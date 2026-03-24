@@ -1,0 +1,118 @@
+{
+  "keyword": "gym near me hubli",
+  "volume": 30000,
+  "scraped_at": "2026-03-15T20:03:28.284830",
+  "local_pack": [],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Best Gym in Hubli - Top Fitness Centers & Clubs near me",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Gyms/nct-11575244",
+      "traffic": 3000,
+      "traffic_pct": 10.0
+    },
+    {
+      "position": 2,
+      "name": "Best Gym in Vijaynagar Hubli, Hubli - Top Fitness Centers ..",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Gyms-in-Vijaynagar-Hubli/nct-11575244",
+      "traffic": 3000,
+      "traffic_pct": 10.0
+    }
+  ],
+  "social": [
+    {
+      "position": 1,
+      "name": "AKHADA-THE LIFESTYLE GYM®️ (@akhada_hubli)",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/akhada_hubli/",
+      "traffic": 1000,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 2,
+      "name": "Hubli's most premium gym. Bespoke Fitness brings elite ...",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/reel/DOI-HdEEwsp/",
+      "traffic": 1000,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 3,
+      "name": "Gym & Fitness Center in Vidyanagar Hubli (@ifitness.hubli)",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/ifitness.hubli/",
+      "traffic": 1000,
+      "traffic_pct": 3.3
+    }
+  ],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Biggest Gym in Hubli | Xtreme Fitness Premium Unisex Gym",
+      "domain": "xtremefitness.co.in",
+      "url": "https://xtremefitness.co.in/",
+      "snippet": "Xtreme Fitness Center is the professional and Best & Biggest Gym in Hubli. We offer multiple fitness training like Cardio, Aerobics, Circuit, Zumba, a",
+      "traffic": 3600,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Ladies Gym: Top Fitness Center for Women Hubli",
+      "domain": "sanaladiesgymandfitness.in",
+      "url": "https://sanaladiesgymandfitness.in/",
+      "snippet": "Whether you are searching for a ladies gym near me or a full-service fitness center for women Hubli, our yoga and Pilates programs are designed for al",
+      "traffic": 2400,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Gyms in Hubli",
+      "domain": "hubballionline.in",
+      "url": "https://www.hubballionline.in/guide/gyms-in-hubli",
+      "snippet": "Learn about the different Gyms and Fitness Centers in Hubli and Health Clubs in Hubli. Know more about it along with their contact details here.",
+      "traffic": 1500,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "5 Best Gym in Vidyanagar - Hubballi Dharwad, KA",
+      "domain": "ind.5bestincity.com",
+      "url": "https://ind.5bestincity.com/gym-in-vidyanagar-hubballi-dharwad-ka",
+      "snippet": "Muscle Factory, Body Tone Gym, Iron Lifters Fitness Center 20, Ifitness, Xtreme Fitness — Top Gym in Vidyanagar - Hubballi Dharwad, Karnataka.",
+      "traffic": 1500,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 5,
+      "name": "Visit the Best Gym Near You with Yoga, Dance & more ...",
+      "domain": "cult.fit",
+      "url": "https://www.cult.fit/fitness/cultpass-elite",
+      "snippet": "They provide a safe space to workout with top quality equipment and cult certified trainers present to assist you ELITE gyms are a curated collection ",
+      "traffic": 1500,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 3000,
+  "summary": {
+    "total_volume": 30000,
+    "gbp_traffic": 0,
+    "gbp_pct": 0.0,
+    "directory_traffic": 6000,
+    "directory_pct": 20.0,
+    "social_traffic": 3000,
+    "social_pct": 10.0,
+    "website_traffic": 10500,
+    "website_pct": 35.0,
+    "uncaptured": 3000,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 0,
+    "directory_count": 2,
+    "social_count": 3,
+    "website_count": 5
+  }
+}

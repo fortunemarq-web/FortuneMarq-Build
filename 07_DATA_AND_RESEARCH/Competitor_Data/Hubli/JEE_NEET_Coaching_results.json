@@ -1,0 +1,142 @@
+{
+  "keyword": "neet coaching hubli",
+  "volume": 2550,
+  "scraped_at": "2026-03-15T20:03:54.842518",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "NARAYANA IIT-JEE/NEET/FOUNDATION - HUBLI",
+      "rating": 4.5,
+      "reviews": 236,
+      "address": "Kalburgi Katwe Fortune, opp. B V B college",
+      "website": "https://www.narayanacoachingcenters.in/landingpage.php?branch=hubli",
+      "phone": "070220 43639",
+      "traffic": 383,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "Aakash Institute, Hubli",
+      "rating": 4.0,
+      "reviews": 265,
+      "address": "2nd Floor, SKD Height, PB Rd, opposite Reliance Digital",
+      "website": "https://centers.aakash.ac.in/aakash-institute-hubli-coaching-center-vidyanagar-hubli-99217/Home",
+      "phone": "088000 13051",
+      "traffic": 303,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "Physics Wallah Vidyapeeth Pathshala Coaching Center Hubli | IIT JEE, NEET & Foundation Classes",
+      "rating": 4.6,
+      "reviews": 111,
+      "address": "2nd Floor Besides, SBI Bank, Beereshwar Arcade, 3976, Main Road",
+      "website": "https://physicswallah.onelink.me/ZAZB/jhn9c2ch?utm_source=Google&utm_medium=GMB",
+      "phone": "074280 96975",
+      "traffic": 205,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "NEET Coaching Centers in Hubli - Hubballi",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Neet-Tutorials/nct-11037560",
+      "traffic": 255,
+      "traffic_pct": 10.0
+    },
+    {
+      "position": 2,
+      "name": "NEET Coaching Centers in Old Hubli, Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Neet-Tutorials-in-Old-Hubli/nct-11037560",
+      "traffic": 255,
+      "traffic_pct": 10.0
+    }
+  ],
+  "social": [],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Aakash Institute, Hubli",
+      "domain": "centers.aakash.ac.in",
+      "url": "https://centers.aakash.ac.in/aakash-institute-hubli-coaching-center-vidyanagar-hubli-99217/Home",
+      "snippet": "Aakash Institute, Hubli · 2nd Floor, SKD Height, PB Road Vidyanagar Hubli - 580031 · Opposite Reliance Digital · +918800013051 · Opens at 10:00 AM · C",
+      "traffic": 306,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Best NEET Coaching in Hubballi",
+      "domain": "allen.in",
+      "url": "https://allen.in/hubballi/neet",
+      "snippet": "ALLEN Hubballi offers carefully designed classroom programs that cater to students at different academic stages. Each course follows a planned syllabu",
+      "traffic": 204,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "narayana iit-jee/neet/foundation - hubli",
+      "domain": "narayanacoachingcenters.in",
+      "url": "https://www.narayanacoachingcenters.in/landingpage.php?branch=hubli",
+      "snippet": "Address: NARAYANA COACHING CENTER, 2ND FLOOR, KALBURGI KATWE FORTUNE, OPP B.V.B COLLEGE, VIDYANAGAR, HUBLI 580021 · Phone: 7022043639 · Email: bm.hubl",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "1 Coaching Institute for JEE Main, Advanced | NEET-UG",
+      "domain": "allen.ac.in",
+      "url": "https://www.allen.ac.in/hubballi/",
+      "snippet": "Join ALLEN Hubballi - #1 Career Coaching Institute for IIT JEE Main + Advanced | NEET-UG/ Medical, Olympiads, BITSAT, KVPY, NTSE, Board & Other Compet",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 5,
+      "name": "Top 10 NEET Coaching in Hubli and Dharwad",
+      "domain": "toppersacademy.app",
+      "url": "https://toppersacademy.app/top-neet-coaching-in-hubli-and-dharwad/",
+      "snippet": "Top 10 NEET Coaching in Hubli and Dharwad. List of Best NEET Coaching, Contact details, fee structure and many other information.",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 6,
+      "name": "NEET Coaching Centre in Hubballi",
+      "domain": "aakash.ac.in",
+      "url": "https://www.aakash.ac.in/hubballi-city/neet-ug-coaching",
+      "snippet": "With its 33 years of expertise and well-qualified tutors, AESL helps students to crack NEET UG 2022 and other medical exams with utmost ease.",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 7,
+      "name": "Sri Chaitanya | Top IIT JEE Coaching Institute | Neet Coachi",
+      "domain": "srichaitanya.net",
+      "url": "https://srichaitanya.net/",
+      "snippet": "Sri Chaitanya is one of the best IIT coaching, JEE coaching, NEET coaching, JEE Mains coaching, JEE Advanced coaching provider institute in India. Enr",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 255,
+  "summary": {
+    "total_volume": 2550,
+    "gbp_traffic": 891,
+    "gbp_pct": 34.9,
+    "directory_traffic": 510,
+    "directory_pct": 20.0,
+    "social_traffic": 0,
+    "social_pct": 0.0,
+    "website_traffic": 1145,
+    "website_pct": 44.9,
+    "uncaptured": 255,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 2,
+    "social_count": 0,
+    "website_count": 7
+  }
+}

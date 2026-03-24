@@ -1,0 +1,141 @@
+{
+  "keyword": "dental clinic hubli",
+  "volume": 3900,
+  "scraped_at": "2026-03-15T20:03:42.988439",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "Bhat Dental Care Centre",
+      "rating": 4.8,
+      "reviews": 710,
+      "address": "12, Enkay Complex",
+      "website": "https://www.bhatdentalclinic.com/",
+      "phone": "099458 99316",
+      "traffic": 586,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "Shree Vishwa Vande Dental Clinic Hubli",
+      "rating": 5.0,
+      "reviews": 245,
+      "address": "UGF :24-25, Eureka Junction Above Hubli Scan center TB Raod, Old, Court Circle",
+      "website": "https://www.vishwavandedental.com/",
+      "phone": "078995 82038",
+      "traffic": 464,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "samant dental clinic",
+      "rating": 4.9,
+      "reviews": 735,
+      "address": "above Bank of Baroda, opposite BRTS bus stand",
+      "website": "https://www.facebook.com/share/1H2LqWAQQS/",
+      "phone": "090352 06602",
+      "traffic": 313,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Best Dentists in Hubli - Top BEST Dentists near me",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Dentists/nct-10156331",
+      "traffic": 195,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 2,
+      "name": "Best Dentists Near Me in Hubli",
+      "domain": "practo.com",
+      "url": "https://www.practo.com/hubli/dentist",
+      "traffic": 195,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 3,
+      "name": "28 Dental Clinics in Hubli Sarafkatta, Hubli",
+      "domain": "practo.com",
+      "url": "https://www.practo.com/hubli/clinics/dental-clinics/hubli-sarafkatta",
+      "traffic": 195,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Best Dental Hospitals in Hubli - Book Appointment Online",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Dental-Hospitals/nct-11273042",
+      "traffic": 195,
+      "traffic_pct": 5.0
+    }
+  ],
+  "social": [
+    {
+      "position": 1,
+      "name": "Hubli Dental Care and Implant Centre",
+      "domain": "facebook.com",
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/HubliDental/",
+      "traffic": 390,
+      "traffic_pct": 10.0
+    }
+  ],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Preferred dental clinic in Hubli for toothcare",
+      "domain": "orthosquare.com",
+      "url": "https://www.orthosquare.com/dental-clinic-in-hubli",
+      "snippet": "Redefine oral health with the proven best dental clinic in Hubli at Orthosquare · Expert team of dental practitioners · Progressive solutions and trea",
+      "traffic": 468,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Jayade Dental World: Best Dental Clinic in Hubli",
+      "domain": "jayadedentalworld.com",
+      "url": "https://jayadedentalworld.com/",
+      "snippet": "Get advanced dental treatments from the best dental clinic in Hubli, Jayade Dental Clinic in Hubli. Book your consultation today +91 986640275.",
+      "traffic": 312,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Top Dental Clinics in Hubli - Shree Vishwa Vande ...",
+      "domain": "vishwavandedental.com",
+      "url": "https://www.vishwavandedental.com/dental-clinic-hubli.php",
+      "snippet": "Shree Vishwa Vande Dental Clinic is one of the leading clinics in Hubli and Dharwad which was established in the year 2018 and now it is the best dent",
+      "traffic": 195,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Video Testimonial",
+      "domain": "vishwavandedental.com",
+      "url": "https://www.vishwavandedental.com/video-testimonial.php",
+      "snippet": "Established in 2018, Shree Vishwa Vande Dental Clinic consists of the best dentists in Hubli and has emerged as one of the leading dental clinics in H",
+      "traffic": 195,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 390,
+  "summary": {
+    "total_volume": 3900,
+    "gbp_traffic": 1363,
+    "gbp_pct": 34.9,
+    "directory_traffic": 780,
+    "directory_pct": 20.0,
+    "social_traffic": 390,
+    "social_pct": 10.0,
+    "website_traffic": 1170,
+    "website_pct": 30.0,
+    "uncaptured": 390,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 4,
+    "social_count": 1,
+    "website_count": 4
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "keyword": "real estate agent hubli",
+  "volume": 2000,
+  "scraped_at": "2026-03-15T20:04:05.568042",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "RD Properties hubli | Bungalow | plots | flats | apartments | land | independent house",
+      "rating": 5.0,
+      "reviews": 40,
+      "address": "# 6 , Trinity Apartments , pacific park, Kusugal Rd",
+      "website": "http://www.rdpropertieshubli.in/",
+      "phone": "088842 99444",
+      "traffic": 301,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "ReachMaxx Properties",
+      "rating": 4.5,
+      "reviews": 30,
+      "address": "Shirur Park Road Netravati Square",
+      "website": "https://reachmaxx.com/",
+      "phone": "099002 63823",
+      "traffic": 238,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "Real Estate Hubli",
+      "rating": 4.9,
+      "reviews": 18,
+      "address": "First Cross, Green Park, 204, Guruji Enclave",
+      "website": "",
+      "phone": "099169 62399",
+      "traffic": 161,
+      "traffic_pct": 8.1
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Real Estate Agents in Hubli - Property Dealers & Brokers",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Real-Estate-Agents/nct-10192623",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 2,
+      "name": "Real Estate Property Agent in Hubballi",
+      "domain": "dir.indiamart.com",
+      "url": "https://dir.indiamart.com/hubli/real-estate-agent.html",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 3,
+      "name": "Estate Agents for Residential Rentals in Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Estate-Agents-For-Residential-Rental/nct-10192844",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Top Real Estate Agents in Hubli, Karnataka",
+      "domain": "housing.com",
+      "url": "https://housing.com/brokers/top/hubli-P1rulbednlcuilosq",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    }
+  ],
+  "social": [],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Property Dealers in Hubli | 174+ Real Estate Agents in Hubli",
+      "domain": "squareyards.com",
+      "url": "https://www.squareyards.com/real-estate-agents-in-hubli",
+      "snippet": "Property Dealers in Hubli: Find 174+ Reliable real estate agents and Brokers in Hubli. Contact residential and Commercial property consultants online.",
+      "traffic": 240,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Trusted Real Estate Agents / Property Dealers in Hubballi",
+      "domain": "realestateindia.com",
+      "url": "https://www.realestateindia.com/agents-brokers-in-hubli.htm",
+      "snippet": "REACHMAXX BUSINESS BOOSTERS is a leading real estate company in HUBBALLI (Hubli), Karnataka. We offer our esteemed clients, superior Property Buying s",
+      "traffic": 160,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "3 Best Real Estate Agents in Hubli Dharwad, KA",
+      "domain": "threebestrated.in",
+      "url": "https://threebestrated.in/real-estate-agents-in-hubballi-dharwad-ka",
+      "snippet": "1. Shriya Properties 2. Reachmaxx Properties 3. RD Properties - The top Hubli Dharwad real estate agents selected via rigorous 50-Point Inspection.",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Top Real Estate Agents in Gokul Road, Hubli",
+      "domain": "realestateindia.com",
+      "url": "https://www.realestateindia.com/agents-brokers-in-gokul-road-hubli.htm",
+      "snippet": "REACHMAXX BUSINESS BOOSTERS is a leading real estate company in HUBBALLI (Hubli), Karnataka. We offer our esteemed clients, superior Property Buying s",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 5,
+      "name": "http://realestatehubli.com/",
+      "domain": "realestatehubli.com",
+      "url": "http://realestatehubli.com/",
+      "snippet": "No information is available for this page.",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 200,
+  "summary": {
+    "total_volume": 2000,
+    "gbp_traffic": 700,
+    "gbp_pct": 35.0,
+    "directory_traffic": 400,
+    "directory_pct": 20.0,
+    "social_traffic": 0,
+    "social_pct": 0.0,
+    "website_traffic": 700,
+    "website_pct": 35.0,
+    "uncaptured": 200,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 4,
+    "social_count": 0,
+    "website_count": 5
+  }
+}

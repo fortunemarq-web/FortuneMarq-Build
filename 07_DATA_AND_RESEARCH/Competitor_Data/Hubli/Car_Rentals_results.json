@@ -1,0 +1,143 @@
+{
+  "keyword": "car rental hubli",
+  "volume": 2550,
+  "scraped_at": "2026-03-15T20:03:58.742990",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "Raahiz Travels - Hubli Car Rental With Driver",
+      "rating": 4.9,
+      "reviews": 437,
+      "address": "BSNL Tower, Shop #3, S P Complex, Sulla Rd, near Shanti Nagar",
+      "website": "https://raahiztravels.com/",
+      "phone": "099457 33200",
+      "traffic": 383,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "Swadeshi Car Rentals Hubli LLP - Car Hire Hubli Services",
+      "rating": 4.9,
+      "reviews": 174,
+      "address": "1 st floor, NMR scan centre, Giriraj house, opp:, Club Rd",
+      "website": "https://swadeshicarrentalshubli.com/",
+      "phone": "072860 51052",
+      "traffic": 303,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "Queens Car Rental & Taxi",
+      "rating": 4.7,
+      "reviews": 543,
+      "address": "Circle",
+      "website": "https://queenscarrental.in/",
+      "phone": "088844 77768",
+      "traffic": 205,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Car Rental in Hubli - Book Reliable Vehicle",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Car-Rental/nct-10076456",
+      "traffic": 510,
+      "traffic_pct": 20.0
+    }
+  ],
+  "social": [],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Car Rental in Hubli with Driver - Rent Cab",
+      "domain": "raahiztravels.com",
+      "url": "https://raahiztravels.com/",
+      "snippet": "Raahiz Travels is one of the leading car rental companies in Hubli that offers a wide range of cars for rent. They have a fleet of cars ranging from l",
+      "traffic": 306,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Hubli Car Rentals - 20% off on all Car Rentals",
+      "domain": "savaari.com",
+      "url": "https://www.savaari.com/hubli/car-rental",
+      "snippet": "Book a Car Rental in Hubli and enjoy a hassle free journey with Savaari's on-time service. When you rent a car in Hubli, you can sit back & relax on y",
+      "traffic": 204,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Self Drive Cars In Hubli - Netlify",
+      "domain": "selfdrivecarsinhubliawesomecars.netlify.app",
+      "url": "https://selfdrivecarsinhubliawesomecars.netlify.app/",
+      "snippet": "Welcome to Awesome Cars, your trusted partner for car rentals in Hubli where you drive the car yourself – no drivers, no delays, just total freedom!",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Hire Cheap Rental Cars in Hubli for your Trip",
+      "domain": "expedia.co.in",
+      "url": "https://www.expedia.co.in/Compare-Cheap-Car-Hire-In-Hubli.d1436.Car-Hire-Guide",
+      "snippet": "Book your Hubli car rental ahead with Expedia ✓ We compare all major car rental companies to find you the best deals. Travel around Hubli with ease in",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 5,
+      "name": "Swadeshi Car Rentals In Hubli",
+      "domain": "swadeshicarrentalshubli.com",
+      "url": "https://swadeshicarrentalshubli.com/",
+      "snippet": "Best car rentals in Hubli with professional drivers and a luxury fleet of sedans, SUVs, and Tempos for airport, outstation & local trips. 24/7 service",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 6,
+      "name": "Car Rental in Hubli | Self Drive Cars",
+      "domain": "gowheelo.com",
+      "url": "https://gowheelo.com/in/hubli/car-rentals",
+      "snippet": "The average cost for luxury car rental in Hubli ranges between ₹3,500 to ₹50,000 per day, depending on the car model and services included. Different ",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 7,
+      "name": "Zoomcar Self Drive Car Rentals in India | Book Online",
+      "domain": "zoomcar.com",
+      "url": "https://www.zoomcar.com/",
+      "snippet": "Enjoy affordable self-drive car hire with flexible plans and online booking. Hire a car for a day or choose monthly car rentals at Zoomcar.",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 8,
+      "name": "Car Hire in Hubli - Search for Self Drive Cars on KAYAK",
+      "domain": "kayak.co.in",
+      "url": "https://www.kayak.co.in/Cheap-Hubli-Car-Hire.52777.cars.ksp",
+      "snippet": "Looking for car hire in Hubli? Search prices from Eco Rent, Gozo Cabs, Instant Cabs, North Car Rental and SS Travels. Search and find Hubli car hire d",
+      "traffic": 127,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 255,
+  "summary": {
+    "total_volume": 2550,
+    "gbp_traffic": 891,
+    "gbp_pct": 34.9,
+    "directory_traffic": 510,
+    "directory_pct": 20.0,
+    "social_traffic": 0,
+    "social_pct": 0.0,
+    "website_traffic": 1272,
+    "website_pct": 49.9,
+    "uncaptured": 255,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 1,
+    "social_count": 0,
+    "website_count": 8
+  }
+}

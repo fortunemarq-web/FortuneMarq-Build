@@ -1,0 +1,141 @@
+{
+  "keyword": "tuition centre hubli",
+  "volume": 2000,
+  "scraped_at": "2026-03-15T20:04:22.729586",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "Jnana Science Academy",
+      "rating": 4.9,
+      "reviews": 69,
+      "address": "3+ years in business",
+      "website": "",
+      "phone": "",
+      "traffic": 301,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "SSR TUTORIALS",
+      "rating": 5.0,
+      "reviews": 11,
+      "address": "Hubballi, Karnataka",
+      "website": "",
+      "phone": "094802 81734",
+      "traffic": 238,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "Jeevishaala Tutorials",
+      "rating": 4.9,
+      "reviews": 49,
+      "address": "Ward 34C, First floor, Plot No 48/6/3",
+      "website": "https://www.jeevishaala.com/",
+      "phone": "099169 49338",
+      "traffic": 161,
+      "traffic_pct": 8.1
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Top Tutorials in Hubli - Best Private Tutorials",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Tutorials/nct-10502492",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 2,
+      "name": "Best CBSE Coaching Classes - Tutorials in Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/CBSE-Tutorials/nct-10966985",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 3,
+      "name": "CBSE Tuition in Hubli, Coaching Classes, Tutors",
+      "domain": "sulekha.com",
+      "url": "https://www.sulekha.com/cbse-tuition-classes/hubli",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Byju's Tuition Centre - Tutorials in Jayanagar Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Byjus-Tuition-Centre-Jayanagar-Hubli/0836PX836-X836-230330182136-D6D2_BZDET",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    }
+  ],
+  "social": [
+    {
+      "position": 1,
+      "name": "Home Tutors in Hubli (@tuitionsinhubli)",
+      "domain": "facebook.com",
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/tuitionsinhubli/",
+      "traffic": 200,
+      "traffic_pct": 10.0
+    }
+  ],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Home Tuition Near me in Hubli - Fees From ₹499/hr",
+      "domain": "superprof.co.in",
+      "url": "https://www.superprof.co.in/lessons/all-tutors/hubli/",
+      "snippet": "Top-rated Home tutors near me for classes 1-12 in Hubli from 505 tutors, with fees from ₹467/hr on Superprof. Open Now!",
+      "traffic": 240,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Top 20 Hubli Tutors - Hubli Tuition From ₹15/hr",
+      "domain": "tutorhunt.co.in",
+      "url": "https://www.tutorhunt.co.in/locations/hubli/",
+      "snippet": "We have 33 tutors based in Hubli, Karnataka with rates from ₹15/Hr. Tutor Hunt offers tutors and qualified teachers for all levels including GCSE, ...",
+      "traffic": 160,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Tuition Centres in Hubli",
+      "domain": "byjus.com",
+      "url": "https://byjus.com/btc/byjus-tuition-centre-hubli/",
+      "snippet": "We teach Maths and Science for Grades 4-10. Students studying CBSE and state board of Karnataka are both welcome here. For saving time spent by studen",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Class 10 Tuition Near Me in Hubli | Home & Online Classes",
+      "domain": "urbanpro.com",
+      "url": "https://www.urbanpro.com/hubli/class-10-tuition",
+      "snippet": "300 - 400 per month. There are many 10th tuition classes available in all localities including Hubli City, Hubli Keshwapur, Hubli Vidyanagar and Gokul",
+      "traffic": 100,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 200,
+  "summary": {
+    "total_volume": 2000,
+    "gbp_traffic": 700,
+    "gbp_pct": 35.0,
+    "directory_traffic": 400,
+    "directory_pct": 20.0,
+    "social_traffic": 200,
+    "social_pct": 10.0,
+    "website_traffic": 600,
+    "website_pct": 30.0,
+    "uncaptured": 200,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 4,
+    "social_count": 1,
+    "website_count": 4
+  }
+}

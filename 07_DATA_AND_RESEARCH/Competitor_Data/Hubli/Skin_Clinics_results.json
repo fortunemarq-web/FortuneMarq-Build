@@ -1,0 +1,141 @@
+{
+  "keyword": "skin clinic hubli",
+  "volume": 7500,
+  "scraped_at": "2026-03-15T20:03:32.950802",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "Dr Arpitha's Skin Hair & Aesthetics",
+      "rating": 4.8,
+      "reviews": 925,
+      "address": "Shop no 201, 2 nd floor, beside Mahila Vidyapeeth, Nirvana tradewinds",
+      "website": "",
+      "phone": "",
+      "traffic": 1128,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "Mohan Skin Care Clinic Hubli",
+      "rating": 4.8,
+      "reviews": 257,
+      "address": "Koppikar Rd, Above Airtel Showroom",
+      "website": "",
+      "phone": "",
+      "traffic": 892,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "JEEVANNAVAR SKIN CARE CLINIC",
+      "rating": 4.5,
+      "reviews": 470,
+      "address": "2nd floor, Access, 944P+PX6 KGS plaza, opp. Reliance Fresh",
+      "website": "",
+      "phone": "",
+      "traffic": 603,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Best Skin Care Clinics Near me in Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Skin-Care-Clinics/nct-10438800",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 2,
+      "name": "Best Skin Care Doctors In Hubli",
+      "domain": "practo.com",
+      "url": "https://www.practo.com/hubli/doctor-for-skin-care",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 3,
+      "name": "3 Skin Clinics in Hubli, Hubli",
+      "domain": "practo.com",
+      "url": "https://www.practo.com/hubli/clinics/skin-clinics/hubli",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "List of nearest Skin Care Clinics in Station Road, Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Skin-Care-Clinics-in-Station-Road/nct-10438800",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    }
+  ],
+  "social": [
+    {
+      "position": 1,
+      "name": "A dream nurtured. A vision built. A clinic born Proud to ...",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/reel/DS-RxlykuQC/",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 2,
+      "name": "SkinCare & Laser Treatments (@surakshaclinics) · Hubli",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/surakshaclinics/",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    }
+  ],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Jeevannavar Skin Care!",
+      "domain": "jeevannavarskincare.com",
+      "url": "http://www.jeevannavarskincare.com/",
+      "snippet": "At Jeevannavar Skin Care, we specialize in the diagnosis and treatment of conditions related to skin, hair, and nails. We are proud to offer advanced ",
+      "traffic": 900,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Skin Doctor in Hubli | Dermatologist & Skin Clinic",
+      "domain": "hubli.idbf.in",
+      "url": "https://hubli.idbf.in/skin-doctor",
+      "snippet": "Dr Chandramohan K. Skin Care And Cure Clinic ... Address: 7A First Floor Eureka Tower, Traffic Island, In Front Of Chennamma Circle, Opposite To Idga ",
+      "traffic": 600,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Skin Care Clinic in Hubli, Karnataka",
+      "domain": "kolorshealthcare.com",
+      "url": "https://www.kolorshealthcare.com/skincare-clinic/karnataka/hubli",
+      "snippet": "Get the best skin care treatment solutions at our skin clinic in Hubli, Karnataka. Book your appointment at Kolors today or call 9884706666.",
+      "traffic": 375,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 750,
+  "summary": {
+    "total_volume": 7500,
+    "gbp_traffic": 2623,
+    "gbp_pct": 35.0,
+    "directory_traffic": 1500,
+    "directory_pct": 20.0,
+    "social_traffic": 750,
+    "social_pct": 10.0,
+    "website_traffic": 1875,
+    "website_pct": 25.0,
+    "uncaptured": 750,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 4,
+    "social_count": 2,
+    "website_count": 3
+  }
+}

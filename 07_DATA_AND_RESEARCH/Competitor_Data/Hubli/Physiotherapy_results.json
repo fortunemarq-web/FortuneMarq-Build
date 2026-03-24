@@ -1,0 +1,141 @@
+{
+  "keyword": "physiotherapy clinic hubli",
+  "volume": 500,
+  "scraped_at": "2026-03-15T20:04:08.901024",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "PHYSIOFIT Physiotherapy Centre",
+      "rating": 4.8,
+      "reviews": 437,
+      "address": "PINTO ROAD, BESIDES BSNL OFFICE,",
+      "website": "http://www.physiofitcentre.com/",
+      "phone": "0836 225 8443",
+      "traffic": 75,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "Sattwam Physiotherapy Clinic and Fitness Studio",
+      "rating": 4.9,
+      "reviews": 222,
+      "address": "Hubballi, Karnataka",
+      "website": "",
+      "phone": "083101 26083",
+      "traffic": 59,
+      "traffic_pct": 11.8
+    },
+    {
+      "position": 3,
+      "name": "Dr. Amit’s Pro Fitness-Physiotherapy Centre In Hubli",
+      "rating": 4.8,
+      "reviews": 194,
+      "address": "Hubballi, Karnataka",
+      "website": "",
+      "phone": "070269 49555",
+      "traffic": 40,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Best Physiotherapists Near me in Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Physiotherapists/nct-10365744",
+      "traffic": 25,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 2,
+      "name": "List of Best Physiotherapy Clinics Near Me in Hubli",
+      "domain": "practo.com",
+      "url": "https://www.practo.com/hubli/clinics/physiotherapy-clinics",
+      "traffic": 25,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 3,
+      "name": "Best Physiotherapy Centres Near me in Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Physiotherapy-Centres/nct-10365751",
+      "traffic": 25,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Sattwam Physiotherapy Clinic And Health Studio in Gokul ...",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Sattwam-Physiotherapy-Clinic-And-Health-Studio-Opposite-Corporation-Bank-Above-Kvgb-Bank-Gokul-Road/0836PX836-X836-180119164822-L7N6_BZDET",
+      "traffic": 25,
+      "traffic_pct": 5.0
+    }
+  ],
+  "social": [
+    {
+      "position": 1,
+      "name": "Physiofit Physiotherapy Centre | Hubli",
+      "domain": "facebook.com",
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/physiofithubli/",
+      "traffic": 12,
+      "traffic_pct": 2.4
+    },
+    {
+      "position": 2,
+      "name": "Physiofit Physiotherapy Centre (@physiofitclinic)",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/physiofitclinic/",
+      "traffic": 12,
+      "traffic_pct": 2.4
+    },
+    {
+      "position": 3,
+      "name": "Sanmati Physiotherapy - Acupuncture & Cold Laser Clinic.",
+      "domain": "facebook.com",
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/sanmati.physiotherapy/",
+      "traffic": 12,
+      "traffic_pct": 2.4
+    },
+    {
+      "position": 4,
+      "name": "Sanmati Physiotherapy Clinic Hubli",
+      "domain": "youtube.com",
+      "platform": "YouTube",
+      "url": "https://www.youtube.com/@SanmatiPhysiotherapyClinic",
+      "traffic": 12,
+      "traffic_pct": 2.4
+    }
+  ],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Best Physiotherapy and Physiotherapist Hospital in Hubli",
+      "domain": "hcghospitals.in",
+      "url": "https://www.hcghospitals.in/centre-of-excellence/physiotherapy-and-rehabilitation-hubli/",
+      "snippet": "HCG Suchirayu Hospital stands out as a leading physiotherapy hospital in Hubli, offering evidence-based, patient-centred care for recovery, pain manag",
+      "traffic": 60,
+      "traffic_pct": 12.0
+    }
+  ],
+  "uncaptured": 50,
+  "summary": {
+    "total_volume": 500,
+    "gbp_traffic": 174,
+    "gbp_pct": 34.8,
+    "directory_traffic": 100,
+    "directory_pct": 20.0,
+    "social_traffic": 48,
+    "social_pct": 9.6,
+    "website_traffic": 60,
+    "website_pct": 12.0,
+    "uncaptured": 50,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 4,
+    "social_count": 4,
+    "website_count": 1
+  }
+}

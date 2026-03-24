@@ -1,0 +1,3505 @@
+FORTUNEMARQ KEYWORD RESEARCH MASTER REPORT
+================================================================================
+FILE: Kalaburgi_keywords/Kalaburgi_Tuition_Centre_Keywords.csv
+--------------------------------------------------------
+Total Monthly Searches: 9,300
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+math tutor near me                       | 50             
+10th cbse tuition classes near me        | 50             
+vedic maths tuition near me              | 50             
+home tuition required near me            | 50             
+cbse coaching centre near me             | 50             
+maths class 11 tuition near me           | 50             
+tuition near me for class 10 state syl   | 50             
+coaching classes for 10th near me        | 50             
+best tuition for class 10                | 50             
+home tutors near me for class 11         | 50             
+home tuition near me for class 12        | 50             
+tuition near me for class 3              | 50             
+10 std tuitions near me                  | 50             
+10th standard tuition near me            | 50             
+best tuition near me for class 8         | 50             
+cbse maths teacher near me               | 50             
+best coaching for cbse class 10 near m   | 50             
+maths tuition class 12 near me           | 50             
+best online coaching for class 11 pcm    | 50             
+12th tuition near me                     | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_IVF_Fertility_Clinic_Keywords.csv
+--------------------------------------------------------------
+Total Monthly Searches: 300
+Average CPC Estimate:  $45.09
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ivf implantation success rate            | 50             
+icsi treatment success rate              | 50             
+chance of blastocyst implantation        | 50             
+ivf percentage success rate              | 50             
+rate of success for ivf                  | 50             
+rate of success ivf                      | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Modular_Kitchen_Keywords.csv
+---------------------------------------------------------
+Total Monthly Searches: 5,350
+Average CPC Estimate:  $7.60
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+design kitchen interior                  | 500            
+kitchen design interior design           | 500            
+kitchen interior decoration              | 500            
+kitchen and interior design              | 500            
+pantry unit price                        | 50             
+modular kitchen pantry unit price        | 50             
+best acrylic colors for kitchen          | 50             
+aluminium kitchen cupboard price         | 50             
+aluminium cupboards cost                 | 50             
+best acrylic sheet for kitchen cabinet   | 50             
+kitchen carcass prices                   | 50             
+ready kitchen cabinets price             | 50             
+best parallel kitchen                    | 50             
+kitchen cabinets and prices              | 50             
+aluminium cabinet for kitchen price      | 50             
+best kitchen interior                    | 50             
+best interior design for small kitchen   | 50             
+best small kitchen interior design       | 50             
+cost cupboard                            | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Dental_Clinic_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 18,450
+Average CPC Estimate:  $0.92
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dentist near me                          | 500            
+dental clinic close to me                | 500            
+dental clinic near me                    | 500            
+dental clinic in near me                 | 500            
+dental near ne                           | 500            
+dentist near me near me                  | 500            
+dental implants near me                  | 50             
+smile dental near me                     | 50             
+one teeth price                          | 50             
+teeth whitening                          | 50             
+dental implants cost                     | 50             
+braces for adults                        | 50             
+cosmetic dentistry                       | 50             
+pediatric dentist                        | 50             
+kids dentist near me                     | 50             
+pediatric dentist near me                | 50             
+teeth whitening near me                  | 50             
+dental services near me                  | 50             
+opalescence whitening                    | 50             
+pulp therapy in pediatric dentistry      | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Computer_Training_Institute_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 13,650
+Average CPC Estimate:  $29.46
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+data science                             | 500            
+digital mktg                             | 500            
+machine learning machine learning        | 50             
+best ui ux design                        | 50             
+python programming near me               | 50             
+digital marketing course cost            | 50             
+best way to learn ai and machine learn   | 50             
+cloud offerings                          | 50             
+cloud computing in aws                   | 50             
+best web developer portfolios            | 50             
+learnbay data science course fees        | 50             
+full stack website development           | 50             
+java programming online course           | 50             
+best courses on artificial intelligenc   | 50             
+best data science institute              | 50             
+best cloud computing companies           | 50             
+best aiml course                         | 50             
+best java course on udemy                | 50             
+scaler data science course cost          | 50             
+artificial intelligence classes online   | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Interior_Designer_Keywords.csv
+-----------------------------------------------------------
+Total Monthly Searches: 13,000
+Average CPC Estimate:  $2.70
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+wardrobe designs                         | 500            
+wardroom design                          | 500            
+kitchen interior design                  | 500            
+clothes cupboard design                  | 500            
+false ceiling design for bedroom price   | 50             
+best dental clinic interior design       | 50             
+modular kitchen pantry unit price        | 50             
+pop ceiling design price list            | 50             
+best office table design                 | 50             
+bedroom wardrobe cost                    | 50             
+best cupboard design for bedroom         | 50             
+interior design for home price           | 50             
+gypsum ceiling work near me              | 50             
+cost of home interior                    | 50             
+small clinic waiting room design         | 50             
+furniture interior near me               | 50             
+clinic reception design                  | 50             
+low cost tiny house interior design      | 50             
+home reno costs                          | 50             
+dental clinic design layout              | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Real_Estate_Agent_Keywords.csv
+-----------------------------------------------------------
+Total Monthly Searches: 12,150
+Average CPC Estimate:  $2.25
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+houses for let near me                   | 500            
+real estate income trust                 | 50             
+sale property near me                    | 50             
+sobha dream acres 2 bhk price            | 50             
+best rental property website             | 50             
+house for purchase near me               | 50             
+shop spaces for rent near me             | 50             
+inexpensive homes for sale near me       | 50             
+commercial property sale near me         | 50             
+near me home for sale                    | 50             
+abandoned places for sale near me        | 50             
+commercial property to let near me       | 50             
+new independent house for sale near me   | 50             
+farmhouse for rent near me               | 50             
+cheap homes to buy near me               | 50             
+newly constructed homes for sale near    | 50             
+buy an apartment near me                 | 50             
+2 bhk apartment for sale near me         | 50             
+new homes on sale near me                | 50             
+studio flats to rent near me             | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Skin_Clinic_Keywords.csv
+-----------------------------------------------------
+Total Monthly Searches: 32,700
+Average CPC Estimate:  $4.41
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dr dermatologist near me                 | 500            
+skin specialist near me                  | 500            
+skin special doctor near me              | 500            
+dermatology near ne                      | 500            
+dermatologist near me                    | 500            
+near me skin specialist doctor           | 500            
+derma near me                            | 500            
+near me skin specialist                  | 500            
+derm near me                             | 500            
+skin doctor near by me                   | 500            
+skin specialist in near me               | 500            
+skin specialist doctor near me           | 500            
+dr skin near me                          | 500            
+skin dr near me                          | 500            
+laser hair removal cost                  | 50             
+hair removal near me                     | 50             
+laser hair removal prices                | 50             
+facial hair removal                      | 50             
+best laser hair removal                  | 50             
+electrolysis near me                     | 50             
+
+================================================================================
+
+Error processing Kalaburgi_keywords/Kalaburgi_JEE_Coaching_Keywords.csv: Error tokenizing data. C error: Expected 1 fields in line 3, saw 26
+
+FILE: Kalaburgi_keywords/Kalaburgi_Gym_Keywords.csv
+---------------------------------------------
+Total Monthly Searches: 59,300
+Average CPC Estimate:  $1.18
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gym near me                              | 5,000          
+gymbox near me                           | 5,000          
+gymnasium near me                        | 5,000          
+gym near near me                         | 5,000          
+near gym near me                         | 5,000          
+gyms and fitness centers near me         | 500            
+gym ladies near me                       | 500            
+yoga classes near me                     | 500            
+yoga lessons near me                     | 500            
+ladies gym in near me                    | 500            
+fitness gyms near me                     | 500            
+ladies gym near me                       | 500            
+gym near me ladies                       | 500            
+gym and fitness near me                  | 500            
+ladies fitness gym near me               | 500            
+workout gyms near me                     | 500            
+yoga sessions near me                    | 500            
+workout centers near me                  | 500            
+gyms near me ladies                      | 500            
+fitness clubs near me                    | 500            
+
+================================================================================
+
+Error processing Kalaburgi_keywords/Kalaburgi_Physiotherapy_empty.csv: Error tokenizing data. C error: Expected 1 fields in line 3, saw 26
+
+FILE: Kalaburgi_keywords/Kalaburgi_NEET_Coaching_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 6,000
+Average CPC Estimate:  $1.28
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+mcc neet pg                              | 500            
+allen neet crash course fees             | 50             
+best course for neet preparation         | 50             
+best course for neet                     | 50             
+best coaching neet                       | 50             
+best coaching institute for neet repea   | 50             
+best coaching institute for neet mds     | 50             
+best coaching for jee and neet           | 50             
+best coaching for iit droppers           | 50             
+best coaching centre for neet droppers   | 50             
+best coaching center for iit             | 50             
+best chapter wise test series for neet   | 50             
+best academy for neet preparation        | 50             
+akash neet coaching near me              | 50             
+best mock tests for neet                 | 50             
+akash neet coaching centre near me       | 50             
+aakash neet test series price            | 50             
+aakash neet institute near me            | 50             
+neet ug best online coaching             | 50             
+best academy for neet                    | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_Car_Rental_Keywords.csv
+----------------------------------------------------
+Total Monthly Searches: 8,650
+Average CPC Estimate:  $2.26
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+car rental near me                       | 50             
+self drive near me                       | 50             
+rent company near me                     | 50             
+car service rental near me               | 50             
+innova car rental near me                | 50             
+self drive rental cars near me           | 50             
+taxi at airport                          | 50             
+car rental self drive near me            | 50             
+thar on rent near me                     | 50             
+cost of taxi                             | 50             
+thar rental near me                      | 50             
+auto hire near me                        | 50             
+ertiga on rent near me                   | 50             
+tata ace on rent near me                 | 50             
+car and driver rental near me            | 50             
+innova rental near me                    | 50             
+auto on rent near me                     | 50             
+cab on rent near me                      | 50             
+taxi in airport                          | 50             
+thar for rent near me                    | 50             
+
+================================================================================
+
+FILE: Kalaburgi_keywords/Kalaburgi_IELTS_Coaching_Keywords.csv
+--------------------------------------------------------
+Total Monthly Searches: 2,400
+Average CPC Estimate:  $43.43
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+ielts mock test                          | 50             
+mbbs abroad consultants near me          | 50             
+best abroad consultancy                  | 50             
+best abroad education consultants        | 50             
+best ielts coaching online free          | 50             
+study in abroad consultancy near me      | 50             
+raman ielts online classes fees          | 50             
+best ielts online classes                | 50             
+ielts dummy test                         | 50             
+offline ielts classes near me            | 50             
+abroad study agency near me              | 50             
+ielts coaching fees online               | 50             
+best ielts practice website              | 50             
+best agencies to study abroad            | 50             
+online best ielts coaching               | 50             
+ielts exam practise                      | 50             
+best abroad study consultancy            | 50             
+best consultancy for abroad              | 50             
+best consultants for abroad education    | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_IVF_Fertility_Clinic_Keywords.csv
+--------------------------------------------------------------
+Total Monthly Searches: 100
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ivf implantation success rate            | 50             
+icsi treatment success rate              | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Gym_Keywords.csv
+---------------------------------------------
+Total Monthly Searches: 81,750
+Average CPC Estimate:  $1.47
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gym near me                              | 5,000          
+near gym near me                         | 5,000          
+gymnasium near me                        | 5,000          
+gymbox near me                           | 5,000          
+gym near near me                         | 5,000          
+workout gyms near me                     | 500            
+yoga sessions near me                    | 500            
+boxing studio near me                    | 500            
+gym near me ladies                       | 500            
+yoga classes near me                     | 500            
+ladies fitness center near me            | 500            
+boxing classes near me                   | 500            
+gym ladies near me                       | 500            
+gym women near me                        | 500            
+yoga lessons near me                     | 500            
+gyms near me ladies                      | 500            
+boxing workout near me                   | 500            
+women's gym near me                      | 500            
+fitness clubs near me                    | 500            
+ladies gym in near me                    | 500            
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Physiotherapy_Clinic_Keywords.csv
+--------------------------------------------------------------
+Total Monthly Searches: 100
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+manual treatment                         | 50             
+osteopathic manual treatment             | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_JEE_Coaching_Keywords.csv
+------------------------------------------------------
+Total Monthly Searches: 8,150
+Average CPC Estimate:  $3.43
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+viteee                                   | 500            
+jee mains jee mains                      | 500            
+jee main                                 | 500            
+jee tuitions near me                     | 50             
+best coaching classes for jee            | 50             
+best course for jee                      | 50             
+best colleges for jee preparation        | 50             
+best coaching material for jee advance   | 50             
+best coaching material for jee           | 50             
+best coaching material for iit jee       | 50             
+best coaching for iit online             | 50             
+best coaching for iit jee online         | 50             
+best aits for jee mains                  | 50             
+askiitians online coaching fees          | 50             
+allen online coaching fees for jee       | 50             
+allen online classes fees for jee main   | 50             
+allen jee coaching near me               | 50             
+jee coaching institute near me           | 50             
+best apps for jee preparation            | 50             
+best mock test for jee mains             | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Tuition_Centre_Keywords.csv
+--------------------------------------------------------
+Total Monthly Searches: 14,750
+Average CPC Estimate:  $0.22
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+tuition near me                          | 500            
+best cpa review course                   | 50             
+english tutors near me                   | 50             
+home tutor near me                       | 50             
+maths tuition near me                    | 50             
+home tuition near me                     | 50             
+private math tutors near me              | 50             
+french tutors near me                    | 50             
+sat coaching near me                     | 50             
+one to one tuition near me               | 50             
+sat class near me                        | 50             
+best tuition classes near me for class   | 50             
+homeschool tutors near me                | 50             
+home tuition centres near me             | 50             
+hindi tuition near me for class 10       | 50             
+private tutors near me                   | 50             
+english tuition near me                  | 50             
+best tuition near me                     | 50             
+cbse 10th tutorials near me              | 50             
+coaching for 10th class near me          | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Skin_Clinic_Keywords.csv
+-----------------------------------------------------
+Total Monthly Searches: 58,100
+Average CPC Estimate:  $6.15
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+pulse skin & hair clinic                 | 500            
+the skin clinic                          | 500            
+skin clinic near me                      | 500            
+dermatologist near me                    | 500            
+laser hair removal                       | 500            
+skin clinic                              | 500            
+facial hair removal                      | 500            
+skin specialist near me                  | 500            
+vish skin clinic                         | 500            
+laser treatment for hair removal         | 500            
+laser depilation                         | 500            
+skin specialist doctor near me           | 500            
+laser hair reduction                     | 500            
+skin dr near me                          | 500            
+derma near me                            | 500            
+skin doctor near by me                   | 500            
+dr skin near me                          | 500            
+derm near me                             | 500            
+dermatology near ne                      | 500            
+skin special doctor near me              | 500            
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_NEET_Coaching_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 6,100
+Average CPC Estimate:  $1.65
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+best neet institute                      | 50             
+best neet coaching institute near me     | 50             
+best neet coaching classes               | 50             
+best neet academy                        | 50             
+best institute for neet pg preparation   | 50             
+best institute for neet coaching         | 50             
+best foundation course for iit           | 50             
+best coaching online for neet            | 50             
+best coaching neet                       | 50             
+best coaching institute for neet pg      | 50             
+best coaching for neet mds               | 50             
+best coaching for ini cet                | 50             
+best coaching for iitjee                 | 50             
+best coaching centre for neet mds        | 50             
+best chemistry question bank for neet    | 50             
+allen neet coaching near me              | 50             
+akash neet coaching near me              | 50             
+akash neet coaching centre near me       | 50             
+aakash repeaters course for neet fees    | 50             
+best online coaching for neet mds        | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Modular_Kitchen_Keywords.csv
+---------------------------------------------------------
+Total Monthly Searches: 9,650
+Average CPC Estimate:  $1.75
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+kitchen design interior design           | 500            
+kitchen and interior design              | 500            
+kitchen interior decoration              | 500            
+design kitchen interior                  | 500            
+acrylic sheet for kitchen cabinets pri   | 50             
+ready made kitchen price                 | 50             
+lowes kitchen cabinet prices             | 50             
+ready kitchen cabinets price             | 50             
+kitchen carcass prices                   | 50             
+acrylic kitchen cabinets cost            | 50             
+interior cupboard price                  | 50             
+kitchen interior design low cost         | 50             
+u shaped modular kitchen price           | 50             
+pantry unit price                        | 50             
+godrej kitchen interior price            | 50             
+acp kitchen cabinets price               | 50             
+acp sheet kitchen cabinets price         | 50             
+acrylic cupboard price                   | 50             
+acrylic sheet price for kitchen cabine   | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Interior_Designer_Keywords.csv
+-----------------------------------------------------------
+Total Monthly Searches: 20,700
+Average CPC Estimate:  $3.07
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+wadroom design                           | 500            
+wardrobe designs                         | 500            
+kitchen modular kitchen                  | 500            
+kitchen interior design                  | 500            
+modular kitchen design                   | 500            
+wardroom design                          | 500            
+clothes cupboard design                  | 500            
+modular kitchen                          | 500            
+simple dental clinic design              | 50             
+gypsum false ceiling price per sq ft     | 50             
+interior designers near me               | 50             
+wood false ceiling cost                  | 50             
+interior design firms near me            | 50             
+small clinic interior design             | 50             
+interior home design price               | 50             
+interior decor price list                | 50             
+home wallpaper design price              | 50             
+interior design services near me         | 50             
+interior decoration price list           | 50             
+interior design in less price            | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Real_Estate_Agent_Keywords.csv
+-----------------------------------------------------------
+Total Monthly Searches: 25,200
+Average CPC Estimate:  $3.67
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+3 bhk                                    | 500            
+houses for let near me                   | 500            
+realtor estate                           | 500            
+land agents near me                      | 50             
+2 bhk price                              | 50             
+homes for sale near me                   | 50             
+office space for rent                    | 50             
+realtors near me                         | 50             
+real estate agents near me               | 50             
+estate agents near me                    | 50             
+small office space for rent near me      | 50             
+office space for rent near me            | 50             
+new homes for sale near me               | 50             
+real estate investing                    | 50             
+real estate investment trust             | 50             
+houses and flats for sale near me        | 50             
+shops for rent near me                   | 50             
+buy house near me                        | 50             
+good realtors near me                    | 50             
+homes to buy near me                     | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Dental_Clinic_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 57,600
+Average CPC Estimate:  $3.38
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dental near ne                           | 5,000          
+dental clinic close to me                | 5,000          
+dentist near me                          | 5,000          
+dentist near me near me                  | 5,000          
+dental clinic in near me                 | 5,000          
+dental clinic near me                    | 5,000          
+cheap dentist near me                    | 50             
+dental implants near me                  | 50             
+pediatric dentist near me                | 50             
+teeth whitening near me                  | 50             
+kids dentist near me                     | 50             
+dental cleaning near me                  | 50             
+dental office near me                    | 50             
+teeth cleaning near me                   | 50             
+orthosquare near me                      | 50             
+dental care near me                      | 50             
+cosmetic dentistry                       | 50             
+all on 4 dental implants                 | 50             
+full mouth dental implants cost          | 50             
+periodontist near me                     | 50             
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Computer_Training_Institute_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 30,500
+Average CPC Estimate:  $27.24
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+cloud systems                            | 500            
+digital marketing course                 | 500            
+class digital marketing                  | 500            
+digital mktg                             | 500            
+cloud and cloud computing                | 500            
+cloud computing                          | 500            
+course marketing digital                 | 500            
+data scientist classes                   | 500            
+google cloud computing                   | 500            
+data science                             | 500            
+cyber security course                    | 500            
+data science cours                       | 500            
+data science course                      | 500            
+cloud in cloud computing                 | 500            
+digital marketing classes                | 500            
+cloud offerings                          | 500            
+cloud computing systems                  | 500            
+learning about machine learning          | 500            
+data science classes                     | 500            
+cloud c                                  | 500            
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_Car_Rental_Keywords.csv
+----------------------------------------------------
+Total Monthly Searches: 31,700
+Average CPC Estimate:  $3.28
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+taxi cab service near me                 | 500            
+rental car rental near me                | 500            
+taxi cab service                         | 500            
+vehicle rental near me                   | 500            
+car rental near me                       | 500            
+hire car rental near me                  | 500            
+car rental near to me                    | 500            
+car rental in near me                    | 500            
+taxis service                            | 500            
+hire rental car near me                  | 500            
+taxi service close to me                 | 500            
+rent a car in near me                    | 500            
+auto rental near me                      | 500            
+rent car near by me                      | 500            
+car rental car near me                   | 500            
+car rental agencies near me              | 500            
+rent a car near by me                    | 500            
+rent of car near me                      | 500            
+automobile rentals near me               | 500            
+near me rent a car                       | 500            
+
+================================================================================
+
+FILE: Mangalore_keywords/Mangalore_IELTS_Coaching_Keywords.csv
+--------------------------------------------------------
+Total Monthly Searches: 5,900
+Average CPC Estimate:  $17.96
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+best abroad consultancy                  | 50             
+ielts coaching fees online               | 50             
+ielts oet coaching near me               | 50             
+abroad study agency near me              | 50             
+ielts coaching online fees               | 50             
+offline ielts classes near me            | 50             
+ielts dummy test                         | 50             
+gre and ielts coaching near me           | 50             
+study in abroad consultancy near me      | 50             
+ielts best online course                 | 50             
+coaching centre for ielts near me        | 50             
+best abroad education consultants        | 50             
+best ielts classes online                | 50             
+ielts training institute near me         | 50             
+online best ielts coaching               | 50             
+ielts exam coaching centre near me       | 50             
+foreign education consultants near me    | 50             
+mbbs abroad consultants near me          | 50             
+ajinorah oet online classes fees         | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Tuition_Centre_Keywords.csv
+------------------------------------------------
+Total Monthly Searches: 997,050
+Average CPC Estimate:  $40.41
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+home tutor                               | 50,000         
+home tuition                             | 50,000         
+home tutoring                            | 50,000         
+mathematics tuition near me              | 50,000         
+tutor home                               | 50,000         
+maths tuition near me                    | 50,000         
+tutor home tutor                         | 50,000         
+tuition near me                          | 50,000         
+home tuition near me                     | 50,000         
+home tutor near me                       | 50,000         
+commerce tuitions near me                | 5,000          
+math teacher near me                     | 5,000          
+home tuition for class 1 to 5 near me    | 5,000          
+mathematics home tutor                   | 5,000          
+gmat classes online                      | 5,000          
+best tuition near me                     | 5,000          
+ielts classes online                     | 5,000          
+home tuition mathematics                 | 5,000          
+tutor near me math                       | 5,000          
+physics tuition near me                  | 5,000          
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Car_Rental_Keywords.csv
+--------------------------------------------
+Total Monthly Searches: 16,450
+Average CPC Estimate:  $2.25
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+taxi cab booking                         | 500            
+taxi cab service                         | 500            
+taxis service                            | 500            
+car hire places near me                  | 50             
+airport taxi near me                     | 50             
+airport taxi                             | 50             
+car rental places near me                | 50             
+cheap car hire near me                   | 50             
+minivan rental near me                   | 50             
+vehicle rental near me                   | 50             
+taxi cab near me                         | 50             
+auto rental near me                      | 50             
+luxury car rental near me                | 50             
+nearest car rental near me               | 50             
+traveller car rental near me             | 50             
+rent a car for a day near me             | 50             
+ertiga for rent near me                  | 50             
+ertiga car for rent near me              | 50             
+outstation car rental                    | 50             
+outstation car rental near me            | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Interior_Designer_Keywords.csv
+---------------------------------------------------
+Total Monthly Searches: 16,650
+Average CPC Estimate:  $8.01
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+clothes cupboard design                  | 500            
+wardrobe designs                         | 500            
+modular kitchen design                   | 500            
+kitchen interior design                  | 500            
+wardroom design                          | 500            
+wallpaper interior design near me        | 50             
+best computer table design for home      | 50             
+kitchen wardrobe design with price       | 50             
+wardrobe design with price               | 50             
+kitchen interior shop near me            | 50             
+pop ceiling work near me                 | 50             
+home interior designer cost              | 50             
+interior furniture near me               | 50             
+bedroom interior design with price       | 50             
+bedroom and wardrobe design              | 50             
+bedroom wardrobe cost                    | 50             
+pvc interior design near me              | 50             
+best sliding wardrobe design             | 50             
+pop false ceiling near me                | 50             
+kitchen modular kitchen                  | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Computer_Training_Institute_Keywords.csv
+-------------------------------------------------------------
+Total Monthly Searches: 24,350
+Average CPC Estimate:  $33.29
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+digital marketing classes                | 500            
+digital mktg                             | 500            
+cloud offerings                          | 500            
+digital marketing course                 | 500            
+cloud computing                          | 500            
+cloud c                                  | 500            
+data science                             | 500            
+google cloud computing                   | 500            
+learning about machine learning          | 500            
+class digital marketing                  | 500            
+course marketing digital                 | 500            
+cloud and cloud computing                | 500            
+machine learning machine learning        | 500            
+cloud in cloud computing                 | 500            
+free online courses on artificial inte   | 50             
+aws server pricing                       | 50             
+best coursera machine learning course    | 50             
+python coaching institute near me        | 50             
+python course near me                    | 50             
+data science course                      | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Modular_Kitchen_Keywords.csv
+-------------------------------------------------
+Total Monthly Searches: 6,450
+Average CPC Estimate:  $1.87
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+kitchen interior decoration              | 500            
+kitchen and interior design              | 500            
+kitchen design interior design           | 500            
+design kitchen interior                  | 500            
+acrylic kitchen sheet price              | 50             
+best acrylic colors for kitchen          | 50             
+aluminium kitchen cupboard price         | 50             
+acrylic kitchen price                    | 50             
+acrylic sheet for kitchen cabinets pri   | 50             
+acrylic kitchen cabinets cost            | 50             
+kaka pvc kitchen furniture price         | 50             
+kitchen carcass prices                   | 50             
+acrylic kitchen cabinets price           | 50             
+approximate cost of kitchen cabinets     | 50             
+steel kitchen cabinets price             | 50             
+best small kitchen interior design       | 50             
+aluminium cabinet for kitchen price      | 50             
+modular kitchen pantry unit price        | 50             
+kitchen cabinets cost per square foot    | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Dental_Clinic_Keywords.csv
+-----------------------------------------------
+Total Monthly Searches: 21,100
+Average CPC Estimate:  $2.28
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dental clinic in near me                 | 500            
+dental clinic near me                    | 500            
+dental clinic close to me                | 500            
+dentist near me near me                  | 500            
+dentist near me                          | 500            
+dental near ne                           | 500            
+dental x ray centre near me              | 50             
+cosmetic dentistry teeth whitening       | 50             
+lateral incisor implant cost             | 50             
+baking soda and teeth whitening          | 50             
+dental implant charges                   | 50             
+happy teeth pediatric dentistry          | 50             
+bridge in mouth cost                     | 50             
+composite resin bonding cost             | 50             
+bridge for teeth price                   | 50             
+cost of bridge for one tooth             | 50             
+smile dental near me                     | 50             
+lady dental doctor near me               | 50             
+nearest dentist doctor                   | 50             
+find a dentist near me                   | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_NEET_Coaching_Keywords.csv
+-----------------------------------------------
+Total Monthly Searches: 5,600
+Average CPC Estimate:  $1.49
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+best neet institute                      | 50             
+neet mock test                           | 50             
+best crash course for neet               | 50             
+best colleges in neet                    | 50             
+best coaching neet                       | 50             
+best coaching institute for droppers     | 50             
+best coaching for neet mds               | 50             
+best coaching for jee and neet           | 50             
+best coaching for iitjee                 | 50             
+best chemistry classes for neet          | 50             
+allen iit foundation course              | 50             
+akash neet coaching near me              | 50             
+akash neet coaching centre near me       | 50             
+aakash institute is best for neet        | 50             
+best online coaching classes for neet    | 50             
+best neet pg coaching                    | 50             
+neet jee classes near me                 | 50             
+crash course for neet near me            | 50             
+neet institutions near me                | 50             
+jee neet coaching centres near me        | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Gym_Keywords.csv
+-------------------------------------
+Total Monthly Searches: 63,950
+Average CPC Estimate:  $1.05
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gym near me                              | 5,000          
+gymbox near me                           | 5,000          
+near gym near me                         | 5,000          
+gym near near me                         | 5,000          
+gymnasium near me                        | 5,000          
+yoga sessions near me                    | 500            
+fitness clubs near me                    | 500            
+gyms and fitness centers near me         | 500            
+workout gyms near me                     | 500            
+yoga classes near me                     | 500            
+fitness gyms near me                     | 500            
+workout centers near me                  | 500            
+gym and fitness near me                  | 500            
+yoga lessons near me                     | 500            
+sparta gym fees                          | 50             
+gym memberships near me                  | 50             
+fitness near me                          | 50             
+boxing gym near me                       | 50             
+fitness classes near me                  | 50             
+certified personal trainer               | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_JEE_Coaching_Keywords.csv
+----------------------------------------------
+Total Monthly Searches: 6,700
+Average CPC Estimate:  $3.43
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee main                                 | 500            
+jee mains jee mains                      | 500            
+viteee                                   | 500            
+pattern of jee                           | 50             
+best apps for jee preparation            | 50             
+best course for iit                      | 50             
+best coaching institute for engineerin   | 50             
+best coaching institute for droppers     | 50             
+best online coaching for iit             | 50             
+best coaching for jee and neet           | 50             
+best coaching center for iit jee         | 50             
+allen online classes fees for jee main   | 50             
+allen jee coaching near me               | 50             
+allen iit foundation course              | 50             
+all the best jee mains                   | 50             
+iit coaching classes near me             | 50             
+best iit                                 | 50             
+best mock test for jee mains             | 50             
+best coaching institute for iit jee      | 50             
+neet jee classes near me                 | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Real_Estate_Agent_Keywords.csv
+---------------------------------------------------
+Total Monthly Searches: 17,850
+Average CPC Estimate:  $3.75
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+houses for let near me                   | 500            
+realtor estate                           | 500            
+realtor offices near me                  | 50             
+olx house for rent near me               | 50             
+homes for sale near me                   | 50             
+any shop for rent near me                | 50             
+condos near me                           | 50             
+buy house near me                        | 50             
+ready homes for sale near me             | 50             
+duplex house near me for sale            | 50             
+independent house near me for sale       | 50             
+1 bhk house for sale near me             | 50             
+houses and flats for sale near me        | 50             
+cheap 2 bedroom house for rent near me   | 50             
+commercial property for lease near me    | 50             
+farmhouse near me with price             | 50             
+farm and house for sale near me          | 50             
+near me independent house for sale       | 50             
+single bedroom flat for sale near me     | 50             
+olx house for sale near me               | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_IVF_Fertility_Clinic_Keywords.csv
+------------------------------------------------------
+Total Monthly Searches: 350
+Average CPC Estimate:  $71.12
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+icsi treatment success rate              | 50             
+embryo implantation success rate         | 50             
+embryo implant success rate              | 50             
+embryo transfer implantation success r   | 50             
+ivf percentage success rate              | 50             
+rate of success for ivf                  | 50             
+rate of success ivf                      | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_Skin_Clinic_Keywords.csv
+---------------------------------------------
+Total Monthly Searches: 41,850
+Average CPC Estimate:  $7.50
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+skin dr near me                          | 500            
+near me skin specialist                  | 500            
+dr skin near me                          | 500            
+dermatology near ne                      | 500            
+near me skin specialist doctor           | 500            
+skin specialist near me                  | 500            
+skin doctor near by me                   | 500            
+dr dermatologist near me                 | 500            
+skin specialist in near me               | 500            
+derm near me                             | 500            
+dermatologist near me                    | 500            
+skin specialist doctor near me           | 500            
+derma near me                            | 500            
+skin special doctor near me              | 500            
+full body laser hair removal cost        | 50             
+zolie skin clinic                        | 50             
+laser hair removal                       | 50             
+laser hair removal cost                  | 50             
+best laser hair removal                  | 50             
+facial hair removal                      | 50             
+
+================================================================================
+
+FILE: Hubli_Keywords/Hubli_IELTS_Coaching_Keywords.csv
+------------------------------------------------
+Total Monthly Searches: 1,196,600
+Average CPC Estimate:  $47.77
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts mock exam                          | 50,000         
+abroad education consultants             | 50,000         
+ielts mock test                          | 50,000         
+ielts exam mock test                     | 50,000         
+overseas study consultants               | 50,000         
+ielts classes near me                    | 50,000         
+ielts coaching near me                   | 50,000         
+foreign study consultancy                | 50,000         
+study abroad consultants                 | 50,000         
+ielts model test online                  | 5,000          
+ielts speaking exam                      | 5,000          
+ielts speaking test                      | 5,000          
+ielts institute near me                  | 5,000          
+ielts academic                           | 5,000          
+ielts sample test free                   | 5,000          
+ielts coaching                           | 5,000          
+ielts dummy test                         | 5,000          
+ielts free practise test                 | 5,000          
+ielts online course                      | 5,000          
+ielts syllabus                           | 5,000          
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_IELTS_Coaching_Cleaned_Keywords.csv
+--------------------------------------------------------------------
+Total Monthly Searches: 1,100
+Average CPC Estimate:  $7.13
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+ielts classes near me                    | 50             
+best education consultancy               | 50             
+best consultants for abroad education    | 50             
+ielts test mock online                   | 50             
+mock exam ielts online                   | 50             
+ielts exam mock test online              | 50             
+online best ielts coaching               | 50             
+best abroad education consultants        | 50             
+ielts exam coaching centre near me       | 50             
+study abroad agency near me              | 50             
+best consultancy to study abroad         | 50             
+ielts best coaching online               | 50             
+best ielts course                        | 50             
+ielts mock exam online                   | 50             
+best online coaching for ielts           | 50             
+ielts best online coaching               | 50             
+best consultancy for abroad studies      | 50             
+best ielts online course free            | 50             
+best ielts online coaching               | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Modular_Kitchen_Cleaned_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 2,600
+Average CPC Estimate:  $3.41
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen cabinet cost                     | 50             
+kitchen interior design                  | 50             
+best kitchen interior                    | 50             
+modular kitchen pantry unit price        | 50             
+kitchen interior decoration              | 50             
+design kitchen interior                  | 50             
+steel kitchen cabinets price             | 50             
+kitchen carcass prices                   | 50             
+acrylic kitchen price                    | 50             
+cost of pvc modular kitchen              | 50             
+pantry unit price                        | 50             
+aluminium cupboards cost                 | 50             
+best acrylic colors for kitchen          | 50             
+cost of building kitchen cabinets        | 50             
+cost of making kitchen cabinets          | 50             
+godrej kitchen cabinet price             | 50             
+kitchen cabinet hinges price             | 50             
+kitchen design interior design           | 50             
+kitchen pantry price                     | 50             
+kitchen pantry unit price                | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Car_Rentals_Cleaned_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 6,550
+Average CPC Estimate:  $1.67
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+car rental near me                       | 50             
+self drive near me                       | 50             
+car rental self drive near me            | 50             
+self drive rental cars near me           | 50             
+car service rental near me               | 50             
+12 seater car for rent near me           | 50             
+outstation cabs near me                  | 50             
+auto hire near me                        | 50             
+innova for rent near me                  | 50             
+taxi cab booking                         | 50             
+car hire for wedding near me             | 50             
+taxi airport near me                     | 50             
+cars available for rent near me          | 50             
+car rental car near me                   | 50             
+one day car rental price with driver     | 50             
+7 seater cars for rent near me           | 50             
+travel cars near me                      | 50             
+mahindra thar for rent near me           | 50             
+zoom car near me                         | 50             
+mini truck rental near me                | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_IVF_Clinics_Cleaned_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 0
+Average CPC Estimate:  $nan
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Interior_Designer_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 7,050
+Average CPC Estimate:  $13.07
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+interior designers near me               | 50             
+best office table design                 | 50             
+kitchen modular kitchen                  | 50             
+pvc interior design near me              | 50             
+wallpaper interior design near me        | 50             
+kitchen tap design with price            | 50             
+best bedroom wardrobe                    | 50             
+modular kitchen pantry unit price        | 50             
+best cupboard design for bedroom         | 50             
+interior designers in near me            | 50             
+interior design for home price           | 50             
+small clinic reception design            | 50             
+cost of home interior                    | 50             
+small clinic waiting room design         | 50             
+pediatric dental clinic design           | 50             
+clinic reception design                  | 50             
+architects and interior designers near   | 50             
+modular kitchen furniture price          | 50             
+home interior design price               | 50             
+interior decoration shop near me         | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Tuition_Centres_Cleaned_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 6,200
+Average CPC Estimate:  $1.76
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+math tutor near me                       | 50             
+science and maths tuition near me        | 50             
+icse class 10 tuition near me            | 50             
+tuition near me for class 4              | 50             
+tutors near me for math                  | 50             
+tuition near me for class 2              | 50             
+best tuition near me for class 9         | 50             
+physics tutor for neet near me           | 50             
+11th tuition near me                     | 50             
+physics tuition near me for neet         | 50             
+10th class coaching near me              | 50             
+best online tuition for class 10 cbse    | 50             
+tuition near me for class 12             | 50             
+class 9 tuition near me                  | 50             
+tuition near me for class 11             | 50             
+10th tuition classes near me             | 50             
+private tutors near me                   | 50             
+10th coaching classes near me            | 50             
+cbse coaching classes near me            | 50             
+best online coaching for class 10 cbse   | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Gyms_Cleaned_Keywords.csv
+----------------------------------------------------------
+Total Monthly Searches: 25,300
+Average CPC Estimate:  $0.30
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gym near near me                         | 500            
+yoga sessions near me                    | 500            
+gymnasium near me                        | 500            
+near gym near me                         | 500            
+yoga lessons near me                     | 500            
+yoga classes near me                     | 500            
+gym near me                              | 500            
+gymbox near me                           | 500            
+active gym near me                       | 50             
+gyms and fitness centers near me         | 50             
+spa and health club near me              | 50             
+ladies gym near me with lady trainer     | 50             
+cheap gym near me with fees              | 50             
+gym near me low price                    | 50             
+best weight training for fat loss        | 50             
+gym near me only for ladies              | 50             
+anytime fitness gym near me              | 50             
+jim center near me                       | 50             
+womens fitness club near me              | 50             
+best gym near me for ladies              | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Physiotherapy_Cleaned_Therapy.csv
+------------------------------------------------------------------
+Total Monthly Searches: 0
+Average CPC Estimate:  $nan
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Skin_Clinics_Cleaned_Keywords.csv
+------------------------------------------------------------------
+Total Monthly Searches: 25,500
+Average CPC Estimate:  $4.52
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dr dermatologist near me                 | 500            
+dermatology near ne                      | 500            
+derm near me                             | 500            
+dermatologist near me                    | 500            
+skin dr near me                          | 500            
+derma near me                            | 500            
+hydrafacial price                        | 50             
+nirmala skin clinic                      | 50             
+nirmal skin clinic                       | 50             
+skinnova clinic                          | 50             
+laser hair removal cost                  | 50             
+laser hair removal near me               | 50             
+zolie skin clinic                        | 50             
+skin clinic                              | 50             
+laser hair removal                       | 50             
+prakash skin clinic                      | 50             
+facial hair removal                      | 50             
+rajis skin clinic                        | 50             
+nishka skin clinic                       | 50             
+rashmi skin clinic                       | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Dental_Clinics_Cleaned_Keywords.csv
+--------------------------------------------------------------------
+Total Monthly Searches: 14,200
+Average CPC Estimate:  $0.32
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dentist near me                          | 500            
+dental clinic close to me                | 500            
+dental clinic in near me                 | 500            
+dentist near me near me                  | 500            
+dental clinic near me                    | 500            
+dental care clinic near me               | 50             
+veneer whitening                         | 50             
+teeth near me                            | 50             
+zirconia dental implants cost            | 50             
+3 dental implants cost                   | 50             
+teeth whitening dentist price            | 50             
+professional dentist near me             | 50             
+dental clinic near my location           | 50             
+smile dental care near me                | 50             
+dental implants how much                 | 50             
+teeth bleaching price                    | 50             
+pediatric dental care near me            | 50             
+best way to remove stains from teeth     | 50             
+teeth bleaching dentist                  | 50             
+price of one dental implant              | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_NEET_Coaching_Cleaned_Keywords.csv
+-------------------------------------------------------------------
+Total Monthly Searches: 4,750
+Average CPC Estimate:  $3.11
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+best neet institute                      | 50             
+best online coaching for neet mds        | 50             
+best coaching institute for neet pg      | 50             
+best coaching for neet mds               | 50             
+best coaching for iitjee                 | 50             
+best coaching centre for neet pg         | 50             
+best coaching center for iit             | 50             
+allen neet crash course fees             | 50             
+akash neet coaching near me              | 50             
+akash neet coaching centre near me       | 50             
+best neet foundation course for class    | 50             
+best neet pg coaching                    | 50             
+best coaching online for neet            | 50             
+aakash byju's neet crash course fees     | 50             
+best coaching institute for iit          | 50             
+best coaching for neet preparation       | 50             
+the best coaching centre for neet        | 50             
+best institute for neet near me          | 50             
+best neet pg coaching online             | 50             
+jee and neet coaching near me            | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_JEE_Coaching_Cleaned_Keywords.csv
+------------------------------------------------------------------
+Total Monthly Searches: 3,350
+Average CPC Estimate:  $1.78
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee test series                          | 50             
+best coaching center for iit jee         | 50             
+best coaching for jee mains              | 50             
+best coaching for droppers jee           | 50             
+jee and neet coaching near me            | 50             
+physics wallah neet course fees offlin   | 50             
+best coaching institute for iit          | 50             
+best online course for jee               | 50             
+best coaching for iit jam                | 50             
+best coaching institute for iit jee      | 50             
+best apps for jee preparation            | 50             
+all the best for jee advanced            | 50             
+allen online classes fees for jee main   | 50             
+allen online coaching fees for jee       | 50             
+best classes for iit jee                 | 50             
+best coaching center for iit             | 50             
+best coaching for jee preparation        | 50             
+jee best online coaching                 | 50             
+best colleges for iit coaching           | 50             
+best course for jee advanced             | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Real_Estate_Cleaned_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 10,750
+Average CPC Estimate:  $4.80
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+3 bhk                                    | 500            
+new independent house for sale near me   | 50             
+buy flats near me                        | 50             
+sale property near me                    | 50             
+soneva jani price                        | 50             
+home sale by owner near me               | 50             
+villa near me for sale                   | 50             
+house for purchase near me               | 50             
+commercial property sale near me         | 50             
+near me home for sale                    | 50             
+land with home for sale near me          | 50             
+commercial property to let near me       | 50             
+farmhouse for rent near me               | 50             
+1 bhk house for rent near me             | 50             
+ready to move apartments near me         | 50             
+real estate income trust                 | 50             
+residential property for sale near me    | 50             
+shop space for sale near me              | 50             
+2 bhk apartment for sale near me         | 50             
+new homes on sale near me                | 50             
+
+================================================================================
+
+FILE: Ballari_Cleaned_Keywords/Ballari_Computer_Training_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 9,100
+Average CPC Estimate:  $19.19
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+python course near me                    | 50             
+java and python courses                  | 50             
+best courses on artificial intelligenc   | 50             
+best data science institute              | 50             
+best aiml course                         | 50             
+best ui ux design                        | 50             
+best java course on udemy                | 50             
+artificial intelligence classes online   | 50             
+best java course for beginners           | 50             
+best digital marketing course in the w   | 50             
+best course on artificial intelligence   | 50             
+best ui ux websites                      | 50             
+python coding near me                    | 50             
+best online course for artificial inte   | 50             
+best courses in artificial intelligenc   | 50             
+best online course for ai and ml         | 50             
+best digital marketing institute near    | 50             
+best course to learn machine learning    | 50             
+best digital marketing classes           | 50             
+best course of digital marketing         | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Modular_Kitchen_Keywords.csv
+-------------------------------------------------------------------
+Total Monthly Searches: 12,150
+Average CPC Estimate:  $4.10
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+kitchen interior decoration              | 500            
+kitchen design interior design           | 500            
+design kitchen interior                  | 500            
+kitchen and interior design              | 500            
+cabinet hardware cost                    | 50             
+acp sheet kitchen cabinets price         | 50             
+acrylic kitchen cupboards                | 50             
+acrylic kitchen furniture                | 50             
+acrylic kitchen units                    | 50             
+aluminium cupboards cost                 | 50             
+aluminium kitchen cupboard price         | 50             
+l shape kitchen interior                 | 50             
+best acrylic colors for kitchen          | 50             
+best parallel kitchen                    | 50             
+cabinet hinges price                     | 50             
+cost cabinets kitchen                    | 50             
+contemporary kitchen interior design     | 50             
+cabinets low cost                        | 50             
+cost cupboard                            | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Real_Estate_Keywords.csv
+---------------------------------------------------------------
+Total Monthly Searches: 31,200
+Average CPC Estimate:  $5.05
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+3 bhk                                    | 5,000          
+real estate listings near me             | 500            
+realtor estate                           | 500            
+houses for let near me                   | 500            
+to let shop for rent near me             | 50             
+commercial property                      | 50             
+buy house near me                        | 50             
+independent house near me for sale       | 50             
+1 bhk house for sale near me             | 50             
+individual house sale near me            | 50             
+purchase property near me                | 50             
+olx house for rent near me               | 50             
+2 bhk house near me for sale             | 50             
+houses flats for sale near me            | 50             
+mobiles home for sale near me            | 50             
+flat house for sale near me              | 50             
+farm and house for sale near me          | 50             
+burj khalifa 2 bhk flat price in india   | 50             
+equine properties for sale near me       | 50             
+commercial buildings for sale near me    | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Computer_Training_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 54,900
+Average CPC Estimate:  $33.89
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+digital mktg                             | 5,000          
+ux designer ui designer                  | 500            
+website development                      | 500            
+cloud computing                          | 500            
+user interface and user experience des   | 500            
+data science                             | 500            
+web development                          | 500            
+ui and ux design                         | 500            
+ui & ux design                           | 500            
+cloud in cloud computing                 | 500            
+machine learning machine learning        | 500            
+full stack developer                     | 500            
+digital marketing course                 | 500            
+data science course                      | 500            
+cloud offerings                          | 500            
+cyber security course                    | 500            
+ui ux                                    | 500            
+data scientist classes                   | 500            
+cloud c                                  | 500            
+cloud and cloud computing                | 500            
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Interior_Design_Keywords.csv
+-------------------------------------------------------------------
+Total Monthly Searches: 32,600
+Average CPC Estimate:  $12.63
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+clothes cupboard design                  | 500            
+wadroom design                           | 500            
+cupboard cupboard design                 | 500            
+kitchen interior design                  | 500            
+wardrobe designs                         | 500            
+modular kitchen design                   | 500            
+interior designers near me               | 500            
+interior designer near by me             | 500            
+modern kitchens                          | 500            
+wardroom design                          | 500            
+interior decorator near me               | 500            
+bedroom wardrobe design                  | 500            
+kitchen tiles design                     | 500            
+cupboard design                          | 500            
+interior designers in near me            | 500            
+house designers near me                  | 500            
+kitchen modular kitchen                  | 500            
+room wardrobe design                     | 500            
+modular kitchen                          | 500            
+bedroom and wardrobe design              | 500            
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Car_Rentals_Keywords.csv
+---------------------------------------------------------------
+Total Monthly Searches: 37,400
+Average CPC Estimate:  $2.66
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+self drive cars near me                  | 500            
+auto rental near me                      | 500            
+near me rent a car                       | 500            
+rent a car in near me                    | 500            
+hire rental car near me                  | 500            
+self drive cars                          | 500            
+car rental near me                       | 500            
+cars on rental near me                   | 500            
+hire car rental near me                  | 500            
+automobile rentals near me               | 500            
+vehicle rental near me                   | 500            
+rental car rental near me                | 500            
+rent car near by me                      | 500            
+car rental near to me                    | 500            
+car in rent near me                      | 500            
+rent of car near me                      | 500            
+car rental in near me                    | 500            
+rent a car near by me                    | 500            
+car rental car near me                   | 500            
+near me car rental                       | 500            
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_IELTS_Coaching_Keywords.csv
+------------------------------------------------------------------
+Total Monthly Searches: 7,900
+Average CPC Estimate:  $26.70
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+overseas study consultants near me       | 50             
+abroad study agency near me              | 50             
+ielts oet coaching near me               | 50             
+ielts preparation centre near me         | 50             
+best ielts practice website              | 50             
+best agencies to study abroad            | 50             
+online best ielts coaching               | 50             
+abroad study consultants near me         | 50             
+manya ielts coaching fees                | 50             
+gre ielts coaching centre near me        | 50             
+ielts exam free practice test            | 50             
+ukvi coaching centre near me             | 50             
+consultant for abroad study near me      | 50             
+best agency for abroad study             | 50             
+study abroad counselor near me           | 50             
+ielts exam online test free              | 50             
+ielts exam mock test online              | 50             
+ielts coaching online fees               | 50             
+ielts model test online                  | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_NEET_Coaching_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 10,950
+Average CPC Estimate:  $1.55
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+neet pg                                  | 500            
+kea neet pg                              | 500            
+mcc neet pg                              | 500            
+physics wallah neet crash course fees    | 50             
+best course for neet                     | 50             
+best coaching for neet class 11          | 50             
+best coaching for neet mds               | 50             
+best coaching for pg neet                | 50             
+best coaching institute for iitjee       | 50             
+best coaching institute for neet repea   | 50             
+neet preparation classes near me         | 50             
+best coaching neet                       | 50             
+best colleges in neet                    | 50             
+best crash course for neet               | 50             
+best free test series for neet           | 50             
+best coaching for ini cet                | 50             
+best institute for droppers              | 50             
+best institute for neet coaching         | 50             
+best foundation course for neet          | 50             
+best institute for neet long term        | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_IVF_Clinic_Keywords.csv
+--------------------------------------------------------------
+Total Monthly Searches: 450
+Average CPC Estimate:  $53.66
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+iui success rate                         | 50             
+icsi treatment success rate              | 50             
+insemination success rate                | 50             
+embryo implantation success rate         | 50             
+chances of 2 embryos implanting          | 50             
+embryo implant success rate              | 50             
+ivf percentage success rate              | 50             
+rate of success for ivf                  | 50             
+rate of success ivf                      | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Tuition_Centre_Keywords.csv
+------------------------------------------------------------------
+Total Monthly Searches: 21,950
+Average CPC Estimate:  $2.60
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+tuition near me                          | 500            
+1 to 1 tuition near me                   | 50             
+physics tutors near me                   | 50             
+sat prep near me                         | 50             
+spanish tutors near me                   | 50             
+english tutors near me                   | 50             
+home tutor near me                       | 50             
+maths tuition near me                    | 50             
+home tuition near me                     | 50             
+french tutors near me                    | 50             
+find a tutor near me                     | 50             
+m2 tuition near me                       | 50             
+physics tuition near me                  | 50             
+tuition classes for 10th near me         | 50             
+tuition class 10 near me                 | 50             
+math coaching near me                    | 50             
+math coaching center near me             | 50             
+maths coaching near me class 10          | 50             
+maths physics chemistry tuition near m   | 50             
+maths tuition for engineering near me    | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Physiotherapy_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 100
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+manual treatment                         | 50             
+osteopathic manual treatment             | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_JEE_Coaching_Keywords.csv
+----------------------------------------------------------------
+Total Monthly Searches: 22,350
+Average CPC Estimate:  $5.33
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee main                                 | 5,000          
+jee mains jee mains                      | 5,000          
+viteee                                   | 500            
+jee main exam                            | 500            
+jee main examination                     | 500            
+jee exam test                            | 500            
+nta jee mains                            | 500            
+joint entrance examination jee main      | 500            
+jee neet coaching centres near me        | 50             
+best course for jee                      | 50             
+best course for jee advanced             | 50             
+best entrance exam for engineering       | 50             
+jee best coaching centre                 | 50             
+best iit coaching online                 | 50             
+best coaching for jee droppers           | 50             
+best for jee                             | 50             
+best course for iit                      | 50             
+best course for iit jee                  | 50             
+best jee                                 | 50             
+best free online classes for jee         | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Gyms_Keywords.csv
+--------------------------------------------------------
+Total Monthly Searches: 151,350
+Average CPC Estimate:  $5.88
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gymbox near me                           | 5,000          
+yoga classes near me                     | 5,000          
+gym near near me                         | 5,000          
+near gym near me                         | 5,000          
+fitness clubs near me                    | 5,000          
+yoga                                     | 5,000          
+gymnasium near me                        | 5,000          
+gym near me                              | 5,000          
+yoga lessons near me                     | 5,000          
+yoga sessions near me                    | 5,000          
+workout centers near me                  | 5,000          
+workout gyms near me                     | 5,000          
+fitness gyms near me                     | 5,000          
+gyms and fitness centers near me         | 5,000          
+gym and fitness near me                  | 5,000          
+boxing workout near me                   | 500            
+7 day meal plan for weight loss          | 500            
+gym near me ladies                       | 500            
+cultfit near me                          | 500            
+boxing studio near me                    | 500            
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Dental_Clinics_Keywords.csv
+------------------------------------------------------------------
+Total Monthly Searches: 62,700
+Average CPC Estimate:  $2.03
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dentist near me near me                  | 5,000          
+dental near ne                           | 5,000          
+dental clinic close to me                | 5,000          
+dental clinic near me                    | 5,000          
+dentist near me                          | 5,000          
+dental clinic in near me                 | 5,000          
+near me best dental clinic               | 500            
+good dental clinic near me               | 500            
+teeth whitening                          | 500            
+pinkham pediatric dentistry              | 50             
+trecartin family dentistry               | 50             
+tooth supported bridge cost              | 50             
+teeth x ray centre near me               | 50             
+teeth braces age 25                      | 50             
+simpladent implants price                | 50             
+set teeth price                          | 50             
+affordable dental implants near me       | 50             
+little smiles dental clinic              | 50             
+pediatric and preventive dentistry       | 50             
+aapd pediatric dentistry                 | 50             
+
+================================================================================
+
+FILE: Mysuru_Cleaned_Keywords/Mysuru_Cleaned_Skin_Clinic_Kewords.csv
+--------------------------------------------------------------
+Total Monthly Searches: 103,550
+Average CPC Estimate:  $11.19
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+derma near me                            | 5,000          
+derm near me                             | 5,000          
+skin dr near me                          | 5,000          
+dermatologist near me                    | 5,000          
+dermatology near ne                      | 5,000          
+dr dermatologist near me                 | 5,000          
+dr skin near me                          | 500            
+near me skin specialist                  | 500            
+laser hair reduction                     | 500            
+dr lavanya's skin clinic                 | 500            
+skin treatment clinic near me            | 500            
+laser hair removal laser                 | 500            
+skin care clinic                         | 500            
+peeling chemical peel                    | 500            
+skin clinic                              | 500            
+near me skin specialist doctor           | 500            
+laser depilation                         | 500            
+laser light hair removal                 | 500            
+skin specialist near me                  | 500            
+chemical peel                            | 500            
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_IELTS_Coaching_Keywords.csv
+----------------------------------------------------
+Total Monthly Searches: 3,350
+Average CPC Estimate:  $36.81
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+ielts coaching fees online               | 50             
+study abroad agency near me              | 50             
+abroad education consultants near me     | 50             
+mbbs abroad consultants near me          | 50             
+foreign education consultants near me    | 50             
+best ielts training online               | 50             
+ielts exam coaching centre near me       | 50             
+coaching for ielts near me               | 50             
+ielts coaching in near me                | 50             
+ielts coaching institute near me         | 50             
+best abroad education consultants        | 50             
+study in abroad consultancy near me      | 50             
+gre and ielts coaching near me           | 50             
+abroad study agency near me              | 50             
+best consultancy for abroad education    | 50             
+ielts academic price                     | 50             
+best ielts coaching centre               | 50             
+online best ielts coaching               | 50             
+abroad study consultants near me         | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_IVF_Fertility_Clinic_Keywords.csv
+----------------------------------------------------------
+Total Monthly Searches: 350
+Average CPC Estimate:  $25.74
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+iui success rate                         | 50             
+ivf implantation success rate            | 50             
+insemination success rate                | 50             
+embryo implantation success rate         | 50             
+blastocyst implantation success rate     | 50             
+chance of blastocyst implantation        | 50             
+embryo implant success rate              | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Interior_Designer_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 13,300
+Average CPC Estimate:  $2.36
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+kitchen upgrade cost                     | 50             
+gypsum board false ceiling cost          | 50             
+gypsum false ceiling price per sq ft     | 50             
+interior decor price list                | 50             
+interior decoration price list           | 50             
+interior design of house cost            | 50             
+interior home design price               | 50             
+interior wallpaper shop near me          | 50             
+iron cupboard designs with price         | 50             
+kapat design and price                   | 50             
+lakdi ki almari price                    | 50             
+low cost house interior design           | 50             
+low cost interior design for kitchen     | 50             
+kitchen makeover near me                 | 50             
+interior designers near me               | 50             
+home renovations near me                 | 50             
+home decorators near me                  | 50             
+house remodeling near me                 | 50             
+best kitchen designs                     | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Car_Rental_Keywords.csv
+------------------------------------------------
+Total Monthly Searches: 24,350
+Average CPC Estimate:  $1.94
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+hire car rental near me                  | 500            
+near me car rental                       | 500            
+cars on rental near me                   | 500            
+car rental near me                       | 500            
+automobile rentals near me               | 500            
+vehicle rental near me                   | 500            
+car rental near to me                    | 500            
+auto rental near me                      | 500            
+hire rental car near me                  | 500            
+near me rent a car                       | 500            
+car rental in near me                    | 500            
+car in rent near me                      | 500            
+near me rental car                       | 500            
+rental car rental near me                | 500            
+rent of car near me                      | 500            
+car rental car near me                   | 500            
+rent a car near by me                    | 500            
+car rental agencies near me              | 500            
+rent a car in near me                    | 500            
+rent car near by me                      | 500            
+
+================================================================================
+
+Error processing Belgaum_Keywords/Belgaum_Physiotherapy_empty.csv: Error tokenizing data. C error: Expected 1 fields in line 3, saw 26
+
+FILE: Belgaum_Keywords/Belgaum_Dental_Clinic_Keywords.csv
+---------------------------------------------------
+Total Monthly Searches: 21,400
+Average CPC Estimate:  $1.64
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dental clinic in near me                 | 500            
+dental near ne                           | 500            
+dentist near me near me                  | 500            
+dental clinic close to me                | 500            
+dental clinic near me                    | 500            
+dentist near me                          | 500            
+bridge in mouth cost                     | 50             
+laser teeth whitening                    | 50             
+bridge for teeth price                   | 50             
+tooth recontouring cost                  | 50             
+natural whitening                        | 50             
+dental implants near me                  | 50             
+teeth x ray centre near me               | 50             
+teeth whitening                          | 50             
+adult orthodontics cost                  | 50             
+happy teeth pediatric dentistry          | 50             
+dentist perfect smile                    | 50             
+composite resin bonding cost             | 50             
+full set of teeth cost                   | 50             
+dental services near me                  | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_JEE_Coaching_Keywords.csv
+--------------------------------------------------
+Total Monthly Searches: 4,950
+Average CPC Estimate:  $2.75
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee test series                          | 50             
+best entrance exam for engineering       | 50             
+best coaching center for iit jee         | 50             
+best coaching center for iit             | 50             
+best academy for iit jee                 | 50             
+allen online classes fees for jee main   | 50             
+allen jee coaching near me               | 50             
+best apps for jee preparation            | 50             
+best coaching institute for iit jee      | 50             
+best coaching for iit jam                | 50             
+best coaching institute for iit          | 50             
+best coaching centre for jee near me     | 50             
+iit jee coaching centres near me         | 50             
+coaching centre near me for jee          | 50             
+physics wallah neet course fees offlin   | 50             
+jee and neet coaching near me            | 50             
+best coaching for jee mains              | 50             
+best coaching for jee mains and advanc   | 50             
+best online coaching for jee main and    | 50             
+byju's online classes fees for neet      | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Modular_Kitchen_Keywords.csv
+-----------------------------------------------------
+Total Monthly Searches: 7,200
+Average CPC Estimate:  $1.38
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+kitchen and interior design              | 500            
+kitchen design interior design           | 500            
+design kitchen interior                  | 500            
+kitchen interior decoration              | 500            
+best u shaped kitchen design             | 50             
+best parallel kitchen                    | 50             
+best island kitchen layout               | 50             
+best acrylic colors for kitchen          | 50             
+pvc kitchen door price                   | 50             
+aluminium cupboards cost                 | 50             
+pantry unit price                        | 50             
+interior cupboard price                  | 50             
+laminate kitchen cabinets price          | 50             
+ready kitchen cabinets price             | 50             
+kitchen carcass prices                   | 50             
+kaka pvc kitchen furniture price         | 50             
+acrylic kitchen sheet price              | 50             
+cost cupboard                            | 50             
+approximate cost of kitchen cabinets     | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Skin_Clinic_Keywords.csv
+-------------------------------------------------
+Total Monthly Searches: 41,600
+Average CPC Estimate:  $5.37
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+near me skin specialist                  | 500            
+dr skin near me                          | 500            
+dermatology near ne                      | 500            
+skin specialist doctor near me           | 500            
+skin special doctor near me              | 500            
+skin doctor near by me                   | 500            
+near me skin specialist doctor           | 500            
+dermatologist near me                    | 500            
+derm near me                             | 500            
+dr dermatologist near me                 | 500            
+derma near me                            | 500            
+skin specialist near me                  | 500            
+skin specialist in near me               | 500            
+skin dr near me                          | 500            
+hair removal near me                     | 50             
+laser hair removal near me               | 50             
+laser hair removal cost                  | 50             
+permanent hair removal                   | 50             
+electrolysis near me                     | 50             
+electrolysis hair removal                | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_NEET_Coaching_Keywords.csv
+---------------------------------------------------
+Total Monthly Searches: 6,050
+Average CPC Estimate:  $1.03
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+best neet institute                      | 50             
+best mock test for neet                  | 50             
+best crash course for neet               | 50             
+best course for neet                     | 50             
+best coaching neet                       | 50             
+best coaching institute for neet repea   | 50             
+best coaching institute for neet mds     | 50             
+best coaching for neet ug                | 50             
+best coaching for neet mds               | 50             
+best coaching for neet exam              | 50             
+best coaching for neet and jee           | 50             
+best coaching for ini cet                | 50             
+best coaching for iitjee                 | 50             
+best coaching centre neet                | 50             
+best coaching centre for neet preparat   | 50             
+best coaching centre for neet exam       | 50             
+best coaching center for iit             | 50             
+allen neet crash course fees             | 50             
+allen neet coaching near me              | 50             
+akash neet coaching near me              | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Real_Estate_Agent_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 19,250
+Average CPC Estimate:  $2.84
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+realtor estate                           | 500            
+houses for let near me                   | 500            
+furnished office for rent near me        | 50             
+real estate brokers near me              | 50             
+small office space for rent near me      | 50             
+office space for rent near me            | 50             
+new homes for sale near me               | 50             
+real estate investment trust             | 50             
+property for sale near me                | 50             
+best real estate agent near me           | 50             
+new houses for sale near me              | 50             
+best realtor near me                     | 50             
+duplex for sale near me                  | 50             
+purchase property near me                | 50             
+good realtors near me                    | 50             
+cheap old house for sale near me         | 50             
+buy farm house near me                   | 50             
+commercial property for sale near me     | 50             
+realtors near me                         | 50             
+olx house for rent near me               | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Gym_Keywords.csv
+-----------------------------------------
+Total Monthly Searches: 67,250
+Average CPC Estimate:  $1.53
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gymnasium near me                        | 5,000          
+near gym near me                         | 5,000          
+gym near near me                         | 5,000          
+gym near me                              | 5,000          
+gymbox near me                           | 5,000          
+yoga lessons near me                     | 500            
+gym and fitness near me                  | 500            
+workout gyms near me                     | 500            
+fitness clubs near me                    | 500            
+yoga classes near me                     | 500            
+fitness gyms near me                     | 500            
+yoga sessions near me                    | 500            
+gyms and fitness centers near me         | 500            
+workout centers near me                  | 500            
+24 hour fitness near me                  | 50             
+yoga near me                             | 50             
+best weight loss program                 | 50             
+boxing classes near me                   | 50             
+hot yoga near me                         | 50             
+workout classes near me                  | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Computer_Training_Institute_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 22,050
+Average CPC Estimate:  $29.82
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+machine learning machine learning        | 500            
+cloud offerings                          | 500            
+cloud c                                  | 500            
+cloud in cloud computing                 | 500            
+data science                             | 500            
+cloud computing                          | 500            
+cloud and cloud computing                | 500            
+google cloud computing                   | 500            
+learning about machine learning          | 500            
+digital mktg                             | 500            
+digital marketing course online          | 50             
+java full stack developer                | 50             
+best machine learning classes            | 50             
+web development                          | 50             
+cyber security course                    | 50             
+website development                      | 50             
+cyber security courses online            | 50             
+google data analytics professional cer   | 50             
+machine learning course                  | 50             
+google cyber security certificate        | 50             
+
+================================================================================
+
+FILE: Belgaum_Keywords/Belgaum_Tuition_Centre_Keywords.csv
+----------------------------------------------------
+Total Monthly Searches: 11,850
+Average CPC Estimate:  $0.04
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+math tutor near me                       | 50             
+cbse coaching centre near me             | 50             
+tuition near me for class 2              | 50             
+tuition for neet near me                 | 50             
+ukg tuition near me                      | 50             
+tutors near me for math                  | 50             
+kannada home tutors near me              | 50             
+home tutors for kg class near me         | 50             
+tuition for 10th near me                 | 50             
+home tuition near me for class 8         | 50             
+online maths tuition for class 10 near   | 50             
+tuition near me for class 6              | 50             
+vedic maths tuition near me              | 50             
+home tuition required near me            | 50             
+best gre preparation course              | 50             
+cbse tutors near me                      | 50             
+tuition near me for class 10 state syl   | 50             
+class 10 science tuition near me         | 50             
+coaching classes for 10th near me        | 50             
+class 10 coaching near me                | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Dental_Clinics_Cleaned_Keywords.csv
+------------------------------------------------------------------------
+Total Monthly Searches: 19,400
+Average CPC Estimate:  $0.49
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dental clinic near me                    | 500            
+dentist near me                          | 500            
+dentist near me near me                  | 500            
+dental clinic close to me                | 500            
+dental clinic in near me                 | 500            
+lady dental doctor near me               | 50             
+laser teeth whitening                    | 50             
+nobel implant cost                       | 50             
+osstell isq price                        | 50             
+pulp therapy in pediatric dentistry      | 50             
+teeth whitening                          | 50             
+dental implants cost                     | 50             
+braces for adults                        | 50             
+family dentist near me                   | 50             
+teeth installation cost                  | 50             
+1 teeth price                            | 50             
+cosmetic dentistry teeth whitening       | 50             
+dental services near me                  | 50             
+smile dental near me                     | 50             
+new teeth set price                      | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_NEET_Coaching_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 5,300
+Average CPC Estimate:  $0.57
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+mcc neet pg                              | 500            
+iit neet coaching near me                | 50             
+best institute for neet dropper          | 50             
+best institute for neet coaching         | 50             
+best coaching neet                       | 50             
+best coaching institute for neet mds     | 50             
+best coaching for neet mds               | 50             
+best coaching for neet and jee           | 50             
+best coaching centre for neet pg         | 50             
+best chemistry question bank for neet    | 50             
+best chemistry online classes for neet   | 50             
+best chapter wise test series for neet   | 50             
+best academy for neet preparation        | 50             
+akash neet coaching near me              | 50             
+aakash institute crash course fees       | 50             
+neet ug best online coaching             | 50             
+best online coaching for neet mds        | 50             
+aakash crash course for neet fees        | 50             
+the best coaching centre for neet        | 50             
+jee neet coaching centres near me        | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Skin_Clinics_Cleaned_Keywords.csv
+----------------------------------------------------------------------
+Total Monthly Searches: 34,950
+Average CPC Estimate:  $7.90
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dermatologist near me                    | 500            
+derm near me                             | 500            
+cutis clinic                             | 500            
+skin care clinic near me                 | 500            
+skin treatment clinic near me            | 500            
+dr dermatologist near me                 | 500            
+skin dr near me                          | 500            
+dermatology near ne                      | 500            
+derma near me                            | 500            
+skinshine clinic                         | 50             
+laser hair removal                       | 50             
+skin clinic                              | 50             
+chemical peel                            | 50             
+hydrafacial price                        | 50             
+laser hair removal near me               | 50             
+laser hair removal cost                  | 50             
+hair dermatologist near me               | 50             
+full body laser hair removal cost        | 50             
+skin specialist near me                  | 50             
+laser hair removal prices                | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Real_Estate_Cleaned_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 11,200
+Average CPC Estimate:  $0.57
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+buy house near me                        | 50             
+houses for sale near me                  | 50             
+selling home near me                     | 50             
+1 bhk house for rent near me             | 50             
+3 bhk house for sale near me             | 50             
+selling homes near me                    | 50             
+sale property near me                    | 50             
+soneva jani price                        | 50             
+house for purchase near me               | 50             
+2 3 bedroom houses for sale near me      | 50             
+ready to move flats near me              | 50             
+inexpensive homes for sale near me       | 50             
+commercial property sale near me         | 50             
+near me home for sale                    | 50             
+commercial property to let near me       | 50             
+new independent house for sale near me   | 50             
+commercial building near me              | 50             
+farmhouse for rent near me               | 50             
+industrial units near me                 | 50             
+cheap homes to buy near me               | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_JEE_Coaching_Cleaned_Keywords.csv
+----------------------------------------------------------------------
+Total Monthly Searches: 5,600
+Average CPC Estimate:  $4.57
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee main                                 | 500            
+jee mains jee mains                      | 500            
+jee academy near me                      | 50             
+jee advanced coaching centre near me     | 50             
+best coaching for neet and jee           | 50             
+best iit                                 | 50             
+best colleges for jee preparation        | 50             
+best coaching material for jee advance   | 50             
+best academy for jee preparation         | 50             
+best coaching for jee preparation        | 50             
+allen online coaching fees for jee       | 50             
+allen online classes fees for jee main   | 50             
+neet and jee coaching near me            | 50             
+allen jee coaching near me               | 50             
+best jee main study material             | 50             
+best apps for jee preparation            | 50             
+best jee online coaching free            | 50             
+best online coaching for iit jee maths   | 50             
+jee neet coaching centres near me        | 50             
+best online course for jee advanced      | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Physiotherapy_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 0
+Average CPC Estimate:  $nan
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Computer_Training_Institute_Cleaned_Keywords.csv
+-------------------------------------------------------------------------------------
+Total Monthly Searches: 17,850
+Average CPC Estimate:  $24.66
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+cloud in cloud computing                 | 500            
+cloud offerings                          | 500            
+learning about machine learning          | 500            
+google cloud computing                   | 500            
+digital mktg                             | 500            
+cloud c                                  | 500            
+data science                             | 500            
+cloud and cloud computing                | 500            
+cloud computing                          | 500            
+machine learning machine learning        | 500            
+digital garage by google                 | 50             
+website development costs                | 50             
+web dev                                  | 50             
+cysa+ price                              | 50             
+best spring boot courses                 | 50             
+course of machine learning               | 50             
+classes for machine learning             | 50             
+website development                      | 50             
+python coaching institute near me        | 50             
+ux interface design                      | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Gyms_Cleaned_Keywords.csv
+--------------------------------------------------------------
+Total Monthly Searches: 58,100
+Average CPC Estimate:  $0.51
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gym near near me                         | 5,000          
+near gym near me                         | 5,000          
+gymnasium near me                        | 5,000          
+gymbox near me                           | 5,000          
+gym near me                              | 5,000          
+gym and fitness near me                  | 500            
+fitness clubs near me                    | 500            
+workout gyms near me                     | 500            
+yoga lessons near me                     | 500            
+yoga classes near me                     | 500            
+yoga                                     | 500            
+gyms and fitness centers near me         | 500            
+workout centers near me                  | 500            
+fitness gyms near me                     | 500            
+yoga sessions near me                    | 500            
+golds gym near me                        | 50             
+boxing classes near me                   | 50             
+fitness near me                          | 50             
+boxing gym near me                       | 50             
+kettlebells                              | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Car_Rentals_Cleaned_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 10,250
+Average CPC Estimate:  $8.93
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+car rental near me                       | 50             
+outstation cabs near me                  | 50             
+taxi airport near me                     | 50             
+lambo rental price                       | 50             
+hire drivers near me                     | 50             
+15 seater car rental near me             | 50             
+travels near me car rental               | 50             
+car hire for wedding near me             | 50             
+taxi cab booking                         | 50             
+cost to rent a lamborghini               | 50             
+innova for rent near me                  | 50             
+auto hire near me                        | 50             
+12 seater car for rent near me           | 50             
+ferrari rental price                     | 50             
+self drive rental cars near me           | 50             
+taxi at airport                          | 50             
+car rental self drive near me            | 50             
+cost of taxi                             | 50             
+self drive near me                       | 50             
+self car drive rental near me            | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Tuition_Centre_Cleaned_Keywords.csv
+------------------------------------------------------------------------
+Total Monthly Searches: 8,450
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+math tutor near me                       | 50             
+maths tutors near me for class 12        | 50             
+tuition near me for class 12             | 50             
+class 12 tuition near me                 | 50             
+10th maths tuition near me               | 50             
+best online tuition for class 10 cbse    | 50             
+home tutor for spoken english near me    | 50             
+home tuition for chemistry near me       | 50             
+local tuition near me                    | 50             
+10th class coaching near me              | 50             
+physics tuition near me for neet         | 50             
+best tuition near me for class 10        | 50             
+cbse tutors near me                      | 50             
+best tuition near me for class 9         | 50             
+tuition near me for class 2              | 50             
+tutors near me for math                  | 50             
+tuition near me for class 4              | 50             
+icse class 10 tuition near me            | 50             
+best online coaching for class 7 cbse    | 50             
+home tuition near me for class 8         | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_IVF_Clinics_Cleaned_Keywords.csv
+---------------------------------------------------------------------
+Total Monthly Searches: 200
+Average CPC Estimate:  $21.05
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+iui success rate                         | 50             
+icsi treatment success rate              | 50             
+insemination success rate                | 50             
+increasing implantation success          | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Modular_Kitchen_Cleaned_Keywords.csv
+-------------------------------------------------------------------------
+Total Monthly Searches: 6,200
+Average CPC Estimate:  $2.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen interior design                  | 500            
+kitchen and interior design              | 500            
+design kitchen interior                  | 500            
+kitchen interior decoration              | 500            
+kitchen design interior design           | 500            
+aluminium cabinet for kitchen price      | 50             
+aluminium cupboards cost                 | 50             
+pantry unit price                        | 50             
+u shaped modular kitchen price           | 50             
+acrylic kitchen cabinets cost            | 50             
+godrej cupboard steel price              | 50             
+kitchen cabinet design price             | 50             
+wooden kitchen cabinets price            | 50             
+kitchen cabinet design and price         | 50             
+modular kitchen pantry unit price        | 50             
+best parallel kitchen                    | 50             
+stainless steel kitchen cabinets cost    | 50             
+best kitchen interior                    | 50             
+aluminium kitchen cabinet price          | 50             
+kitchen wardrobe price                   | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_IELTS_Coaching_Cleaned_Keywords.csv
+------------------------------------------------------------------------
+Total Monthly Searches: 2,250
+Average CPC Estimate:  $4.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+overseas education consultants near me   | 50             
+ielts best coaching online               | 50             
+foreign consultancy near me              | 50             
+study abroad agency near me              | 50             
+abroad education consultants near me     | 50             
+abroad consultants near me               | 50             
+mbbs abroad consultants near me          | 50             
+ielts training institute near me         | 50             
+best online classes for ielts preparat   | 50             
+best abroad education consultants        | 50             
+ielts best online course                 | 50             
+best agencies to study abroad            | 50             
+online best ielts coaching               | 50             
+manya ielts coaching fees                | 50             
+best academy for ielts                   | 50             
+best consultants for abroad education    | 50             
+best overseas consultancy                | 50             
+ielts academic cost                      | 50             
+ielts exam reading practice              | 50             
+
+================================================================================
+
+FILE: Davangere_Cleaned_Keywords/Davangere_Interior_Designer_Cleaned_Keywords.csv
+---------------------------------------------------------------------------
+Total Monthly Searches: 13,100
+Average CPC Estimate:  $2.78
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+wardrobe designs                         | 500            
+wardroom design                          | 500            
+kitchen interior design                  | 500            
+clothes cupboard design                  | 500            
+home reno costs                          | 50             
+modular kitchen pantry unit price        | 50             
+best office table design                 | 50             
+bedroom wardrobe cost                    | 50             
+interior design for home price           | 50             
+reasonably priced home decor             | 50             
+small clinic reception design            | 50             
+cost of home interior                    | 50             
+small clinic waiting room design         | 50             
+furniture interior near me               | 50             
+pediatric dental clinic design           | 50             
+clinic reception design                  | 50             
+dental clinic design layout              | 50             
+sink design for kitchen with price       | 50             
+best laminate design for wardrobe        | 50             
+thermocol ceiling work near me           | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Skin_Clinics_Cleaned_Keywords.csv
+------------------------------------------------------------------------
+Total Monthly Searches: 23,600
+Average CPC Estimate:  $4.44
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+derm near me                             | 500            
+dermatologist near me                    | 500            
+dermatology near ne                      | 500            
+derma near me                            | 500            
+nirmala skin clinic                      | 50             
+laser face resurfacing price             | 50             
+best hair removal                        | 50             
+skin and beauty clinic                   | 50             
+shan skin and hair clinic                | 50             
+skin clinic                              | 50             
+laser freckle treatment                  | 50             
+laser pigmentation cost                  | 50             
+naik skin clinic dasarahalli             | 50             
+nirmal skin & hair clinic                | 50             
+nirmal skin and hair clinic              | 50             
+nirmal skin clinic                       | 50             
+nishka skin clinic                       | 50             
+hair removal laser clinic near me        | 50             
+permanent laser hair removal cost        | 50             
+prasad skin clinic                       | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Dental_Clinics_Cleaned_Keywords.csv
+--------------------------------------------------------------------------
+Total Monthly Searches: 15,150
+Average CPC Estimate:  $1.79
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dentist near me                          | 500            
+dentist near me near me                  | 500            
+dental near ne                           | 500            
+dental clinic close to me                | 500            
+dental clinic in near me                 | 500            
+dental clinic near me                    | 500            
+dental 365 near me                       | 50             
+fake teeth price                         | 50             
+zirconia dental implants cost            | 50             
+teeth near me                            | 50             
+dental clinic near my location           | 50             
+aesthetic dental clinic                  | 50             
+teeth bleaching price                    | 50             
+dental implants how much                 | 50             
+all on four dental implants price        | 50             
+veneer whitening                         | 50             
+pediatric dental care near me            | 50             
+teeth plantation cost                    | 50             
+dental clinic price list near me         | 50             
+price of one dental implant              | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Tuition_Centres_Cleaned_Keywords.csv
+---------------------------------------------------------------------------
+Total Monthly Searches: 5,250
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+math tutor near me                       | 50             
+cbse coaching classes near me            | 50             
+10th cbse tuition classes near me        | 50             
+coaching classes for 10th near me        | 50             
+tuition near me for class 10 state syl   | 50             
+home tuition required near me            | 50             
+gmat best prep course                    | 50             
+vedic maths tuition near me              | 50             
+icse class 10 tuition near me            | 50             
+tuition near me for class 4              | 50             
+tutors near me for math                  | 50             
+chemistry home tuition near me           | 50             
+10th class coaching near me              | 50             
+best online tuition for class 10 cbse    | 50             
+home tuition for ukg near me             | 50             
+class 12 tuition near me                 | 50             
+physics class 12 tutor near me           | 50             
+best home tuition                        | 50             
+best coaching for class 10 near me       | 50             
+best home tutors                         | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Gyms_Cleaned_Keywords.csv
+----------------------------------------------------------------
+Total Monthly Searches: 27,800
+Average CPC Estimate:  $0.11
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+fitness clubs near me                    | 500            
+gym and fitness near me                  | 500            
+gymnasium near me                        | 500            
+gyms and fitness centers near me         | 500            
+workout gyms near me                     | 500            
+near gym near me                         | 500            
+gym near near me                         | 500            
+fitness gyms near me                     | 500            
+workout centers near me                  | 500            
+gymbox near me                           | 500            
+gym near me                              | 500            
+best weight loss program                 | 50             
+ladies gym fees                          | 50             
+fitness near me                          | 50             
+gym memberships near me                  | 50             
+boxing classes near me                   | 50             
+gym near me with fees for ladies         | 50             
+yoga classes near me                     | 50             
+yoga near me                             | 50             
+personal trainer near me                 | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Computer_Training_Institute_Cleaned_Keywords.csv
+---------------------------------------------------------------------------------------
+Total Monthly Searches: 9,000
+Average CPC Estimate:  $18.54
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+python course near me                    | 50             
+scaler data science course cost          | 50             
+digital marketing course cost            | 50             
+cloud offerings                          | 50             
+learnbay data science course fees        | 50             
+cyber security best course               | 50             
+best courses on artificial intelligenc   | 50             
+best certification courses for data sc   | 50             
+best full stack java developer course    | 50             
+best ui ux design                        | 50             
+best java course on udemy                | 50             
+artificial intelligence classes online   | 50             
+best course on artificial intelligence   | 50             
+best ui ux websites                      | 50             
+best online course for artificial inte   | 50             
+best courses in artificial intelligenc   | 50             
+python classes near me with fees         | 50             
+artificial intelligence course free on   | 50             
+best course to learn machine learning    | 50             
+artificial intelligence basic course     | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_JEE_Coaching_Cleaned_Keywords.csv
+------------------------------------------------------------------------
+Total Monthly Searches: 4,200
+Average CPC Estimate:  $3.87
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee main                                 | 500            
+jee mains jee mains                      | 500            
+best coaching institute for iit          | 50             
+iit coaching classes near me             | 50             
+best mock test for jee mains             | 50             
+all the best for jee advanced            | 50             
+allen online classes fees for jee main   | 50             
+best apps for iit jee preparation        | 50             
+best coaching center for iit             | 50             
+best coaching classes for iit            | 50             
+best coaching for neet and jee           | 50             
+best colleges for jee preparation        | 50             
+best for iit coaching                    | 50             
+best iit                                 | 50             
+best jee main study material             | 50             
+best jee mock test                       | 50             
+best apps for jee preparation            | 50             
+best jee online classes                  | 50             
+best jee preparation                     | 50             
+best online course for iit jee           | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Car_Rentals_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 6,950
+Average CPC Estimate:  $1.14
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+car rental near me                       | 50             
+innova for rent near me                  | 50             
+airport near me car rental               | 50             
+wedding car near me                      | 50             
+7 seater cars for rent near me           | 50             
+ferrari rental price                     | 50             
+car rental car near me                   | 50             
+travels near me car rental               | 50             
+auto hire near me                        | 50             
+innova rental near me                    | 50             
+outstation cabs near me                  | 50             
+self drive rental cars near me           | 50             
+cost of taxi                             | 50             
+self drive near me                       | 50             
+thar rental near me                      | 50             
+ertiga on rent near me                   | 50             
+travel cars near me                      | 50             
+mahindra thar for rent near me           | 50             
+travel car rental near me                | 50             
+hire rental car near me                  | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_IVF_Clinics_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 50
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+icsi treatment success rate              | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_IELTS_Coaching_Cleaned_Keywords.csv
+--------------------------------------------------------------------------
+Total Monthly Searches: 650
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts coaching near me                   | 50             
+ielts classes near me                    | 50             
+ielts institute near me                  | 50             
+best ielts online coaching               | 50             
+study abroad consultants near me         | 50             
+consultancy near me for abroad studies   | 50             
+ielts best online coaching               | 50             
+overseas consultancy near me             | 50             
+best online coaching for ielts           | 50             
+best consultancy for mbbs abroad         | 50             
+coaching centre for ielts near me        | 50             
+online best ielts coaching               | 50             
+best abroad study consultancy            | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Physiotherapy_Cleaned_Keywords.csv
+-------------------------------------------------------------------------
+Total Monthly Searches: 0
+Average CPC Estimate:  $nan
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Interior_Designers_Cleaned_Keywords.csv
+------------------------------------------------------------------------------
+Total Monthly Searches: 7,750
+Average CPC Estimate:  $5.02
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+interior designers near me               | 50             
+reno costs                               | 50             
+best office table design                 | 50             
+best cupboard design for bedroom         | 50             
+best dental clinic design                | 50             
+small clinic reception design            | 50             
+cost of home interior                    | 50             
+small clinic waiting room design         | 50             
+pediatric dental clinic design           | 50             
+clinic reception design                  | 50             
+wardrobe design and price                | 50             
+thermocol ceiling work near me           | 50             
+best office interiors                    | 50             
+cost for false ceiling                   | 50             
+wallpaper design and price               | 50             
+home interior design and price           | 50             
+furniture interior design near me        | 50             
+bedroom wardrobe price                   | 50             
+kitchen wardrobe design with price       | 50             
+wardrobe design with price               | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Real_Estate_Cleaned_Keywords.csv
+-----------------------------------------------------------------------
+Total Monthly Searches: 9,450
+Average CPC Estimate:  $4.30
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+houses for sale near me                  | 50             
+shops available for rent near me         | 50             
+soneva jani price                        | 50             
+home sale by owner near me               | 50             
+inexpensive homes for sale near me       | 50             
+near me home for sale                    | 50             
+commercial property to let near me       | 50             
+cheap flats for sale near me             | 50             
+farmhouse for rent near me               | 50             
+real estate income trust                 | 50             
+cheap homes to buy near me               | 50             
+flats to let near me                     | 50             
+homes for sale close to me               | 50             
+new homes on sale near me                | 50             
+studio flats to rent near me             | 50             
+home listings for sale near me           | 50             
+sale for home near me                    | 50             
+any house for sale near me               | 50             
+house sales agents near me               | 50             
+oberoi sky city 2 bhk price              | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_NEET_Coaching_Cleaned_Keywords.csv
+-------------------------------------------------------------------------
+Total Monthly Searches: 4,800
+Average CPC Estimate:  $1.44
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+best neet institute                      | 50             
+neet mock test                           | 50             
+best institute for neet long term        | 50             
+best institute for neet coaching         | 50             
+best course for neet                     | 50             
+best colleges of neet                    | 50             
+best coaching neet                       | 50             
+best coaching institute for neet near    | 50             
+best coaching for neet and jee           | 50             
+best coaching classes for iit            | 50             
+best coaching centre for neet droppers   | 50             
+best coaching center for iit             | 50             
+best chemistry question bank for neet    | 50             
+allen neet coaching near me              | 50             
+akash neet coaching near me              | 50             
+best academy for neet                    | 50             
+best coaching institute for iit          | 50             
+crash course for neet near me            | 50             
+good neet coaching near me               | 50             
+best institute for neet near me          | 50             
+
+================================================================================
+
+FILE: Vijayapura_Cleaned_Keywords/Vijayapura_Modular_Kitchen_Cleaned_Keywords.csv
+---------------------------------------------------------------------------
+Total Monthly Searches: 2,300
+Average CPC Estimate:  $0.00
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen cabinet cost                     | 50             
+aluminium cabinet for kitchen price      | 50             
+the cost of kitchen cabinets             | 50             
+aluminium kitchen cabinet cost           | 50             
+aluminium cabinet price                  | 50             
+kitchen acrylic sheet price              | 50             
+kitchen wardrobe design with price       | 50             
+kitchen cabinets and prices              | 50             
+kitchen cabinet design and price         | 50             
+best kitchen interior                    | 50             
+wooden kitchen cabinets price            | 50             
+kitchen cabinet design price             | 50             
+kitchen cabinet prices                   | 50             
+kitchen carcass prices                   | 50             
+acrylic kitchen sheet price              | 50             
+pantry unit price                        | 50             
+aluminium cupboards cost                 | 50             
+aluminium kitchen cupboard price         | 50             
+best acrylic colors for kitchen          | 50             
+cost cupboard                            | 50             
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Gym_Keywords.csv
+-----------------------------------------
+Total Monthly Searches: 37,290,150
+Average CPC Estimate:  $20.34
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+gymbox near me                           | 5,000,000      
+gymnasium near me                        | 5,000,000      
+near gym near me                         | 5,000,000      
+gym near me                              | 5,000,000      
+gym near near me                         | 5,000,000      
+fitness clubs near me                    | 500,000        
+yoga                                     | 500,000        
+workout gyms near me                     | 500,000        
+yoga lessons near me                     | 500,000        
+yoga classes near me                     | 500,000        
+fitness gyms near me                     | 500,000        
+yoga sessions near me                    | 500,000        
+gyms and fitness centers near me         | 500,000        
+gym and fitness near me                  | 500,000        
+workout centers near me                  | 500,000        
+gym with trainer                         | 50,000         
+near by gym                              | 50,000         
+fitness places near me                   | 50,000         
+workout facilities near me               | 50,000         
+cultfit near me                          | 50,000         
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Computer_Training_Institute_Keywords.csv
+-----------------------------------------------------------------
+Total Monthly Searches: 15,046,350
+Average CPC Estimate:  $80.40
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+user interface design                    | 500,000        
+cloud in cloud computing                 | 500,000        
+cloud offerings                          | 500,000        
+data science                             | 500,000        
+cloud computing                          | 500,000        
+cloud and cloud computing                | 500,000        
+digital mktg                             | 500,000        
+learning about machine learning          | 500,000        
+digital marketing course                 | 500,000        
+cloud c                                  | 500,000        
+class digital marketing                  | 500,000        
+digital marketing classes                | 500,000        
+google cloud computing                   | 500,000        
+machine learning machine learning        | 500,000        
+course marketing digital                 | 500,000        
+ux design and ui design                  | 50,000         
+classes for machine learning             | 50,000         
+digital garage by google                 | 50,000         
+ux interface design                      | 50,000         
+digital marketing course price           | 50,000         
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Real_Estate_Agent_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 13,050
+Average CPC Estimate:  $2.03
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+buy house near me                        | 50             
+homes for sale close to me               | 50             
+homes to sell near me                    | 50             
+restaurant rental space near me          | 50             
+1 bhk house for rent near me             | 50             
+3 bhk house for sale near me             | 50             
+sale property near me                    | 50             
+villa near me for sale                   | 50             
+house for purchase near me               | 50             
+three bedroom homes for sale near me     | 50             
+shop spaces for rent near me             | 50             
+ready to move flats near me              | 50             
+new bungalows for sale near me           | 50             
+commercial property sale near me         | 50             
+near me home for sale                    | 50             
+commercial property to let near me       | 50             
+new independent house for sale near me   | 50             
+commercial building near me              | 50             
+farmhouse for rent near me               | 50             
+real estate income trust                 | 50             
+
+================================================================================
+
+Error processing Dharwad_Keywords/Dharwad_Physiotherapy_Keywords1empty.csv: Error tokenizing data. C error: Expected 1 fields in line 3, saw 26
+
+Error processing Dharwad_Keywords/Dharwad_IVF_Fertility_Keywords1empty.csv: Error tokenizing data. C error: Expected 1 fields in line 3, saw 26
+
+FILE: Dharwad_Keywords/Dharwad_Tuition_Centre_Keywords.csv
+----------------------------------------------------
+Total Monthly Searches: 997,050
+Average CPC Estimate:  $40.33
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+home tutor                               | 50,000         
+home tuition                             | 50,000         
+home tutoring                            | 50,000         
+mathematics tuition near me              | 50,000         
+tutor home                               | 50,000         
+maths tuition near me                    | 50,000         
+tutor home tutor                         | 50,000         
+tuition near me                          | 50,000         
+home tuition near me                     | 50,000         
+home tutor near me                       | 50,000         
+commerce tuitions near me                | 5,000          
+math teacher near me                     | 5,000          
+home tuition for class 1 to 5 near me    | 5,000          
+mathematics home tutor                   | 5,000          
+gmat classes online                      | 5,000          
+best tuition near me                     | 5,000          
+ielts classes online                     | 5,000          
+home tuition mathematics                 | 5,000          
+tutor near me math                       | 5,000          
+physics tuition near me                  | 5,000          
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Dental_Clinic_Keywords.csv
+---------------------------------------------------
+Total Monthly Searches: 16,750
+Average CPC Estimate:  $2.71
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+dental near ne                           | 500            
+dental clinic close to me                | 500            
+dental clinic near me                    | 500            
+dental clinic in near me                 | 500            
+dentist near me                          | 500            
+dentist near me near me                  | 500            
+pediatric dentist                        | 50             
+shiny whitening                          | 50             
+narayana dental clinic near me           | 50             
+teeth whitening                          | 50             
+dental implants cost                     | 50             
+braces for adults                        | 50             
+cosmetic dentistry                       | 50             
+composite veneers near me                | 50             
+dental implants near me                  | 50             
+bridge in mouth cost                     | 50             
+best cosmetic dentist near me            | 50             
+gum reshaping cost                       | 50             
+teeth whitening charges                  | 50             
+up pediatric dentistry                   | 50             
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_JEE_Coaching_Keywords.csv
+--------------------------------------------------
+Total Monthly Searches: 13,431,200
+Average CPC Estimate:  $47.99
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+jee main                                 | 5,000,000      
+jee mains jee mains                      | 5,000,000      
+viteee                                   | 500,000        
+jee advanced                             | 500,000        
+nta jee mains                            | 500,000        
+jee advanced 2025                        | 500,000        
+joint entrance examination jee main      | 50,000         
+jee main nta nic                         | 50,000         
+mathongo test series                     | 50,000         
+jee mock exam                            | 50,000         
+iit jee advanced                         | 50,000         
+iit jee                                  | 50,000         
+jee main nta nic in                      | 50,000         
+jee mains mock test                      | 50,000         
+iit and jee                              | 50,000         
+viteee exam                              | 50,000         
+jee main examination                     | 50,000         
+jee main nta                             | 50,000         
+best iit                                 | 50,000         
+jee main exam                            | 50,000         
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_NEET_Coaching_Keywords.csv
+---------------------------------------------------
+Total Monthly Searches: 1,689,400
+Average CPC Estimate:  $41.88
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+neet pg                                  | 500,000        
+neetmocktest                             | 50,000         
+bsc nursing entrance test                | 50,000         
+mcc neet ug                              | 50,000         
+neet mock test                           | 50,000         
+bsc nursing entrance exam                | 50,000         
+neet pg exam                             | 50,000         
+neet mock exam                           | 50,000         
+bsc nursing admission test               | 50,000         
+nbems neet pg                            | 50,000         
+neet exam mock test                      | 50,000         
+mcc neet pg                              | 50,000         
+bsc nursing entrance exams               | 50,000         
+aiims pg                                 | 5,000          
+neet coaching centres near me            | 5,000          
+neet coaching near me                    | 5,000          
+neet chemistry                           | 5,000          
+neet allen test series                   | 5,000          
+neet exam practice                       | 5,000          
+neet mock test free                      | 5,000          
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_IELTS_Coaching_Keywords.csv
+----------------------------------------------------
+Total Monthly Searches: 1,196,600
+Average CPC Estimate:  $47.67
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+ielts mock exam                          | 50,000         
+abroad education consultants             | 50,000         
+ielts mock test                          | 50,000         
+ielts exam mock test                     | 50,000         
+overseas study consultants               | 50,000         
+ielts classes near me                    | 50,000         
+ielts coaching near me                   | 50,000         
+foreign study consultancy                | 50,000         
+study abroad consultants                 | 50,000         
+ielts model test online                  | 5,000          
+ielts speaking exam                      | 5,000          
+ielts speaking test                      | 5,000          
+ielts institute near me                  | 5,000          
+ielts academic                           | 5,000          
+ielts sample test free                   | 5,000          
+ielts coaching                           | 5,000          
+ielts dummy test                         | 5,000          
+ielts free practise test                 | 5,000          
+ielts online course                      | 5,000          
+ielts syllabus                           | 5,000          
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Car_Rental_Keywords.csv
+------------------------------------------------
+Total Monthly Searches: 11,350
+Average CPC Estimate:  $2.15
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+car rental near me                       | 50             
+car for marriage rent near me            | 50             
+wedding car booking near me              | 50             
+car hire for wedding near me             | 50             
+taxi cab booking                         | 50             
+cost to rent a lamborghini               | 50             
+places to rent vans near me              | 50             
+auto hire near me                        | 50             
+self drive rental cars near me           | 50             
+exotic car rental prices                 | 50             
+seven seater car for rent near me        | 50             
+taxi at airport                          | 50             
+luxury car rental for wedding near me    | 50             
+car rental self drive near me            | 50             
+suv on rent near me                      | 50             
+cost of taxi                             | 50             
+big car rental near me                   | 50             
+thar rental near me                      | 50             
+hire driver for outstation near me       | 50             
+one day rent car near me                 | 50             
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Skin_Clinic_Keywords.csv
+-------------------------------------------------
+Total Monthly Searches: 28,000
+Average CPC Estimate:  $4.79
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+derma near me                            | 500            
+dr dermatologist near me                 | 500            
+derm near me                             | 500            
+skin dr near me                          | 500            
+dermatologist near me                    | 500            
+dermatology near ne                      | 500            
+permanent hair removal                   | 50             
+laser pigmentation cost                  | 50             
+skin specialist near me                  | 50             
+facial hair removal                      | 50             
+best laser hair removal                  | 50             
+electrolysis near me                     | 50             
+hydrafacial price                        | 50             
+laser hair removal cost                  | 50             
+laser hair removal near me               | 50             
+naik skin clinic dasarahalli             | 50             
+skin clinic                              | 50             
+laser hair removal                       | 50             
+nirmal skin & hair clinic                | 50             
+madhu skin clinic                        | 50             
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Modular_Kitchen_Keywords.csv
+-----------------------------------------------------
+Total Monthly Searches: 2,800
+Average CPC Estimate:  $2.16
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+kitchen cabinet cost                     | 50             
+kitchen interior design                  | 50             
+kitchen wardrobe design with price       | 50             
+kitchen cabinets and prices              | 50             
+stainless steel kitchen cabinets price   | 50             
+kitchen cabinet design and price         | 50             
+best kitchen interior                    | 50             
+modular kitchen pantry unit price        | 50             
+acrylic kitchen cost                     | 50             
+kitchen interior decoration              | 50             
+design kitchen interior                  | 50             
+kitchen cabinet design price             | 50             
+steel kitchen cabinets price             | 50             
+kitchen carcass prices                   | 50             
+ready kitchen cabinets price             | 50             
+cost of pvc modular kitchen              | 50             
+pantry unit price                        | 50             
+aluminium cupboards cost                 | 50             
+best parallel kitchen                    | 50             
+cabinet hinges price                     | 50             
+
+================================================================================
+
+FILE: Dharwad_Keywords/Dharwad_Interior_Designer_Keywords.csv
+-------------------------------------------------------
+Total Monthly Searches: 9,750
+Average CPC Estimate:  $1.37
+
+TOP 20 KEYWORDS:
+Keyword                                  | Monthly Searches
+------------------------------------------------------------
+interior designers near me               | 50             
+cost of home interior                    | 50             
+best cupboard design                     | 50             
+house interior design price              | 50             
+livspace showroom near me                | 50             
+interior designers in near me            | 50             
+low price home decor                     | 50             
+kitchen modular kitchen                  | 50             
+pop false ceiling near me                | 50             
+best sliding wardrobe design             | 50             
+best luxury interior designers           | 50             
+kitchen tap design with price            | 50             
+cost to renovate entire house            | 50             
+pop ceiling work near me                 | 50             
+simple interior design low cost          | 50             
+wardrobe design with price               | 50             
+kitchen wardrobe design with price       | 50             
+sink design for kitchen with price       | 50             
+best dental clinic interior design       | 50             
+modular kitchen pantry unit price        | 50             
+
+================================================================================
+

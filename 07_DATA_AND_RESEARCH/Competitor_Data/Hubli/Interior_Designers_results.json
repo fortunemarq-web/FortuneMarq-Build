@@ -1,0 +1,134 @@
+{
+  "keyword": "interior designer hubli",
+  "volume": 3450,
+  "scraped_at": "2026-03-15T20:04:01.934861",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "Vinspace Interiors | Interior Designers | Home Interiors | Modular Kitchen | Wardrobes | Aluminum Interiors",
+      "rating": 5.0,
+      "reviews": 210,
+      "address": "103, 2nd Floor, satellite complex, Koppikar Rd",
+      "website": "https://vinspace.in/vinspace-interiors/",
+      "phone": "099868 96457",
+      "traffic": 519,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "TOUCHSTONE INTERIORS AND DESIGNS",
+      "rating": 4.8,
+      "reviews": 65,
+      "address": "2nd Floor, Lake side Building, behind Arogya Cafe, opp. Tolankere Road",
+      "website": "https://touchstoneinteriorshubli.com/",
+      "phone": "088840 66378",
+      "traffic": 410,
+      "traffic_pct": 11.9
+    },
+    {
+      "position": 3,
+      "name": "CORNERS JOINT",
+      "rating": 5.0,
+      "reviews": 80,
+      "address": "Marvel Artiza ,Shop No -UG-28 Jayanager,Vidyanager",
+      "website": "http://www.cornersjoint.com/",
+      "phone": "095914 49469",
+      "traffic": 277,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Interior Designers in Hubli - Home & Office Design Experts",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Interior-Designers/nct-10272436",
+      "traffic": 345,
+      "traffic_pct": 10.0
+    },
+    {
+      "position": 2,
+      "name": "Interior Designing Services in Hubballi",
+      "domain": "dir.indiamart.com",
+      "url": "https://dir.indiamart.com/hubli/interior-design.html",
+      "traffic": 345,
+      "traffic_pct": 10.0
+    }
+  ],
+  "social": [
+    {
+      "position": 1,
+      "name": "Touch Stone Interiors (@touchstone_interior_hubli)",
+      "domain": "instagram.com",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/touchstone_interior_hubli/",
+      "traffic": 345,
+      "traffic_pct": 10.0
+    }
+  ],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Best & Budget Interior Designers in Hubli",
+      "domain": "interiordesk.in",
+      "url": "https://www.interiordesk.in/interior-designers-hubli.php",
+      "snippet": "We are one of the best home interior designers in Hubli doing up lots of color schemes, remodeling, renovation and styling as and when required.",
+      "traffic": 414,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Interior Designers & Interior Decorators in Hubli. - Houzz",
+      "domain": "houzz.in",
+      "url": "https://www.houzz.in/professionals/interior-designers-and-decorators/hubli-19-in-probr0-bo~t_26677~r_1269920",
+      "snippet": "\"Carve design studio is a leading and top Interior designer, architectural designer & construction company. We provide end-to-end design &...",
+      "traffic": 276,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Interior Designers in Hubli",
+      "domain": "livspace.com",
+      "url": "https://www.livspace.com/in/interiors/hubli",
+      "snippet": "Let our interior design ideas be the stepping stone towards your dream home. From modular kitchens to stunning full home interiors, we've got it all!",
+      "traffic": 172,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 4,
+      "name": "Top Interior Designer and Best Architect in Hubli | CARVE ..",
+      "domain": "carvedesignstudio.in",
+      "url": "https://carvedesignstudio.in/",
+      "snippet": "Carve Design Studio is the top interior designer and best architect in Hubli, offering end-to-end design and construction services under one roof.",
+      "traffic": 172,
+      "traffic_pct": 5.0
+    },
+    {
+      "position": 5,
+      "name": "Best Interior Design Services in Hubli with No-Cost EMI ...",
+      "domain": "decorpot.com",
+      "url": "https://www.decorpot.com/blog/best-interior-design-services-in-hubli-no-cost-emi",
+      "snippet": "If you are looking for a trusted and innovative home interior designer in Hubli, then the name you can depend on is Decorpot.com. It is known ...",
+      "traffic": 172,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 345,
+  "summary": {
+    "total_volume": 3450,
+    "gbp_traffic": 1206,
+    "gbp_pct": 35.0,
+    "directory_traffic": 690,
+    "directory_pct": 20.0,
+    "social_traffic": 345,
+    "social_pct": 10.0,
+    "website_traffic": 1206,
+    "website_pct": 35.0,
+    "uncaptured": 345,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 2,
+    "social_count": 1,
+    "website_count": 5
+  }
+}

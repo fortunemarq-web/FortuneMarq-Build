@@ -1,0 +1,138 @@
+{
+  "keyword": "modular kitchen hubli",
+  "volume": 1200,
+  "scraped_at": "2026-03-15T20:04:19.884525",
+  "local_pack": [
+    {
+      "position": 1,
+      "name": "Namma Kitchen",
+      "rating": 4.5,
+      "reviews": 298,
+      "address": "New Bus Stand, Gokul Rd",
+      "website": "",
+      "phone": "090359 23813",
+      "traffic": 180,
+      "traffic_pct": 15.0
+    },
+    {
+      "position": 2,
+      "name": "WeWia Modular Kitchen & Wardrobes Experience Centre",
+      "rating": 5.0,
+      "reviews": 45,
+      "address": "WeWia modular kitchens and wardrobes, Kalburgi platinum complex, above Dominos",
+      "website": "",
+      "phone": "074063 53760",
+      "traffic": 142,
+      "traffic_pct": 11.8
+    },
+    {
+      "position": 3,
+      "name": "Hafele Studio Partner - Kitchen O Kulture",
+      "rating": 4.8,
+      "reviews": 26,
+      "address": "RS No 111, Arihanth Homes, Plot No 35-39, Kusugal Rd, opposite Sri Srinivas Gardens",
+      "website": "",
+      "phone": "0612 671 1282",
+      "traffic": 96,
+      "traffic_pct": 8.0
+    }
+  ],
+  "directories": [
+    {
+      "position": 1,
+      "name": "Modular Kitchen Dealers in Hubli Near You",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Modular-Kitchen-Dealers/nct-10326758",
+      "traffic": 40,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 2,
+      "name": "Modular Kitchen Interior Design in Hubballi",
+      "domain": "dir.indiamart.com",
+      "url": "https://dir.indiamart.com/hubli/modular-kitchens.html",
+      "traffic": 40,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 3,
+      "name": "Designer Modular Kitchen In Hubli",
+      "domain": "tradeindia.com",
+      "url": "https://www.tradeindia.com/hubli/designer-modular-kitchen-city-196270.html",
+      "traffic": 40,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 4,
+      "name": "Top Modular Kitchen Dealers premium in Hubli",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Modular-Kitchen-Dealers-Premium/nct-11376616",
+      "traffic": 40,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 5,
+      "name": "Modular Kitchen Interior Design - IndiaMART",
+      "domain": "indiamart.com",
+      "url": "https://www.indiamart.com/proddetail/modular-kitchen-interior-design-13200054697.html?srsltid=AfmBOooZB6j0c2-W_n8EN5OgW3Un4UaiM5Qlck3PIUzKDXFXy9jqS52F",
+      "traffic": 40,
+      "traffic_pct": 3.3
+    },
+    {
+      "position": 6,
+      "name": "Top Modular Kitchen Dealers in Hubli Traffic ...",
+      "domain": "justdial.com",
+      "url": "https://www.justdial.com/Hubli/Modular-Kitchen-Dealers-in-Hubli-Traffic-Island/nct-10326758",
+      "traffic": 40,
+      "traffic_pct": 3.3
+    }
+  ],
+  "social": [],
+  "websites": [
+    {
+      "position": 1,
+      "name": "Best Modular Interior Design Factory in Hubli",
+      "domain": "elements4kitchens.com",
+      "url": "https://www.elements4kitchens.com/factory.php",
+      "snippet": "Our Elements Kitchen interior design factory is located in Hubli. #SPL 9, Ground Floor, Mahadev Udyog Industrial Estate Gokul Road, Hubli-580030.",
+      "traffic": 144,
+      "traffic_pct": 12.0
+    },
+    {
+      "position": 2,
+      "name": "Infinity Modular Kitchen & Interior Works",
+      "domain": "infinitymodularkitchens.com",
+      "url": "https://www.infinitymodularkitchens.com/",
+      "snippet": "1st Gate Shed, No.B-38, Industrial Estate, Gokul Road, Hubballi-30; info@infinitymodularkitchens.com. post: Infinity Modular Kitchens.",
+      "traffic": 96,
+      "traffic_pct": 8.0
+    },
+    {
+      "position": 3,
+      "name": "Aluminium Interior in Hubli",
+      "domain": "interiordesk.in",
+      "url": "https://www.interiordesk.in/aluminium-interior-hubli.php",
+      "snippet": "InteriorDesk is proud to offer a comprehensive range of aluminum interior solutions, including Aluminium modular kitchen, Aluminium wardrobe / Cupboar",
+      "traffic": 60,
+      "traffic_pct": 5.0
+    }
+  ],
+  "uncaptured": 120,
+  "summary": {
+    "total_volume": 1200,
+    "gbp_traffic": 418,
+    "gbp_pct": 34.8,
+    "directory_traffic": 240,
+    "directory_pct": 20.0,
+    "social_traffic": 0,
+    "social_pct": 0.0,
+    "website_traffic": 300,
+    "website_pct": 25.0,
+    "uncaptured": 120,
+    "uncaptured_pct": 10.0,
+    "gbp_count": 3,
+    "directory_count": 6,
+    "social_count": 0,
+    "website_count": 3
+  }
+}
