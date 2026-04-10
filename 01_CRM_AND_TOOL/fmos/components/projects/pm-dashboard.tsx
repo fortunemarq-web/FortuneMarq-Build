@@ -1,0 +1,882 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import {
+  Calendar,
+  CheckCircle2,
+  Clock,
+  AlertTriangle,
+  Users,
+  Briefcase,
+  ChevronDown,
+  ChevronUp,
+  ListTodo,
+  TrendingUp,
+  User,
+  Plus,
+  Search,
+  ExternalLink,
+  Trash2,
+  Link as LinkIcon
+} from "lucide-react";
+import clsx from "clsx";
+import { createClient } from "@/lib/supabase";
+import CreateProjectModal from "./create-project-modal";
+
+interface Task {
+  id: string;
+  title: string;
+  status: string;
+  due_date: string | null;
+  assigned_to: string | null;
+  project_id: string;
+  created_at: string;
+  completed_at?: string | null;
+}
+
+interface Client {
+  id: string;
+  business_name: string;
+  primary_email?: string | null;
+}
+
+interface Project {
+  id: string;
+  name?: string;
+  service_type: string;
+  status: string;
+  deadline: string | null;
+  client_id?: string | null;
+  deal_id?: string | null;
+  clients?: Client | null;
+  tasks?: Task[];
+}
+
+interface ClientResource {
+  id: string;
+  client_id: string;
+  resource_type: 'drive_folder' | 'file' | 'link' | 'other';
+  title: string;
+  url: string;
+  created_at: string;
+}
+
+interface PMDashboardProps {
+  projects: Project[];
+  tasks: Task[];
+  clientResources: ClientResource[];
+}
+
+const STATUS_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "not_started", label: "Not Started" },
+  { key: "in_progress", label: "In Progress" },
+  { key: "on_hold", label: "On Hold" },
+  { key: "completed", label: "Completed" },
+  { key: "needs_attention", label: "Needs Attention" },
+];
+
+const statusLabels: Record<string, string> = {
+  not_started: "Not Started",
+  in_progress: "In Progress",
+  on_hold: "On Hold",
+  completed: "Completed",
+  cancelled: "Cancelled",
+};
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toISOString().split("T")[0];
+}
+
+function isToday(dateStr: string | null): boolean {
+  if (!dateStr) return false;
+  const today = new Date().toISOString().split("T")[0];
+  return dateStr.split("T")[0] === today;
+}
+
+function isOverdue(dateStr: string | null): boolean {
+  if (!dateStr) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dueDate = new Date(dateStr);
+  dueDate.setHours(0, 0, 0, 0);
+  return dueDate < today;
+}
+
+function formatDisplayDate(dateStr: string | null): string {
+  if (!dateStr) return "No deadline";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export default function PMDashboard(props: PMDashboardProps) {
+  const { projects, tasks } = props;
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [showTeamDetails, setShowTeamDetails] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Resource Management State
+  const [resources, setResources] = useState<ClientResource[]>(props.clientResources || []);
+  const [editingResourceClientId, setEditingResourceClientId] = useState<string | null>(null);
+  const [newLinkUrl, setNewLinkUrl] = useState("");
+  const [newLinkTitle, setNewLinkTitle] = useState("");
+  const [isSubmittingResource, setIsSubmittingResource] = useState(false);
+
+  // View Mode State
+  const [viewMode, setViewMode] = useState<'projects' | 'clients'>('clients');
+  const [expandedClients, setExpandedClients] = useState<Record<string, boolean>>({});
+
+  const supabase = createClient();
+
+  const handleAddResource = async (clientId: string) => {
+    if (!newLinkUrl || !newLinkTitle) return;
+    setIsSubmittingResource(true);
+
+    try {
+      const { data, error } = await supabase.from("client_resources" as any).insert({
+        client_id: clientId,
+        title: newLinkTitle,
+        url: newLinkUrl,
+        resource_type: 'link'
+      }).select().single();
+
+      if (error) throw error;
+      if (data) {
+        setResources([...resources, data as any as ClientResource]);
+        setNewLinkUrl("");
+        setNewLinkTitle("");
+        setEditingResourceClientId(null);
+      }
+    } catch (err) {
+      console.error("Failed to add resource", err);
+      alert("Failed to add link");
+    } finally {
+      setIsSubmittingResource(false);
+    }
+  };
+
+  const handleDeleteResource = async (resourceId: string) => {
+    if (!confirm("Are you sure you want to delete this link?")) return;
+    try {
+      const { error } = await supabase.from("client_resources" as any).delete().eq("id", resourceId);
+      if (error) throw error;
+      setResources(resources.filter(r => r.id !== resourceId));
+    } catch (err) {
+      console.error("Failed to delete resource", err);
+      alert("Failed to delete link");
+    }
+  };
+
+
+  const today = new Date().toISOString().split("T")[0];
+
+  // Dashboard metrics
+  const metrics = useMemo(() => {
+    const tasksDueToday = tasks.filter(
+      (t) => t.due_date && t.due_date.split("T")[0] === today && t.status !== "completed"
+    );
+
+    const completedToday = tasks.filter(
+      (t) =>
+        t.status === "completed" &&
+        ((t.completed_at && t.completed_at.split("T")[0] === today) ||
+          (t.due_date && t.due_date.split("T")[0] === today))
+    );
+
+    const overdueTasks = tasks.filter(
+      (t) => t.status !== "completed" && isOverdue(t.due_date)
+    );
+
+    // Group active tasks by assigned_to
+    const teamWorkload: Record<string, { count: number; nextDeadline: string | null }> = {};
+    tasks
+      .filter((t) => t.status !== "completed" && t.assigned_to)
+      .forEach((task) => {
+        const member = task.assigned_to || "Unassigned";
+        if (!teamWorkload[member]) {
+          teamWorkload[member] = { count: 0, nextDeadline: null };
+        }
+        teamWorkload[member].count++;
+        if (
+          task.due_date &&
+          (!teamWorkload[member].nextDeadline ||
+            task.due_date < teamWorkload[member].nextDeadline!)
+        ) {
+          teamWorkload[member].nextDeadline = task.due_date;
+        }
+      });
+
+    return {
+      tasksDueToday: tasksDueToday.length,
+      completedToday: completedToday.length,
+      overdueTasks: overdueTasks.length,
+      teamWorkload,
+    };
+  }, [tasks, today]);
+
+  // Project metrics & filtering
+  const projectsWithMetrics = useMemo(() => {
+    return projects.map((project) => {
+      const projectTasks = tasks.filter((t) => t.project_id === project.id);
+      const totalTasks = projectTasks.length;
+      const completedTasks = projectTasks.filter((t) => t.status === "completed").length;
+      const overdueTasks = projectTasks.filter(
+        (t) => t.status !== "completed" && isOverdue(t.due_date)
+      ).length;
+      const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+      return {
+        ...project,
+        totalTasks,
+        completedTasks,
+        overdueTasks,
+        progress,
+        needsAttention: overdueTasks > 0,
+      };
+    });
+  }, [projects, tasks]);
+
+  // Filtered projects
+  const filteredProjects = useMemo(() => {
+    let result = projectsWithMetrics;
+
+    // Apply Status Filter
+    if (activeFilter !== "all") {
+      if (activeFilter === "needs_attention") {
+        result = result.filter((p) => p.needsAttention);
+      } else {
+        result = result.filter((p) => p.status === activeFilter);
+      }
+    }
+
+    // Apply Search Filter
+    if (searchQuery.trim()) {
+      const lowerQuery = searchQuery.toLowerCase();
+      result = result.filter(p => {
+        const businessName = p.clients?.business_name?.toLowerCase() || "";
+        const email = p.clients?.primary_email?.toLowerCase() || "";
+        return businessName.includes(lowerQuery) || email.includes(lowerQuery);
+      });
+    }
+
+    return result;
+  }, [projectsWithMetrics, activeFilter, searchQuery]);
+
+  // Count projects per filter
+  const filterCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: projectsWithMetrics.length,
+      needs_attention: projectsWithMetrics.filter((p) => p.needsAttention).length,
+    };
+    projectsWithMetrics.forEach((p) => {
+      counts[p.status] = (counts[p.status] || 0) + 1;
+    });
+    return counts;
+  }, [projectsWithMetrics]);
+
+  // Group projects by client
+  const clientGroups = useMemo(() => {
+    const groups: Record<string, {
+      client: Client | null;
+      projects: typeof projectsWithMetrics;
+      metrics: { totalTasks: number; completedTasks: number; overdueCount: number }
+    }> = {};
+
+    filteredProjects.forEach(p => {
+      const clientId = p.client_id || 'unknown';
+      if (!groups[clientId]) {
+        groups[clientId] = {
+          client: p.clients || null,
+          projects: [],
+          metrics: { totalTasks: 0, completedTasks: 0, overdueCount: 0 }
+        };
+      }
+      groups[clientId].projects.push(p);
+      groups[clientId].metrics.totalTasks += p.totalTasks;
+      groups[clientId].metrics.completedTasks += p.completedTasks;
+      groups[clientId].metrics.overdueCount += p.overdueTasks;
+    });
+
+    return Object.values(groups).sort((a, b) => {
+      const nameA = a.client?.business_name || 'Unknown';
+      const nameB = b.client?.business_name || 'Unknown';
+      return nameA.localeCompare(nameB);
+    });
+  }, [filteredProjects]);
+
+  const toggleClientExpand = (clientId: string) => {
+    setExpandedClients(prev => ({ ...prev, [clientId]: !prev[clientId] }));
+  };
+
+  const getStatusBadgeColor = (status: string) => {
+    switch (status) {
+      case "not_started":
+        return "bg-gray-600 text-gray-200";
+      case "in_progress":
+        return "bg-[#42CA80] text-slate-900";
+      case "on_hold":
+        return "bg-yellow-600 text-slate-900";
+      case "completed":
+        return "bg-blue-600 text-slate-900";
+      case "cancelled":
+        return "bg-red-600 text-slate-900";
+      default:
+        return "bg-gray-600 text-gray-200";
+    }
+  };
+
+  const formatServiceType = (serviceType: string) => {
+    return serviceType
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  return (
+    <>
+      {/* Header */}
+      <div className="mb-4 sm:mb-6 flex justify-between items-start">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 sm:text-2xl md:text-4xl font-mono tabular-nums">
+            Projects Dashboard
+          </h1>
+          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+            Manage all active projects and team workload
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+          {/* Search Bar */}
+          <div className="relative group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 group-focus-within:text-[#42CA80] transition-colors" />
+            <input
+              type="text"
+              placeholder="Search client or email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-[#666] focus:outline-none focus:border-[#42CA80] w-[200px] sm:w-[240px] transition-all"
+            />
+          </div>
+
+          <div className="flex bg-slate-100 rounded-lg p-1 mr-2">
+            <button
+              onClick={() => setViewMode('clients')}
+              className={clsx(
+                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
+                viewMode === 'clients' ? "bg-[#42CA80] text-black shadow-sm" : "text-slate-500 hover:text-slate-900"
+              )}
+            >
+              Clients
+            </button>
+            <button
+              onClick={() => setViewMode('projects')}
+              className={clsx(
+                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
+                viewMode === 'projects' ? "bg-[#42CA80] text-black shadow-sm" : "text-slate-500 hover:text-slate-900"
+              )}
+            >
+              All Projects
+            </button>
+          </div>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white text-sm font-bold rounded-lg "
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">New Project</span>
+          </button>
+          <Link
+            href="/projects/list"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-900 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors"
+          >
+            <ListTodo className="h-4 w-4" />
+            <span className="hidden sm:inline">List View</span>
+          </Link>
+        </div>
+      </div>
+
+      {showCreateModal && (
+        <CreateProjectModal
+          onClose={() => setShowCreateModal(false)}
+          onSuccess={() => {
+            setShowCreateModal(false);
+            window.location.reload(); // Simple refresh to show new project
+          }}
+        />
+      )}
+
+      {/* Team Pulse - Key Metrics */}
+      <div className="mb-4 grid grid-cols-3 gap-3 sm:mb-6 sm:gap-4">
+        {/* Tasks Due Today */}
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 sm:p-4">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-amber-400 sm:h-5 sm:w-5" />
+            <span className="text-[10px] text-amber-300 sm:text-xs">Due Today</span>
+          </div>
+          <p className="mt-1 text-xl font-bold text-amber-400 sm:mt-2 sm:text-4xl font-mono tabular-nums">
+            {metrics.tasksDueToday}
+          </p>
+        </div>
+
+        {/* Completed Today */}
+        <div className="rounded-xl border border-[#42CA80]/30 bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 p-3 sm:p-4">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-[#42CA80] sm:h-5 sm:w-5" />
+            <span className="text-[10px] text-[#42CA80]/80 sm:text-xs">Completed</span>
+          </div>
+          <p className="mt-1 text-xl font-bold text-[#42CA80] sm:mt-2 sm:text-4xl font-mono tabular-nums">
+            {metrics.completedToday}
+          </p>
+        </div>
+
+        {/* At Risk / Overdue */}
+        <div className={clsx(
+          "rounded-xl border p-3 sm:p-4",
+          metrics.overdueTasks > 0
+            ? "border-red-500/30 bg-red-500/10"
+            : "border-slate-200 bg-white"
+        )}>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className={clsx(
+              "h-4 w-4 sm:h-5 sm:w-5",
+              metrics.overdueTasks > 0 ? "text-red-400" : "text-slate-600"
+            )} />
+            <span className={clsx(
+              "text-[10px] sm:text-xs",
+              metrics.overdueTasks > 0 ? "text-red-300" : "text-slate-600"
+            )}>At Risk</span>
+          </div>
+          <p className={clsx(
+            "mt-1 text-xl font-bold sm:mt-2 sm:text-3xl",
+            metrics.overdueTasks > 0 ? "text-red-400" : "text-slate-600"
+          )}>
+            {metrics.overdueTasks}
+          </p>
+        </div>
+      </div>
+
+      {/* Who is doing what? */}
+      <div className="mb-4 rounded-xl border border-slate-200 bg-white sm:mb-6">
+        <button
+          onClick={() => setShowTeamDetails(!showTeamDetails)}
+          className="flex w-full items-center justify-between p-3 sm:p-4"
+        >
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/20 sm:h-10 sm:w-10">
+              <Users className="h-4 w-4 text-indigo-400 sm:h-5 sm:w-5" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-sm font-semibold text-slate-900 sm:text-base">Team Workload</h3>
+              <p className="text-[10px] text-slate-600 sm:text-xs">
+                {Object.keys(metrics.teamWorkload).length} team members with active tasks
+              </p>
+            </div>
+          </div>
+          {showTeamDetails ? (
+            <ChevronUp className="h-5 w-5 text-slate-600" />
+          ) : (
+            <ChevronDown className="h-5 w-5 text-slate-600" />
+          )}
+        </button>
+
+        {showTeamDetails && (
+          <div className="border-t border-slate-200 p-3 sm:p-4">
+            {Object.keys(metrics.teamWorkload).length === 0 ? (
+              <p className="text-center text-sm text-slate-600">No assigned tasks</p>
+            ) : (
+              <div className="space-y-2">
+                {/* Header - Hidden on mobile */}
+                <div className="hidden grid-cols-3 gap-4 border-b border-slate-200 pb-2 text-xs font-medium text-slate-600 sm:grid">
+                  <span>Team Member</span>
+                  <span className="text-center">Tasks</span>
+                  <span className="text-right">Next Deadline</span>
+                </div>
+                {/* Team rows */}
+                {Object.entries(metrics.teamWorkload)
+                  .sort((a, b) => b[1].count - a[1].count)
+                  .map(([member, data]) => (
+                    <div
+                      key={member}
+                      className="flex flex-col gap-1 rounded-lg bg-slate-50 p-3 sm:grid sm:grid-cols-3 sm:items-center sm:gap-4 sm:p-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-medium text-indigo-400">
+                          {member.charAt(0).toUpperCase()}
+                        </div>
+                        <span className="text-sm font-medium text-slate-900">{member}</span>
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-center">
+                        <span className="text-xs text-slate-600 sm:hidden">Tasks:</span>
+                        <span className="rounded-full bg-indigo-500/20 px-2.5 py-0.5 text-xs font-semibold text-indigo-400">
+                          {data.count}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-end">
+                        <span className="text-xs text-slate-600 sm:hidden">Next:</span>
+                        <span className={clsx(
+                          "text-xs",
+                          data.nextDeadline && isOverdue(data.nextDeadline)
+                            ? "font-medium text-red-400"
+                            : data.nextDeadline && isToday(data.nextDeadline)
+                              ? "font-medium text-amber-400"
+                              : "text-slate-500"
+                        )}>
+                          {data.nextDeadline
+                            ? formatDisplayDate(data.nextDeadline)
+                            : "No deadline"}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="mb-4 flex gap-1 overflow-x-auto pb-1 sm:mb-6 sm:gap-2">
+        {STATUS_FILTERS.map((filter) => {
+          const count = filterCounts[filter.key] || 0;
+          const isActive = activeFilter === filter.key;
+          const isNeedsAttention = filter.key === "needs_attention";
+
+          return (
+            <button
+              key={filter.key}
+              onClick={() => setActiveFilter(filter.key)}
+              className={clsx(
+                "flex-shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+                isActive
+                  ? isNeedsAttention
+                    ? "bg-red-500 text-slate-900"
+                    : "bg-white text-black"
+                  : isNeedsAttention && count > 0
+                    ? "bg-red-500/20 text-red-400 active:bg-red-500/30"
+                    : "bg-white text-slate-500 active:bg-slate-100"
+              )}
+            >
+              {filter.label}
+              {count > 0 && (
+                <span className={clsx(
+                  "ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                  isActive
+                    ? "bg-black/20 text-inherit"
+                    : isNeedsAttention && count > 0
+                      ? "bg-red-500/30 text-red-300"
+                      : "bg-slate-200 text-slate-500"
+                )}>
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Conditional Rendering based on View Mode */}
+      {viewMode === 'clients' ? (
+        // CLIENTS VIEW
+        <div className="space-y-4">
+          {clientGroups.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center">
+              <Briefcase className="mx-auto h-8 w-8 text-slate-600" />
+              <p className="mt-2 text-sm text-slate-600">No active client folders</p>
+            </div>
+          ) : (
+            clientGroups.map((group) => {
+              const clientId = group.client?.id || 'unknown';
+              const isExpanded = expandedClients[clientId];
+
+              return (
+                <div key={clientId} className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+                  <div
+                    onClick={() => toggleClientExpand(clientId)}
+                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-white transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-indigo-500/10 rounded-lg flex items-center justify-center border border-indigo-500/20">
+                        <User className="h-5 w-5 text-indigo-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-slate-900 max-w-[200px] sm:max-w-md truncate">
+                          {group.client?.business_name || "Unknown Client"}
+                        </h3>
+                        <p className="text-xs text-slate-600">
+                          {group.projects.length} Active Services
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      {/* Mini Metrics for Client */}
+                      <div className="hidden sm:flex items-center gap-3 text-xs text-slate-600">
+                        <span className="flex items-center gap-1">
+                          <ListTodo className="h-3 w-3" /> {group.metrics.completedTasks}/{group.metrics.totalTasks} Tasks
+                        </span>
+                        {group.metrics.overdueCount > 0 && (
+                          <span className="text-red-400 flex items-center gap-1 font-medium">
+                            <AlertTriangle className="h-3 w-3" /> {group.metrics.overdueCount} Alerts
+                          </span>
+                        )}
+                      </div>
+
+                      {isExpanded ? <ChevronUp className="h-5 w-5 text-slate-600" /> : <ChevronDown className="h-5 w-5 text-slate-600" />}
+                    </div>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="border-t border-slate-200 p-4 bg-slate-50">
+
+                      {/* CLIENT RESOURCES SECTION */}
+                      <div className="mb-6">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                            <LinkIcon className="h-4 w-4 text-[#42CA80]" />
+                            Client Resources
+                          </h4>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (editingResourceClientId === clientId) {
+                                setEditingResourceClientId(null);
+                              } else {
+                                setEditingResourceClientId(clientId);
+                                setNewLinkUrl("");
+                                setNewLinkTitle("");
+                              }
+                            }}
+                            className="text-xs text-[#42CA80] hover:text-[#3ab872] font-medium"
+                          >
+                            {editingResourceClientId === clientId ? "Cancel" : "+ Add Link"}
+                          </button>
+                        </div>
+
+                        {/* Add Resource Form */}
+                        {editingResourceClientId === clientId && (
+                          <div className="mb-4 bg-white p-3 rounded-lg border border-slate-300 flex flex-col gap-2 sm:flex-row sm:items-center">
+                            <input
+                              type="text"
+                              placeholder="Link Title (e.g. Drive Folder)"
+                              value={newLinkTitle}
+                              onChange={(e) => setNewLinkTitle(e.target.value)}
+                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-[#42CA80] outline-none"
+                            />
+                            <input
+                              type="text"
+                              placeholder="URL (https://...)"
+                              value={newLinkUrl}
+                              onChange={(e) => setNewLinkUrl(e.target.value)}
+                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-[#42CA80] outline-none"
+                            />
+                            <button
+                              disabled={isSubmittingResource}
+                              onClick={() => handleAddResource(clientId)}
+                              className="bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white text-xs font-bold px-4 py-1.5 rounded disabled:opacity-50"
+                            >
+                              {isSubmittingResource ? "Adding..." : "Save"}
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Existing Resources List */}
+                        <div className="flex flex-wrap gap-2">
+                          {resources.filter(r => r.client_id === clientId).map(resource => (
+                            <div key={resource.id} className="group flex items-center gap-2 bg-white border border-slate-300 px-3 py-2 rounded-lg hover:border-[#666] transition-colors">
+                              <a
+                                href={resource.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-xs text-slate-900 hover:text-[#42CA80]"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                                {resource.title}
+                              </a>
+                              <button
+                                onClick={() => handleDeleteResource(resource.id)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-600 hover:text-red-400"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ))}
+                          {resources.filter(r => r.client_id === clientId).length === 0 && !editingResourceClientId && (
+                            <p className="text-xs text-slate-600 italic">No resources linked.</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {/* RENDER PROJECTS FOR THIS CLIENT */}
+                        {group.projects.map(project => (
+                          <Link
+                            key={project.id}
+                            href={`/projects/${project.id}`}
+                            className={clsx(
+                              "block rounded-xl border bg-white p-4 transition-all active:scale-[0.98] sm:p-5",
+                              project.needsAttention
+                                ? "border-red-500/50 hover:border-red-500"
+                                : "border-slate-200 hover:border-[#42CA80]/50"
+                            )}
+                          >
+                            {/* Client Name Header is redundant here, show Service instead */}
+                            <div className="flex items-start justify-between gap-2">
+                              <h3 className="truncate text-base font-bold text-slate-900 sm:text-lg">
+                                {formatServiceType(project.service_type || "Project")}
+                              </h3>
+                              {project.needsAttention && (
+                                <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-400" />
+                              )}
+                            </div>
+
+                            <div className="mt-2 flex items-center justify-between gap-2">
+                              <span className="truncate text-xs text-slate-500 sm:text-sm">
+                                {statusLabels[project.status] || project.status}
+                              </span>
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div className="mt-3">
+                              <div className="flex items-center justify-between text-[10px] text-slate-600 sm:text-xs">
+                                <span>Progress</span>
+                                <span className="font-medium text-slate-500">
+                                  {project.completedTasks}/{project.totalTasks} tasks
+                                </span>
+                              </div>
+                              <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-50">
+                                <div
+                                  className={clsx(
+                                    "h-full rounded-full transition-all",
+                                    project.progress === 100
+                                      ? "bg-blue-500"
+                                      : project.needsAttention
+                                        ? "bg-red-500"
+                                        : "bg-[#42CA80]"
+                                  )}
+                                  style={{ width: `${project.progress}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Deadline */}
+                            <div className="mt-3 flex items-center justify-between text-xs">
+                              {project.deadline && (
+                                <div className={clsx(
+                                  "flex items-center gap-1",
+                                  isOverdue(project.deadline) ? "text-red-400" : "text-slate-600"
+                                )}>
+                                  <Calendar className="h-3 w-3" />
+                                  <span>{formatDisplayDate(project.deadline)}</span>
+                                </div>
+                              )}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProjects.length === 0 ? (
+            <div className="col-span-full rounded-xl border border-dashed border-slate-300 p-8 text-center">
+              <Briefcase className="mx-auto h-8 w-8 text-slate-600" />
+              <p className="mt-2 text-sm text-slate-600">No projects match this filter</p>
+            </div>
+          ) : (
+            filteredProjects.map((project) => {
+              const clientName = project.clients?.business_name || "Unknown Client";
+
+              return (
+                <Link
+                  key={project.id}
+                  href={`/projects/${project.id}`}
+                  className={clsx(
+                    "block rounded-xl border bg-white p-4 transition-all active:scale-[0.98] sm:p-5",
+                    project.needsAttention
+                      ? "border-red-500/50 hover:border-red-500"
+                      : "border-slate-200 hover:border-[#42CA80]/50"
+                  )}
+                >
+                  {/* Client Name */}
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="truncate text-base font-bold text-slate-900 sm:text-lg">
+                      {clientName}
+                    </h3>
+                    {project.needsAttention && (
+                      <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-400" />
+                    )}
+                  </div>
+
+                  {/* Service Type & Status */}
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <span className="truncate text-xs text-slate-500 sm:text-sm">
+                      {formatServiceType(project.service_type || "")}
+                    </span>
+                    <span
+                      className={clsx(
+                        "flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium sm:px-2.5 sm:text-xs",
+                        getStatusBadgeColor(project.status)
+                      )}
+                    >
+                      {statusLabels[project.status] || project.status}
+                    </span>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-[10px] text-slate-600 sm:text-xs">
+                      <span>Progress</span>
+                      <span className="font-medium text-slate-500">
+                        {project.completedTasks}/{project.totalTasks} tasks
+                      </span>
+                    </div>
+                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-50">
+                      <div
+                        className={clsx(
+                          "h-full rounded-full transition-all",
+                          project.progress === 100
+                            ? "bg-blue-500"
+                            : project.needsAttention
+                              ? "bg-red-500"
+                              : "bg-[#42CA80]"
+                        )}
+                        style={{ width: `${project.progress}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Deadline & Overdue Count */}
+                  <div className="mt-3 flex items-center justify-between text-xs">
+                    {project.deadline && (
+                      <div className={clsx(
+                        "flex items-center gap-1",
+                        isOverdue(project.deadline) ? "text-red-400" : "text-slate-600"
+                      )}>
+                        <Calendar className="h-3 w-3" />
+                        <span>{formatDisplayDate(project.deadline)}</span>
+                      </div>
+                    )}
+                    {project.overdueTasks > 0 && (
+                      <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-medium text-red-400">
+                        {project.overdueTasks} overdue
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              );
+            })
+          )}
+        </div>
+      )}
+    </>
+  );
+}
