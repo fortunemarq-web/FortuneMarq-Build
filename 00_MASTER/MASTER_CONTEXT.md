@@ -275,30 +275,29 @@ Everything in this list needs to be built. Tracked across the relevant folders.
 
 | What | Folder Responsible | Status |
 |---|---|---|
-| FMOS deployed to fmos.fortunemarq.com | 01_CRM_AND_TOOL | PENDING |
-| CRM changes from blueprint plan | 01_CRM_AND_TOOL | PENDING |
+| FMOS deployed to fmos.fortunemarq.com | 01_CRM_AND_TOOL | PENDING — highest priority blocker |
+| CRM changes from blueprint plan | 01_CRM_AND_TOOL | PENDING — Outreach Board, Lead Profile, role views, Revenue Forecast |
 | Lead upload to FMOS (Hubli_Final — 11 files ready) | 01_CRM_AND_TOOL + 07_DATA_AND_RESEARCH | BLOCKED — awaiting FMOS deployment |
-| Lead pipeline for other 8 cities | 07_DATA_AND_RESEARCH | PENDING |
-| PDF_Index.md | 07_DATA_AND_RESEARCH | PENDING — next task in folder |
-| PDF pipeline for Dharwad, Belgaum, Mangalore, Davangere, Ballari | 07_DATA_AND_RESEARCH | PENDING — SERP HTML ready |
-| SERP HTML collection + pipeline for Mysuru, Kalaburgi, Vijayapura | 07_DATA_AND_RESEARCH | PENDING |
-| Website Brief Generator App | 02_SERVICE_DELIVERY_AUTOMATION | PENDING |
-| SEO automation system | 02_SERVICE_DELIVERY_AUTOMATION | PENDING |
-| Ads automation system | 02_SERVICE_DELIVERY_AUTOMATION | PENDING |
-| Monthly report automation | 02_SERVICE_DELIVERY_AUTOMATION | PENDING |
-| Telecaller scripts (Afifa) | 03_SALES_SYSTEM | PENDING — L1a complete, L1b needed first |
-| WhatsApp templates (all 12 outcomes) | 03_SALES_SYSTEM | PENDING |
-| Proposal template | 03_SALES_SYSTEM | PENDING |
-| Agreement template | 09_LEGAL_AND_OPERATIONS | PENDING |
-| Client onboarding SOP | 04_CLIENT_MANAGEMENT | PENDING |
+| Finalise leads for other 8 cities (cleaned, not formatted) | 07_DATA_AND_RESEARCH | PENDING — Dharwad next |
+| PDF pipeline for Dharwad, Belgaum, Mangalore, Davangere, Ballari | 07_DATA_AND_RESEARCH | PENDING — SERP HTML ready, just needs pipeline run |
+| SERP HTML collection + pipeline for Mysuru, Kalaburgi, Vijayapura | 07_DATA_AND_RESEARCH | PENDING — no HTML yet |
+| Website Brief Generator App | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 1 build (Months 1–2) |
+| SEO automation system | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 3 build (Months 5–6) |
+| Ads automation system | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 2 build (Months 3–4) |
+| Monthly report automation | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 4 build (Months 7–8) |
+| Telecaller scripts — Hubli | 03_SALES_SYSTEM | COMPLETE — New architecture: 4 lead-type variants (A/B/C/D) × English. JSON data files created in FMOS_Script_Data/ for direct code use. Old Kanglish/Kannada .md files exist but are superseded by new type-based system. |
+| WhatsApp templates | 03_SALES_SYSTEM | COMPLETE — 17 templates across 5 categories (Curiosity, Bot Reply, Outcome Triggered, Follow-Back Reminder, Post Meeting). JSON files + TypeScript loader in FMOS_Template_Data/. Needs Meta WhatsApp API setup and niche landing pages before going live. |
+| Proposal + Agreement | 03_SALES_SYSTEM | COMPLETE — 5-6 page dynamic proposal generated from FMOS (Jabeer enters services + pricing manually, client data auto-filled). Agreement is a simple 1-page doc sent via WhatsApp/email, confirmed by client reply. JSON schema + services data + TypeScript loader in FMOS_Proposal_Data/. |
+| Agreement template | 09_LEGAL_AND_OPERATIONS | COMPLETE — agreement_template.md + service_terms.json + payment_and_cancellation_policy.md |
+| Client onboarding SOP | 04_CLIENT_MANAGEMENT | COMPLETE — onboarding_checklists.json (all 7 services) + onboarding.types.ts + index.ts + onboarding_sop.md |
 | Upsell system and triggers | 04_CLIENT_MANAGEMENT | PENDING |
-| GMB fully optimised | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING |
-| Instagram content — 5 posts/week | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING |
+| GMB fully optimised | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING — can start now, independent of FMOS |
+| Instagram content — 5 posts/week | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING — can start now |
 | FortuneMarq SEO content plan | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING |
-| 13–14 niche+city landing pages | 06_PAID_MARKETING | PENDING |
-| Meta ad campaigns (Phase 1) | 06_PAID_MARKETING | PENDING |
-| GST invoice setup | 08_FINANCE | PENDING |
-| Finance tracking activated in FMOS | 08_FINANCE | PENDING |
+| 13–14 niche+city landing pages | 06_PAID_MARKETING | PENDING — needed before ads launch |
+| Meta ad campaigns (Phase 1) | 06_PAID_MARKETING | PENDING — LAST step, all systems must be ready first |
+| GST invoice setup (add GSTIN to FMOS) | 08_FINANCE | PENDING |
+| Finance tracking activated in FMOS | 08_FINANCE | PENDING — do at deployment |
 
 ---
 
@@ -397,8 +396,12 @@ If a decision affects another folder — note it. Update that folder's context t
 | Date | Folder | Summary |
 |---|---|---|
 | March 2026 | 00_MASTER | Master context file created. Full business context, system map, team, tech stack, assets, targets, and decisions documented. |
-| 2026-03-19 | 07_DATA_AND_RESEARCH | Hubli data pipeline complete. Leads finalised (11 CSVs in Hubli_Final/), 75 PDFs generated in EN + KN (Types 1–4, 14 niches). PDF Generator pipeline reusable for 8 remaining cities. Content Build Hierarchy: L0 complete, L1a Hubli complete, L1b PDF_Index.md pending, L2–L7 pending. Next: PDF_Index.md then move to 03_SALES_SYSTEM for Telecaller Scripts. |
-| 2026-03-19 | ALL FOLDERS | All niche volumes updated from FortuneMarq_Master_Keyword_Research.xlsx. Replaced estimated numbers with real Google Keyword Planner data across all context files and data_loader.py. PDFs already generated with correct data — no regeneration needed. |
+| 2026-03-19 | 07_DATA_AND_RESEARCH | Hubli data pipeline complete. Leads finalised (11 CSVs in Hubli_Final/), 75 PDFs generated in EN + KN (Types 1–4, 14 niches). PDF Generator pipeline reusable for 8 remaining cities. PDF_Index.md created and complete. |
+| 2026-03-19 | ALL FOLDERS | All niche volumes updated from FortuneMarq_Master_Keyword_Research.xlsx. Real Google Keyword Planner data now in all context files and data_loader.py. PDFs already generated with correct data — no regeneration needed. |
+| 2026-03-19 | 03_SALES_SYSTEM | Telecaller scripts written for all Hubli niches — Kanglish + Kannada versions per niche. Call flow doc exists. L2 is complete for Hubli. |
+| 2026-03-31 | 00_MASTER | Full audit and cleanup of 00_MASTER folder. Fixed wrong niche volumes across all Claude_Project_Instructions.md projects (old estimated numbers replaced with real data). Fixed UNIVERSAL_PROJECT_PROMPT.md encoding corruption. Updated MASTER_CONTEXT.md Section 8 to reflect true status: PDF_Index COMPLETE, Hubli scripts COMPLETE. Misplaced CRM files (APPLICATION_DOCUMENTATION.md, FORTUNEMARQ_APP_CONTEXT.md) noted for relocation to 01_CRM_AND_TOOL. Duplicate _project_files/ subfolder identified as archive — not to be used for active work. |
+| 2026-04-01 | 03_SALES_SYSTEM | Script architecture (L2) + WhatsApp Templates (L3) + Proposal and Agreement data (L4) all completed.
+| 2026-04-02 | 09_LEGAL_AND_OPERATIONS + 04_CLIENT_MANAGEMENT | Agreement Template document (L4b) complete: agreement_template.md (1-page client-facing doc), service_terms.json (all 7 services), payment_and_cancellation_policy.md. Onboarding Checklists + SOP (L5b) complete: onboarding_checklists.json covers all 7 services with full task lists, asset collection lists, and team tasks. TypeScript types + FMOS loader built. onboarding_sop.md written — full 10-step SOP for Jabeer. | Services finalised: Website, GMB, SEO, Google Ads, Meta Ads, WhatsApp Marketing, AI Automations. Closing sequence locked: Proposal → Agreement doc → Client confirms by reply → Invoice → Onboarding. | Old generic per-niche scripts replaced with 4 lead-type variants based on SERP_Ranked + Has_Website columns: Type A (ranked), Type B (website, not ranked), Type C (no website), Type D (low volume). Language set to English. Script structure: Introduction → Opening Hook (market research angle) → Data Hook → FOMO Point (opportunity before competitors catch up) → Differentiator (not just ads — full online growth system) → Meeting Ask (30-45min with Jabeer, founder, presentation, valuable even without signing). Call outcomes: INTERESTED (book now / follow up later / send info), NOT INTERESTED (reason required), FOLLOW BACK (date+time), WRONG NUMBER/DEAD. 4 JSON files created in FMOS_Script_Data/ for direct code loading. TypeScript types + loader utility created. |
 
 ---
 

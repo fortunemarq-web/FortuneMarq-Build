@@ -1,0 +1,37 @@
+{
+  "category": "POST_MEETING",
+  "description": "Sent by Jabeer manually after the sales meeting. Covers the full closing sequence from proposal to invoice.",
+  "sentBy": "jabeer_manual",
+  "requiresMetaApproval": true,
+  "metaCategory": "UTILITY",
+  "templates": [
+    {
+      "id": "PROPOSAL_SENT",
+      "label": "Proposal Sent",
+      "stage": "post_meeting",
+      "variables": ["name", "businessName", "proposalLink"],
+      "message": "Hi {{name}}! 😊\n\nReally good speaking with you today. As discussed, here's the proposal for {{businessName}} —\n\n📄 {{proposalLink}}\n\nEverything we covered is in there — services, pricing, timelines. Have a look when you get a chance and let me know if you have any questions. Happy to clarify anything.\n\n— Jabeer, FortuneMarq"
+    },
+    {
+      "id": "PROPOSAL_FOLLOWUP",
+      "label": "Proposal Follow-Up (48hrs no reply)",
+      "stage": "post_meeting",
+      "variables": ["name"],
+      "message": "Hi {{name}}! 👋\n\nJust checking in — did you get a chance to look at the proposal I sent across?\n\nNo rush at all — just wanted to make sure it reached you okay and see if you have any questions.\n\n— Jabeer, FortuneMarq"
+    },
+    {
+      "id": "AGREEMENT_REQUEST",
+      "label": "Agreement Request",
+      "stage": "closing",
+      "variables": ["name", "service1", "service2"],
+      "message": "Hi {{name}}! 😊\n\nGreat to know you'd like to move forward! To confirm, please just reply to this message with a simple *\"Yes, confirmed\"* and we'll get started.\n\nJust to recap what we're starting with:\n✅ {{service1}}\n✅ {{service2}}\n\nOnce confirmed, I'll send across the invoice and we'll kick things off from there.\n\n— Jabeer, FortuneMarq"
+    },
+    {
+      "id": "INVOICE_SENT",
+      "label": "Invoice Sent",
+      "stage": "closing",
+      "variables": ["name", "invoiceLink"],
+      "message": "Hi {{name}}! 🎉\n\nWelcome to FortuneMarq! Here's your invoice —\n\n🧾 {{invoiceLink}}\n\nOnce payment is done, we'll start immediately. Onboarding checklist will come right after so we can get everything we need from your end quickly.\n\nExcited to get started on this!\n\n— Jabeer, FortuneMarq"
+    }
+  ]
+}

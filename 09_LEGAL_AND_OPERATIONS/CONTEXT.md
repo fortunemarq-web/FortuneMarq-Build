@@ -12,11 +12,11 @@ Create and store all legal documents, business policies, and compliance material
 - GMB: Created and verified
 
 ## What Needs to Be Created
-- [ ] Client Agreement Template (L4b)
-- [ ] Service-specific terms (per service type)
+- [x] Client Agreement Template (L4b) — COMPLETE: agreement_template.md in Agreement_Templates/
+- [x] Service-specific terms (per service type) — COMPLETE: service_terms.json (all 7 services + exit policy)
+- [x] Cancellation policy document — COMPLETE: payment_and_cancellation_policy.md in Business_Policies/
 - [ ] Privacy Policy for fortunemarq.com
 - [ ] Website Ownership Transfer document
-- [ ] Cancellation policy document
 - [ ] GST invoice compliance checklist
 
 ## Connections to Other Folders
@@ -27,6 +27,7 @@ Create and store all legal documents, business policies, and compliance material
 | Date | Summary |
 |---|---|
 | March 2026 | Context file created. Existing assets documented. Creation list defined. |
+| 2026-04-02 | Agreement Template (L4b) complete. Files created: agreement_template.md (the actual 1-page doc Jabeer sends to clients), service_terms.json (service-specific terms for all 7 services + universal terms + exit policy), payment_and_cancellation_policy.md (full payment SOP including overdue communication flow). |
 ---
 
 ## FortuneMarq System DNA
@@ -77,11 +78,12 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 
 ### Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — IN PROGRESS
-- L2 Telecaller Scripts — PENDING
-- L3 WhatsApp Templates — PENDING
-- L4 Proposal + Agreement — PENDING
-- L5 SOPs + Onboarding + Brief Form — PENDING
+- L1 Lead CSV Files + PDF Index — COMPLETE
+- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
+- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
+- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
 - L6 Report Templates + Health Score — PENDING
 - L7 Upsell System — PENDING
 
@@ -98,8 +100,8 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 - ₹5L MRR → 2-year vision
 
 ### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (30,000/mo) 2. Skin Clinics (7,500/mo) 3. Computer Training (7,500/mo)
-4. Dental (3,900/mo) 5. JEE/NEET Coaching (2,550/mo) 6. Car Rentals (2,550/mo)
+1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
+4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
 
 ### Golden Rule
 Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.

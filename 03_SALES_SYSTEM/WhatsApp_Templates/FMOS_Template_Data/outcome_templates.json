@@ -1,0 +1,54 @@
+{
+  "category": "OUTCOME_TRIGGERED",
+  "description": "Auto-sent by FMOS immediately when Afifa logs a call outcome. One message per outcome. Sent from FortuneMarq WhatsApp number.",
+  "sentBy": "fmos_auto_on_outcome_log",
+  "requiresMetaApproval": true,
+  "metaCategory": "UTILITY",
+  "templates": [
+    {
+      "id": "OUTCOME_BOOK_MEETING",
+      "outcomeId": "INTERESTED_BOOK_NOW",
+      "label": "Meeting Confirmation",
+      "variables": ["businessName", "meetingDate", "meetingTime", "meetLink"],
+      "message": "Hi {{businessName}}! 🙌\n\nJust confirming your meeting with Jabeer from FortuneMarq —\n\n📅 {{meetingDate}}\n⏰ {{meetingTime}}\n📲 Google Meet: {{meetLink}}\n\nHe'll walk you through a presentation built specifically for your business. See you then!"
+    },
+    {
+      "id": "OUTCOME_FOLLOW_UP_LATER",
+      "outcomeId": "INTERESTED_FOLLOW_UP_LATER",
+      "label": "Follow Up Later Confirmation",
+      "variables": ["businessName", "followUpDate", "landingPageLink"],
+      "message": "Hi {{businessName}}!\n\nThanks for your time today. I'll follow up with you on {{followUpDate}} as discussed.\n\nIn the meantime, check out what we do here: {{landingPageLink}}\n\nTalk soon!\n— Afifa, FortuneMarq"
+    },
+    {
+      "id": "OUTCOME_SEND_INFO",
+      "outcomeId": "INTERESTED_SEND_INFO",
+      "label": "Send More Info",
+      "description": "Bot sends the matching bot_reply template (Type A/B/C/D) based on lead type. No separate message needed here.",
+      "variables": [],
+      "message": null,
+      "handledBy": "bot_reply_templates"
+    },
+    {
+      "id": "OUTCOME_NOT_INTERESTED",
+      "outcomeId": "NOT_INTERESTED",
+      "label": "Not Interested — Soft Close",
+      "variables": ["businessName"],
+      "message": "Hi {{businessName}}!\n\nNo worries at all — really appreciate you taking the time to speak with me.\n\nIf things change or you'd ever like to know more about what's happening in your market, feel free to reach out anytime. We're always here.\n\nHave a great day! 😊\n— FortuneMarq"
+    },
+    {
+      "id": "OUTCOME_FOLLOW_BACK",
+      "outcomeId": "FOLLOW_BACK",
+      "label": "Follow Back Confirmation",
+      "variables": ["businessName", "followBackDate", "followBackTime"],
+      "message": "Hi {{businessName}}!\n\nNo problem at all! I'll give you a call on {{followBackDate}} at around {{followBackTime}}.\n\nHave a good day!\n— Afifa, FortuneMarq"
+    },
+    {
+      "id": "OUTCOME_WRONG_NUMBER",
+      "outcomeId": "WRONG_NUMBER",
+      "label": "Wrong Number / Dead",
+      "variables": [],
+      "message": null,
+      "description": "No message sent. Lead marked dead and added to cleanup queue."
+    }
+  ]
+}

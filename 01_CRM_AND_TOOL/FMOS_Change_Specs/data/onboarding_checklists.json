@@ -1,0 +1,747 @@
+{
+  "description": "Per-service onboarding checklists loaded by FMOS when a new client is created. Triggered automatically after agreement confirmation is logged. Each service has its own checklist. If a client signs for multiple services, all relevant checklists are merged into one onboarding task list in FMOS.",
+  "version": "1.0",
+  "triggeredBy": "Agreement status changes to CONFIRMED in FMOS",
+  "assignedTo": "Jabeer (all onboarding tasks default to Jabeer — he delegates to team as appropriate)",
+
+  "onboarding_flow": {
+    "step1": "Agreement confirmed → FMOS creates onboarding task list for the client",
+    "step2": "Jabeer sends welcome message to client via WhatsApp (template: ONBOARD_WELCOME)",
+    "step3": "Jabeer works through asset collection checklist (WhatsApp or meeting)",
+    "step4": "All assets stored in client's Asset Vault in FMOS",
+    "step5": "Setup tasks assigned to team (Zaid/Sufiyan for websites, Jabeer for everything else)",
+    "step6": "First delivery milestone logged in FMOS",
+    "step7": "Onboarding marked COMPLETE — client status changes to ACTIVE"
+  },
+
+  "services": {
+
+    "WEBSITE": {
+      "label": "Website Building",
+      "onboardingTimeTarget": "Complete asset collection within 3 days of agreement. Site live within 10–14 working days.",
+      "jabeerActions": [
+        {
+          "taskId": "WEB_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WEB_J2",
+          "task": "Share Website Brief Form link with client (or fill it together on a call)",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "Brief form is the single most important onboarding step for websites. Everything the cousins build comes from this."
+        },
+        {
+          "taskId": "WEB_J3",
+          "task": "Collect domain login credentials from client",
+          "dueBy": "Day 1–2",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Domain Access"
+        },
+        {
+          "taskId": "WEB_J4",
+          "task": "Collect hosting login credentials from client (or set up Hostinger if needed)",
+          "dueBy": "Day 1–2",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Hosting Access"
+        },
+        {
+          "taskId": "WEB_J5",
+          "task": "Review completed Brief Form before assigning to cousins",
+          "dueBy": "Day 2–3",
+          "owner": "Jabeer",
+          "notes": "Do not assign to Zaid/Sufiyan until brief is complete and reviewed."
+        },
+        {
+          "taskId": "WEB_J6",
+          "task": "Create website build task in FMOS — assign to Zaid or Sufiyan",
+          "dueBy": "Day 3",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WEB_J7",
+          "task": "Review Stage 1 (structure/layout) submitted by cousin",
+          "dueBy": "Day 7",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WEB_J8",
+          "task": "Review final website before client preview",
+          "dueBy": "Day 9–10",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WEB_J9",
+          "task": "Get written client approval before going live",
+          "dueBy": "Day 10",
+          "owner": "Jabeer",
+          "notes": "Send preview link. Client confirms via WhatsApp. Log confirmation in FMOS."
+        },
+        {
+          "taskId": "WEB_J10",
+          "task": "Go live — point domain to hosting, final checks",
+          "dueBy": "Day 11–12",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WEB_J11",
+          "task": "Connect Google Analytics and Google Search Console",
+          "dueBy": "Go-live day",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WEB_J12",
+          "task": "Mark onboarding complete in FMOS. Client status → ACTIVE.",
+          "dueBy": "Go-live day",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "WEB_A1",
+          "asset": "Logo",
+          "format": "PNG with transparent background (preferred) or SVG",
+          "storeIn": "Asset Vault → Brand Assets",
+          "required": true
+        },
+        {
+          "assetId": "WEB_A2",
+          "asset": "Brand colours",
+          "format": "Hex codes or just confirm from logo",
+          "storeIn": "Asset Vault → Brand Assets",
+          "required": true
+        },
+        {
+          "assetId": "WEB_A3",
+          "asset": "Business photos",
+          "format": "JPG/PNG — interior, exterior, team, services in action. Minimum 10 photos.",
+          "storeIn": "Asset Vault → Photos",
+          "required": true,
+          "notes": "If client has no photos, advise them to take on phone. WhatsApp over is fine."
+        },
+        {
+          "assetId": "WEB_A4",
+          "asset": "List of services offered",
+          "format": "WhatsApp message or typed list is fine",
+          "storeIn": "Brief Form → Services section",
+          "required": true
+        },
+        {
+          "assetId": "WEB_A5",
+          "asset": "Domain login credentials",
+          "format": "Username + password for registrar (GoDaddy, Hostinger, etc.)",
+          "storeIn": "Asset Vault → Domain Access (encrypted)",
+          "required": true
+        },
+        {
+          "assetId": "WEB_A6",
+          "asset": "Hosting login credentials",
+          "format": "cPanel / Hostinger login",
+          "storeIn": "Asset Vault → Hosting Access (encrypted)",
+          "required": true
+        },
+        {
+          "assetId": "WEB_A7",
+          "asset": "Completed Website Brief Form",
+          "format": "Submitted via the Brief Form app in FMOS",
+          "storeIn": "Client profile → Brief Form tab",
+          "required": true
+        },
+        {
+          "assetId": "WEB_A8",
+          "asset": "Existing content (if any)",
+          "format": "Old website text, brochures, PDFs — anything the client already has",
+          "storeIn": "Asset Vault → Existing Content",
+          "required": false
+        }
+      ],
+      "teamTasks": [
+        {
+          "taskId": "WEB_T1",
+          "task": "Build website as per Brief Form and Jabeer's assigned prompts",
+          "owner": "Zaid or Sufiyan (assigned by Jabeer)",
+          "dueBy": "Day 7 (Stage 1 preview)",
+          "submitVia": "FMOS task update with preview link"
+        },
+        {
+          "taskId": "WEB_T2",
+          "task": "Apply Jabeer's Stage 1 review feedback",
+          "owner": "Zaid or Sufiyan",
+          "dueBy": "Day 9",
+          "submitVia": "FMOS task update"
+        }
+      ]
+    },
+
+    "GMB": {
+      "label": "GMB Optimization",
+      "onboardingTimeTarget": "Full access and setup complete within 2 days. First optimization actions within 5 days.",
+      "jabeerActions": [
+        {
+          "taskId": "GMB_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GMB_J2",
+          "task": "Request Google Business Profile access from client (send invite from FortuneMarq Google account)",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "Ask client to accept the manager invite from Google. Send them a step-by-step if needed."
+        },
+        {
+          "taskId": "GMB_J3",
+          "task": "Audit current GMB profile — note what's missing or wrong",
+          "dueBy": "Day 1–2 (after access granted)",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GMB_J4",
+          "task": "Collect business photos from client",
+          "dueBy": "Day 2",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Photos"
+        },
+        {
+          "taskId": "GMB_J5",
+          "task": "Update GMB — categories, description, services, hours, photos, Q&A",
+          "dueBy": "Day 3–5",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GMB_J6",
+          "task": "Log GMB baseline metrics in FMOS (views, calls, direction requests)",
+          "dueBy": "Day 5",
+          "owner": "Jabeer",
+          "notes": "Screenshot from GMB dashboard. This is the benchmark for Month 1 report."
+        },
+        {
+          "taskId": "GMB_J7",
+          "task": "Mark onboarding complete. Client status → ACTIVE.",
+          "dueBy": "Day 5",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "GMB_A1",
+          "asset": "Google Business Profile access",
+          "format": "Manager invite accepted by client",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "GMB_A2",
+          "asset": "Business photos",
+          "format": "Interior, exterior, team, products/services. Minimum 10.",
+          "storeIn": "Asset Vault → Photos",
+          "required": true
+        },
+        {
+          "assetId": "GMB_A3",
+          "asset": "Business hours",
+          "format": "WhatsApp message listing days and times",
+          "storeIn": "Client profile → Business Info",
+          "required": true
+        },
+        {
+          "assetId": "GMB_A4",
+          "asset": "List of services offered",
+          "format": "WhatsApp message or typed list",
+          "storeIn": "Client profile → Business Info",
+          "required": true
+        },
+        {
+          "assetId": "GMB_A5",
+          "asset": "Exact business address",
+          "format": "Full address with pincode",
+          "storeIn": "Client profile → Business Info",
+          "required": true
+        }
+      ]
+    },
+
+    "SEO": {
+      "label": "SEO",
+      "onboardingTimeTarget": "All access granted within 3 days. Technical audit complete within 7 days.",
+      "jabeerActions": [
+        {
+          "taskId": "SEO_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "SEO_J2",
+          "task": "Request website backend access from client",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Website Access"
+        },
+        {
+          "taskId": "SEO_J3",
+          "task": "Request Google Search Console access — add FortuneMarq Google account as owner/full user",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "If client has no GSC set up, create and verify it. Property type: domain."
+        },
+        {
+          "taskId": "SEO_J4",
+          "task": "Request Google Analytics access — add FortuneMarq Google account as Editor",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "If client has no GA4, set it up and install tracking code on website."
+        },
+        {
+          "taskId": "SEO_J5",
+          "task": "Run full technical SEO audit",
+          "dueBy": "Day 5–7",
+          "owner": "Jabeer",
+          "notes": "Check: page speed, mobile usability, crawl errors, broken links, meta tags, heading structure, local SEO signals."
+        },
+        {
+          "taskId": "SEO_J6",
+          "task": "Log baseline keyword rankings in FMOS",
+          "dueBy": "Day 7",
+          "owner": "Jabeer",
+          "notes": "Track 5–15 keywords depending on SEO tier. These are the Month 1 benchmark."
+        },
+        {
+          "taskId": "SEO_J7",
+          "task": "Create Month 1 SEO action plan — share with client",
+          "dueBy": "Day 7",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "SEO_J8",
+          "task": "Mark onboarding complete. Client status → ACTIVE.",
+          "dueBy": "Day 7",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "SEO_A1",
+          "asset": "Website backend access",
+          "format": "CMS login (WordPress, Wix, etc.) or Antigravity access",
+          "storeIn": "Asset Vault → Website Access (encrypted)",
+          "required": true
+        },
+        {
+          "assetId": "SEO_A2",
+          "asset": "Google Search Console access",
+          "format": "Full user / owner access granted to FortuneMarq Google account",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "SEO_A3",
+          "asset": "Google Analytics access",
+          "format": "Editor access granted to FortuneMarq Google account",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "SEO_A4",
+          "asset": "Target keywords or business priorities",
+          "format": "WhatsApp — just ask 'What do you want to rank for?' in simple language",
+          "storeIn": "Client profile → SEO Goals",
+          "required": false,
+          "notes": "FortuneMarq leads the keyword strategy. This is just directional input from the client."
+        }
+      ]
+    },
+
+    "GOOGLE_ADS": {
+      "label": "Google Ads Management",
+      "onboardingTimeTarget": "All access granted within 3 days. Campaigns live within 7 days.",
+      "jabeerActions": [
+        {
+          "taskId": "GADS_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GADS_J2",
+          "task": "Request Google Ads account access — or create one for the client",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "If creating new account: use client's Google account, not FortuneMarq's. The account must belong to the client.",
+          "store": "Asset Vault → Account Access"
+        },
+        {
+          "taskId": "GADS_J3",
+          "task": "Confirm monthly ad budget with client in writing (WhatsApp message)",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "Log the confirmed budget in FMOS client profile. This is the reference if any budget dispute arises."
+        },
+        {
+          "taskId": "GADS_J4",
+          "task": "Confirm the landing page / website URL the ads will send traffic to",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "Ads cannot run effectively without a strong landing page. If client has no website, recommend Website service first."
+        },
+        {
+          "taskId": "GADS_J5",
+          "task": "Set up billing on the Google Ads account (client's own payment method)",
+          "dueBy": "Day 2",
+          "owner": "Jabeer",
+          "notes": "Guide client to add their card/UPI. FortuneMarq must not be added as billing contact."
+        },
+        {
+          "taskId": "GADS_J6",
+          "task": "Build campaign structure, keyword list, ad copy. Share for Jabeer review before launch.",
+          "dueBy": "Day 5",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GADS_J7",
+          "task": "Launch campaigns. Log launch date in FMOS.",
+          "dueBy": "Day 7",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GADS_J8",
+          "task": "Send launch confirmation to client with what to expect in Week 1",
+          "dueBy": "Launch day",
+          "template": "GADS_LAUNCH_CONFIRM",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "GADS_J9",
+          "task": "Mark onboarding complete. Client status → ACTIVE.",
+          "dueBy": "Launch day",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "GADS_A1",
+          "asset": "Google Ads account access",
+          "format": "Admin access granted to FortuneMarq Google Ads manager account",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "GADS_A2",
+          "asset": "Confirmed monthly ad budget",
+          "format": "Written confirmation via WhatsApp",
+          "storeIn": "Client profile → Ads Budget",
+          "required": true
+        },
+        {
+          "assetId": "GADS_A3",
+          "asset": "Landing page URL",
+          "format": "URL link",
+          "storeIn": "Client profile → Campaign Info",
+          "required": true
+        },
+        {
+          "assetId": "GADS_A4",
+          "asset": "Phone number to use in ads",
+          "format": "Mobile number — must be reachable during business hours",
+          "storeIn": "Client profile → Business Info",
+          "required": true
+        }
+      ]
+    },
+
+    "META_ADS": {
+      "label": "Meta Ads Management",
+      "onboardingTimeTarget": "All access granted within 3 days. Campaigns live within 7 days.",
+      "jabeerActions": [
+        {
+          "taskId": "META_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "META_J2",
+          "task": "Request Facebook Page admin access",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "Client must add FortuneMarq's Facebook account as Page admin. Send them a step-by-step if needed.",
+          "store": "Asset Vault → Account Access"
+        },
+        {
+          "taskId": "META_J3",
+          "task": "Request Meta Business Manager access — or create one for the client",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "Client's Business Manager must own the ad account. FortuneMarq is added as a partner agency."
+        },
+        {
+          "taskId": "META_J4",
+          "task": "Confirm monthly ad budget with client in writing (WhatsApp message)",
+          "dueBy": "Day 1",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "META_J5",
+          "task": "Collect brand photos / videos for ad creatives",
+          "dueBy": "Day 2",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Ad Creatives"
+        },
+        {
+          "taskId": "META_J6",
+          "task": "Set up Meta Pixel on client's website (if applicable)",
+          "dueBy": "Day 3",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "META_J7",
+          "task": "Build campaign — audiences, creatives, ad copy. Review before launch.",
+          "dueBy": "Day 5",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "META_J8",
+          "task": "Launch campaigns. Log launch date in FMOS.",
+          "dueBy": "Day 7",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "META_J9",
+          "task": "Send launch confirmation to client with what to expect in Week 1–2",
+          "dueBy": "Launch day",
+          "template": "META_LAUNCH_CONFIRM",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "META_J10",
+          "task": "Mark onboarding complete. Client status → ACTIVE.",
+          "dueBy": "Launch day",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "META_A1",
+          "asset": "Facebook Page admin access",
+          "format": "Admin role granted to FortuneMarq Facebook account",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "META_A2",
+          "asset": "Meta Business Manager access",
+          "format": "Partner access for FortuneMarq",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "META_A3",
+          "asset": "Confirmed monthly ad budget",
+          "format": "Written confirmation via WhatsApp",
+          "storeIn": "Client profile → Ads Budget",
+          "required": true
+        },
+        {
+          "assetId": "META_A4",
+          "asset": "Brand photos or videos for creatives",
+          "format": "JPG/PNG (1080x1080 or higher) or MP4 (under 30 seconds). WhatsApp is fine.",
+          "storeIn": "Asset Vault → Ad Creatives",
+          "required": true
+        },
+        {
+          "assetId": "META_A5",
+          "asset": "Instagram Business Profile (if exists)",
+          "format": "Connected to Facebook Page. FortuneMarq added via Business Manager.",
+          "storeIn": "Asset Vault → Account Access",
+          "required": false
+        }
+      ]
+    },
+
+    "WHATSAPP_MARKETING": {
+      "label": "WhatsApp Marketing",
+      "onboardingTimeTarget": "API setup and template submission within 5 days. First campaign within 14 days.",
+      "jabeerActions": [
+        {
+          "taskId": "WA_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WA_J2",
+          "task": "Confirm the dedicated phone number for WhatsApp API",
+          "dueBy": "Day 1",
+          "owner": "Jabeer",
+          "notes": "This number must NOT be registered with personal WhatsApp. It gets migrated to WhatsApp Business API. If client doesn't have one, advise getting a new SIM."
+        },
+        {
+          "taskId": "WA_J3",
+          "task": "Request Meta Business Manager access to set up WhatsApp Business API",
+          "dueBy": "Day 1",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WA_J4",
+          "task": "Set up WhatsApp Business API on the client's phone number",
+          "dueBy": "Day 3",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WA_J5",
+          "task": "Submit 3–5 message templates for Meta approval",
+          "dueBy": "Day 4",
+          "owner": "Jabeer",
+          "notes": "Templates take 1–3 days to approve. Submit early."
+        },
+        {
+          "taskId": "WA_J6",
+          "task": "Collect client's customer contact list",
+          "dueBy": "Day 5",
+          "owner": "Jabeer",
+          "notes": "CSV format with name + phone number. Must be opt-in contacts only.",
+          "store": "Asset Vault → Contact List"
+        },
+        {
+          "taskId": "WA_J7",
+          "task": "Once templates approved — run first test broadcast to 5–10 numbers",
+          "dueBy": "Day 10",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WA_J8",
+          "task": "Launch first full broadcast campaign",
+          "dueBy": "Day 14",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "WA_J9",
+          "task": "Mark onboarding complete. Client status → ACTIVE.",
+          "dueBy": "Day 14",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "WA_A1",
+          "asset": "Dedicated phone number for WhatsApp API",
+          "format": "Mobile number (not registered with personal WhatsApp)",
+          "storeIn": "Client profile → Business Info",
+          "required": true
+        },
+        {
+          "assetId": "WA_A2",
+          "asset": "Meta Business Manager access",
+          "format": "Partner access for FortuneMarq",
+          "storeIn": "Asset Vault → Account Access",
+          "required": true
+        },
+        {
+          "assetId": "WA_A3",
+          "asset": "Customer contact list",
+          "format": "CSV or Excel — Name, Phone Number columns. Opt-in contacts only.",
+          "storeIn": "Asset Vault → Contact List",
+          "required": true
+        }
+      ]
+    },
+
+    "AI_AUTOMATIONS": {
+      "label": "AI Automations",
+      "onboardingTimeTarget": "Discovery session within 3 days. First automation deployed within 14–21 days.",
+      "jabeerActions": [
+        {
+          "taskId": "AI_J1",
+          "task": "Send welcome message to client",
+          "template": "ONBOARD_WELCOME",
+          "dueBy": "Same day as agreement confirmation",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "AI_J2",
+          "task": "Book and run 30–45 minute discovery session with client",
+          "dueBy": "Day 1–3",
+          "owner": "Jabeer",
+          "notes": "Goal: understand their current workflow, identify the 2–3 highest-impact automation opportunities. Log notes in FMOS."
+        },
+        {
+          "taskId": "AI_J3",
+          "task": "Define automation scope — confirm with client in writing",
+          "dueBy": "Day 3",
+          "owner": "Jabeer",
+          "notes": "Send a short WhatsApp summary: 'Here's what we'll build: [list]. Confirm to start.' Client confirms by reply."
+        },
+        {
+          "taskId": "AI_J4",
+          "task": "Request access to all third-party tools needed",
+          "dueBy": "Day 3",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Account Access"
+        },
+        {
+          "taskId": "AI_J5",
+          "task": "Build Automation 1 (highest priority from discovery)",
+          "dueBy": "Day 10–14",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "AI_J6",
+          "task": "Test automation with client — get feedback",
+          "dueBy": "Day 14–16",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "AI_J7",
+          "task": "Apply feedback and deploy Automation 1 live",
+          "dueBy": "Day 17–21",
+          "owner": "Jabeer"
+        },
+        {
+          "taskId": "AI_J8",
+          "task": "Provide documentation: how the automation works, what to do if it fails",
+          "dueBy": "Deployment day",
+          "owner": "Jabeer",
+          "store": "Asset Vault → Automation Documentation"
+        },
+        {
+          "taskId": "AI_J9",
+          "task": "Mark onboarding complete. Client status → ACTIVE.",
+          "dueBy": "Deployment day",
+          "owner": "Jabeer"
+        }
+      ],
+      "assetsToCollect": [
+        {
+          "assetId": "AI_A1",
+          "asset": "Access to all tools the automation will connect",
+          "format": "Login credentials or API keys for each tool (CRM, calendar, WhatsApp, etc.)",
+          "storeIn": "Asset Vault → Account Access (encrypted)",
+          "required": true
+        },
+        {
+          "assetId": "AI_A2",
+          "asset": "Discovery session notes",
+          "format": "Logged in FMOS by Jabeer during/after the session",
+          "storeIn": "Client profile → Automation Notes",
+          "required": true
+        },
+        {
+          "assetId": "AI_A3",
+          "asset": "Written confirmation of automation scope",
+          "format": "Client's WhatsApp reply confirming the scope summary",
+          "storeIn": "Client profile → Conversation Log",
+          "required": true
+        }
+      ]
+    }
+  }
+}

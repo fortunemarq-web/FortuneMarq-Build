@@ -1,0 +1,179 @@
+{
+  "description": "Full service details used to populate Page 4 of the proposal. Only services Jabeer selects in FMOS are included in the generated PDF. Pricing is NOT stored here — Jabeer enters pricing manually per proposal in FMOS.",
+
+  "services": [
+    {
+      "id": "WEBSITE",
+      "label": "Website Building",
+      "layer": "Foundation Layer",
+      "tagline": "A fast, professional website built specifically for your business and your customers in {{city}}.",
+      "whatWeDo": "We start with a detailed brief — your goals, your services, your brand. From there we design and build your website, review it with you, and launch it live. Built to load fast, look professional on mobile, and convert visitors into enquiries.",
+      "deliverables": [
+        "Live website — mobile optimised and fast loading",
+        "Contact form and WhatsApp button",
+        "Google Analytics connected",
+        "Google Search Console set up",
+        "Basic on-page SEO in place from day one"
+      ],
+      "timeline": "7–10 working days from brief approval",
+      "whatWeNeed": [
+        "Logo and brand colours",
+        "Photos of your business (or we guide you on what to take)",
+        "Domain and hosting details",
+        "List of services you offer"
+      ]
+    },
+
+    {
+      "id": "GMB",
+      "label": "GMB Optimization",
+      "layer": "Foundation Layer",
+      "tagline": "Your Google Business Profile, fully set up and actively working to bring you local customers every day.",
+      "whatWeDo": "Most businesses set up their Google Business Profile once and forget it. We treat it as an active marketing channel — optimised categories, regular posts, photo strategy, review management, Q&A setup. A properly managed GMB profile is one of the most cost-effective ways to get local leads.",
+      "deliverables": [
+        "Fully optimised Google Business Profile",
+        "Category and service area setup",
+        "Monthly posts (4 per month)",
+        "Review response management",
+        "Photo uploads and ongoing updates",
+        "Monthly performance snapshot"
+      ],
+      "timeline": "Setup complete in week 1. Results visible in 30–60 days.",
+      "whatWeNeed": [
+        "Google Business Profile login access",
+        "Business photos",
+        "Business hours and service list",
+        "Any existing customer reviews to work with"
+      ]
+    },
+
+    {
+      "id": "SEO",
+      "label": "SEO",
+      "layer": "Visibility Layer",
+      "tagline": "Getting your website to rank when people in {{city}} search for {{niche}} services — so they find you instead of your competitors.",
+      "whatWeDo": "SEO is a long game but it compounds over time. We start with a full technical audit of your website, identify what's blocking it from ranking, fix it, then build on top of it — keyword targeting, on-page content, local SEO signals, and monthly rank tracking. We report every month on exactly where you rank and what moved.",
+      "deliverables": [
+        "Technical SEO audit and fixes",
+        "Keyword targeting and on-page optimization",
+        "Local SEO setup (city and niche signals)",
+        "Monthly keyword rank report",
+        "Google Search Console and Analytics access shared with you",
+        "Monthly action summary"
+      ],
+      "timeline": "First movements visible in 60–90 days. Significant results in 4–6 months.",
+      "whatWeNeed": [
+        "Website access (for on-page changes)",
+        "Google Search Console access",
+        "Google Analytics access"
+      ],
+      "pricingReference": {
+        "note": "Pricing entered manually by Jabeer in FMOS",
+        "tiers": [
+          {"name": "SEO Starter", "monthlyPrice": 7000, "keywords": 5},
+          {"name": "SEO Growth", "monthlyPrice": 10000, "keywords": 10},
+          {"name": "SEO Dominate", "monthlyPrice": 15000, "keywords": "15+"}
+        ]
+      }
+    },
+
+    {
+      "id": "GOOGLE_ADS",
+      "label": "Google Ads Management",
+      "layer": "Visibility Layer",
+      "tagline": "Your business at the top of Google the moment someone in {{city}} searches for {{niche}} — from day one.",
+      "whatWeDo": "While SEO builds long-term visibility, Google Ads gets you leads immediately. We handle everything — campaign structure, keyword selection, ad copy, bid management, daily monitoring, and monthly optimization. You get a weekly performance summary and a detailed monthly report.",
+      "deliverables": [
+        "Campaign setup and structure",
+        "Keyword research and negative keyword list",
+        "Ad copy — multiple variants tested",
+        "Daily bid and budget monitoring",
+        "Weekly performance summary",
+        "Monthly detailed report with recommendations"
+      ],
+      "timeline": "Campaigns live within 5–7 days of setup. Leads from day one.",
+      "whatWeNeed": [
+        "Google Ads account access (or we create one for you)",
+        "Monthly ad budget (your own spend — we manage it)",
+        "Landing page or website to send traffic to"
+      ],
+      "importantNote": "Ad spend is your own budget, paid directly to Google. FortuneMarq charges a management fee only.",
+      "pricingReference": {
+        "note": "Pricing entered manually by Jabeer in FMOS",
+        "setupFee": 4500,
+        "monthlyManagement": 2500
+      }
+    },
+
+    {
+      "id": "META_ADS",
+      "label": "Meta Ads Management",
+      "layer": "Visibility Layer",
+      "tagline": "Reaching your ideal customer in {{city}} on Facebook and Instagram — before they even know they need you.",
+      "whatWeDo": "Meta Ads work differently from Google Ads — instead of reaching people who are already searching, we reach people who match your ideal customer profile while they're browsing. This works especially well for visual services and for building brand recognition in your local market. We handle campaign strategy, audience building, creative direction, ad copy, and optimisation.",
+      "deliverables": [
+        "Campaign strategy and audience setup",
+        "Ad creative direction and copy",
+        "Facebook and Instagram placement",
+        "Daily monitoring and optimisation",
+        "Monthly performance report",
+        "Audience refinement over time"
+      ],
+      "timeline": "Campaigns live within 5–7 days. Results typically visible in 2–3 weeks.",
+      "whatWeNeed": [
+        "Facebook Page admin access",
+        "Monthly ad budget (your own spend — we manage it)",
+        "Brand photos or videos for creatives"
+      ],
+      "importantNote": "Ad spend is your own budget, paid directly to Meta. FortuneMarq charges a management fee only.",
+      "pricingReference": {
+        "note": "Pricing entered manually by Jabeer in FMOS",
+        "setupFee": 4500,
+        "monthlyManagement": 2500
+      }
+    },
+
+    {
+      "id": "WHATSAPP_MARKETING",
+      "label": "WhatsApp Marketing",
+      "layer": "Engagement Layer",
+      "tagline": "Staying connected with your leads and customers through the channel they actually respond to.",
+      "whatWeDo": "WhatsApp has the highest open rate of any marketing channel in India — most messages are read within minutes. We set up your WhatsApp Business API, build approved message templates, and run monthly broadcast campaigns to your customer list. We also build automated follow-up sequences so leads don't fall through the cracks.",
+      "deliverables": [
+        "WhatsApp Business API setup and verification",
+        "Meta-approved message templates",
+        "Monthly broadcast campaign",
+        "Automated lead follow-up sequences",
+        "Contact list management",
+        "Monthly delivery and response report"
+      ],
+      "timeline": "Setup complete in week 1–2. First campaign within 2 weeks of setup.",
+      "whatWeNeed": [
+        "Dedicated business phone number for WhatsApp",
+        "Customer contact list for broadcasts",
+        "Meta Business Account access"
+      ]
+    },
+
+    {
+      "id": "AI_AUTOMATIONS",
+      "label": "AI Automations",
+      "layer": "Engagement Layer",
+      "tagline": "Taking the repetitive work out of running your business — so you can focus on what actually grows it.",
+      "whatWeDo": "We identify the highest-impact automation opportunities in your business — enquiry handling, follow-ups, appointment reminders, report generation, internal workflows — and build them using AI. Each automation is built to your specific workflow, tested, deployed, and maintained. You save time, reduce errors, and your business runs smarter.",
+      "deliverables": [
+        "Workflow discovery session with Jabeer",
+        "Custom automation built and deployed",
+        "Integration with your existing tools",
+        "Documentation for your team",
+        "Ongoing maintenance and updates included"
+      ],
+      "timeline": "Discovery in week 1. First automation deployed within 2–3 weeks.",
+      "whatWeNeed": [
+        "Access to the tools and platforms you currently use",
+        "30-minute workflow walkthrough with Jabeer",
+        "Feedback during testing phase"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "type": "D",
+  "typeLabel": "Low Search Volume Niche",
+  "pdfType": "Type 4 — Niche Market Report",
+  "condition": {
+    "note": "Low search volume niche or city. Assign manually or based on niche threshold in data_loader."
+  },
+  "steps": [
+    {
+      "stepId": 1,
+      "stepName": "Introduction",
+      "lines": [
+        {
+          "type": "script",
+          "text": "Hello, am I speaking with someone from [Business Name]?"
+        },
+        {
+          "type": "branch",
+          "condition": "If no",
+          "text": "Could I speak with the owner or manager? I have some research data about their business I wanted to share."
+        },
+        {
+          "type": "script",
+          "text": "Hi! My name is Afifa, I'm calling from FortuneMarq Media & Marketing — we're an online growth system building agency based right here in [City]."
+        }
+      ],
+      "objections": []
+    },
+    {
+      "stepId": 2,
+      "stepName": "Opening Hook",
+      "lines": [
+        {
+          "type": "script",
+          "text": "We recently conducted a market research for [Niche] businesses in [City] and we have some really interesting data on how people are finding and choosing services like yours online. Do you have a minute to talk?"
+        }
+      ],
+      "objections": [
+        {
+          "trigger": "I'm busy right now",
+          "response": "No problem at all — I'll be quick. We have data specific to your niche in [City] that I think you'd find useful. If it's not relevant I'll let you go straight away."
+        },
+        {
+          "trigger": "Not interested",
+          "response": "That's totally fine. I just wanted to share what we found in our research — it's data about your market that you might not have seen before. Even just hearing the number might be worth a minute."
+        },
+        {
+          "trigger": "Who are you / I don't know your company",
+          "response": "I'm Afifa from FortuneMarq — we're a local online growth agency based right here in [City]. We've been doing market research across different business categories in the city and your niche had some really interesting findings."
+        }
+      ]
+    },
+    {
+      "stepId": 3,
+      "stepName": "Data Hook",
+      "lines": [
+        {
+          "type": "script",
+          "text": "So what we found is — direct Google searches for your category in [City] are limited, but the local demand for your service is very real. It comes through Google Maps, referrals, and social media rather than direct search. The thing is, most businesses in your niche here haven't set up any of those channels properly — which is actually a big opportunity right now."
+        }
+      ],
+      "objections": [
+        {
+          "trigger": "Where did you get this data?",
+          "response": "It comes from Google's own data tools plus local market research we did specifically for [City]. I can share what we found on WhatsApp if you'd like to see it before the meeting."
+        },
+        {
+          "trigger": "We get enough business through referrals",
+          "response": "Referrals are great — the most trusted source. But there's a whole layer of potential customers who don't know anyone who can refer them, so they search online and whoever shows up first gets that business. That's what the meeting covers."
+        }
+      ]
+    },
+    {
+      "stepId": 4,
+      "stepName": "FOMO Point",
+      "lines": [
+        {
+          "type": "script",
+          "text": "More and more business owners are realising that online presence isn't optional anymore — it's what builds trust before a customer even walks through your door. Most businesses in your category in [City] haven't built this out yet, which means right now is the best time to move. The ones who build their online presence first in a local market tend to lock in that position — and once that trust is established with customers, it becomes very hard for late movers to compete."
+        }
+      ],
+      "objections": []
+    },
+    {
+      "stepId": 5,
+      "stepName": "Differentiator",
+      "lines": [
+        {
+          "type": "script",
+          "text": "And just so you know — we're not just an agency that runs ads. We build a complete online growth system for your business — your presence, your visibility, your leads — all connected and built specifically for you."
+        }
+      ],
+      "objections": []
+    },
+    {
+      "stepId": 6,
+      "stepName": "Meeting Ask",
+      "lines": [
+        {
+          "type": "script",
+          "text": "What I'd love to do is book a quick meeting for you with Jabeer, our founder. He'll walk you through a presentation built specifically for your business — where the demand in your category is actually coming from, how to capture it, and what a realistic growth path looks like for your niche in [City]. It's about 30 to 45 minutes."
+        },
+        {
+          "type": "script",
+          "text": "And honestly — even if you decide our services aren't the right fit, you'll still walk away with really useful insights about your business's online growth that most business owners in [City] don't have access to. There's no pressure, no commitment."
+        },
+        {
+          "type": "script",
+          "text": "Would sometime this week work for you?"
+        },
+        {
+          "type": "branch",
+          "condition": "If wants to think",
+          "text": "Absolutely, no rush. I'll send you the report on WhatsApp so you can have a look — and whenever you're ready for the meeting, just let me know."
+        },
+        {
+          "type": "branch",
+          "condition": "If still resistant",
+          "text": "It's completely free, no commitment at all. Just a data-based conversation. Even 20 minutes is enough."
+        }
+      ],
+      "objections": [
+        {
+          "trigger": "How much does this cost?",
+          "response": "Jabeer will cover everything in the meeting — packages and pricing based on what actually makes sense for your business. The meeting itself is completely free."
+        },
+        {
+          "trigger": "We tried digital marketing before and it didn't work",
+          "response": "That happens a lot, honestly. Most agencies just run ads and leave — there's no foundation built underneath. What we do is different — we build the whole system first before spending on ads. The meeting is actually the best way to show you what that looks like in practice."
+        },
+        {
+          "trigger": "The owner isn't available / Someone else handles this",
+          "response": "No problem — when is the owner usually free? Jabeer can speak directly with them. Or if it's easier, I can WhatsApp the report so they can have a look first before we set up the meeting."
+        },
+        {
+          "trigger": "Just send me information on WhatsApp",
+          "response": "Of course — I'll send the report right now. Have a look whenever you get a chance, and the meeting with Jabeer will make a lot more sense after you've seen it. Even 30 minutes with him is worth it — you'll leave knowing exactly where your business stands online."
+        },
+        {
+          "trigger": "I'll think about it",
+          "response": "Absolutely, take your time. I'll follow up in a couple of days — and the meeting is free, no commitment, no pressure. Jabeer just walks you through the data and you decide what, if anything, makes sense for you."
+        },
+        {
+          "trigger": "We handle marketing internally / We have someone",
+          "response": "Good to know. The meeting might still be useful — Jabeer can show you what the market data looks like for your niche and you can see if there are any gaps worth filling. Even as a second opinion, most business owners find it valuable."
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "INTERESTED_BOOK_NOW",
+      "label": "Interested — Book Meeting Now",
+      "category": "INTERESTED",
+      "actions": ["select_date_time", "generate_meet_link", "send_calendar_invite", "trigger_whatsapp_meeting_confirmation"],
+      "whatsappTemplate": "meeting_booked"
+    },
+    {
+      "id": "INTERESTED_FOLLOW_UP_LATER",
+      "label": "Interested — Follow Up Later",
+      "category": "INTERESTED",
+      "actions": ["select_date_time", "capture_note", "schedule_afifa_reminder"],
+      "whatsappTemplate": "follow_back"
+    },
+    {
+      "id": "INTERESTED_SEND_INFO",
+      "label": "Interested — Send More Info First",
+      "category": "INTERESTED",
+      "actions": ["trigger_whatsapp_report_template"],
+      "whatsappTemplate": "send_more_info"
+    },
+    {
+      "id": "NOT_INTERESTED",
+      "label": "Not Interested",
+      "category": "NOT_INTERESTED",
+      "requiresReason": true,
+      "reasons": [
+        "Already has an agency",
+        "No budget right now",
+        "Not the decision maker",
+        "Bad timing / not now",
+        "Service not relevant",
+        "Other"
+      ],
+      "markAs": ["cold", "dead"],
+      "whatsappTemplate": null
+    },
+    {
+      "id": "FOLLOW_BACK",
+      "label": "Follow Back",
+      "category": "FOLLOW_BACK",
+      "actions": ["select_date_time", "capture_note", "schedule_afifa_reminder"],
+      "whatsappTemplate": "follow_back"
+    },
+    {
+      "id": "WRONG_NUMBER",
+      "label": "Wrong Number / Dead Lead",
+      "category": "DEAD",
+      "subOptions": [
+        "Wrong number",
+        "Business closed / doesn't exist",
+        "Duplicate entry"
+      ],
+      "actions": ["mark_lead_dead"],
+      "whatsappTemplate": null
+    }
+  ],
+  "postCallWhatsApp": [
+    {
+      "templateId": "meeting_booked",
+      "trigger": "INTERESTED_BOOK_NOW",
+      "message": "Hi! I've sent you the Google Meet link for [Meeting Date] at [Meeting Time]. Jabeer will walk you through everything — see you then! [Meet Link]"
+    },
+    {
+      "templateId": "follow_back",
+      "trigger": "INTERESTED_FOLLOW_UP_LATER",
+      "message": "Hi! I'll follow up with you on [Follow Up Date]. Here's the report in the meantime — [PDF Link]"
+    },
+    {
+      "templateId": "send_more_info",
+      "trigger": "INTERESTED_SEND_INFO",
+      "message": "Hi! Here's the report we prepared for [Niche] businesses in [City] — [PDF Link]. Have a look and let me know if you'd like to meet Jabeer — completely free, no commitment."
+    }
+  ]
+}

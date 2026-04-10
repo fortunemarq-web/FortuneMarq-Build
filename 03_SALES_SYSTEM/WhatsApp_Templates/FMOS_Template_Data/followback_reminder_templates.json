@@ -1,0 +1,15 @@
+{
+  "category": "FOLLOWBACK_REMINDER",
+  "description": "Sent by Afifa via FMOS button on the day of a scheduled follow-back call. Reminds the lead that a call is coming and includes the niche landing page link.",
+  "sentBy": "afifa_fmos_button",
+  "requiresMetaApproval": true,
+  "metaCategory": "UTILITY",
+  "templates": [
+    {
+      "id": "FOLLOWBACK_REMINDER",
+      "label": "Follow-Back Day Reminder",
+      "variables": ["businessName", "callTime", "landingPageLink"],
+      "message": "Hi {{businessName}}! 👋\n\nJust a heads up — I'll be giving you a call today as we discussed, sometime around {{callTime}}.\n\nHere's the link again if you'd like to look before the call: {{landingPageLink}}\n\nTalk soon!\n— Afifa, FortuneMarq"
+    }
+  ]
+}

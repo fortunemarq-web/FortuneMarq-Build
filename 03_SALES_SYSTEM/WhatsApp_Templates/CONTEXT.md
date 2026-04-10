@@ -1,50 +1,55 @@
 # 03 — WhatsApp Templates
-**Last Updated:** March 2026 | **Status:** PENDING — waiting on L2 (scripts) completion
+**Last Updated:** April 2026 | **Status:** COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
 
 ## Purpose
-Write all 28 WhatsApp message templates used by Afifa, Jabeer, and auto-sent by FMOS. Templates must sound like a natural continuation of the phone call — same voice, same data references as the telecaller scripts.
+All WhatsApp message templates used throughout the sales flow. Templates are pre-written and loaded by FMOS. Jabeer sends some manually. Others are triggered automatically by Afifa's outcome logging or by bot response.
 
-## Depends On
-- L2 Telecaller Scripts — must be complete first (templates match script tone)
-- L1 PDF Index — PDF filenames must be confirmed
+## Who Sends What
+| Category | Sent By | Trigger |
+|---|---|---|
+| Curiosity (4) | Jabeer — manual batch send | Before calls begin, per lead type |
+| Bot Reply (4) | Bot — auto-send | Lead replies to curiosity message |
+| Outcome Triggered (6) | FMOS auto-send | Afifa logs call outcome |
+| Follow-Back Reminder (1) | Afifa — FMOS button | Day of the follow-back appointment |
+| Post Meeting (4) | Jabeer — manual | After meeting / proposal / agreement stage |
 
-## Complete Template List (28 total)
-### Outreach (6)
-Touch 1 per niche: Gyms, Skin Clinics, Computer Training, Dental, Coaching, Car Rentals
+**Total: 17 templates** (not 28 — that was the old plan before architecture was finalised)
 
-### PDF Delivery by Outcome (5)
-Interested / Wants Report / Not Interested / Straight Rejection / No Answer x3
+## Template Files for Code
+Location: `WhatsApp_Templates/FMOS_Template_Data/`
+- `curiosity_templates.json` — 4 templates (Type A/B/C/D) — Jabeer manual batch, need Meta approval
+- `bot_reply_templates.json` — 4 templates — bot auto-sends when lead replies (session window, no Meta approval needed)
+- `outcome_templates.json` — 6 templates — FMOS auto-sends on outcome log (need Meta approval)
+- `followback_reminder_templates.json` — 1 template — Afifa FMOS button on follow-back day
+- `post_meeting_templates.json` — 4 templates (Proposal Sent / Proposal Follow-up / Agreement Request / Invoice Sent) — Jabeer manual
+- `whatsapp.types.ts` — TypeScript interfaces for template structure
+- `index.ts` — Template loader utility
 
-### Follow-up Sequence (4)
-Touch 3 follow-up / Meeting Confirmation / Meeting Reminder / Post-Meeting Thank You
+## Template Architecture
+- Curiosity templates: 1 per lead type (A/B/C/D). Frame around market research data. Goal: get a reply. Sent before calls begin.
+- Bot reply templates: Sent when lead replies to curiosity. Sends **niche+city landing page link** (not PDF — portfolio/case study page for that niche). Goal: get them to check out FortuneMarq.
+- Outcome triggered: Auto-sent the moment Afifa logs a call outcome in FMOS. One per outcome type.
+- Follow-back reminder: Single message. Afifa hits a button in FMOS on the day of follow-back. Reminds lead of agreed callback time.
+- Post meeting: Jabeer sends manually. 4 stages: Proposal sent, Proposal follow-up (day 2), Agreement request, Invoice sent.
 
-### Proposal & Closing (2)
-Proposal Follow-up 48h / Proposal Follow-up 4 days
+## Key Decisions (locked)
+- Bot reply sends **landing page link** (not PDF report again) — avoids duplicate and drives them to explore the portfolio
+- Tone: Friendly and conversational throughout
+- FortuneMarq is branded as "FortuneMarq" only (not "FortuneMarq Media & Marketing" in message body — too long)
+- Meta WhatsApp Business API must be purchased and connected to FMOS before templates go live
+- Landing pages per niche must be live before bot replies can be sent
 
-### Finance & Payments (3)
-Invoice Due / 7 Days Overdue / Campaign Paused Notice
-
-### Client Management (4)
-Monthly Report Delivery / Retainer Pitch at Website Delivery / Upsell GMB→Ads / Upsell Ads→SEO
-
-### Revival Sequences (3)
-30-Day Revival / 90-Day Revival / 6-Month Revival
-
-## Each Template Contains
-- Template Name (CRM reference name)
-- When to Send (trigger condition)
-- Who Sends (Afifa / Jabeer / Auto)
-- Message Text (complete, with [VARIABLE] placeholders)
-- Variables list
-- Follow-up Action
-
-## Key Principle
-Directory angle woven into relevant messages — FortuneMarq bypasses JustDial, clients get direct calls.
+## Meta Approval Notes
+- Business-initiated messages (curiosity, outcome, post meeting) need Meta template approval before sending
+- Use `{{1}}`, `{{2}}` variable format for Meta templates
+- Session-window messages (bot replies within 24h of user reply) do NOT need Meta approval
 
 ## Session Log
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. All 28 templates listed. Waiting on L2 scripts completion. |
+| March 2026 | Context file created. Old plan: 28 templates across 6 categories. Waiting on L2 scripts. |
+| 2026-04-01 | Full redesign. 17 templates in 5 categories. Architecture decided: Jabeer sends curiosity manually, bot auto-sends when lead replies, FMOS auto-sends on outcome log, Afifa uses FMOS button for follow-back reminder, Jabeer handles post-meeting manually. Bot reply changed from PDF to niche landing page link. TypeScript types + loader created in FMOS_Template_Data/. Needs Meta API setup + niche landing pages before going live. |
+
 ---
 
 ## FortuneMarq System DNA
@@ -95,11 +100,12 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 
 ### Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — IN PROGRESS
-- L2 Telecaller Scripts — PENDING
-- L3 WhatsApp Templates — PENDING
-- L4 Proposal + Agreement — PENDING
-- L5 SOPs + Onboarding + Brief Form — PENDING
+- L1 Lead CSV Files + PDF Index — COMPLETE
+- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
+- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
+- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
 - L6 Report Templates + Health Score — PENDING
 - L7 Upsell System — PENDING
 
@@ -107,7 +113,7 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 - CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
 - Hosting: Hostinger → fmos.fortunemarq.com
 - Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
+- Design: Canva
 
 ### Revenue Targets
 - ₹50K MRR → End April/May 2026
@@ -116,8 +122,8 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 - ₹5L MRR → 2-year vision
 
 ### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (30,000/mo) 2. Skin Clinics (7,500/mo) 3. Computer Training (7,500/mo)
-4. Dental (3,900/mo) 5. JEE/NEET Coaching (2,550/mo) 6. Car Rentals (2,550/mo)
+1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
+4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
 
 ### Golden Rule
 Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.

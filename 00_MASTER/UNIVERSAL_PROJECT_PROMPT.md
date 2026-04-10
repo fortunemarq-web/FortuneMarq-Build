@@ -1,4 +1,4 @@
-# FortuneMarq â€” Universal Project Kickoff Prompt
+# FortuneMarq — Universal Project Kickoff Prompt
 Copy and paste this at the START of every new conversation in every Claude browser project.
 Do this AFTER attaching the project files.
 
@@ -14,7 +14,7 @@ I have attached the context files for this project. Before we start any work, I 
 - What is the purpose of this specific project folder?
 - What has already been done and what is the current status?
 - What are the 3 most important things that need to happen next in this folder?
-- How does this folder connect to the rest of the FortuneMarq system â€” what does it feed into and what does it depend on?
+- How does this folder connect to the rest of the FortuneMarq system — what does it feed into and what does it depend on?
 
 3. Tell me what you understand about FortuneMarq as a whole:
 - What kind of business is it?
@@ -38,7 +38,7 @@ Do not start any actual work until I confirm your understanding is correct. Give
 Ensures Claude fully absorbs context before jumping into work.
 Prevents mistakes from incomplete understanding.
 Surfaces gaps in context files so they can be updated.
-Takes 2 minutes â€” saves hours of rework.
+Takes 2 minutes — saves hours of rework.
 
 ---
 

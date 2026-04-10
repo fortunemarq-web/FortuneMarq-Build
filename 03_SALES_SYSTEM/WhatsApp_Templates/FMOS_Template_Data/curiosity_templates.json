@@ -1,0 +1,37 @@
+{
+  "category": "CURIOSITY",
+  "description": "Sent by Jabeer manually as a batch send before calling begins. One per lead type. Goal: get a reply and let them explore FortuneMarq.",
+  "sentBy": "jabeer_manual",
+  "requiresMetaApproval": true,
+  "metaCategory": "MARKETING",
+  "templates": [
+    {
+      "id": "CURIOSITY_TYPE_A",
+      "leadType": "A",
+      "label": "Curiosity — Already Ranking",
+      "variables": ["businessName", "city", "niche"],
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses here in {{city}} and found some interesting data about your online position.\n\nYour business is already showing up on Google — but there's a clear gap in how much of that traffic is actually reaching you vs going elsewhere.\n\nWe've put together a short report on this. Want me to send it across? Takes 2 mins to read.\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
+    },
+    {
+      "id": "CURIOSITY_TYPE_B",
+      "leadType": "B",
+      "label": "Curiosity — Has Website, Not Ranking",
+      "variables": ["businessName", "city", "niche", "searchVolume"],
+      "message": "Hi {{businessName}}! 👋\n\nWe recently did a market research for {{niche}} businesses in {{city}} and noticed something interesting — {{searchVolume}}+ people here search for your service on Google every month, but your website isn't showing up in those results.\n\nWe've put together a short report on exactly why that's happening and what the opportunity looks like. Want me to send it?\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
+    },
+    {
+      "id": "CURIOSITY_TYPE_C",
+      "leadType": "C",
+      "label": "Curiosity — No Website, GMB Only",
+      "variables": ["businessName", "city", "niche", "searchVolume"],
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses in {{city}} and found that {{searchVolume}}+ people here search for your service on Google every month — and most of them look for a website before deciding who to call.\n\nWe've put together a short report on this opportunity. Want me to send it across?\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
+    },
+    {
+      "id": "CURIOSITY_TYPE_D",
+      "leadType": "D",
+      "label": "Curiosity — Low Search Volume",
+      "variables": ["businessName", "city", "niche"],
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses here in {{city}} and found something interesting — most people looking for your service aren't finding businesses through direct search. They're coming through Google Maps, social media, and referrals.\n\nWe've put together a short report on where the actual demand is coming from and how much of it is being missed. Want me to send it?\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
+    }
+  ]
+}

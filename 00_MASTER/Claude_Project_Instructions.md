@@ -42,8 +42,9 @@ Data → Paid Campaign → Lead in FMOS → 3-Touch Outreach (Afifa) → Meeting
 
 ## Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet: COMPLETE
-- L1 Lead CSV Files + PDF Index: IN PROGRESS
-- L2 Telecaller Scripts: PENDING
+- L1a Lead CSV Files — Hubli: COMPLETE (11 files in Hubli_Final/). Other 8 cities: pending pipeline run.
+- L1b PDF Index: COMPLETE (PDF_Index.md created, all 75 Hubli PDFs mapped)
+- L2 Telecaller Scripts — Hubli: COMPLETE (Kanglish + Kannada per niche). Other cities: pending.
 - L3 WhatsApp Templates: PENDING
 - L4 Proposal + Agreement: PENDING
 - L5 SOPs + Onboarding + Brief Form: PENDING
@@ -177,13 +178,13 @@ Meta/Google ad runs for niche+city → 2 days later telecaller (Afifa) begins ca
 - Touch 2: PDF report delivered after call (niche+city specific — always)
 - Touch 3: Follow-up call — goal is booking 15–20 min meeting with Jabeer
 
-## The 6 Priority Niches and Data Hooks
-1. Gyms: 30,000/month — "only 3 websites getting traffic, zero ads in market"
-2. Skin Clinics: 7,500/month — "97% gap, top clinic gets 173 visits"
-3. Computer Training: 7,500/month — "6,900 students going to online platforms"
-4. Dental: 3,900/month — "one moderate competitor, market wide open"
-5. JEE/NEET: 2,550/month — "students choosing Physics Wallah because no local institute shows up"
-6. Car Rentals: 2,550/month — "zero paid ads in entire market"
+## The 6 Priority Niches and Data Hooks (real Google Keyword Planner data — updated 2026-03-19)
+1. Gyms: 63,950/month — "only 3 websites getting traffic, zero ads in market"
+2. Skin Clinics: 41,850/month — "99% gap, top clinic gets 173 visits from 41,850 searches"
+3. Computer Training: 24,350/month — "market leader gets 600, 23,750 students going elsewhere"
+4. Dental: 21,100/month — "one real competitor, no one running paid ads"
+5. JEE/NEET: 12,300/month — "students choosing Physics Wallah because no local institute shows up"
+6. Car Rentals: 16,450/month — "zero paid ads in entire market"
 
 ## Directory Dominance Angle (use in all scripts and templates)
 70% of search traffic goes to JustDial, Sulekha, Practo, and directories. Local websites share ~25–30%. FortuneMarq bypasses directories — clients get direct calls, not JustDial leads. This explains why even "ranked" competitors get low traffic.
@@ -290,11 +291,14 @@ Add all services with descriptions | Upload 15+ photos (office, team, work) | Wr
 - Single_Image/: stat posts, quotes, announcements
 File naming: [FORMAT]_[Topic]_[Date].md
 
-## Key Data to Use in Content (from 07_DATA_AND_RESEARCH)
-- Gyms Hubli: 30,000 searches/month, zero competitors running ads
-- Skin Clinics: 7,500/month, top clinic gets 173 visits
-- Computer Training: 7,500/month, 6,900 students going to online platforms
-- Total across 9 cities: 691,350 searches/month
+## Key Data to Use in Content (from 07_DATA_AND_RESEARCH — real Google Keyword Planner data)
+- Gyms Hubli: 63,950 searches/month, zero competitors running ads, top site auth score 12/100
+- Skin Clinics: 41,850/month, top clinic gets only 173 visits — 99% gap
+- Computer Training: 24,350/month, market leader gets 600 visits, 23,750 going elsewhere
+- Dental: 21,100/month, one real competitor, no paid ads
+- Car Rentals: 16,450/month, zero paid ads in entire market
+- JEE/NEET: 12,300/month, students going to Physics Wallah
+- Total across 9 cities × 14 niches: 2,154,200 searches/month
 
 ## Connections
 - Feeds into: 06_PAID_MARKETING (brand trust reduces ad cost per lead), 03_SALES_SYSTEM (inbound leads from content)
@@ -327,7 +331,7 @@ Paid campaigns launch LAST. Only after: CRM deployed, telecaller system operatio
 | Reserve — double down on winner | ₹10,000 | After week 2 data |
 
 ## Ad Format
-Jabeer on camera. 60–90 seconds. Explains real niche search data. Example: "30,000 people search for gyms in Hubli every month. Here are the 3 websites getting that traffic — look how weak they are. This is your opportunity." Ends with WhatsApp CTA.
+Jabeer on camera. 60–90 seconds. Explains real niche search data. Example: "63,950 people search for gyms in Hubli every month. Here are the 3 websites getting that traffic — look how weak they are. This is your opportunity." Ends with WhatsApp CTA.
 
 ## Funnel
 Awareness video → 50%+ video viewers retargeted → Landing page → Lead form → FMOS (auto-tagged by niche+city+source) → Afifa follow-up call
@@ -335,13 +339,13 @@ Awareness video → 50%+ video viewers retargeted → Landing page → Lead form
 ## Landing Pages Required (13–14 pages + 1 generic)
 One per niche+city for Hubli-Dharwad. Each page: search volume data, competitor gap visual, 3-step solution, pricing reference, lead capture form, WhatsApp CTA.
 
-## Data Available for Ad Copy (from 07_DATA_AND_RESEARCH)
-- Gyms: 30,000/month, top competitor auth score 12/100
-- Skin Clinics: 7,500/month, 97% traffic gap
-- Computer Training: 7,500/month, top player gets 600/7,500
-- Dental: 3,900/month, one moderate competitor
-- Coaching: 2,550/month, only 1 institute with working website
-- Car Rentals: 2,550/month, zero paid ads in entire market
+## Data Available for Ad Copy (from 07_DATA_AND_RESEARCH — real Google Keyword Planner data)
+- Gyms: 63,950/month, top competitor auth score 12/100, zero ads in market
+- Skin Clinics: 41,850/month, top clinic 173 visits — 99% traffic gap
+- Computer Training: 24,350/month, top player gets 600 visits from 24,350 searches
+- Dental: 21,100/month, one real competitor, no paid ads
+- JEE/NEET Coaching: 12,300/month, only 1 local institute with working website
+- Car Rentals: 16,450/month, zero paid ads in entire market
 
 ## Connections
 - Feeds into: 01_CRM_AND_TOOL (inbound leads auto-tagged)
@@ -360,16 +364,16 @@ Organise, clean, and structure all data assets — keyword research, competitor 
 
 ## Assets in This Folder
 - Niche Data Reference Sheet: COMPLETE (L0) — real numbers for 6 priority niches
-- PDF Index: IN PROGRESS (L1b)
-- Lead CSV Files: IN PROGRESS (L1a) — 8,000 leads, cleaned, needs formatting + upload
+- PDF Index: COMPLETE (L1b) — PDF_Index.md created, all 75 Hubli PDFs mapped by city/niche/type/language
+- Lead CSV Files — Hubli: COMPLETE (L1a) — 11 finalised CSVs in Hubli_Final/, upload-ready for FMOS. Other 8 cities cleaned but not yet finalised.
 - Keyword Data: COMPLETE — all 9 cities × 14 niches in city-wise folders
-- Competitor Data: PARTIAL — Hubli complete, other cities pending
-- Market Intelligence PDFs: 252 complete (126 EN + 126 KN) — stored separately on Mac
+- Competitor Data: Hubli COMPLETE (GBP CSV + Organic CSV + Master SERP Report). Dharwad/Belgaum/Mangalore/Davangere/Ballari — HTML files ready, pipeline not yet run. Mysuru/Kalaburgi/Vijayapura — SERP HTML not yet collected.
+- Market Intelligence PDFs: 75 COMPLETE for Hubli (English + Kannada, 4 types, 14 niches) in PDF_Generator/output/Hubli/. Pipeline reusable for all cities.
 
-## Key Numbers (use in all content)
-- Total searches across 9 cities × 14 niches: 691,350/month
-- Gyms Hubli: 30,000/month | Skin Clinics: 7,500 | Computer Training: 7,500
-- Dental: 3,900 | JEE/NEET: 2,550 | Car Rentals: 2,550
+## Key Numbers — Real Google Keyword Planner Data (updated 2026-03-19)
+- Total searches across 9 cities × 14 niches: 2,154,200/month
+- Gyms Hubli: 63,950/month | Skin Clinics: 41,850 | Computer Training: 24,350
+- Dental: 21,100 | Car Rentals: 16,450 | JEE/NEET: 12,300
 - NOT A SINGLE competitor in 6 priority niches runs paid ads
 
 ## Competitor Traffic Reality

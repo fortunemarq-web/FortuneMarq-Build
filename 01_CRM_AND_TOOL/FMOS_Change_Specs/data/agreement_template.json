@@ -1,0 +1,86 @@
+{
+  "documentType": "AGREEMENT",
+  "version": "1.0",
+  "description": "Simple one-page service agreement sent to client after they confirm the proposal. Sent via WhatsApp or email. Client confirms by replying. Not a legal contract — a clear, friendly summary of what was agreed.",
+  "sentBy": "jabeer_manual",
+  "deliveryMethod": ["whatsapp", "email"],
+  "confirmationMethod": "Client replies to confirm — reply constitutes agreement",
+
+  "sections": [
+    {
+      "sectionId": "HEADER",
+      "content": {
+        "logo": "FortuneMarq logo",
+        "documentTitle": "Service Agreement",
+        "referenceNumber": "Agreement No: {{agreementNumber}}",
+        "linkedProposal": "Ref: Proposal No {{proposalNumber}}",
+        "date": "{{agreementDate}}"
+      }
+    },
+
+    {
+      "sectionId": "PARTIES",
+      "heading": "Between",
+      "content": {
+        "agency": {
+          "name": "FortuneMarq Media & Marketing",
+          "address": "Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020",
+          "contact": "+91 93530 82656 | fortunemarq@gmail.com",
+          "representedBy": "Jabeer, Founder"
+        },
+        "client": {
+          "businessName": "{{businessName}}",
+          "ownerName": "{{ownerName}}",
+          "city": "{{city}}"
+        }
+      }
+    },
+
+    {
+      "sectionId": "SERVICES_AGREED",
+      "heading": "Services Agreed",
+      "description": "Auto-populated from the linked proposal. Lists only the selected services.",
+      "tableColumns": ["Service", "Setup Fee", "Monthly Retainer"],
+      "rows": "dynamic — from proposal data",
+      "totals": {
+        "totalSetup": "{{totalSetupFee}}",
+        "totalMonthly": "{{totalMonthlyRetainer}}"
+      },
+      "adSpendNote": "Ad spend for Google Ads and Meta Ads is the client's own budget, paid directly to Google and Meta. FortuneMarq charges a management fee only."
+    },
+
+    {
+      "sectionId": "PAYMENT_TERMS",
+      "heading": "Payment Terms",
+      "points": [
+        "Setup fee of ₹{{totalSetupFee}} is due before work begins",
+        "Monthly retainer of ₹{{totalMonthlyRetainer}} is invoiced on the 1st of every month",
+        "Payment due by the 5th of every month",
+        "If payment is overdue by 7 days, ad campaigns will be paused until payment is received",
+        "Work resumes the same day payment is confirmed"
+      ]
+    },
+
+    {
+      "sectionId": "START_DATE",
+      "heading": "Start Date",
+      "content": "Work begins on {{startDate}}, following setup fee payment and onboarding completion."
+    },
+
+    {
+      "sectionId": "CONFIRMATION",
+      "heading": "Confirmation",
+      "content": "This agreement is confirmed by {{ownerName}} of {{businessName}} by replying to this message or email with 'Yes, confirmed'. No signature required. Your reply serves as your confirmation to proceed.",
+      "callToAction": "Please reply with 'Yes, confirmed' to get started."
+    },
+
+    {
+      "sectionId": "FOOTER",
+      "content": {
+        "agencyName": "FortuneMarq Media & Marketing",
+        "contact": "Jabeer — +91 93530 82656 | fortunemarq@gmail.com | fortunemarq.com",
+        "tagline": "Marketing That Pays You Back"
+      }
+    }
+  ]
+}

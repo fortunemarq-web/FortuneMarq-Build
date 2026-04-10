@@ -1,0 +1,129 @@
+{
+  "description": "Service-specific terms and conditions referenced by each service in the agreement. These are displayed inside FMOS and optionally appended to the agreement PDF. Client-facing language — clear, not legal jargon.",
+  "version": "1.0",
+
+  "universal_terms": {
+    "title": "Terms That Apply to All Services",
+    "points": [
+      "All work begins only after the setup fee is received and onboarding is complete.",
+      "Monthly invoices are raised on the 1st and due by the 5th of each month.",
+      "Payment overdue by 7 days: ad campaigns paused. Payment overdue by 30 days: website taken offline. Services resume the same day payment is confirmed.",
+      "FortuneMarq does not guarantee specific results (rankings, leads, sales) as outcomes depend on market conditions, competition, and client cooperation.",
+      "Client is responsible for providing accurate business information, logos, photos, and access credentials in a timely manner.",
+      "FortuneMarq will not be held responsible for delays caused by late asset delivery from the client.",
+      "Either party can exit the agreement with 30 days written notice. Setup fees are non-refundable. Monthly fees are pro-rated to the cancellation date.",
+      "All logins, accounts, and assets created for the client remain the client's property and will be handed over upon exit.",
+      "FortuneMarq will never post content that is false, misleading, or violates platform policies on the client's behalf."
+    ]
+  },
+
+  "services": {
+
+    "WEBSITE": {
+      "label": "Website Building",
+      "terms": [
+        "The website is built based on the brief form filled out during onboarding. Changes to scope after the build starts are treated as new work.",
+        "Client gets 2 rounds of revision after the first preview. Additional revisions are quoted separately.",
+        "Website goes live only after Jabeer's final review and client's written approval.",
+        "Domain and hosting are the client's own responsibility. FortuneMarq assists with setup but does not own or manage these on the client's behalf.",
+        "If the client has a monthly retainer with FortuneMarq, basic website updates (text, photos, offers) are included. Structural redesigns are quoted separately.",
+        "On exit, the website files and all credentials are handed over to the client."
+      ],
+      "cancellationNote": "One-time builds: no monthly retainer unless the client opts in for maintenance. Maintenance retainer exits on 30-day notice."
+    },
+
+    "GMB": {
+      "label": "GMB Optimization",
+      "terms": [
+        "Client must provide access to their Google Business Profile. If the profile is not verified, verification is the client's responsibility.",
+        "FortuneMarq will post 4 times per month on the profile. Post topics are decided by FortuneMarq based on niche best practices.",
+        "Review responses will be drafted and posted by FortuneMarq in a professional tone. Jabeer will alert the client to any negative reviews before responding.",
+        "GMB results (ranking improvements, views, calls) are tracked and reported monthly. Results typically become visible in 30–60 days.",
+        "Client must not make changes to the GMB profile without informing FortuneMarq, as this can interfere with the optimization strategy.",
+        "On exit, GMB access will be removed from FortuneMarq's account and all posting activity stops."
+      ],
+      "cancellationNote": "Monthly retainer. Exits on 30-day notice."
+    },
+
+    "SEO": {
+      "label": "SEO",
+      "terms": [
+        "SEO results are long-term. Meaningful ranking improvements typically appear in 60–90 days. Significant organic growth in 4–6 months.",
+        "Client must provide website backend access, Google Search Console access, and Google Analytics access for the work to proceed.",
+        "On-page changes will be made directly to the website. FortuneMarq will communicate all significant changes before making them.",
+        "Monthly reports include keyword rank tracking, traffic data, and the actions taken that month.",
+        "FortuneMarq does not use black-hat SEO tactics (keyword stuffing, link farms, cloaking). All work follows Google's guidelines.",
+        "If the client makes independent changes to the website (new pages, URL changes, plugin updates), FortuneMarq must be informed as these can affect rankings.",
+        "On exit, all SEO work done remains on the website. Google Search Console and Analytics access will be removed."
+      ],
+      "cancellationNote": "Monthly retainer. Exits on 30-day notice."
+    },
+
+    "GOOGLE_ADS": {
+      "label": "Google Ads Management",
+      "terms": [
+        "Ad spend is the client's own budget, paid directly to Google. FortuneMarq charges a management fee only.",
+        "Minimum recommended ad spend: ₹5,000/month. Below this, campaign performance is limited.",
+        "Campaigns go live within 5–7 working days of account access and budget confirmation.",
+        "FortuneMarq will not increase the client's daily budget without explicit written approval.",
+        "Weekly performance summaries and a detailed monthly report are provided for every active campaign.",
+        "If payment is overdue by 7 days, campaigns will be paused until payment is received. This may affect campaign learning and performance.",
+        "The Google Ads account is the client's property. On exit, FortuneMarq's access is removed. Campaign history remains in the account."
+      ],
+      "cancellationNote": "Monthly retainer. Exits on 30-day notice. Campaigns paused immediately on exit."
+    },
+
+    "META_ADS": {
+      "label": "Meta Ads Management",
+      "terms": [
+        "Ad spend is the client's own budget, paid directly to Meta (Facebook/Instagram). FortuneMarq charges a management fee only.",
+        "Minimum recommended ad spend: ₹5,000/month. Below this, campaign performance is limited.",
+        "Client must provide Facebook Page admin access and Meta Business Manager access.",
+        "Campaigns go live within 5–7 working days of access and budget confirmation.",
+        "FortuneMarq will not increase the client's daily budget without explicit written approval.",
+        "Creative direction and ad copy are handled by FortuneMarq. Final approval for any ad showing the client's face or personal brand content rests with the client.",
+        "If payment is overdue by 7 days, campaigns will be paused until payment is received.",
+        "The Meta Ads account is the client's property. On exit, FortuneMarq's access is removed. Campaign history remains in the account."
+      ],
+      "cancellationNote": "Monthly retainer. Exits on 30-day notice. Campaigns paused immediately on exit."
+    },
+
+    "WHATSAPP_MARKETING": {
+      "label": "WhatsApp Marketing",
+      "terms": [
+        "WhatsApp Business API requires a dedicated phone number that is not linked to a personal WhatsApp account.",
+        "All message templates must be approved by Meta before they can be sent. Approval typically takes 1–3 business days.",
+        "FortuneMarq will not send messages to contacts who have not opted in to receive communications from the client's business.",
+        "Monthly broadcast volume is limited to the client's approved contact list. Growing this list is the client's responsibility.",
+        "FortuneMarq handles content, scheduling, and delivery. The client is responsible for the accuracy of any offers or promotions in the messages.",
+        "On exit, all message templates and contact list exports will be handed over to the client."
+      ],
+      "cancellationNote": "Monthly retainer. Exits on 30-day notice."
+    },
+
+    "AI_AUTOMATIONS": {
+      "label": "AI Automations",
+      "terms": [
+        "Each automation project begins with a paid discovery session (₹0 — included in setup fee). The scope of the automation is locked at the end of the discovery session.",
+        "Changes to the automation scope after build begins are quoted separately.",
+        "The client is responsible for providing access to all third-party tools required for the automation (CRM, calendar, WhatsApp, etc.).",
+        "FortuneMarq's AI automations are built on third-party platforms (WhatsApp API, Google Workspace, Make, etc.). Service interruptions caused by these platforms are outside FortuneMarq's control.",
+        "Automations are tested before deployment. The client must participate in the testing phase within the agreed timeline.",
+        "Documentation for how to use and manage each automation is provided at handover.",
+        "On exit, all automation workflows are handed over in a documented format. Third-party platform access is transferred to the client."
+      ],
+      "cancellationNote": "Monthly maintenance retainer. Exits on 30-day notice."
+    }
+  },
+
+  "exit_policy": {
+    "title": "Exiting the Agreement",
+    "points": [
+      "Either party can exit with 30 days written notice via WhatsApp or email.",
+      "Setup fees are non-refundable.",
+      "Monthly fees are pro-rated to the last day of active service.",
+      "All accounts, credentials, and assets created for the client are handed over within 7 working days of exit.",
+      "FortuneMarq removes its access to all client accounts within 3 working days of the final invoice being settled."
+    ]
+  }
+}

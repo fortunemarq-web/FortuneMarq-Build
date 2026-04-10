@@ -1,46 +1,57 @@
 # 03 — Telecaller Scripts
-**Last Updated:** March 2026 | **Status:** PENDING — waiting on L1 completion
+**Last Updated:** April 2026 | **Status:** COMPLETE — 4 lead-type JSON scripts in FMOS_Script_Data/
 
 ## Purpose
-Write one complete telecaller script per priority niche. These are the exact words Afifa reads during every cold call. Scripts are displayed in FMOS during calls. Every script uses real data from the Niche Data Reference Sheet (L0).
+All telecaller script content for Afifa. Scripts are loaded dynamically by FMOS based on lead type — not per-niche. FMOS auto-detects the lead type from the CSV columns and displays the matching script during the call.
 
-## Depends On
-- L0 Niche Data Reference Sheet — COMPLETE ✓
-- L1 PDF Index — must confirm PDF filenames before scripts reference them
+## Architecture — NEW (April 2026)
+Scripts are no longer per-niche. There are 4 lead-type variants that cover all niches. FMOS detects lead type from: `SERP_Ranked` and `Has_Website` columns in the lead CSV.
 
-## Scripts to Write (6 total)
-1. Gyms Script — hook: "30,000 searches, only 3 websites, zero ads"
-2. Skin Clinics Script — hook: "7,500 searches, top clinic gets 173 visits, 97% gap"
-3. Computer Training Script — hook: "7,500 searches, 6,900 students going to online platforms"
-4. Dental Script — hook: "3,900 searches, one real competitor, open market"
-5. JEE/NEET Script — hook: "students going to Physics Wallah because no local institute shows up"
-6. Car Rentals Script — hook: "zero paid ads in entire market"
+### Lead Type Detection Logic
+| Type | Condition | Situation | PDF Referenced |
+|---|---|---|---|
+| A | SERP_Ranked = Y | Already ranking on Google | Type 1 — Visibility Report |
+| B | Has_Website = Y, SERP_Ranked = N | Has website, not ranking | Type 3 — Website Performance |
+| C | Has_Website = N, SERP_Ranked = N | No website, GMB only | Type 2 — Market Opportunity |
+| D | Low search volume niche/city | Limited direct search demand | Type 4 — Niche Market Report |
 
-## Each Script Contains
-- Opening line (0–15 seconds) — greeting, name, agency, one-line reason
-- Data hook (15–30 seconds) — the real number that creates curiosity
-- Transition to PDF offer
-- All 12 outcome responses (word for word)
-- Meeting booking close
-- CRM log instructions (what to select after each call type)
+## Script Structure (all 4 types — English)
+1. **Introduction** — "Hi, my name is Afifa, I'm calling from FortuneMarq Media & Marketing — online growth system building agency, based in Hubli."
+2. **Opening Hook** — "We conducted a market research for [niche] in [city] and we have some interesting data on how many people are actively searching on Google for services you offer. Do you have a minute to talk?"
+3. **Data Hook** — Type-specific: monthly search volume + what it means for their current situation
+4. **FOMO Point** — Type-specific: opportunity exists NOW before competitors get strong. Anchored in: today people search online first, online presence = trust. Phrase: "you have a good opportunity before your competitor gets strong"
+5. **Differentiator** — Short: "We don't just run ads. We build a complete online growth system — presence, visibility, leads — all connected, built specifically for your business."
+6. **Meeting Ask** — 30–45 min Google Meet with Jabeer (founder). Presentation built for their business. Valuable even if they don't sign. No pressure, no commitment.
 
-## The 12 Outcomes
-1. Curiosity Triggered | 2. Wants Report | 3. Surprised by Data
-4. Has Website | 5. Already Has Agency | 6. Asks Price
-7. Skeptical | 8. Not Interested | 9. Staff Answered
-10. Very Interested | 11. Perfect Client | 12. Future Client
+## Objections Bank (per step)
+- After Step 2 (Opening): Busy right now / Not interested / Who are you
+- After Step 3 (Data Hook): Numbers not real / Already have enough customers / (Type C: We rely on word of mouth)
+- After Step 6 (Meeting Ask): How much does it cost / We tried before / Owner not here right now / Just send on WhatsApp / Let me think about it / We handle marketing internally
 
-## Directory Angle (use in all scripts)
-70% of search traffic goes to JustDial/Sulekha/directories. Competitors share ~25–30% of remaining traffic. FortuneMarq bypasses directories — clients get direct calls, not JustDial leads.
+## Call Outcomes
+- **INTERESTED** → Sub-options: Book Meeting Now / Follow Up Later / Send More Info
+- **NOT INTERESTED** → Reason required (6 options) → Mark Cold or Dead
+- **FOLLOW BACK** → Date + time + note → auto-reminder in FMOS
+- **WRONG NUMBER / DEAD** → Mark dead → cleanup queue
 
-## File Naming
-One file per niche: Gyms_Script.md, SkinClinics_Script.md, ComputerTraining_Script.md, Dental_Script.md, Coaching_Script.md, CarRentals_Script.md
-Plus: Master_Script_Guide.md — tone, rules, DOs and DONTs for Afifa
+## Script Files for Code
+Location: `Telecaller_Scripts/FMOS_Script_Data/`
+- `script_type_A.json` — Already ranking on Google
+- `script_type_B.json` — Has website, not ranking
+- `script_type_C.json` — No website, GMB only
+- `script_type_D.json` — Low search volume
+- `script.types.ts` — TypeScript interfaces for the script data structure
+- `index.ts` — Script loader utility (`getScriptForLead(lead)` function returns matching script)
+
+## Old Files (Superseded)
+The `Hubli/` subfolder contains old per-niche Kanglish and Kannada .md script files. These are superseded by the new type-based JSON architecture. Do not use for Afifa — FMOS will load from FMOS_Script_Data/ instead.
 
 ## Session Log
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Waiting on L1 to complete before writing scripts. |
+| March 2026 | Context file created. Waiting on L1 completion before writing scripts. |
+| 2026-04-01 | Full script architecture redesign. 4 lead-type English variants created. 6-step structure: Introduction → Opening Hook (market research angle) → Data Hook (type-specific volumes) → FOMO Point (opportunity before competitors, today people search online first) → Differentiator (complete online growth system, not just ads) → Meeting Ask (Jabeer, founder, 30-45min, presentation, valuable even without signing). Objections bank mapped per step. 4 call outcomes with sub-options. JSON data files + TypeScript types + loader created in FMOS_Script_Data/. |
+
 ---
 
 ## FortuneMarq System DNA
@@ -91,11 +102,12 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 
 ### Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — IN PROGRESS
-- L2 Telecaller Scripts — PENDING
-- L3 WhatsApp Templates — PENDING
-- L4 Proposal + Agreement — PENDING
-- L5 SOPs + Onboarding + Brief Form — PENDING
+- L1 Lead CSV Files + PDF Index — COMPLETE
+- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
+- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
+- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
 - L6 Report Templates + Health Score — PENDING
 - L7 Upsell System — PENDING
 
@@ -103,7 +115,7 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 - CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
 - Hosting: Hostinger → fmos.fortunemarq.com
 - Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
+- Design: Canva
 
 ### Revenue Targets
 - ₹50K MRR → End April/May 2026
@@ -112,8 +124,8 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 - ₹5L MRR → 2-year vision
 
 ### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (30,000/mo) 2. Skin Clinics (7,500/mo) 3. Computer Training (7,500/mo)
-4. Dental (3,900/mo) 5. JEE/NEET Coaching (2,550/mo) 6. Car Rentals (2,550/mo)
+1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
+4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
 
 ### Golden Rule
 Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.

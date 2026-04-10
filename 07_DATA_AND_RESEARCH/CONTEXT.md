@@ -36,27 +36,22 @@ Step 5: Upload [City]_Final CSVs to FMOS
 ## Content Build Hierarchy — Current Status
 - L0  Niche Data Reference Sheet — COMPLETE
 - L1a Lead CSV Files — HUBLI COMPLETE (11 finalised files in Hubli_Final/). Other 8 cities pending pipeline run.
-- L1b PDF Index — PENDING. Must be created before L2 can start.
-- L2  Telecaller Scripts — PENDING. Cannot start until L1a and L1b complete.
-- L3  WhatsApp Templates — PENDING
-- L4a Proposal Template — PENDING
-- L4b Agreement Template — PENDING
-- L5a Service Delivery SOPs — PENDING
-- L5b Onboarding Checklist — PENDING
-- L5c Website Brief Intake Form — PENDING
-- L6a Monthly Report Templates — PENDING
-- L6b Client Health Score System — PENDING
+- L1b PDF Index — COMPLETE — PDF_Index.md created in this folder
+- L2  Telecaller Scripts — COMPLETE — New 4 lead-type JSON architecture in 03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/
+- L3  WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in 03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic proposal in 03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc + service terms in 09_LEGAL_AND_OPERATIONS/Agreement_Templates/
+- L5  SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md in 04_CLIENT_MANAGEMENT/Onboarding/
+- L6  Report Templates + Health Score — PENDING
 - L7  Upsell Trigger System — PENDING
 
 ## Next Tasks — This Folder
-1. Create PDF_Index.md — map all 75 generated Hubli PDFs to niche + type + language + filename
-2. Run pipeline for Dharwad — all SERP assets ready, next priority city
-3. Run pipeline for Belgaum, Mangalore, Davangere, Ballari
-4. Collect SERP HTML for Mysuru, Kalaburgi, Vijayapura then run pipeline
+1. Run pipeline for Dharwad — all SERP assets ready, next priority city
+2. Run pipeline for Belgaum, Mangalore, Davangere, Ballari
+3. Collect SERP HTML for Mysuru, Kalaburgi, Vijayapura then run pipeline
 
 ## Next Task — Outside This Folder
-Move to 03_SALES_SYSTEM and begin L2 Telecaller Scripts for Hubli 6 priority niches.
-L1a is complete for Hubli. L1b (PDF_Index.md) must be created first, then L2 can start.
+FMOS deployment is the current priority blocker. Once FMOS is live, upload Hubli_Final CSVs and begin outreach.
 
 ## Connections to Other Folders
 - **Feeds INTO:** 03_SALES_SYSTEM (scripts, templates use real numbers), 06_PAID_MARKETING (ad copy data), 01_CRM_AND_TOOL (leads uploaded), 05_ONLINE_PRESENCE (content hooks)
@@ -68,6 +63,7 @@ L1a is complete for Hubli. L1b (PDF_Index.md) must be created first, then L2 can
 | March 2026 | Context file created. L0 complete. L1 in progress. |
 | 2026-03-19 | Hubli pipeline complete. 75 PDFs generated (EN + KN, Types 1–4). 11 Hubli_Final CSVs ready for FMOS upload. PDF Generator pipeline reusable for all cities. Next: PDF_Index.md then move to 03_SALES_SYSTEM. |
 | 2026-03-19 | All niche volumes updated from FortuneMarq_Master_Keyword_Research.xlsx. Replaced estimated numbers with real Google Keyword Planner data across all context files and data_loader.py. PDFs already generated with correct data — no regeneration needed. |
+| 2026-04-09 | Context audit. Updated Content Build Hierarchy to reflect all completed work: L1b PDF Index COMPLETE, L2–L5 all COMPLETE (scripts, templates, proposal, agreement, onboarding). Next: run pipeline for Dharwad, then FMOS deployment. |
 
 ---
 
@@ -120,11 +116,12 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 ### Content Build Hierarchy (current progress)
 - L0  Niche Data Reference Sheet — COMPLETE
 - L1a Lead CSV Files — HUBLI COMPLETE. Other 8 cities pending.
-- L1b PDF Index — PENDING
-- L2  Telecaller Scripts — PENDING
-- L3  WhatsApp Templates — PENDING
-- L4  Proposal + Agreement — PENDING
-- L5  SOPs + Onboarding + Brief Form — PENDING
+- L1b PDF Index — COMPLETE
+- L2  Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
+- L3  WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
+- L5  SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
 - L6  Report Templates + Health Score — PENDING
 - L7  Upsell System — PENDING
 

@@ -166,11 +166,12 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 
 ### Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — IN PROGRESS
-- L2 Telecaller Scripts — PENDING
-- L3 WhatsApp Templates — PENDING
-- L4 Proposal + Agreement — PENDING
-- L5 SOPs + Onboarding + Brief Form — PENDING
+- L1 Lead CSV Files + PDF Index — COMPLETE
+- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
+- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
+- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
 - L6 Report Templates + Health Score — PENDING
 - L7 Upsell System — PENDING
 

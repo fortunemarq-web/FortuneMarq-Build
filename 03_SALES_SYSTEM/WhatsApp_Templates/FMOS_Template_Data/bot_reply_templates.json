@@ -1,0 +1,37 @@
+{
+  "category": "BOT_REPLY",
+  "description": "Auto-sent by bot when a lead replies to the curiosity message. Sends the niche landing page link with context about what they will find there. One per lead type. No Meta pre-approval needed — these are session messages within the 24-hour reply window.",
+  "sentBy": "bot_auto",
+  "requiresMetaApproval": false,
+  "trigger": "lead_replies_to_curiosity",
+  "templates": [
+    {
+      "id": "BOT_REPLY_TYPE_A",
+      "leadType": "A",
+      "label": "Bot Reply — Already Ranking",
+      "variables": ["businessName", "city", "niche", "landingPageLink"],
+      "message": "Thanks for your reply, {{businessName}}! 😊\n\nWe've put together a full breakdown on {{niche}} businesses in {{city}} — search volumes, online visibility gaps, and growth opportunities.\n\nCheck it out here: {{landingPageLink}}\n\nIf you'd like to go deeper on what this means specifically for your business, our founder Jabeer is happy to walk you through it in a quick meeting. Completely free.\n\n— FortuneMarq"
+    },
+    {
+      "id": "BOT_REPLY_TYPE_B",
+      "leadType": "B",
+      "label": "Bot Reply — Has Website, Not Ranking",
+      "variables": ["businessName", "city", "niche", "landingPageLink"],
+      "message": "Thanks for your reply, {{businessName}}! 😊\n\nWe've put together a full breakdown on {{niche}} businesses in {{city}} — how many people are searching, why most websites aren't showing up, and what the opportunity looks like.\n\nCheck it out here: {{landingPageLink}}\n\nIf you'd like to know exactly what's happening with your website specifically, our founder Jabeer can walk you through it in a quick meeting. No commitment at all.\n\n— FortuneMarq"
+    },
+    {
+      "id": "BOT_REPLY_TYPE_C",
+      "leadType": "C",
+      "label": "Bot Reply — No Website, GMB Only",
+      "variables": ["businessName", "city", "niche", "landingPageLink"],
+      "message": "Thanks for your reply, {{businessName}}! 😊\n\nWe've put together a full breakdown on {{niche}} businesses in {{city}} — how many people are searching for your service every month and how much of that demand is being captured by businesses with an online presence.\n\nCheck it out here: {{landingPageLink}}\n\nOur founder Jabeer can show you exactly what this opportunity looks like for your business in a quick meeting. Free, no strings attached.\n\n— FortuneMarq"
+    },
+    {
+      "id": "BOT_REPLY_TYPE_D",
+      "leadType": "D",
+      "label": "Bot Reply — Low Search Volume",
+      "variables": ["businessName", "city", "niche", "landingPageLink"],
+      "message": "Thanks for your reply, {{businessName}}! 😊\n\nWe've put together a full breakdown on {{niche}} businesses in {{city}} — where the actual demand is coming from and how similar businesses in other cities are capturing it.\n\nCheck it out here: {{landingPageLink}}\n\nOur founder Jabeer can walk you through what this looks like specifically for your business in a quick meeting. Completely free.\n\n— FortuneMarq"
+    }
+  ]
+}

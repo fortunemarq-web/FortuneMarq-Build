@@ -31,6 +31,7 @@ Company clients: 0 (building towards ₹50K MRR)
 | Date | Summary |
 |---|---|
 | March 2026 | Context file created. Lifecycle and health score system defined. |
+| 2026-04-02 | Onboarding Checklists (L5b) complete. Files created in Onboarding/FMOS_Onboarding_Data/: onboarding_checklists.json (full per-task, per-asset checklists for all 7 services — WEBSITE, GMB, SEO, GOOGLE_ADS, META_ADS, WHATSAPP_MARKETING, AI_AUTOMATIONS), onboarding.types.ts (TypeScript types for FMOS), index.ts (loader with generateClientOnboarding, isOnboardingComplete, getMissingRequiredAssets helpers). onboarding_sop.md created — full step-by-step SOP for Jabeer covering all 10 onboarding steps, service-specific timelines, asset vault guide, and common problems. |
 ---
 
 ## FortuneMarq System DNA
@@ -81,11 +82,12 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 
 ### Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — IN PROGRESS
-- L2 Telecaller Scripts — PENDING
-- L3 WhatsApp Templates — PENDING
-- L4 Proposal + Agreement — PENDING
-- L5 SOPs + Onboarding + Brief Form — PENDING
+- L1 Lead CSV Files + PDF Index — COMPLETE
+- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
+- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
+- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
+- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
+- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
 - L6 Report Templates + Health Score — PENDING
 - L7 Upsell System — PENDING
 
@@ -102,8 +104,8 @@ Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
 - ₹5L MRR → 2-year vision
 
 ### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (30,000/mo) 2. Skin Clinics (7,500/mo) 3. Computer Training (7,500/mo)
-4. Dental (3,900/mo) 5. JEE/NEET Coaching (2,550/mo) 6. Car Rentals (2,550/mo)
+1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
+4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
 
 ### Golden Rule
 Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.

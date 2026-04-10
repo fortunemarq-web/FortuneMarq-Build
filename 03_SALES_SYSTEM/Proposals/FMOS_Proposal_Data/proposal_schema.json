@@ -1,0 +1,190 @@
+{
+  "documentType": "PROPOSAL",
+  "version": "1.0",
+  "totalPages": "5-6",
+  "description": "Online growth proposal generated dynamically from FMOS. Jabeer selects services and enters pricing manually. Client data, market data, and lead type content are auto-populated from the lead profile.",
+
+  "autoFilledFields": [
+    "businessName",
+    "ownerName",
+    "city",
+    "niche",
+    "nicheKeyword",
+    "searchVolume",
+    "leadType",
+    "proposalDate",
+    "proposalNumber",
+    "meetingDate"
+  ],
+
+  "manualFields": [
+    "selectedServices",
+    "setupFees",
+    "monthlyPricing",
+    "startDate"
+  ],
+
+  "pages": [
+    {
+      "pageNumber": 1,
+      "pageId": "COVER",
+      "pageTitle": "Cover Page",
+      "layout": "cover",
+      "content": [
+        {
+          "element": "logo",
+          "value": "FortuneMarq logo + tagline"
+        },
+        {
+          "element": "documentTitle",
+          "value": "Online Growth Proposal"
+        },
+        {
+          "element": "preparedFor",
+          "value": "Prepared for: {{businessName}}, {{city}}"
+        },
+        {
+          "element": "preparedBy",
+          "value": "Prepared by: Jabeer — FortuneMarq Media & Marketing"
+        },
+        {
+          "element": "date",
+          "value": "{{proposalDate}}"
+        },
+        {
+          "element": "proposalNumber",
+          "value": "Proposal No: {{proposalNumber}}"
+        }
+      ]
+    },
+
+    {
+      "pageNumber": 2,
+      "pageId": "ABOUT_AND_SYSTEM",
+      "pageTitle": "About FortuneMarq + The System",
+      "layout": "two_section",
+      "sections": [
+        {
+          "sectionId": "ABOUT",
+          "heading": "We Don't Just Run Ads. We Build Your Online Growth System.",
+          "content": "FortuneMarq is a digital marketing agency built specifically for local businesses in Karnataka. We're based right here in Hubli — we understand the local market, the local customer, and what actually works here.\n\nMost agencies run ads, send you a report, and disappear. We work differently. Before we spend a rupee on ads, we build the foundation — your online presence, your visibility, your trust signals. Everything connected into one system that brings you consistent leads.\n\nEvery decision we make is backed by real data. Not guesswork."
+        },
+        {
+          "sectionId": "SYSTEM_DIAGRAM",
+          "heading": "The Online Growth System",
+          "description": "Visual flow showing the three layers",
+          "layers": [
+            {
+              "layer": "Foundation Layer",
+              "services": ["Website Building", "GMB Optimization"],
+              "outcome": "You exist online. People can find you and trust what they see."
+            },
+            {
+              "layer": "Visibility Layer",
+              "services": ["SEO", "Google Ads", "Meta Ads"],
+              "outcome": "You show up when people search. You reach people who don't know you yet."
+            },
+            {
+              "layer": "Engagement Layer",
+              "services": ["WhatsApp Marketing", "AI Automations"],
+              "outcome": "You stay connected with leads and customers. Your business runs smarter."
+            },
+            {
+              "layer": "Result",
+              "services": [],
+              "outcome": "Consistent online leads. Growing brand trust. Market leadership in {{niche}} in {{city}}."
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "pageNumber": 3,
+      "pageId": "MARKET_OPPORTUNITY",
+      "pageTitle": "Your Market Opportunity",
+      "layout": "data_focused",
+      "heading": "What We Found About Your Market",
+      "description": "Auto-populated from lead profile. Content varies by lead type.",
+      "typeVariants": {
+        "A": {
+          "label": "Already Ranking",
+          "intro": "{{searchVolume}} people search for '{{nicheKeyword}}' in {{city}} every month. Your business is currently showing up in Google's top results — that's a strong position most of your competitors haven't reached.",
+          "finding": "We analysed how much of that monthly search traffic is reaching you directly versus going to competitors below you. There's a clear gap — and a real opportunity to capture more of it before your competitors start investing seriously in their online presence.",
+          "opportunity": "The businesses that protect and grow their online position now will own their market in {{city}} for years. The ones that don't will spend twice as much later trying to recover it."
+        },
+        "B": {
+          "label": "Has Website, Not Ranking",
+          "intro": "{{searchVolume}} people search for '{{nicheKeyword}}' in {{city}} every month. Your business has a website — which puts you ahead of many competitors. But right now your website isn't showing up when people search.",
+          "finding": "That means every month, {{searchVolume}} people are actively looking for exactly what you offer in {{city}} — and they're finding other businesses instead. Your website exists but it isn't working for you yet.",
+          "opportunity": "This is fixable — and right now is the best time to fix it. Once your website starts ranking, that monthly search demand starts coming to you. Every month you wait is another month that traffic goes elsewhere."
+        },
+        "C": {
+          "label": "No Website, GMB Only",
+          "intro": "{{searchVolume}} people search for '{{nicheKeyword}}' in {{city}} every month. Most of those people look for a website before deciding who to call — it's how they judge whether a business is trustworthy and professional.",
+          "finding": "Right now, without a website, a significant portion of that monthly demand is going directly to competitors who have an online presence. You're on Google Maps which helps — but that's capturing only a fraction of the total opportunity available.",
+          "opportunity": "Most {{niche}} businesses in {{city}} haven't built a proper online presence yet. That means moving now gives you the first-mover advantage — you build the trust and visibility before your competitors realise the opportunity."
+        },
+        "D": {
+          "label": "Low Search Volume",
+          "intro": "Direct search volume for {{niche}} in {{city}} is limited — but the local demand for your service is very real. It comes through Google Maps, social media, word of mouth, and referral — not just direct search.",
+          "finding": "Most {{niche}} businesses in {{city}} haven't set up any of these channels properly. That means the demand exists but it's going to whoever is most visible and trusted online — which right now isn't a crowded space.",
+          "opportunity": "The businesses that build their online presence first in a local market like this lock in that position. Once trust is established with local customers, late movers find it very hard to compete."
+        }
+      }
+    },
+
+    {
+      "pageNumber": 4,
+      "pageId": "SERVICE_DETAILS",
+      "pageTitle": "What We're Building For You",
+      "layout": "service_cards",
+      "heading": "What We're Building For You",
+      "description": "Only the services Jabeer selects in FMOS appear on this page. If 2-3 services are selected this fits on one page. If 4-5 services are selected this becomes page 4 and 5, pushing the investment page to page 6.",
+      "note": "See services_data.json for full content of each service card."
+    },
+
+    {
+      "pageNumber": "5 or 6",
+      "pageId": "INVESTMENT_AND_TERMS",
+      "pageTitle": "Investment + Payment Terms + Next Steps",
+      "layout": "three_section",
+      "sections": [
+        {
+          "sectionId": "INVESTMENT",
+          "heading": "Your Investment",
+          "tableColumns": ["Service", "Setup Fee", "Monthly Retainer"],
+          "rows": "dynamic — populated from Jabeer's manual entries in FMOS",
+          "footerNote": "Ad spend for Google Ads and Meta Ads is your own budget, managed by us, billed directly by Google and Meta. FortuneMarq charges a management fee only."
+        },
+        {
+          "sectionId": "PAYMENT_TERMS",
+          "heading": "Payment Terms",
+          "points": [
+            "Setup fee is due before work begins",
+            "Monthly retainer invoice raised on the 1st of every month",
+            "Payment due by the 5th of every month",
+            "Ads paused if payment is overdue by 7 days — resumed same day payment is received"
+          ]
+        },
+        {
+          "sectionId": "NEXT_STEPS",
+          "heading": "What Happens Next",
+          "steps": [
+            "Reply 'Yes, confirmed' to this proposal — or reach out if you have any questions",
+            "We send the service agreement document for your records",
+            "Invoice raised for setup fee",
+            "Payment received → Onboarding begins within 24 hours",
+            "We collect what we need from your end and get started"
+          ],
+          "contact": {
+            "name": "Jabeer",
+            "phone": "+91 93530 82656",
+            "email": "fortunemarq@gmail.com",
+            "website": "fortunemarq.com"
+          }
+        }
+      ]
+    }
+  ]
+}
