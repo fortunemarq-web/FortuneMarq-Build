@@ -1,5 +1,5 @@
 # 04 — Monthly Reports
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE — monthly_report_schema.json + client_health_score.json + report_index.ts created
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — monthly_report_schema.json + client_health_score.json + report_index.ts created
 
 ## Folder Purpose
 Monthly performance reports generated as PDFs and sent to every active client. Covers Google rankings, website traffic, leads generated, and GMB insights. Each report includes a Client Health Score (0–100) to track account health over time. Health score also triggers upsell conversations.

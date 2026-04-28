@@ -1,5 +1,5 @@
 # 09 — Agreement Templates
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE — agreement_template.md + service_terms.json ready
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — agreement_template.md + service_terms.json ready
 
 ## Folder Purpose
 Store the client service agreement template and service-specific terms. The agreement is the closing document sent to clients after verbal/message confirmation. It is 1 page, sent via WhatsApp or email, confirmed by client reply.

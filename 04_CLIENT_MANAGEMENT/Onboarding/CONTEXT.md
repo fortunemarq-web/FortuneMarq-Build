@@ -1,5 +1,5 @@
 # 04 — Client Onboarding
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE — onboarding_checklists.json + onboarding.types.ts + index.ts + onboarding_sop.md all created
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — onboarding_checklists.json + onboarding.types.ts + index.ts + onboarding_sop.md all created
 
 ## Folder Purpose
 Define the exact onboarding process — what happens the moment a client signs, what assets are collected, how the project is set up in FMOS, and how work begins within 48 hours.

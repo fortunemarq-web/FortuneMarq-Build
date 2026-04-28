@@ -1,5 +1,5 @@
 # 08 — Invoicing
-**Last Updated:** 2026-04-28 | **Status:** Invoice system built in FMOS but not yet activated. No invoices raised yet.
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Invoice system built in FMOS but not yet activated. No invoices raised yet.
 
 ## Folder Purpose
 Process documentation for raising, tracking, and managing client invoices. All invoice operations live in FMOS `/admin/finance/invoices`.

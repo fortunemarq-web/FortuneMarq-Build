@@ -25,7 +25,7 @@ FortuneMarq Media & Marketing is a systems-driven, automation-first digital mark
 
 ## Current Status (April 2026)
 
-Company MRR is ₹0 — the business has not yet landed its first client. The build phase is ~90% complete. The primary blocker is deploying FMOS to production, which gates the entire outbound sales operation. See [[CurrentBlockers]] for the full picture.
+Company MRR is ₹0 — the business has not yet landed its first client. **FMOS is production-ready at v4.5** — all features complete, strict TypeScript build clean. The only remaining step is deploying FMOS to Hostinger, which immediately unlocks the entire outbound sales operation. See [[CurrentBlockers]] for the deployment checklist.
 
 ## The Core Machine
 

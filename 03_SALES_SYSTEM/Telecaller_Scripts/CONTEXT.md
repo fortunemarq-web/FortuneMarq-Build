@@ -1,5 +1,5 @@
 # 03 — Telecaller Scripts
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE — 4 type-based JSON scripts + TypeScript loader in FMOS_Script_Data/
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — 4 type-based JSON scripts + TypeScript loader in FMOS_Script_Data/
 
 ## Folder Purpose
 All telecaller script content for Afifa. Scripts are loaded dynamically by FMOS based on lead type — not per-niche. FMOS auto-detects the lead type from the CSV columns and displays the matching script during the call.

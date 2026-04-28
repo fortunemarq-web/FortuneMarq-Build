@@ -1,5 +1,5 @@
 # 04 — Upsell System
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE — upsell_rules.json + upsell_scripts.json created
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — upsell_rules.json + upsell_scripts.json created
 
 ## Folder Purpose
 Rules engine and conversation scripts for upselling active clients once strong results are established. Keeps revenue growing from the existing client base without relying entirely on new client acquisition.

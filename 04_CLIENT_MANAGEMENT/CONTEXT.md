@@ -1,5 +1,5 @@
 # 04 — Client Management
-**Last Updated:** 2026-04-28 | **Status:** L5, L6, L7 all COMPLETE. Execution pending FMOS deployment.
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** L5, L6, L7 all COMPLETE. Execution pending FMOS deployment.
 
 ## Folder Purpose
 Define and document how FortuneMarq manages clients after they sign — onboarding, delivery oversight, health monitoring, monthly reports, renewals, and upsells. This folder contains the processes, schemas, and SOPs. The execution happens in FMOS (01_CRM_AND_TOOL).

@@ -1,5 +1,5 @@
 # 04 — Renewals & Upsells
-**Last Updated:** 2026-04-28 | **Status:** Planning reference — detailed upsell logic moved to Upsell_System/ subfolder
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Planning reference — detailed upsell logic moved to Upsell_System/ subfolder
 
 ## Folder Purpose
 Documents when and how to upsell existing clients and manage contract renewals. The detailed rules engine and scripts now live in `04_CLIENT_MANAGEMENT/Upsell_System/FMOS_Upsell_Data/`.

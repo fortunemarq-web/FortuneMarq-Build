@@ -8,58 +8,52 @@
 
 ## Summary
 
-As of April 2026, FortuneMarq is in final build phase. Three blockers stand between the current state and launch. The FMOS deployment is the critical path — everything else cascades from it.
+As of 2026-04-28, FMOS is **production-ready (v4.5)**. All phases are complete. The only thing between FortuneMarq and its first paying client is deploying FMOS and getting Afifa on the phones.
 
-## Blocker 1 — FMOS Not Deployed (CRITICAL)
+## 🚀 FMOS Status — Production Ready
 
-FMOS is ~90% complete and running on localhost:3000 but not yet live on fmos.fortunemarq.com. Until this is resolved:
+All phases complete. TypeScript strict build passes clean. Zero pending features. See [[FMOS]] for full feature list.
+
+## Blocker 1 — FMOS Not Yet Deployed (CRITICAL PATH)
+
+FMOS is complete and running on localhost but not yet live on fmos.fortunemarq.com. Until this ships:
 - 8,000 Hubli leads cannot be uploaded
 - Afifa cannot start calling
-- The entire outbound sales machine is offline
-- No revenue is possible
+- The outbound sales machine is offline
+- Revenue is impossible
 
-**To deploy:** Finish the 6 pending features (see below), then run the deployment checklist in [[FMOS]].
+**Deployment checklist:**
+- [ ] Add `OPENROUTER_API_KEY` to Hostinger env vars
+- [ ] Point `fmos.fortunemarq.com` subdomain DNS to Hostinger
+- [ ] Create accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff)
+- [ ] Upload 8,000 Hubli leads CSV
+- [ ] Enter real client data and run smoke test
+- [ ] Activate GST invoice settings
 
-## Blocker 2 — FMOS Phases C, D, E Not Yet Executed
+## Blocker 2 — Antigravity Team Access
 
-Phases A and B are complete. Three phases remain, all fully spec'd and waiting for Antigravity execution:
+Zaid and Sufiyan cannot build client websites until Jabeer upgrades from personal to team plan on Antigravity. Low urgency until first clients are signed, but needs to happen before the first website delivery.
 
-**Phase C — Outreach & Leads:**
-- Outreach Sequence Board (3-touch tracker per lead)
-- Lead Profile Page (full history: calls, WhatsApp, PDFs, proposals, meetings)
-- PDF Delivery Tracker (log which PDF sent, when, by whom)
+## ✅ Resolved Blockers
 
-**Phase D — Proposal & Onboarding:**
-- Retainer Package System (service tier tagging + upsell flags)
-- Proposal builder + Agreement integration
+- ~~6 FMOS features pending~~ → All phases complete as of 2026-04-28
+- ~~Phase C, D, E not built~~ → All done, production-ready v4.5
 
-**Phase E — Finance & Forecast:**
-- Revenue Forecast Widget (pipeline × close rate = projected MRR)
-- Upsell Tracker (current package, eligible upgrades, last attempt, outcome)
+## Next Tasks — Priority Order
 
-Note: L6 (Monthly Reports) and L7 (Upsell System) data files are already complete in `04_CLIENT_MANAGEMENT/`. They just need wiring into FMOS via Phase D/E.
-
-## Blocker 3 — Antigravity Team Access
-
-Zaid and Sufiyan cannot build client websites until Jabeer upgrades from personal to team plan on Antigravity. This doesn't block revenue but does block website delivery capacity.
-
-## Next Immediate Tasks (Priority Order)
-
-1. Build the 6 pending FMOS features
-2. Deploy FMOS to fmos.fortunemarq.com on Hostinger
-3. Create team accounts (Afifa, Zaid, Sufiyan) in FMOS
-4. Upload 8,000 Hubli leads CSV to FMOS
-5. Onboard Afifa and start call queue
-6. Finalize Dharwad lead data and run PDF pipeline
-7. Build 13–14 landing pages for Phase 1 niches
-8. Launch Meta/Google campaigns (LAST — only after system is fully live)
+1. **Deploy FMOS to Hostinger** — this is the only thing that matters right now
+2. Create team accounts and upload 8,000 Hubli leads
+3. Onboard Afifa — walk through FMOS, start call queue
+4. Upgrade Antigravity to team plan for Zaid/Sufiyan
+5. Deploy niche landing pages to fortunemarq.com
+6. Launch Meta/Google campaigns (after first 2 weeks of calling)
 
 ## Open Questions
 
-- [ ] Which of the 6 pending features is fastest to build?
-- [ ] Estimated time to full deployment?
+- [ ] Hostinger deployment plan — Node.js hosting or VPS?
+- [ ] When does Afifa officially start?
 
 ## Sources
 
+- [[raw/2026-04-28_fmos-production-ready]]
 - [[raw/2026-04-28_open-decisions-blockers]]
-- [[raw/2026-04-28_fmos-crm]]

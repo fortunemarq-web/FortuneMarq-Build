@@ -43,8 +43,8 @@
 |------|---------------|
 | [[FortuneMarq]] | Master business overview |
 | [[SayedJabeer]] | Jabeer's profile and working style |
-| [[FMOS]] | The CRM — what's built, what's pending |
-| [[CurrentBlockers]] | What's in the way right now |
+| [[FMOS]] | The CRM — **production-ready v4.5**, all phases complete, deploy to Hostinger |
+| [[CurrentBlockers]] | Only blocker: deploy FMOS. Everything else is built. |
 | [[LockedDecisions]] | Final decisions — do not re-discuss |
 | [[OpenDecisions]] | Unresolved items with triggers |
 | [[GrowthRoadmap]] | Revenue targets and milestones |

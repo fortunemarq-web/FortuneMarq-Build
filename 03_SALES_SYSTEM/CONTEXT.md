@@ -1,5 +1,5 @@
 # 03 — Sales System
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE through L4b. All content ready. Waiting on FMOS deployment to execute.
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE through L4b. All content ready. Waiting on FMOS deployment to execute.
 
 ## Folder Purpose
 Plan and create everything related to acquiring clients — telecaller scripts, WhatsApp templates, proposals, agreements, and the outreach sequence. This folder is the content layer for the sales function. The execution happens in FMOS (01_CRM_AND_TOOL). The content lives here.

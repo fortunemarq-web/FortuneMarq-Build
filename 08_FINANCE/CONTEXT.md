@@ -1,5 +1,5 @@
 # 08 — Finance
-**Last Updated:** 2026-04-28 | **Status:** Finance module exists in FMOS but not yet activated. No revenue yet. All pricing locked.
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Finance module exists in FMOS but not yet activated. No revenue yet. All pricing locked.
 
 ## Folder Purpose
 Plan and manage all financial operations — invoicing, GST compliance, expense tracking, revenue reporting, and progress toward ₹50K MRR goal. The finance module exists in FMOS (`/admin/finance`) but needs GST settings activated and the MRR/one-time split built (Phase E).

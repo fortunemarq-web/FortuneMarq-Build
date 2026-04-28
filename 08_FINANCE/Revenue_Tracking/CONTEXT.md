@@ -1,5 +1,5 @@
 # 08 — Revenue Tracking
-**Last Updated:** 2026-04-28 | **Status:** Revenue tracking methodology defined. No revenue to track yet.
+**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Revenue tracking methodology defined. No revenue to track yet.
 
 ## Folder Purpose
 Documents the methodology for tracking FortuneMarq's revenue. Tracks both MRR (recurring retainers) and one-time payments separately. All tracking happens in FMOS `/admin/finance`.
