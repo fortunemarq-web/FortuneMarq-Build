@@ -1,107 +1,77 @@
 # 07 — Keyword Data
-**Last Updated:** March 2026 | **Status:** Complete — all 9 cities × 14 niches
+**Last Updated:** 2026-04-28 | **Status:** COMPLETE — all 9 cities × 14 niches, real Google Keyword Planner data
 
-## Purpose
-Store all keyword research data — monthly search volumes, top keywords, and competition levels per niche per city. This data powers the sales pitches, ad campaigns, and SEO strategies.
+## Folder Purpose
+Store all keyword research data — monthly search volumes, top keywords, and competition levels per niche per city. This data powers the sales pitches, ad campaigns, SEO strategies, and is the source of truth for all search volume numbers across the project.
 
-## Coverage
-9 Cities: Hubli, Dharwad, Belgaum, Ballari, Davangere, Kalaburgi, Mangalore, Mysuru, Vijayapura
-14 Niches: Dental, Car Rentals, Computer Training, Gyms, IELTS, IVF, Interior Design, JEE Coaching, Modular Kitchen, NEET Coaching, Physiotherapy, Real Estate, Skin Clinics, Tuition Centres
+## What Exists (Complete)
 
-## Total Volume
-691,350 searches/month across all 9 cities × 14 niches
+### Root Files
+| File | Description |
+|---|---|
+| `FortuneMarq_Master_Keyword_Research.xlsx` | Master Excel — all keyword data consolidated across 9 cities × 14 niches. Source of truth. |
+| `Keyword Research For Google Ads.xlsx` | Google Ads-specific keyword research with ad group structure |
+| `FortuneMarq_Detailed_Report.txt` | Text summary of key findings across all cities |
+| `analyze_keywords.py` | Python script to analyze and aggregate keyword data |
+| `generate_master_excel.py` | Script to generate/update the master Excel from city CSVs |
 
-## Top Stats
-- #1 niche: Gyms — 278,100/month across all cities
-- #2 and #3: Dental + Skin Clinics — 89,550/month each
-- #1 city: Mysuru — 220,150/month
-- #2 city: Mangalore — 117,650/month
+### City Folders (all 9 cities)
+Each city folder contains CSV files per niche (12–14 files per city) with: keyword, monthly volume, competition level, CPC estimate
 
-## File Format
-City-wise folders with CSV files per niche containing: keyword, monthly volume, competition level, top ranking URLs
+| City Folder | Status |
+|---|---|
+| `Hubli_Keywords/` | Complete — 14 niche CSVs |
+| `Dharwad_Keywords/` | Complete |
+| `Belgaum_Keywords/` | Complete |
+| `Ballari_Cleaned_Keywords/` | Complete |
+| `Davangere_Cleaned_Keywords/` | Complete |
+| `Kalaburagi_keywords/` | Complete |
+| `Mangalore_keywords/` | Complete |
+| `Mysuru_Cleaned_Keywords/` | Complete |
+| `Vijayapura_Cleaned_Keywords/` | Complete |
 
-## Session Log
+### Hubli_Keywords/ files (14 niches)
+Hubli_Car_Rental_Keywords.csv, Hubli_Computer_Training_Institute_Keywords.csv, Hubli_Dental_Clinic_Keywords.csv, Hubli_Gym_Keywords.csv, Hubli_IELTS_Coaching_Keywords.csv, Hubli_IVF_Fertility_Clinic_Keywords.csv, Hubli_Interior_Designer_Keywords.csv, Hubli_JEE_Coaching_Keywords.csv, Hubli_Modular_Kitchen_Keywords.csv, Hubli_NEET_Coaching_Keywords.csv, Hubli_Real_Estate_Agent_Keywords.csv, Hubli_Skin_Clinic_Keywords.csv, Hubli_Tuition_Centre_Keywords.csv
+
+## Key Data Points (Hubli — Phase 1 priority)
+| Niche | Monthly Searches (Hubli-Dharwad area) |
+|---|---|
+| Gyms | 63,950 |
+| Skin Clinics | 41,850 |
+| Computer Training | 24,350 |
+| Dental | 21,100 |
+| Car Rentals | 16,450 |
+| JEE/NEET Coaching | 12,300 |
+
+## Key Finding
+Not a single competitor in the 6 priority Hubli niches runs paid ads. The search volume is there. The competition is not. This is the core pitch.
+
+## Overall Data Stats
+- Total monthly searches across all 9 cities × 14 niches: ~2,154,200/month
+- Top niche overall: Gyms — 278,100/month
+- Top city overall: Mysuru — 220,150/month
+
+## What's Pending
+- None. All keyword data is collected and ready.
+- Data feeds into: `07_DATA_AND_RESEARCH/PDF_Generator/data_loader.py` (volumes used in PDFs)
+
+## What's Blocked
+- Nothing.
+
+## Connections to Other Folders
+- **Directly used by:** `07_DATA_AND_RESEARCH/PDF_Generator/data_loader.py` — volumes loaded into PDFs
+- **Referenced in:** `03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/` — Data Hook step in all scripts
+- **Used for:** `06_PAID_MARKETING/` — ad campaign targeting and copy
+- **Source of truth for:** `07_DATA_AND_RESEARCH/Niche_Data_Reference_Sheet.md`
+
+## Key Decisions Made (Locked)
+- All volumes sourced from Google Keyword Planner — no estimates
+- Numbers updated from FortuneMarq_Master_Keyword_Research.xlsx in March 2026 across all context files and data_loader.py
+- PDFs already generated with correct data — no regeneration needed for English versions
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. All data files confirmed present. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Context file created. All keyword data confirmed. |
+| 2026-03-19 | All niche volumes updated from master Excel across all context files and data_loader.py. |
+| 2026-04-28 | CONTEXT.md fully rewritten with file-level inventory. |

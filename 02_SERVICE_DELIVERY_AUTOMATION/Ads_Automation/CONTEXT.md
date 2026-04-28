@@ -1,131 +1,44 @@
-# 02 — Ads Automation Platform
-**Last Updated:** March 2026 | **Status:** Not started — Phase 2 of build plan
+# 02 — Ads Automation
+**Last Updated:** 2026-04-28 | **Status:** Not started — pre-build phase
 
-## Purpose
-Build the unified platform that manages Google Ads and Meta Ads for all clients from one system. AI generates campaign strategy, humans approve, system monitors daily, optimises automatically, and reports weekly.
+## Folder Purpose
+Plan and build the ads automation platform managing all client Google Ads and Meta Ads accounts — campaign generation, human approval gates, auto-optimisation, and monthly performance reporting.
 
-## Architecture
-- Google Ads: Agency MCC (Manager Account) — all clients linked underneath — one developer token
-- Meta Ads: Agency Business Manager — clients add as partner — long-lived system user tokens
-- AI (Claude API): generates campaign structure, keywords, audiences, ad copy
-- Human approval gate: nothing goes live without Jabeer sign-off
-- Daily optimisation pass: pause poor performers, adjust bids, reallocate budget
-- Weekly report: combined Google + Meta performance per client
+## What Exists (Complete)
+| File | Description |
+|---|---|
+| `CONTEXT.md` | This file — only file in this folder |
 
-## Google Ads Setup
-- Apply for Google Ads MCC (Manager Account) — free
-- Basic Access: 15K ops/day — covers ~40–50 local clients
-- Standard Access (approval-based, free) — apply when scaling beyond 50 clients
-- SDK: google-ads-python
+No build files exist. This folder is a planning placeholder.
 
-## Meta Ads Setup
-- Agency Business Manager already exists
-- Clients add agency as partner (one-time setup per client)
-- SDK: facebook-business Python SDK
-- Standard Access: rolling hourly points, recovers quickly
+## What's Pending
+- Google Ads MCC setup (all client accounts under FortuneMarq MCC)
+- Meta Business Manager setup (all client ad accounts under FortuneMarq BM)
+- AI campaign structure generator per niche (campaign → ad group → keyword/audience → ad copy)
+- Human approval gate in FMOS before any changes go live
+- Budget monitoring + pause rules (overspend protection)
+- Monthly ads performance report auto-generation
+- Google Ads API + Meta Ads API integration
+- Build timeline: Phase 2 (Months 3–4 after FMOS deployed)
 
-## Services This Covers
-- Google Ads Management (₹2,500/month)
-- Meta Ads Management (₹2,500/month)
-- Google Ads Setup one-time (₹4,500)
-- Meta Ads Setup one-time (₹4,500)
+## What's Blocked
+- Blocked on FMOS deployment
+- Google MCC creation requires a real Google Ads manager account
+- Meta BM requires verified business page and GSTIN
+- API access requires billing setup with Google and Meta
 
 ## Connections to Other Folders
-- **Feeds FROM:** 01_CRM_AND_TOOL (client list, budgets, access credentials)
-- **Feeds INTO:** 08_FINANCE (monthly management fee invoices), 04_CLIENT_MANAGEMENT (leads generated updates health score)
-- **Depends ON:** Google Ads SOP + Meta Ads SOP (L5a) must be written first
+- **Inbound leads from ads to:** `01_CRM_AND_TOOL` — inbound leads auto-tagged with niche+city+source=ads
+- **Campaign data for:** `04_CLIENT_MANAGEMENT/Monthly_Reports/FMOS_Report_Data/monthly_report_schema.json` — ads section
+- **Reference:** `02_SERVICE_DELIVERY_AUTOMATION/Agency_OS_Master_Plan.docx`
 
-## Current Status
-- [ ] Google Ads MCC — not applied for
-- [ ] Meta Business Manager partner setup — not done
-- [ ] Ads SOPs — not written
-- [ ] Build planned for Month 3–4
+## Key Decisions Made
+- All client ad accounts managed under one MCC / Business Manager — never give clients admin access
+- Human approval required before any live changes
+- Jabeer reviews all ad creatives before activation
 
-## Open Decision
-- WhatsApp API vs Business Account for lead follow-ups from ads — affects how inbound leads from campaigns are handled
-
-## Session Log
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Architecture defined from master plan. Waiting on SOPs + Phase 1. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Folder created as planning placeholder. |
+| 2026-04-28 | CONTEXT.md rewritten. Confirmed no files exist. Blocked on FMOS deployment. |

@@ -1,112 +1,47 @@
 # 05 — Instagram & Facebook
-**Last Updated:** March 2026 | **Status:** Not started — 500 followers target by April 2026
+**Last Updated:** 2026-04-28 | **Status:** Not started — planning phase only
 
-## Purpose
-Build FortuneMarq's Instagram and Facebook presence. Instagram is the primary platform. Content drives brand authority, attracts local business owners, and generates inbound leads over time. Jabeer creates content manually until AI avatar + automation system is built.
+## Folder Purpose
+Plan and execute FortuneMarq's Instagram and Facebook presence. Primary goal: build authority in the Hubli digital marketing space, demonstrate expertise with real data, and generate inbound leads over time.
 
-## Goal
-500 Instagram followers by end of April 2026
+## What Exists (Complete)
+| File | Description |
+|---|---|
+| `CONTEXT.md` | This file |
+| `Carousels/CONTEXT.md` | Planning placeholder — no carousel files |
+| `Reels/CONTEXT.md` | Planning placeholder — no reel files |
+| `Single_Image/CONTEXT.md` | Planning placeholder — no single image files |
 
-## Posting Schedule
-5 posts per week minimum across Reels, Carousels, and Single Images
+No content files exist. This folder is a planning placeholder.
 
-## Content Pillars
-1. Niche Data Reels (2x/week) — real Hubli search volumes, competitor gaps
-2. Behind the System (1x/week) — CRM, PDFs, automation builds
-3. AI Tools Education (1x/week) — tools for local business owners
-4. Client Results (1x/week once available)
-5. Agency Building Tips (1x/week) — Jabeer's journey
+## Content Strategy (5 posts/week)
+| Type | Frequency | Topic |
+|---|---|---|
+| Niche Data Reels | 2×/week | Real search volumes for Hubli niches (e.g., "8,500 people searched for gyms in Hubli last month") |
+| Behind the System | 1×/week | Show FMOS, PDFs, automation — proof of systems-driven approach |
+| AI Tools Education | 1×/week | AI tools local businesses can use |
+| Client Results | 1×/week (once results exist) | Real results from active clients |
+| Agency Building Tips | 1×/week | Founder's journey content |
 
-## Folder Structure
-- Reels/ — video scripts, hooks, captions
-- Carousels/ — slide content, designs
-- Single_Image/ — static post content
+## What's Pending
+- Instagram account setup (bio, profile photo, link in bio)
+- First 9 posts planned and created (grid cohesion matters at the start)
+- Reel template creation in Canva
+- Content calendar for first month
+- Facebook page setup (mirror Instagram content initially)
+- Meta Business Manager setup (required for ads + WhatsApp API)
 
-## Subfolders
-Each subfolder (Reels, Carousels, Single_Image) has its own CONTEXT.md
+## What's Blocked
+- Nothing technically blocked — just needs time and execution
+- Not a current priority while FMOS deployment is the main focus
 
-## Session Log
+## Connections to Other Folders
+- **Data for content from:** `07_DATA_AND_RESEARCH/Niche_Data_Reference_Sheet.md` — search volumes
+- **Feeds into:** `06_PAID_MARKETING/Meta_Ads` — warm audience retargeting once posts run
+- **Brand assets from:** `00_MASTER/Brand_Assets/` (root level)
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Content pillars defined. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Folder created. Content strategy planned. |
+| 2026-04-28 | CONTEXT.md rewritten. Confirmed no content files exist yet. |

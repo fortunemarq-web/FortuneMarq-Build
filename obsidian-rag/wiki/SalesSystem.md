@@ -50,10 +50,20 @@ Dynamic 5–6 page PDF. Jabeer enters services and pricing in FMOS; client data 
 
 21-item checklist per service type covering: logo/domain/content/hosting asset collection, team task assignment, kickoff call. JSON in `onboarding_checklists.json`. 10-step SOP for Jabeer.
 
-## What's Still Pending
+## L6 — Monthly Reports & Health Score (✅ Complete)
 
-- **L6 (Report Templates + Health Score):** Monthly auto-generated PDF reports for clients. Health score = payment timeliness + communication + results + tenure + upsell potential.
-- **L7 (Upsell System):** Trigger-based upsell scripts (e.g., GMB → Google Ads after 50 calls/month).
+Completed April 26, 2026. Files in `04_CLIENT_MANAGEMENT/Monthly_Reports/FMOS_Report_Data/`:
+- `monthly_report_schema.json` — auto-generated PDF report structure per service type
+- `client_health_score.json` — scoring model: payment timeliness + communication + results + tenure + upsell potential
+- `report_index.ts` — TypeScript loader for FMOS integration
+
+## L7 — Upsell System (✅ Complete)
+
+Completed April 26, 2026. Files in `04_CLIENT_MANAGEMENT/Upsell_System/FMOS_Upsell_Data/`:
+- `upsell_rules.json` — trigger conditions per service (e.g., GMB → Google Ads after 50+ calls/month)
+- `upsell_scripts.json` — call scripts for each upsell scenario
+
+Both L6 and L7 data files are ready for FMOS integration as part of Phase D/E build.
 
 ## Open Questions
 

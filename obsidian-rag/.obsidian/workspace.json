@@ -11,10 +11,10 @@
             "id": "32881bc92136e1bf",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "graph",
               "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -178,6 +178,9 @@
   },
   "active": "32881bc92136e1bf",
   "lastOpenFiles": [
+    "raw/2026-04-28_corrections-from-full-scan.md",
+    "wiki/NicheLandingPages.md",
+    "README.md",
     "wiki/WorkflowSessions.md",
     "wiki/BrandingVoice.md",
     "wiki/GrowthRoadmap.md",

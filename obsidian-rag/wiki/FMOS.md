@@ -1,6 +1,6 @@
 # FMOS
 
-**Last updated:** 2026-04-28  
+**Last updated:** 2026-04-28 (revised after full folder scan)  
 **Tags:** #project #active #evergreen  
 **Related:** [[FortuneMarq]], [[TechStack]], [[TeamStructure]], [[CurrentBlockers]], [[SalesSystem]]
 
@@ -31,16 +31,28 @@ Next.js 16.1.6 + TypeScript strict + Tailwind CSS v4 frontend. Supabase (Postgre
 - **Audit Log** — all actions tracked
 - **50+ database tables** covering all business functions
 
+## Build Phase Status
+
+FMOS development is organised into 5 phases (A–E) spec'd in `PHASE_A_CLEANUP.md` through `PHASE_E_FINANCE_FORECAST.md` inside `01_CRM_AND_TOOL/fmos/`:
+
+| Phase | What | Status |
+|-------|------|--------|
+| A — Cleanup | Bug fixes, auth hardening, UI polish | ✅ Done |
+| B — Role Views | Telecaller view, staff view, role-based dashboards | ✅ Done |
+| C — Outreach & Leads | Outreach Sequence Board, Lead Profile Page, PDF Delivery Tracker | ⏳ Spec'd — awaiting Antigravity execution |
+| D — Proposal & Onboarding | Retainer Package System, Proposal builder, Agreement, Onboarding flow | ⏳ Spec'd — awaiting Antigravity execution |
+| E — Finance & Forecast | Revenue Forecast Widget, Upsell Tracker, P&L forecasting | ⏳ Spec'd — awaiting Antigravity execution |
+
 ## What's Pending (Deployment Blockers)
 
-Six features must be built before FMOS goes live:
+Phases C, D, and E must be executed before FMOS goes live. Key features still to build:
 
-1. **Outreach Sequence Board** — visual board showing where each lead is in the 3-touch sequence
-2. **Lead Profile Page** — complete view of call history, WhatsApp messages, PDFs delivered, proposals, meetings
-3. **PDF Delivery Tracker** — log which PDF sent, when, by whom
-4. **Retainer Package System** — tag clients by service tier, flag upsell opportunities
-5. **Revenue Forecast Widget** — pipeline × close rate = projected MRR vs ₹50K target
-6. **Upsell Tracker** — current package, eligible upgrades, last upsell attempt, outcome
+1. **Outreach Sequence Board** — visual board showing where each lead is in the 3-touch sequence (Phase C)
+2. **Lead Profile Page** — full view of call history, WhatsApp messages, PDFs delivered, proposals, meetings (Phase C)
+3. **PDF Delivery Tracker** — log which PDF sent, when, by whom (Phase C)
+4. **Retainer Package System** — tag clients by service tier, flag upsell opportunities (Phase D)
+5. **Revenue Forecast Widget** — pipeline × close rate = projected MRR vs ₹50K target (Phase E)
+6. **Upsell Tracker** — current package, eligible upgrades, last upsell attempt, outcome (Phase E)
 
 ## Deployment Checklist
 
@@ -53,8 +65,9 @@ Six features must be built before FMOS goes live:
 
 ## Open Questions
 
-- [ ] Timeline to finish the 6 pending features?
+- [ ] When will Phases C, D, E be executed in Antigravity?
 - [ ] Which hosting plan on Hostinger — Node.js? VPS?
+- [ ] Does Jabeer build Phases C–E himself or hand to Zaid/Sufiyan once trained?
 
 ## Sources
 

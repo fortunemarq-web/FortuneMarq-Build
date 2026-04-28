@@ -1,149 +1,129 @@
 # 07 — Data & Research
-**Last Updated:** 2026-03-19 | **Status:** Active — Hubli pipeline complete. Other cities pending.
+**Last Updated:** 2026-04-28 | **Status:** Hubli pipeline complete. Other cities pipeline ready to run. PDF Index created. L1–L7 content hierarchy fully complete.
 
-## Purpose
-Store and organise all data assets that power the FortuneMarq sales and marketing machine — keyword research, competitor analysis, lead database, and market intelligence PDFs. This is the foundation of the content hierarchy. Nothing in the sales system, marketing, or CRM is accurate without this data.
+## Folder Purpose
+Store and organise all data assets that power the FortuneMarq sales and marketing machine — keyword research, competitor analysis, lead database, market intelligence PDFs, and the PDF generator pipeline. This is the foundation of the content hierarchy. Nothing in the sales system, marketing, or CRM is accurate without this data.
 
-## Assets in This Folder
-| Asset | Status | Location |
-|---|---|---|
-| Niche Data Reference Sheet | COMPLETE — 6 priority niches, Hubli | Niche_Data_Reference_Sheet.md |
-| PDF Index | PENDING — must be created | PDF_Index.md (not yet created) |
-| Keyword Data | COMPLETE — all 9 cities x 14 niches | Keyword_Data/ subfolder |
-| Competitor SERP Data | HUBLI COMPLETE. HTML files exist for Dharwad, Belgaum, Mangalore, Davangere, Ballari — pipeline not yet run. Mysuru, Kalaburgi, Vijayapura need SERP HTML collected. | Competitor_Data/ subfolder |
-| Lead Database | HUBLI COMPLETE — 14 niches cleaned, SERP-matched, finalised in Hubli_Final/ (11 files). Other 8 cities cleaned but not yet finalised. | Lead_Database/ subfolder |
-| Market Intelligence PDFs | HUBLI COMPLETE — 75 PDFs (EN + KN, 4 types across 14 niches). Pipeline reusable for all cities. | PDF_Generator/output/Hubli/ |
-| PDF Generator Pipeline | COMPLETE and reusable | PDF_Generator/ subfolder |
+## What Exists (Complete)
+
+### Root Files
+| File | Description |
+|---|---|
+| `Niche_Data_Reference_Sheet.md` | L0: All 6 priority niches with real search volumes, competitor analysis, opportunity sizing |
+| `PDF_Index.md` | L1b: Maps all 75 Hubli PDFs to city/niche/type/language/filename. Status: 37 English APPROVED, 38 Kannada PENDING REWRITE (misspellings found) |
+| `cleanup.py` | Python script for data cleaning |
+
+### Lead_Database/ subfolder
+| Location | Description |
+|---|---|
+| `Hubli_Final/` | 11 upload-ready Hubli CSV files (~858 leads total) — final cleaned, SERP-matched, ready for FMOS upload |
+| `Hubli_All_Leads_Clean.csv` | Combined Hubli leads (858 rows) |
+| `No_Phone_Has_Website_Leads.csv` | Leads with website but no phone — different outreach approach needed |
+| `Website_Rescrape_Queue.csv` | Leads flagged for website re-scrape |
+| `Hubli_cleaned_leads/` | Intermediate cleaned files (pre-final) — 13 niche files |
+| `Dharwad_cleaned_leads/` | 13 niche CSVs — cleaned, not yet finalized |
+| `Belgaum_cleaned_leads/` | Partial — less complete than Dharwad |
+| `Davangere_Cleaned_Leads/` | 11 niche CSVs |
+| `Mysuru_Cleaned_Leads/` | 14 niche CSVs — full coverage |
+| `manglore_cleaned_leads/` | 14 niche CSVs |
+| `Kalburgi_cleaned_leads/` | 12 niche CSVs |
+| `Vijayapura_Cleaned_Leads/` | 12 niche CSVs |
+| `analyze_leads.py` | Python analysis script |
+| `process_hubli_leads_v2.py` | Hubli lead processing pipeline script |
+| `website_phone_scraper.py` | Script to scrape phones and websites from GBP data |
+
+**Hubli_Final/ files (11 CSVs, ~858 leads):**
+- Hubli_CarRentals_Final.csv (106 leads)
+- Hubli_ComputerTraining_Final.csv (101 leads)
+- Hubli_DentalClinics_Final.csv (106 leads)
+- Hubli_Gyms_Final.csv (117 leads)
+- Hubli_InteriorDesigners_Final.csv (91 leads)
+- Hubli_JEENEETCoaching_Final.csv (48 leads)
+- Hubli_ModularKitchens_Final.csv (42 leads)
+- Hubli_Physiotherapy_Final.csv (33 leads)
+- Hubli_RealEstate_Final.csv (49 leads)
+- Hubli_SkinClinics_Final.csv (111 leads)
+- Hubli_TuitionCentres_Final.csv (54 leads)
+
+### Keyword_Data/ subfolder
+| Location | Description |
+|---|---|
+| `FortuneMarq_Master_Keyword_Research.xlsx` | Master Excel with all keyword data across 9 cities × 14 niches |
+| `Keyword Research For Google Ads.xlsx` | Google Ads specific keyword research |
+| `FortuneMarq_Detailed_Report.txt` | Text summary of keyword findings |
+| `analyze_keywords.py` | Analysis script |
+| `generate_master_excel.py` | Script to generate master Excel |
+| `Hubli_Keywords/` | 14 CSV files — one per niche (Hubli) |
+| `Dharwad_Keywords/` | City keyword folder |
+| `Belgaum_Keywords/` | City keyword folder |
+| `Ballari_Cleaned_Keywords/` | City keyword folder |
+| `Davangere_Cleaned_Keywords/` | City keyword folder |
+| `Kalaburgi_keywords/` | City keyword folder |
+| `Mangalore_keywords/` | City keyword folder |
+| `Mysuru_Cleaned_Keywords/` | City keyword folder |
+| `Vijayapura_Cleaned_Keywords/` | City keyword folder |
+
+### Competitor_Data/ subfolder
+| Location | Description |
+|---|---|
+| `Hubli/` | Hubli competitor SERP analysis — complete for 6 priority niches |
+| `Dharwad/` | Dharwad competitor data — partial |
+| `Belgaum/` | Belgaum data folder |
+| `Davangeri/` | Davangere data folder |
+| `Manglore/` | Mangalore data folder |
+
+### PDF_Generator/ subfolder
+| File/Location | Description |
+|---|---|
+| `pdf_generator.py` | Python PDF generator (English) using brand fonts, search volumes, competitor data |
+| `pdf_generator_kn.py` | Python PDF generator (Kannada) — misspellings found, needs rewrite |
+| `generate_all_pdfs.py` | Batch runner for English PDFs |
+| `generate_all_pdfs_kn.py` | Batch runner for Kannada PDFs |
+| `data_loader.py` | Data loader with real search volumes per niche per city |
+| `translator.py` | Translation utility for Kannada versions |
+| `output/Hubli/` | 75 PDF files (37 English approved + 38 Kannada pending rewrite) |
+
+**PDF Types:**
+- Type 1 — Visibility Report (for SERP_Ranked = Y leads)
+- Type 2 — Market Opportunity Report (for no-website leads)
+- Type 3 — Website Performance Report (for has-website-not-ranking leads)
+- Type 4 — Niche Market Report (for low-volume niches: IVF, Physiotherapy, IELTS, Hotels)
 
 ## Key Data Facts
-- Total monthly searches across 9 cities x 14 niches: 2,154,200/month
-- 7,298 GBP scraped leads — cleaned and standardised across 9 cities
-- Hubli: 11 finalised upload-ready CSVs in Hubli_Final/ — 14 niches cleaned and SERP-matched
-- 75 PDFs generated for Hubli (English + Kannada) — 4 types across 14 niches
-- NOT A SINGLE competitor in 6 priority niches runs paid ads
-- PDF Generator pipeline is complete: pdf_generator.py, pdf_generator_kn.py, generate_all_pdfs.py, generate_all_pdfs_kn.py, data_loader.py, translator.py
+- Total Hubli leads in Hubli_Final/: ~858 (upload-ready)
+- Total leads across 9 cities (all cleaned folders): ~7,298
+- Total PDFs generated for Hubli: 75 (37 EN approved, 38 KN pending rewrite)
+- Keyword data: 9 cities × 14 niches = 126 niche-city combinations
+- Total monthly searches across all cities/niches: ~2,154,200/month
+- Not a single competitor in 6 priority niches runs paid ads
 
-## Competitor Data Note
-Traffic numbers adjusted to reflect reality: ~25–30% of search volume goes to local websites. ~70% goes to directories (JustDial, Sulekha, Practo etc.). This is the truth and the pitch.
+## What's Pending
+1. **Hubli Kannada PDFs** — regenerate 38 KN PDFs after fixing misspellings in pdf_generator_kn.py
+2. **Dharwad pipeline** — all SERP assets ready; run process_hubli_leads_v2.py equivalent for Dharwad
+3. **Belgaum, Mangalore, Davangere, Ballari** — SERP assets partially ready; run pipeline
+4. **Mysuru, Kalaburgi, Vijayapura** — need SERP HTML collection first, then run pipeline
+5. **FMOS upload** — upload Hubli_Final/ CSVs once FMOS is deployed (currently the active priority)
 
-## Reusable Pipeline for Other Cities
-Step 1: Save SERP HTML files for all 14 niches → Competitor_Data/[City]/SERP_HTML/
-Step 2: Extract text → GBP CSV → Organic CSV → Master SERP Report
-Step 3: Clean leads → cross-match SERP → split into [City]_Final/ files
-Step 4: Update data_loader.py volumes for city → run generate_all_pdfs.py → run generate_all_pdfs_kn.py
-Step 5: Upload [City]_Final CSVs to FMOS
-
-## Content Build Hierarchy — Current Status
-- L0  Niche Data Reference Sheet — COMPLETE
-- L1a Lead CSV Files — HUBLI COMPLETE (11 finalised files in Hubli_Final/). Other 8 cities pending pipeline run.
-- L1b PDF Index — COMPLETE — PDF_Index.md created in this folder
-- L2  Telecaller Scripts — COMPLETE — New 4 lead-type JSON architecture in 03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/
-- L3  WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in 03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic proposal in 03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc + service terms in 09_LEGAL_AND_OPERATIONS/Agreement_Templates/
-- L5  SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md in 04_CLIENT_MANAGEMENT/Onboarding/
-- L6  Report Templates + Health Score — PENDING
-- L7  Upsell Trigger System — PENDING
-
-## Next Tasks — This Folder
-1. Run pipeline for Dharwad — all SERP assets ready, next priority city
-2. Run pipeline for Belgaum, Mangalore, Davangere, Ballari
-3. Collect SERP HTML for Mysuru, Kalaburgi, Vijayapura then run pipeline
-
-## Next Task — Outside This Folder
-FMOS deployment is the current priority blocker. Once FMOS is live, upload Hubli_Final CSVs and begin outreach.
+## What's Blocked
+- FMOS upload blocked on FMOS deployment (Phase C–E completion)
+- Kannada PDF regeneration: needs pdf_generator_kn.py misspelling fixes first
+- Other city pipelines: not urgent until after Hubli outreach is underway
 
 ## Connections to Other Folders
-- **Feeds INTO:** 03_SALES_SYSTEM (scripts, templates use real numbers), 06_PAID_MARKETING (ad copy data), 01_CRM_AND_TOOL (leads uploaded), 05_ONLINE_PRESENCE (content hooks)
+- **Feeds INTO:** `03_SALES_SYSTEM` (scripts/templates reference real search volumes), `06_PAID_MARKETING` (ad copy uses competitor gaps), `01_CRM_AND_TOOL` (leads uploaded via CSV), `05_FORTUNEMARQ_ONLINE_PRESENCE` (content hooks from niche data)
 - **Foundation FOR:** Every single folder in the build system depends on this data being accurate
 
-## Session Log
+## Key Decisions Made (Locked)
+- Hubli is Phase 1 — all other cities are Phase 2+
+- 11 Hubli_Final/ CSVs are the upload-ready set (not the _cleaned_leads versions)
+- English PDFs approved; Kannada PDFs pending rewrite
+- PDF type assignment: by SERP_Ranked + Has_Website columns on each lead
+- Pipeline is fully reusable for all cities — same scripts, just update data_loader.py per city
+
+## Session History
 | Date | Summary |
 |---|---|
 | March 2026 | Context file created. L0 complete. L1 in progress. |
-| 2026-03-19 | Hubli pipeline complete. 75 PDFs generated (EN + KN, Types 1–4). 11 Hubli_Final CSVs ready for FMOS upload. PDF Generator pipeline reusable for all cities. Next: PDF_Index.md then move to 03_SALES_SYSTEM. |
-| 2026-03-19 | All niche volumes updated from FortuneMarq_Master_Keyword_Research.xlsx. Replaced estimated numbers with real Google Keyword Planner data across all context files and data_loader.py. PDFs already generated with correct data — no regeneration needed. |
-| 2026-04-09 | Context audit. Updated Content Build Hierarchy to reflect all completed work: L1b PDF Index COMPLETE, L2–L5 all COMPLETE (scripts, templates, proposal, agreement, onboarding). Next: run pipeline for Dharwad, then FMOS deployment. |
-
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0  Niche Data Reference Sheet — COMPLETE
-- L1a Lead CSV Files — HUBLI COMPLETE. Other 8 cities pending.
-- L1b PDF Index — COMPLETE
-- L2  Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3  WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5  SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6  Report Templates + Health Score — PENDING
-- L7  Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| 2026-03-19 | Hubli pipeline complete. 75 PDFs generated (EN + KN). 11 Hubli_Final CSVs ready. PDF generator pipeline documented. All keyword volumes updated from master keyword research. |
+| 2026-04-09 | Context audit. L1b PDF Index confirmed complete. L2–L7 all complete (in 03_SALES_SYSTEM and 04_CLIENT_MANAGEMENT folders). |
+| 2026-04-28 | CONTEXT.md fully rewritten. All files inventoried including city-by-city lead folders, PDF counts, script files. |

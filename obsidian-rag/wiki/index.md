@@ -1,6 +1,6 @@
 # Wiki Index
 
-*Last updated: 2026-04-28 — Total pages: 16*
+*Last updated: 2026-04-28 (revised after full folder scan) — Total pages: 17*
 
 > Master index of all wiki pages. Update this file immediately when creating, renaming, or deleting a page.
 
@@ -16,8 +16,9 @@
 ## Products & Services
 
 - [[ServiceOfferings]] — Full pricing table, payment policy, upsell paths.
-- [[SalesSystem]] — 3-touch outreach, scripts (4 variants), 17 WhatsApp templates, proposal, agreement, onboarding.
+- [[SalesSystem]] — 3-touch outreach, scripts (4 variants), 17 WhatsApp templates, proposal, agreement, onboarding. L6 + L7 complete.
 - [[PhaseOneNiches]] — 6 priority niches in Hubli with search volumes and opportunity data.
+- [[NicheLandingPages]] — 11 HTML landing pages built for FortuneMarq's own lead gen. Ready to deploy.
 
 ## Systems & Technology
 

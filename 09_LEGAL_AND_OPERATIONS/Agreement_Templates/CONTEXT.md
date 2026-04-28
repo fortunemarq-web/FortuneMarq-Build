@@ -1,111 +1,67 @@
 # 09 — Agreement Templates
-**Last Updated:** March 2026 | **Status:** PENDING — L4b in content hierarchy
+**Last Updated:** 2026-04-28 | **Status:** COMPLETE — agreement_template.md + service_terms.json ready
 
-## Purpose
-Write the master client agreement template and service-specific variants. These are signed before any work begins. They define exactly what FortuneMarq delivers, payment terms, and client rights.
+## Folder Purpose
+Store the client service agreement template and service-specific terms. The agreement is the closing document sent to clients after verbal/message confirmation. It is 1 page, sent via WhatsApp or email, confirmed by client reply.
 
-## Depends On
-- L3 WhatsApp Templates (tone consistency)
-- Pricing locked (already done)
+## What Exists (Complete)
 
-## Master Agreement Sections
-Parties / Services + Deliverables / Term / Investment + Payment / Ad Spend Policy / Revision Policy / Cancellation / Ownership / Confidentiality / Governing Law (Karnataka) / Signatures
+| File | Description |
+|---|---|
+| `agreement_template.md` | The actual agreement document text (what the client receives). All {{variables}} marked for FMOS substitution: {{agreementNumber}}, {{proposalNumber}}, {{agreementDate}}, {{businessName}}, {{ownerName}}, {{city}}, {{service_n_name}}, {{service_n_setup}}, {{service_n_monthly}}, {{totalSetupFee}}, {{totalMonthlyRetainer}} |
+| `service_terms.json` | Service-specific terms for all 7 services: WEBSITE, GMB, SEO, GOOGLE_ADS, META_ADS, WHATSAPP_MARKETING, AI_AUTOMATIONS — plus universal terms and exit policy |
+| `CONTEXT.md` | This file |
 
-## Key Terms (locked)
-- Minimum commitment: 1 month rolling
-- Payment: due 5th of month
-- Cancellation: 30 days written notice
-- Website ownership: transfers to client on full payment
-- Ad accounts: client owns always
-- Jurisdiction: Karnataka
+## Agreement Document Summary
+**Header:** FortuneMarq branding, address, contact info
+**Agreement number + proposal reference**
+**Parties:** FortuneMarq (Jabeer) and [Client Business] (Owner Name)
+**Services table:** Service name, setup fee, monthly retainer per row
+**Payment terms:** Setup fee before work, monthly invoice 1st/due 5th, overdue consequences
+**Key rules:** 30-day exit notice, non-refundable setup fees, asset handover on exit
+**Confirmation:** "Reply 'Yes, confirmed' or 'Confirmed' to start"
 
-## Variants Needed
-- Website project agreement
-- Monthly retainer agreement (ads/SEO/GMB)
-- Combined website + retainer agreement
+## Service Terms Summary (`service_terms.json`)
+**Universal Terms (apply to all services):**
+- Work starts only after setup fee received
+- Monthly invoices raised 1st, due by 5th
+- 7 days overdue: ads paused; 30 days overdue: website offline
+- No guaranteed results (market conditions, competition, client cooperation)
+- Client provides accurate info and assets on time
+- 30-day exit notice, setup fees non-refundable, monthly fees pro-rated
 
-## Session Log
+**Per-Service Terms cover:**
+- WEBSITE: 2 revision rounds, go-live only after Jabeer review + client approval, scope changes quoted separately
+- GMB: Client must have verified profile, 4 posts/month, review management, client must not make changes without informing us
+- SEO: Results timeline (60–90 days), client must not make website changes without informing us
+- GOOGLE_ADS: Ad spend is client's budget, FortuneMarq charges management fee only
+- META_ADS: Creative approval required before launch, FortuneMarq manages all creatives
+- WHATSAPP_MARKETING: Client provides opt-in contact list, FortuneMarq manages templates
+- AI_AUTOMATIONS: Scoped per project, separate agreement per automation built
+
+## What's Pending
+- FMOS Phase D: Build agreement generation flow (from proposal → generate agreement → send → log confirmation)
+- FMOS_Change_Specs/data/agreement_template.json is the FMOS-compatible version (already created)
+
+## What's Blocked
+- Agreement generation blocked on FMOS Phase D
+- No agreements signed yet (no clients)
+
+## Connections to Other Folders
+- **FMOS version:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/agreement_template.json`
+- **Referenced from:** `03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/` — proposals link to agreement
+- **Triggers:** `04_CLIENT_MANAGEMENT/Onboarding/` — agreement confirmation triggers onboarding checklist
+- **Payment terms reference:** `09_LEGAL_AND_OPERATIONS/Business_Policies/payment_and_cancellation_policy.md`
+
+## Key Decisions Made (Locked)
+- No physical signature required — WhatsApp/email reply "Confirmed" is sufficient
+- Agreement number: AGR-2026-001 format (FMOS auto-increments)
+- Always references proposal number so both documents link together
+- Service terms displayed in FMOS proposal flow; brief version in agreement
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. All sections defined. Ready to write when L3 complete. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Folder created. Agreement template not yet written. |
+| 2026-04-02 | agreement_template.md created. service_terms.json created for all 7 services + universal terms + exit policy. |
+| 2026-04-28 | CONTEXT.md fully rewritten with file contents documented. |

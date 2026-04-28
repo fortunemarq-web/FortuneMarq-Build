@@ -1,111 +1,81 @@
 # 09 — Legal & Operations
-**Last Updated:** March 2026 | **Status:** GST registered — agreement templates not written yet
+**Last Updated:** 2026-04-28 | **Status:** GST registered, Udyam registered. Agreement template and policies complete. Minor items pending.
 
-## Purpose
-Create and store all legal documents, business policies, and compliance materials. These documents protect FortuneMarq and set clear expectations with clients. Agreement template is L4b in the content hierarchy — must be written before service SOPs (L5).
+## Folder Purpose
+Create and store all legal documents, business policies, and compliance materials. These documents protect FortuneMarq and set clear expectations with clients. Agreement template is L4b in the content hierarchy.
 
-## What Exists
-- GST Registration: Complete
-- Business Bank Account: Complete
-- Office: Complete (Galaxy Mall, J.C Nagar, Hubli)
-- Agency Website: Live at fortunemarq.com
-- GMB: Created and verified
+## What Exists (Complete)
 
-## What Needs to Be Created
-- [x] Client Agreement Template (L4b) — COMPLETE: agreement_template.md in Agreement_Templates/
-- [x] Service-specific terms (per service type) — COMPLETE: service_terms.json (all 7 services + exit policy)
-- [x] Cancellation policy document — COMPLETE: payment_and_cancellation_policy.md in Business_Policies/
-- [ ] Privacy Policy for fortunemarq.com
-- [ ] Website Ownership Transfer document
-- [ ] GST invoice compliance checklist
+### Root Files
+| File | Description |
+|---|---|
+| `BUSINESS_MASTER_INFO.md` | Complete business identity: trade name, legal name (Sayed Jabeer), GSTIN 29ICWPS9816Q1ZS, Udyam number UDYAM-KR-13-0088191, registered address, bank account details, NIC codes |
+| `CONTEXT.md` | This file |
+
+### Agreement_Templates/ folder
+| File | Description |
+|---|---|
+| `agreement_template.md` | L4b: The actual 1-page agreement document Jabeer sends to clients. All {{variables}} marked for FMOS substitution. Client confirms by replying "Yes, confirmed." |
+| `service_terms.json` | Service-specific terms for all 7 services + universal terms + exit policy. Used in FMOS and optionally appended to agreement PDF. |
+
+### Business_Policies/ folder
+| File | Description |
+|---|---|
+| `payment_and_cancellation_policy.md` | Full payment SOP: invoice schedule, accepted methods, overdue escalation flow (7-day pause, 30-day offline), cancellation terms, asset handover on exit |
+
+### GST_and_Compliance/ folder
+| File | Description |
+|---|---|
+| `GST Certificate.pdf` | Official GST registration certificate. GSTIN: 29ICWPS9816Q1ZS. Valid from 05/11/2025. |
+
+### _project_files/ folder
+| File | Description |
+|---|---|
+| `MASTER_CONTEXT.md` | Master context for the folder |
+
+### Root-level documents
+| File | Description |
+|---|---|
+| `fortunemarq udyam.pdf` | Udyam Registration Certificate. UDYAM-KR-13-0088191. Micro enterprise. NIC codes: 62012 (Web-page designing), 73100 (Advertising). Registered 05/11/2025. |
+
+## Business Registration Details
+| Detail | Value |
+|---|---|
+| Legal Name | Sayed Jabeer (Proprietorship) |
+| Trade Name | FortuneMarq Media & Marketing |
+| Founded | 04/11/2025 |
+| GSTIN | 29ICWPS9816Q1ZS |
+| Udyam Number | UDYAM-KR-13-0088191 |
+| Address | Galaxy Mall, Floor 1, Shop No. 43, JC Nagar, Hubli — 580020, Karnataka |
+| Phone | 9353082656 |
+| Email | fortunemarq@gmail.com |
+
+## What's Pending
+- [ ] Privacy Policy for fortunemarq.com (website legal requirement)
+- [ ] Website Ownership Transfer document (for website clients who want to take their site elsewhere)
+- [ ] GST invoice compliance checklist for FMOS activation
+- [ ] FMOS activation: enter GSTIN and bank details in `/admin/finance` settings
+
+## What's Blocked
+- Privacy Policy: not urgent until website gets significant traffic
+- FMOS GST activation: blocked on FMOS deployment
 
 ## Connections to Other Folders
-- **Feeds INTO:** 03_SALES_SYSTEM/Proposals (proposals reference agreement terms), 04_CLIENT_MANAGEMENT (onboarding starts after agreement signed)
-- **Depends ON:** L3 WhatsApp Templates (tone consistency)
+- **Feeds INTO:** `03_SALES_SYSTEM/Proposals` — proposals reference agreement terms
+- **Feeds INTO:** `04_CLIENT_MANAGEMENT/Onboarding` — onboarding starts after agreement signed
+- **Feeds INTO:** `08_FINANCE` — GSTIN used in all invoices
+- **Service terms used by:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/agreement_template.json` — FMOS version of the agreement
 
-## Session Log
+## Key Decisions Made (Locked)
+- Agreement is confirmed by WhatsApp/email reply — no physical signature required
+- Agreement number format: AGR-2026-001 (auto-incremented by FMOS)
+- Service terms are universal + service-specific (layered approach)
+- Exit: 30-day written notice, setup fees non-refundable, monthly fees pro-rated
+- All assets created for client remain the client's property and are handed over on exit
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Existing assets documented. Creation list defined. |
-| 2026-04-02 | Agreement Template (L4b) complete. Files created: agreement_template.md (the actual 1-page doc Jabeer sends to clients), service_terms.json (service-specific terms for all 7 services + universal terms + exit policy), payment_and_cancellation_policy.md (full payment SOP including overdue communication flow). |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Context file created. GST status and existing assets documented. |
+| 2026-04-02 | L4b complete: agreement_template.md created. service_terms.json created (7 services + universal + exit). payment_and_cancellation_policy.md created. |
+| 2026-04-28 | CONTEXT.md fully rewritten. BUSINESS_MASTER_INFO.md and fortunemarq udyam.pdf noted. |

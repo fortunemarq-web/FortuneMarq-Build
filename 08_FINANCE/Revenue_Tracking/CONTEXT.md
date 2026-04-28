@@ -1,112 +1,56 @@
 # 08 — Revenue Tracking
-**Last Updated:** March 2026 | **Status:** Not active — starts when first company client signs
+**Last Updated:** 2026-04-28 | **Status:** Revenue tracking methodology defined. No revenue to track yet.
 
-## Purpose
-Track MRR vs one-time revenue, expenses, profit, and progress toward revenue milestones. This is the scoreboard for the entire agency.
+## Folder Purpose
+Documents the methodology for tracking FortuneMarq's revenue. Tracks both MRR (recurring retainers) and one-time payments separately. All tracking happens in FMOS `/admin/finance`.
 
-## Current State
-- Company MRR: ₹0
-- Personal freelance: ₹15K–₹20K/month (not counted in company)
-- Target: ₹50K MRR by end April/May 2026
+## What Exists (Complete)
+| File | Description |
+|---|---|
+| `CONTEXT.md` | This file — only file in this folder |
 
-## Reports Needed Weekly
-- Cash collected this week
-- Outstanding invoices
+## Revenue Tracking Methodology
 
-## Reports Needed Monthly
-- MRR vs last month
-- One-time revenue this month
-- Expenses by category
-- Profit (revenue − expenses)
-- MRR growth chart
-- Revenue per client
-- Overdue invoices (7+ days)
+### Two Revenue Streams (tracked separately)
+1. **MRR (Monthly Recurring Revenue)** — All retainer payments: Ads management, SEO, GMB, WhatsApp Marketing
+   - MRR = number of clients × average monthly retainer
+   - This is the business health metric — grows slowly but predictably
+2. **One-Time Revenue** — Website builds, setup fees, logo, AI automations
+   - Does not count toward MRR
+   - Improves cash flow while waiting for MRR to build
 
-## Expense Categories
-Office & Infrastructure / Subscriptions & Tools / Team Stipends / Ad Spend (own) / Travel / Misc
+### Revenue Milestones Tracked
+| Milestone | Target Date | Status |
+|---|---|---|
+| First paying client | ASAP | Pending |
+| ₹10K MRR | Within 1 month of first client | Pending |
+| ₹50K MRR | End April/May 2026 | Pending |
+| ₹1L MRR | Month 4–5 | Pending |
+| ₹2L MRR (hiring trigger) | Month 6–8 | Pending |
+| ₹5L MRR | 2-year vision | Pending |
 
-## Session Log
+### Current Revenue Status
+- Company MRR: ₹0 (as of April 2026)
+- Clients: 0 company clients
+- Personal freelance clients (Jabeer): OM SAI TRAVELS, Trishika Car Rental, Sneha Cabs, Shanteshwara Travels
+
+## FMOS Phase E — Revenue Features to Build
+- `revenue_type` column on invoices (mrr / setup_fee / one_time)
+- Finance dashboard: MRR card vs One-Time card (separate, not combined)
+- Revenue Forecast Widget: (leads in pipeline × close rate) = projected MRR vs ₹50K target
+- Retainer Package tiers: starter / growth / pro / custom on each client record
+
+## What's Pending
+- FMOS Phase E build
+- First client to track
+
+## Connections to Other Folders
+- **Tracks invoices from:** `01_CRM_AND_TOOL/fmos/app/admin/finance/invoices/`
+- **Forecast uses pipeline from:** FMOS outreach board (Phase C)
+- **Monthly burn reference:** ₹15,600–₹16,600/month (in `08_FINANCE/CONTEXT.md`)
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Tracking starts when first client signs. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Folder created. Revenue methodology defined. |
+| 2026-04-28 | CONTEXT.md rewritten with current state and Phase E requirements. |

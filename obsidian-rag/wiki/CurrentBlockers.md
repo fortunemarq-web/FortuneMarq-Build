@@ -20,16 +20,24 @@ FMOS is ~90% complete and running on localhost:3000 but not yet live on fmos.for
 
 **To deploy:** Finish the 6 pending features (see below), then run the deployment checklist in [[FMOS]].
 
-## Blocker 2 — 6 FMOS Features Still Pending
+## Blocker 2 — FMOS Phases C, D, E Not Yet Executed
 
-Before deployment, these must be built:
+Phases A and B are complete. Three phases remain, all fully spec'd and waiting for Antigravity execution:
 
-1. **Outreach Sequence Board** — visual 3-touch sequence tracker per lead
-2. **Lead Profile Page** — full history view: calls, WhatsApp, PDFs, proposals, meetings
-3. **PDF Delivery Tracker** — log which PDF sent, when, by whom
-4. **Retainer Package System** — service tier tagging + upsell opportunity flags
-5. **Revenue Forecast Widget** — pipeline × close rate = projected MRR vs ₹50K target
-6. **Upsell Tracker** — current package, eligible upgrades, last attempt, outcome
+**Phase C — Outreach & Leads:**
+- Outreach Sequence Board (3-touch tracker per lead)
+- Lead Profile Page (full history: calls, WhatsApp, PDFs, proposals, meetings)
+- PDF Delivery Tracker (log which PDF sent, when, by whom)
+
+**Phase D — Proposal & Onboarding:**
+- Retainer Package System (service tier tagging + upsell flags)
+- Proposal builder + Agreement integration
+
+**Phase E — Finance & Forecast:**
+- Revenue Forecast Widget (pipeline × close rate = projected MRR)
+- Upsell Tracker (current package, eligible upgrades, last attempt, outcome)
+
+Note: L6 (Monthly Reports) and L7 (Upsell System) data files are already complete in `04_CLIENT_MANAGEMENT/`. They just need wiring into FMOS via Phase D/E.
 
 ## Blocker 3 — Antigravity Team Access
 

@@ -1,109 +1,68 @@
 # 04 — Client Onboarding
-**Last Updated:** March 2026 | **Status:** PENDING — waiting on L4b (agreement) completion
+**Last Updated:** 2026-04-28 | **Status:** COMPLETE — onboarding_checklists.json + onboarding.types.ts + index.ts + onboarding_sop.md all created
 
-## Purpose
+## Folder Purpose
 Define the exact onboarding process — what happens the moment a client signs, what assets are collected, how the project is set up in FMOS, and how work begins within 48 hours.
 
-## Depends On
-- L4b Agreement Template — defines what was promised, which determines what to collect
+## What Exists (Complete)
 
-## Onboarding Trigger
-Agreement signed in FMOS → onboarding checklist auto-created as tasks in FMOS → assigned to Jabeer
+### FMOS_Onboarding_Data/ folder
+| File | Description |
+|---|---|
+| `onboarding_checklists.json` | Full per-service onboarding checklists for all 7 services: WEBSITE, GMB, SEO, GOOGLE_ADS, META_ADS, WHATSAPP_MARKETING, AI_AUTOMATIONS. Each service has tasks (with owner, due_by, status) and assets (with required flag, status) |
+| `onboarding.types.ts` | TypeScript interfaces: OnboardingTask, OnboardingAsset, ServiceOnboarding, ClientOnboarding, OnboardingStatus |
+| `index.ts` | Loader: generateClientOnboarding(clientId, services[]), isOnboardingComplete(checklist), getMissingRequiredAssets(checklist), getOverdueTasks(checklist) |
 
-## Assets to Collect (checklist)
-Logo (hi-res PNG/SVG) / Brand Colours (hex) / Brand Fonts / Business Description / Service List / Photos / Domain Login / Hosting Details / Google Ads Account access / Meta Business Manager access / GSC property / GA4 property / Competitor References / WhatsApp Broadcast List / Client GSTIN / Advance Payment confirmed
+### Root Files
+| File | Description |
+|---|---|
+| `onboarding_sop.md` | Full 10-step onboarding SOP for Jabeer: welcome message, kickoff call, brief form, asset collection, project setup in FMOS, task assignment to cousins, timeline by service, asset vault guide, common problems + solutions |
+| `CONTEXT.md` | This file |
 
-## Timeline Standard
-- Hour 1: Welcome message sent (WhatsApp template from L3)
-- Hour 24: Kickoff call completed
-- Hour 48: All assets collected, project set up in FMOS, cousins assigned (if website)
-- Hour 48: Work begins
+## Onboarding Process (10 Steps)
+1. Agreement confirmed → Welcome message sent (WhatsApp template from L3)
+2. Invoice raised for setup fee → paid before work starts
+3. Kickoff call scheduled + completed (30 min)
+4. Brief form filled (in FMOS or shared link)
+5. Assets collected (logo, photos, domain, hosting, GMB access etc.)
+6. Assets stored in FMOS Asset Vault per service
+7. Project set up in FMOS — tasks created from onboarding_checklists.json
+8. Tasks assigned: website tasks to Zaid/Sufiyan, strategy tasks to Jabeer
+9. Work begins — delivery within stated timeline per service
+10. Day 7 check-in with client (WhatsApp)
 
-## Most Local Clients
-Provide logo, branding, content, domain and hosting from FortuneMarq side — clients want one-stop solution. Asset collection is simpler than typical agencies.
+## Standard Timeline by Service
+- Website: 7–10 working days from brief approval
+- GMB: Setup week 1; results visible 30–60 days
+- Google Ads: Campaign live within 3–5 working days
+- Meta Ads: Creative review + launch within 5–7 working days
+- SEO: Strategy in week 1; first results 60–90 days
+- WhatsApp Marketing: Setup + first broadcast within 5 days
+- AI Automations: Scoped per project
 
-## Session Log
+## What's Pending
+- FMOS Phase D: Build Onboarding Tab in client profile (`/admin/clients/[id]`) using these JSON files
+- Asset Vault UI in FMOS: track asset collection status per service
+- Welcome message auto-trigger in FMOS when client status changes to onboarding
+- Note: Most local clients provide logo, services description, photos only — domain/hosting often handled by FortuneMarq
+
+## What's Blocked
+- Execution blocked on FMOS deployment
+
+## Connections to Other Folders
+- **JSON files copied to:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/` — for Antigravity Phase D
+- **Triggered by:** Agreement confirmation in FMOS (from `09_LEGAL_AND_OPERATIONS/Agreement_Templates/`)
+- **Feeds into:** `02_SERVICE_DELIVERY_AUTOMATION` (delivery tasks start once onboarding complete)
+
+## Key Decisions Made (Locked)
+- Work begins only after setup fee received — no exceptions
+- All assets collected within 48 hours target (or work cannot start)
+- Onboarding tasks auto-created in FMOS from checklists when client is onboarded
+- Asset vault per service — client must supply minimum required assets for each service
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Checklist items defined. Waiting on L4b. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Folder created. Asset checklist and process defined. Waiting on L4b agreement. |
+| 2026-04-02 | L5 complete. All FMOS_Onboarding_Data/ files created. onboarding_sop.md written. |
+| 2026-04-28 | CONTEXT.md fully rewritten to reflect actual file inventory. |

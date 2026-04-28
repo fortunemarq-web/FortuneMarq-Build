@@ -1,108 +1,62 @@
 # 08 — Pricing Decisions
-**Last Updated:** March 2026 | **Status:** Phase 1 pricing locked
+**Last Updated:** 2026-04-28 | **Status:** All pricing locked — do not change without explicit review session
 
-## Purpose
-Track all pricing decisions, discount policies, and future price change plans. This folder is the single source of truth for what FortuneMarq charges and why.
+## Folder Purpose
+Documents all locked pricing decisions for FortuneMarq services. These are the prices used in all proposals, agreements, and invoices.
 
-## Current Pricing (locked — do not change in Phase 1)
-### One-Time
-Landing Page ₹5K–₹8K / Standard Website ₹8K / Premium ₹15K–₹20K
-Ads Setup ₹4,500 / WhatsApp Setup ₹5K / Logo ₹3K–₹5K
+## What Exists (Complete)
+| File | Description |
+|---|---|
+| `CONTEXT.md` | This file — the pricing reference |
 
-### Monthly Recurring
-Ads Management ₹2,500/service / GMB ₹2,500 / SEO ₹7K–₹15K+ / WhatsApp ₹2,500
+## Locked Pricing Table
 
-### Discounts
-Website upfront: 15% off / Ads 3 months advance: 20% off / SEO 3 months upfront: 25% off
-3-installment premium: +10–20%
+### Website Building
+| Package | Setup Fee | Monthly |
+|---|---|---|
+| Landing Page | ₹5,000–₹8,000 | One-time (no retainer unless maintenance opted) |
+| Standard Website (5–7 pages) | ₹8,000 | One-time |
+| Premium Website (8–12 pages) | ₹15,000–₹20,000 | One-time |
 
-## Open Decisions (decide after 3 months with data)
-- Performance-based pricing / guarantees
-- Price increases for new clients
-- Social Media Management pricing
+### Digital Marketing Services
+| Service | Setup Fee | Monthly Retainer |
+|---|---|---|
+| GMB Optimization | — | ₹2,500/month |
+| Google Ads Management | ₹4,500 | ₹2,500/month |
+| Meta Ads Management | ₹4,500 | ₹2,500/month |
+| SEO Starter | — | ₹7,000/month |
+| SEO Growth | — | ₹10,000–₹12,000/month |
+| SEO Dominate | — | ₹15,000+/month |
+| WhatsApp Marketing | ₹5,000 | ₹2,500/month |
+| AI Automations | Quoted per project | Quoted per project |
 
-## Session Log
+*Ad spend is always client's own budget paid directly to Google/Meta — FortuneMarq charges management fee only.*
+
+## Pricing Rationale
+- Accessible entry point (₹2,500/month GMB) to get local businesses to start
+- Upsell path built in — start small, prove results, add services
+- Pricing designed for 30–50 client volume with automation reducing delivery cost
+- Prices will increase as portfolio and results strengthen
+
+## What's Pending
+- None. Pricing is locked.
+- First proposal will use these prices.
+
+## What's Blocked
+- Nothing.
+
+## Connections to Other Folders
+- **Used in:** `03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/proposal_schema.json` — proposal page 5 (Investment)
+- **Used in:** `01_CRM_AND_TOOL/fmos` — Jabeer enters pricing manually per proposal in FMOS
+- **Referenced in:** `08_FINANCE/CONTEXT.md`
+
+## Key Decisions Made (Locked)
+- All pricing is locked — do not deviate without review
+- Jabeer enters pricing manually per proposal (some flexibility for high-value clients)
+- No discounting without Jabeer's explicit decision
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Phase 1 pricing locked from blueprint. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Folder created. All pricing locked. |
+| 2026-04-28 | CONTEXT.md rewritten with full pricing table. |

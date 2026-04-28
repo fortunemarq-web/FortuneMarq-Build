@@ -1,120 +1,97 @@
 # 05 — FortuneMarq Online Presence
-**Last Updated:** March 2026 | **Status:** Active — GMB created, Instagram not started
+**Last Updated:** 2026-04-28 | **Status:** Website live, GMB created. Niche landing pages generated (April 2026). Instagram/LinkedIn not started.
 
-## Purpose
-Build and manage FortuneMarq's own digital presence — the agency's website SEO, GMB, Instagram, Facebook, and LinkedIn. This is the long-game inbound lead channel. While the sales system does outbound, online presence builds brand authority that makes every outbound call easier and generates inbound leads over time.
+## Folder Purpose
+Build and manage FortuneMarq's own digital presence — website SEO, GMB, Instagram, Facebook, and LinkedIn. This is the long-game inbound lead channel. While the sales system does outbound, online presence builds brand authority that makes every outbound call easier and generates inbound leads over time.
 
 ## Current State
-- Website: fortunemarq.com — live on Hostinger
-- GMB: Created, verified, basic info added — NOT optimised
-- Instagram: Not started
-- Facebook: Not started
-- LinkedIn: Not started
+- **Website:** fortunemarq.com — live on Hostinger. `public_html.zip` (40MB) stored in this folder.
+- **GMB:** Created, verified, basic info added — NOT yet fully optimized
+- **Niche landing pages:** 11 HTML pages generated (April 2026) — stored in `niches/` subfolder
+- **Instagram:** Not started
+- **Facebook:** Not started
+- **LinkedIn:** Not started
+
+## What Exists (Complete)
+
+### Root Files
+| File | Description |
+|---|---|
+| `public_html.zip` | Full website HTML/CSS/JS zip (40MB) — the live fortunemarq.com build |
+| `CONTEXT.md` | This file |
+
+### niches/ — Niche Landing Pages (April 2026)
+11 HTML files — one per Hubli niche, data-driven with real search volumes and competitor gaps:
+- `car-rentals-hubli.html`
+- `dental-clinics-hubli.html`
+- `gyms-hubli.html`
+- `ielts-coaching-hubli.html`
+- `interior-designers-hubli.html`
+- `ivf-clinics-hubli.html`
+- `jee-neet-coaching-hubli.html`
+- `modular-kitchens-hubli.html`
+- `real-estate-hubli.html`
+- `skin-clinics-hubli.html`
+- `tuition-centres-hubli.html`
+
+These landing pages are referenced by WhatsApp bot reply templates — when a lead replies to the curiosity message, the bot sends the relevant niche landing page URL.
+
+### assets/ — Brand Images
+- `images/` subfolder with Gemini-generated brand visuals (2 images created April 2026)
+
+### Instagram_Facebook/ — Social Media Subfolders
+- `Carousels/CONTEXT.md` — planning placeholder
+- `Reels/CONTEXT.md` — planning placeholder
+- `Single_Image/CONTEXT.md` — planning placeholder
+
+### LinkedIn/ — LinkedIn Subfolder
+- `Posts/CONTEXT.md` — planning placeholder
+- `CONTEXT.md`
+
+### SEO_and_Local_SEO/ — SEO Planning
+- `CONTEXT.md` only — no build files
+
+### _project_files/ — Reference
+- `CONTEXT.md`, `MASTER_CONTEXT.md`, `Niche_Data_Reference_Sheet.md`
 
 ## Goals
-- Instagram: 500 followers by end of April 2026
-- GMB: Rank for "digital marketing agency Hubli" and related searches
-- SEO: fortunemarq.com appearing for local agency keywords
+- **Instagram:** 500 followers by end of April 2026 (not yet started)
+- **GMB:** Rank for "digital marketing agency Hubli" and related searches
+- **Niche pages:** Live on fortunemarq.com so bot reply templates can send links
+- **SEO:** fortunemarq.com appearing for local agency keywords
 
-## Content Strategy (Instagram/Facebook)
-- Niche data reels (2x/week) — real search volume numbers for Hubli niches
-- Behind the system (1x/week) — show the CRM, the PDFs, the automation
-- AI tools education (1x/week) — tools that help local businesses
-- Client results (1x/week — once results exist)
-- Agency building tips (1x/week)
-Total: 5 posts/week minimum
+## Content Strategy (Instagram/Facebook — 5 posts/week)
+1. Niche data reels (2×/week) — real search volume numbers for Hubli niches
+2. Behind the system (1×/week) — show the CRM, PDFs, automation
+3. AI tools education (1×/week) — tools that help local businesses
+4. Client results (1×/week — once results exist)
+5. Agency building tips (1×/week)
+
+## What's Pending
+1. Deploy niche landing pages to fortunemarq.com/[niche]-hubli — required for WhatsApp bot replies
+2. GMB full optimization: categories, service areas, monthly posts, review strategy
+3. Instagram setup: bio, first 9 posts, reel strategy
+4. LinkedIn setup: company page, Jabeer personal page, first 5 posts
+5. SEO keyword targeting for fortunemarq.com
+
+## What's Blocked
+- Niche pages deployment blocked on Hostinger access
+- WhatsApp bot replies blocked until pages are live
+- Instagram/LinkedIn: content calendar and execution need to start (no dependencies)
 
 ## Connections to Other Folders
-- **Feeds INTO:** 06_PAID_MARKETING (brand awareness reduces ad CPL), 03_SALES_SYSTEM (inbound leads from content)
-- **Uses data FROM:** 07_DATA_AND_RESEARCH (niche search volumes for content hooks)
+- **Feeds INTO:** `06_PAID_MARKETING` (brand awareness reduces CPL), `03_SALES_SYSTEM` (inbound leads from content)
+- **Uses data FROM:** `07_DATA_AND_RESEARCH` (niche search volumes for content hooks)
+- **Landing pages enable:** `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/bot_reply_templates.json` — bot sends niche page links
 
-## Jabeer's Personal Brand
-- Decision pending: FortuneMarq brand vs personal brand balance
-- Platform priority: Instagram first, LinkedIn second
-- Content angle: founder building a systems-driven agency
+## Key Decisions Made (Locked)
+- FortuneMarq brand first (not Jabeer's personal brand) — agency brand building
+- Instagram + LinkedIn are the primary social platforms
+- Niche landing pages are data-driven (real search volumes) — not generic agency pages
+- Bot reply template sends niche page link (not PDF — avoids duplicate)
 
-## Session Log
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Current state documented. Content strategy outlined. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Context file created. Website live. GMB created. Content strategy outlined. |
+| 2026-04-28 | CONTEXT.md fully rewritten. Niche landing pages (11 HTML files in niches/) and assets (2 Gemini images) confirmed present. public_html.zip noted. |

@@ -1,122 +1,97 @@
 # 08 — Finance
-**Last Updated:** March 2026 | **Status:** Infrastructure exists in FMOS — not yet activated
+**Last Updated:** 2026-04-28 | **Status:** Finance module exists in FMOS but not yet activated. No revenue yet. All pricing locked.
 
-## Purpose
-Plan and manage all financial operations — invoicing, GST compliance, expense tracking, revenue reporting, and progress toward ₹2L MRR goal. The finance module exists in FMOS but needs to be configured with real GST details and activated.
+## Folder Purpose
+Plan and manage all financial operations — invoicing, GST compliance, expense tracking, revenue reporting, and progress toward ₹50K MRR goal. The finance module exists in FMOS (`/admin/finance`) but needs GST settings activated and the MRR/one-time split built (Phase E).
 
-## Revenue Model
-- MRR: All recurring retainer payments (Ads, SEO, GMB, WhatsApp Marketing)
-- One-Time: Website builds, setups, logo, AI automations
-- Track both separately — MRR is the business health metric, one-time is cash flow
+## What Exists (Complete)
 
-## Pricing (locked)
-- Landing Page: ₹5K–₹8K | Standard Website: ₹8K | Premium: ₹15K–₹20K
-- Ads Setup: ₹4,500 | Ads Monthly: ₹2,500 | GMB: ₹2,500/month
-- SEO: ₹7K–₹15K+/month | WhatsApp: ₹5K setup, ₹2,500/month
+### Root Files
+| File | Description |
+|---|---|
+| `CONTEXT.md` | This file |
 
-## Payment Policy (locked)
-- Invoices raised 1st of month, due 5th
-- 7 days overdue: campaigns paused + auto WhatsApp reminder
-- 30 days overdue (website): site taken down, payment pending page shown
-- Advance payments via UPI/bank transfer before work starts
+### Subfolders (CONTEXT.md only — no build files yet)
+| Subfolder | Description |
+|---|---|
+| `Invoicing/CONTEXT.md` | Invoicing process documentation |
+| `Pricing_Decisions/CONTEXT.md` | All locked pricing decisions |
+| `Revenue_Tracking/CONTEXT.md` | Revenue tracking methodology |
+| `_project_files/MASTER_CONTEXT.md` | Master context for the folder |
+
+## Revenue Model (Locked)
+- **MRR (Monthly Recurring Revenue):** All retainer payments — Ads management, SEO, GMB, WhatsApp Marketing
+- **One-Time:** Website builds, setups, logo design, AI automations
+- **Track separately** — MRR is the business health metric, one-time is cash flow
+
+## Pricing (All Locked)
+| Service | Setup Fee | Monthly |
+|---|---|---|
+| Landing Page | ₹5,000–₹8,000 | One-time |
+| Standard Website | ₹8,000 | One-time |
+| Premium Website | ₹15,000–₹20,000 | One-time |
+| Google Ads Management | ₹4,500 | ₹2,500/month |
+| Meta Ads Management | — | ₹2,500/month |
+| GMB Optimization | — | ₹2,500/month |
+| SEO Starter | — | ₹7,000/month |
+| SEO Growth | — | ₹10,000–₹12,000/month |
+| SEO Dominate | — | ₹15,000+/month |
+| WhatsApp Marketing | ₹5,000 | ₹2,500/month |
+
+*Ad spend for Google Ads and Meta Ads is client's own budget, paid directly to Google/Meta. FortuneMarq charges management fee only.*
+
+## Payment Policy (Locked)
+- Invoices raised 1st of month, due by 5th
+- Setup fees due before work begins
+- 7 days overdue: ad campaigns paused + auto WhatsApp reminder
+- 30 days overdue (website): site taken offline, payment pending page shown
+- Service resumes same day payment confirmed
+- Accepted: UPI / Bank Transfer / Cash (office)
 
 ## Monthly Burn
-₹15,600–16,600/month (rent ₹6K + electricity ₹1.2K + wifi ₹700 + EMI ₹2.7K + subscriptions ₹4–5K)
+₹15,600–₹16,600/month (rent ₹6K + electricity ₹1.2K + wifi ₹700 + EMI ₹2.7K + subscriptions ₹4–5K)
+
+## GST Details
+- GSTIN: 29ICWPS9816Q1ZS
+- GST Type: Regular, 18% on all services
+- Invoice settings not yet activated in FMOS
+- To activate: enter GSTIN + bank details in FMOS `/admin/finance` settings
 
 ## Revenue Milestones
-- ₹50K MRR → end April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → hiring trigger
+| Target | Timeline |
+|---|---|
+| ₹50K MRR | End April/May 2026 |
+| ₹1L MRR | Month 4–5 |
+| ₹2L MRR | Hiring trigger |
+| ₹5L MRR | 2-year vision |
 
-## GST Status
-GST registered. 18% GST on all services. Invoicing not yet activated in FMOS. GSTIN needs to be added to invoice settings.
+## Current Revenue
+- Company MRR: ₹0 (as of April 2026)
+- Personal freelance income: ₹15,000–₹20,000/month (Jabeer — not counted in company revenue)
+
+## What's Pending
+- FMOS Phase E: MRR vs one-time revenue split in Finance dashboard
+- FMOS Phase E: Revenue Forecast Widget (pipeline × close rate vs ₹50K target)
+- Activate GST invoice settings in FMOS once deployed
+- First invoice to be raised: will be for the first signed company client
+
+## What's Blocked
+- All finance operations blocked on FMOS deployment
+- No clients yet = no invoices
 
 ## Connections to Other Folders
-- **Receives FROM:** 02_SERVICE_DELIVERY_AUTOMATION (delivery complete → invoice trigger), 04_CLIENT_MANAGEMENT (renewals)
-- **Feeds INTO:** 01_CRM_AND_TOOL (invoice data lives in FMOS)
+- **Receives FROM:** `02_SERVICE_DELIVERY_AUTOMATION` (delivery complete → invoice trigger), `04_CLIENT_MANAGEMENT` (renewals → invoice)
+- **Lives IN:** `01_CRM_AND_TOOL/fmos/app/admin/finance/` — all finance operations in FMOS
+- **GST docs in:** `09_LEGAL_AND_OPERATIONS/GST_and_Compliance/`
 
-## Session Log
+## Key Decisions Made (Locked)
+- All pricing is locked — do not change without explicit review session
+- MRR tracked separately from one-time (FMOS Phase E)
+- Invoices in INR + GST 18%
+- No free trials, no credit — payment before work, always
+
+## Session History
 | Date | Summary |
 |---|---|
-| March 2026 | Context file created. Finance module exists, needs activation. |
----
-
-## FortuneMarq System DNA
-> This section is present in every context file. It ensures every Claude session — regardless of folder — understands the full interconnected system.
-
-### Business
-- **Legal Name:** FortuneMarq Media & Marketing
-- **Brand:** FortuneMarq | **Tagline:** Marketing That Pays You Back
-- **Address:** Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020
-- **CRM/OS:** fmos.fortunemarq.com | **Website:** fortunemarq.com
-- **Contact:** fortunemarq@gmail.com | +91 93530 82656
-
-### Team
-| Person | Role | Status |
-|---|---|---|
-| Jabeer | Founder — strategy, sales, closing, all tech | Active |
-| Afifa | Telecaller — calls, outcomes, PDF delivery, meeting booking | Hired, not started |
-| Zaid | Website builder — Antigravity builds, task execution | Training |
-| Sufiyan | Website builder — Antigravity builds, task execution | Training |
-
-### The Full System Map
-```
-07_DATA_AND_RESEARCH
-  → feeds → 06_PAID_MARKETING + 03_SALES_SYSTEM
-06_PAID_MARKETING
-  → feeds → 01_CRM_AND_TOOL (inbound leads)
-03_SALES_SYSTEM
-  → feeds → 01_CRM_AND_TOOL (pipeline) + 04_CLIENT_MANAGEMENT
-01_CRM_AND_TOOL (FMOS — central nervous system)
-  → feeds → 02_SERVICE_DELIVERY_AUTOMATION + 04_CLIENT_MANAGEMENT + 08_FINANCE
-02_SERVICE_DELIVERY_AUTOMATION
-  → feeds → 04_CLIENT_MANAGEMENT (delivery) + 08_FINANCE (invoicing triggers)
-04_CLIENT_MANAGEMENT
-  → feeds → 08_FINANCE (renewals) + 03_SALES_SYSTEM (upsells back to pipeline)
-05_FORTUNEMARQ_ONLINE_PRESENCE
-  → feeds → 06_PAID_MARKETING (brand trust) + 03_SALES_SYSTEM (inbound leads)
-08_FINANCE ← receives from all service delivery and client management
-09_LEGAL_AND_OPERATIONS ← supports 03_SALES_SYSTEM + 04_CLIENT_MANAGEMENT
-10_PERSONAL_GROWTH ← supports Jabeer across all folders
-```
-
-### Master Flow
-```
-Data (L0) → Campaign → Lead in FMOS → 3-Touch Outreach → Meeting
-→ Proposal → Agreement → Invoice → Onboarding → Delivery
-→ Monthly Report → Health Score → Upsell → Renewal
-```
-
-### Content Build Hierarchy (current progress)
-- L0 Niche Data Reference Sheet — COMPLETE
-- L1 Lead CSV Files + PDF Index — COMPLETE
-- L2 Telecaller Scripts — COMPLETE — 4 lead-type JSON files in FMOS_Script_Data/
-- L3 WhatsApp Templates — COMPLETE — 17 templates in 5 JSON files in FMOS_Template_Data/
-- L4a Proposal Template — COMPLETE — 5-6 page dynamic PDF, JSON schema in FMOS_Proposal_Data/
-- L4b Agreement Document — COMPLETE — 1-page doc, service terms, payment policy
-- L5 SOPs + Onboarding — COMPLETE — onboarding_checklists.json + onboarding_sop.md
-- L6 Report Templates + Health Score — PENDING
-- L7 Upsell System — PENDING
-
-### Tech Stack
-- CRM: Next.js 16, TypeScript, Tailwind CSS v4, Supabase
-- Hosting: Hostinger → fmos.fortunemarq.com
-- Builds: Antigravity | AI: Claude Pro + Claude Code
-- Design: Canva | Task Queue: Celery + Redis (planned)
-
-### Revenue Targets
-- ₹50K MRR → End April/May 2026
-- ₹1L MRR → Month 4–5
-- ₹2L MRR → Hiring trigger
-- ₹5L MRR → 2-year vision
-
-### Niche Attack Order (Phase 1 — Hubli-Dharwad)
-1. Gyms (63,950/mo) 2. Skin Clinics (41,850/mo) 3. Computer Training (24,350/mo)
-4. Dental (21,100/mo) 5. Car Rentals (16,450/mo) 6. JEE/NEET Coaching (12,300/mo)
-
-### Golden Rule
-Every decision made in any folder must be considered in context of the full system. If a decision affects another folder — note it and update that folder's context too.
-
-### How to Use This File
-- **Start session:** "Read CONTEXT.md and continue."
-- **End session:** "Update CONTEXT.md with everything we decided today."
+| March 2026 | Context file created. Finance module noted as existing in FMOS but needing activation. Pricing locked. |
+| 2026-04-28 | CONTEXT.md fully rewritten. GSTIN confirmed. Current revenue confirmed zero. Phase E requirements documented. |
