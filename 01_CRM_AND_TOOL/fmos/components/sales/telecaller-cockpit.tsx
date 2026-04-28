@@ -145,8 +145,8 @@ export default function TelecallerCockpit({ leads, userId, dailyStats }: Telecal
   const [stats, setStats] = useState(dailyStats);
   const [isPending, startTransition] = useTransition();
 
-  const niches = ["All", ...Array.from(new Set(leads.map((l) => l.industry).filter(Boolean)))];
-  const cities = ["All", ...Array.from(new Set(leads.map((l) => l.city).filter(Boolean)))];
+  const niches = ["All", ...Array.from(new Set(leads.map((l) => l.industry).filter((x): x is string => x !== null && x !== undefined)))];
+  const cities = ["All", ...Array.from(new Set(leads.map((l) => l.city).filter((x): x is string => x !== null && x !== undefined)))];
 
   const supabase = createClient();
   const selectedLead = leads.find((l) => l.id === selectedLeadId) || null;

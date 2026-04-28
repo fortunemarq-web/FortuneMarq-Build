@@ -22,6 +22,10 @@
         {
           "type": "script",
           "text": "Hi! My name is Afifa, I'm calling from FortuneMarq Media & Marketing — we're an online growth system building agency based right here in [City]."
+        },
+        {
+          "type": "script",
+          "text": "Just to make it comfortable for you — would you prefer to continue in Kannada, Hindi, or English?"
         }
       ],
       "objections": []
@@ -38,11 +42,11 @@
       "objections": [
         {
           "trigger": "I'm busy right now",
-          "response": "No problem at all — I'll be quick. We have data specific to your niche in [City] that I think you'd find useful. If it's not relevant I'll let you go straight away."
+          "response": "No problem at all. Can I call you back in an hour or later this evening?"
         },
         {
           "trigger": "Not interested",
-          "response": "That's totally fine. I just wanted to share what we found in our research — it's data about your market that you might not have seen before. Even just hearing the number might be worth a minute."
+          "response": "No worries. Mind if I ask — is there a specific reason you don't want to do digital marketing for your business?"
         },
         {
           "trigger": "Who are you / I don't know your company",
@@ -98,15 +102,15 @@
       "lines": [
         {
           "type": "script",
-          "text": "What I'd love to do is book a quick meeting for you with Jabeer, our founder. He'll walk you through a presentation built specifically for your business — where the demand in your category is actually coming from, how to capture it, and what a realistic growth path looks like for your niche in [City]. It's about 30 to 45 minutes."
+          "text": "To understand this better — our founder personally does a quick Zoom call, which you can join right from your phone. He'll walk you through a presentation designed specifically for your business in [City] — where the demand in your category is actually coming from, how to capture it, and what a realistic growth path looks like. It's 15 to 20 minutes max — and even if you don't take any services, you'll walk away with a much better understanding of your online presence and what's possible for your business."
         },
         {
           "type": "script",
-          "text": "And honestly — even if you decide our services aren't the right fit, you'll still walk away with really useful insights about your business's online growth that most business owners in [City] don't have access to. There's no pressure, no commitment."
+          "text": "There's no pressure, no commitment."
         },
         {
           "type": "script",
-          "text": "Would sometime this week work for you?"
+          "text": "When would you be free? I'll book the Zoom call and send you the link on WhatsApp."
         },
         {
           "type": "branch",
@@ -116,13 +120,13 @@
         {
           "type": "branch",
           "condition": "If still resistant",
-          "text": "It's completely free, no commitment at all. Just a data-based conversation. Even 20 minutes is enough."
+          "text": "It's completely free, no commitment at all. Just a data-based conversation. Even 15 minutes is enough."
         }
       ],
       "objections": [
         {
           "trigger": "How much does this cost?",
-          "response": "Jabeer will cover everything in the meeting — packages and pricing based on what actually makes sense for your business. The meeting itself is completely free."
+          "response": "We don't have fixed prices — our founder first understands your business, what you actually need, and how much you can benefit from the work. Pricing is decided based on that. But I can assure you, nobody in Hubli right now offers pricing like ours. You can discuss everything directly with him on the call."
         },
         {
           "trigger": "We tried digital marketing before and it didn't work",
@@ -130,19 +134,19 @@
         },
         {
           "trigger": "The owner isn't available / Someone else handles this",
-          "response": "No problem — when is the owner usually free? Jabeer can speak directly with them. Or if it's easier, I can WhatsApp the report so they can have a look first before we set up the meeting."
+          "response": "No problem — when is the owner usually free? Our founder can speak directly with them. Or if it's easier, I can WhatsApp the report so they can have a look first before we set up the meeting."
         },
         {
           "trigger": "Just send me information on WhatsApp",
-          "response": "Of course — I'll send the report right now. Have a look whenever you get a chance, and the meeting with Jabeer will make a lot more sense after you've seen it. Even 30 minutes with him is worth it — you'll leave knowing exactly where your business stands online."
+          "response": "Of course — I'll send the report right now. Have a look whenever you get a chance, and the meeting with our founder will make a lot more sense after you've seen it. Even 20 minutes with him is worth it — you'll leave knowing exactly where your business stands online."
         },
         {
           "trigger": "I'll think about it",
-          "response": "Absolutely, take your time. I'll follow up in a couple of days — and the meeting is free, no commitment, no pressure. Jabeer just walks you through the data and you decide what, if anything, makes sense for you."
+          "response": "Absolutely, take your time. I'll follow up in a couple of days — and the meeting is free, no commitment, no pressure. Our founder just walks you through the data and you decide if anything makes sense for you."
         },
         {
           "trigger": "We handle marketing internally / We have someone",
-          "response": "Good to know. The meeting might still be useful — Jabeer can show you what the market data looks like for your niche and you can see if there are any gaps worth filling. Even as a second opinion, most business owners find it valuable."
+          "response": "Good to know. The meeting might still be useful — our founder can show you what the market data looks like for your niche and you can see if there are any gaps worth filling. Even as a second opinion, most business owners find it valuable."
         }
       ]
     }
@@ -209,17 +213,27 @@
     {
       "templateId": "meeting_booked",
       "trigger": "INTERESTED_BOOK_NOW",
-      "message": "Hi! I've sent you the Google Meet link for [Meeting Date] at [Meeting Time]. Jabeer will walk you through everything — see you then! [Meet Link]"
+      "message": "Hi! I've sent you the Zoom link for [Meeting Date] at [Meeting Time]. Our founder will walk you through everything — see you then! [Meet Link]"
     },
     {
       "templateId": "follow_back",
-      "trigger": "INTERESTED_FOLLOW_UP_LATER",
+      "trigger": "INTERESTED_FOLLOW_UP_LATER — first contact",
       "message": "Hi! I'll follow up with you on [Follow Up Date]. Here's the report in the meantime — [PDF Link]"
     },
     {
+      "templateId": "follow_back_report_sent",
+      "trigger": "INTERESTED_FOLLOW_UP_LATER — report already shared",
+      "message": "Hi! Just following up from our last call. Hope you got a chance to look at the report. Here are some results we've delivered for businesses similar to yours — [Portfolio Link]. Would love to get that Zoom call booked with our founder — just 15 to 20 minutes. When would you be free?"
+    },
+    {
       "templateId": "send_more_info",
-      "trigger": "INTERESTED_SEND_INFO",
-      "message": "Hi! Here's the report we prepared for [Niche] businesses in [City] — [PDF Link]. Have a look and let me know if you'd like to meet Jabeer — completely free, no commitment."
+      "trigger": "INTERESTED_SEND_INFO — first contact",
+      "message": "Hi! Here's the report we prepared for [Niche] businesses in [City] — [PDF Link]. Have a look and let me know if you'd like to get on a quick Zoom call with our founder — completely free, no commitment."
+    },
+    {
+      "templateId": "send_portfolio",
+      "trigger": "INTERESTED_SEND_INFO — report already shared",
+      "message": "Hi! Since you already have the report — here's a look at the results we've delivered for businesses in [City]: [Portfolio Link]. Have a look and let me know when you're free for the Zoom call with our founder. Completely free, no commitment."
     }
   ]
 }

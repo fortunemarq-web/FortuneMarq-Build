@@ -29,34 +29,16 @@ export async function logAudit({
   try {
     const { data: { user } } = await supabase.auth.getUser();
 
-    let userName = "Public / System";
-    let userRole = "guest";
-    let userId = null;
-
-    if (user) {
-      userId = user.id;
-      // Fetch user profile for name and role
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, role")
-        .eq("id", user.id)
-        .single() as any;
-
-      userName = (profile as any)?.full_name || user.email || "Unknown User";
-      userRole = (profile as any)?.role || "unknown";
-    }
+    const userId = user?.id ?? null;
 
     const { error } = await supabase.from("audit_logs").insert({
-      user_id: userId,
-      user_name: userName,
-      user_role: userRole,
+      actor_id: userId,
       action,
-      resource_type: resourceType,
-      resource_id: resourceId,
-      resource_label: resourceLabel,
-      old_value: oldValue,
-      new_value: newValue,
-    } as any);
+      entity_type: resourceType,
+      entity_id: resourceId ?? "system",
+      before_data: oldValue ?? null,
+      after_data: newValue ?? (resourceLabel ? { label: resourceLabel } : null),
+    });
 
     if (error) {
       console.error("Failed to log audit:", error);

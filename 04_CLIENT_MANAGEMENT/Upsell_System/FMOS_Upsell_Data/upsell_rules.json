@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0",
+  "systemName": "FortuneMarq Upsell Rules Engine",
+  "description": "Defines when to trigger upsell conversations, what to offer, and how to track upsell pipeline for active clients.",
+
+  "triggerRules": [
+    {
+      "ruleId": "excellent_2_consecutive",
+      "ruleName": "Excellent Health Score — 2 Months in a Row",
+      "description": "Client has scored Excellent (80+) on their health score for 2 consecutive months. This is the primary upsell trigger.",
+      "conditions": {
+        "health_tier_current_month": "Excellent",
+        "health_tier_previous_month": "Excellent",
+        "months_active": { "min": 2 }
+      },
+      "action": "flag_for_upsell",
+      "priority": "high",
+      "note": "Only trigger when results are clearly showing. This is the strongest position to upsell from — the client already trusts the work."
+    }
+  ],
+
+  "upsellServices": [
+    {
+      "serviceId": "social_media_management",
+      "serviceName": "Social Media Management",
+      "description": "Instagram and Facebook content creation, posting, and account management. Builds brand presence and drives engagement alongside SEO.",
+      "platforms": ["Instagram", "Facebook"],
+      "deliverables": [
+        "12 posts per month (3 per week)",
+        "Story content (3x per week)",
+        "Caption writing and hashtag strategy",
+        "Monthly content calendar",
+        "Basic engagement management (replies to comments/DMs)"
+      ],
+      "pitchAngle": "Your SEO is working — people are finding you on Google. Social media is the next layer. It builds trust before they even search — someone sees your Instagram, remembers the brand, then searches for you specifically. It compounds the SEO work.",
+      "bestFitFor": ["B2C niches", "Visual niches like Dental, Skin, Gyms, Interior Designers"],
+      "pricingNote": "Custom — discuss with client based on content volume needed"
+    },
+    {
+      "serviceId": "google_ads",
+      "serviceName": "Google Ads",
+      "description": "Paid search campaigns on Google to capture high-intent leads immediately. Runs alongside organic SEO for maximum SERP coverage.",
+      "deliverables": [
+        "Campaign setup and keyword research",
+        "Ad copywriting",
+        "Landing page optimisation recommendations",
+        "Monthly ad spend management",
+        "Performance reporting (integrated into monthly report)"
+      ],
+      "pitchAngle": "Your organic rankings are strong. Google Ads on top means you own two spots on the same search results page — the paid ad at the top and your organic result below. Competitors only have one. It also captures leads instantly while SEO continues to compound.",
+      "bestFitFor": ["High-intent niches", "IVF, Dental, Car Rentals, JEE/NEET Coaching"],
+      "pricingNote": "Service fee + client's ad budget (ad budget paid directly to Google by client)",
+      "minimumAdBudget": "₹5,000/month recommended minimum ad spend"
+    }
+  ],
+
+  "upsellProcess": {
+    "step1": {
+      "stepName": "FMOS Flags the Client",
+      "actor": "FMOS (automated)",
+      "description": "When trigger conditions are met, FMOS marks the client as 'Upsell Ready' and surfaces them on the admin dashboard with a notification.",
+      "fmosAction": "set_upsell_status = ready, show_in_upsell_queue"
+    },
+    "step2": {
+      "stepName": "Jabeer Reviews and Decides Which Service to Offer",
+      "actor": "Jabeer",
+      "description": "Jabeer looks at the client's profile — niche, city, current results, and health score trend — and decides whether to pitch Social Media, Google Ads, or both.",
+      "decisionGuide": [
+        { "niche": "Gyms, Skin, Dental, Interior Designers", "recommended": "Social Media Management", "reason": "Visual, B2C — Instagram content builds strong brand trust" },
+        { "niche": "IVF, Car Rentals, JEE/NEET, Computer Training", "recommended": "Google Ads", "reason": "High intent, decision-driven — paid ads capture leads faster" },
+        { "niche": "Real Estate, Modular Kitchen", "recommended": "Both — start with Social Media", "reason": "Long sales cycle — social builds awareness, ads capture active buyers" }
+      ]
+    },
+    "step3": {
+      "stepName": "Jabeer Calls the Client Personally",
+      "actor": "Jabeer",
+      "description": "Jabeer calls the client directly — same personal approach as the first meeting. References their results and introduces the upsell naturally.",
+      "scriptRef": "upsell_scripts.json — call_script"
+    },
+    "step4": {
+      "stepName": "Zoom Meeting (if needed)",
+      "actor": "Jabeer",
+      "description": "If the client needs more context, book a short Zoom call. Walk through the upsell proposal — show what social media or Google Ads would add on top of current results.",
+      "scriptRef": "upsell_scripts.json — meeting_talking_points"
+    },
+    "step5": {
+      "stepName": "Upsell Outcome Logged in FMOS",
+      "actor": "Jabeer",
+      "description": "Log the result of the upsell conversation in FMOS.",
+      "outcomes": [
+        { "id": "UPSELL_CLOSED", "label": "Closed — Service Added", "action": "update_client_services, generate_new_agreement" },
+        { "id": "UPSELL_FOLLOW_UP", "label": "Interested — Follow Up Later", "action": "schedule_reminder, capture_note" },
+        { "id": "UPSELL_NOT_NOW", "label": "Not Now — Revisit in 60 Days", "action": "snooze_upsell_flag_60_days" },
+        { "id": "UPSELL_DECLINED", "label": "Declined", "action": "mark_upsell_closed_lost, capture_reason" }
+      ]
+    }
+  },
+
+  "upsellPipeline": {
+    "statuses": [
+      { "status": "not_eligible", "label": "Not Eligible Yet", "description": "Client hasn't hit the trigger conditions yet" },
+      { "status": "ready", "label": "Upsell Ready", "description": "Trigger conditions met — Jabeer to review and call" },
+      { "status": "in_conversation", "label": "In Conversation", "description": "Jabeer has initiated the upsell call" },
+      { "status": "closed_won", "label": "Closed — Won", "description": "Upsell accepted and added to client account" },
+      { "status": "closed_lost", "label": "Closed — Lost", "description": "Client declined — revisit at renewal" },
+      { "status": "snoozed", "label": "Snoozed", "description": "Not now — FMOS will re-surface in 60 days" }
+    ]
+  }
+}

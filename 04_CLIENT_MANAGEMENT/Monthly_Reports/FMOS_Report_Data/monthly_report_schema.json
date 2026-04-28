@@ -1,0 +1,171 @@
+{
+  "schemaVersion": "1.0",
+  "templateName": "FortuneMarq Monthly Performance Report",
+  "description": "Monthly report generated and sent as PDF to each active client. Covers Google rankings, website traffic, leads generated, and GMB insights. Includes client health score.",
+
+  "sections": [
+    {
+      "sectionId": "cover",
+      "sectionName": "Cover Page",
+      "fields": [
+        { "key": "client_business_name", "label": "Business Name", "type": "string", "source": "lead_profile" },
+        { "key": "client_niche", "label": "Niche", "type": "string", "source": "lead_profile" },
+        { "key": "client_city", "label": "City", "type": "string", "source": "lead_profile" },
+        { "key": "report_month", "label": "Report Month", "type": "month_year", "source": "auto" },
+        { "key": "report_generated_date", "label": "Generated On", "type": "date", "source": "auto" },
+        { "key": "health_score", "label": "Health Score", "type": "number", "source": "calculated", "range": "0-100" },
+        { "key": "health_tier", "label": "Health Tier", "type": "string", "source": "calculated", "values": ["Excellent", "Good", "Needs Attention", "At Risk"] }
+      ]
+    },
+
+    {
+      "sectionId": "rankings",
+      "sectionName": "Google Rankings",
+      "description": "Tracks position of each target keyword on Google. Updated monthly.",
+      "fields": [
+        {
+          "key": "keywords_tracked",
+          "label": "Keywords Tracked",
+          "type": "array",
+          "items": {
+            "keyword": { "type": "string" },
+            "current_position": { "type": "number", "note": "null if not ranking in top 100" },
+            "previous_position": { "type": "number", "note": "null if not tracked last month" },
+            "change": { "type": "number", "note": "positive = moved up, negative = moved down" },
+            "status": { "type": "string", "values": ["Top 3", "Top 10", "Top 20", "Top 50", "Not Ranking"] }
+          }
+        },
+        { "key": "keywords_in_top_10", "label": "Keywords in Top 10", "type": "number", "source": "calculated" },
+        { "key": "keywords_improved", "label": "Keywords Improved This Month", "type": "number", "source": "calculated" },
+        { "key": "rankings_summary", "label": "Summary Note", "type": "string", "source": "manual", "placeholder": "e.g. 3 keywords moved into top 10 this month. Main keyword now at position 4." }
+      ]
+    },
+
+    {
+      "sectionId": "traffic",
+      "sectionName": "Website Traffic",
+      "description": "Data pulled from Google Analytics. Shows visits, sources, and top performing pages.",
+      "fields": [
+        { "key": "total_visits", "label": "Total Visits This Month", "type": "number", "source": "google_analytics" },
+        { "key": "total_visits_last_month", "label": "Total Visits Last Month", "type": "number", "source": "google_analytics" },
+        { "key": "traffic_change_percent", "label": "Month-on-Month Change (%)", "type": "number", "source": "calculated" },
+        {
+          "key": "traffic_by_source",
+          "label": "Traffic by Source",
+          "type": "object",
+          "fields": {
+            "organic": { "type": "number", "label": "Organic (Google)" },
+            "direct": { "type": "number", "label": "Direct" },
+            "referral": { "type": "number", "label": "Referral" },
+            "social": { "type": "number", "label": "Social Media" }
+          }
+        },
+        {
+          "key": "top_pages",
+          "label": "Top 3 Pages by Traffic",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "page_url": { "type": "string" },
+            "page_name": { "type": "string" },
+            "visits": { "type": "number" }
+          }
+        },
+        { "key": "traffic_summary", "label": "Summary Note", "type": "string", "source": "manual", "placeholder": "e.g. Traffic up 18% from last month. Homepage and services page driving most organic visits." }
+      ]
+    },
+
+    {
+      "sectionId": "leads",
+      "sectionName": "Leads Generated",
+      "description": "All enquiries and contacts that came through the website or GMB this month.",
+      "fields": [
+        { "key": "calls_received", "label": "Phone Calls from Website/GMB", "type": "number", "source": "manual" },
+        { "key": "form_submissions", "label": "Contact Form Submissions", "type": "number", "source": "manual" },
+        { "key": "whatsapp_enquiries", "label": "WhatsApp Enquiries via Website Button", "type": "number", "source": "manual" },
+        { "key": "total_leads", "label": "Total Leads This Month", "type": "number", "source": "calculated", "formula": "calls_received + form_submissions + whatsapp_enquiries" },
+        { "key": "total_leads_last_month", "label": "Total Leads Last Month", "type": "number", "source": "manual" },
+        { "key": "leads_change_percent", "label": "Month-on-Month Change (%)", "type": "number", "source": "calculated" },
+        { "key": "leads_summary", "label": "Summary Note", "type": "string", "source": "manual", "placeholder": "e.g. 11 total leads this month vs 7 last month. Calls are the primary lead source." }
+      ]
+    },
+
+    {
+      "sectionId": "gmb",
+      "sectionName": "Google Business Profile (GMB) Insights",
+      "description": "Data from Google Business Profile dashboard. Shows how many people found and interacted with the listing.",
+      "fields": [
+        { "key": "profile_views", "label": "Profile Views", "type": "number", "source": "gmb_dashboard" },
+        { "key": "search_impressions", "label": "Search Impressions", "type": "number", "source": "gmb_dashboard" },
+        { "key": "gmb_calls", "label": "Calls via GMB", "type": "number", "source": "gmb_dashboard" },
+        { "key": "direction_requests", "label": "Direction Requests", "type": "number", "source": "gmb_dashboard" },
+        { "key": "photo_views", "label": "Photo Views", "type": "number", "source": "gmb_dashboard" },
+        { "key": "reviews_received", "label": "New Reviews This Month", "type": "number", "source": "manual" },
+        { "key": "average_rating", "label": "Current Average Rating", "type": "number", "source": "manual" },
+        { "key": "gmb_summary", "label": "Summary Note", "type": "string", "source": "manual", "placeholder": "e.g. 340 profile views this month. 2 new 5-star reviews added. Direction requests up by 12." }
+      ]
+    },
+
+    {
+      "sectionId": "work_done",
+      "sectionName": "What We Did This Month",
+      "description": "Summary of work delivered by FortuneMarq this month.",
+      "fields": [
+        {
+          "key": "deliverables",
+          "label": "Deliverables",
+          "type": "array",
+          "source": "manual",
+          "items": {
+            "category": { "type": "string", "values": ["SEO", "Website", "GMB", "Content", "Social Media", "Reporting"] },
+            "task": { "type": "string" },
+            "status": { "type": "string", "values": ["Completed", "In Progress", "Scheduled"] }
+          }
+        },
+        { "key": "work_summary", "label": "Overall Summary", "type": "string", "source": "manual", "placeholder": "e.g. Published 4 blog posts, fixed 3 technical SEO issues, updated GMB photos and services section." }
+      ]
+    },
+
+    {
+      "sectionId": "next_month",
+      "sectionName": "Plan for Next Month",
+      "description": "What FortuneMarq will focus on in the coming month.",
+      "fields": [
+        {
+          "key": "planned_tasks",
+          "label": "Planned Tasks",
+          "type": "array",
+          "source": "manual",
+          "items": {
+            "category": { "type": "string", "values": ["SEO", "Website", "GMB", "Content", "Social Media"] },
+            "task": { "type": "string" }
+          }
+        },
+        { "key": "focus_note", "label": "Focus Note", "type": "string", "source": "manual", "placeholder": "e.g. Focus next month: pushing 2 keywords from position 12-15 into top 10, and adding service pages for Dharwad leads." }
+      ]
+    },
+
+    {
+      "sectionId": "health_score_breakdown",
+      "sectionName": "Client Health Score Breakdown",
+      "description": "Score out of 100 based on performance across 4 pillars. Purely performance-based — no subjective factors.",
+      "fields": [
+        { "key": "rankings_score", "label": "Rankings Score", "type": "number", "source": "calculated", "max": 25 },
+        { "key": "traffic_score", "label": "Traffic Score", "type": "number", "source": "calculated", "max": 25 },
+        { "key": "leads_score", "label": "Leads Score", "type": "number", "source": "calculated", "max": 25 },
+        { "key": "gmb_score", "label": "GMB Score", "type": "number", "source": "calculated", "max": 25 },
+        { "key": "total_score", "label": "Total Health Score", "type": "number", "source": "calculated", "max": 100 },
+        { "key": "health_tier", "label": "Tier", "type": "string", "source": "calculated" },
+        { "key": "score_note", "label": "Score Note", "type": "string", "source": "auto" }
+      ]
+    }
+  ],
+
+  "footer": {
+    "brand": "FortuneMarq",
+    "tagline": "Marketing That Pays You Back",
+    "website": "fortunemarq.com",
+    "contact": "+91 93530 82656",
+    "address": "Galaxy Mall, First Floor, Shop No. 43, J.C Nagar, Hubli — 580020"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0",
+  "description": "Upsell call script and meeting talking points for Jabeer. Used when a client is flagged as Upsell Ready in FMOS.",
+
+  "callScript": {
+    "context": "Jabeer calls the client personally. Client already knows FortuneMarq and is seeing results. This is a warm call — not cold.",
+    "steps": [
+      {
+        "stepId": 1,
+        "stepName": "Opening",
+        "script": "Hi [Client Name], it's our founder from FortuneMarq — how are you doing? Just wanted to touch base personally and share some good news about how things are going."
+      },
+      {
+        "stepId": 2,
+        "stepName": "Results Recap",
+        "script": "So looking at this month's numbers — [mention 1-2 specific results e.g. 'you're now ranking in the top 5 for dentist in Hubli' or 'traffic is up 28% from last month and leads have doubled']. The work is really compounding now.",
+        "note": "Always reference specific numbers from the monthly report. Generic praise doesn't land."
+      },
+      {
+        "stepId": 3,
+        "stepName": "Natural Transition",
+        "script": "The reason I'm calling is — now that the SEO foundation is strong, there's a natural next step that most of our best-performing clients end up adding. I wanted to talk to you about it first before anyone else in your niche does.",
+        "note": "This creates mild urgency without pressure. Positions it as an advantage, not a sales call."
+      },
+      {
+        "stepId": 4,
+        "stepName": "Pitch — Social Media (if applicable)",
+        "script": "We're seeing that clients who add social media management on top of SEO get much stronger results overall. The way it works — SEO gets you found when someone searches. Social media makes them remember you before they even search. Someone sees your Instagram, recognises the brand, and when they need your service they search for you specifically instead of a generic term. It compounds everything we've already built.",
+        "triggerFor": "social_media_management"
+      },
+      {
+        "stepId": 4,
+        "stepName": "Pitch — Google Ads (if applicable)",
+        "script": "Here's what I think makes sense for you at this stage — Google Ads on top of your organic rankings. Right now you're showing up organically. If we add a paid ad as well, you own two spots on the same search results page — the ad at the top and your organic result below. Your competitors only have one. And while SEO keeps compounding, the ads bring in leads immediately.",
+        "triggerFor": "google_ads"
+      },
+      {
+        "stepId": 5,
+        "stepName": "Meeting Ask",
+        "script": "I'd love to show you exactly what this would look like for your business specifically — numbers, what we'd do, what the expected impact is. Can we do a quick 15-20 minute Zoom call this week? I'll walk you through everything and you can decide if it makes sense."
+      },
+      {
+        "stepId": 6,
+        "stepName": "If Hesitant",
+        "script": "Totally understand — no rush at all. I'll send you a quick summary on WhatsApp so you can have a look in your own time. And whenever you're ready to discuss, just let me know."
+      }
+    ],
+    "objections": [
+      {
+        "trigger": "We're happy with what we have for now",
+        "response": "That's great — and honestly that's the best time to think about this, when things are going well. It's not about fixing a problem, it's about building on top of what's already working. No pressure — I'll send you a brief overview and you can look at it whenever."
+      },
+      {
+        "trigger": "What's the cost?",
+        "response": "I'll cover everything in the Zoom call — it depends on what you need and what makes sense for your business. But I'll give you a clear number upfront, no surprises."
+      },
+      {
+        "trigger": "We tried Google Ads / Social Media before and it didn't work",
+        "response": "That's really common. Most of the time it doesn't work because the foundation wasn't there — no strong website, no rankings, no trust built. Now that the SEO is working, the ads or social content land on a much stronger base. It's a completely different situation to what you tried before."
+      },
+      {
+        "trigger": "Not the right time / budget is tight",
+        "response": "Completely fine — I'll follow up in a couple of months. In the meantime the SEO keeps running as usual. Just wanted to make sure you heard about it first."
+      }
+    ]
+  },
+
+  "meetingTalkingPoints": {
+    "context": "Short Zoom call — 15 to 20 minutes. Jabeer screen-shares a quick slide or walks through the numbers verbally.",
+    "structure": [
+      {
+        "point": "Open with results",
+        "content": "Start by showing the last 2 months of health scores and the specific metrics that are moving. Make the client feel good about the progress before introducing anything new."
+      },
+      {
+        "point": "Show the gap",
+        "content": "For Social Media: show that their competitors are active on Instagram and building brand recognition. For Google Ads: show that competitors are running ads on their keywords — they're losing the top spot to paid results."
+      },
+      {
+        "point": "Show what it looks like in practice",
+        "content": "For Social Media: show an example content calendar or sample posts. For Google Ads: show what their search results page looks like and where the ad would appear."
+      },
+      {
+        "point": "Give a clear number",
+        "content": "Give the pricing clearly and confidently. No ranges. No 'it depends'. One clean number for the service fee. For Ads, also explain that ad budget is separate and goes directly to Google."
+      },
+      {
+        "point": "Close softly",
+        "content": "We can add this starting next month if you'd like to go ahead. If you need a couple of days to think about it — no problem, I'll follow up."
+      }
+    ]
+  },
+
+  "postCallWhatsApp": [
+    {
+      "templateId": "upsell_summary_social",
+      "trigger": "After upsell call — Social Media pitch",
+      "message": "Hi [Client Name]! Great speaking with you. As mentioned — here's a quick overview of what Social Media Management would look like for your business: [Upsell Summary Link / PDF]. Have a look and let me know if you'd like to move forward or have any questions. No rush at all."
+    },
+    {
+      "templateId": "upsell_summary_ads",
+      "trigger": "After upsell call — Google Ads pitch",
+      "message": "Hi [Client Name]! Great speaking with you. Here's a quick overview of what Google Ads would add on top of your current SEO results: [Upsell Summary Link / PDF]. Have a look whenever you get a chance — happy to answer any questions."
+    },
+    {
+      "templateId": "upsell_closed_confirmation",
+      "trigger": "Upsell accepted — service added",
+      "message": "Hi [Client Name]! Excited to get [Service Name] started for you. I'll send over the updated agreement shortly. We'll kick things off from [Start Date]. Speak soon!"
+    },
+    {
+      "templateId": "upsell_followup",
+      "trigger": "Follow-up after no response — 5 days later",
+      "message": "Hi [Client Name]! Just checking in — did you get a chance to look at the overview I sent? Happy to answer any questions or jump on a quick call if that's easier."
+    }
+  ]
+}

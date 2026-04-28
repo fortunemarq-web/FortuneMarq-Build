@@ -2,6 +2,7 @@ import { createServerClientWithCookies } from "@/lib/supabase-server";
 import TemplateManager from "@/components/admin/template-manager";
 import { MessageSquare, LayoutDashboard, Settings } from "lucide-react";
 import Link from "next/link";
+import SeedTemplatesButton from "./seed-button";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default async function WhatsappTemplatesPage() {
                     </div>
 
                     <div className="flex gap-3">
+                        <SeedTemplatesButton />
                         <Link
                             href="/admin"
                             className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"

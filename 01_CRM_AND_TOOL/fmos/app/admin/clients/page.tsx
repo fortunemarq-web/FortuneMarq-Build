@@ -141,7 +141,6 @@ async function ClientsContent() {
   return (
     <ClientsTable
       clients={clients}
-      packages={packages ?? []}
       upsellAttempts={upsellAttempts ?? []}
     />
   );

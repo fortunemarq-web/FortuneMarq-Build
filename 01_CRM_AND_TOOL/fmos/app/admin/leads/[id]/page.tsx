@@ -65,7 +65,7 @@ export default async function AdminLeadProfilePage({ params }: { params: Promise
       .eq("city", lead?.city || "")
       .single(),
 
-    supabase
+    (supabase as any)
       .from("whatsapp_templates")
       .select("*")
       .order("name", { ascending: true }),

@@ -2976,6 +2976,8 @@ export type Database = {
         | "closed_won"
         | "closed_lost"
         | "proposal_sent"
+        | "meeting_booked"
+        | "follow_up_due"
       milestone_status:
         | "not_started"
         | "in_progress"

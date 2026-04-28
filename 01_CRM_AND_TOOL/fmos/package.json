@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.25",
+    "lightningcss": "^1.32.0",
     "lucide-react": "^0.556.0",
     "nanoid": "^5.1.6",
     "next": "^16.1.6",

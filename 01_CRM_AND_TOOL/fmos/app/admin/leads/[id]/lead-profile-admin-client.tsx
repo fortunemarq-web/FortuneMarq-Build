@@ -633,7 +633,7 @@ function OnboardingModal({ onClose, lead, userId }: { onClose: () => void; lead:
           status: "PENDING" 
         }
       ]);
-      await supabase.from("client_onboarding_tasks").insert(onboardingTasks);
+      await (supabase as any).from("client_onboarding_tasks").insert(onboardingTasks);
     }
     await supabase.from("leads").update({ outreach_stage: "won" } as any).eq("id", lead.id);
     setIsActivating(false);
