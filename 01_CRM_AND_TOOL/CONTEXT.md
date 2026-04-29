@@ -1,5 +1,5 @@
 # 01 — CRM & Tool (FMOS)
-**Last Updated:** 2026-04-28 | **Status:** ✅ PRODUCTION READY — v4.5 — All phases complete. TypeScript strict build clean. Deploy to Hostinger is the only remaining step.
+**Last Updated:** 2026-04-29 | **Status:** ✅ PRODUCTION READY — v4.5 — All phases complete. TypeScript strict build clean. 858 Hubli leads live in FMOS. Bulk-import tool ready for remaining ~6,300 leads. Deploy to Hostinger is the only remaining step.
 
 ## Folder Purpose
 Plan, design, and execute all changes to the FortuneMarq Operating System (FMOS). This is the central nervous system of the entire agency. Every other folder either feeds data into FMOS or is managed through it. Decisions here affect every team member and every workflow.
@@ -62,6 +62,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `/admin/upload` — Lead CSV uploader with on-the-fly duplicate detection
 - `/admin/upload/history` — Upload history
 - `/admin/upload/debug` — Debug page
+- `/admin/bulk-import` — One-click bulk importer: walks all CSVs in `07_DATA_AND_RESEARCH/Lead_Database`, skips duplicates automatically, shows per-file breakdown (added/skipped). Server action handles chunked upload (200 rows/chunk) via existing `uploadLeads()` action.
 - `/admin/data-management` — Data management tools
 - `/admin/duplicates` — Duplicate scanner + merge (undo supported)
 - `/admin/whatsapp-templates` — WhatsApp template library + seed button
@@ -77,7 +78,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `/admin/marketing` — SEO tracker, paid campaigns, content calendar, weekly brief
 - `/admin/operations` — Operations hub
 - `/admin/niche-kits` — Niche kit management
-- `/sales` — Sales Intelligence Cockpit (power dialer, lead queue, follow-up engine, 858 Hubli leads)
+- `/sales` — Sales Intelligence Cockpit (power dialer, lead queue, follow-up engine). Role-based: telecaller → TelecallerCockpit with real search volumes wired per lead via `searchVolumeMap`; admin → SalesIntelligenceCockpit. 858 Hubli leads live, bulk-import ready for ~6,300 more.
 - `/strategist` — Strategist dashboard: 6-stage pipeline, Close Deal modal
 - `/strategist/deals` — Deals management list
 - `/projects` — PM dashboard: clients view + all projects view + team workload
@@ -103,6 +104,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 
 **Server actions (actions/):**
 - `analyze-data.ts`, `bulk-actions.ts`, `delete-data.ts`, `reset-database.ts`, `upload-leads.ts`
+- `app/admin/bulk-import/actions.ts` — `runBulkImport()` server action; walks Lead_Database filesystem, parses both CSV column formats (Hubli_Final + cleaned_leads), maps to `UploadLeadParams`, chunks at 200/file
 
 ### FMOS_Change_Specs/ — Phase C/D/E Specs + All Data Files
 - `MASTER_SPEC.md` — DB migrations master list for all pending phases
@@ -163,7 +165,8 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - [ ] Create Afifa's telecaller account in /admin/users
 - [ ] Create Zaid and Sufiyan accounts
 - [ ] Point fmos.fortunemarq.com subdomain to Hostinger
-- [ ] Upload 11 Hubli_Final CSVs (~858 leads)
+- [x] Upload 11 Hubli_Final CSVs (~858 leads) — DONE via manual upload before 2026-04-29
+- [ ] Run `/admin/bulk-import` to load remaining ~6,300 leads from other cities
 - [ ] Enter Austin Dental Spa and OM SAI TRAVELS real data
 - [ ] Activate GST invoice settings with GSTIN 29ICWPS9816Q1ZS
 
@@ -203,3 +206,4 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 | March 2026 | Context file created. Full feature list documented. Change requirements defined. |
 | 2026-04-02 | Full FMOS change spec created. 5 phase spec files written in FMOS_Change_Specs/. 21 data files created in FMOS_Change_Specs/data/. DB migrations documented in MASTER_SPEC.md. Phase order locked. |
 | 2026-04-28 | CONTEXT.md fully rewritten to reflect actual file structure. Phases A+B confirmed complete per 00_MASTER_BUILD_PLAN.md. Phases C–E specs confirmed complete and ready for Antigravity. Deployment checklist documented. |
+| 2026-04-29 | Scripts (A/B/C/D) updated in `lib/data/scripts/`: "our founder" everywhere (was "Jabeer"), Zoom call meeting ask, new objection responses, 9 outcomes, 2 new WhatsApp templates (follow_back_report_sent, send_portfolio). Real search volumes wired into TelecallerCockpit via `searchVolumeMap` (fetched from `market_insights` table in page.tsx). New `/admin/bulk-import` route + server action for one-click import of all ~7,181 leads from Lead_Database. 858 Hubli leads already live. Note: must `rm -rf .next && npm run dev` after any JSON script changes to bust Next.js module cache. |

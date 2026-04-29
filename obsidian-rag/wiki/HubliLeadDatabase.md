@@ -1,6 +1,6 @@
 # HubliLeadDatabase
 
-**Last updated:** 2026-04-28  
+**Last updated:** 2026-04-29  
 **Tags:** #research #active  
 **Related:** [[PhaseOneNiches]], [[SalesSystem]], [[FMOS]], [[FortuneMarq]]
 
@@ -8,14 +8,25 @@
 
 ## Summary
 
-FortuneMarq has 8,000 scraped, cleaned, and standardized business leads for Hubli across 6 priority niches, stored as 11 CSV files and ready to upload to FMOS. Paired with 75 market intelligence PDFs, this is the data engine that powers cold outreach.
+FortuneMarq has ~7,181 scraped, cleaned, and standardized business leads across 9 cities stored as CSV files in `07_DATA_AND_RESEARCH/Lead_Database/`. 858 Hubli leads are **live in FMOS** as of 2026-04-29. A one-click bulk-import tool at `/admin/bulk-import` is ready to load the remaining ~6,300 leads from other city folders.
 
 ## Lead Database
 
-- **Total leads:** 8,000 (Hubli)
-- **Format:** 11 CSV files in `07_DATA_AND_RESEARCH/Hubli_Final/` (one per niche)
-- **Status:** COMPLETE — ready for upload the moment FMOS is live
-- **Key columns:** Business name, phone, address, website (Y/N), SERP_Ranked (Y/N), niche, city
+- **Hubli leads in FMOS:** 858 ✅ LIVE
+- **Total leads across all cities:** ~7,181 (all city folders in Lead_Database)
+- **Hubli format:** 11 CSV files in `07_DATA_AND_RESEARCH/Lead_Database/Hubli_Final/` (one per niche)
+- **Key columns:** Business Name, Phone, City, Niche, Has Website (Y/N), SERP Ranked (Y/N), Website Link, Google Maps Link, SERP Source, Owner Name
+
+## Bulk Import Tool
+
+`/admin/bulk-import` in FMOS — one-click server action that:
+- Walks the entire `Lead_Database` folder recursively
+- Handles both CSV column formats (Hubli_Final format and *_cleaned_leads format)
+- Skips: `Hubli_cleaned_leads/` (superseded), combined files, utility scripts
+- Uploads in chunks of 200 rows/file, duplicate-safe (skips existing phone numbers)
+- Shows real-time results: files / leads found / added / skipped
+
+**To run:** go to `192.168.1.2:3000/admin/bulk-import` → click Start Bulk Import. Run once. Safe to re-run (all duplicates skipped).
 
 ## PDF Assets (Market Intelligence)
 
@@ -40,7 +51,7 @@ Fully built and reusable. Scripts ready: `pdf_generator.py`, `pdf_generator_kn.p
 
 | City | Status |
 |------|--------|
-| Hubli | ✅ Complete |
+| Hubli | ✅ Complete — 858 leads LIVE in FMOS |
 | Dharwad | Cleaned, ready to format |
 | Belgaum | SERP HTML ready, pipeline not run |
 | Mangalore | SERP HTML ready, pipeline not run |

@@ -51,6 +51,9 @@ import {
   type MarketData,
   type PitchResult,
 } from "@/lib/pitch-engine";
+import type { TelecallerScript, ScriptType } from "@/lib/data/scripts/script.types";
+import { getFilledScript } from "@/lib/data/scripts/scripts_index";
+import { RotateCcw } from "lucide-react";
 import { useLeadType } from "./sales-lead-type-switcher";
 import clsx from "clsx";
 import ActivityTimeline from "@/components/ActivityTimeline";
@@ -245,6 +248,48 @@ export default function SalesIntelligenceCockpit({
 
   const currentLead = queue[currentIndex] || null;
 
+  // ── Step-by-step script state ────────────────────────────────
+  const [scriptStep, setScriptStep] = useState<number>(0);
+  const [expandedObjections, setExpandedObjections] = useState<Set<number>>(new Set());
+  const [scriptTypeOverride, setScriptTypeOverride] = useState<ScriptType | null>(null);
+
+  // Reset script when lead changes
+  useEffect(() => {
+    setScriptStep(0);
+    setExpandedObjections(new Set());
+    setScriptTypeOverride(null);
+  }, [currentLead?.id]);
+
+  const effectiveScriptType: ScriptType | null = (() => {
+    if (scriptTypeOverride) return scriptTypeOverride;
+    // 1. Explicit lead_type field takes priority
+    const lt = currentLead?.lead_type?.toUpperCase();
+    if (lt === "A" || lt === "B" || lt === "C" || lt === "D") return lt as ScriptType;
+    // 2. Derive from tags
+    const tags = currentLead?.tags || [];
+    const serpRanked =
+      tags.some((t) => t === "SERP Ranked") || !!currentLead?.serp_ranked;
+    const hasWebsite =
+      tags.some((t) => t === "Has Website") || !!currentLead?.has_website;
+    const notRanked = tags.some((t) => t === "Not SERP Ranked");
+    if (serpRanked) return "A";
+    if (notRanked && hasWebsite) return "B";
+    if (notRanked && !hasWebsite) return "C";
+    // 3. Fallback to boolean fields alone
+    if (currentLead?.serp_ranked) return "A";
+    if (!currentLead?.serp_ranked && currentLead?.has_website) return "B";
+    if (!currentLead?.serp_ranked && !currentLead?.has_website) return "C";
+    return null;
+  })();
+
+  const SCRIPT_TYPES: { value: ScriptType; label: string; desc: string }[] = [
+    { value: "A", label: "Type A", desc: "Already ranking on Google" },
+    { value: "B", label: "Type B", desc: "Has website, not ranking" },
+    { value: "C", label: "Type C", desc: "No website, not ranking" },
+    { value: "D", label: "Type D", desc: "Low-volume niche" },
+  ];
+  // ────────────────────────────────────────────────────────────
+
   useEffect(() => {
     // Reset individual call timer when currentLead changes
     setCurrentCallSeconds(0);
@@ -279,6 +324,24 @@ export default function SalesIntelligenceCockpit({
 
   const pitch: PitchResult | null =
     pitchLead && marketData ? generateSmartPitch(pitchLead, marketData) : null;
+
+  const callScript: TelecallerScript | null =
+    effectiveScriptType && currentLead
+      ? getFilledScript(
+          {
+            SERP_Ranked: currentLead.serp_ranked ? "Y" : "N",
+            Has_Website: currentLead.has_website ? "Y" : "N",
+            isLowVolume: effectiveScriptType === "D",
+          },
+          {
+            businessName: currentLead.company_name || "[Business]",
+            city: currentLead.city || "[City]",
+            niche: currentLead.industry || "[Niche]",
+            nicheKeyword: `${currentLead.industry || "business"} near me`,
+            searchVolume: currentMarketInsight?.search_volume || "—",
+          }
+        )
+      : null;
 
   const highlightVariables = (script: string) => {
     if (!script) return "";
@@ -962,12 +1025,169 @@ export default function SalesIntelligenceCockpit({
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative group">
-                    <div className="flex justify-between items-center mb-4 text-sm">
-                      <span className="font-bold text-slate-800">Smart Pitch</span>
-                      <button onClick={copyScript} className="text-emerald-600 flex items-center gap-1 hover:underline text-xs"><Copy className="h-3 w-3" /> {copiedScript ? "Copied!" : "Copy"}</button>
+                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    {/* Script header */}
+                    <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                      <div>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Call Script</p>
+                        <p className="text-sm font-semibold text-slate-800 mt-0.5">
+                          {callScript?.typeLabel || (effectiveScriptType ? `Script Type ${effectiveScriptType}` : "Select script type")}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {effectiveScriptType && (
+                          <button
+                            onClick={() => { setScriptStep(0); setExpandedObjections(new Set()); }}
+                            className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 border border-slate-200 rounded-lg px-2 py-1.5 bg-white transition-colors"
+                          >
+                            <RotateCcw className="h-3 w-3" /> Reset
+                          </button>
+                        )}
+                        <select
+                          value={scriptTypeOverride || effectiveScriptType || ""}
+                          onChange={(e) => { setScriptTypeOverride(e.target.value as ScriptType || null); setScriptStep(0); setExpandedObjections(new Set()); }}
+                          className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                        >
+                          <option value="">Select type...</option>
+                          {SCRIPT_TYPES.map((t) => (
+                            <option key={t.value} value={t.value}>{t.label} — {t.desc}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                    <div className="text-slate-600 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: highlightVariables(pitch?.script || "Analyzing market context...") }} />
+
+                    {!effectiveScriptType ? (
+                      <div className="p-5">
+                        <p className="text-sm font-semibold text-amber-700 mb-3">
+                          ⚠️ No script type set. Select the type that matches this lead:
+                        </p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {SCRIPT_TYPES.map((t) => (
+                            <button
+                              key={t.value}
+                              onClick={() => setScriptTypeOverride(t.value)}
+                              className="text-left border border-slate-200 rounded-xl p-3 hover:border-[#42CA80] hover:bg-emerald-50 transition-all"
+                            >
+                              <p className="text-sm font-bold text-slate-900">{t.label}</p>
+                              <p className="text-xs text-slate-500 mt-0.5">{t.desc}</p>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : callScript && (() => {
+                      const steps = callScript.steps;
+                      const step = steps[scriptStep];
+                      const totalSteps = steps.length;
+                      return (
+                        <div className="p-5 space-y-4">
+                          {/* Progress bar */}
+                          <div className="flex items-center gap-2">
+                            <div className="flex gap-1 flex-1">
+                              {steps.map((_, i) => (
+                                <button
+                                  key={i}
+                                  onClick={() => { setScriptStep(i); setExpandedObjections(new Set()); }}
+                                  className={`h-1.5 flex-1 rounded-full transition-colors ${
+                                    i < scriptStep ? "bg-[#42CA80]" : i === scriptStep ? "bg-indigo-500" : "bg-slate-200"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-xs font-mono text-slate-500 whitespace-nowrap shrink-0">
+                              {scriptStep + 1} / {totalSteps}
+                            </span>
+                          </div>
+
+                          {/* Step header */}
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white text-sm font-bold shrink-0">
+                              {step.stepId}
+                            </span>
+                            <h3 className="text-base font-bold text-slate-900">{step.stepName}</h3>
+                          </div>
+
+                          {/* Script lines */}
+                          <div className="space-y-2">
+                            {step.lines.map((line, j) => (
+                              <div
+                                key={j}
+                                className={`text-sm leading-relaxed p-3.5 rounded-lg ${
+                                  line.type === "branch"
+                                    ? "bg-amber-50 border border-amber-200 text-amber-900"
+                                    : "bg-slate-900 text-green-300 font-mono"
+                                }`}
+                              >
+                                {line.type === "branch" && line.condition && (
+                                  <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mb-1">
+                                    {line.condition}
+                                  </p>
+                                )}
+                                {line.text}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Objections — click to reveal */}
+                          {step.objections.length > 0 && (
+                            <div className="space-y-2">
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                If they object...
+                              </p>
+                              {step.objections.map((obj, k) => (
+                                <div key={k} className="rounded-lg border border-slate-200 overflow-hidden">
+                                  <button
+                                    onClick={() => {
+                                      setExpandedObjections((prev) => {
+                                        const next = new Set(prev);
+                                        if (next.has(k)) next.delete(k);
+                                        else next.add(k);
+                                        return next;
+                                      });
+                                    }}
+                                    className="w-full flex items-center justify-between px-3 py-2.5 bg-slate-50 hover:bg-orange-50 text-left transition-colors"
+                                  >
+                                    <span className="text-xs font-semibold text-slate-700">
+                                      💬 &quot;{obj.trigger}&quot;
+                                    </span>
+                                    {expandedObjections.has(k) ? (
+                                      <ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0 ml-2" />
+                                    ) : (
+                                      <ChevronRight className="h-3.5 w-3.5 text-slate-400 shrink-0 ml-2" />
+                                    )}
+                                  </button>
+                                  {expandedObjections.has(k) && (
+                                    <div className="px-3 py-3 bg-indigo-50 border-t border-slate-200">
+                                      <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide mb-1.5">
+                                        Say this:
+                                      </p>
+                                      <p className="text-sm text-slate-800 leading-relaxed">{obj.response}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Prev / Next navigation */}
+                          <div className="flex gap-3 pt-1">
+                            <button
+                              onClick={() => { setScriptStep((s) => Math.max(0, s - 1)); setExpandedObjections(new Set()); }}
+                              disabled={scriptStep === 0}
+                              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            >
+                              <ChevronLeft className="h-4 w-4" /> Previous
+                            </button>
+                            <button
+                              onClick={() => { setScriptStep((s) => Math.min(totalSteps - 1, s + 1)); setExpandedObjections(new Set()); }}
+                              disabled={scriptStep === totalSteps - 1}
+                              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors"
+                            >
+                              Next Step <ChevronRight className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
               </div>

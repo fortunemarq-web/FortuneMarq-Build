@@ -11,13 +11,15 @@ export const revalidate = 30;
 export default async function SalesPage() {
   const supabase = await createServerClientWithCookies();
 
-  // Get the current user and their role
-  const [userResult, profileResult] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.from("profiles").select("role, full_name").single(),
-  ]);
-
+  // Get the current user first
+  const userResult = await supabase.auth.getUser();
   const user = userResult.data?.user;
+
+  // Then get their profile by ID to ensure correct role detection
+  const profileResult = user?.id
+    ? await supabase.from("profiles").select("role, full_name").eq("id", user.id).single()
+    : { data: null };
+
   const userRole = (profileResult.data as any)?.role || null;
 
   // ── TELECALLER VIEW ──────────────────────────────────────────
@@ -25,14 +27,14 @@ export default async function SalesPage() {
     const today = new Date().toISOString().split("T")[0];
     const todayStart = today + "T00:00:00";
 
-    const [leadsResult, callsTodayResult, pdfsTodayResult, meetingsTodayResult] = await Promise.all([
-      // Active leads for the call queue — show follow_up_due + new leads
+    const [leadsResult, callsTodayResult, pdfsTodayResult, meetingsTodayResult, allNichesResult, allCitiesResult, marketInsightsResult] = await Promise.all([
+      // All active leads — no limit so niche/city filters see the full dataset
       supabase
         .from("leads")
-        .select("id, company_name, contact_person, phone, industry, city, status, notes, lead_type, has_website, serp_ranked, follow_up_date, last_outcome")
+        .select("id, company_name, contact_person, phone, industry, city, status, notes, lead_type, has_website, serp_ranked, follow_up_date, last_outcome, tags")
         .not("status", "in", '("closed_won","closed_lost","disqualified")')
-        .order("follow_up_date", { ascending: true, nullsFirst: false })
-        .limit(100),
+        .order("follow_up_date", { ascending: true, nullsFirst: true })
+        .limit(2000),
 
       // Calls logged today
       supabase
@@ -55,6 +57,23 @@ export default async function SalesPage() {
         .select("id", { count: "exact", head: true })
         .eq("status", "meeting_booked")
         .gte("updated_at", todayStart),
+
+      // All distinct niches across entire leads table (for filter dropdown)
+      supabase
+        .from("leads")
+        .select("industry")
+        .not("industry", "is", null),
+
+      // All distinct cities across entire leads table (for filter dropdown)
+      supabase
+        .from("leads")
+        .select("city")
+        .not("city", "is", null),
+
+      // Market insights — for search volume lookup by niche+city
+      supabase
+        .from("market_insights")
+        .select("industry, city, search_volume"),
     ]);
 
     const leads = (leadsResult.data || []).map((l: any) => ({
@@ -71,12 +90,33 @@ export default async function SalesPage() {
       serp_ranked: l.serp_ranked,
       follow_up_date: l.follow_up_date,
       last_outcome: l.last_outcome,
+      tags: l.tags || [],
     }));
+
+    const allNiches = Array.from(new Set(
+      (allNichesResult.data || []).map((r: any) => r.industry).filter(Boolean)
+    )).sort() as string[];
+
+    const allCities = Array.from(new Set(
+      (allCitiesResult.data || []).map((r: any) => r.city).filter(Boolean)
+    )).sort() as string[];
+
+    // Build niche+city → search_volume lookup map
+    const searchVolumeMap: Record<string, string> = {};
+    for (const mi of (marketInsightsResult.data || [])) {
+      if (mi.industry && mi.city && mi.search_volume != null) {
+        const key = `${mi.industry}__${mi.city}`.toLowerCase();
+        searchVolumeMap[key] = mi.search_volume.toLocaleString();
+      }
+    }
 
     return (
       <TelecallerCockpit
         leads={leads}
         userId={user?.id || null}
+        allNiches={allNiches}
+        allCities={allCities}
+        searchVolumeMap={searchVolumeMap}
         dailyStats={{
           callsToday: callsTodayResult.count || 0,
           pdfsSentToday: pdfsTodayResult.count || 0,

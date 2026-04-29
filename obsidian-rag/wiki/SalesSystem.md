@@ -1,6 +1,6 @@
 # SalesSystem
 
-**Last updated:** 2026-04-28  
+**Last updated:** 2026-04-29  
 **Tags:** #active #project  
 **Related:** [[FortuneMarq]], [[TeamStructure]], [[HubliLeadDatabase]], [[ServiceOfferings]], [[FMOS]]
 
@@ -13,7 +13,7 @@ FortuneMarq's sales system is a 3-touch outreach sequence executed by Afifa (tel
 ## The 3-Touch Outreach Sequence
 
 1. **Pre-call WhatsApp (Curiosity message):** Sent before the call to warm the lead — references their specific gap (visibility, ranking, competition)
-2. **Call (Afifa):** Follows one of 4 script variants based on lead type (A/B/C/D). Goal: qualify, create interest, book a meeting with Jabeer
+2. **Call (Afifa):** Follows one of 4 script variants based on lead type (A/B/C/D). Goal: qualify, create interest, book a 15–20 min Zoom call with our founder
 3. **Post-call WhatsApp:** Outcome-triggered — sends relevant PDF + next step based on what happened on the call
 
 ## Script Variants (L2 — Complete)
@@ -25,7 +25,7 @@ FortuneMarq's sales system is a 3-touch outreach sequence executed by Afifa (tel
 | C | No website | Start from scratch — you're invisible |
 | D | Low search volume | Different market angle |
 
-Scripts include full call flow, objection handling, and closing technique. JSON data files in `FMOS_Script_Data/` — loaded directly into FMOS.
+Scripts are **7 steps**: Introduction → Language Preference → Permission to Speak → Data Hook → The Gap → How We Fit In → Meeting Ask (Zoom call with our founder). Real search volumes auto-populate the `[Search Volume]` token from the `market_insights` table — no manual lookup needed. 9 call outcomes. 5 post-call WhatsApp templates per script. JSON files in `fmos/lib/data/scripts/` — live in FMOS TelecallerCockpit.
 
 ## WhatsApp Templates (L3 — Complete)
 
@@ -34,7 +34,7 @@ Scripts include full call flow, objection handling, and closing technique. JSON 
 2. **Bot reply templates** (auto-responses to inbound messages)
 3. **Outcome-triggered messages** (post-call, based on outcome logged in FMOS)
 4. **Follow-back reminders** (when to re-contact unresponsive leads)
-5. **Post-meeting templates** (after Jabeer's meeting — follow-up, proposal link)
+5. **Post-meeting templates** (after founder's Zoom call — follow-up, proposal link)
 
 JSON files in `FMOS_Template_Data/` — ready for Meta WhatsApp API integration.
 

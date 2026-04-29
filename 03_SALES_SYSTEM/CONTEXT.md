@@ -1,11 +1,11 @@
 # 03 — Sales System
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE through L4b. All content ready. Waiting on FMOS deployment to execute.
+**Last Updated:** 2026-04-29 | **Status:** COMPLETE through L4b. Scripts live in FMOS with real search volumes. Waiting on FMOS deployment and bulk lead import to execute outreach.
 
 ## Folder Purpose
 Plan and create everything related to acquiring clients — telecaller scripts, WhatsApp templates, proposals, agreements, and the outreach sequence. This folder is the content layer for the sales function. The execution happens in FMOS (01_CRM_AND_TOOL). The content lives here.
 
 ## The Sales Flow
-Curiosity WhatsApp mass send → Paid campaign runs simultaneously → Replied leads tagged as priority → Inbound leads from ads → Cold call queue (Afifa works through FMOS) → 3-touch outreach → Meeting booked with Jabeer → Jabeer closes → Proposal sent (FMOS-generated PDF) → Agreement confirmation (WhatsApp/email reply) → Invoice → Work starts
+Curiosity WhatsApp mass send → Paid campaign runs simultaneously → Replied leads tagged as priority → Inbound leads from ads → Cold call queue (Afifa works through FMOS) → 3-touch outreach → Meeting booked with our founder (Jabeer) → Founder closes → Proposal sent (FMOS-generated PDF) → Agreement confirmation (WhatsApp/email reply) → Invoice → Work starts
 
 ## Lead Priority in FMOS Queue
 1. Replied to WhatsApp curiosity message (highest priority)
@@ -15,7 +15,7 @@ Curiosity WhatsApp mass send → Paid campaign runs simultaneously → Replied l
 ## The 3-Touch Sequence
 - Touch 1: WhatsApp curiosity message (mass send before calls begin, per lead type A/B/C/D)
 - Touch 2: PDF report delivered (type-matched to lead's online presence situation)
-- Touch 3: Follow-up call — goal is booking 30–45 min Google Meet with Jabeer
+- Touch 3: Follow-up call — goal is booking a 15–20 min Zoom call with our founder (Jabeer)
 
 ## Script Architecture — Type-Based (Not Niche-Based)
 FMOS auto-detects lead type from CSV columns and loads the matching script.
@@ -78,7 +78,7 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 ## What's Pending
 - FMOS deployment — once live, all content gets loaded into the live CRM
 - WhatsApp template seeding: Phases D spec will seed templates from JSON files into Supabase `whatsapp_templates` table
-- Script loading: Phase C will wire script JSON files to the lead profile + sales cockpit
+- Script loading: ✅ DONE — scripts wired to TelecallerCockpit in FMOS. Real search volumes from `market_insights` table auto-populate `[Search Volume]` token per lead via `searchVolumeMap`.
 - Meta WhatsApp Business API: must be purchased and connected to FMOS before templates go live
 - Niche landing pages: must be live before bot reply templates can be sent (bot replies send landing page link)
 - Per-niche scripts in `Hubli/` folder are legacy — the type-based FMOS_Script_Data/ files are the ones that matter
@@ -109,3 +109,4 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 | March 2026 | Context file created. Sales flow defined. Content hierarchy planned. |
 | April 2026 | L2 Scripts complete — new type-based architecture (4 JSON files). L3 WhatsApp Templates complete — 17 templates across 5 files. L4a Proposal complete — schema + services data + TypeScript. L4b Agreement complete (in 09_LEGAL_AND_OPERATIONS). |
 | 2026-04-28 | CONTEXT.md fully rewritten. All file inventory confirmed. Content hierarchy updated to reflect L6 and L7 also complete (in 04_CLIENT_MANAGEMENT subfolders). |
+| 2026-04-29 | Scripts (A/B/C/D JSON files in fmos/lib/data/scripts/) updated: all "Jabeer" references → "our founder"; meeting ask rewritten as 15–20 min Zoom call; objection responses updated (pricing, past-agency, busy, not-interested); 9 outcomes total; 2 new WhatsApp templates added (follow_back_report_sent, send_portfolio). Real search volumes now auto-fill in scripts via searchVolumeMap from market_insights table. |

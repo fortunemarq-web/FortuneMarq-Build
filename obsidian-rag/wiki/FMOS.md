@@ -1,6 +1,6 @@
 # FMOS
 
-**Last updated:** 2026-04-28  
+**Last updated:** 2026-04-29  
 **Tags:** #project #active #evergreen  
 **Related:** [[FortuneMarq]], [[TechStack]], [[TeamStructure]], [[CurrentBlockers]], [[SalesSystem]]
 
@@ -8,7 +8,7 @@
 
 ## Summary
 
-FMOS (FortuneMarq Operating System) is a full-stack agency CRM built from scratch by [[SayedJabeer]]. It is **production-ready at v4.5** as of 2026-04-28. All phases are complete. TypeScript strict build passes clean (`npx tsc --noEmit` + `npm run build` zero errors). All `(supabase as any)` casts removed globally. The only remaining step is deployment to fmos.fortunemarq.com.
+FMOS (FortuneMarq Operating System) is a full-stack agency CRM built from scratch by [[SayedJabeer]]. It is **production-ready at v4.5** as of 2026-04-28. All phases are complete. TypeScript strict build passes clean. 858 Hubli leads are live in the system. Telecaller scripts are live with real search volumes auto-populated per lead. A one-click bulk-import tool is ready at `/admin/bulk-import` to load the remaining ~6,300 leads. The only remaining step is deployment to fmos.fortunemarq.com.
 
 ## Stack
 
@@ -32,7 +32,9 @@ Next.js 16.1.6 + TypeScript strict + Tailwind CSS v4 frontend. Supabase (Postgre
 
 ## What's Built (Full Feature List)
 
-- Sales Intelligence Cockpit — power dialer, AI Brain, follow-up automation
+- Sales Intelligence Cockpit — power dialer, AI Brain, follow-up automation. Role-based: telecaller → TelecallerCockpit with live script + real search volumes per lead; admin → SalesIntelligenceCockpit
+- Telecaller Scripts — 4 type-based JSON scripts (A/B/C/D) displayed step-by-step during calls. Real search volumes auto-filled from `market_insights` table via `searchVolumeMap`. "our founder" language throughout. 9 call outcomes. 5 post-call WhatsApp templates per script.
+- Bulk Lead Import — `/admin/bulk-import` one-click tool: walks `07_DATA_AND_RESEARCH/Lead_Database`, handles both CSV formats, chunks at 200/file, duplicate-safe. 858 Hubli leads already live. ~6,300 remaining ready to import.
 - Niche Pipeline Kanban — 7-stage: new → contacted → interested → meeting → proposal → won/lost
 - Outreach Sequence Board — 3-touch lead sequence tracker
 - Lead Profile Page — full history: calls, WhatsApp, PDFs, proposals, meetings
@@ -65,7 +67,8 @@ Next.js 16.1.6 + TypeScript strict + Tailwind CSS v4 frontend. Supabase (Postgre
 - [ ] Add `OPENROUTER_API_KEY` to Hostinger environment variables
 - [ ] Point `fmos.fortunemarq.com` subdomain DNS to Hostinger
 - [ ] Create user accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff)
-- [ ] Upload 8,000 Hubli leads via CSV bulk import
+- [x] Upload Hubli leads — 858 live ✅
+- [ ] Run `/admin/bulk-import` to load remaining ~6,300 leads from other cities
 - [ ] Enter real client data (Austin Dental Spa, OM SAI TRAVELS as test cases)
 - [ ] Activate GST invoice settings with GSTIN 29ICWPS9816Q1ZS
 - [ ] Run smoke test across all modules post-deploy

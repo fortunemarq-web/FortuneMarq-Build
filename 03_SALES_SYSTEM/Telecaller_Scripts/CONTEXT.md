@@ -1,5 +1,5 @@
 # 03 — Telecaller Scripts
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — 4 type-based JSON scripts + TypeScript loader in FMOS_Script_Data/
+**Last Updated:** 2026-04-29 | **Status:** COMPLETE — 4 type-based JSON scripts live in FMOS. Real search volumes wired. All content reflects April 2026 review. Ready for Afifa to use once FMOS is deployed.
 
 ## Folder Purpose
 All telecaller script content for Afifa. Scripts are loaded dynamically by FMOS based on lead type — not per-niche. FMOS auto-detects the lead type from the CSV columns and displays the matching script during the call.
@@ -36,29 +36,49 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 | C | Has_Website = N, SERP_Ranked = N | No website, GMB only |
 | D | Low search volume niche/city | Limited direct search demand |
 
-### Script Structure (all 4 types — English)
-1. **Introduction** — "Hi, my name is Afifa, I'm calling from FortuneMarq Media & Marketing — online growth system building agency, based in [City]."
-2. **Opening Hook** — "We conducted market research for [niche] in [city] and have interesting data on how many people are searching for services like yours. Do you have a minute?"
-3. **Data Hook** — Type-specific: monthly search volume + what it means for their situation
-4. **FOMO Point** — Type-specific: opportunity before competitors get strong; phrase: "you have a good opportunity before your competitor gets strong"
-5. **Differentiator** — "We don't just run ads. We build a complete online growth system — presence, visibility, leads — all connected, built specifically for your business."
-6. **Meeting Ask** — 30–45 min Google Meet with Jabeer (founder). Presentation built for their business. No pressure, no commitment.
+### Script Structure (all 4 types — 7 steps)
+1. **Introduction** — Name, FortuneMarq Media & Marketing, based in [City].
+2. **Language Preference** — Kannada / Hindi / English — whatever is comfortable.
+3. **Permission to Speak** — "2 minutes — we did market research for [Niche] in [City], is this a good time?" Objections: Busy → offer callback hour/evening; Not interested → ask why they don't want digital marketing.
+4. **Data Hook** — Type-specific: [Search Volume] monthly searches + what it means for their situation. Real number auto-populated from `market_insights` table via `searchVolumeMap` in FMOS.
+5. **The Gap** — Type-specific: who's capturing demand vs who's invisible. A: reinforce position; B: site but no visibility; C: GMB-only, search demand going to competitors; D: low volume, zero competition, high-intent buyers.
+6. **How We Fit In** — Own website, own Google ranking, own enquiries. Not JustDial, not directories. Full system managed for them.
+7. **Meeting Ask** — Our founder personally does a 15–20 min Zoom call (joinable from phone). Built for their business in [City]. No commitment. Book date + send Zoom link on WhatsApp. Objections: pricing (no fixed rates, founder decides per business), tried before (full system first, not just ads), owner unavailable (WhatsApp PDF first), send on WhatsApp (send PDF + follow up in 2 days), let me think (no pressure), internal team (offer as second opinion).
 
-### Objections Bank (per step)
-- After Step 2: Busy right now / Not interested / Who are you
-- After Step 3 (Data Hook): Numbers not real / Already have enough customers / (Type C: We rely on word of mouth)
-- After Step 6 (Meeting Ask): How much does it cost / We tried before / Owner not here / Just send on WhatsApp / Let me think about it / We handle it internally
+### Key Language (locked in all 4 scripts)
+- "our founder" — never "Jabeer" in Afifa's spoken script
+- "Zoom call" — never "Google Meet" or "30–45 min meeting"
+- Busy response: "No problem at all. Can I call you back in an hour or later this evening?"
+- Not interested response: "No worries. Mind if I ask — is there a specific reason you don't want to do digital marketing for your business?"
+- Pricing response: "We don't have fixed prices — our founder first understands your business, what you actually need, and how much you can benefit from the work. Pricing is decided based on that."
 
-### Call Outcomes
-- **INTERESTED** → Book Meeting Now / Follow Up Later / Send More Info
-- **NOT INTERESTED** → Reason required (6 options) → Mark Cold or Dead
-- **FOLLOW BACK** → Date + time + note → auto-reminder in FMOS
-- **WRONG NUMBER / DEAD** → Mark dead → cleanup queue
+### Call Outcomes (9 total)
+| ID | Label | Category |
+|---|---|---|
+| INTERESTED_BOOK_NOW | Interested — Book Meeting Now | INTERESTED |
+| INTERESTED_CALLBACK | Interested — Call Back to Book | INTERESTED |
+| INTERESTED_SEND_PDF | Interested — Send PDF First | INTERESTED |
+| GATEKEEPER | Gatekeeper — Owner Unavailable | FOLLOW_BACK |
+| NO_ANSWER | No Answer / Voicemail | FOLLOW_BACK |
+| NOT_INTERESTED | Not Interested (reason required, 7 options) | NOT_INTERESTED |
+| FOLLOW_BACK | Follow Back Later | FOLLOW_BACK |
+| WRONG_NUMBER | Wrong Number / Dead Lead | DEAD |
+| LANGUAGE_BARRIER | Language Barrier / Couldn't Communicate | FOLLOW_BACK |
+
+### WhatsApp Templates (postCallWhatsApp — 5 per script)
+| templateId | Trigger | Description |
+|---|---|---|
+| meeting_booked | INTERESTED_BOOK_NOW | Zoom link + date/time confirmation |
+| send_pdf | INTERESTED_SEND_PDF | PDF attachment + Zoom call invite |
+| follow_back | INTERESTED_CALLBACK | Follow-up date + PDF |
+| follow_back_report_sent | INTERESTED_CALLBACK | For leads who already have the PDF |
+| send_portfolio | INTERESTED_SEND_PDF | Portfolio link variant |
 
 ## What's Pending
-- Scripts are complete. Execution pending FMOS deployment and Afifa starting.
-- FMOS Phase C (Outreach Board) will wire these scripts to the lead profile and sales cockpit
-- Scripts seeded into Supabase `whatsapp_templates` table during Phase D (or referenced from JSON directly)
+- FMOS deployment — once live, Afifa can start using scripts in TelecallerCockpit (/sales)
+- Script JSON changes require `rm -rf .next && npm run dev` to bust Next.js module cache
+- WhatsApp template seeding into Supabase `whatsapp_templates` table (Phase D)
+- Script content is complete and live in FMOS. No further script writing needed.
 
 ## What's Blocked
 - Blocked on FMOS deployment
@@ -81,3 +101,4 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 | March 2026 | Folder created. Per-niche Hubli scripts written. |
 | April 2026 | Architecture changed to type-based. 4 JSON files created in FMOS_Script_Data/. TypeScript loader written. Telecaller_Scripts_Review.docx reviewed and finalized. |
 | 2026-04-28 | CONTEXT.md fully rewritten to reflect actual file inventory and current architecture. |
+| 2026-04-29 | All 4 JSON files (A/B/C/D) updated in fmos/lib/data/scripts/: "Jabeer" → "our founder" everywhere; 7-step structure (added Language Preference as Step 2); meeting ask rewritten as 15–20 min Zoom call; permission step objections rewritten; pricing objection rewritten; 9 outcomes; 2 new WhatsApp templates (follow_back_report_sent, send_portfolio). Real search volumes now live in scripts via searchVolumeMap from market_insights table. |
