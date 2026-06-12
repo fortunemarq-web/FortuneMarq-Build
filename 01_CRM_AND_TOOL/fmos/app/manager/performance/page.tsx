@@ -107,7 +107,7 @@ export default function ManagerPerformance() {
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8 space-y-8">
+        <div className="min-h-full bg-slate-50 p-4 md:p-8 space-y-8">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>

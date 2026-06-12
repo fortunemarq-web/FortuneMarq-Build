@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CheckSquare, X, ChevronDown, CheckCircle2 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface BulkActionBarProps {
     selectedCount: number;
@@ -72,7 +73,7 @@ export default function BulkActionBar({
             await onAction(action);
         } catch (e) {
             console.error(e);
-            alert("Action failed");
+            toast.error("Action failed");
         } finally {
             setIsProcessing(false);
         }

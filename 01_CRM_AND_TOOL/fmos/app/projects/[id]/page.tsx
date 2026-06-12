@@ -79,7 +79,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
   if (projectError || !projectWithClient) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <p className="text-red-500">
             {projectError ? `Error: ${projectError.message}` : "Project not found"}

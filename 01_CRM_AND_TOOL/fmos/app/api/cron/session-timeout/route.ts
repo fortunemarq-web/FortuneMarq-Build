@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
+import { verifyCronSecret } from "@/lib/cron-auth";
 
 export async function POST(req: NextRequest) {
-    // Optional secret check
-    const authHeader = req.headers.get('x-admin-cron-secret');
-    if (authHeader !== process.env.CRON_SECRET && process.env.NODE_ENV === 'production') {
-        // return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = verifyCronSecret(req);
+    if (denied) return denied;
 
-    const supabase = createServerClient() as any;
+    const supabase = createAdminClient() as any;
 
     try {
         // Call security definer function to clean up

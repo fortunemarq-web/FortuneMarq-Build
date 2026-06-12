@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 
 export async function POST(req: NextRequest) {
     const sessionId = req.cookies.get("app_session_id")?.value;
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     response.cookies.delete("app_session_id");
 
     if (sessionId) {
-        const supabase = createServerClient();
+        const supabase = await createServerClientWithCookies();
 
         await supabase.from("user_sessions" as any)
             .update({

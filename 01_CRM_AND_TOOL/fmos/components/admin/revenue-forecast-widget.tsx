@@ -2,7 +2,7 @@ import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
 import { TrendingUp, Target, ArrowRight } from "lucide-react";
 
-const MRR_TARGET = 50_000;
+const MRR_TARGET = 0; // Build month — no target set yet (June 2026)
 const CLOSE_RATE = 0.30;
 
 export default async function RevenueForecastWidget() {
@@ -33,9 +33,10 @@ export default async function RevenueForecastWidget() {
 
   const projectedFull = currentMRR + pipelineMonthly;
   const projectedConservative = currentMRR + Math.round(pipelineMonthly * CLOSE_RATE);
-  const gapToTarget = Math.max(0, MRR_TARGET - currentMRR);
-  const targetHit = currentMRR >= MRR_TARGET;
-  const progressPct = Math.min(100, Math.round((currentMRR / MRR_TARGET) * 100));
+  const hasTarget = MRR_TARGET > 0;
+  const gapToTarget = hasTarget ? Math.max(0, MRR_TARGET - currentMRR) : 0;
+  const targetHit = hasTarget && currentMRR >= MRR_TARGET;
+  const progressPct = hasTarget ? Math.min(100, Math.round((currentMRR / MRR_TARGET) * 100)) : 0;
 
   const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
@@ -47,29 +48,35 @@ export default async function RevenueForecastWidget() {
       </div>
 
       <div className="p-5 space-y-5">
-        {/* Current MRR vs Target */}
+        {/* Current MRR */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-500">Current MRR</span>
             <div className="text-right">
               <span className="text-base font-bold font-mono text-slate-900">{formatINR(currentMRR)}</span>
-              <span className="text-xs text-slate-400 ml-1">/ {formatINR(MRR_TARGET)} target</span>
+              {hasTarget && <span className="text-xs text-slate-400 ml-1">/ {formatINR(MRR_TARGET)} target</span>}
             </div>
           </div>
-          <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all ${targetHit ? "bg-emerald-500" : "bg-indigo-500"}`}
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          <div className="flex items-center justify-between mt-1.5">
-            <span className="text-[10px] text-slate-400">{progressPct}% of target</span>
-            {targetHit ? (
-              <span className="text-[10px] font-bold text-emerald-600">🎯 Target hit! Next: ₹1L MRR</span>
-            ) : (
-              <span className="text-[10px] text-slate-400">{formatINR(gapToTarget)} to go</span>
-            )}
-          </div>
+          {hasTarget ? (
+            <>
+              <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${targetHit ? "bg-emerald-500" : "bg-indigo-500"}`}
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between mt-1.5">
+                <span className="text-[10px] text-slate-400">{progressPct}% of target</span>
+                {targetHit ? (
+                  <span className="text-[10px] font-bold text-emerald-600">🎯 Target hit! Next: ₹1L MRR</span>
+                ) : (
+                  <span className="text-[10px] text-slate-400">{formatINR(gapToTarget)} to go</span>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-[10px] text-slate-400 mt-1">Build month — no revenue target set</p>
+          )}
         </div>
 
         {/* Pipeline */}
@@ -109,14 +116,14 @@ export default async function RevenueForecastWidget() {
           </div>
         )}
 
-        {/* Gap to target */}
-        {!targetHit && (
+        {/* Gap to target — only shown when a target is set */}
+        {hasTarget && !targetHit && (
           <div className={`rounded-xl p-3 flex items-center justify-between ${projectedConservative >= MRR_TARGET ? "bg-emerald-50 border border-emerald-200" : "bg-amber-50 border border-amber-200"}`}>
             <div className="flex items-center gap-2">
               <Target className={`h-4 w-4 ${projectedConservative >= MRR_TARGET ? "text-emerald-600" : "text-amber-600"}`} />
               <span className="text-xs font-semibold text-slate-700">
                 {projectedConservative >= MRR_TARGET
-                  ? "On track to hit ₹50K target"
+                  ? "On track to hit target"
                   : `₹${(MRR_TARGET - projectedConservative).toLocaleString("en-IN")} short (conservative)`}
               </span>
             </div>

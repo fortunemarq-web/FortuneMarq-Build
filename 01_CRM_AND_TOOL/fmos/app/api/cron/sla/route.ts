@@ -1,13 +1,13 @@
-import { createServerClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
+import { verifyCronSecret } from "@/lib/cron-auth";
 import { type NextRequest, NextResponse } from "next/server";
 import { logAudit } from "@/lib/audit";
 
 export async function GET(req: NextRequest) {
-    // In production, verify a CRON_SECRET header to prevent public access
-    // const authHeader = req.headers.get('authorization');
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) return new NextResponse('Unauthorized', { status: 401 });
+    const denied = verifyCronSecret(req);
+    if (denied) return denied;
 
-    const supabase = createServerClient();
+    const supabase = createAdminClient();
     const now = new Date();
 
     // Define SLA Thresholds
@@ -41,13 +41,13 @@ export async function GET(req: NextRequest) {
 
                 // Log Event (Activity Only, System Action)
                 await logAudit({
-                    entity_type: "lead",
-                    entity_id: lead.id,
-                    event_type: "sla_missed",
-                    title: "SLA Missed (Inbound)",
-                    body: "Lead was not contacted within 30 minutes of creation.",
-                    metadata: { sla_limit: "30m", minutes_overdue: Math.round((now.getTime() - new Date(lead.created_at).getTime()) / 60000) }
-                } as any);
+                    action: "update",
+                    resourceType: "lead",
+                    resourceId: lead.id,
+                    resourceLabel: lead.company_name,
+                    newValue: { stale_flag: true, reason: "SLA Missed (Inbound)" },
+                    summary: `SLA missed — inbound lead not contacted within 30 mins`,
+                });
 
                 updatedCount++;
             }
@@ -72,13 +72,13 @@ export async function GET(req: NextRequest) {
                 }).eq("id", lead.id);
 
                 await logAudit({
-                    entity_type: "lead",
-                    entity_id: lead.id,
-                    event_type: "sla_missed",
-                    title: "SLA Missed (Outbound)",
-                    body: "Lead was not contacted within 24 hours of assignment.",
-                    metadata: { sla_limit: "24h", hours_overdue: Math.round((now.getTime() - new Date(lead.created_at).getTime()) / 3600000) }
-                } as any);
+                    action: "update",
+                    resourceType: "lead",
+                    resourceId: lead.id,
+                    resourceLabel: lead.company_name,
+                    newValue: { stale_flag: true, reason: "SLA Missed (Outbound)" },
+                    summary: `SLA missed — outbound lead not contacted within 24h`,
+                });
 
                 updatedCount++;
             }

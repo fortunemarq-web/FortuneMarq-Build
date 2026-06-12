@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Search } from "lucide-react";
+import ExportCsvButton from "@/components/ui/export-csv-button";
 
 export default function AdminAttendancePage() {
     const [summaries, setSummaries] = useState<any[]>([]);
@@ -40,7 +41,7 @@ export default function AdminAttendancePage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 px-6 py-8 text-slate-900">
+        <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-900">
             <div className="mx-auto max-w-6xl">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold">Attendance Overview</h1>
@@ -51,7 +52,18 @@ export default function AdminAttendancePage() {
                             onChange={e => setDate(e.target.value)}
                             className="bg-white border border-slate-300 rounded-lg px-4 py-2 text-slate-900"
                         />
-                        <button className="bg-indigo-600 px-4 py-2 rounded-lg font-medium text-sm">Export CSV</button>
+                        <ExportCsvButton
+                            rows={summaries}
+                            columns={{
+                                user_id: "User ID",
+                                sessions_count: "Sessions",
+                                gross_minutes: "Gross (min)",
+                                break_minutes: "Break (min)",
+                                net_minutes: "Net Work (min)",
+                                is_complete: "Complete",
+                            }}
+                            filename={`attendance-${date}`}
+                        />
                     </div>
                 </div>
 

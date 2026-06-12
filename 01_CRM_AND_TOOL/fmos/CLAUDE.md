@@ -1,131 +1,342 @@
-# FortuneMarq Agency OS — Claude Context File
-# This file is auto-loaded at the start of every Claude Code session.
+# FMOS — FortuneMarq Agency OS · Claude Context File
+# Auto-loaded at the start of every session. Read this fully before doing anything.
+# Last updated: 2026-06-11 evening (UI/UX overhaul + layout/PDF session — see COWORK_HANDOFF.md)
+#
+# LATEST SESSION: see COWORK_HANDOFF.md (full detail) — UI design system,
+# layout shell fix, outreach board column fix, invoice/proposal/agreement PDFs.
+#
+# KEY CONVENTIONS ADDED 2026-06-11 (evening — UI/UX session):
+# - Design system lives in app/globals.css (@theme): green text/buttons use
+#   brand-deep (#1E7A4F); raw brand #42CA80 is for accents/fills ONLY (contrast).
+# - No emoji as UI chrome. Emoji in WhatsApp/script message content is fine.
+# - App shell (layout-wrapper) is h-dvh; <main> is the ONLY scroll container.
+#   Shell pages use min-h-full, NEVER min-h-screen (only public no-sidebar
+#   routes keep min-h-screen).
+# - Printable documents: wrap doc in .print-area, mark chrome print:hidden,
+#   add <PrintButton /> (components/ui/print-button.tsx). Do NOT use the
+#   visibility-hidden print isolation trick — it produced blank PDFs.
+# - leadStageUpdate()/leadStatusUpdate() now auto-stamp last_activity_at
+#   (+ meeting_booked_at when stage → meeting_booked).
+# - leads has NO updated_at / assigned_to columns. Use last_activity_at,
+#   assigned_sales_exec, meeting_booked_at.
+#
+# KEY CONVENTIONS ADDED 2026-06-11 (morning — hardening session):
+# - lib/pipeline.ts is the SINGLE source of truth for lead stages.
+#   NEVER write outreach_stage or status directly — use leadStageUpdate()
+#   (stage-space) or leadStatusUpdate() (status-space).
+# - Every Supabase mutation in client components must capture { error }
+#   and show toast.error() from components/ui/toast — no silent awaits.
+# - Cron routes: verifyCronSecret(req) + createAdminClient() only.
+# - Server actions/API routes on behalf of a user: createServerClientWithCookies().
+#   Service-role (createAdminClient) only for cron + public-by-design flows.
+# - 4 migrations from 2026-06-11 must be run in Supabase before deploy
+#   (RLS hardening, meeting columns, audit triggers, indexes) — see last_session.md.
 
-## What This Project Is
-FMOS = FortuneMarq Agency OS. A Next.js 16 + TypeScript + Supabase CRM built for a digital marketing agency in Hubli, Karnataka. Sole builder is the agency owner (FortuneMarq).
+---
+
+## WHAT THIS PROJECT IS
+
+FMOS = FortuneMarq Marketing Operating System. A Next.js 16 CRM built by and for FortuneMarq — a digital marketing agency in Hubli, Karnataka. The owner is Jabeer (sayedjabir33@gmail.com). The system covers the full agency lifecycle: lead calling → outreach → meetings → proposals → client management → finance → team.
 
 **App path:** `/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos`
-**Stack:** Next.js 16.1.6 App Router | TypeScript | Tailwind CSS v4 | Supabase | Framer Motion | Lucide React | Recharts
-**Version:** v4.5
-**Supabase project:** `cnwooodktqwvpzkucskm.supabase.co`
+**Stack:** Next.js 16 App Router | TypeScript | Tailwind CSS v4 | Supabase (cnwooodktqwvpzkucskm.supabase.co) | Lucide React | Recharts
+**Dev command:** `npm run dev` (binds `0.0.0.0` so mobile works on same Wi-Fi)
+**Supabase client rules:**
+- Server components / server actions → `createServerClientWithCookies()` from `@/lib/supabase-server`
+- Client components → `createClient()` from `@/lib/supabase`
+- Never use `createServerClient` directly — always the wrapper
 
 ---
 
-## HOW WE WORK — READ THIS FIRST
+## HOW WE WORK
 
-1. **No code without a prompt file.** Any dev task → create a `.md` spec file in the fmos root → user reviews → Antigravity (separate AI) implements it.
-2. **Writing prompts for Antigravity** is a primary task. Prompts must be self-contained with file paths, line numbers, exact code blocks, summary table, and a Rules section.
-3. **After any work session**, update `documentation/SALES.md`, `00_MASTER_BUILD_PLAN.md`, `00_QUICK_REFERENCE.md`, and memory files.
-4. **No AI API calls** in the sales cockpit — pitch engine is local only.
-5. **Short, direct responses.** No filler. No emojis unless asked.
-
----
-
-## CURRENT BUILD STATUS (v4.5) — Updated 2026-03-25
-
-### ✅ Type Safety — COMPLETE (2026-03-25)
-- `database.types.ts` regenerated via Supabase CLI — all 30+ tables now typed
-- All 176 `(supabase as any)` global casts removed across 72 files
-- Auth client standardized — all 14 page.tsx files now use `createServerClientWithCookies()`
-- Build: clean `npx tsc --noEmit` + `npm run build`
-
-### ✅ Sales Cockpit — COMPLETE
-- 858 Hubli outbound leads imported (11 niches, all `lead_type = "outbound"`)
-- `serp_ranked`, `serp_source`, `tags[]` columns live in Supabase
-- Niche filter, City filter, Has Website / No Website toggle in top bar
-- Calling card: auto-tags + SERP tags + manual tags + GMB Profile / Google Search button
-- Follow-up tab: reconnect script, last contacted badge, notes reminder, last outcome badge
-- Follow-up sidebar: priority sort (overdue→today→upcoming), niche/city filters
-
-### ✅ Outreach Sales System — COMPLETE
-- `/sales/outreach` — 7-stage Kanban (Touch 1 → PDF → Follow-up → Meeting → Proposal → Won/Lost)
-- AdvanceStageModal adapts per stage, all transitions logged to `activity_events`
-- 8 DB tables: `outreach_sequences`, `pdf_deliveries`, `meetings`, `proposals`, `client_packages`, `upsell_attempts`, `lead_outcomes`, `activity_events`
-
-### ✅ Phase 1 — Admin Dashboard + Build Tracker — COMPLETE
-- `/admin` — KPI bar, Priority List, Pipeline Snapshot, Quick Actions, Agency Growth Card, Build Progress
-- `/admin/build-tracker` — 3 systems, 35+ modules, inline status/notes updates, Framer Motion progress bars
-
-### ✅ Phase 2 — Client Lifecycle — COMPLETE
-- `/admin/clients` — full client list, health scores (5-dimension), MRR, service pills, upsell engine
-- `/admin/clients/[id]` — 6-tab profile: Overview, Onboarding, Asset Vault, Projects, Finance, Strategy
-- `/admin/clients/renewals` — renewal countdown + upsell opportunity tracker
-
-### ✅ Phase 3 — Agency Growth — COMPLETE
-- `/admin/growth` — organic + acquisition hub
-- `/admin/growth/instagram`, `/linkedin`, `/facebook` — content calendar + kanban
-- `/admin/growth/gmb` — performance metrics, posts calendar, optimization checklist, review tracker
-- `/admin/growth/seo` — keyword tracker, pages tracker, traffic log
-- `/admin/growth/acquisition/[city]` — per-city niche accordion with full acquisition breakdown
-
-### ✅ Phase 4 — Strategy-to-Task Engine — COMPLETE
-- `/admin/strategy` — paste strategy → configure destination → LLM generates tasks
-- `/admin/strategy/archive` — past strategy runs
-- `/admin/strategy/review` — review generated tasks before committing
-
-### ✅ Phase 5 — Finance Module — COMPLETE
-- `/admin/finance` — revenue dashboard, P&L, recent invoices
-- `/admin/finance/invoices` — invoice manager with PDF generation
-- `/admin/finance/expenses` — expense log with categories
-- `/admin/finance/pnl` — P&L statement view
-
-### ✅ Phase 6 — Team Management — COMPLETE (2026-03-25)
-- `/admin/team` — member cards, aggregate stats, "Assign Task" modal, "Set Targets" modal wired up
-- `/admin/team/sops` — SOP library with working search + category filters
-- `/admin/team/sops/new` — SOP creation page (was missing, now built)
-- `/admin/team/sops/[id]` — SOP edit/view page verified
-- `/admin/team/scorecards` — weekly performance scorecards by role
-
-### ✅ Strategist Dashboard — COMPLETE (2026-03-25)
-- `/strategist` — full 6-stage Kanban pipeline (Qualified → Contract Signed)
-- Close Deal modal: creates client + logs deal + provisions one project per service + updates lead status
-- Dashboard View: Needs Proposal list, Needs Contract list, Loss Reason tally
-- Amber highlight for today's follow-ups
-- `/strategist/deals` — deals management list
+- Build directly. No spec files needed anymore — Jabeer reviews code changes in conversation.
+- Use `localLeads` state pattern for immediate UI updates after Supabase mutations (no page reload needed).
+- TypeScript: use `as any` sparingly; `database.types.ts` is the source of truth for Supabase types.
+- `outreach_stage` column is the single source of truth for where a lead sits in the pipeline.
+- Short direct responses. No filler.
 
 ---
 
-## KEY FILES TO KNOW
+## CURRENT BUILD STATUS — Updated 2026-06-07
 
-| File | Purpose |
+### ✅ /sales — Telecaller Cockpit
+**File:** `app/sales/page.tsx` + `components/sales/telecaller-cockpit.tsx`
+
+- Always shows `TelecallerCockpit` for ALL roles (removed role-based branching).
+- **A/B/C/D filter** between niche/city filters and search bar. `getLeadScriptType(l)` derives type from `serp_ranked` + `has_website`.
+- **`localLeads` state** initialized from `leads` prop. All mutations update `localLeads` immediately — UI reflects changes without page reload.
+- **Follow-up tab** counts: `isFollowUp = l.outreach_stage === "follow_up_due" || l.outreach_stage === "no_answer" || l.outreach_stage === "follow_back"` — aligned with outreach board.
+- **Manual add lead** modal: `showAddLead` state, `saveNewLead()` function, full form with datalists for niches/cities. `+` button in header.
+- **7 log outcomes and where they go:**
+  | Outcome ID | Label | outreach_stage set to |
+  |---|---|---|
+  | CURIOUS | Sent Curiosity | curiosity_sent |
+  | PDF_SENT | Sent PDF | pdf_sent |
+  | FOLLOW_UP | Follow-up Booked | follow_up_due |
+  | FOLLOW_BACK | Will Call Back | follow_back |
+  | NO_ANSWER | No Answer | no_answer |
+  | NOT_INTERESTED | Not Interested | not_interested |
+  | MEETING | Meeting Booked | meeting_booked |
+- **After `logOutcome` DB write:** `setLocalLeads((prev) => prev.map((l) => l.id === currentLead.id ? { ...l, ...leadUpdates } : l))` — keeps UI in sync.
+- **Full multi-step follow-up scripts** based on `outreach_stage`: `follow_up_due` / `no_answer` / `follow_back` — each has 3 steps + objection handlers + progress bar.
+
+### ✅ /admin/outreach — Outreach Board
+**File:** `app/admin/outreach/outreach-board-client.tsx`
+
+All 7 outcome stages now visible as columns:
+```
+ACTIVE_STAGES:
+  touch1_pending | no_answer | follow_back | curiosity_sent | pdf_sent | follow_up_due | meeting_booked | proposal_sent
+
+CLOSED_STAGES:
+  not_interested | won | lost | dead | revival
+```
+
+### ✅ /admin/meetings — Meetings Page (BUILT THIS SESSION)
+**Files:** `app/admin/meetings/page.tsx` + `app/admin/meetings/meetings-client.tsx`
+
+Server page fetches leads with `outreach_stage = 'meeting_booked'` selecting:
+`id, company_name, contact_person, phone, industry, city, follow_up_date, outreach_stage, last_outcome, notes, has_website, lead_type, website_link, gmb_link, serp_ranked, meeting_link, meeting_notes`
+
+Client features:
+- Meeting status: `overdue` / `today` / `upcoming` via `getMeetingStatus()`
+- Script type A/B/C/D from `getScriptType()` on lead fields
+- **Browser notifications**: `useEffect` + `setTimeout` for 1h and 15-min before meeting
+- **WhatsApp templates**: 3 types (Confirmation, 1h Reminder, 15-min Reminder) → click expands dark preview panel → "Open in WhatsApp & Send" button. Meeting link embedded in templates via `buildMsg(m, type)`
+- **Pre-meeting intel panel**: script type badge, website/GMB/ranking status, opening strategy tip, pre-call checklist
+- **Meeting notes**: inline edit + save to `meeting_notes` column
+- **Post-meeting attended flow**: notes capture → "Confirm & Move to Proposals" → "Create Proposal" link
+- **Actions**: `handleAction`, `confirmAttended`, `handleReschedule`, `saveMeetingLink`, `saveMeetingNotes`
+- Added to sidebar nav: `{ label: "Meetings", href: "/admin/meetings", icon: CalendarCheck }` between Outreach and Proposals
+
+⚠️ **PENDING SQL MIGRATION** (not yet run in Supabase):
+```sql
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_link TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
+```
+Until this runs, TypeScript shows 2 errors in meetings-client.tsx — these are column-not-in-schema errors, not logic errors.
+
+### ✅ /admin/proposals — Proposals Page
+**File:** `app/admin/proposals/page.tsx`
+
+Added **"Awaiting Proposal" section** at the top:
+- Fetches leads with `outreach_stage = 'proposal_sent'`
+- Cross-checks against `proposals` table to find leads without a proposal record yet
+- Shows amber cards with company, meeting notes preview, and "Create Proposal →" link to `/admin/leads/[id]/proposal/new`
+
+### ✅ /admin/leads/[id]/proposal/new — Proposal Creator (REBUILT THIS SESSION)
+**Files:**
+- `app/admin/leads/[id]/proposal/new/page.tsx` — fetches `id, company_name, contact_person, city, industry, lead_type, phone`
+- `components/proposals/proposal-creator.tsx` — fully rebuilt (v2)
+
+**Proposal creator is a 3-step flow:**
+
+**Step 1 — Service Selection:**
+- Services grouped by layer (Foundation / Visibility / Engagement) with colour-coded headers
+- Each service card: checkbox + tagline + expand chevron (shows the problem it solves, deliverables, timeline, ad spend warning)
+- Selected services show setup fee + monthly retainer inputs
+- Proposal meta: start date, validity (3/5/7/14/30 days), personal note to client
+- Sticky right-hand summary panel with totals + commitment badges
+
+**Step 2 — Proposal Preview (consultative document):**
+1. **Branded cover** — gradient dark, headline tailored to lead type A/B/C/D, proposal metadata
+2. **Understanding Your Situation** — 3 left-bordered panels: Where You Are Now, What This Is Costing You, Why Now (personalised per type A/B/C/D via `LEAD_TYPE_COPY`)
+3. **Growth Funnel** — visual tapering funnel with 5 stages (Attract → Capture → Nurture → Convert → Retain), selected services tagged onto relevant stages. Below: 4-phase execution roadmap (Discovery → Strategy → Execution → Optimise & Scale)
+4. **Why FortuneMarq** — 6 differentiators as Typical Agency vs FortuneMarq two-column side-by-side comparison
+5. **Service deep-dives** — per selected service: Why You Need This + Our Approach (numbered steps) + What You Get In Detail (6-feature grid) + Why This Works + Timeline. Content from `SERVICE_DEEP` constant in the component
+6. **Investment table** — dark header, alternating rows, green monthly total, ad spend disclaimer if Google/Meta Ads selected
+7. **How We Get Started** — 5-step onboarding flow
+8. **Dark footer** — contact details
+
+**Step 3 — Done:**
+- WhatsApp message styled as dark green chat bubble
+- Copy button + "Open WhatsApp" deep link (pre-filled message + `wa.me/91[phone]`)
+- "Mark as Sent → Move Stage" updates proposal status to `sent` and lead `outreach_stage` to `proposal_sent`
+
+**Services data source:** `lib/data/services_data.json` — 7 services: WEBSITE, GMB, SEO, GOOGLE_ADS, META_ADS, WHATSAPP_MARKETING, AI_AUTOMATIONS
+
+---
+
+## ALL ROUTES
+
+| Route | Component | Status |
+|---|---|---|
+| `/` | Root redirect | ✅ |
+| `/login` | Auth page | ✅ |
+| `/sales` | TelecallerCockpit (all roles) | ✅ |
+| `/admin` | Admin dashboard | ✅ |
+| `/admin/outreach` | Outreach Kanban board | ✅ |
+| `/admin/meetings` | Meetings page | ✅ (needs SQL migration) |
+| `/admin/proposals` | Proposals list + Awaiting section | ✅ |
+| `/admin/leads/[id]` | Lead profile | ✅ |
+| `/admin/leads/[id]/proposal/new` | Proposal creator | ✅ |
+| `/admin/clients` | Client list | ✅ |
+| `/admin/clients/[id]` | Client profile (6 tabs) | ✅ |
+| `/admin/finance` | Finance dashboard | ✅ |
+| `/admin/team` | Team management | ✅ |
+| `/admin/growth` | Growth hub | ✅ |
+| `/admin/strategy` | Strategy-to-task engine | ✅ |
+| `/tasks` | Task list | ✅ |
+| `/projects` | Project board | ✅ |
+| `/strategist` | Strategist pipeline Kanban | ✅ |
+| `/telecaller/my-stats` | Telecaller stats | ✅ |
+| `/client/dashboard` | Client portal | ✅ |
+
+---
+
+## KEY FILES
+
+| File | What it does |
 |---|---|
-| `components/sales/sales-intelligence-cockpit.tsx` | Main sales cockpit (dialer, tags, filters, scripts) |
-| `components/sales/follow-up-list.tsx` | Follow-up sidebar panel |
-| `components/strategist/strategist-pipeline.tsx` | Strategist Kanban pipeline |
-| `components/strategist/close-deal-modal.tsx` | Close Deal → creates client + deal + projects |
-| `app/strategist/page.tsx` | Strategist dashboard server component |
-| `app/sales/page.tsx` | Server component — fetches leads for cockpit |
-| `app/admin/team/actions.ts` | Team server actions: upsertTeamTargets, createAssignedTask, createSop |
-| `scripts/import_hubli_leads.py` | Bulk Hubli lead importer (deletes + re-imports) |
-| `actions/upload-leads.ts` | Server action for CSV uploads |
-| `types/database.types.ts` | All Supabase type definitions (REGENERATED — all 30+ tables) |
-| `supabase/migrations/` | All SQL migration files |
-| `lib/supabase-server.ts` | Server client WITH cookies — use for all page.tsx files |
-| `lib/supabase.ts` | Browser client — use for client components only |
-| `documentation/ADMIN.md` | Admin dashboard feature spec |
-| `documentation/STRATEGY.md` | Strategist dashboard feature spec |
-| `documentation/PROJECT_MANAGER.md` | PM dashboard feature spec |
-| `documentation/STAFF.md` | Staff dashboard feature spec |
-| `APPLICATION_DOCUMENTATION.md` | Full app documentation v4.1 |
-| `00_MASTER_BUILD_PLAN.md` | Master plan + all phases |
+| `components/sales/telecaller-cockpit.tsx` | Main sales cockpit — dialer, scripts, log outcome, A/B/C/D filter, localLeads, add lead |
+| `app/admin/outreach/outreach-board-client.tsx` | Outreach Kanban — all 13 stages |
+| `app/admin/meetings/meetings-client.tsx` | Meetings client — WhatsApp templates, intel, notes, post-meeting flow |
+| `app/admin/meetings/page.tsx` | Meetings server page |
+| `app/admin/proposals/page.tsx` | Proposals list + Awaiting Proposal section |
+| `components/proposals/proposal-creator.tsx` | Full consultative proposal builder (v2) |
+| `app/admin/leads/[id]/proposal/new/page.tsx` | New proposal server page |
+| `lib/data/services_data.json` | 7 services with full details (deliverables, timeline, etc.) |
+| `lib/supabase-server.ts` | `createServerClientWithCookies()` — use in all server components |
+| `lib/supabase.ts` | `createClient()` — use in all client components |
+| `lib/notifications.ts` | `sendNotification()` helper |
+| `types/database.types.ts` | All Supabase type definitions |
+| `components/ui/app-sidebar.tsx` | Navigation sidebar — includes Meetings nav item |
+| `app/sales/page.tsx` | Sales server page — always renders TelecallerCockpit |
 
 ---
 
-## LEADS TABLE — KEY COLUMNS
-```
-id, company_name, phone, industry (niche), city, status, lead_type
-has_website (bool), website_link, gmb_link
-serp_ranked (bool), serp_source, tags (text[])
-last_contacted_at, last_outcome, next_action_date, attempts, notes
-```
+## SUPABASE TABLES (KEY ONES)
 
-## CSV UPLOAD FORMAT SUPPORTED
 ```
-Business Name | Phone | Has Website (Y/N) | Website Link | Google Maps Link
-SERP_Ranked (Y/N) | SERP_Source | Niche | City
+leads:
+  id, company_name, phone, industry, city, status, lead_type (A/B/C/D)
+  has_website (bool), website_link, gmb_link
+  serp_ranked (bool), serp_source, tags (text[])
+  outreach_stage (text) — SOURCE OF TRUTH for pipeline position
+  last_outcome, last_outreach_at, follow_up_date
+  notes, contact_person
+  meeting_link (TEXT — ADD COLUMN PENDING)
+  meeting_notes (TEXT — ADD COLUMN PENDING)
+
+proposals:
+  id, lead_id, proposal_number, services (jsonb), total_setup, total_monthly
+  status (draft/sent/confirmed/rejected), created_by, created_at, sent_at, start_date
+
+profiles:
+  id, full_name, email, role (admin/telecaller/strategist/pm/staff)
+
+clients:
+  id, business_name, primary_email, ...
+
+activity_events:
+  id, lead_id, user_id, event_type, stage_from, stage_to, notes, created_at
 ```
 
 ---
 
-## LAST SESSION LOG
-See `last_session.md` for the most recent session summary.
+## PENDING TASKS (do these next)
+
+### 🔴 CRITICAL — Run in Supabase SQL Editor (in this order)
+1. `supabase/migrations/20260611000000_harden_rls_policies.sql` — locks the DB (anon had full read/write before)
+2. `supabase/migrations/20260611000001_leads_meeting_columns.sql` — meeting_link / meeting_notes
+3. `supabase/migrations/20260611000002_audit_triggers.sql` — server-side audit trail
+4. `supabase/migrations/20260611000003_hot_column_indexes.sql` — leads/tasks/finance indexes
+
+After #1, smoke-test login + cockpit + outreach board + client portal.
+
+### 🟡 DEPLOY TO VERCEL
+- Push to GitHub first
+- Set these env vars in Vercel dashboard:
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY` (required — cron + public lead capture run on it)
+  - `ANTHROPIC_API_KEY`
+  - `CRON_SECRET` (required — all /api/cron/* routes 503 without it; use the value from .env.local)
+- After deploy: update Supabase auth redirect URLs to include the Vercel domain
+
+### 🟡 WHATSAPP CRM INTEGRATION
+- Needs live HTTPS URL (deploy first)
+- Then set up Meta webhook for incoming WhatsApp messages
+- Goal: log incoming WhatsApp replies as activity events on the lead
+
+### 🟡 AUTOMATED REMINDERS
+- 24h + 15-min WhatsApp reminders for meetings
+- Use scheduled tasks (needs deployed URL for cron)
+
+### 🟢 PAGES TO TEST NEXT
+- Outreach board drag/drop between columns
+- Clients page — health scores, MRR
+- Finance page — invoice generation
+- Team page — assign task, set targets
+- Admin dashboard KPIs (check ₹ figures are real not zero)
+
+---
+
+## LEAD TYPE SYSTEM
+
+| Type | Condition | Script focus |
+|---|---|---|
+| A | `serp_ranked = true` + `has_website = true` | Protect ranking, grow from strong position |
+| B | `serp_ranked = false` + `has_website = true` | Website exists but not ranking — SEO |
+| C | `has_website = false` | No website — build foundation first |
+| D | `serp_ranked = false` + `has_website = false` (low-search niche) | Visibility in low-search market |
+
+`getLeadScriptType(lead)` in telecaller-cockpit.tsx derives the type from these fields.
+
+---
+
+## OUTREACH STAGE → UI LOCATION MAPPING
+
+| outreach_stage | Outreach Board column | Follow-up queue? |
+|---|---|---|
+| touch1_pending | Touch 1 Pending | No |
+| no_answer | No Answer | YES |
+| follow_back | Follow Back | YES |
+| curiosity_sent | Curiosity Sent | No |
+| pdf_sent | PDF Sent | No |
+| follow_up_due | Follow-up Due | YES |
+| meeting_booked | Meeting Booked | No (→ /admin/meetings) |
+| proposal_sent | Proposal Sent | No (→ /admin/proposals) |
+| not_interested | Closed: Not Interested | No |
+| won | Closed: Won | No |
+| lost | Closed: Lost | No |
+| dead | Closed: Dead | No |
+| revival | Closed: Revival | No |
+
+---
+
+## PROPOSAL CREATOR — CONTENT STRUCTURE
+
+The `SERVICE_DEEP` constant in `proposal-creator.tsx` holds deep-dive content for all 7 services:
+- `problem` — why the client needs this service
+- `ourApproach` — step-by-step array of what we do
+- `whyItWorks` — the strategic reason
+- `features` — array of `{ title, detail }` — 6 per service
+
+The `LEAD_TYPE_COPY` constant holds A/B/C/D personalised content:
+- `headline` — proposal cover title
+- `situation` — where the client is now (uses `{company}` placeholder)
+- `consequence` — what it's costing them
+- `urgency` — why now
+
+The `DIFFERENTIATORS` constant holds 6 typical-agency vs FortuneMarq comparisons.
+
+The `FUNNEL_STAGES` constant maps services to funnel stages (Attract/Capture/Nurture/Convert/Retain).
+
+---
+
+## RECENT SESSION SUMMARY (2026-06-07)
+
+Built in this session:
+1. Made `/sales` always show TelecallerCockpit for all roles
+2. Added A/B/C/D filter to telecaller cockpit
+3. Added manual lead creation modal to cockpit
+4. Fixed follow-up count (was showing all leads with a date, now only correct `outreach_stage` values)
+5. Fixed no_answer leads not appearing in follow-up queue
+6. Added full multi-step follow-up scripts per outreach_stage
+7. Added no_answer, follow_back, not_interested stages to outreach board (all 7 outcomes now have a column)
+8. Built /admin/meetings page from scratch — full featured with WhatsApp templates, browser notifications, pre-meeting intel, inline notes, post-meeting flow
+9. Added Meetings to sidebar nav
+10. Added "Awaiting Proposal" section to proposals page
+11. Rebuilt proposal creator (v2) — full consultative document: Situation → Growth Funnel → Why We're Different → Service Deep-Dives → Investment → Next Steps

@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, SlidersHorizontal, ArrowUpDown, Eye, Package, Heart, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Search, SlidersHorizontal, ArrowUpDown, Eye, Package, Heart, Zap, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type { ClientRecord } from "@/app/admin/clients/actions";
+import { updateClientField, deleteClient } from "@/app/admin/clients/actions";
+import { toast } from "@/components/ui/toast";
 import HealthScoreStars from "./HealthScoreStars";
 import ServicePills from "./ServicePills";
 import PackageModal from "@/app/admin/clients/package-modal";
@@ -39,8 +42,37 @@ export default function ClientsTable({
     setActiveModal(null);
   };
 
+  const router = useRouter();
+  const [localStatus, setLocalStatus] = useState<Record<string, string>>({});
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
+
+  const changeStatus = async (c: ClientRecord, status: string) => {
+    const prev = localStatus[c.id] ?? c.status ?? "active";
+    setLocalStatus((m) => ({ ...m, [c.id]: status }));
+    const res = await updateClientField(c.id, "status", status);
+    if (!res.success) {
+      setLocalStatus((m) => ({ ...m, [c.id]: prev }));
+      toast.error("Could not update status", res.error ?? "");
+      return;
+    }
+    toast.success(`${c.business_name} marked ${status}`);
+    router.refresh();
+  };
+
+  const handleDelete = async (c: ClientRecord) => {
+    if (!confirm(`Permanently delete ${c.business_name} and all their package/onboarding data? This can't be undone.\n\nIf they're leaving, mark them Churned instead so finance history stays intact.`)) return;
+    const res = await deleteClient(c.id);
+    if (!res.success) {
+      toast.error("Could not delete client", res.error ?? "");
+      return;
+    }
+    setDeletedIds((s) => new Set(s).add(c.id));
+    toast.success("Client deleted", c.business_name);
+    router.refresh();
+  };
+
   const filtered = useMemo(() => {
-    let result = clients;
+    let result = clients.filter((c) => !deletedIds.has(c.id));
 
     // Search
     if (search.trim()) {
@@ -109,7 +141,7 @@ export default function ClientsTable({
     });
 
     return result;
-  }, [clients, search, statusFilter, packageFilter, healthFilter, sortField, sortDir]);
+  }, [clients, search, statusFilter, packageFilter, healthFilter, sortField, sortDir, deletedIds]);
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
@@ -165,7 +197,7 @@ export default function ClientsTable({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search clients..."
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
           />
         </div>
 
@@ -177,7 +209,7 @@ export default function ClientsTable({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-[#42CA80] focus:outline-none min-h-[36px]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand focus:outline-none min-h-[36px]"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -187,7 +219,7 @@ export default function ClientsTable({
           <select
             value={packageFilter}
             onChange={(e) => setPackageFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-[#42CA80] focus:outline-none min-h-[36px]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand focus:outline-none min-h-[36px]"
           >
             <option value="all">All Packages</option>
             <option value="starter">Starter</option>
@@ -198,7 +230,7 @@ export default function ClientsTable({
           <select
             value={healthFilter}
             onChange={(e) => setHealthFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-[#42CA80] focus:outline-none min-h-[36px]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand focus:outline-none min-h-[36px]"
           >
             <option value="all">Health</option>
             <option value="80">Healthy (80+)</option>
@@ -219,13 +251,13 @@ export default function ClientsTable({
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/70">
               <SortHeader label="Client" field="business_name" current={sortField} dir={sortDir} onToggle={toggleSort} />
-              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Package</th>
-              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 min-w-[180px]">Services</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Package</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 min-w-[180px]">Services</th>
               <SortHeader label="MRR" field="monthly_value" current={sortField} dir={sortDir} onToggle={toggleSort} />
               <SortHeader label="Health" field="health_score" current={sortField} dir={sortDir} onToggle={toggleSort} />
               <SortHeader label="Renewal" field="renewal_date" current={sortField} dir={sortDir} onToggle={toggleSort} />
-              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
-              <th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Actions</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
+              <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
@@ -244,11 +276,11 @@ export default function ClientsTable({
 
                 return (
                   <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/admin/clients/${c.id}`}
-                          className="font-semibold text-slate-900 hover:text-[#42CA80] transition-colors truncate max-w-[150px] inline-block"
+                          className="font-semibold text-slate-900 hover:text-brand-deep transition-colors truncate max-w-[150px] inline-block"
                         >
                           {c.business_name}
                         </Link>
@@ -260,12 +292,12 @@ export default function ClientsTable({
                       </div>
                       <p className="text-[11px] text-slate-400 mt-0.5">{c.city ?? "—"}</p>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <span className={`inline-flex border px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${tierColors[tier]}`}>
                         {tier}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <div className="flex flex-wrap gap-1">
                         {services.length > 0 ? services.map(s => (
                           <span key={s} className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-medium border border-slate-200 truncate max-w-[80px]" title={s}>
@@ -276,29 +308,37 @@ export default function ClientsTable({
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-mono font-bold text-slate-800">
+                    <td className="px-4 py-2.5 font-mono font-bold text-slate-800">
                       ₹{mrr.toLocaleString("en-IN")}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <span className={`inline-flex flex-col items-center justify-center h-[26px] min-w-[26px] rounded-full text-[11px] font-bold ${healthBadge.color}`}>
                         {healthBadge.text}
                       </span>
                     </td>
-                    <td className={`px-4 py-3 text-xs ${renewalClass(c.renewal_date)}`}>
+                    <td className={`px-4 py-2.5 text-xs ${renewalClass(c.renewal_date)}`}>
                       {c.renewal_date
                         ? new Date(c.renewal_date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
                         : "—"}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center rounded flex-col px-2 py-1 text-[9px] font-bold uppercase tracking-widest border ${statusBadge(c.status || "active")}`}>
-                        {c.status}
-                      </span>
+                    <td className="px-4 py-2.5">
+                      <select
+                        value={localStatus[c.id] ?? c.status ?? "active"}
+                        onChange={(e) => changeStatus(c, e.target.value)}
+                        title="Change status"
+                        className={`rounded border px-1.5 py-1 text-[9px] font-bold uppercase tracking-widest cursor-pointer focus:outline-none ${statusBadge(localStatus[c.id] ?? c.status ?? "active")}`}
+                      >
+                        <option value="active">Active</option>
+                        <option value="onboarding">Onboarding</option>
+                        <option value="paused">Paused</option>
+                        <option value="churned">Churned</option>
+                      </select>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => openModal(c, "package")}
-                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-[#42CA80] hover:text-[#42CA80] transition-colors"
+                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-brand-deep hover:text-brand-deep transition-colors"
                           title="Manage Package"
                         >
                           <Package className="h-3.5 w-3.5" />
@@ -317,6 +357,13 @@ export default function ClientsTable({
                         >
                           <Eye className="h-3.5 w-3.5" />
                         </Link>
+                        <button
+                          onClick={() => handleDelete(c)}
+                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-white text-slate-300 hover:border-red-300 hover:text-red-500 transition-colors"
+                          title="Delete Client"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -357,17 +404,17 @@ function SortHeader({
 }) {
   const isActive = current === field;
   return (
-    <th className="px-4 py-3 text-left">
+    <th className="px-4 py-2.5 text-left">
       <button
         onClick={() => onToggle(field)}
         className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
       >
         {label}
         <ArrowUpDown
-          className={`h-3 w-3 ${isActive ? "text-[#42CA80]" : "opacity-30"}`}
+          className={`h-3 w-3 ${isActive ? "text-brand-deep" : "opacity-30"}`}
         />
         {isActive && (
-          <span className="text-[8px] text-[#42CA80]">
+          <span className="text-[8px] text-brand-deep">
             {dir === "asc" ? "↑" : "↓"}
           </span>
         )}

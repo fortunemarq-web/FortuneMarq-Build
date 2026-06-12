@@ -1,11 +1,11 @@
-import { createServerClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
 
 /**
  * Calculates and updates the daily summary for a user given a specific day.
  * Should be called after any Clock In, Clock Out, Break Start, or Break End.
  */
 export async function updateDailySummary(userId: string, date: string) {
-    const supabase = createServerClient() as any;
+    const supabase = createAdminClient() as any;
 
     // 1. Fetch all sessions for this user on this day
     const { data: sessions } = await supabase

@@ -11,10 +11,10 @@ export const metadata = {
 };
 
 const GMB_TYPES = [
-  { id: "update", label: "What's New", icon: "📢" },
-  { id: "offer", label: "Offer", icon: "🏷️" },
-  { id: "event", label: "Event", icon: "📅" },
-  { id: "product", label: "Product", icon: "📦" },
+  { id: "update", label: "What's New" },
+  { id: "offer", label: "Offer" },
+  { id: "event", label: "Event" },
+  { id: "product", label: "Product" },
 ];
 
 export default async function GMBManagerPage() {
@@ -46,7 +46,7 @@ export default async function GMBManagerPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl space-y-8">
         <div>
           <Link href="/admin/growth" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-4">

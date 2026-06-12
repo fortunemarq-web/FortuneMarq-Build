@@ -15,25 +15,17 @@ import {
   Filter,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { toast } from "@/components/ui/toast";
+import { logAudit } from "@/lib/audit";
+import { PIPELINE_STAGES, STAGES_BY_GROUP, leadStageUpdate } from "@/lib/pipeline";
 
-// ─── Stage Config ─────────────────────────────────────────────
-const ACTIVE_STAGES = [
-  { key: "touch1_pending",  label: "Touch 1 Pending",  color: "bg-slate-100 border-slate-300",   badge: "bg-slate-200 text-slate-700" },
-  { key: "curiosity_sent",  label: "Curiosity Sent",   color: "bg-blue-50 border-blue-200",      badge: "bg-blue-100 text-blue-700" },
-  { key: "pdf_sent",        label: "PDF Sent",         color: "bg-indigo-50 border-indigo-200",  badge: "bg-indigo-100 text-indigo-700" },
-  { key: "follow_up_due",   label: "Follow-up Due",    color: "bg-amber-50 border-amber-200",   badge: "bg-amber-100 text-amber-700" },
-  { key: "meeting_booked",  label: "Meeting Booked",   color: "bg-green-50 border-green-200",   badge: "bg-green-100 text-green-700" },
-  { key: "proposal_sent",   label: "Proposal Sent",    color: "bg-purple-50 border-purple-200", badge: "bg-purple-100 text-purple-700" },
-] as const;
-
-const CLOSED_STAGES = [
-  { key: "won",     label: "Won",     badge: "bg-emerald-100 text-emerald-700" },
-  { key: "lost",    label: "Lost",    badge: "bg-red-100 text-red-700" },
-  { key: "dead",    label: "Dead",    badge: "bg-slate-100 text-slate-500" },
-  { key: "revival", label: "Revival", badge: "bg-orange-100 text-orange-700" },
-] as const;
-
-const ALL_STAGES = [...ACTIVE_STAGES, ...CLOSED_STAGES];
+// ─── Stage Config (single source of truth: lib/pipeline.ts) ──
+// Parked stages (unreachable / gatekeeper wall / language barrier /
+// revival) render in the main drag-drop row so leads never vanish
+// from the board.
+const ACTIVE_STAGES = [...STAGES_BY_GROUP.active, ...STAGES_BY_GROUP.parked];
+const CLOSED_STAGES = STAGES_BY_GROUP.closed;
+const ALL_STAGES = PIPELINE_STAGES;
 
 const LEAD_TYPE_COLORS: Record<string, string> = {
   A: "bg-green-100 text-green-700 border border-green-300",
@@ -52,8 +44,9 @@ interface Lead {
   outreach_stage: string | null;
   follow_up_date: string | null;
   last_outreach_at: string | null;
-  assigned_to: string | null;
-  updated_at: string;
+  assigned_sales_exec: string | null;
+  last_activity_at: string | null;
+  created_at: string;
   phone: string | null;
   status: string | null;
 }
@@ -138,7 +131,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
     if (filterNiche && l.industry !== filterNiche) return false;
     if (filterCity && l.city !== filterCity) return false;
     if (filterType && l.lead_type?.toUpperCase() !== filterType) return false;
-    if (filterAssigned && l.assigned_to !== filterAssigned) return false;
+    if (filterAssigned && l.assigned_sales_exec !== filterAssigned) return false;
     return true;
   });
 
@@ -147,8 +140,17 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
   }
 
   async function moveLeadToStage(leadId: string, newStage: string) {
+    const lead = leads.find(l => l.id === leadId);
+    const oldStage = lead?.outreach_stage || "touch1_pending";
+    // Optimistic move; rolled back below if the write fails
     setLeads(prev => prev.map(l => l.id === leadId ? { ...l, outreach_stage: newStage } : l));
-    await supabase.from("leads").update({ outreach_stage: newStage } as any).eq("id", leadId);
+    const { error } = await supabase.from("leads").update(leadStageUpdate(newStage) as any).eq("id", leadId);
+    if (error) {
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, outreach_stage: oldStage } : l));
+      toast.error("Could not move lead", error.message);
+      return;
+    }
+    logAudit({ action: "stage_change", resourceType: "lead", resourceId: leadId, resourceLabel: lead?.company_name, oldValue: { stage: oldStage }, newValue: { stage: newStage }, summary: `Stage: ${oldStage.replace(/_/g, " ")} → ${newStage.replace(/_/g, " ")}` });
   }
 
   function handleDragStart(leadId: string) {
@@ -168,7 +170,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
   const totalClosed = CLOSED_STAGES.reduce((sum, s) => sum + getLeadsForStage(s.key).length, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-full bg-slate-50">
       {/* Header */}
       <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
         <div className="px-4 py-4">
@@ -190,7 +192,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
             <div className="relative flex-1 min-w-[160px] max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
               <input
-                className="w-full pl-8 pr-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                className="w-full pl-8 pr-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
                 placeholder="Search business name…"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
@@ -233,7 +235,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                 onDragLeave={() => setIsDraggingOver(null)}
                 onDrop={e => handleDrop(e, stage.key)}
                 className={`w-[240px] shrink-0 rounded-2xl border transition-all ${stage.color} ${
-                  isOver ? "ring-2 ring-[#42CA80] ring-offset-1" : ""
+                  isOver ? "ring-2 ring-brand ring-offset-1" : ""
                 }`}
               >
                 {/* Column header */}
@@ -247,17 +249,18 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                 </div>
 
                 {/* Cards */}
-                <div className="p-2 space-y-2 max-h-[calc(100vh-230px)] overflow-y-auto">
+                {/* dvh + top-bar (48px) aware; avoids the old 100vh overshoot */}
+                <div className="p-2 space-y-2 max-h-[calc(100dvh-280px)] overflow-y-auto">
                   {stageLeads.length === 0 && (
                     <div className="flex items-center justify-center h-16 text-[10px] text-slate-300 font-medium">
                       Empty
                     </div>
                   )}
                   {stageLeads.map(lead => {
-                    const daysInStage = daysSince(lead.updated_at);
+                    const daysInStage = daysSince(lead.last_activity_at ?? lead.created_at);
                     const isStalled = daysInStage >= 7;
                     const typeKey = (lead.lead_type || "").toUpperCase();
-                    const assignee = profiles.find(p => p.id === lead.assigned_to);
+                    const assignee = profiles.find(p => p.id === lead.assigned_sales_exec);
 
                     return (
                       <div
@@ -275,13 +278,13 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                         {isStalled && (
                           <div className="flex items-center gap-1 mb-1.5">
                             <span className="text-[9px] font-bold uppercase text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-full border border-orange-200">
-                              ⚠ Stalled {daysInStage}d
+                              Stalled {daysInStage}d
                             </span>
                           </div>
                         )}
 
                         {/* Business name */}
-                        <Link href={`/admin/leads/${lead.id}`} className="block hover:text-[#42CA80] transition-colors">
+                        <Link href={`/admin/leads/${lead.id}`} className="block hover:text-brand-deep transition-colors">
                           <p className="text-xs font-bold text-slate-900 leading-snug line-clamp-1">{lead.company_name}</p>
                         </Link>
 

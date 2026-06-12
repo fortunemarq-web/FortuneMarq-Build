@@ -1,19 +1,36 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { X, Calendar as CalendarIcon, Loader2, Save, BarChart3, Image as ImageIcon } from "lucide-react";
-import { upsertContentPiece, ContentPiece } from "@/app/admin/growth/actions";
+import { X, Calendar as CalendarIcon, Loader2, Save, BarChart3, Image as ImageIcon, Trash2 } from "lucide-react";
+import { upsertContentPiece, deleteContentPiece, ContentPiece } from "@/app/admin/growth/actions";
+import { toast } from "@/components/ui/toast";
 
 interface ContentPostModalProps {
   post: Partial<ContentPiece>;
   channel: string;
   onClose: () => void;
   onSave: (savedPost: ContentPiece) => void;
-  availableTypes: { id: string; label: string; icon: string }[];
+  onDelete?: (id: string) => void;
+  availableTypes: { id: string; label: string; icon?: string }[];
 }
 
-export default function ContentPostModal({ post, channel, onClose, onSave, availableTypes }: ContentPostModalProps) {
+export default function ContentPostModal({ post, channel, onClose, onSave, onDelete, availableTypes }: ContentPostModalProps) {
   const [isPending, startTransition] = useTransition();
+
+  const handleDelete = () => {
+    if (!post.id) return;
+    if (!confirm(`Delete "${post.title || "this post"}"? This can't be undone.`)) return;
+    startTransition(async () => {
+      const result = await deleteContentPiece(post.id!, channel);
+      if (result.success) {
+        toast.success("Post deleted");
+        onDelete?.(post.id!);
+        onClose();
+      } else {
+        toast.error("Could not delete post", result.error ?? "");
+      }
+    });
+  };
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +70,7 @@ export default function ContentPostModal({ post, channel, onClose, onSave, avail
         onSave(result.data as ContentPiece);
         onClose();
       } else {
-        alert("Failed to save post");
+        toast.error("Failed to save post", result.error ?? "");
       }
     });
   };
@@ -77,32 +94,32 @@ export default function ContentPostModal({ post, channel, onClose, onSave, avail
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-xs font-semibold text-slate-700 mb-1">Title / Topic <span className="text-red-500">*</span></label>
-              <input required name="title" defaultValue={post.title} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none" placeholder="e.g. 5 SEO Tips for Local Businesses" />
+              <input required name="title" defaultValue={post.title} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none" placeholder="e.g. 5 SEO Tips for Local Businesses" />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">Content Type</label>
-              <select name="content_type" defaultValue={post.content_type || availableTypes[0]?.id} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none min-h-[38px] bg-white">
+              <select name="content_type" defaultValue={post.content_type || availableTypes[0]?.id} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none min-h-[38px] bg-white">
                 {availableTypes.map(t => (
-                  <option key={t.id} value={t.id}>{t.icon} {t.label}</option>
+                  <option key={t.id} value={t.id}>{t.label}</option>
                 ))}
               </select>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
-              <select name="status" defaultValue={post.status || "idea"} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none min-h-[38px] bg-white">
-                <option value="idea">Idea 💡</option>
-                <option value="drafted">Drafted 📝</option>
-                <option value="ready">Ready ✅</option>
-                <option value="published">Published 🚀</option>
+              <select name="status" defaultValue={post.status || "idea"} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none min-h-[38px] bg-white">
+                <option value="idea">Idea</option>
+                <option value="drafted">Drafted</option>
+                <option value="ready">Ready</option>
+                <option value="published">Published</option>
               </select>
             </div>
             
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">Scheduled Date</label>
               <div className="relative">
-                <input type="date" name="scheduled_date" defaultValue={post.scheduled_date ? post.scheduled_date.split("T")[0] : ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 pl-9 text-sm focus:border-[#42CA80] focus:outline-none" />
+                <input type="date" name="scheduled_date" defaultValue={post.scheduled_date ? post.scheduled_date.split("T")[0] : ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 pl-9 text-sm focus:border-brand focus:outline-none" />
                 <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
               </div>
             </div>
@@ -110,7 +127,7 @@ export default function ContentPostModal({ post, channel, onClose, onSave, avail
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Caption Draft / Body</label>
-            <textarea name="caption_draft" rows={4} defaultValue={post.caption_draft || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none resize-y" placeholder="Write your post caption here..." />
+            <textarea name="caption_draft" rows={4} defaultValue={post.caption_draft || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none resize-y" placeholder="Write your post caption here..." />
           </div>
 
           {channel === 'gmb' && (
@@ -118,13 +135,13 @@ export default function ContentPostModal({ post, channel, onClose, onSave, avail
               <div className="col-span-2">
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Image Prompt (AI Gen)</label>
                 <div className="relative">
-                  <input name="image_prompt" defaultValue={post.image_prompt || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 pl-9 text-sm focus:border-[#42CA80] focus:outline-none" placeholder="Describe the image you want for this post..." />
+                  <input name="image_prompt" defaultValue={post.image_prompt || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 pl-9 text-sm focus:border-brand focus:outline-none" placeholder="Describe the image you want for this post..." />
                   <ImageIcon className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">CTA Type</label>
-                <select name="cta_type" defaultValue={post.cta_type || "Learn More"} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none bg-white">
+                <select name="cta_type" defaultValue={post.cta_type || "Learn More"} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none bg-white">
                   <option value="Book">Book</option>
                   <option value="Call">Call</option>
                   <option value="Learn More">Learn More</option>
@@ -135,7 +152,7 @@ export default function ContentPostModal({ post, channel, onClose, onSave, avail
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">CTA URL</label>
-                <input name="cta_url" defaultValue={post.cta_url || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none" placeholder="https://..." />
+                <input name="cta_url" defaultValue={post.cta_url || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none" placeholder="https://..." />
               </div>
             </div>
           )}
@@ -165,10 +182,21 @@ export default function ContentPostModal({ post, channel, onClose, onSave, avail
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Internal Notes</label>
-            <textarea name="notes" rows={2} defaultValue={post.notes || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#42CA80] focus:outline-none resize-y" placeholder="Hashtags to use, references..." />
+            <textarea name="notes" rows={2} defaultValue={post.notes || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none resize-y" placeholder="Hashtags to use, references..." />
           </div>
 
           <div className="flex gap-3 pt-4 border-t border-slate-100">
+            {post.id && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isPending}
+                title="Delete post"
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:opacity-50 transition-colors"
+              >
+                <Trash2 className="h-4 w-4" /> Delete
+              </button>
+            )}
             <button
               type="submit"
               disabled={isPending}

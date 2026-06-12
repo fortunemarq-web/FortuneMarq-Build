@@ -3,9 +3,21 @@
 import { useState, useTransition } from "react";
 import {
   CheckCircle, Clock, AlertTriangle, XCircle, Box,
-  ChevronDown, ChevronUp, Upload
+  ChevronDown, ChevronUp, Upload, Loader2, Wand2,
+  PlayCircle, Ban
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { generateClientOnboarding, SERVICE_TASKS, SERVICE_ASSETS } from "@/lib/onboarding/generateClientOnboarding";
+
+const ALL_SERVICES = [
+  { id: "WEBSITE", label: "Website Building" },
+  { id: "GMB", label: "GMB Optimization" },
+  { id: "SEO", label: "SEO" },
+  { id: "GOOGLE_ADS", label: "Google Ads" },
+  { id: "META_ADS", label: "Meta Ads" },
+  { id: "WHATSAPP_MARKETING", label: "WhatsApp Marketing" },
+  { id: "AI_AUTOMATIONS", label: "AI Automations" },
+];
 
 // ─── Types ────────────────────────────────────────────────────
 interface OnboardingTask {
@@ -67,6 +79,9 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   const [assets, setAssets] = useState<AssetRecord[]>(initialAssets);
   const [isPending, startTransition] = useTransition();
   const [collapsedServices, setCollapsedServices] = useState<Set<string>>(new Set());
+  const [generating, setGenerating] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
+  const [showGeneratePanel, setShowGeneratePanel] = useState(false);
   const supabase = createClient();
 
   // Group by service
@@ -77,12 +92,47 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   const missingRequiredAssets = assets.filter(a => a.required && a.status !== "STORED").length;
   const isComplete = totalTasks > 0 && doneTasks === totalTasks && missingRequiredAssets === 0;
 
-  async function markTaskDone(taskId: string) {
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "DONE", completed_at: new Date().toISOString() } : t));
-    await supabase.from("client_onboarding_tasks" as any).update({
-      status: "DONE",
-      completed_at: new Date().toISOString(),
+  const TASK_STATUS_CYCLE: Record<OnboardingTask["status"], OnboardingTask["status"]> = {
+    PENDING: "IN_PROGRESS",
+    IN_PROGRESS: "DONE",
+    DONE: "PENDING",
+    BLOCKED: "PENDING",
+  };
+
+  async function cycleTaskStatus(taskId: string, current: OnboardingTask["status"]) {
+    const next = TASK_STATUS_CYCLE[current];
+    const now = new Date().toISOString();
+    setTasks(prev => prev.map(t =>
+      t.id === taskId ? { ...t, status: next, completed_at: next === "DONE" ? now : null } : t
+    ));
+    await (supabase as any).from("client_onboarding_tasks").update({
+      status: next,
+      completed_at: next === "DONE" ? now : null,
     }).eq("id", taskId);
+  }
+
+  async function markTaskBlocked(taskId: string) {
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "BLOCKED" } : t));
+    await (supabase as any).from("client_onboarding_tasks").update({ status: "BLOCKED" }).eq("id", taskId);
+  }
+
+  async function handleGenerateOnboarding() {
+    if (selectedServices.size === 0) return;
+    setGenerating(true);
+    try {
+      await generateClientOnboarding(supabase, clientId, Array.from(selectedServices));
+      // Refetch tasks + assets
+      const [{ data: newTasks }, { data: newAssets }] = await Promise.all([
+        (supabase as any).from("client_onboarding_tasks").select("*").eq("client_id", clientId).order("service_id"),
+        (supabase as any).from("client_asset_vault").select("*").eq("client_id", clientId).order("category"),
+      ]);
+      setTasks(newTasks ?? []);
+      setAssets(newAssets ?? []);
+      setShowGeneratePanel(false);
+      setSelectedServices(new Set());
+    } finally {
+      setGenerating(false);
+    }
   }
 
   async function advanceAsset(assetId: string, currentStatus: AssetRecord["status"]) {
@@ -117,10 +167,45 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
 
   if (tasks.length === 0 && assets.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-        <Box className="h-10 w-10 mb-3 opacity-30" />
-        <p className="text-sm font-medium">No onboarding tasks generated yet.</p>
-        <p className="text-xs mt-1">Create an onboarding record when the agreement is confirmed.</p>
+      <div className="space-y-4">
+        <div className="flex flex-col items-center justify-center py-12 text-slate-400 bg-white border border-slate-200 rounded-2xl">
+          <Box className="h-10 w-10 mb-3 opacity-30" />
+          <p className="text-sm font-semibold text-slate-600">No onboarding tasks yet</p>
+          <p className="text-xs mt-1 mb-6 text-slate-400">Select services to generate the onboarding checklist</p>
+
+          {isAdmin && (
+            <div className="w-full max-w-sm px-6">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Select services</p>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {ALL_SERVICES.map(svc => (
+                  <button
+                    key={svc.id}
+                    onClick={() => setSelectedServices(prev => {
+                      const next = new Set(prev);
+                      next.has(svc.id) ? next.delete(svc.id) : next.add(svc.id);
+                      return next;
+                    })}
+                    className={`text-xs font-semibold px-3 py-2 rounded-xl border-2 transition-all text-left ${
+                      selectedServices.has(svc.id)
+                        ? "border-[#42CA80] bg-emerald-50 text-emerald-800"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                    }`}
+                  >
+                    {svc.label}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleGenerateOnboarding}
+                disabled={selectedServices.size === 0 || generating}
+                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-sm font-bold py-3 rounded-xl transition-colors"
+              >
+                {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                Generate Onboarding Tasks
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -211,14 +296,37 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                               </div>
                               {task.notes && <p className="text-[10px] text-slate-400 italic mt-0.5">{task.notes}</p>}
                             </div>
-                            {task.status !== "DONE" && isAdmin && (
-                              <button
-                                onClick={() => markTaskDone(task.id)}
-                                disabled={isPending}
-                                className="shrink-0 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg transition-colors"
-                              >
-                                Mark Done
-                              </button>
+                            {isAdmin && (
+                              <div className="flex items-center gap-1 shrink-0">
+                                <button
+                                  onClick={() => cycleTaskStatus(task.id, task.status)}
+                                  title={
+                                    task.status === "PENDING" ? "Start" :
+                                    task.status === "IN_PROGRESS" ? "Mark Done" :
+                                    "Reset to Pending"
+                                  }
+                                  className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${
+                                    task.status === "DONE"
+                                      ? "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100"
+                                      : task.status === "IN_PROGRESS"
+                                      ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+                                      : "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+                                  }`}
+                                >
+                                  {task.status === "PENDING" ? "▶ Start" :
+                                   task.status === "IN_PROGRESS" ? "✓ Done" :
+                                   task.status === "DONE" ? "↺ Reset" : "↺ Unblock"}
+                                </button>
+                                {task.status !== "DONE" && task.status !== "BLOCKED" && (
+                                  <button
+                                    onClick={() => markTaskBlocked(task.id)}
+                                    title="Mark Blocked"
+                                    className="text-xs font-semibold px-2 py-1.5 rounded-lg border bg-red-50 border-red-200 text-red-600 hover:bg-red-100 transition-colors"
+                                  >
+                                    ✕
+                                  </button>
+                                )}
+                              </div>
                             )}
                           </div>
                         );

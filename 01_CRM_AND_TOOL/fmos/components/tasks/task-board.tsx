@@ -8,6 +8,7 @@ import CreateTaskModal from "./create-task-modal";
 import TaskModalContent from "@/components/projects/task-modal-content";
 import { createClient } from "@/lib/supabase";
 import { sendNotification } from "@/lib/notifications";
+import { toast } from "@/components/ui/toast";
 import clsx from "clsx";
 
 interface Task {
@@ -29,6 +30,7 @@ interface Task {
 interface TaskBoardProps {
   initialTasks: Task[];
   projects: any[]; // Using any[] for simplicity, or reusing the type from modal
+  currentUserId?: string | null;
 }
 
 type TabType = "open" | "my_tasks" | "completed";
@@ -56,10 +58,12 @@ const statusColors: Record<string, string> = {
   completed: "bg-blue-500",
 };
 
-export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
+export default function TaskBoard({ initialTasks, projects, currentUserId }: TaskBoardProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [activeTab, setActiveTab] = useState<TabType>("open");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [quickAddTitle, setQuickAddTitle] = useState("");
+  const [quickAddSaving, setQuickAddSaving] = useState(false);
 
   // Edit Modal State
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -129,12 +133,37 @@ export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
       setTasks(tasks.map(t => t.id === editingTask.id ? { ...t, ...updates } : t));
       setShowEditModal(false);
       router.refresh();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("Failed to save changes");
+      toast.error("Failed to save changes", e?.message ?? "");
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // ClickUp-style quick-add: type a title, press Enter, task exists.
+  const handleQuickAdd = async () => {
+    const title = quickAddTitle.trim();
+    if (!title || quickAddSaving) return;
+    setQuickAddSaving(true);
+    const supabase = createClient();
+    const { data, error } = await (supabase.from("tasks") as any)
+      .insert({
+        title,
+        status: "pending",
+        assigned_to: currentUserId ?? null,
+        created_at: new Date().toISOString(),
+      })
+      .select("id, title, status, due_date, assigned_to, project_id, section_tag, priority")
+      .single();
+    setQuickAddSaving(false);
+    if (error || !data) {
+      toast.error("Could not add task", error?.message ?? "No row returned");
+      return;
+    }
+    setTasks(prev => [data as Task, ...prev]);
+    setQuickAddTitle("");
+    toast.success("Task added", title);
   };
 
   // Filter tasks based on active tab
@@ -144,8 +173,8 @@ export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
     } else if (activeTab === "completed") {
       return task.status === "completed";
     } else {
-      // "my_tasks" - for now show all open tasks (would filter by assigned_to in production)
-      return task.status !== "completed";
+      // "my_tasks" — open tasks assigned to the signed-in user
+      return task.status !== "completed" && !!currentUserId && task.assigned_to === currentUserId;
     }
   });
 
@@ -167,10 +196,10 @@ export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
   return (
     <div>
       {/* Stats Bar */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 " />
+            <div className="h-2 w-2 rounded-full bg-brand" />
             <span className="text-sm text-slate-500">
               <span className="font-semibold text-slate-900">{totalOpen}</span> open tasks
             </span>
@@ -185,11 +214,26 @@ export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 rounded-lg bg-[#42CA80] px-3 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#3ab872] active:scale-[0.98]"
+          className="flex items-center gap-2 rounded-lg bg-brand-deep px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-hover active:scale-[0.98]"
         >
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">Add Task</span>
         </button>
+      </div>
+
+      {/* Quick-add row */}
+      <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-1.5 focus-within:border-brand focus-within:border-solid transition-colors">
+        <Plus className="h-4 w-4 text-slate-300 shrink-0" />
+        <input
+          type="text"
+          value={quickAddTitle}
+          onChange={(e) => setQuickAddTitle(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") handleQuickAdd(); }}
+          placeholder="Quick add a task — type and press Enter"
+          disabled={quickAddSaving}
+          className="flex-1 bg-transparent py-1 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none disabled:opacity-50"
+        />
+        {quickAddSaving && <span className="text-[11px] text-slate-400">Saving…</span>}
       </div>
 
       {showCreateModal && (
@@ -248,15 +292,15 @@ export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
       {activeTab === "completed" ? (
         <div className="space-y-2">
           {completedTasks.length === 0 ? (
-            <div className="rounded-lg border border-slate-200 bg-slate-200/50 p-8 text-center">
-              <CheckCircle2 className="mx-auto h-8 w-8 text-[#3a3a3a]" />
+            <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
+              <CheckCircle2 className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-2 text-sm text-slate-500">No completed tasks yet</p>
             </div>
           ) : (
             completedTasks.map((task) => (
               <div
                 key={task.id}
-                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-200/30 px-4 py-3 opacity-60"
+                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2.5 opacity-60"
               >
                 <CheckCircle2 className="h-5 w-5 text-[#42CA80]" />
                 <div className="min-w-0 flex-1">
@@ -309,8 +353,8 @@ export default function TaskBoard({ initialTasks, projects }: TaskBoardProps) {
           })}
 
           {filteredTasks.length === 0 && (
-            <div className="rounded-lg border border-slate-200 bg-slate-200/50 p-8 text-center">
-              <ListTodo className="mx-auto h-8 w-8 text-[#3a3a3a]" />
+            <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
+              <ListTodo className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-2 text-sm text-slate-500">No tasks found</p>
             </div>
           )}

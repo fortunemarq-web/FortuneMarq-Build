@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, CheckCircle2, XCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { leadStageUpdate } from "@/lib/pipeline";
 
 interface CallOutcomeModalProps {
   leadId: string;
@@ -22,7 +23,8 @@ type OutcomeType =
 interface OutcomeConfig {
   type: OutcomeType;
   label: string;
-  status: "calling" | "contacted" | "disqualified" | "qualified";
+  /** outreach_stage to move the lead to — the single source of truth */
+  stage: string;
   color: string;
   needsDateTime: boolean;
 }
@@ -31,36 +33,36 @@ const outcomes: OutcomeConfig[] = [
   {
     type: "no_answer",
     label: "No Answer",
-    status: "calling",
+    stage: "no_answer",
     color: "bg-gray-600 hover:bg-gray-700",
     needsDateTime: false,
   },
   {
     type: "callback_scheduled",
     label: "Callback / Interested",
-    status: "contacted",
+    stage: "follow_back",
     color: "bg-blue-600 hover:bg-blue-700",
     needsDateTime: true,
   },
   {
     type: "not_interested",
     label: "Not Interested",
-    status: "disqualified",
+    stage: "not_interested",
     color: "bg-red-600 hover:bg-red-700",
     needsDateTime: false,
   },
   {
     type: "wrong_number",
     label: "Wrong Number",
-    status: "disqualified",
+    stage: "dead",
     color: "bg-red-600 hover:bg-red-700",
     needsDateTime: false,
   },
   {
     type: "qualified_pass_to_strategist",
     label: "Qualified!",
-    status: "qualified",
-    color: "bg-[#42CA80] hover:bg-[#42CA80]/90",
+    stage: "meeting_booked",
+    color: "bg-brand-deep hover:bg-brand-hover",
     needsDateTime: false,
   },
 ];
@@ -123,12 +125,10 @@ export default function CallOutcomeModal({
         nextActionDate = date.toISOString().split("T")[0]; // YYYY-MM-DD format
       }
 
-      // Update the lead
+      // Update the lead — stage writes ONLY via lib/pipeline.ts helpers
+      // (keeps outreach_stage + legacy status + last_activity_at in lockstep)
       const leadUpdateQuery = (supabase.from("leads") as any)
-        .update({
-          status: outcome.status,
-          next_action_date: nextActionDate,
-        })
+        .update(leadStageUpdate(outcome.stage, { next_action_date: nextActionDate }))
         .eq("id", leadId);
       const { error: leadError } = await leadUpdateQuery;
 

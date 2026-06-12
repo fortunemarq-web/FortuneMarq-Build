@@ -123,66 +123,50 @@ export default function LoginPage() {
   if (isCheckingAuth) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-[#42CA80]" />
-          <p className="text-sm text-slate-600">Loading...</p>
-        </div>
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
       </div>
     );
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 px-4">
-      {/* Background Effects */}
-      <div className="pointer-events-none absolute inset-0">
-        {/* Gradient orbs */}
-        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /20 blur-[120px]" />
-        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 blur-[120px]" />
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4">
+      <div className="w-full max-w-sm">
+        {/* Logo & Branding */}
+        <div className="mb-8 flex flex-col items-center text-center">
+          <FortuneMarqLogo size="lg" showText={false} />
+          <h1 className="mt-5 text-xl font-semibold tracking-tight text-slate-900">
+            Sign in to FortuneMarq
+          </h1>
+          <p className="mt-1.5 text-sm text-slate-500">
+            Enter your work email to access your workspace
+          </p>
+        </div>
 
-      {/* Login Card */}
-      <div className="relative w-full max-w-md">
-        {/* Card glow effect */}
-        <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-[#42CA80]/20 to-transparent blur-xl" />
-
-        <div className="relative rounded-2xl border border-slate-200 bg-slate-50/90 p-8 shadow-2xl backdrop-blur-sm sm:p-10">
-          {/* Logo & Branding */}
-          <div className="mb-8 flex flex-col items-center text-center">
-            <FortuneMarqLogo size="lg" showText={false} />
-            <p className="mt-4 text-sm text-slate-600">
-              Sign in to your workspace
-            </p>
-          </div>
-
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3">
-              <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-400" />
-              <p className="text-sm text-red-400">{error}</p>
+            <div
+              role="alert"
+              className="mb-5 flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Input */}
             <div>
               <label
                 htmlFor="email"
-                className="mb-2 block text-sm font-medium text-slate-500"
+                className="mb-1.5 block text-sm font-medium text-slate-700"
               >
-                Email Address
+                Email address
               </label>
               <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Mail className="h-5 w-5 text-slate-600" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Mail className="h-4 w-4 text-slate-400" />
                 </div>
                 <input
                   id="email"
@@ -192,7 +176,7 @@ export default function LoginPage() {
                   placeholder="you@company.com"
                   required
                   autoComplete="email"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-slate-900 placeholder-[#444] transition-all focus:border-[#42CA80]/50 focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20"
+                  className="h-11 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-shadow focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-ring"
                 />
               </div>
             </div>
@@ -201,23 +185,23 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-2 block text-sm font-medium text-slate-500"
+                className="mb-1.5 block text-sm font-medium text-slate-700"
               >
                 Password
               </label>
               <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Lock className="h-5 w-5 text-slate-600" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Lock className="h-4 w-4 text-slate-400" />
                 </div>
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   required
                   autoComplete="current-password"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-slate-900 placeholder-[#444] transition-all focus:border-[#42CA80]/50 focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20"
+                  className="h-11 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-shadow focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-ring"
                 />
               </div>
             </div>
@@ -227,37 +211,29 @@ export default function LoginPage() {
               type="submit"
               disabled={isLoading}
               className={clsx(
-                "relative mt-2 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-all",
+                "mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold text-white transition-colors",
                 isLoading
-                  ? "cursor-not-allowed bg-[#42CA80]/50 text-slate-900/70"
-                  : "bg-[#42CA80] text-black hover:bg-[#3ab872] hover:shadow-lg hover:shadow-[#42CA80]/25 active:scale-[0.98]"
+                  ? "cursor-not-allowed bg-brand-deep/60"
+                  : "bg-brand-deep hover:bg-brand-active active:bg-brand-deep"
               )}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Signing in...
+                  Signing in…
                 </>
               ) : (
-                "Sign In"
+                "Sign in"
               )}
             </button>
           </form>
-
-          {/* Footer */}
-          <div className="mt-8 border-t border-slate-200 pt-6 text-center">
-            <p className="text-xs text-slate-600">
-              Protected by enterprise-grade security
-            </p>
-          </div>
         </div>
 
         {/* Bottom text */}
-        <p className="mt-6 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} FortuneMarq. All rights reserved.
+        <p className="mt-6 text-center text-xs text-slate-400">
+          © {new Date().getFullYear()} FortuneMarq · Internal workspace
         </p>
       </div>
     </div>
   );
 }
-

@@ -5,8 +5,8 @@ import {
   Target,
   ArrowRight,
   Phone,
+  PhoneCall,
   AlertTriangle,
-  Coffee,
   CheckSquare,
   CalendarDays,
   FileText,
@@ -18,11 +18,13 @@ import {
   Clock,
   ClipboardList,
   UserCheck,
+  History,
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import KpiBar from "@/components/admin/dashboard/KpiBar";
 import RevenueForecastWidget from "@/components/admin/revenue-forecast-widget";
+import { PIPELINE_STAGES } from "@/lib/pipeline";
 
 // Phase B1: Admin Morning Dashboard — pure operational intelligence
 
@@ -53,7 +55,7 @@ export default async function AdminCommandHub() {
     // MRR this month
     supabase
       .from("invoices")
-      .select("amount")
+      .select("total_amount, revenue_type")
       .eq("revenue_type", "mrr")
       .eq("status", "paid")
       .gte("created_at", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
@@ -61,37 +63,37 @@ export default async function AdminCommandHub() {
     // Outstanding invoices
     supabase
       .from("invoices")
-      .select("id, amount, status")
+      .select("id, total_amount, status")
       .in("status", ["unpaid", "overdue"]),
 
     // Active clients
     supabase.from("clients").select("id", { count: "exact", head: true }).eq("status", "active"),
 
-    // Leads in pipeline (not won/lost)
+    // Leads in pipeline (not closed) — outreach_stage is the source of truth
     supabase
       .from("leads")
       .select("id", { count: "exact", head: true })
-      .not("status", "in", '("closed_won","closed_lost","disqualified")'),
+      .or("outreach_stage.is.null,outreach_stage.not.in.(won,lost,dead,not_interested)"),
 
     // Meetings today
     supabase
       .from("leads")
       .select("id, company_name, industry, city, follow_up_date")
-      .eq("status", "meeting_booked" as any)
+      .eq("outreach_stage", "meeting_booked")
       .gte("follow_up_date", todayStart)
       .lte("follow_up_date", todayEnd),
 
     // Overdue invoices with client info
     supabase
       .from("invoices")
-      .select("id, amount, created_at, status, client:clients(business_name)")
+      .select("id, total_amount, due_date, status, client:clients(business_name)")
       .eq("status", "overdue")
       .order("created_at", { ascending: true }),
 
     // Proposals sent 48h+ with no response
     supabase
       .from("proposals")
-      .select("id, amount, sent_at, lead:leads(company_name, phone)")
+      .select("id, monthly_value, total_monthly, sent_at, lead:leads(id, company_name, phone)")
       .eq("status", "sent")
       .lte("sent_at", fortyEightHoursAgo)
       .order("sent_at", { ascending: true }),
@@ -107,15 +109,15 @@ export default async function AdminCommandHub() {
     // Clients currently onboarding
     supabase
       .from("clients")
-      .select("id, business_name, onboarding_completed")
-      .eq("status", "active")
-      .eq("onboarding_completed", false),
+      .select("id, business_name")
+      .eq("status", "onboarding"),
 
-    // Pipeline stage breakdown
+    // Pipeline stage breakdown — outreach_stage is the source of truth
+    // (status-space is legacy; the cockpit/board only write outreach_stage)
     supabase
       .from("leads")
-      .select("status")
-      .not("status", "in", '("closed_won","closed_lost","disqualified")'),
+      .select("outreach_stage")
+      .or("outreach_stage.is.null,outreach_stage.not.in.(won,lost,dead,not_interested)"),
 
     // Telecaller calls today (lead_outcomes)
     supabase
@@ -127,26 +129,27 @@ export default async function AdminCommandHub() {
     supabase
       .from("leads")
       .select("id", { count: "exact", head: true })
-      .eq("status", "meeting_booked" as any)
-      .gte("updated_at", todayStart),
+      .eq("outreach_stage", "meeting_booked")
+      .gte("meeting_booked_at", todayStart),
 
     // PDFs/curiosity sent today (outreach_logs)
     supabase
-      .from("outreach_logs" as any)
+      .from("outreach_logs")
       .select("id", { count: "exact", head: true })
       .eq("touch_type", "pdf_sent")
       .gte("created_at", todayStart),
   ]);
 
   // ── KPI Values ──────────────────────────────────────────
-  const mrr = (mrrResult.data || []).reduce((s: number, i: any) => s + (i.amount || 0), 0);
-  const mrrTarget = 50000;
-  const mrrPct = Math.min(100, Math.round((mrr / mrrTarget) * 100));
-  const mrrColor = mrrPct >= 80 ? "text-emerald-600" : mrrPct >= 50 ? "text-amber-600" : "text-red-600";
-  const mrrBarColor = mrrPct >= 80 ? "bg-emerald-500" : mrrPct >= 50 ? "bg-amber-400" : "bg-red-500";
+  const mrr = (mrrResult.data || []).reduce((s: number, i: any) => s + (i.total_amount || 0), 0);
+  // June 2026 = build month, no revenue target set yet
+  const mrrTarget = 0;
+  const mrrPct = 0;
+  const mrrColor = "text-slate-500";
+  const mrrBarColor = "bg-slate-300";
 
   const outstanding = outstandingResult.data || [];
-  const outstandingTotal = outstanding.reduce((s: number, i: any) => s + (i.amount || 0), 0);
+  const outstandingTotal = outstanding.reduce((s: number, i: any) => s + (i.total_amount || 0), 0);
 
   const activeClients = activeClientsResult.count || 0;
   const leadsInPipeline = leadsInPipelineResult.count || 0;
@@ -161,30 +164,71 @@ export default async function AdminCommandHub() {
   const meetingsBookedToday = telecallerMeetingsTodayResult.count || 0;
   const pdfsSentToday = telecallerPdfsTodayResult.count || 0;
 
-  // Pipeline stage counts
+  // Follow-ups due today
+  const { data: followUpsDue } = await supabase
+    .from("leads")
+    .select("id, company_name, contact_person, phone, city, industry")
+    .eq("outreach_stage", "follow_up_due")
+    .eq("follow_up_date", today)
+    .order("company_name");
+
+  // Overdue meetings — booked, meeting time in the past, never marked
+  // attended/no-show. The most urgent thing on the board.
+  const { data: overdueMeetings } = await supabase
+    .from("leads")
+    .select("id, company_name, industry, city, phone, follow_up_date")
+    .eq("outreach_stage", "meeting_booked")
+    .lt("follow_up_date", todayStart)
+    .order("follow_up_date", { ascending: true });
+
+  // Missed follow-ups — due before today and never actioned. Without this
+  // they silently fall out of the "due today" view and rot.
+  const { data: missedFollowUps } = await supabase
+    .from("leads")
+    .select("id, company_name, contact_person, phone, city, industry, follow_up_date")
+    .in("outreach_stage", ["follow_up_due", "no_answer", "follow_back"])
+    .lt("follow_up_date", today)
+    .order("follow_up_date", { ascending: true })
+    .limit(10);
+
+  // Pipeline stage counts (outreach_stage; null = never touched)
   const stageCounts: Record<string, number> = {};
   pipelineLeads.forEach((l: any) => {
-    const s = l.status || "new";
+    const s = l.outreach_stage || "touch1_pending";
     stageCounts[s] = (stageCounts[s] || 0) + 1;
   });
 
-  const pipelineStages = [
-    { key: "new", label: "New / Untouched", color: "bg-slate-400" },
-    { key: "first_call_pending", label: "1st Call Pending", color: "bg-blue-400" },
-    { key: "calling", label: "Calling", color: "bg-blue-500" },
-    { key: "contacted", label: "Contacted", color: "bg-indigo-500" },
-    { key: "qualified", label: "Qualified", color: "bg-purple-500" },
-    { key: "strategy_booked", label: "Strategy Booked", color: "bg-violet-600" },
-    { key: "nurture", label: "Nurture", color: "bg-amber-500" },
-    { key: "proposal_sent", label: "Proposal Sent", color: "bg-orange-500" },
-  ];
+  const pipelineStages = PIPELINE_STAGES
+    .filter((s) => s.group === "active")
+    .map((s) => ({
+      key: s.key,
+      label: s.key === "touch1_pending" ? "New / Untouched" : s.label,
+    }));
 
   const totalActionItems =
+    (overdueMeetings?.length ?? 0) +
+    (missedFollowUps?.length ?? 0) +
     meetingsToday.length +
+    (followUpsDue?.length ?? 0) +
     overdueInvoices.length +
     staleProposals.length +
     tasksDueToday.length +
     onboardingClients.length;
+
+  // Breakdown so "N items need your attention" actually says WHAT
+  const attentionBreakdown = [
+    { label: "overdue meeting", labelPlural: "overdue meetings", count: overdueMeetings?.length ?? 0 },
+    { label: "missed follow-up", labelPlural: "missed follow-ups", count: missedFollowUps?.length ?? 0 },
+    { label: "meeting today", labelPlural: "meetings today", count: meetingsToday.length },
+    { label: "follow-up due", labelPlural: "follow-ups due", count: followUpsDue?.length ?? 0 },
+    { label: "overdue invoice", labelPlural: "overdue invoices", count: overdueInvoices.length },
+    { label: "stale proposal", labelPlural: "stale proposals", count: staleProposals.length },
+    { label: "task due", labelPlural: "tasks due", count: tasksDueToday.length },
+    { label: "client onboarding", labelPlural: "clients onboarding", count: onboardingClients.length },
+  ]
+    .filter((b) => b.count > 0)
+    .map((b) => `${b.count} ${b.count > 1 ? b.labelPlural : b.label}`)
+    .join(", ");
 
   const formatINR = (n: number) =>
     n >= 100000
@@ -195,26 +239,32 @@ export default async function AdminCommandHub() {
     Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl">
 
         {/* ── HEADER ─────────────────────────────────────── */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-              <Coffee className="h-7 w-7 text-[#42CA80]" />
-              Good Morning, Jabeer
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+              Good morning, Jabeer
             </h1>
             <p className="text-slate-500 mt-1 text-sm">
               {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}
-              {totalActionItems > 0
-                ? ` · ${totalActionItems} item${totalActionItems > 1 ? "s" : ""} need your attention`
-                : " · All clear — nothing urgent"}
+              {totalActionItems > 0 ? (
+                <>
+                  {" · "}
+                  <a href="#action-list" className="font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 hover:text-brand-deep hover:decoration-brand transition-colors">
+                    {attentionBreakdown}
+                  </a>
+                </>
+              ) : (
+                " · All clear — nothing urgent"
+              )}
             </p>
           </div>
           <Link
             href="/admin/briefing"
-            className="flex items-center gap-2 bg-[#42CA80] hover:bg-[#35A66A] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm"
+            className="flex items-center gap-2 bg-brand-deep hover:bg-brand-active text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <CalendarDays className="h-4 w-4" /> Daily Briefing
           </Link>
@@ -222,14 +272,14 @@ export default async function AdminCommandHub() {
 
         {/* E4: Monthly Invoice Reminder (1st-5th of month) */}
         {new Date().getDate() <= 5 && activeClients > 0 && (
-          <div className="mb-6 flex items-center justify-between border border-amber-200 bg-amber-50 px-5 py-3 rounded-xl shadow-sm">
+          <div className="mb-6 flex items-center justify-between border border-amber-200 bg-amber-50 px-5 py-3 rounded-xl">
             <div className="flex items-center gap-3">
-              <ClipboardList className="h-5 w-5 text-amber-500" />
-              <p className="text-sm font-semibold text-amber-800">
-                📋 Monthly invoices due. <span className="font-bold">{activeClients}</span> active clients need invoices raised.
+              <ClipboardList className="h-5 w-5 text-amber-600" />
+              <p className="text-sm font-medium text-amber-900">
+                Monthly invoices due — <span className="font-semibold">{activeClients}</span> active clients need invoices raised.
               </p>
             </div>
-            <Link href="/admin/finance/invoices" className="text-xs font-bold bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg hover:bg-amber-300 transition-colors">
+            <Link href="/admin/finance/invoices" className="text-xs font-semibold text-amber-900 border border-amber-300 bg-white px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors">
               Go to Finance
             </Link>
           </div>
@@ -241,55 +291,50 @@ export default async function AdminCommandHub() {
             {
               label: "MRR This Month",
               value: formatINR(mrr),
-              sub: `${mrrPct}% of ₹50k target`,
+              sub: `Build month — no target set`,
               icon: DollarSign,
-              color: "text-emerald-600",
-              bg: "bg-emerald-50",
+              alert: false,
             },
             {
               label: "Outstanding",
               value: formatINR(outstandingTotal),
               sub: `${outstanding.length} invoice${outstanding.length !== 1 ? "s" : ""}`,
               icon: AlertTriangle,
-              color: outstanding.length > 0 ? "text-red-600" : "text-slate-400",
-              bg: outstanding.length > 0 ? "bg-red-50" : "bg-slate-50",
+              alert: outstanding.length > 0,
             },
             {
               label: "Active Clients",
               value: activeClients.toString(),
               sub: "Currently on retainer",
               icon: Users,
-              color: "text-blue-600",
-              bg: "bg-blue-50",
+              alert: false,
             },
             {
               label: "Leads in Pipeline",
               value: leadsInPipeline.toString(),
               sub: "Not won or lost",
               icon: Target,
-              color: "text-purple-600",
-              bg: "bg-purple-50",
+              alert: false,
             },
             {
               label: "Meetings Today",
               value: meetingsToday.length.toString(),
               sub: meetingsToday.length > 0 ? "On the books" : "None scheduled",
               icon: CalendarDays,
-              color: meetingsToday.length > 0 ? "text-indigo-600" : "text-slate-400",
-              bg: meetingsToday.length > 0 ? "bg-indigo-50" : "bg-slate-50",
+              alert: false,
             },
           ].map((kpi) => {
             const Icon = kpi.icon;
             return (
-              <div key={kpi.label} className="rounded-xl bg-white border border-slate-200 shadow-sm p-4 flex flex-col gap-2">
-                <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${kpi.bg}`}>
-                  <Icon className={`h-5 w-5 ${kpi.color}`} />
+              <div key={kpi.label} className="rounded-xl bg-white border border-slate-200 shadow-sm p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-medium text-slate-500">{kpi.label}</p>
+                  <Icon className={`h-4 w-4 ${kpi.alert ? "text-red-500" : "text-slate-300"}`} />
                 </div>
-                <p className="text-2xl font-bold font-mono tabular-nums text-slate-900">{kpi.value}</p>
-                <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{kpi.label}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{kpi.sub}</p>
-                </div>
+                <p className={`mt-2 text-2xl font-semibold tracking-tight tabular-nums ${kpi.alert ? "text-red-600" : "text-slate-900"}`}>
+                  {kpi.value}
+                </p>
+                <p className="text-xs text-slate-400 mt-1">{kpi.sub}</p>
               </div>
             );
           })}
@@ -301,8 +346,8 @@ export default async function AdminCommandHub() {
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
               <TrendingUp className="h-3.5 w-3.5" /> MRR vs Target
             </span>
-            <span className={`text-sm font-bold font-mono ${mrrColor}`}>
-              {formatINR(mrr)} / ₹50,000 ({mrrPct}%)
+            <span className="text-sm font-bold font-mono text-slate-400">
+              {formatINR(mrr)} — build month
             </span>
           </div>
           <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -323,7 +368,7 @@ export default async function AdminCommandHub() {
               Today&apos;s Action List
             </h2>
 
-            {totalActionItems === 0 && meetingsToday.length === 0 && (
+            {totalActionItems === 0 && (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/50 py-16 text-center">
                 <CheckCircle className="h-10 w-10 text-emerald-500 mb-3" />
                 <p className="text-lg font-semibold text-emerald-700">Nothing urgent today.</p>
@@ -331,10 +376,67 @@ export default async function AdminCommandHub() {
               </div>
             )}
 
+            {/* Anchor for the "needs your attention" header link */}
+            <div id="action-list" className="scroll-mt-16" />
+
+            {/* 0. Overdue Meetings — most urgent, always on top */}
+            {(overdueMeetings?.length ?? 0) > 0 && (
+              <ActionSection title="Overdue Meetings" icon={AlertTriangle} tone="danger" count={overdueMeetings?.length ?? 0}>
+                {overdueMeetings?.map((lead: any) => (
+                  <ActionCard key={lead.id}>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="text-xs text-slate-500">{lead.industry} · {lead.city}</p>
+                      <p className="text-xs text-red-600 mt-0.5 font-medium">
+                        Was scheduled {new Date(lead.follow_up_date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} — mark attended, no-show, or reschedule
+                      </p>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      {lead.phone && (
+                        <a href={`tel:${lead.phone}`} className="text-xs px-2 py-1 bg-brand-soft text-brand-deep rounded font-medium">
+                          Call
+                        </a>
+                      )}
+                      <Link href="/admin/meetings" className="action-btn border border-red-200 bg-red-50 text-red-700 hover:bg-red-100">
+                        Resolve
+                      </Link>
+                    </div>
+                  </ActionCard>
+                ))}
+              </ActionSection>
+            )}
+
+            {/* 0b. Missed Follow-ups */}
+            {(missedFollowUps?.length ?? 0) > 0 && (
+              <ActionSection title="Missed Follow-ups" icon={PhoneCall} tone="warning" count={missedFollowUps?.length ?? 0}>
+                {missedFollowUps?.map((lead: any) => (
+                  <ActionCard key={lead.id}>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="text-xs text-slate-500">{lead.industry} · {lead.city}</p>
+                      <p className="text-xs text-amber-600 mt-0.5 font-medium">
+                        Due {new Date(lead.follow_up_date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} — never actioned
+                      </p>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      {lead.phone && (
+                        <a href={`tel:${lead.phone}`} className="text-xs px-2 py-1 bg-brand-soft text-brand-deep rounded font-medium">
+                          Call
+                        </a>
+                      )}
+                      <Link href={`/admin/leads/${lead.id}`} className="text-xs px-2 py-1 bg-slate-100 rounded font-medium">
+                        Profile
+                      </Link>
+                    </div>
+                  </ActionCard>
+                ))}
+              </ActionSection>
+            )}
+
             {/* 1. Meetings Today */}
             {meetingsToday.length > 0 && (
-              <ActionSection title="Meetings Today" icon={CalendarDays} color="text-green-600" bg="bg-green-50 border-green-200" count={meetingsToday.length}>
-                {meetingsToday.map((lead: any) => (
+            <ActionSection title="Meetings Today" icon={CalendarDays} count={meetingsToday.length}>
+              {meetingsToday.map((lead: any) => (
                   <ActionCard key={lead.id}>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
@@ -345,19 +447,41 @@ export default async function AdminCommandHub() {
                         </p>
                       )}
                     </div>
-                    <Link href={`/sales/leads/${lead.id}`} className="action-btn bg-green-600 hover:bg-green-700 text-white">
+                    <Link href={`/admin/leads/${lead.id}`} className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
                       Open Lead
                     </Link>
                   </ActionCard>
                 ))}
-              </ActionSection>
+            </ActionSection>
             )}
 
-            {/* 2. Overdue Invoices */}
+            {/* 2. Follow-ups Due Today */}
+            {(followUpsDue?.length ?? 0) > 0 && (
+            <ActionSection title="Follow-ups Due Today" icon={PhoneCall} count={followUpsDue?.length ?? 0}>
+              {followUpsDue?.map((lead: any) => (
+                  <ActionCard key={lead.id}>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="text-xs text-slate-500">{lead.city} · {lead.industry}</p>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      <a href={`tel:${lead.phone}`} className="text-xs px-2 py-1 bg-brand-soft text-brand-deep rounded font-medium">
+                        Call
+                      </a>
+                      <Link href={`/admin/leads/${lead.id}`} className="text-xs px-2 py-1 bg-slate-100 rounded font-medium">
+                        Profile
+                      </Link>
+                    </div>
+                  </ActionCard>
+                ))}
+            </ActionSection>
+            )}
+
+            {/* 3. Overdue Invoices */}
             {overdueInvoices.length > 0 && (
-              <ActionSection title="Overdue Invoices" icon={AlertTriangle} color="text-red-600" bg="bg-red-50 border-red-200" count={overdueInvoices.length}>
-                {overdueInvoices.map((inv: any) => {
-                  const days = daysSince(inv.created_at);
+            <ActionSection title="Overdue Invoices" icon={AlertTriangle} tone="danger" count={overdueInvoices.length}>
+              {overdueInvoices.map((inv: any) => {
+                  const days = daysSince(inv.due_date || inv.created_at);
                   return (
                     <ActionCard key={inv.id}>
                       <div className="flex-1 min-w-0">
@@ -369,31 +493,43 @@ export default async function AdminCommandHub() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500">{formatINR(inv.amount)} · {days}d overdue</p>
+                        <p className="text-xs text-slate-500">{formatINR(inv.total_amount)} · {days}d overdue</p>
                       </div>
-                      <Link href="/admin/finance" className="action-btn bg-red-600 hover:bg-red-700 text-white">
+                      <Link href="/admin/finance/invoices" className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
                         View Invoice
                       </Link>
                     </ActionCard>
                   );
                 })}
-              </ActionSection>
+            </ActionSection>
             )}
 
-            {/* 3. Stale Proposals (48h+) */}
+            {/* 4. Stale Proposals (48h+) */}
             {staleProposals.length > 0 && (
-              <ActionSection title="Proposals Not Replied (48h+)" icon={FileText} color="text-amber-600" bg="bg-amber-50 border-amber-200" count={staleProposals.length}>
+              <ActionSection title="Proposals Not Replied (48h+)" icon={FileText} tone="warning" count={staleProposals.length}>
                 {staleProposals.map((p: any) => (
                   <ActionCard key={p.id}>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-slate-900 text-sm truncate">{(p.lead as any)?.company_name || "Unknown"}</p>
                       <p className="text-xs text-slate-500">
-                        {p.amount ? formatINR(p.amount) : "—"} · Sent {daysSince(p.sent_at)}d ago
+                        {(p.total_monthly ?? p.monthly_value) ? formatINR(p.total_monthly ?? p.monthly_value) : "—"} · Sent {daysSince(p.sent_at)}d ago
                       </p>
                     </div>
-                    <Link href="/sales/outreach" className="action-btn bg-amber-600 hover:bg-amber-700 text-white">
-                      Open Proposal
-                    </Link>
+                    <div className="flex gap-2 shrink-0">
+                      {(p.lead as any)?.phone && (
+                        <a
+                          href={`https://wa.me/91${String((p.lead as any).phone).replace(/\D/g, "").slice(-10)}?text=${encodeURIComponent(`Hi! Jabeer here from FortuneMarq. Just checking in on the growth proposal I sent over for ${(p.lead as any).company_name} — did you get a chance to go through it? Happy to jump on a quick call if anything needs clarifying.`)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="action-btn border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        >
+                          Follow up
+                        </a>
+                      )}
+                      <Link href={`/admin/leads/${(p.lead as any)?.id}`} className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
+                        Open
+                      </Link>
+                    </div>
                   </ActionCard>
                 ))}
               </ActionSection>
@@ -401,7 +537,7 @@ export default async function AdminCommandHub() {
 
             {/* 4. Tasks Due Today */}
             {tasksDueToday.length > 0 && (
-              <ActionSection title="Tasks Due Today" icon={CheckSquare} color="text-indigo-600" bg="bg-indigo-50 border-indigo-200" count={tasksDueToday.length}>
+              <ActionSection title="Tasks Due Today" icon={CheckSquare} count={tasksDueToday.length}>
                 {tasksDueToday.slice(0, 5).map((task: any) => (
                   <ActionCard key={task.id}>
                     <div className="flex-1 min-w-0">
@@ -410,7 +546,7 @@ export default async function AdminCommandHub() {
                         {(task.projects as any)?.name || "No project"} · {(task.assignee as any)?.full_name || "Unassigned"}
                       </p>
                     </div>
-                    <Link href="/tasks" className="action-btn bg-indigo-600 hover:bg-indigo-700 text-white">
+                    <Link href="/tasks" className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
                       Open Task
                     </Link>
                   </ActionCard>
@@ -418,21 +554,21 @@ export default async function AdminCommandHub() {
               </ActionSection>
             )}
 
-            {/* 5. Onboarding Pending */}
+            {/* 6. Onboarding Pending */}
             {onboardingClients.length > 0 && (
-              <ActionSection title="Onboarding Pending" icon={UserCheck} color="text-purple-600" bg="bg-purple-50 border-purple-200" count={onboardingClients.length}>
-                {onboardingClients.map((client: any) => (
+            <ActionSection title="Clients in Onboarding" icon={UserCheck} count={onboardingClients.length}>
+              {onboardingClients.map((client: any) => (
                   <ActionCard key={client.id}>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-slate-900 text-sm truncate">{client.business_name}</p>
                       <p className="text-xs text-slate-500">Onboarding checklist incomplete</p>
                     </div>
-                    <Link href={`/admin/clients/${client.id}`} className="action-btn bg-purple-600 hover:bg-purple-700 text-white">
+                    <Link href={`/admin/clients/${client.id}`} className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
                       Open Client
                     </Link>
                   </ActionCard>
                 ))}
-              </ActionSection>
+            </ActionSection>
             )}
           </div>
 
@@ -454,12 +590,12 @@ export default async function AdminCommandHub() {
                     className="flex items-center gap-3 group py-1.5 hover:bg-slate-50 rounded-lg transition-colors px-2 -mx-2"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-700 truncate group-hover:text-[#42CA80] transition-colors">
+                      <p className="text-xs font-medium text-slate-700 truncate group-hover:text-brand-deep transition-colors">
                         {stage.label}
                       </p>
                       <div className="mt-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${stage.color} transition-all`}
+                          className="h-full rounded-full bg-brand transition-all"
                           style={{ width: `${(count / maxCount) * 100}%` }}
                         />
                       </div>
@@ -467,7 +603,7 @@ export default async function AdminCommandHub() {
                     <span className="text-sm font-bold font-mono tabular-nums text-slate-900 shrink-0 w-8 text-right">
                       {count}
                     </span>
-                    <ArrowRight className="h-3 w-3 text-slate-300 group-hover:text-[#42CA80] transition-colors shrink-0" />
+                    <ArrowRight className="h-3 w-3 text-slate-300 group-hover:text-brand-deep transition-colors shrink-0" />
                   </Link>
                 );
               })}
@@ -524,6 +660,9 @@ export default async function AdminCommandHub() {
                 <Link href="/admin/team" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
                   <Clock className="h-4 w-4 text-slate-400" /> Team SOPs
                 </Link>
+                <Link href="/admin/audit-log" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
+                  <History className="h-4 w-4 text-slate-400" /> Audit Log
+                </Link>
               </div>
             </div>
           </div>
@@ -537,21 +676,26 @@ export default async function AdminCommandHub() {
 // ── Small helper components (server-side, no "use client" needed) ──
 
 function ActionSection({
-  title, icon: Icon, color, bg, count, children
+  title, icon: Icon, count, tone = "neutral", children
 }: {
   title: string;
   icon: React.ElementType;
-  color: string;
-  bg: string;
   count: number;
+  tone?: "neutral" | "danger" | "warning";
   children: React.ReactNode;
 }) {
+  const badge =
+    tone === "danger" && count > 0
+      ? "bg-red-50 text-red-700"
+      : tone === "warning" && count > 0
+        ? "bg-amber-50 text-amber-700"
+        : "bg-slate-100 text-slate-600";
   return (
-    <div className="rounded-xl border overflow-hidden bg-white shadow-sm">
-      <div className={`flex items-center gap-2 px-4 py-3 border-b ${bg}`}>
-        <Icon className={`h-4 w-4 ${color}`} />
-        <span className="text-sm font-bold text-slate-800">{title}</span>
-        <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full bg-white/70 ${color}`}>
+    <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100">
+        <Icon className="h-4 w-4 text-slate-400" />
+        <span className="text-sm font-semibold text-slate-800">{title}</span>
+        <span className={`ml-auto text-xs font-semibold px-2 py-0.5 rounded-full tabular-nums ${badge}`}>
           {count}
         </span>
       </div>

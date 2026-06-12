@@ -14,6 +14,11 @@ export function applyFilters(query: any, filters: FilterConfig) {
         query = query.in("status", filters.status);
     }
 
+    // Outreach Stage Filter (Array) — the real pipeline position for leads
+    if (filters.outreach_stage && filters.outreach_stage.length > 0) {
+        query = query.in("outreach_stage", filters.outreach_stage);
+    }
+
     // Lead Type Filter
     if (filters.lead_type) {
         query = query.eq("lead_type", filters.lead_type);

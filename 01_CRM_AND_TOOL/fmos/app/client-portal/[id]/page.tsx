@@ -41,7 +41,7 @@ export default async function ClientPortalPage({ params }: ClientPortalPageProps
 
   if (projectError) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <p className="text-red-500">
             Error loading project: {projectError.message}
@@ -59,7 +59,7 @@ export default async function ClientPortalPage({ params }: ClientPortalPageProps
 
   if (!project) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <p className="text-slate-500">Project not found.</p>
           <Link
@@ -93,7 +93,7 @@ export default async function ClientPortalPage({ params }: ClientPortalPageProps
   const clientName = clientData?.business_name || "Your Project";
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-8">

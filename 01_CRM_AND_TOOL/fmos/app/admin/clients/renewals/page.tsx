@@ -25,7 +25,7 @@ export default async function RenewalsPage() {
   const { data: renewalClients } = await supabase
     .from("clients")
     .select(
-      "id, business_name, niche, services, monthly_value, renewal_date, health_score, status, start_date, last_upsell_attempt"
+      "id, business_name, niche, services, services_active, monthly_value, renewal_date, health_score, status, start_date, last_upsell_attempt, phone"
     )
     .eq("status", "active")
     .not("renewal_date", "is", null)
@@ -40,7 +40,7 @@ export default async function RenewalsPage() {
   const { data: upsellClients } = await supabase
     .from("clients")
     .select(
-      "id, business_name, niche, services, monthly_value, renewal_date, health_score, status, start_date, last_upsell_attempt"
+      "id, business_name, niche, services, services_active, monthly_value, renewal_date, health_score, status, start_date, last_upsell_attempt, phone"
     )
     .eq("status", "active")
     .gte("health_score", 4)
@@ -76,7 +76,7 @@ export default async function RenewalsPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">

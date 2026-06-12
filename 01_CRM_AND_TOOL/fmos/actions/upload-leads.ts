@@ -1,6 +1,6 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/audit";
 
@@ -21,7 +21,7 @@ export type UploadLeadParams = {
 };
 
 export async function uploadLeads(leads: UploadLeadParams[]) {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
     let addedCount = 0;
     let skippedCount = 0;
     const errors: string[] = [];

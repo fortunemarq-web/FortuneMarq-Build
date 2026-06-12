@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { getLocalISODate, updateDailySummary } from "@/lib/attendance/calc";
 import { logAudit } from "@/lib/audit"; // Assuming this exists from prompt context
 
 export async function POST(req: NextRequest) {
-    const supabase = createServerClient() as any;
+    const supabase = await createServerClientWithCookies() as any;
 
     // 1. Auth Check
     const { data: { user } } = await supabase.auth.getUser();

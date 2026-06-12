@@ -13,7 +13,7 @@ export default async function AdminAlertsPage() {
         .limit(100);
 
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-8">
+        <div className="min-h-full bg-slate-50 px-4 py-8">
             <div className="mx-auto max-w-5xl">
                 <div className="mb-6">
                     <Link href="/admin" className="text-slate-500 hover:text-slate-900 flex items-center gap-2 mb-4 text-sm transition-colors">

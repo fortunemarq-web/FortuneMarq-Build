@@ -222,7 +222,7 @@ export default function ClientDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50">
+      <div className="flex min-h-full flex-col items-center justify-center bg-slate-50">
         <Zap className="h-10 w-10 text-[#42CA80] animate-pulse mb-4" />
         <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
       </div>
@@ -231,7 +231,7 @@ export default function ClientDashboardPage() {
 
   if (error && !client) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 text-center">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 p-4 text-center">
         <div className="max-w-md">
           <Building2 className="mx-auto h-12 w-12 text-slate-300 mb-4" />
           <h1 className="text-xl font-bold mb-2">Portal Access</h1>
@@ -244,7 +244,7 @@ export default function ClientDashboardPage() {
 
   if (client && projects.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 text-center">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 p-4 text-center">
         <div className="max-w-md">
           <CheckCircle2 className="mx-auto h-12 w-12 text-[#42CA80] mb-4" />
           <h1 className="text-xl font-bold mb-2">Welcome, {client.business_name}</h1>
@@ -261,7 +261,7 @@ export default function ClientDashboardPage() {
   const currentMilestoneIndex = milestones.findIndex(m => m.status !== "completed" && m.status !== "approved");
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8 md:px-8 lg:py-12">
+    <div className="min-h-full bg-slate-50 px-4 py-8 md:px-8 lg:py-12">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-xl">

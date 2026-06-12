@@ -57,6 +57,17 @@ export default function WeeklyReportPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const handleDownload = () => {
+        if (!report) return;
+        const blob = new Blob([report], { type: "text/markdown;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `weekly-report-${new Date().toISOString().split("T")[0]}.md`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="p-8 max-w-6xl mx-auto space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -103,7 +114,10 @@ export default function WeeklyReportPage() {
                                     >
                                         {copied ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <Copy className="h-5 w-5" />}
                                     </button>
-                                    <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-500">
+                                    <button
+                                        onClick={handleDownload}
+                                        title="Download as Markdown"
+                                        className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-500">
                                         <Download className="h-5 w-5" />
                                     </button>
                                 </div>

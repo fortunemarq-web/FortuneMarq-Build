@@ -1,6 +1,6 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { logAudit } from "@/lib/audit";
 
 type TableName = "leads" | "deals" | "projects" | "tasks";
@@ -16,7 +16,7 @@ export async function bulkUpdateEntity(
     updates: Record<string, unknown>,
     actionName: string = "bulk_update"
 ): Promise<BulkUpdateResult> {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

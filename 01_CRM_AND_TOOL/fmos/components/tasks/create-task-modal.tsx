@@ -43,6 +43,7 @@ export default function CreateTaskModal({
     const [priority, setPriority] = useState("medium");
     const [sop, setSop] = useState("");
     const [isSaving, setIsSaving] = useState(false);
+    const [repeatMonths, setRepeatMonths] = useState(0); // 0 = one-off; N = also create N monthly copies
 
     const supabase = createClient();
 
@@ -99,6 +100,20 @@ export default function CreateTaskModal({
                 .single();
 
             if (insertError) throw insertError;
+
+            // Monthly recurrence: create future-dated copies (no schema change
+            // needed — they're plain tasks with shifted due dates).
+            if (repeatMonths > 0 && dueDate) {
+                const copies = Array.from({ length: repeatMonths }, (_, i) => {
+                    const d = new Date(dueDate);
+                    d.setMonth(d.getMonth() + i + 1);
+                    return { ...taskData, due_date: d.toISOString().split("T")[0] };
+                });
+                const { error: copiesError } = await supabase
+                    .from("tasks")
+                    .insert(copies as any);
+                if (copiesError) console.error("Recurring copies failed:", copiesError.message);
+            }
 
             // Trigger Notification
             if (taskData.assigned_to) {
@@ -196,6 +211,19 @@ export default function CreateTaskModal({
                                 onChange={(e) => setDueDate(e.target.value)}
                                 className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                             />
+                            {dueDate && (
+                                <select
+                                    value={repeatMonths}
+                                    onChange={(e) => setRepeatMonths(parseInt(e.target.value))}
+                                    title="Also create future monthly copies of this task"
+                                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none cursor-pointer"
+                                >
+                                    <option value={0}>Does not repeat</option>
+                                    <option value={2}>Repeat monthly ×3 (this + 2)</option>
+                                    <option value={5}>Repeat monthly ×6 (this + 5)</option>
+                                    <option value={11}>Repeat monthly ×12 (this + 11)</option>
+                                </select>
+                            )}
                         </div>
                         <div>
                             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">

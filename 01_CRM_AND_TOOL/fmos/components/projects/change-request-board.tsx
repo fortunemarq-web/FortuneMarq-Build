@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { AlertTriangle, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface ChangeRequest {
     id: string;
@@ -38,10 +39,10 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
             if (data) setRequests([data as any, ...requests]);
             setIsAdding(false);
             setNewItem({ title: "", description: "", priority: "medium" });
-            alert("Change request submitted.");
+            toast.success("Change request submitted");
         } catch (e) {
             console.error(e);
-            alert("Error submitting request");
+            toast.error("Error submitting request");
         }
     };
 

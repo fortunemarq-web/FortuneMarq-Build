@@ -2,26 +2,29 @@
 
 import { useState } from "react";
 import { X, Receipt, Search, PlusCircle, CheckCircle2, AlertTriangle, RefreshCcw } from "lucide-react";
-import { createExpense } from "@/app/admin/finance/actions";
+import { createExpense, updateExpense } from "@/app/admin/finance/actions";
 
 interface ExpenseCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   clients: any[];
   onSuccess: (newExp: any) => void;
+  /** When set, the modal edits this expense instead of creating a new one. */
+  editExpense?: any | null;
 }
 
-export default function ExpenseCreateModal({ isOpen, onClose, clients, onSuccess }: ExpenseCreateModalProps) {
+export default function ExpenseCreateModal({ isOpen, onClose, clients, onSuccess, editExpense }: ExpenseCreateModalProps) {
+  const isEdit = !!editExpense;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Form State
-  const [expenseDate, setExpenseDate] = useState(new Date().toISOString().split('T')[0]);
-  const [category, setCategory] = useState("Marketing");
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
-  const [clientId, setClientId] = useState(""); // optional
-  const [isRecurring, setIsRecurring] = useState(false);
+  const [expenseDate, setExpenseDate] = useState(editExpense?.expense_date ?? new Date().toISOString().split('T')[0]);
+  const [category, setCategory] = useState(editExpense?.category ?? "");
+  const [description, setDescription] = useState(editExpense?.description ?? "");
+  const [amount, setAmount] = useState(editExpense?.amount != null ? String(editExpense.amount) : "");
+  const [clientId, setClientId] = useState(editExpense?.client_id ?? ""); // optional
+  const [isRecurring, setIsRecurring] = useState(editExpense?.is_recurring ?? false);
 
   const categories = ["Ad Spend", "Subscription", "Stipend/Salary", "Office", "Tools & Software", "Misc"];
 
@@ -44,7 +47,9 @@ export default function ExpenseCreateModal({ isOpen, onClose, clients, onSuccess
         is_recurring: isRecurring
       };
 
-      const result = await createExpense(expenseData) as any;
+      const result = isEdit
+        ? await updateExpense(editExpense.id, expenseData) as any
+        : await createExpense(expenseData) as any;
       onSuccess({ ...result, clients: clients.find(c => c.id === clientId) });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
@@ -65,7 +70,7 @@ export default function ExpenseCreateModal({ isOpen, onClose, clients, onSuccess
               <Receipt className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Log Agency Expense</h2>
+              <h2 className="text-xl font-bold text-slate-900">{isEdit ? "Edit Expense" : "Log Agency Expense"}</h2>
               <p className="text-xs text-slate-500 font-semibold tracking-wider uppercase opacity-80">FortuneMarq Finance</p>
             </div>
           </div>
@@ -176,7 +181,7 @@ export default function ExpenseCreateModal({ isOpen, onClose, clients, onSuccess
             disabled={loading}
             className="px-8 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg shadow-slate-950/20 hover:bg-black transition-all disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? "Saving..." : <><PlusCircle className="h-4 w-4" /> Save Expense</>}
+            {loading ? "Saving..." : <><PlusCircle className="h-4 w-4" /> {isEdit ? "Save Changes" : "Save Expense"}</>}
           </button>
         </div>
       </div>

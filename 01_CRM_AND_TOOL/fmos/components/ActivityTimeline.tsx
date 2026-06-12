@@ -73,30 +73,58 @@ export default function ActivityTimeline({
     const fetchEvents = async (pageIdx: number, reset = false) => {
         try {
             const supabase = createClient();
-            const { data, error } = await supabase
-                .from("activity_events")
-                .select(`
-          *,
-          profiles:created_by (full_name, email)
-        `)
-                .eq("entity_type", entityType)
-                .eq("entity_id", entityId)
-                .order("created_at", { ascending: false })
-                .range(pageIdx * pageSize, (pageIdx + 1) * pageSize - 1);
 
-            if (error) throw error;
+            // Two sources: explicit activity_events, plus the DB-trigger
+            // audit trail (audit_logs) which captures every mutation.
+            const [activityRes, auditRes] = await Promise.all([
+                supabase
+                    .from("activity_events")
+                    .select(`*, profiles:created_by (full_name, email)`)
+                    .eq("entity_type", entityType)
+                    .eq("entity_id", entityId)
+                    .order("created_at", { ascending: false })
+                    .range(pageIdx * pageSize, (pageIdx + 1) * pageSize - 1),
+                supabase
+                    .from("audit_logs" as any)
+                    .select("id, action, summary, old_value, new_value, created_at, user_name")
+                    .eq("resource_type", entityType)
+                    .eq("resource_id", entityId)
+                    .order("created_at", { ascending: false })
+                    .range(pageIdx * pageSize, (pageIdx + 1) * pageSize - 1),
+            ]);
+
+            if (activityRes.error) throw activityRes.error;
+            // audit_logs is admin-readable only — non-admins just get the
+            // activity_events half, which is fine.
+            const auditRows = auditRes.error ? [] : (auditRes.data || []);
+
+            const auditEvents: ActivityEvent[] = (auditRows as any[]).map((r) => ({
+                id: `audit-${r.id}`,
+                event_type: r.action === "stage_change" ? "status_changed" : r.action,
+                title: r.summary || `${r.action} ${entityType}`,
+                body: null,
+                metadata:
+                    r.old_value?.outreach_stage || r.new_value?.outreach_stage
+                        ? { from_status: r.old_value?.outreach_stage, to_status: r.new_value?.outreach_stage }
+                        : {},
+                created_at: r.created_at,
+                created_by: "",
+                profiles: r.user_name ? ({ full_name: r.user_name, email: "" } as any) : undefined,
+            }));
+
+            const merged = [...((activityRes.data || []) as ActivityEvent[]), ...auditEvents].sort(
+                (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            );
 
             if (reset) {
-                setEvents((data || []) as ActivityEvent[]);
+                setEvents(merged);
             } else {
-                setEvents((prev) => [...prev, ...((data || []) as ActivityEvent[])]);
+                setEvents((prev) => [...prev, ...merged]);
             }
 
-            if ((data || []).length < pageSize) {
-                setHasMore(false);
-            } else {
-                setHasMore(true);
-            }
+            const fullPage =
+                (activityRes.data || []).length >= pageSize || auditRows.length >= pageSize;
+            setHasMore(fullPage);
         } catch (err) {
             console.error("Error fetching activity:", err);
         } finally {

@@ -11,7 +11,7 @@ import {
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import ClientProfileTabs from "@/components/admin/clients/ClientProfileTabs";
 import OverviewTab from "@/components/admin/clients/tabs/OverviewTab";
-import OnboardingTab from "@/components/admin/clients/tabs/OnboardingTab";
+import OnboardingTab from "@/components/clients/onboarding-tab";
 import AssetVaultTab from "@/components/admin/clients/tabs/AssetVaultTab";
 import ProjectsTab from "@/components/admin/clients/tabs/ProjectsTab";
 import FinanceTab from "@/components/admin/clients/tabs/FinanceTab";
@@ -51,14 +51,17 @@ export default async function ClientProfilePage({
 }) {
   const { id } = await params;
 
+  const supabase = await createServerClientWithCookies();
   // Parallel data fetching
-  const [client, onboardingItems, assets, callLogs, projects] =
+  const [client, onboardingItems, assets, callLogs, projects, { data: onboardingTasks }, { data: assetVault }] =
     await Promise.all([
       fetchClientById(id),
       fetchOnboardingItems(id),
       fetchClientAssets(id),
       fetchClientCallLogs(id),
       fetchClientProjects(id),
+      supabase.from("client_onboarding_tasks").select("*").eq("client_id", id).order("service_id"),
+      supabase.from("client_asset_vault").select("*").eq("client_id", id).order("category"),
     ]);
 
   if (!client) notFound();
@@ -71,7 +74,6 @@ export default async function ClientProfilePage({
   ]);
 
   // Fetch activity feed (recent actions for this client entity)
-  const supabase = await createServerClientWithCookies();
   const { data: activityFeed } = await supabase
     .from("activity_events")
     .select("id, title, body, created_at")
@@ -106,7 +108,7 @@ export default async function ClientProfilePage({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-6xl">
         {/* Back */}
         <Link
@@ -233,7 +235,7 @@ export default async function ClientProfilePage({
               />
             ),
             onboarding: (
-              <OnboardingTab items={onboardingItems} clientId={id} />
+              <OnboardingTab clientId={id} initialTasks={(onboardingTasks as any) ?? []} initialAssets={(assetVault as any) ?? []} isAdmin={true} />
             ),
             assets: (
               <AssetVaultTab assets={assets} clientId={id} />

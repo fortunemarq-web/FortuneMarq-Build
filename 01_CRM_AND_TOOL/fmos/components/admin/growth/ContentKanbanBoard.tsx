@@ -4,18 +4,19 @@ import { useState } from "react";
 import { Plus, GripVertical, CheckCircle2, Clock } from "lucide-react";
 import { ContentPiece, upsertContentPiece } from "@/app/admin/growth/actions";
 import ContentPostModal from "@/components/admin/growth/ContentPostModal";
+import { getContentTypeIcon } from "@/components/admin/growth/content-type-icons";
 
 interface KanbanProps {
   channel: string;
   initialPieces: ContentPiece[];
-  availableTypes: { id: string; label: string; icon: string }[];
+  availableTypes: { id: string; label: string; icon?: string }[];
 }
 
 const COLUMNS = [
   { id: "idea", label: "Idea", bg: "bg-slate-50", text: "text-slate-600", dot: "bg-slate-400" },
   { id: "drafted", label: "Drafted", bg: "bg-blue-50", text: "text-blue-700", dot: "bg-blue-500" },
   { id: "ready", label: "Ready", bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-500" },
-  { id: "published", label: "Published", bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-[#42CA80]" },
+  { id: "published", label: "Published", bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-brand" },
 ];
 
 export default function ContentKanbanBoard({ channel, initialPieces, availableTypes }: KanbanProps) {
@@ -100,24 +101,25 @@ export default function ContentKanbanBoard({ channel, initialPieces, availableTy
               {/* Cards */}
               <div className="flex-1 overflow-y-auto p-3 space-y-3">
                 {colPieces.map(piece => {
-                  const type = availableTypes.find(t => t.id === piece.content_type) || { icon: "📝", label: "Post" };
+                  const type = availableTypes.find(t => t.id === piece.content_type) || { id: piece.content_type, label: "Post" };
+                  const TypeIcon = getContentTypeIcon(piece.content_type);
                   const isOverdue = piece.scheduled_date && new Date(piece.scheduled_date) < new Date() && piece.status !== "published";
-                  
+
                   return (
                     <div
                       key={piece.id}
                       draggable
                       onDragStart={() => handleDragStart(piece.id)}
                       onClick={() => setModalPost(piece)}
-                      className={`group relative rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-[#42CA80]/50 hover:shadow-md transition-all cursor-pointer ${draggedId === piece.id ? 'opacity-50 ring-2 ring-[#42CA80] ring-offset-2' : ''}`}
+                      className={`group relative rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-brand/50 hover:shadow-md transition-all cursor-pointer ${draggedId === piece.id ? 'opacity-50 ring-2 ring-brand ring-offset-2' : ''}`}
                     >
                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab hover:text-slate-900 active:cursor-grabbing text-slate-400">
                         <GripVertical className="h-4 w-4" />
                       </div>
-                      
+
                       <div className="flex items-center gap-2 mb-2">
                         <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-100 bg-slate-50 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-600">
-                          {type.icon} {type.label}
+                          <TypeIcon className="h-3 w-3" /> {type.label}
                         </span>
                         {piece.status === 'published' && piece.engagement_rate > 0 && (
                           <span className="text-[10px] font-bold text-emerald-600 border border-emerald-100 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -157,6 +159,7 @@ export default function ContentKanbanBoard({ channel, initialPieces, availableTy
           channel={channel}
           onClose={() => setModalPost(null)}
           onSave={handleSaveModal}
+          onDelete={(id) => setPieces(prev => prev.filter(p => p.id !== id))}
           availableTypes={availableTypes}
         />
       )}

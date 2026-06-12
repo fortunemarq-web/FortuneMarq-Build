@@ -3,6 +3,97 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 
+// ─── Strategy AI extraction (server-side, key never touches the browser) ───
+
+export async function extractStrategyTasks({
+  text,
+  destination,
+  timeframe,
+  assignee,
+}: {
+  text: string;
+  destination: string;
+  timeframe: string;
+  assignee: string;
+}): Promise<{ success: true; data: any } | { success: false; error: string }> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return { success: false, error: "ANTHROPIC_API_KEY is not configured on the server." };
+  }
+
+  const systemPrompt = `You are a task extraction engine for FortuneMarq, a digital marketing agency.
+
+You will receive a strategy document. Your job is to extract ALL actionable tasks and return them as a JSON array.
+
+DESTINATION CONTEXT: ${destination}
+TIMEFRAME: ${timeframe}
+DEFAULT ASSIGNEE: ${assignee}
+TODAY'S DATE: ${new Date().toISOString().split("T")[0]}
+
+Rules:
+1. Extract EVERY specific action item from the document
+2. If a task has no explicit due date, distribute tasks evenly across the timeframe
+3. If a task has no assignee, use the default assignee
+4. Break large vague tasks into smaller specific ones (max 2 hours of work per task)
+5. Priority: use 'high' for week 1 items, 'medium' for week 2-3, 'low' for later
+6. Every task MUST have: title, description, due_date (YYYY-MM-DD), priority, assignee, section_tag
+
+Return ONLY valid JSON, no preamble, no explanation. Format:
+{
+  "strategy_title": "string",
+  "total_tasks": number,
+  "tasks": [
+    {
+      "title": "string (max 80 chars, action verb first)",
+      "description": "string (1-2 sentences of context/guidance)",
+      "due_date": "YYYY-MM-DD",
+      "priority": "high|medium|low",
+      "assignee": "admin|telecaller|user_id",
+      "section_tag": "string",
+      "estimated_minutes": number
+    }
+  ]
+}`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 4000,
+        temperature: 0,
+        system: systemPrompt,
+        messages: [
+          {
+            role: "user",
+            content: `Here is the strategy document. Please extract the tasks into the requested JSON format:\n\n${text}`,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      return { success: false, error: errData.error?.message || `API Error: ${response.status}` };
+    }
+
+    const data = await response.json();
+    const resultText = data.content?.[0]?.text || "{}";
+    const cleaned = resultText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return { success: true, data: JSON.parse(cleaned) };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown error calling Anthropic API",
+    };
+  }
+}
+
 export async function fetchStrategyTeam() {
   const supabase = await createServerClientWithCookies();
   const { data } = await supabase

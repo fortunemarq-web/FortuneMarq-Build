@@ -259,7 +259,7 @@ export default function NotificationBell() {
                     </div>
 
                     <Link
-                        href="/notifications"
+                        href="/admin/audit-log"
                         className="block py-4 bg-slate-50 text-center text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all border-t border-slate-100"
                     >
                         View all activity

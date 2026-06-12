@@ -10,10 +10,10 @@ export const metadata = {
 };
 
 const INS_TYPES = [
-  { id: "reel", label: "Reel", icon: "🎬" },
-  { id: "carousel", label: "Carousel", icon: "📷" },
-  { id: "static", label: "Static Image", icon: "🖼️" },
-  { id: "story", label: "Story", icon: "⭕" },
+  { id: "reel", label: "Reel" },
+  { id: "carousel", label: "Carousel" },
+  { id: "static", label: "Static Image" },
+  { id: "story", label: "Story" },
 ];
 
 export default async function InstagramTrackerPage() {
@@ -27,7 +27,7 @@ export default async function InstagramTrackerPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl space-y-8">
         {/* Header */}
         <div>
@@ -105,7 +105,7 @@ export default async function InstagramTrackerPage() {
                   pieces.filter(p => p.status === 'published')
                    .sort((a,b) => new Date(b.published_date || 0).getTime() - new Date(a.published_date || 0).getTime())
                    .map(p => {
-                    const type = INS_TYPES.find(t => t.id === p.content_type) || { icon: "📝", label: "Post" };
+                    const type = INS_TYPES.find(t => t.id === p.content_type) || { label: "Post" };
                     return (
                       <tr key={p.id} className="hover:bg-slate-50/60 transition-colors">
                         <td className="px-4 py-3 text-slate-500 font-mono text-xs">
@@ -113,7 +113,7 @@ export default async function InstagramTrackerPage() {
                         </td>
                         <td className="px-4 py-3">
                           <span className="inline-flex items-center gap-1.5 rounded bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-600">
-                            {type.icon} {type.label}
+                            {type.label}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-slate-900 truncate max-w-[200px]">{p.title}</td>

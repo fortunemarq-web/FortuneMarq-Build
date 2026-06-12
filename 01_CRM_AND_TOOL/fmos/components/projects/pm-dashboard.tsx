@@ -23,6 +23,7 @@ import {
 import clsx from "clsx";
 import { createClient } from "@/lib/supabase";
 import CreateProjectModal from "./create-project-modal";
+import { toast } from "@/components/ui/toast";
 
 interface Task {
   id: string;
@@ -154,7 +155,7 @@ export default function PMDashboard(props: PMDashboardProps) {
       }
     } catch (err) {
       console.error("Failed to add resource", err);
-      alert("Failed to add link");
+      toast.error("Failed to add link");
     } finally {
       setIsSubmittingResource(false);
     }
@@ -168,7 +169,7 @@ export default function PMDashboard(props: PMDashboardProps) {
       setResources(resources.filter(r => r.id !== resourceId));
     } catch (err) {
       console.error("Failed to delete resource", err);
-      alert("Failed to delete link");
+      toast.error("Failed to delete link");
     }
   };
 
@@ -316,17 +317,17 @@ export default function PMDashboard(props: PMDashboardProps) {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "not_started":
-        return "bg-gray-600 text-gray-200";
+        return "bg-slate-100 text-slate-600";
       case "in_progress":
-        return "bg-[#42CA80] text-slate-900";
+        return "bg-brand-soft text-brand-deep";
       case "on_hold":
-        return "bg-yellow-600 text-slate-900";
+        return "bg-amber-100 text-amber-700";
       case "completed":
-        return "bg-blue-600 text-slate-900";
+        return "bg-blue-100 text-blue-700";
       case "cancelled":
         return "bg-red-600 text-slate-900";
       default:
-        return "bg-gray-600 text-gray-200";
+        return "bg-slate-100 text-slate-600";
     }
   };
 
@@ -352,13 +353,13 @@ export default function PMDashboard(props: PMDashboardProps) {
         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
           {/* Search Bar */}
           <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 group-focus-within:text-[#42CA80] transition-colors" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 group-focus-within:text-brand-deep transition-colors" />
             <input
               type="text"
               placeholder="Search client or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-[#666] focus:outline-none focus:border-[#42CA80] w-[200px] sm:w-[240px] transition-all"
+              className="pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-[#666] focus:outline-none focus:border-brand w-[200px] sm:w-[240px] transition-all"
             />
           </div>
 
@@ -367,7 +368,7 @@ export default function PMDashboard(props: PMDashboardProps) {
               onClick={() => setViewMode('clients')}
               className={clsx(
                 "px-3 py-1 text-xs font-medium rounded-md transition-colors",
-                viewMode === 'clients' ? "bg-[#42CA80] text-black shadow-sm" : "text-slate-500 hover:text-slate-900"
+                viewMode === 'clients' ? "bg-slate-900 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
               )}
             >
               Clients
@@ -376,7 +377,7 @@ export default function PMDashboard(props: PMDashboardProps) {
               onClick={() => setViewMode('projects')}
               className={clsx(
                 "px-3 py-1 text-xs font-medium rounded-md transition-colors",
-                viewMode === 'projects' ? "bg-[#42CA80] text-black shadow-sm" : "text-slate-500 hover:text-slate-900"
+                viewMode === 'projects' ? "bg-slate-900 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
               )}
             >
               All Projects
@@ -384,7 +385,7 @@ export default function PMDashboard(props: PMDashboardProps) {
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white text-sm font-bold rounded-lg "
+            className="flex items-center gap-2 px-4 py-2 bg-brand-deep hover:bg-brand-hover text-white text-sm font-bold rounded-lg shadow-sm transition-colors active:scale-[0.98]"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">New Project</span>
@@ -423,12 +424,12 @@ export default function PMDashboard(props: PMDashboardProps) {
         </div>
 
         {/* Completed Today */}
-        <div className="rounded-xl border border-[#42CA80]/30 bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 p-3 sm:p-4">
+        <div className="rounded-xl border border-brand/30 bg-brand-soft p-3 sm:p-4">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#42CA80] sm:h-5 sm:w-5" />
-            <span className="text-[10px] text-[#42CA80]/80 sm:text-xs">Completed</span>
+            <CheckCircle2 className="h-4 w-4 text-brand-deep sm:h-5 sm:w-5" />
+            <span className="text-[10px] text-brand-deep/80 sm:text-xs">Completed</span>
           </div>
-          <p className="mt-1 text-xl font-bold text-[#42CA80] sm:mt-2 sm:text-4xl font-mono tabular-nums">
+          <p className="mt-1 text-xl font-bold text-brand-deep sm:mt-2 sm:text-4xl font-mono tabular-nums">
             {metrics.completedToday}
           </p>
         </div>
@@ -636,7 +637,7 @@ export default function PMDashboard(props: PMDashboardProps) {
                       <div className="mb-6">
                         <div className="flex items-center justify-between mb-3">
                           <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                            <LinkIcon className="h-4 w-4 text-[#42CA80]" />
+                            <LinkIcon className="h-4 w-4 text-brand-deep" />
                             Client Resources
                           </h4>
                           <button
@@ -650,7 +651,7 @@ export default function PMDashboard(props: PMDashboardProps) {
                                 setNewLinkTitle("");
                               }
                             }}
-                            className="text-xs text-[#42CA80] hover:text-[#3ab872] font-medium"
+                            className="text-xs text-brand-deep hover:text-brand-hover font-medium"
                           >
                             {editingResourceClientId === clientId ? "Cancel" : "+ Add Link"}
                           </button>
@@ -664,19 +665,19 @@ export default function PMDashboard(props: PMDashboardProps) {
                               placeholder="Link Title (e.g. Drive Folder)"
                               value={newLinkTitle}
                               onChange={(e) => setNewLinkTitle(e.target.value)}
-                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-[#42CA80] outline-none"
+                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-brand outline-none"
                             />
                             <input
                               type="text"
                               placeholder="URL (https://...)"
                               value={newLinkUrl}
                               onChange={(e) => setNewLinkUrl(e.target.value)}
-                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-[#42CA80] outline-none"
+                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-brand outline-none"
                             />
                             <button
                               disabled={isSubmittingResource}
                               onClick={() => handleAddResource(clientId)}
-                              className="bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white text-xs font-bold px-4 py-1.5 rounded disabled:opacity-50"
+                              className="bg-brand-deep hover:bg-brand-hover text-white text-xs font-bold px-4 py-1.5 rounded transition-colors disabled:opacity-50"
                             >
                               {isSubmittingResource ? "Adding..." : "Save"}
                             </button>

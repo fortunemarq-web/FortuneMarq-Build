@@ -1,9 +1,9 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 
 export async function analyzeIndustryDistribution() {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
 
     // Fetch all industries
     const { data, error } = await supabase

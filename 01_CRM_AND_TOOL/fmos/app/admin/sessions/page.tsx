@@ -42,7 +42,7 @@ export default function AdminSessionsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 px-6 py-8 text-slate-900">
+        <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-900">
             <div className="mx-auto max-w-7xl">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold">Active Sessions</h1>

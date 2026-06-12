@@ -45,15 +45,9 @@ export default function AuditLogPage() {
             .order("created_at", { ascending: false })
             .range((page - 1) * pageSize, page * pageSize - 1);
 
-        if (resourceFilter !== "all") {
-            query = query.eq("resource_type", resourceFilter);
-        }
-        if (actionFilter !== "all") {
-            query = query.eq("action", actionFilter);
-        }
-        if (userFilter) {
-            query = query.ilike("user_name", `%${userFilter}%`);
-        }
+        if (resourceFilter !== "all") query = query.eq("resource_type", resourceFilter);
+        if (actionFilter !== "all") query = query.eq("action", actionFilter);
+        if (userFilter) query = query.ilike("user_name", `%${userFilter}%`);
 
         const { data, count, error } = await query;
         if (error) console.error(error);
@@ -120,7 +114,7 @@ export default function AuditLogPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12">
+        <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
             <div className="mx-auto max-w-7xl">
                 {/* Header */}
                 <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
@@ -166,13 +160,16 @@ export default function AuditLogPage() {
                         className="bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-slate-900/5 transition-all"
                     >
                         <option value="all">All Resources</option>
-                        <option value="profile">Users & Roles</option>
                         <option value="lead">Leads</option>
-                        <option value="template">Templates</option>
-                        <option value="niche_kit">Niche Kits</option>
+                        <option value="proposal">Proposals</option>
+                        <option value="agreement">Agreements</option>
+                        <option value="client">Clients</option>
+                        <option value="invoice">Invoices</option>
+                        <option value="meeting">Meetings</option>
+                        <option value="onboarding">Onboarding</option>
                         <option value="task">Tasks</option>
-                        <option value="deliverable">Deliverables</option>
                         <option value="report">Reports</option>
+                        <option value="profile">Users & Roles</option>
                     </select>
 
                     <select
@@ -263,11 +260,15 @@ export default function AuditLogPage() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <p className="text-sm font-medium text-slate-600 line-clamp-1 italic">
-                                                    {log.action === 'stage_change' ? `${log.old_value?.stage} → ${log.new_value?.stage}` :
-                                                        log.action === 'update' ? 'Properties modified' :
-                                                            log.action === 'create' ? 'New record added' : 'Action taken'
-                                                    }
+                                                <p className="text-sm text-slate-600 line-clamp-1">
+                                                    {log.summary
+                                                        ? log.summary
+                                                        : log.action === 'stage_change' && log.old_value?.stage
+                                                            ? `${log.old_value.stage} → ${log.new_value?.stage}`
+                                                            : log.action === 'update' ? 'Fields updated'
+                                                            : log.action === 'create' ? 'Record created'
+                                                            : log.action === 'delete' ? 'Record deleted'
+                                                            : log.action.replace(/_/g, ' ')}
                                                 </p>
                                             </td>
                                             <td className="px-6 py-4 text-right">

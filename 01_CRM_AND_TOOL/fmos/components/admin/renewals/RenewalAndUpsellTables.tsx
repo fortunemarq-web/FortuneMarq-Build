@@ -7,7 +7,7 @@ import {
   markClientChurned,
   logUpsellAttempt,
 } from "@/app/admin/clients/renewals/actions";
-import { CalendarClock, Check, X, Loader2, TrendingUp } from "lucide-react";
+import { CalendarClock, Check, X, Loader2, TrendingUp, MessageCircle } from "lucide-react";
 import ServicePills from "@/components/admin/clients/ServicePills";
 import HealthScoreStars from "@/components/admin/clients/HealthScoreStars";
 
@@ -16,12 +16,14 @@ interface ClientForRenewal {
   business_name: string;
   niche: string | null;
   services: string[] | null;
+  services_active?: string[] | null;
   monthly_value: number;
   renewal_date: string | null;
   health_score: number;
   status: string;
   start_date: string | null;
   last_upsell_attempt: string | null;
+  phone?: string | null;
 }
 
 const ALL_SERVICES = [
@@ -110,7 +112,7 @@ export function RenewalTable({
           {clients.length === 0 ? (
             <tr>
               <td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">
-                No upcoming renewals in the next 60 days 🎉
+                No upcoming renewals in the next 60 days
               </td>
             </tr>
           ) : (
@@ -134,7 +136,7 @@ export function RenewalTable({
                     {c.niche ?? "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <ServicePills services={c.services} max={3} />
+                    <ServicePills services={c.services_active ?? c.services} max={3} />
                   </td>
                   <td className="px-4 py-3 text-sm font-mono font-semibold text-slate-800">
                     ₹{(c.monthly_value ?? 0).toLocaleString("en-IN")}
@@ -158,6 +160,17 @@ export function RenewalTable({
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1.5">
+                      {c.phone && (
+                        <a
+                          href={`https://wa.me/91${String(c.phone).replace(/\D/g, "").slice(-10)}?text=${encodeURIComponent(`Hi! Jabeer from FortuneMarq here. Your plan with us comes up for renewal${c.renewal_date ? ` on ${new Date(c.renewal_date).toLocaleDateString("en-IN", { day: "numeric", month: "long" })}` : " soon"} — I'd love to walk you through what we achieved this cycle and the plan for the next one. When's a good time for a quick call?`)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-lg border border-green-200 bg-green-50 p-2 text-green-600 hover:bg-green-100 transition-colors min-h-[36px]"
+                          title="Start renewal conversation on WhatsApp"
+                        >
+                          <MessageCircle className="h-3.5 w-3.5" />
+                        </a>
+                      )}
                       <button
                         onClick={() => handleRenew(c.id)}
                         disabled={pendingId === c.id}
@@ -258,7 +271,7 @@ export function UpsellTable({
                     </Link>
                   </td>
                   <td className="px-4 py-3">
-                    <ServicePills services={currentServices} max={3} />
+                    <ServicePills services={c.services_active ?? currentServices} max={3} />
                   </td>
                   <td className="px-4 py-3">
                     <ServicePills services={missing} max={3} />

@@ -20,9 +20,9 @@ export default async function AdminBriefingPage() {
     // Sales: Followups
     const { data: followups } = await supabase
         .from('leads')
-        .select('id, first_name, last_name, company, next_action_date')
-        .gte('next_action_date', today)
-        .lt('next_action_date', new Date(Date.now() + 86400000).toISOString())
+        .select('id, company_name, contact_person, city, industry, phone, outreach_stage, follow_up_date')
+        .gte('follow_up_date', today)
+        .lt('follow_up_date', new Date(Date.now() + 86400000).toISOString())
         .limit(5);
 
     // Delivery: Tasks Due
@@ -49,13 +49,13 @@ export default async function AdminBriefingPage() {
         .limit(10);
 
     return (
-        <div className="min-h-screen bg-slate-50 p-6 text-slate-900">
+        <div className="min-h-full bg-slate-50 p-6 text-slate-900">
             <div className="mx-auto max-w-5xl space-y-8">
                 {/* Header */}
                 <div className="flex justify-between items-end">
                     <div>
-                        <h1 className="text-4xl font-mono tabular-nums font-bold flex items-center gap-3">
-                            <span className="text-2xl">☕️</span> Good Morning, Admin
+                        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                            Good Morning, Admin
                         </h1>
                         <p className="text-slate-600 mt-1">Here is your daily briefing for {new Date().toLocaleDateString()}.</p>
                     </div>
@@ -102,9 +102,9 @@ export default async function AdminBriefingPage() {
                             </div>
                             <div className="space-y-3">
                                 {followups?.map((lead: any) => (
-                                    <div key={lead.id} className="flex justify-between items-center text-sm border-b border-[#222] pb-2 last:border-0 last:pb-0">
-                                        <span className="truncate max-w-[120px] text-slate-600">{lead.company || lead.first_name}</span>
-                                        <Link href={`/sales/leads/${lead.id}`} className="text-blue-400 hover:text-blue-300 text-xs text-right">Call</Link>
+                                    <div key={lead.id} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0 last:pb-0">
+                                        <span className="truncate max-w-[120px] text-slate-600">{lead.contact_person} — {lead.company_name}</span>
+                                        <Link href={`/admin/leads/${lead.id}`} className="text-blue-400 hover:text-blue-300 text-xs text-right">View</Link>
                                     </div>
                                 ))}
                                 {followups?.length === 0 && <p className="text-xs text-slate-600 italic">No urgent follow-ups.</p>}
@@ -121,7 +121,7 @@ export default async function AdminBriefingPage() {
                             </div>
                             <div className="space-y-3">
                                 {tasksDue?.map((task: any) => (
-                                    <div key={task.id} className="flex justify-between items-center text-sm border-b border-[#222] pb-2 last:border-0 last:pb-0">
+                                    <div key={task.id} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0 last:pb-0">
                                         <span className="truncate max-w-[150px] text-slate-600">{task.title}</span>
                                         <Link href={`/projects/${task.project_id}`} className="text-green-400 hover:text-green-300 text-xs">View</Link>
                                     </div>
@@ -140,7 +140,7 @@ export default async function AdminBriefingPage() {
                             </div>
                             <div className="space-y-3">
                                 {approvals?.map((app: any) => (
-                                    <div key={app.id} className="flex justify-between items-center text-sm border-b border-[#222] pb-2 last:border-0 last:pb-0">
+                                    <div key={app.id} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0 last:pb-0">
                                         <span className="text-slate-600">Milestone Decision</span>
                                         <span className="text-amber-500 text-xs font-medium">Pending</span>
                                     </div>
@@ -158,7 +158,7 @@ export default async function AdminBriefingPage() {
                     </h2>
                     <div className="bg-white border border-slate-200 rounded-xl overflow-hidden text-sm">
                         {activity?.map((event: any, i: number) => (
-                            <div key={event.id} className={clsx("p-3 flex gap-3 items-start border-b border-slate-200", i % 2 === 0 ? "bg-white" : "bg-[#151515]")}>
+                            <div key={event.id} className={clsx("p-3 flex gap-3 items-start border-b border-slate-200", i % 2 === 0 ? "bg-white" : "bg-slate-50")}>
                                 <div className="mt-1 w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0"></div>
                                 <div>
                                     <p className="text-slate-700">

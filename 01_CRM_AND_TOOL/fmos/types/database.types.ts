@@ -206,6 +206,83 @@ export type Database = {
           },
         ]
       }
+      agreements: {
+        Row: {
+          agreement_number: string | null
+          confirmed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          lead_id: string | null
+          proposal_id: string | null
+          proposal_ref: string | null
+          services: Json | null
+          start_date: string | null
+          status: string | null
+          total_monthly: number | null
+          total_setup: number | null
+        }
+        Insert: {
+          agreement_number?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          lead_id?: string | null
+          proposal_id?: string | null
+          proposal_ref?: string | null
+          services?: Json | null
+          start_date?: string | null
+          status?: string | null
+          total_monthly?: number | null
+          total_setup?: number | null
+        }
+        Update: {
+          agreement_number?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          lead_id?: string | null
+          proposal_id?: string | null
+          proposal_ref?: string | null
+          services?: Json | null
+          start_date?: string | null
+          status?: string | null
+          total_monthly?: number | null
+          total_setup?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agreements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agreements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "agreements_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agreements_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       alert_rules: {
         Row: {
           condition: Json
@@ -518,6 +595,63 @@ export type Database = {
           },
         ]
       }
+      client_asset_vault: {
+        Row: {
+          asset_id: string
+          asset_name: string
+          client_id: string | null
+          created_at: string | null
+          file_url: string | null
+          id: string
+          notes: string | null
+          received_at: string | null
+          required: boolean | null
+          service_id: string
+          status: string | null
+        }
+        Insert: {
+          asset_id: string
+          asset_name: string
+          client_id?: string | null
+          created_at?: string | null
+          file_url?: string | null
+          id?: string
+          notes?: string | null
+          received_at?: string | null
+          required?: boolean | null
+          service_id: string
+          status?: string | null
+        }
+        Update: {
+          asset_id?: string
+          asset_name?: string
+          client_id?: string | null
+          created_at?: string | null
+          file_url?: string | null
+          id?: string
+          notes?: string | null
+          received_at?: string | null
+          required?: boolean | null
+          service_id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_asset_vault_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_asset_vault_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "renewal_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_assets: {
         Row: {
           category: string
@@ -643,6 +777,80 @@ export type Database = {
           },
         ]
       }
+      client_onboarding_tasks: {
+        Row: {
+          client_id: string | null
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string | null
+          due_by: string | null
+          id: string
+          notes: string | null
+          owner: string
+          service_id: string
+          status: string | null
+          task: string
+          task_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          due_by?: string | null
+          id?: string
+          notes?: string | null
+          owner: string
+          service_id: string
+          status?: string | null
+          task: string
+          task_id: string
+        }
+        Update: {
+          client_id?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          due_by?: string | null
+          id?: string
+          notes?: string | null
+          owner?: string
+          service_id?: string
+          status?: string | null
+          task?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_onboarding_tasks_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_onboarding_tasks_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "renewal_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_onboarding_tasks_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_onboarding_tasks_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       client_packages: {
         Row: {
           client_id: string
@@ -749,12 +957,15 @@ export type Database = {
           notes: string | null
           onboarding_completed: boolean | null
           owner_name: string | null
+          package_tier: string | null
           phone: string | null
           primary_email: string | null
           renewal_date: string | null
           services: string[] | null
+          services_active: Json | null
           start_date: string | null
           status: string | null
+          upsell_eligible: boolean | null
           upsell_notes: string | null
           user_id: string | null
         }
@@ -770,12 +981,15 @@ export type Database = {
           notes?: string | null
           onboarding_completed?: boolean | null
           owner_name?: string | null
+          package_tier?: string | null
           phone?: string | null
           primary_email?: string | null
           renewal_date?: string | null
           services?: string[] | null
+          services_active?: Json | null
           start_date?: string | null
           status?: string | null
+          upsell_eligible?: boolean | null
           upsell_notes?: string | null
           user_id?: string | null
         }
@@ -791,12 +1005,15 @@ export type Database = {
           notes?: string | null
           onboarding_completed?: boolean | null
           owner_name?: string | null
+          package_tier?: string | null
           phone?: string | null
           primary_email?: string | null
           renewal_date?: string | null
           services?: string[] | null
+          services_active?: Json | null
           start_date?: string | null
           status?: string | null
+          upsell_eligible?: boolean | null
           upsell_notes?: string | null
           user_id?: string | null
         }
@@ -934,6 +1151,21 @@ export type Database = {
           leads_count?: number
           source?: string | null
           uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      dashboard_state: {
+        Row: {
+          id: number
+          state: Json
+        }
+        Insert: {
+          id: number
+          state?: Json
+        }
+        Update: {
+          id?: number
+          state?: Json
         }
         Relationships: []
       }
@@ -1252,6 +1484,7 @@ export type Database = {
           paid_amount: number | null
           paid_at: string | null
           pdf_url: string | null
+          revenue_type: string | null
           status: string | null
           subtotal: number
           total_amount: number
@@ -1270,6 +1503,7 @@ export type Database = {
           paid_amount?: number | null
           paid_at?: string | null
           pdf_url?: string | null
+          revenue_type?: string | null
           status?: string | null
           subtotal?: number
           total_amount?: number
@@ -1288,6 +1522,7 @@ export type Database = {
           paid_amount?: number | null
           paid_at?: string | null
           pdf_url?: string | null
+          revenue_type?: string | null
           status?: string | null
           subtotal?: number
           total_amount?: number
@@ -1380,6 +1615,7 @@ export type Database = {
           current_traffic_estimate: string | null
           deal_probability: number | null
           email: string | null
+          follow_up_date: string | null
           gmb_link: string | null
           has_gmb: boolean | null
           has_website: boolean | null
@@ -1393,15 +1629,22 @@ export type Database = {
           last_contacted_at: string | null
           last_interaction_note: string | null
           last_outcome: string | null
+          last_outreach_at: string | null
           lead_source: string | null
           lead_type: string | null
           meeting_booked_at: string | null
+          meeting_link: string | null
+          meeting_notes: string | null
           next_action_date: string | null
+          no_answer_count: number | null
           notes: string | null
           outreach_stage: string | null
+          pdf_name: string | null
+          pdf_sent_at: string | null
           phone: string | null
           proposal_link: string | null
           proposal_sent_at: string | null
+          search_volume: number | null
           serp_ranked: boolean | null
           serp_source: string | null
           source: string | null
@@ -1423,6 +1666,7 @@ export type Database = {
           current_traffic_estimate?: string | null
           deal_probability?: number | null
           email?: string | null
+          follow_up_date?: string | null
           gmb_link?: string | null
           has_gmb?: boolean | null
           has_website?: boolean | null
@@ -1436,15 +1680,22 @@ export type Database = {
           last_contacted_at?: string | null
           last_interaction_note?: string | null
           last_outcome?: string | null
+          last_outreach_at?: string | null
           lead_source?: string | null
           lead_type?: string | null
           meeting_booked_at?: string | null
+          meeting_link?: string | null
+          meeting_notes?: string | null
           next_action_date?: string | null
+          no_answer_count?: number | null
           notes?: string | null
           outreach_stage?: string | null
+          pdf_name?: string | null
+          pdf_sent_at?: string | null
           phone?: string | null
           proposal_link?: string | null
           proposal_sent_at?: string | null
+          search_volume?: number | null
           serp_ranked?: boolean | null
           serp_source?: string | null
           source?: string | null
@@ -1466,6 +1717,7 @@ export type Database = {
           current_traffic_estimate?: string | null
           deal_probability?: number | null
           email?: string | null
+          follow_up_date?: string | null
           gmb_link?: string | null
           has_gmb?: boolean | null
           has_website?: boolean | null
@@ -1479,15 +1731,22 @@ export type Database = {
           last_contacted_at?: string | null
           last_interaction_note?: string | null
           last_outcome?: string | null
+          last_outreach_at?: string | null
           lead_source?: string | null
           lead_type?: string | null
           meeting_booked_at?: string | null
+          meeting_link?: string | null
+          meeting_notes?: string | null
           next_action_date?: string | null
+          no_answer_count?: number | null
           notes?: string | null
           outreach_stage?: string | null
+          pdf_name?: string | null
+          pdf_sent_at?: string | null
           phone?: string | null
           proposal_link?: string | null
           proposal_sent_at?: string | null
+          search_volume?: number | null
           serp_ranked?: boolean | null
           serp_source?: string | null
           source?: string | null
@@ -1726,6 +1985,61 @@ export type Database = {
           },
         ]
       }
+      outreach_logs: {
+        Row: {
+          actor_id: string | null
+          created_at: string | null
+          id: string
+          lead_id: string | null
+          note: string | null
+          outcome: string | null
+          pdf_name: string | null
+          touch_type: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          note?: string | null
+          outcome?: string | null
+          pdf_name?: string | null
+          touch_type: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          note?: string | null
+          outcome?: string | null
+          pdf_name?: string | null
+          touch_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outreach_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "outreach_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       outreach_sequences: {
         Row: {
           assigned_to: string | null
@@ -1877,24 +2191,30 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           email: string | null
+          first_name: string | null
           full_name: string | null
           id: string
+          last_name: string | null
           role: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id: string
+          last_name?: string | null
           role?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id?: string
+          last_name?: string | null
           role?: string | null
         }
         Relationships: []
@@ -2166,6 +2486,7 @@ export type Database = {
           agreement_sent_at: string | null
           closed_at: string | null
           created_at: string | null
+          created_by: string | null
           id: string
           lead_id: string
           meeting_id: string | null
@@ -2178,13 +2499,18 @@ export type Database = {
           sent_at: string | null
           sent_by: string | null
           sequence_id: string | null
+          services: Json | null
+          start_date: string | null
           status: string
+          total_monthly: number | null
+          total_setup: number | null
           updated_at: string | null
         }
         Insert: {
           agreement_sent_at?: string | null
           closed_at?: string | null
           created_at?: string | null
+          created_by?: string | null
           id?: string
           lead_id: string
           meeting_id?: string | null
@@ -2197,13 +2523,18 @@ export type Database = {
           sent_at?: string | null
           sent_by?: string | null
           sequence_id?: string | null
+          services?: Json | null
+          start_date?: string | null
           status?: string
+          total_monthly?: number | null
+          total_setup?: number | null
           updated_at?: string | null
         }
         Update: {
           agreement_sent_at?: string | null
           closed_at?: string | null
           created_at?: string | null
+          created_by?: string | null
           id?: string
           lead_id?: string
           meeting_id?: string | null
@@ -2216,10 +2547,28 @@ export type Database = {
           sent_at?: string | null
           sent_by?: string | null
           sequence_id?: string | null
+          services?: Json | null
+          start_date?: string | null
           status?: string
+          total_monthly?: number | null
+          total_setup?: number | null
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "proposals_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposals_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "proposals_lead_id_fkey"
             columns: ["lead_id"]
@@ -2565,6 +2914,8 @@ export type Database = {
           id: string
           priority: string | null
           project_id: string | null
+          revision_count: number | null
+          revision_notes: string | null
           section_tag: string | null
           sop_content: string | null
           status: Database["public"]["Enums"]["task_status"] | null
@@ -2587,6 +2938,8 @@ export type Database = {
           id?: string
           priority?: string | null
           project_id?: string | null
+          revision_count?: number | null
+          revision_notes?: string | null
           section_tag?: string | null
           sop_content?: string | null
           status?: Database["public"]["Enums"]["task_status"] | null
@@ -2609,6 +2962,8 @@ export type Database = {
           id?: string
           priority?: string | null
           project_id?: string | null
+          revision_count?: number | null
+          revision_notes?: string | null
           section_tag?: string | null
           sop_content?: string | null
           status?: Database["public"]["Enums"]["task_status"] | null
@@ -2828,6 +3183,45 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_templates: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          id: string
+          lead_type: string | null
+          meta_category: string | null
+          name: string
+          requires_meta_approval: boolean | null
+          sent_by: string | null
+          variables: Json | null
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          id: string
+          lead_type?: string | null
+          meta_category?: string | null
+          name: string
+          requires_meta_approval?: boolean | null
+          sent_by?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          lead_type?: string | null
+          meta_category?: string | null
+          name?: string
+          requires_meta_approval?: boolean | null
+          sent_by?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       campaign_analytics: {
@@ -2956,11 +3350,13 @@ export type Database = {
         Args: { p_project_id: string }
         Returns: undefined
       }
+      get_dashboard_state: { Args: never; Returns: Json }
       get_my_role: { Args: never; Returns: string }
       increment_package_value: {
         Args: { p_amount: number; p_package_id: string }
         Returns: undefined
       }
+      save_dashboard_state: { Args: { new_state: Json }; Returns: undefined }
     }
     Enums: {
       lead_status:
@@ -2976,8 +3372,6 @@ export type Database = {
         | "closed_won"
         | "closed_lost"
         | "proposal_sent"
-        | "meeting_booked"
-        | "follow_up_due"
       milestone_status:
         | "not_started"
         | "in_progress"

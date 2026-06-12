@@ -47,13 +47,37 @@ export function CommandPalette() {
     const supabase = createClient();
     const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
+    // Mirrors the sidebar nav — keep in sync with app-sidebar.tsx
     const commonActions: SearchResult[] = [
-        { id: "nav-dashboard", title: "Command Hub", icon: LayoutDashboard, href: "/admin", category: "Navigation" },
-        { id: "nav-sales", title: "Sales Force", icon: Phone, href: "/admin/sales", category: "Navigation" },
-        { id: "nav-operations", title: "Operations Center", icon: FolderKanban, href: "/admin/operations", category: "Navigation" },
-        { id: "nav-financials", title: "Financials Hub", icon: DollarSign, href: "/admin/financials", category: "Navigation" },
-        { id: "nav-strategy", title: "Strategy Engine", icon: Target, href: "/admin/strategy", category: "Navigation" },
-        { id: "nav-leads", title: "Leads Management", icon: Users, href: "/admin/sales/leads", category: "Navigation" },
+        { id: "nav-dashboard", title: "Dashboard", icon: LayoutDashboard, href: "/admin", category: "Navigation" },
+        { id: "nav-leads", title: "Leads", icon: Phone, href: "/sales", category: "Navigation" },
+        { id: "nav-outreach", title: "Outreach Board", icon: Target, href: "/admin/outreach", category: "Navigation" },
+        { id: "nav-meetings", title: "Meetings", icon: ClipboardList, href: "/admin/meetings", category: "Navigation" },
+        { id: "nav-proposals", title: "Proposals", icon: ClipboardList, href: "/admin/proposals", category: "Navigation" },
+        { id: "nav-agreements", title: "Agreements", icon: ClipboardList, href: "/admin/agreements", category: "Navigation" },
+        { id: "nav-clients", title: "Clients", icon: Building2, href: "/admin/clients", category: "Navigation" },
+        { id: "nav-tasks", title: "Tasks", icon: ClipboardList, href: "/tasks", category: "Navigation" },
+        { id: "nav-projects", title: "Projects", icon: FolderKanban, href: "/projects", category: "Navigation" },
+        { id: "nav-team", title: "Team", icon: Users, href: "/admin/team", category: "Navigation" },
+        { id: "nav-finance", title: "Finance", icon: DollarSign, href: "/admin/finance", category: "Navigation" },
+        { id: "nav-growth", title: "Growth", icon: Target, href: "/admin/growth", category: "Navigation" },
+        { id: "nav-strategy", title: "Strategy", icon: Target, href: "/admin/strategy", category: "Navigation" },
+        { id: "nav-reports", title: "Reports (AI Weekly)", icon: ClipboardList, href: "/admin/reports", category: "Navigation" },
+        { id: "nav-wa-templates", title: "WhatsApp Templates", icon: MessageSquare, href: "/admin/whatsapp-templates", category: "Navigation" },
+        { id: "nav-attendance", title: "Attendance Overview", icon: ClipboardList, href: "/admin/attendance", category: "Navigation" },
+        { id: "nav-work-hours", title: "Work Hours", icon: ClipboardList, href: "/admin/work-hours", category: "Navigation" },
+        { id: "nav-audit", title: "Audit Log", icon: ClipboardList, href: "/admin/audit-log", category: "Navigation" },
+        { id: "nav-data-mgmt", title: "Data Management", icon: ClipboardList, href: "/admin/data-management", category: "Navigation" },
+        { id: "nav-duplicates", title: "Data Quality (Duplicates)", icon: ClipboardList, href: "/admin/duplicates", category: "Navigation" },
+        { id: "nav-automations", title: "Automations", icon: Target, href: "/admin/automations", category: "Navigation" },
+        { id: "nav-niche-kits", title: "Niche Kits", icon: ClipboardList, href: "/admin/niche-kits", category: "Navigation" },
+        { id: "nav-scorecards", title: "Team Scorecards", icon: Users, href: "/admin/team/scorecards", category: "Navigation" },
+        { id: "nav-sops", title: "SOPs Library", icon: ClipboardList, href: "/admin/team/sops", category: "Navigation" },
+        { id: "nav-sessions", title: "Active Sessions", icon: Users, href: "/admin/sessions", category: "Navigation" },
+        { id: "nav-settings", title: "Settings", icon: ClipboardList, href: "/admin/settings", category: "Navigation" },
+        { id: "nav-upload", title: "Upload Leads (CSV)", icon: ClipboardList, href: "/admin/upload", category: "Navigation" },
+        { id: "nav-manager-pipeline", title: "Manager Pipeline", icon: Target, href: "/manager/pipeline", category: "Navigation" },
+        { id: "nav-manager-perf", title: "Sales Performance", icon: Target, href: "/manager/performance", category: "Navigation" },
     ];
 
     // Initialize Recent Searches
@@ -85,38 +109,42 @@ export function CommandPalette() {
         }
 
         setLoading(true);
-        const searchTerms = query.trim().split(" ").join(" & "); // for fts
+        // ilike on guaranteed columns — fts_tokens migration may not be applied,
+        // and a failed textSearch silently returns nothing.
+        const pattern = `%${query.trim()}%`;
         const fullResults: SearchResult[] = [];
 
         try {
             // 1. Search Leads (Scoped by role)
-            let leadsQuery = supabase.from("leads").select("id, company_name, industry, status, assigned_sales_exec");
+            let leadsQuery = supabase.from("leads")
+                .select("id, company_name, industry, city, outreach_stage, phone, assigned_sales_exec")
+                .or(`company_name.ilike.${pattern},phone.ilike.${pattern},city.ilike.${pattern}`);
 
             // Apply Telecaller restriction
             if (userProfile?.role === 'telecaller') {
                 leadsQuery = leadsQuery.eq('assigned_sales_exec', userProfile.id);
             }
 
-            const { data: leads } = await leadsQuery.textSearch('fts_tokens', searchTerms).limit(5);
+            const { data: leads } = await leadsQuery.limit(5);
             if (leads) {
                 leads.forEach((l: any) => {
                     fullResults.push({
                         id: `lead-${l.id}`,
                         title: l.company_name,
-                        subtitle: l.industry || "General Lead",
+                        subtitle: [l.industry, l.city].filter(Boolean).join(" · ") || "Lead",
                         category: "Leads",
-                        href: `/admin/sales/leads?id=${l.id}`,
+                        href: `/admin/leads/${l.id}`,
                         icon: Users,
-                        badge: l.status.replace(/_/g, ' ')
+                        badge: (l.outreach_stage || "").replace(/_/g, ' ')
                     });
                 });
             }
 
             // 2. Search Clients (Managers/Admins only)
             if (userProfile?.role !== 'telecaller') {
-                const { data: clients } = await supabase.from("clients" as any)
-                    .select("id, business_name, contact_name")
-                    .textSearch('fts_tokens', searchTerms)
+                const { data: clients } = await (supabase.from("clients" as any) as any)
+                    .select("id, business_name, owner_name, city")
+                    .or(`business_name.ilike.${pattern},owner_name.ilike.${pattern},city.ilike.${pattern}`)
                     .limit(5);
 
                 if (clients) {
@@ -124,7 +152,7 @@ export function CommandPalette() {
                         fullResults.push({
                             id: `client-${c.id}`,
                             title: c.business_name,
-                            subtitle: c.contact_name || "Enterprise Client",
+                            subtitle: [c.owner_name, c.city].filter(Boolean).join(" · ") || "Client",
                             category: "Clients",
                             href: `/admin/clients/${c.id}`,
                             icon: Building2
@@ -133,31 +161,10 @@ export function CommandPalette() {
                 }
             }
 
-            // 3. Search Projects (Managers/Admins only)
-            if (userProfile?.role !== 'telecaller') {
-                const { data: projects } = await supabase.from("projects" as any)
-                    .select("id, service_type, status")
-                    .textSearch('fts_tokens', searchTerms)
-                    .limit(5);
-
-                if (projects) {
-                    projects.forEach((p: any) => {
-                        fullResults.push({
-                            id: `project-${p.id}`,
-                            title: p.service_type?.replace(/_/g, ' ') || "Project",
-                            subtitle: `Status: ${p.status?.replace(/_/g, ' ')}`,
-                            category: "Projects",
-                            href: `/projects/${p.id}`,
-                            icon: FolderKanban
-                        });
-                    });
-                }
-            }
-
-            // 4. Search Tasks
-            const { data: tasks } = await supabase.from("tasks" as any)
-                .select("id, title, project_id, assigned_to")
-                .textSearch('fts_tokens', searchTerms)
+            // 3. Search Tasks
+            const { data: tasks } = await (supabase.from("tasks" as any) as any)
+                .select("id, title, project_id, status")
+                .ilike("title", pattern)
                 .limit(5);
 
             if (tasks) {
@@ -165,33 +172,12 @@ export function CommandPalette() {
                     fullResults.push({
                         id: `task-${t.id}`,
                         title: t.title,
-                        subtitle: `Assigned to: ${t.assigned_to || 'Unassigned'}`,
+                        subtitle: `Status: ${(t.status || "open").replace(/_/g, ' ')}`,
                         category: "Tasks",
-                        href: `/projects/${t.project_id}`,
+                        href: t.project_id ? `/projects/${t.project_id}` : "/tasks",
                         icon: ClipboardList
                     });
                 });
-            }
-
-            // 5. Search WhatsApp Logs (Admin only)
-            if (userProfile?.role === 'admin') {
-                const { data: logs } = await supabase.from("whatsapp_logs" as any)
-                    .select("id, lead_id, message_sent")
-                    .textSearch('fts_tokens', searchTerms)
-                    .limit(3);
-
-                if (logs) {
-                    logs.forEach((log: any) => {
-                        fullResults.push({
-                            id: `wa-${log.id}`,
-                            title: "WhatsApp Audit Item",
-                            subtitle: log.message_sent.slice(0, 60) + "...",
-                            category: "WhatsApp",
-                            href: `/admin/sales/leads?id=${log.lead_id}`,
-                            icon: MessageSquare
-                        });
-                    });
-                }
             }
 
             setResults(fullResults);

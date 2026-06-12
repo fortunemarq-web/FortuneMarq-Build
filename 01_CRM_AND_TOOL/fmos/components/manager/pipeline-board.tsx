@@ -22,15 +22,21 @@ import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { sendNotification, NotificationType } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
+import { leadStageUpdate } from "@/lib/pipeline";
+import { toast } from "@/components/ui/toast";
 
+// Columns map 1:1 to outreach_stage — the single source of truth for
+// pipeline position (see lib/pipeline.ts). Never invent parallel stages.
 const STAGES = [
-    { id: "new", label: "New", color: "slate", icon: Building2 },
-    { id: "called_no_answer", label: "No Answer", color: "amber", icon: AlertCircle },
-    { id: "called_interested", label: "Interested", color: "emerald", icon: CheckCircle2 },
+    { id: "touch1_pending", label: "New", color: "slate", icon: Building2 },
+    { id: "no_answer", label: "No Answer", color: "amber", icon: AlertCircle },
+    { id: "follow_up_due", label: "Follow-up Due", color: "amber", icon: Clock },
+    { id: "curiosity_sent", label: "Curiosity Sent", color: "purple", icon: ArrowRightLeft },
+    { id: "pdf_sent", label: "PDF Sent", color: "purple", icon: FileText },
+    { id: "meeting_booked", label: "Meeting Booked", color: "emerald", icon: CheckCircle2 },
     { id: "proposal_sent", label: "Proposal Sent", color: "blue", icon: FileText },
-    { id: "negotiation", label: "Negotiation", color: "purple", icon: ArrowRightLeft },
-    { id: "closed_won", label: "Closed Won", color: "green", icon: Award },
-    { id: "closed_lost", label: "Closed Lost", color: "rose", icon: XCircle },
+    { id: "won", label: "Won", color: "green", icon: Award },
+    { id: "lost", label: "Lost", color: "rose", icon: XCircle },
 ];
 
 // Helper for Lucide icons because I can't import dynamically easily in this snippet
@@ -41,10 +47,11 @@ interface Lead {
     company_name: string;
     industry: string;
     city: string;
-    pipeline_stage: string;
+    outreach_stage: string;
     lead_quality_score?: number;
-    pipeline_updated_at: string;
-    assigned_to?: string;
+    last_activity_at: string | null;
+    created_at: string;
+    assigned_sales_exec?: string | null;
     telecaller?: {
         full_name: string;
         avatar_url: string;
@@ -69,23 +76,18 @@ export default function PipelineBoard() {
     async function fetchLeads() {
         setIsLoading(true);
         try {
+            // leads has NO updated_at / assigned_to columns — use
+            // last_activity_at / assigned_sales_exec (see CLAUDE.md).
             const { data, error } = await supabase
                 .from("leads")
-                .select("*, telecaller:auth.users(id, full_name, avatar_url)") // Note: This might need adjustment based on profiles table
-                .order("pipeline_updated_at", { ascending: false });
+                .select("id, company_name, industry, city, outreach_stage, lead_quality_score, last_activity_at, created_at, assigned_sales_exec")
+                .order("last_activity_at", { ascending: false, nullsFirst: false });
 
-            // Re-fetch with profiles join if the above fails due to auth.users restriction
-            const { data: leadsWithProfiles, error: profileError } = await (supabase
-                .from("leads")
-                .select(`
-                    *,
-                    telecaller:profiles!leads_assigned_to_fkey(full_name, avatar_url)
-                `) as any);
-
-            if (profileError) throw profileError;
-            setLeads(leadsWithProfiles || []);
-        } catch (error) {
+            if (error) throw error;
+            setLeads(data || []);
+        } catch (error: any) {
             console.error("Error fetching leads for pipeline:", error);
+            toast.error("Could not load pipeline", error?.message ?? "");
         } finally {
             setIsLoading(false);
         }
@@ -105,32 +107,31 @@ export default function PipelineBoard() {
         const groups: Record<string, Lead[]> = {};
         STAGES.forEach(s => groups[s.id] = []);
         filteredLeads.forEach(l => {
-            const stage = l.pipeline_stage || "new";
+            const stage = l.outreach_stage || "touch1_pending";
             if (groups[stage]) groups[stage].push(l);
-            else groups["new"].push(l); // Fallback
+            // Closed stages without a column (not_interested, dead, revival)
+            // are intentionally not shown on the manager board.
         });
         return groups;
     }, [filteredLeads]);
 
     async function moveLead(leadId: string, toStage: string) {
         // Optimistic UI update
-        const updatedLeads = (leads.map(l => l.id === leadId ? { ...l, pipeline_stage: toStage, pipeline_updated_at: new Date().toISOString() } : l) as any[]);
+        const updatedLeads = (leads.map(l => l.id === leadId ? { ...l, outreach_stage: toStage, last_activity_at: new Date().toISOString() } : l) as any[]);
         setLeads(updatedLeads);
 
         try {
+            // Stage writes ONLY via lib/pipeline.ts helpers
             const { error } = await (supabase
                 .from("leads") as any)
-                .update({
-                    pipeline_stage: toStage,
-                    pipeline_updated_at: new Date().toISOString()
-                })
+                .update(leadStageUpdate(toStage))
                 .eq("id", leadId);
 
 
             if (error) throw error;
 
             // Notify Manager for critical stage changes
-            if (toStage === 'called_interested' || toStage === 'closed_won') {
+            if (toStage === 'meeting_booked' || toStage === 'won') {
                 const { data: admins } = await supabase.from("profiles").select("id").eq("role", "admin");
                 const lead = leads.find(l => l.id === leadId);
 
@@ -138,8 +139,8 @@ export default function PipelineBoard() {
                     for (const admin of admins) {
                         await sendNotification({
                             userId: (admin as any).id,
-                            type: (toStage === 'closed_won' ? 'deal_closed' : 'lead_status_changed') as NotificationType,
-                            title: toStage === 'closed_won' ? '🏆 Deal Closed Won!' : '🔥 New Interested Lead',
+                            type: (toStage === 'won' ? 'deal_closed' : 'lead_status_changed') as NotificationType,
+                            title: toStage === 'won' ? 'Deal Closed Won' : 'Meeting Booked',
                             body: `${lead?.company_name || 'A lead'} has moved to ${toStage.replace('_', ' ')}.`,
                             link: `/manager/pipeline`
                         });
@@ -154,7 +155,7 @@ export default function PipelineBoard() {
                 resourceType: 'lead',
                 resourceId: leadId,
                 resourceLabel: `Moved ${lead?.company_name || 'lead'} to ${toStage}`,
-                oldValue: { stage: lead?.pipeline_stage },
+                oldValue: { stage: lead?.outreach_stage },
                 newValue: { stage: toStage }
             });
 
@@ -187,7 +188,7 @@ export default function PipelineBoard() {
     const niches = Array.from(new Set(leads.map(l => l.industry).filter(Boolean)));
 
     return (
-        <div className="flex flex-col h-screen bg-slate-50 overflow-hidden">
+        <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
             {/* Toolbar */}
             <div className="bg-white border-b border-slate-200 px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 shadow-sm relative z-20">
                 <div className="flex items-center gap-4">
@@ -255,9 +256,7 @@ export default function PipelineBoard() {
                                         {groupedLeads[stage.id]?.length || 0}
                                     </span>
                                 </div>
-                                <button className="p-1 text-slate-400 hover:text-slate-900 transition-colors">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </button>
+                                {/* (kebab menu removed — no column actions exist yet) */}
                             </div>
 
                             {/* Cards Container */}
@@ -304,7 +303,7 @@ export default function PipelineBoard() {
                                                 <div className="flex items-center justify-between pt-2 border-t border-slate-50">
                                                     <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
                                                         <Clock className="h-3 w-3" />
-                                                        <span>{Math.floor((new Date().getTime() - new Date(lead.pipeline_updated_at).getTime()) / (1000 * 60 * 60 * 24))}d ago</span>
+                                                        <span>{Math.floor((new Date().getTime() - new Date(lead.last_activity_at ?? lead.created_at).getTime()) / (1000 * 60 * 60 * 24))}d ago</span>
                                                     </div>
 
                                                     <div className="flex items-center -space-x-1.5">
@@ -342,26 +341,21 @@ export default function PipelineBoard() {
                 </div>
             </div>
 
-            {/* Funnel Insight Sidebar (Optional Bottom or Side Overlay) */}
+            {/* Funnel insight strip — real numbers only */}
             <div className="bg-white border-t border-slate-200 px-8 py-3 flex items-center justify-between shrink-0 relative z-30">
                 <div className="flex items-center gap-8">
                     <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs font-bold text-slate-500">Pipeline Value: <span className="text-slate-900 text-sm">$425,000</span></span>
+                        <Users className="h-4 w-4 text-blue-500" />
+                        <span className="text-xs font-bold text-slate-500">Leads on board: <span className="text-slate-900 text-sm">{filteredLeads.length}</span></span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-blue-500" />
-                        <span className="text-xs font-bold text-slate-500">Active Deals: <span className="text-slate-900 text-sm">{leads.length}</span></span>
+                        <TrendingUp className="h-4 w-4 text-emerald-500" />
+                        <span className="text-xs font-bold text-slate-500">Meetings booked: <span className="text-slate-900 text-sm">{groupedLeads["meeting_booked"]?.length || 0}</span></span>
                     </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <div className="flex h-1.5 w-32 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500" style={{ width: '45%' }} />
-                        <div className="h-full bg-blue-500" style={{ width: '25%' }} />
-                        <div className="h-full bg-amber-500" style={{ width: '30%' }} />
+                    <div className="flex items-center gap-2">
+                        <Award className="h-4 w-4 text-emerald-600" />
+                        <span className="text-xs font-bold text-slate-500">Won: <span className="text-slate-900 text-sm">{groupedLeads["won"]?.length || 0}</span></span>
                     </div>
-                    <span className="text-xs font-bold text-slate-500">Conversion: 12.4%</span>
                 </div>
             </div>
 

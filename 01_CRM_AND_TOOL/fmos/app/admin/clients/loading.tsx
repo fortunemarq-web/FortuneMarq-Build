@@ -1,6 +1,6 @@
 export default function ClientsLoading() {
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl animate-pulse">
         <div className="h-10 w-48 rounded-lg bg-slate-200 mb-2" />
         <div className="h-4 w-72 rounded bg-slate-100 mb-8" />

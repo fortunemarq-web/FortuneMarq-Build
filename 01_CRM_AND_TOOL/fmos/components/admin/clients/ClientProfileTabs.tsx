@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   ClipboardCheck,
@@ -23,6 +24,8 @@ const TABS = [
 
 export type TabId = (typeof TABS)[number]["id"];
 
+const VALID_TABS = TABS.map((t) => t.id) as string[];
+
 export default function ClientProfileTabs({
   children,
   defaultTab = "overview",
@@ -30,7 +33,24 @@ export default function ClientProfileTabs({
   children: Record<TabId, ReactNode>;
   defaultTab?: TabId;
 }) {
-  const [activeTab, setActiveTab] = useState<TabId>(defaultTab);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const tabFromUrl = searchParams.get("tab");
+  const initialTab: TabId =
+    tabFromUrl && VALID_TABS.includes(tabFromUrl)
+      ? (tabFromUrl as TabId)
+      : defaultTab;
+
+  const [activeTab, setActiveTab] = useState<TabId>(initialTab);
+
+  function handleTabChange(id: TabId) {
+    setActiveTab(id);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", id);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
 
   return (
     <div>
@@ -43,7 +63,7 @@ export default function ClientProfileTabs({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all whitespace-nowrap min-h-[44px] ${
                   isActive
                     ? "border-[#42CA80] text-[#42CA80]"

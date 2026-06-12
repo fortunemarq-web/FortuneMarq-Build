@@ -27,11 +27,11 @@ export default function MarketingDashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#0f0f0f] p-4 md:p-8">
+        <div className="min-h-full bg-[#0f0f0f] p-4 md:p-8">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white font-display">
+                    <h1 className="text-2xl font-bold text-white">
                         Agency Marketing
                     </h1>
                     <p className="text-[#a1a1aa] text-sm mt-1">

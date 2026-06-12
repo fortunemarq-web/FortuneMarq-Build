@@ -27,7 +27,7 @@ export default async function UploadDebugPage() {
   const canReadLeads = !leadsError;
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-4xl">
         <Link
           href="/admin/upload"

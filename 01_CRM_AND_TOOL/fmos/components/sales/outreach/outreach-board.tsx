@@ -68,7 +68,7 @@ export default function OutreachBoard({ sequences, todayMeetings }: OutreachBoar
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-[1800px]">
         {/* Go Back Button */}
         <div className="mb-4">

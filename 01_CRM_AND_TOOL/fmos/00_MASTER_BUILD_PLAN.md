@@ -1,10 +1,35 @@
 # FortuneMarq Agency OS — Master Build Plan
-**Version**: 3.0 | **Updated**: 2026-03-25
-**Status**: Production Ready | **Current App Version**: v4.5
+**Version**: 3.2 | **Updated**: 2026-06-11 (evening)
+**Status**: Hardened + UI overhauled, pre-deploy (4 SQL migrations pending) | **Current App Version**: v4.7
 
 ---
 
 ## Build Status — All Systems
+
+### ✅ UI/UX Overhaul + Layout/PDF Session (2026-06-11 evening)
+Full detail in `COWORK_HANDOFF.md`. Highlights:
+- **Design system** in `globals.css`: brand token scale (`brand-deep` #1E7A4F = the only green for text/buttons on white), self-hosted fonts via next/font, focus rings, thin scrollbars, tabular numerals; dead `tailwind.config.ts` deleted
+- **Restyled**: login page (rebuilt), admin dashboard (neutral-first, semantic color only), 7 error pages, telecaller cockpit accents; emoji removed from all UI chrome
+- **Layout fix**: app shell `h-dvh`, `<main>` is the only scroll container; `min-h-screen → min-h-full` in 106 shell files (kills overscroll white space; sidebar no longer scrolls away)
+- **Bug fix**: outreach board crash — `leads.updated_at`/`assigned_to` don't exist → `last_activity_at`/`assigned_sales_exec`; dashboard meetings-today counts on `meeting_booked_at`; `pipeline.ts` helpers auto-stamp both timestamps now
+- **PDFs**: `InvoicePDF.tsx` redesigned (brand bar, status chip, zebra table, Total Due block); print-to-PDF system (`.print-area` + `PrintButton`) for proposals + agreements; agreement gained signature blocks
+- Build: clean `npx tsc --noEmit` + `npm run build`
+- **Open**: PDF re-test by user; growth-page emoji icons; ~670 hardcoded `#42CA80` hexes to migrate to tokens opportunistically; `/manager` pipeline-board phantom columns
+
+### ✅ Security & Reliability Hardening (2026-06-11)
+Full audit → fixes executed (steps 1–7). Details in `last_session.md`.
+- **Auth**: `proxy.ts` deny-by-default route protection; `/admin` admin-only; role-area redirects
+- **RLS**: migration `20260611000000_harden_rls_policies.sql` — anon fully locked out, staff-only catch-all, admin-only finance/audit, scoped client-portal policies ⚠️ MUST BE RUN IN SUPABASE
+- **Cron**: all 6 routes require `CRON_SECRET` bearer (fail closed) + service-role client (`lib/supabase-admin.ts`, `lib/cron-auth.ts`)
+- **API routes**: 18 routes/actions moved from anon client to cookie-auth client
+- **Error UX**: global toast system (`components/ui/toast.tsx` + `lib/mutate.ts`); silent-failure mutations fixed in cockpit, outreach board, meetings, proposal creator, lead profile, close-deal modal
+- **Pipeline**: `lib/pipeline.ts` single state machine (17 stages incl. parked: unreachable/gatekeeper/gatekeeper_flagged/language_barrier/revival); `outreach_stage` + `status` written in lockstep everywhere; parked stages now visible on outreach board
+- **Audit**: migration `20260611000002_audit_triggers.sql` — DB triggers on 10 core tables ⚠️ RUN IN SUPABASE
+- **Meetings columns**: migration `20260611000001_leads_meeting_columns.sql` ⚠️ RUN IN SUPABASE
+- **Perf**: migration `20260611000003_hot_column_indexes.sql` ⚠️ RUN IN SUPABASE; outreach board select fix (updated_at/assigned_to) + caps; LeadsList real DB pagination (50/page)
+- **Wired up**: NotificationBell mounted (was orphaned — notifications were write-only); ActivityTimeline (now merges audit_logs) on lead profile + client overview
+- Build: clean `npx tsc --noEmit` + `npm run build`
+- **Deferred**: WhatsApp Cloud API/webhooks (awaiting credentials); wa.me links unchanged
 
 ### ✅ Type Safety & Code Quality (2026-03-25)
 - `database.types.ts` regenerated via Supabase CLI — all 30+ tables typed

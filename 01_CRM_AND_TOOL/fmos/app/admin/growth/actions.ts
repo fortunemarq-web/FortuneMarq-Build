@@ -76,6 +76,22 @@ export async function upsertContentPiece(data: Partial<ContentPiece>) {
   return { success: true, data: result };
 }
 
+export async function deleteContentPiece(id: string, channel: string) {
+  const supabase = await createServerClientWithCookies();
+
+  const { error } = await supabase
+    .from("content_pieces")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath(`/admin/growth/${channel}`);
+  return { success: true };
+}
+
 // ───────────────────────────────────────────
 // 2. City & Niche Acquisition
 // ───────────────────────────────────────────

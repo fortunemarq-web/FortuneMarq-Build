@@ -146,3 +146,20 @@ export async function updateSopAction(id: string, formData: FormData) {
   revalidatePath(`/admin/team/sops/${id}`);
   redirect("/admin/team/sops");
 }
+
+export async function deleteSopAction(id: string) {
+  const supabase = await createServerClientWithCookies();
+
+  const { error } = await supabase
+    .from("sops" as any)
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error deleting SOP:", error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/admin/team/sops");
+  redirect("/admin/team/sops");
+}

@@ -53,43 +53,59 @@ export default function MyStatsPage() {
             const { data: userData } = await supabase.auth.getUser();
             if (!userData.user) return;
 
-            // Fetch summary stats
-            const { data: statsData } = await supabase
-                .from("telecaller_stats" as any)
-                .select("*")
-                .eq("user_id", userData.user.id)
-                .single() as any;
-
-            // Fetch today's counts from call_logs
             const today = new Date().toISOString().split('T')[0];
-            const { data: todayLogs } = await supabase
-                .from("call_logs" as any)
-                .select("outcome")
-                .eq("telecaller_id", userData.user.id)
-                .gte("created_at", today) as any;
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
 
-            // Fetch recent logs
+            // Fetch today's calls from outreach_logs
+            const { data: todayLogs } = await supabase
+                .from("outreach_logs")
+                .select("id, outcome, touch_type, created_at")
+                .eq("actor_id", userData.user.id)
+                .eq("touch_type", "call")
+                .gte("created_at", `${today}T00:00:00`)
+                .lte("created_at", `${today}T23:59:59`);
+
+            // Fetch this week's calls
+            const { data: weekLogs } = await supabase
+                .from("outreach_logs")
+                .select("id, outcome")
+                .eq("actor_id", userData.user.id)
+                .eq("touch_type", "call")
+                .gte("created_at", weekStart.toISOString());
+
+            // Fetch all-time stats
+            const { data: allTimeLogs } = await supabase
+                .from("outreach_logs")
+                .select("id, outcome")
+                .eq("actor_id", userData.user.id)
+                .eq("touch_type", "call");
+
+            // Fetch recent logs for activity feed
             const { data: recentLogs } = await supabase
-                .from("call_logs" as any)
-                .select("id, outcome, duration_seconds, created_at, leads(company_name)")
-                .eq("telecaller_id", userData.user.id)
+                .from("outreach_logs")
+                .select("id, outcome, created_at, touch_type, notes, lead_id")
+                .eq("actor_id", userData.user.id)
                 .order("created_at", { ascending: false })
-                .limit(10) as any;
+                .limit(10);
+
+            const interestedOutcomes = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO"];
+            const totalInterested = allTimeLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0;
 
             setStats({
                 callsToday: todayLogs?.length || 0,
-                interestedToday: todayLogs?.filter((l: any) => l.outcome === 'interested' || l.outcome === 'strategy_booked').length || 0,
-                currentStreak: statsData?.current_streak || 0,
-                highestStreak: statsData?.highest_streak || 0,
-                totalCalls: statsData?.total_calls || 0,
-                totalInterested: statsData?.total_interested || 0,
+                interestedToday: todayLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0,
+                currentStreak: 0, // Would need day-by-day calculation — show 0 for now
+                highestStreak: 0,
+                totalCalls: allTimeLogs?.length || 0,
+                totalInterested,
             });
 
             setLogs((recentLogs || []).map((l: any) => ({
                 id: l.id,
-                lead_name: l.leads?.company_name || "Unknown",
-                outcome: l.outcome,
-                duration_seconds: l.duration_seconds,
+                lead_name: l.lead_id?.slice(0, 8) || "Lead",
+                outcome: l.outcome || l.touch_type || "call",
+                duration_seconds: 0,
                 created_at: l.created_at
             })));
 
@@ -114,7 +130,7 @@ export default function MyStatsPage() {
     const progressPercent = Math.min((stats.callsToday / dailyCallGoal) * 100, 100);
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+        <div className="min-h-full bg-slate-50 p-4 md:p-8 max-w-7xl mx-auto space-y-8">
             {/* Header / Hero */}
             <div className="bg-slate-900 rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 blur-[100px] rounded-full -mr-64 -mt-64" />
@@ -203,8 +219,8 @@ export default function MyStatsPage() {
                                 <div className="flex items-center gap-4">
                                     <div className={clsx(
                                         "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs uppercase",
-                                        log.outcome === 'interested' || log.outcome === 'strategy_booked' ? "bg-emerald-100 text-emerald-600" :
-                                            log.outcome === 'no_answer' || log.outcome === 'busy' ? "bg-slate-100 text-slate-500" : "bg-rose-100 text-rose-600"
+                                        ['INTERESTED_BOOK', 'INTERESTED_FOLLOW_UP', 'INTERESTED_SEND_INFO'].includes(log.outcome) ? "bg-emerald-100 text-emerald-600" :
+                                            ['NO_ANSWER', 'FOLLOW_BACK'].includes(log.outcome) ? "bg-slate-100 text-slate-500" : "bg-rose-100 text-rose-600"
                                     )}>
                                         {log.outcome.slice(0, 2)}
                                     </div>

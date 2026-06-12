@@ -1,9 +1,9 @@
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
 
     try {
         const { merge_id } = await req.json();

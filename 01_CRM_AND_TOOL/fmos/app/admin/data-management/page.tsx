@@ -1,10 +1,10 @@
 import DataManager from "@/components/admin/data-manager";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { ShieldAlert } from "lucide-react";
 
 export default function AdminDataManagementPage() {
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-12">
+        <div className="min-h-full bg-slate-50 px-4 py-12">
             <div className="mx-auto max-w-4xl">
                 <div className="mb-8">
                     <h1 className="text-4xl font-mono tabular-nums font-bold text-slate-900 flex items-center gap-3">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase";
 import { useParams } from "next/navigation";
 import {
     FileText,
@@ -21,20 +20,14 @@ export default function MagicReportPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const supabase = createClient();
-
     useEffect(() => {
         async function fetchReport() {
             setLoading(true);
             try {
-                const { data, error: fetchError } = await supabase
-                    .from("client_reports" as any)
-                    .select("*, clients(business_name)")
-                    .eq("magic_link_token", token)
-                    .single();
-
-                if (fetchError) throw fetchError;
-                setReport(data);
+                const res = await fetch(`/api/public/client-report/${token}`);
+                if (!res.ok) throw new Error(`Report fetch failed (${res.status})`);
+                const json = await res.json();
+                setReport(json.report);
             } catch (err) {
                 console.error("Error fetching report:", err);
                 setError("Report not found or link expired.");

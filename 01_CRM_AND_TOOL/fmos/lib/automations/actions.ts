@@ -1,6 +1,7 @@
-import { createClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
 import { Action } from "./types";
 import { logAudit } from "@/lib/audit";
+import { leadStatusUpdate } from "@/lib/pipeline";
 
 // We'll use a server-side client passed from engine usually, but here we create one if needed
 // Actually, engine should pass the client to ensure transaction/context sharing if possible,
@@ -8,7 +9,7 @@ import { logAudit } from "@/lib/audit";
 // We'll instantiate new clients or reuse.
 
 export async function executeAction(action: Action, entityType: string, entityId: string, snapshot: any): Promise<void> {
-    const supabase = createClient() as any;
+    const supabase = createAdminClient() as any;
     const now = new Date();
 
     try {
@@ -17,7 +18,11 @@ export async function executeAction(action: Action, entityType: string, entityId
                 await handleAssign(supabase, entityType, entityId, action.value);
                 break;
             case 'set_status':
-                await updateEntity(supabase, entityType, entityId, { status: action.value });
+                // Leads keep outreach_stage in lockstep with status
+                await updateEntity(
+                    supabase, entityType, entityId,
+                    entityType === 'lead' ? leadStatusUpdate(action.value) : { status: action.value }
+                );
                 break;
             case 'set_next_action_date':
                 const date = calculateDate(action.value);

@@ -10,6 +10,7 @@ import { bulkUpdateEntity } from "@/actions/bulk-actions";
 import { SavedView, FilterConfig, SortConfig } from "@/types/view";
 import { Loader2, ArrowUpDown } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface DealWithClient {
     id: string;
@@ -86,7 +87,7 @@ export default function DealsList({ userId }: { userId: string }) {
 
         if (Object.keys(updates).length > 0) {
             await bulkUpdateEntity("deal", ids, updates, action);
-            alert("Updated deals");
+            toast.success("Deals updated");
             clearSelection();
             fetchData();
         }

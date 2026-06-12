@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 
 export default function RenewalsError({
@@ -10,15 +11,15 @@ export default function RenewalsError({
   reset: () => void;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-full bg-slate-50 flex items-center justify-center px-4">
       <div className="max-w-md text-center space-y-4">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-          <span className="text-2xl">⚠️</span>
+          <AlertTriangle className="h-7 w-7 text-red-500" />
         </div>
         <h2 className="text-xl font-bold text-slate-900">Failed to load renewals</h2>
         <p className="text-sm text-slate-500">{error.message}</p>
         <div className="flex items-center justify-center gap-3">
-          <button onClick={reset} className="rounded-xl bg-[#42CA80] px-6 py-3 text-sm font-semibold text-white hover:bg-[#38b571] transition-colors min-h-[44px]">
+          <button onClick={reset} className="rounded-lg bg-brand-deep px-6 py-3 text-sm font-semibold text-white hover:bg-brand-active transition-colors min-h-[44px]">
             Try Again
           </button>
           <Link href="/admin/clients" className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]">

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import type { ClientRecord } from "@/app/admin/clients/actions";
 import { updateClientNotes, updateClientField } from "@/app/admin/clients/actions";
 import { Calendar, FolderKanban, FileText, Save, Loader2, Zap } from "lucide-react";
+import ActivityTimeline from "@/components/ActivityTimeline";
 
 export default function OverviewTab({
   client,
@@ -85,6 +86,23 @@ export default function OverviewTab({
               ₹{(client.monthly_value ?? 0).toLocaleString("en-IN")}
             </span>
           </div>
+          {client.services_active && client.services_active.length > 0 && (
+            <div className="py-2 border-b border-slate-50">
+              <p className="text-xs text-slate-500 mb-1 flex justify-between items-center">
+                <span>Active Services</span>
+              </p>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {client.services_active.map((service: string) => (
+                  <span
+                    key={service}
+                    className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200 uppercase"
+                  >
+                    {service.replace(/_/g, " ")}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="flex justify-between items-center py-2">
             <span className="text-xs text-slate-500">Onboarding</span>
             <span
@@ -204,6 +222,15 @@ export default function OverviewTab({
               ))}
             </div>
           )}
+        </div>
+
+        {/* Full Activity Trail (audit triggers + activity events) */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+            <Zap className="h-3.5 w-3.5" />
+            Activity Trail
+          </h3>
+          <ActivityTimeline entityType="client" entityId={client.id} compact limit={8} />
         </div>
 
         {/* Notes */}

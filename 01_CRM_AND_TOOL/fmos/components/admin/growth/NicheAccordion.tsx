@@ -5,27 +5,30 @@ import Link from "next/link";
 import { ChevronDown, ExternalLink, Activity, ArrowRight, Sparkles } from "lucide-react";
 import { updateAcquisitionTarget } from "@/app/admin/growth/actions";
 
+export interface NichePipelineCounts {
+  new: number;
+  engaged: number;
+  meeting: number;
+  proposal: number;
+  won: number;
+}
+
 interface NicheAccordionProps {
   target: any;
   campaigns?: any[];
+  /** Real per-niche stage counts, computed server-side from leads */
+  pipeline?: NichePipelineCounts;
 }
 
-export default function NicheAccordion({ target, campaigns = [] }: NicheAccordionProps) {
+const EMPTY_PIPELINE: NichePipelineCounts = { new: 0, engaged: 0, meeting: 0, proposal: 0, won: 0 };
+
+export default function NicheAccordion({ target, campaigns = [], pipeline = EMPTY_PIPELINE }: NicheAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isActive, setIsActive] = useState(target.is_active);
   const [notes, setNotes] = useState(target.notes || "");
   const [isSaving, setIsSaving] = useState(false);
 
-  // Mocked pipeline counts matching the Phase 3 spec pattern
-  const pipeline = {
-    new: Math.floor(Math.random() * 30),
-    contacted: Math.floor(Math.random() * 10),
-    demo: Math.floor(Math.random() * 5),
-    proposal: Math.floor(Math.random() * 3),
-    closed: Math.floor(Math.random() * 2),
-  };
-  
-  const totalLeads = Object.values(pipeline).reduce((a,b) => a+b, 0);
+  const totalLeads = Object.values(pipeline).reduce((a, b) => a + b, 0);
 
   const handleToggleActive = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -93,10 +96,10 @@ export default function NicheAccordion({ target, campaigns = [] }: NicheAccordio
               <div className="flex items-center justify-between gap-2 overflow-x-auto pb-2">
                 {[
                   { label: "New", count: pipeline.new, color: "text-blue-600", bg: "bg-blue-50 border-blue-100" },
-                  { label: "Contacted", count: pipeline.contacted, color: "text-amber-600", bg: "bg-amber-50 border-amber-100" },
-                  { label: "Demo", count: pipeline.demo, color: "text-purple-600", bg: "bg-purple-50 border-purple-100" },
+                  { label: "Engaged", count: pipeline.engaged, color: "text-amber-600", bg: "bg-amber-50 border-amber-100" },
+                  { label: "Meeting", count: pipeline.meeting, color: "text-purple-600", bg: "bg-purple-50 border-purple-100" },
                   { label: "Proposal", count: pipeline.proposal, color: "text-orange-600", bg: "bg-orange-50 border-orange-100" },
-                  { label: "Closed", count: pipeline.closed, color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-200" },
+                  { label: "Won", count: pipeline.won, color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-200" },
                 ].map(stage => (
                   <Link 
                     key={stage.label}
@@ -139,9 +142,7 @@ export default function NicheAccordion({ target, campaigns = [] }: NicheAccordio
                 )}
               </div>
               
-              <button className="mt-4 w-full flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white py-2 text-xs font-semibold text-slate-600 hover:border-[#42CA80] hover:text-[#42CA80] transition-colors">
-                <Sparkles className="h-3 w-3" /> New Campaign Draft
-              </button>
+              {/* ("New Campaign Draft" button removed — it did nothing) */}
             </div>
             
           </div>

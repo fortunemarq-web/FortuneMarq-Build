@@ -4,11 +4,12 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { ContentPiece } from "@/app/admin/growth/actions";
 import ContentPostModal from "@/components/admin/growth/ContentPostModal";
+import { getContentTypeIcon } from "@/components/admin/growth/content-type-icons";
 
 interface CalendarProps {
   channel: string;
   initialPieces: ContentPiece[];
-  availableTypes: { id: string; label: string; icon: string }[];
+  availableTypes: { id: string; label: string; icon?: string }[];
 }
 
 export default function ContentCalendar({ channel, initialPieces, availableTypes }: CalendarProps) {
@@ -101,22 +102,23 @@ export default function ContentCalendar({ channel, initialPieces, availableTypes
                   
                   <button 
                     onClick={() => setModalPost({ scheduled_date: dayObj.dateStr })}
-                    className="absolute top-2 right-2 p-1 rounded-md text-slate-300 hover:bg-slate-100 hover:text-[#42CA80] opacity-0 group-hover:opacity-100 transition-all"
+                    className="absolute top-2 right-2 p-1 rounded-md text-slate-300 hover:bg-slate-100 hover:text-brand-deep opacity-0 group-hover:opacity-100 transition-all"
                   >
                     <Plus className="h-3 w-3" />
                   </button>
 
                   <div className="mt-2 space-y-1.5 flex-1 overflow-y-auto pr-1">
                     {dayObj.pieces.map((p: any) => {
-                      const type = availableTypes.find(t => t.id === p.content_type) || { icon: "📝" };
+                      const TypeIcon = getContentTypeIcon(p.content_type);
                       return (
-                        <div 
-                          key={p.id} 
+                        <div
+                          key={p.id}
                           onClick={() => setModalPost(p)}
-                          className={`text-[10px] font-semibold leading-tight rounded-md px-1.5 py-1 cursor-pointer border hover:opacity-80 transition-all truncate ${statusColor(p.status)}`}
+                          className={`flex items-center gap-1 text-[10px] font-semibold leading-tight rounded-md px-1.5 py-1 cursor-pointer border hover:opacity-80 transition-all ${statusColor(p.status)}`}
                           title={p.title}
                         >
-                          <span className="mr-1">{type.icon}</span> {p.title}
+                          <TypeIcon className="h-3 w-3 shrink-0" />
+                          <span className="truncate">{p.title}</span>
                         </div>
                       );
                     })}
@@ -134,6 +136,7 @@ export default function ContentCalendar({ channel, initialPieces, availableTypes
           channel={channel}
           onClose={() => setModalPost(null)}
           onSave={handleSaveModal}
+          onDelete={(id) => setPieces(prev => prev.filter(p => p.id !== id))}
           availableTypes={availableTypes}
         />
       )}

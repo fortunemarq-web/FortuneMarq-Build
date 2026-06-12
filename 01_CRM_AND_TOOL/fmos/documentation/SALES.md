@@ -7,6 +7,22 @@
 
 ---
 
+## ⚡ Updates — 2026-06-11 Hardening
+
+- **Outcome logging now fails loudly.** If the `outreach_logs` insert or the lead update fails, the rep sees an error toast, the logger stays open for retry, and the cockpit does NOT advance to the next lead. A success toast confirms every logged outcome.
+- **Stage + status in lockstep.** Logging an outcome writes both `outreach_stage` (canonical) and legacy `status` via `stageToStatus()` from `lib/pipeline.ts` — admin dashboards and the cockpit can no longer disagree about a lead.
+- **Follow-up queue membership** comes from `FOLLOW_UP_QUEUE_STAGES` in `lib/pipeline.ts`: `no_answer`, `follow_back`, `follow_up_due`, `gatekeeper`, `gatekeeper_flagged`.
+- **Parked stages are visible.** `unreachable` (3× no answer), `gatekeeper_flagged` (3× gatekeeper), and `language_barrier` leads now appear as columns on `/admin/outreach` instead of vanishing.
+- **Auth:** `/sales` requires login at the proxy level (deny-by-default routing).
+
+## ⚡ Updates — 2026-06-11 Evening (UI/UX)
+
+- **Cockpit visuals:** call button is now solid dark green (`brand-deep`) with white text (was a gradient with dark text); the sticky stats bar shows uniform white numerals; UI emojis removed (filter labels, warnings). Emojis inside scripts/WhatsApp messages are unchanged.
+- **Outcome logging now also stamps `last_activity_at`** on the lead (and `meeting_booked_at` when a meeting is booked) — this powers the "Stalled Nd" badges on `/admin/outreach` and the "Meetings booked today" KPI on `/admin`.
+- **Layout:** the page no longer overscrolls into blank space; the main area is the single scroll container.
+
+---
+
 ## 1. Quick Start Workflow
 1. **Login** and navigate to `/sales`.
 2. **Select Lead Type**: Use the top-left switcher — **Outbound (Cold)** or **Inbound (Hot)**.

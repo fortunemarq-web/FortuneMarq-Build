@@ -134,14 +134,12 @@ export async function generateClientOnboarding(
 
   // Batch insert tasks
   if (taskInserts.length > 0) {
-    await (supabase as any).from("client_onboarding_tasks").insert(taskInserts);
-    // TODO: regenerate types after client_onboarding_tasks migration
+    await supabase.from("client_onboarding_tasks").insert(taskInserts);
   }
 
   // Batch insert asset vault entries
   if (assetInserts.length > 0) {
-    await (supabase as any).from("client_asset_vault").insert(assetInserts);
-    // TODO: regenerate types after client_asset_vault migration
+    await supabase.from("client_asset_vault").insert(assetInserts);
   }
 }
 

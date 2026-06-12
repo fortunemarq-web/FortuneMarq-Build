@@ -40,25 +40,49 @@ export default async function AgencyGrowthHub({
     .order("due_date", { ascending: true })
     .limit(10);
 
-  // 2. Mock/Fetch High-Level Stats for the Header
+  // 2. Real per-channel publishing stats from content_pieces.
+  //    Follower counts have no data source yet (no social API integration)
+  //    — shown as "—" instead of fabricated numbers.
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+  const { data: pieces } = await supabase
+    .from("content_pieces" as any)
+    .select("channel, status, published_date");
+
+  const channelStats: Record<string, { mtd: number; last: string | null }> = {};
+  ((pieces as any[]) || []).forEach((p: any) => {
+    if (p.status !== "published" || !p.published_date) return;
+    const c = p.channel;
+    if (!channelStats[c]) channelStats[c] = { mtd: 0, last: null };
+    if (p.published_date >= monthStart) channelStats[c].mtd++;
+    if (!channelStats[c].last || p.published_date > channelStats[c].last!) channelStats[c].last = p.published_date;
+  });
+
+  const lastPostLabel = (c: string) => {
+    const last = channelStats[c]?.last;
+    if (!last) return "No posts yet";
+    const days = Math.floor((Date.now() - new Date(last).getTime()) / 86400000);
+    return days === 0 ? "Today" : days === 1 ? "1 day ago" : `${days} days ago`;
+  };
+
+  const totalPublishedMtd = Object.values(channelStats).reduce((s, c) => s + c.mtd, 0);
   const headerStats = [
-    { label: "Instagram Followers", value: "1,245", change: 5.2, positive: true },
-    { label: "LinkedIn Followers", value: "3,892", change: 12.4, positive: true },
-    { label: "Facebook Followers", value: "854", change: -1.2, positive: false },
-    { label: "GMB Views (MTD)", value: "12,450", change: 18.5, positive: true },
-    { label: "Website Sessions (MTD)", value: "4,210", change: 8.7, positive: true },
+    { label: "Posts Published (MTD)", value: String(totalPublishedMtd) },
+    { label: "Instagram Posts (MTD)", value: String(channelStats["instagram"]?.mtd ?? 0) },
+    { label: "LinkedIn Posts (MTD)", value: String(channelStats["linkedin"]?.mtd ?? 0) },
+    { label: "Facebook Posts (MTD)", value: String(channelStats["facebook"]?.mtd ?? 0) },
+    { label: "GMB Posts (MTD)", value: String(channelStats["gmb"]?.mtd ?? 0) },
   ];
 
   const platforms = [
-    { name: "Instagram", icon: Instagram, metric: "1,245 followers", lastPost: "2 days ago", postsThisMonth: 8, href: "/admin/growth/instagram" },
-    { name: "LinkedIn", icon: Linkedin, metric: "3,892 followers", lastPost: "1 day ago", postsThisMonth: 12, href: "/admin/growth/linkedin" },
-    { name: "Facebook", icon: Facebook, metric: "854 followers", lastPost: "5 days ago", postsThisMonth: 4, href: "/admin/growth/facebook" },
-    { name: "Google My Business", icon: MapPin, metric: "12,450 views", lastPost: "3 days ago", postsThisMonth: 5, href: "/admin/growth/gmb" },
-    { name: "Website/SEO", icon: Search, metric: "24 top 10 keywords", lastPost: "Updated today", postsThisMonth: 2, href: "/admin/growth/seo" },
+    { name: "Instagram", icon: Instagram, metric: "Followers: — (not connected)", lastPost: lastPostLabel("instagram"), postsThisMonth: channelStats["instagram"]?.mtd ?? 0, href: "/admin/growth/instagram" },
+    { name: "LinkedIn", icon: Linkedin, metric: "Followers: — (not connected)", lastPost: lastPostLabel("linkedin"), postsThisMonth: channelStats["linkedin"]?.mtd ?? 0, href: "/admin/growth/linkedin" },
+    { name: "Facebook", icon: Facebook, metric: "Followers: — (not connected)", lastPost: lastPostLabel("facebook"), postsThisMonth: channelStats["facebook"]?.mtd ?? 0, href: "/admin/growth/facebook" },
+    { name: "Google My Business", icon: MapPin, metric: "Views: — (not connected)", lastPost: lastPostLabel("gmb"), postsThisMonth: channelStats["gmb"]?.mtd ?? 0, href: "/admin/growth/gmb" },
+    { name: "Website/SEO", icon: Search, metric: "Rank tracking in SEO tab", lastPost: lastPostLabel("seo"), postsThisMonth: channelStats["seo"]?.mtd ?? 0, href: "/admin/growth/seo" },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl">
         {/* Header Setup */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
@@ -101,13 +125,7 @@ export default async function AgencyGrowthHub({
           {headerStats.map((stat, i) => (
             <div key={i} className="bg-white rounded-xl border border-slate-200 shadow-sm p-5" style={{ borderTop: "3px solid #42CA80" }}>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">{stat.label}</p>
-              <div className="flex items-end justify-between">
-                <p className="text-2xl font-bold font-mono text-slate-900">{stat.value}</p>
-                <div className={`flex items-center text-xs font-bold ${stat.positive ? 'text-emerald-600' : 'text-red-500'}`}>
-                  {stat.positive ? <ArrowUpRight className="h-3 w-3 mr-0.5" /> : <ArrowDownRight className="h-3 w-3 mr-0.5" />}
-                  {stat.change}%
-                </div>
-              </div>
+              <p className="text-2xl font-bold font-mono text-slate-900">{stat.value}</p>
             </div>
           ))}
         </div>

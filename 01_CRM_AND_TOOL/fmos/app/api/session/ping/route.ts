@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 
 export async function POST(req: NextRequest) {
     const sessionId = req.cookies.get("app_session_id")?.value;
     if (!sessionId) return new NextResponse(null, { status: 204 }); // No session to ping
 
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
 
     // Optimistic update, ignoring return to be fast
     await supabase.from("user_sessions" as any)

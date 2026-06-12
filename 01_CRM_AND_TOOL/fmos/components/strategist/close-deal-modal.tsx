@@ -5,7 +5,9 @@ import { X, CheckCircle2, XCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { generateProjectTasks, generateProjectMilestones } from "@/lib/project-utils";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
 import type { Database } from "@/types/database.types";
+import { leadStatusUpdate } from "@/lib/pipeline";
 
 type Lead = Database["public"]["Tables"]["leads"]["Row"];
 interface CloseDealModalProps {
@@ -115,7 +117,7 @@ export default function CloseDealModal({
       // Step 1: Update lead status to 'closed_won'
       const { error: leadError } = await supabase
         .from("leads")
-        .update({ status: "closed_won" })
+        .update(leadStatusUpdate("closed_won") as any)
         .eq("id", lead.id);
 
       if (leadError) throw leadError;
@@ -158,10 +160,10 @@ export default function CloseDealModal({
         // If clients table doesn't exist or insert fails, check if it's RLS
         if (clientError.message?.includes("row-level security policy")) {
           console.error("clients table RLS policy blocking insert:", clientError);
-          alert(`Error: Cannot create client due to security policy. Please check RLS settings.\n\n${clientError.message}`);
+          toast.error(`Error: Cannot create client due to security policy. Please check RLS settings.\n\n${clientError.message}`);
         } else {
           console.error("clients table insert failed:", clientError);
-          alert(`Error: Failed to create client.\n\n${clientError.message}`);
+          toast.error(`Error: Failed to create client.\n\n${clientError.message}`);
         }
         onClose();
         return; // Stop here if client creation fails
@@ -171,7 +173,7 @@ export default function CloseDealModal({
 
       if (!clientId) {
         console.error("Client was created but no ID returned");
-        alert("Error: Client was created but no ID was returned. Cannot proceed.");
+        toast.error("Error: Client was created but no ID was returned. Cannot proceed.");
         onClose();
         return;
       }
@@ -299,7 +301,7 @@ export default function CloseDealModal({
           // Partial success, maybe warn but don't blocking everything?
           // We'll consider it a success but show alert?
           console.warn(`Some projects failed to create: ${errors.join(", ")}`);
-          alert(`Warning: Projects for ${errors.join(", ")} failed to create. Others succeeded.`);
+          toast.error(`Warning: Projects for ${errors.join(", ")} failed to create. Others succeeded.`);
         }
       }
 

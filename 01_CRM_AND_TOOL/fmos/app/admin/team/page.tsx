@@ -60,12 +60,28 @@ export default async function TeamOverviewPage() {
     .from("team_targets")
     .select("*");
 
+  // 4. Real "actuals" for the targets table:
+  //    calls = today's lead_outcomes per actor; tasks = completed today
+  const { data: outcomesToday } = await supabase
+    .from("lead_outcomes")
+    .select("actor_id")
+    .gte("created_at", today + "T00:00:00");
+
+  const actuals: Record<string, { calls: number; tasks: number }> = {};
+  profiles?.forEach((p: any) => {
+    actuals[p.id] = { calls: 0, tasks: taskStats[p.id]?.completedToday ?? 0 };
+  });
+  (outcomesToday || []).forEach((o: any) => {
+    if (o.actor_id && actuals[o.actor_id]) actuals[o.actor_id].calls++;
+  });
+
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12">
-      <TeamOverviewClient 
-        profiles={profiles} 
-        targets={targets || []} 
-        taskStats={taskStats} 
+    <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
+      <TeamOverviewClient
+        profiles={profiles}
+        targets={targets || []}
+        taskStats={taskStats}
+        actuals={actuals}
       />
     </div>
   );

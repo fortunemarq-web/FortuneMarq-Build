@@ -66,7 +66,7 @@ export default async function ScorecardsPage({
     .lte("created_at", endStr);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12">
+    <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">

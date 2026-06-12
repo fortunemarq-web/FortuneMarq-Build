@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { Link as LinkIcon, AlertCircle, Plus, X } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface TaskDependency {
     id: string;
@@ -53,7 +54,7 @@ export default function TaskDependencies({ taskId, projectId, initialDependencie
             setSelectedTaskId("");
         } catch (e) {
             console.error(e);
-            alert("Failed to add dependency (detecting cycle?)");
+            toast.error("Failed to add dependency", "Possible circular dependency");
         }
     };
 

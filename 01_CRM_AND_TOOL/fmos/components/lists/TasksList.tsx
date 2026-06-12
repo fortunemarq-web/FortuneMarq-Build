@@ -10,6 +10,7 @@ import { bulkUpdateEntity } from "@/actions/bulk-actions";
 import { FilterConfig, SortConfig } from "@/types/view";
 import { Loader2 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 export default function TasksList({ userId }: { userId: string }) {
     const [data, setData] = useState<any[]>([]);
@@ -75,7 +76,7 @@ export default function TasksList({ userId }: { userId: string }) {
 
         if (Object.keys(updates).length > 0) {
             await bulkUpdateEntity("task", ids, updates, action);
-            alert("Updated tasks");
+            toast.success("Tasks updated");
             clearSelection();
             fetchData();
         }

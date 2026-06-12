@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { sendNotification } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
 
 export default function AdminNewReportPage() {
     const { id: clientId } = useParams();
@@ -95,7 +96,7 @@ export default function AdminNewReportPage() {
             router.push(`/admin/clients/${clientId}`);
         } catch (err) {
             console.error(err);
-            alert("Failed to save report.");
+            toast.error("Failed to save report");
         } finally {
             setIsSaving(false);
         }
@@ -104,7 +105,7 @@ export default function AdminNewReportPage() {
     if (loading) return <div className="p-8"><Loader2 className="animate-spin" /></div>;
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-12">
+        <div className="min-h-full bg-slate-50 p-4 md:p-12">
             <div className="max-w-2xl mx-auto">
                 <Link href={`/admin/clients/${clientId}`} className="flex items-center gap-2 text-slate-400 hover:text-slate-900 mb-8 transition-colors">
                     <ArrowLeft className="h-4 w-4" />

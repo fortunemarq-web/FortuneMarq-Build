@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import { Search, Copy, BookOpen, AlertCircle } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface ScriptObjectionPanelProps {
     leadIndustry?: string | null;
@@ -133,7 +134,7 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
                                 onClick={() => {
                                     const text = activeTab === "scripts" ? item.script_body : item.rebuttal;
                                     navigator.clipboard.writeText(text);
-                                    alert("Copied to clipboard!");
+                                    toast.success("Copied to clipboard");
                                 }}
                                 className="mt-3 w-full flex items-center justify-center gap-2 rounded bg-slate-50 py-1.5 text-xs font-medium text-slate-600 opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-100 hover:text-slate-900"
                             >

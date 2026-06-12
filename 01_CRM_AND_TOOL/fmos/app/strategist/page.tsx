@@ -8,7 +8,7 @@ export default async function StrategistDashboardPage() {
 
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900">Unauthorized</h1>
           <p className="mt-2 text-slate-600">Please log in to access the Strategist Dashboard.</p>
@@ -25,7 +25,8 @@ export default async function StrategistDashboardPage() {
     .from("leads")
     .select("*")
     .in("status", ["qualified", "strategy_booked", "strategy_completed", "proposal_sent", "contract_signed"] as any)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(500);
 
   // Fetch closed won leads
   const { data: closedWonLeads, error: wonError } = await supabase
@@ -61,14 +62,16 @@ export default async function StrategistDashboardPage() {
       .from("leads")
       .select("*")
       .eq("status", "strategy_completed")
-      .order("next_action_date", { ascending: true }),
+      .order("next_action_date", { ascending: true })
+      .limit(200),
 
     supabase
       .from("leads")
       .select("*")
       .eq("status", "proposal_sent")
       .lte("proposal_sent_at", threeDaysAgo)
-      .order("proposal_sent_at", { ascending: true }),
+      .order("proposal_sent_at", { ascending: true })
+      .limit(200),
   ]);
 
   if (needsProposalResult.error) console.error("needs_proposal fetch failed:", needsProposalResult.error.message);
@@ -79,7 +82,7 @@ export default async function StrategistDashboardPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <p className="text-red-500">Error loading leads: {error.message}</p>
         </div>
@@ -88,7 +91,7 @@ export default async function StrategistDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-7xl">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Strategist Dashboard</h1>

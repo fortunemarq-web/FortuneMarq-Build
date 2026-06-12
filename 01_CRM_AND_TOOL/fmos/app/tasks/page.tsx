@@ -12,11 +12,15 @@ export default async function TasksPage() {
   const supabase = await createServerClientWithCookies();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Get user role
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, full_name")
-    .single();
+  // Get user role (scoped to the signed-in user — .single() without a
+  // filter returns an arbitrary row)
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("role, full_name")
+        .eq("id", user.id)
+        .single()
+    : { data: null };
 
   const userRole = (profile as any)?.role || null;
   const isStaff = userRole === "execution_specialist" || userRole === "staff";
@@ -107,7 +111,7 @@ export default async function TasksPage() {
 
   if (tasksError) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <p className="text-red-500">Error loading tasks: {tasksError.message}</p>
           <Link href="/" className="mt-4 inline-block text-[#42CA80] hover:underline">
@@ -119,24 +123,22 @@ export default async function TasksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-[#42CA80]">
-            <ArrowLeft className="h-4 w-4" />
-            <span>Back to Home</span>
-          </Link>
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#42CA80]/10">
-              <ListTodo className="h-5 w-5 text-[#42CA80]" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">Task Board</h1>
-              <p className="text-sm text-slate-500">Manage and track all project tasks</p>
-            </div>
+    <div className="min-h-full bg-slate-50 px-4 py-6">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-soft">
+            <ListTodo className="h-4 w-4 text-brand-deep" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-slate-900">Tasks</h1>
+            <p className="text-[13px] text-slate-500">Manage and track all project tasks</p>
           </div>
         </div>
-        <TaskBoard initialTasks={(tasks || []) as any[]} projects={projectsData || []} />
+        <TaskBoard
+          initialTasks={(tasks || []) as any[]}
+          projects={projectsData || []}
+          currentUserId={user?.id ?? null}
+        />
       </div>
     </div>
   );

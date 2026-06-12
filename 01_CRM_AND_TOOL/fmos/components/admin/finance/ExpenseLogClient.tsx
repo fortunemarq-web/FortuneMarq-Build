@@ -11,6 +11,8 @@ import {
   Tooltip 
 } from 'recharts';
 import ExpenseCreateModal from "@/components/admin/finance/ExpenseCreateModal";
+import { deleteExpense } from "@/app/admin/finance/actions";
+import { toast } from "@/components/ui/toast";
 
 interface ExpenseLogClientProps {
   initialExpenses: any[];
@@ -24,8 +26,20 @@ const COLORS = ['#6366F1', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#94A3B8'
 export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, chartData }: ExpenseLogClientProps) {
   const [expenses, setExpenses] = useState(initialExpenses);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editExpense, setEditExpense] = useState<any | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+
+  const handleDelete = async (exp: any) => {
+    if (!confirm(`Delete this expense (${exp.description})? This can't be undone.`)) return;
+    try {
+      await deleteExpense(exp.id);
+      setExpenses(prev => prev.filter(e => e.id !== exp.id));
+      toast.success("Expense deleted");
+    } catch (err) {
+      toast.error("Error deleting expense: " + (err instanceof Error ? err.message : "Unknown error"));
+    }
+  };
 
   const filteredExpenses = expenses.filter(exp => {
     const matchesSearch = exp.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,7 +81,7 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-400 mb-1">
-            <Link href="/admin/finance" className="hover:text-indigo-600">Finance</Link>
+            <Link href="/admin/finance" className="hover:text-slate-700">Finance</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-slate-900">Expense Log</span>
           </div>
@@ -75,7 +89,7 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/10 transition-all"
+          className="flex items-center gap-2 bg-brand-deep hover:bg-brand-hover text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-colors"
         >
           <Plus className="h-4 w-4" /> Log Expense
         </button>
@@ -150,7 +164,7 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
             placeholder="Search by description or client..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
           />
         </div>
         <div className="flex items-center gap-2 w-full md:w-auto">
@@ -167,9 +181,7 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
             <option value="Tools & Software">Tools & Software</option>
             <option value="Misc">Misc</option>
           </select>
-          <button className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-slate-600">
-            <Filter className="h-4 w-4" />
-          </button>
+          {/* (filter icon button removed — it did nothing; the select is the filter) */}
         </div>
       </div>
 
@@ -179,12 +191,12 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
           <table className="w-full text-left">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Category</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Description</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Client Attribute</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right">Amount</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right pr-8">Actions</th>
+                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
+                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Category</th>
+                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Description</th>
+                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Client Attribute</th>
+                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right">Amount</th>
+                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right pr-8">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -216,10 +228,16 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
                        <span className="font-mono text-sm font-bold text-slate-900">{formatCurrency(exp.amount)}</span>
                     </td>
                     <td className="px-6 py-4 text-right pr-6 flex items-center justify-end gap-1 translate-y-2">
-                       <button className="p-2 text-slate-300 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all">
+                       <button
+                        onClick={() => { setEditExpense(exp); setIsModalOpen(true); }}
+                        title="Edit expense"
+                        className="p-2 text-slate-300 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all">
                         <Edit3 className="h-3.5 w-3.5" />
                        </button>
-                       <button className="p-2 text-slate-300 hover:text-red-500 hover:bg-slate-50 rounded-lg transition-all">
+                       <button
+                        onClick={() => handleDelete(exp)}
+                        title="Delete expense"
+                        className="p-2 text-slate-300 hover:text-red-500 hover:bg-slate-50 rounded-lg transition-all">
                         <Trash2 className="h-3.5 w-3.5" />
                        </button>
                     </td>
@@ -240,13 +258,22 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
       </div>
 
       {isModalOpen && (
-        <ExpenseCreateModal 
+        <ExpenseCreateModal
+          key={editExpense?.id ?? "new"}
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => { setIsModalOpen(false); setEditExpense(null); }}
           clients={clients}
+          editExpense={editExpense}
           onSuccess={(newExp: any) => {
-            setExpenses([newExp, ...expenses]);
+            if (editExpense) {
+              setExpenses(prev => prev.map(e => e.id === newExp.id ? { ...e, ...newExp } : e));
+              toast.success("Expense updated");
+            } else {
+              setExpenses([newExp, ...expenses]);
+              toast.success("Expense logged");
+            }
             setIsModalOpen(false);
+            setEditExpense(null);
           }}
         />
       )}

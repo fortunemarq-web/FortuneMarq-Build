@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { UploadCloud, FileText, Link as LinkIcon, Download, Trash2, Tag } from "lucide-react";
+import { toast } from "@/components/ui/toast";
 
 interface Deliverable {
     id: string;
@@ -38,7 +39,7 @@ export default function DeliverableManager({ projectId, initialDeliverables, isC
             setNewItem({ title: "", type: "link", url: "", description: "", version: "v1.0" });
         } catch (e) {
             console.error(e);
-            alert("Error adding deliverable");
+            toast.error("Error adding deliverable");
         }
     };
 

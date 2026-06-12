@@ -15,7 +15,7 @@ export default function BuildTrackerError({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8 flex items-center justify-center">
+    <div className="min-h-full bg-slate-50 px-4 py-8 flex items-center justify-center">
       <div className="max-w-md w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 border border-red-100">
           <BarChart2 className="h-6 w-6 text-red-500" />

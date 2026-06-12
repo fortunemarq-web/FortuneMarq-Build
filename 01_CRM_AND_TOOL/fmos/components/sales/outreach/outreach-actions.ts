@@ -1,6 +1,7 @@
 "use server";
 
 import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { leadStageUpdate } from "@/lib/pipeline";
 
 export async function advanceOutreachStage(
   sequenceId: string,
@@ -91,10 +92,7 @@ export async function advanceOutreachStage(
         // Update lead
         await supabase
           .from("leads")
-          .update({
-            meeting_booked_at: new Date().toISOString(),
-            outreach_stage: "meeting_booked" as any,
-          } as any)
+          .update(leadStageUpdate("meeting_booked", { meeting_booked_at: new Date().toISOString() }) as any)
           .eq("id", leadId);
         break;
       }
@@ -121,10 +119,7 @@ export async function advanceOutreachStage(
         // Update lead
         await supabase
           .from("leads")
-          .update({
-            proposal_sent_at: new Date().toISOString(),
-            outreach_stage: "proposal_sent" as any,
-          } as any)
+          .update(leadStageUpdate("proposal_sent", { proposal_sent_at: new Date().toISOString() }) as any)
           .eq("id", leadId);
         break;
       }
@@ -138,17 +133,14 @@ export async function advanceOutreachStage(
           outcome_at: new Date().toISOString(),
           outcome_notes: data.notes || null,
         };
-        // Update lead status
-        let leadStatus = "nurture";
-        if (data.outcome === "won") leadStatus = "closed_won";
-        else if (data.outcome === "lost") leadStatus = "closed_lost";
+        // won/lost map directly; anything else parks the lead in
+        // revival (status derives to "nurture" via the state machine)
+        const closedStage =
+          data.outcome === "won" || data.outcome === "lost" ? data.outcome : "revival";
 
         await supabase
           .from("leads")
-          .update({
-            status: leadStatus as any,
-            outreach_stage: (data.outcome as any) || ("won" as any),
-          } as any)
+          .update(leadStageUpdate(closedStage) as any)
           .eq("id", leadId);
         break;
       }

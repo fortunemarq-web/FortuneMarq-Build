@@ -112,7 +112,7 @@ export default function MyAttendancePage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900">
+        <div className="min-h-full bg-slate-50 px-4 py-8 text-slate-900">
             <div className="mx-auto max-w-md space-y-8">
                 <header className="text-center">
                     <h1 className="text-2xl font-bold">Attendance</h1>

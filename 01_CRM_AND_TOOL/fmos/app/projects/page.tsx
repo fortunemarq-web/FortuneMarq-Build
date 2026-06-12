@@ -74,7 +74,7 @@ export default async function ProjectsPage() {
 
   if (projectsError) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
           <p className="text-red-500">Error loading projects: {projectsError.message}</p>
           <p className="mt-2 text-sm text-slate-500">
@@ -103,7 +103,7 @@ export default async function ProjectsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-7xl">
         <PMDashboard
           projects={enrichedProjects}

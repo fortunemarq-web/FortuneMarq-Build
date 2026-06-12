@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Clock, AlertCircle, ChevronDown, Circle, Loader2, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Clock, AlertCircle, ChevronDown, Circle, Loader2, AlertTriangle, CheckCircle2, Flag } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
 import clsx from "clsx";
 
 interface Task {
@@ -14,6 +15,11 @@ interface Task {
   assigned_to: string | null;
   project_id: string | null;
   section_tag?: string | null;
+  priority?: string | null;
+  assignee?: {
+    id?: string;
+    full_name: string | null;
+  } | null;
   projects?: {
     service_type: string;
     clients?: {
@@ -21,6 +27,14 @@ interface Task {
     } | null;
   } | null;
 }
+
+// ClickUp-style priority flags
+const PRIORITY_FLAGS: Record<string, { label: string; cls: string }> = {
+  urgent: { label: "Urgent", cls: "text-red-600" },
+  high: { label: "High", cls: "text-orange-500" },
+  medium: { label: "Medium", cls: "text-blue-500" },
+  low: { label: "Low", cls: "text-slate-300" },
+};
 
 interface TaskCardProps {
   task: Task;
@@ -69,13 +83,13 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
     });
 
     if (diffDays < 0) {
-      return { label: `Overdue: ${formatted}`, color: "text-red-400", icon: AlertCircle };
+      return { label: `Overdue: ${formatted}`, color: "text-red-600", icon: AlertCircle };
     } else if (diffDays === 0) {
-      return { label: "Due Today", color: "text-orange-400", icon: AlertCircle };
+      return { label: "Due Today", color: "text-orange-600", icon: AlertCircle };
     } else if (diffDays <= 3) {
-      return { label: formatted, color: "text-yellow-400", icon: Clock };
+      return { label: formatted, color: "text-amber-600", icon: Clock };
     } else {
-      return { label: formatted, color: "text-[#42CA80]", icon: Clock };
+      return { label: formatted, color: "text-slate-500", icon: Clock };
     }
   };
 
@@ -109,18 +123,17 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
 
       if (error) {
         console.error("Supabase error:", error);
-        alert(`Error: ${error.message}\n\nCode: ${error.code}\nDetails: ${error.details || "none"}`);
+        toast.error("Could not update task", error.message);
         return;
       }
 
       if (!data || data.length === 0) {
         console.warn("No data returned - task may not exist or RLS is blocking");
-        alert("Update returned no data. The task may not exist or RLS policies are blocking the update.");
+        toast.error("Update returned no data", "The task may not exist or RLS policies are blocking the update.");
         return;
       }
 
-      console.log("Task updated successfully:", data);
-      alert(`✅ Task status updated to "${newStatus}"!`);
+      toast.success("Task updated", `Status → ${newStatus}`);
       onStatusChange();
 
       // AUDIT: Task Status Change
@@ -134,7 +147,7 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
       });
     } catch (error: any) {
       console.error("Catch block error:", error);
-      alert(`Unexpected error: ${error.message || JSON.stringify(error)}`);
+      toast.error("Unexpected error", error.message || JSON.stringify(error));
     } finally {
       setIsUpdating(false);
     }
@@ -162,15 +175,18 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
   const currentStatus = statusOptions.find((s) => s.value === task.status) || statusOptions[0];
   const StatusIcon = currentStatus.icon;
 
+  const priority = PRIORITY_FLAGS[(task.priority || "").toLowerCase()];
+  const assigneeName = task.assignee?.full_name || null;
+
   return (
     <div
       onClick={() => onEdit && onEdit(task)}
-      className="group flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-slate-200/50 px-4 py-3 transition-all hover:border-[#42CA80]/30 hover:bg-slate-50 cursor-pointer"
+      className="group flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white px-3.5 py-2 transition-all hover:border-slate-300 hover:shadow-sm cursor-pointer"
     >
       {/* Left: Status Dropdown + Content */}
-      <div className="flex items-start gap-3 min-w-0 flex-1">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         {/* Status Dropdown */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative shrink-0" ref={dropdownRef}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -179,7 +195,7 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
             disabled={isUpdating}
             className={clsx(
               "flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all",
-              "border border-[#2a2a2a] hover:border-[#3a3a3a]",
+              "border border-slate-200 bg-white hover:border-slate-300",
               isUpdating && "opacity-50 cursor-not-allowed"
             )}
             aria-label="Change task status"
@@ -187,16 +203,15 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
             <div className={clsx("h-2 w-2 rounded-full", currentStatus.color)} />
             <span className="text-slate-500 hidden sm:inline">{currentStatus.label}</span>
             <ChevronDown className={clsx(
-              "h-3 w-3 text-slate-600 transition-transform",
+              "h-3 w-3 text-slate-400 transition-transform",
               isDropdownOpen && "rotate-180"
             )} />
           </button>
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute left-0 top-full z-50 mt-1 w-44 rounded-lg border border-[#2a2a2a] bg-white py-1 shadow-xl">
+            <div className="absolute left-0 top-full z-50 mt-1 w-44 rounded-lg border border-slate-200 bg-white py-1 shadow-xl">
               {statusOptions.map((option) => {
-                const Icon = option.icon;
                 const isSelected = option.value === task.status;
                 return (
                   <button
@@ -205,8 +220,8 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
                     className={clsx(
                       "flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors",
                       isSelected
-                        ? "bg-[#42CA80]/10 text-[#42CA80]"
-                        : "text-slate-500 hover:bg-[#2a2a2a] hover:text-slate-900"
+                        ? "bg-brand-soft text-brand-deep"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                     )}
                   >
                     <div className={clsx("h-2 w-2 rounded-full", option.color)} />
@@ -221,17 +236,32 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
 
         {/* Content */}
         <div className="min-w-0 flex-1">
-          <h4 className="truncate text-sm font-medium text-slate-900">{task.title}</h4>
-          <p className="mt-0.5 truncate text-xs text-slate-500">
+          <h4 className="truncate text-[13px] font-medium text-slate-900">{task.title}</h4>
+          <p className="mt-0.5 truncate text-[11px] text-slate-400">
             {secondaryLabel}
           </p>
         </div>
       </div>
 
-      {/* Right: Due Date */}
-      <div className={clsx("flex items-center gap-1.5 text-xs flex-shrink-0", dueDateInfo.color)}>
-        <DueDateIcon className="h-3.5 w-3.5" />
-        <span>{dueDateInfo.label}</span>
+      {/* Right: priority flag · assignee avatar · due date */}
+      <div className="flex items-center gap-3 flex-shrink-0">
+        {priority && (
+          <span title={`Priority: ${priority.label}`}>
+            <Flag className={clsx("h-3.5 w-3.5", priority.cls)} fill="currentColor" />
+          </span>
+        )}
+        {assigneeName && (
+          <span
+            title={assigneeName}
+            className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-600 uppercase"
+          >
+            {assigneeName.split(" ").map(w => w.charAt(0)).slice(0, 2).join("")}
+          </span>
+        )}
+        <div className={clsx("flex items-center gap-1.5 text-xs", dueDateInfo.color)}>
+          <DueDateIcon className="h-3.5 w-3.5" />
+          <span className="whitespace-nowrap">{dueDateInfo.label}</span>
+        </div>
       </div>
     </div>
   );

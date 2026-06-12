@@ -1,11 +1,11 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/audit";
 
 export async function deleteLeadsByIndustry(industry: string) {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
 
     try {
         let leadsToDelete: { id: string }[] = [];
@@ -93,7 +93,7 @@ export async function deleteLeadsByIndustry(industry: string) {
 }
 
 export async function deleteSingleLead(leadId: string) {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
     try {
         const { data: lead } = await supabase.from("leads").select("company_name").eq("id", leadId).single();
 

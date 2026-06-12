@@ -4,7 +4,7 @@ import PipelineBoard from "@/components/manager/pipeline-board";
 
 export default function PipelinePage() {
     return (
-        <div className="h-screen overflow-hidden">
+        <div className="h-full overflow-hidden">
             <PipelineBoard />
         </div>
     );

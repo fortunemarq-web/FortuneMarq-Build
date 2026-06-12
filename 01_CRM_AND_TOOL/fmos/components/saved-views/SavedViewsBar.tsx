@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { SavedView, EntityType, FilterConfig, SortConfig } from "@/types/view";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface SavedViewsBarProps {
     entityType: EntityType;
@@ -101,7 +102,7 @@ export default function SavedViewsBar({
             .single();
 
         if (error) {
-            alert("Error saving view");
+            toast.error("Error saving view");
             console.error(error);
         } else {
             const savedData = data as any;

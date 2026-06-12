@@ -12,6 +12,7 @@ import {
     Check
 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface Lead {
     id: string;
@@ -35,7 +36,7 @@ export default function WhatsAppTemplateButton({ lead, onOutcomeLogged }: WhatsA
 
     const handleSend = async (outcome: 'no_answer' | 'not_interested' | 'interested') => {
         if (!lead.phone) {
-            alert("No phone number available for this lead.");
+            toast.error("No phone number available for this lead.");
             return;
         }
 
@@ -71,7 +72,7 @@ export default function WhatsAppTemplateButton({ lead, onOutcomeLogged }: WhatsA
             const { data: template } = await (templateQuery.limit(1).single() as any);
 
             if (!template) {
-                alert(`No active template found for ${outcome} in this niche/city.`);
+                toast.error("No active template found", `${outcome} in this niche/city`);
                 setIsLoading(false);
                 return;
             }
@@ -123,7 +124,7 @@ export default function WhatsAppTemplateButton({ lead, onOutcomeLogged }: WhatsA
 
         } catch (error) {
             console.error("WhatsApp Send Error:", error);
-            alert("Error sending WhatsApp message.");
+            toast.error("Error sending WhatsApp message.");
         } finally {
             setIsLoading(false);
         }

@@ -11,13 +11,35 @@ const ROLE_ROUTES: Record<string, string> = {
   client: '/client/dashboard',
 }
 
-const PROTECTED_ROUTES = ['/admin', '/sales', '/strategist', '/projects', '/staff', '/client']
+// Routes that must work without a session.
+// - /lp/*            public landing pages (lead capture)
+// - /client/report/* magic-link client reports (token-validated server-side)
+// - /api/*           route handlers enforce their own auth (cookies or CRON_SECRET)
+const PUBLIC_PREFIXES = [
+  '/login',
+  '/signup',
+  '/forgot-password',
+  '/reset-password',
+  '/lp/',
+  '/client/report/',
+  '/api/',
+  '/_next',
+]
+
+// Areas any signed-in staff member may use regardless of role
+const SHARED_AREAS = ['/tasks', '/projects', '/attendance', '/staff', '/sales']
+
+function isPublic(pathname: string): boolean {
+  if (pathname === '/') return true // root page handles its own auth redirect
+  return PUBLIC_PREFIXES.some(
+    (prefix) => pathname === prefix.replace(/\/$/, '') || pathname.startsWith(prefix)
+  )
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Allow public routes
-  if (pathname.startsWith('/login') || pathname.startsWith('/_next') || pathname.startsWith('/api')) {
+  if (isPublic(pathname)) {
     return NextResponse.next()
   }
 
@@ -42,16 +64,13 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Not logged in — redirect to login
+  // Deny by default: every non-public route requires a session.
   if (!user) {
-    const isProtected = PROTECTED_ROUTES.some(route => pathname.startsWith(route))
-    if (isProtected) {
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-    return response
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('next', pathname)
+    return NextResponse.redirect(loginUrl)
   }
 
-  // Get user role from profiles table
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
@@ -64,10 +83,19 @@ export async function proxy(request: NextRequest) {
   // Admin can access everything
   if (role === 'admin') return response
 
-  // Redirect to correct dashboard if accessing wrong route
-  if (allowedBase && !pathname.startsWith(allowedBase)) {
-    const isProtected = PROTECTED_ROUTES.some(route => pathname.startsWith(route))
-    if (isProtected) {
+  // /admin is admin-only — send everyone else to their own dashboard
+  if (pathname.startsWith('/admin')) {
+    return NextResponse.redirect(new URL(allowedBase ?? '/', request.url))
+  }
+
+  // Keep users out of other roles' home areas, except shared ones
+  if (allowedBase) {
+    const foreignBases = Object.values(ROLE_ROUTES).filter(
+      (base) => base !== '/admin' && base !== allowedBase
+    )
+    const inForeignArea = foreignBases.some((base) => pathname.startsWith(base))
+    const inSharedArea = SHARED_AREAS.some((area) => pathname.startsWith(area))
+    if (inForeignArea && !inSharedArea) {
       return NextResponse.redirect(new URL(allowedBase, request.url))
     }
   }

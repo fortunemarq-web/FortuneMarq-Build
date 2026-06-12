@@ -1,9 +1,9 @@
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import { normalizePhone, normalizeEmail, extractDomain, normalizeName } from "@/lib/normalize";
 
 export async function POST(req: NextRequest) {
-    const supabase = createServerClient();
+    const supabase = await createServerClientWithCookies();
 
     // Verify Admin (Optional but recommended)
     // const { data: { user } } = await supabase.auth.getUser();

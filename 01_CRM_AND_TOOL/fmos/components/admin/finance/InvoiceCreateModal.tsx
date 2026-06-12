@@ -2,31 +2,38 @@
 
 import { useState, useEffect } from "react";
 import { X, Plus, Trash2, Calculator, Info } from "lucide-react";
-import { createInvoice } from "@/app/admin/finance/actions";
+import { createInvoice, updateInvoice } from "@/app/admin/finance/actions";
 
 interface InvoiceCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   clients: any[];
   onSuccess: (newInv: any) => void;
+  /** When set, the modal edits this invoice instead of creating a new one. */
+  editInvoice?: any | null;
 }
 
-export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess }: InvoiceCreateModalProps) {
+export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess, editInvoice }: InvoiceCreateModalProps) {
+  const isEdit = !!editInvoice;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Form State
-  const [clientId, setClientId] = useState("");
-  const [invoiceNumber, setInvoiceNumber] = useState("");
-  const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0]);
-  const [dueDate, setDueDate] = useState("");
-  const [revenueType, setRevenueType] = useState("mrr");
-  const [includeGst, setIncludeGst] = useState(true);
-  const [notes, setNotes] = useState("");
+  const [clientId, setClientId] = useState(editInvoice?.client_id ?? "");
+  const [invoiceNumber, setInvoiceNumber] = useState(editInvoice?.invoice_number ?? "");
+  const [issueDate, setIssueDate] = useState(editInvoice?.issue_date ?? new Date().toISOString().split('T')[0]);
+  const [dueDate, setDueDate] = useState(editInvoice?.due_date ?? "");
+  const [revenueType, setRevenueType] = useState(editInvoice?.revenue_type ?? "mrr");
+  const [includeGst, setIncludeGst] = useState(isEdit ? (editInvoice?.gst_amount ?? 0) > 0 : true);
+  const [notes, setNotes] = useState(editInvoice?.notes ?? "");
 
-  const [lineItems, setLineItems] = useState([
-    { description: "", amount: 0 }
-  ]);
+  const [lineItems, setLineItems] = useState(
+    isEdit && editInvoice?.invoice_line_items?.length
+      ? [...editInvoice.invoice_line_items]
+          .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+          .map((li: any) => ({ description: li.description, amount: li.amount }))
+      : [{ description: "", amount: 0 }]
+  );
 
   // Derived state
   const subtotal = lineItems.reduce((acc, item) => acc + (Number(item.amount) || 0), 0);
@@ -34,6 +41,8 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
   const totalAmount = subtotal + gstAmount;
 
   useEffect(() => {
+    if (isEdit) return; // keep existing values when editing
+
     // 1. Set default due date (+15 days)
     const d = new Date();
     d.setDate(d.getDate() + 15);
@@ -44,7 +53,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
     const year = new Date().getFullYear();
     const random = Math.floor(100 + Math.random() * 900);
     setInvoiceNumber(`FM-${year}-${random}`);
-  }, []);
+  }, [isEdit]);
 
   const addLineItem = () => {
     setLineItems([...lineItems, { description: "", amount: 0 }]);
@@ -69,7 +78,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
     setError(null);
 
     try {
-      const invData = {
+      const invData: any = {
         invoice_number: invoiceNumber,
         client_id: clientId,
         issue_date: issueDate,
@@ -78,13 +87,18 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
         gst_amount: gstAmount,
         total_amount: totalAmount,
         notes,
-        status: 'unpaid',
         revenue_type: revenueType
       };
 
-      const result = await createInvoice(invData, lineItems) as any;
+      const result = isEdit
+        ? await updateInvoice(editInvoice.id, invData, lineItems) as any
+        : await createInvoice({ ...invData, status: 'unpaid' }, lineItems) as any;
       // Wait for revalidation or optimistic update
-      onSuccess({ ...result, clients: clients.find(c => c.id === clientId) });
+      onSuccess({
+        ...result,
+        clients: clients.find(c => c.id === clientId),
+        invoice_line_items: lineItems.map((li: any, i: number) => ({ ...li, sort_order: i })),
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
       setLoading(false);
@@ -104,7 +118,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
               <Calculator className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Create New Invoice</h2>
+              <h2 className="text-xl font-bold text-slate-900">{isEdit ? `Edit Invoice ${editInvoice.invoice_number}` : "Create New Invoice"}</h2>
               <p className="text-xs text-slate-500 font-semibold tracking-wider uppercase opacity-80">FortuneMarq Finance</p>
             </div>
           </div>
@@ -283,7 +297,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
             disabled={loading}
             className="px-8 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all disabled:opacity-50"
           >
-            {loading ? "Generating..." : "Generate Invoice →"}
+            {loading ? "Saving..." : isEdit ? "Save Changes" : "Generate Invoice →"}
           </button>
         </div>
       </div>

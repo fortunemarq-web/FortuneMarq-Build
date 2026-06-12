@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, FileText, CheckCircle2, Clock, MapPin, Trash2, Plus } from "lucide-react";
 import Link from "next/link";
 import { saveApprovedTasks } from "@/app/admin/strategy/actions";
+import { toast } from "@/components/ui/toast";
 
 interface Task {
   title: string;
@@ -114,7 +115,7 @@ export default function ReviewPageClient({ team }: { team: any[] }) {
       
       router.push(path);
     } else {
-      alert("Failed to save tasks: " + result.error);
+      toast.error("Failed to save tasks", result.error ?? "");
       setIsSaving(false);
     }
   };
@@ -124,7 +125,7 @@ export default function ReviewPageClient({ team }: { team: any[] }) {
   const checkedCount = activeTasks.filter(t => t.checked).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8 pb-32">
+    <div className="min-h-full bg-slate-50 px-4 py-8 pb-32">
       <div className="mx-auto max-w-7xl space-y-6">
         
         {/* Header */}

@@ -1,12 +1,30 @@
 import CsvUploader from "@/components/dashboard/csv-uploader";
 import Link from "next/link";
-import { FileText, History } from "lucide-react";
+import { FileText, History, ShieldAlert } from "lucide-react";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 
-export default function AdminUploadPage() {
-  // TODO: Add proper authentication/authorization check for Admin role
-  
+export default async function AdminUploadPage() {
+  // Admin-only: bulk imports can overwrite real data
+  const supabase = await createServerClientWithCookies();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user
+    ? await supabase.from("profiles").select("role").eq("id", user.id).single()
+    : { data: null };
+
+  if ((profile as any)?.role !== "admin") {
+    return (
+      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
+        <div className="text-center text-slate-500">
+          <ShieldAlert className="h-10 w-10 mx-auto mb-3 text-red-400" />
+          <p className="font-semibold text-slate-900">Admins only</p>
+          <p className="text-sm mt-1">Bulk lead upload is restricted to the admin role.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
+    <div className="flex min-h-full items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900 md:text-4xl font-mono tabular-nums">

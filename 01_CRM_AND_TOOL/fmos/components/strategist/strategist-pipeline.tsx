@@ -32,6 +32,8 @@ import type { Database } from "@/types/database.types";
 import CloseDealModal from "./close-deal-modal";
 import StrategySessionModal from "./strategy-session-modal";
 import clsx from "clsx";
+import { leadStatusUpdate } from "@/lib/pipeline";
+import { toast } from "@/components/ui/toast";
 
 type Lead = Database["public"]["Tables"]["leads"]["Row"];
 
@@ -245,7 +247,7 @@ export default function StrategistPipeline({
     try {
       const supabase = createClient();
       const updateQuery = (supabase.from("leads") as any)
-        .update({ status: "strategy_booked" })
+        .update(leadStatusUpdate("strategy_booked") as any)
         .eq("id", leadId);
       const { error } = await updateQuery;
 
@@ -259,7 +261,7 @@ export default function StrategistPipeline({
       router.refresh();
     } catch (error: any) {
       console.error("Error booking session:", error);
-      alert("Failed to book session. Please try again.");
+      toast.error("Failed to book session", "Please try again.");
     } finally {
       setIsUpdating(null);
     }
@@ -311,7 +313,7 @@ export default function StrategistPipeline({
     try {
       const supabase = createClient();
       const updateQuery2 = (supabase.from("leads") as any)
-        .update({ status: "closed_lost" })
+        .update(leadStatusUpdate("closed_lost") as any)
         .eq("id", leadId);
       const { error } = await updateQuery2;
 
@@ -321,7 +323,7 @@ export default function StrategistPipeline({
       router.refresh();
     } catch (error: any) {
       console.error("Error marking as not fit:", error);
-      alert("Failed to update lead. Please try again.");
+      toast.error("Failed to update lead", "Please try again.");
     } finally {
       setIsUpdating(null);
     }
@@ -333,7 +335,7 @@ export default function StrategistPipeline({
     try {
       const supabase = createClient();
       const { error } = await (supabase.from("leads") as any)
-        .update({ status: newStatus })
+        .update(leadStatusUpdate(newStatus) as any)
         .eq("id", leadId);
 
       if (error) throw error;
@@ -346,7 +348,7 @@ export default function StrategistPipeline({
       router.refresh();
     } catch (error: any) {
       console.error(`Error updating status to ${newStatus}:`, error);
-      alert("Failed to update status. Please try again.");
+      toast.error("Failed to update status", "Please try again.");
     } finally {
       setIsUpdating(null);
     }

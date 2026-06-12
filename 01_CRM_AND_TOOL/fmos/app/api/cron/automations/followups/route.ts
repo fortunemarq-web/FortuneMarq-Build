@@ -1,11 +1,13 @@
-import { createServerClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
+import { verifyCronSecret } from "@/lib/cron-auth";
 import { type NextRequest, NextResponse } from "next/server";
 import { runTrigger } from "@/lib/automations/engine";
 
 export async function POST(req: NextRequest) {
-    // 1. Auth Check (Admin or Secret)
-    // skipping specific secret check logic for strict environment, assuming protected route or basic session check
-    const supabase = createServerClient();
+    const denied = verifyCronSecret(req);
+    if (denied) return denied;
+
+    const supabase = createAdminClient();
 
     try {
         const now = new Date();

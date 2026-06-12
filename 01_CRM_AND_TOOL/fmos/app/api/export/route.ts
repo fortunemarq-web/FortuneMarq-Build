@@ -1,11 +1,11 @@
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import Papa from "papaparse";
 import { applyFilters, applySort } from "@/lib/filtering";
 
 export async function POST(req: NextRequest) {
     try {
-        const supabase = createServerClient();
+        const supabase = await createServerClientWithCookies();
         const {
             data: { user },
         } = await supabase.auth.getUser();

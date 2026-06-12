@@ -120,6 +120,48 @@ export async function updateClientField(
   return { success: true };
 }
 
+// ── Delete a client (admin cleanup for mistakes) ────────────
+// Removes known child rows first, then the client. For real
+// offboarding prefer setting status to "churned" instead.
+export async function deleteClient(
+  clientId: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createServerClientWithCookies();
+
+  // Best-effort cleanup of child tables (some may not have rows)
+  const childTables = [
+    "client_packages",
+    "client_assets",
+    "client_call_logs",
+    "onboarding_checklists",
+    "client_onboarding_tasks",
+    "client_asset_vault",
+    "upsell_attempts",
+  ];
+  for (const table of childTables) {
+    const { error } = await (supabase as any)
+      .from(table)
+      .delete()
+      .eq("client_id", clientId);
+    if (error && !/does not exist/i.test(error.message)) {
+      console.error(`deleteClient cleanup (${table}):`, error.message);
+    }
+  }
+
+  const { error } = await supabase
+    .from("clients")
+    .delete()
+    .eq("id", clientId);
+
+  if (error) {
+    console.error("deleteClient error:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/admin/clients");
+  return { success: true };
+}
+
 // ── Fetch single client with related data ───────────────────
 export async function fetchClientById(clientId: string) {
   const supabase = await createServerClientWithCookies();

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
 
 interface Niche {
     id: string;
@@ -202,6 +203,26 @@ export default function TemplateManager() {
         }
     };
 
+    const handleDelete = async (template: Template) => {
+        if (!confirm(`Delete this template${template.niche?.name ? ` for ${template.niche.name}` : ""}? This can't be undone.`)) return;
+        const { error } = await supabase.from("whatsapp_message_templates" as any)
+            .delete()
+            .eq("id", template.id);
+        if (error) {
+            toast.error("Could not delete template", error.message);
+            return;
+        }
+        setTemplates(prev => prev.filter(t => t.id !== template.id));
+        toast.success("Template deleted");
+        await logAudit({
+            action: 'delete',
+            resourceType: 'template',
+            resourceId: template.id,
+            resourceLabel: `Deleted template${template.niche?.name ? ` for ${template.niche.name}` : ""}`,
+            oldValue: template
+        });
+    };
+
     const filteredTemplates = templates.filter(t => {
         if (selectedNiche !== "all" && t.niche_id !== selectedNiche) return false;
         if (selectedCity !== "all" && t.city_id !== selectedCity) return false;
@@ -360,6 +381,7 @@ export default function TemplateManager() {
                                                 <Edit2 className="h-4 w-4" />
                                             </button>
                                             <button
+                                                onClick={() => handleDelete(template)}
                                                 className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                                                 title="Delete Template"
                                             >

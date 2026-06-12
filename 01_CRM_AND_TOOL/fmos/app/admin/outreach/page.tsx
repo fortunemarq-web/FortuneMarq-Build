@@ -16,15 +16,19 @@ export default async function OutreachBoardPage() {
   const userRole = (profileResult.data as any)?.role || "admin";
   const isAdmin = userRole === "admin";
 
-  // Fetch all active leads with outreach data
+  // Fetch all active leads with outreach data.
+  // last_activity_at + assigned_sales_exec are required by the board (stalled
+  // badges, assignee filter); capped to keep the page responsive
+  // at scale.
   const { data: leads, error } = await supabase
     .from("leads")
-    .select("id, company_name, industry, city, lead_type, outreach_stage, follow_up_date, last_outreach_at, assigned_to, created_at, updated_at, phone, status")
-    .order("updated_at", { ascending: false });
+    .select("id, company_name, industry, city, lead_type, outreach_stage, follow_up_date, created_at, last_activity_at, assigned_sales_exec, phone, status, last_contacted_at, last_outcome")
+    .order("created_at", { ascending: false })
+    .limit(3000);
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="flex min-h-full items-center justify-center bg-slate-50">
         <p className="text-red-500">Error loading leads: {error.message}</p>
       </div>
     );

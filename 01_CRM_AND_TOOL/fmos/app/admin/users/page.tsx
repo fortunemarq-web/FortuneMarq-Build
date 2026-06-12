@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
 
 const ROLES = [
     { value: "admin", label: "Admin", color: "bg-red-500", desc: "Full system access" },
@@ -76,7 +77,7 @@ export default function UserManagementPage() {
             setProfiles(profiles.map(p => p.id === userId ? { ...p, role: newRole } : p));
         } catch (err) {
             console.error(err);
-            alert("Failed to update role");
+            toast.error("Failed to update role");
         } finally {
             setUpdatingId(null);
         }
@@ -88,7 +89,7 @@ export default function UserManagementPage() {
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12">
+        <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
             <div className="mx-auto max-w-6xl">
                 {/* Header */}
                 <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">

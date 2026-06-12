@@ -1,9 +1,13 @@
-import { createServerClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
+import { verifyCronSecret } from "@/lib/cron-auth";
 import { type NextRequest, NextResponse } from "next/server";
 import { runTrigger } from "@/lib/automations/engine";
 
 export async function POST(req: NextRequest) {
-    const supabase = createServerClient() as any;
+    const denied = verifyCronSecret(req);
+    if (denied) return denied;
+
+    const supabase = createAdminClient() as any;
     try {
         const now = new Date();
         const { data: tasks, error } = await supabase

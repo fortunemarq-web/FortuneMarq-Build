@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
 
 export async function calculateSalesKPIs(supabase: any) {
     const today = new Date();
@@ -203,7 +203,7 @@ export async function calculateFinanceKPIs(supabase: any) {
 }
 
 export async function generateDailySnapshot(customSupabase?: any) {
-    const supabase = customSupabase || createServerClient();
+    const supabase = customSupabase || await createServerClientWithCookies();
 
     try {
         const sales = await calculateSalesKPIs(supabase);

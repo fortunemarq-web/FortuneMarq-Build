@@ -36,7 +36,7 @@ export default async function PitchPage({ params }: PitchPageProps) {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-slate-50 px-4 py-6">
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-6">

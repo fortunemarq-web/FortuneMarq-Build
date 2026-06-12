@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase-admin";
 import { evaluateConditions } from "./conditions";
 import { executeAction } from "./actions";
 import { AutomationRule } from "./types";
@@ -16,7 +16,7 @@ export async function runTrigger(
     actorId?: string | null,
     context?: any
 ): Promise<AutomationResult> {
-    const supabase = createServerClient();
+    const supabase = createAdminClient();
     const result: AutomationResult = { triggered: 0, actions_executed: 0, errors: [] };
 
     try {

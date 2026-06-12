@@ -184,7 +184,7 @@ export default function CsvUploader() {
               if (row["Has Website"]) {
                 // Explicit column exists
                 const hw = row["Has Website"].toString().toLowerCase().trim();
-                hasWebsite = ["yes", "true", "1", "available"].includes(hw);
+                hasWebsite = ["yes", "true", "1", "available", "y"].includes(hw);
 
                 // If explicitly said NO, ensure link is null
                 if (!hasWebsite) websiteLink = null;

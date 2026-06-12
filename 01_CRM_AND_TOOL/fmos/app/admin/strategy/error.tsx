@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Copy } from "lucide-react";
+import { Copy, AlertTriangle } from "lucide-react";
 
 export default function AgencyGrowthError({
   error,
@@ -11,10 +11,10 @@ export default function AgencyGrowthError({
   reset: () => void;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-full bg-slate-50 flex items-center justify-center px-4">
       <div className="max-w-md text-center space-y-4">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-          <span className="text-2xl">⚠️</span>
+          <AlertTriangle className="h-7 w-7 text-red-500" />
         </div>
         <h2 className="text-xl font-bold text-slate-900">
           Failed to load Growth Hub
@@ -23,7 +23,7 @@ export default function AgencyGrowthError({
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={reset}
-            className="rounded-xl bg-[#42CA80] px-6 py-3 text-sm font-semibold text-white hover:bg-[#38b571] transition-colors min-h-[44px]"
+            className="rounded-lg bg-brand-deep px-6 py-3 text-sm font-semibold text-white hover:bg-brand-active transition-colors min-h-[44px]"
           >
             Try Again
           </button>

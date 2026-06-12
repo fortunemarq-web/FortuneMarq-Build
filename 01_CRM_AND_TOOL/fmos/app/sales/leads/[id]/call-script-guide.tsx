@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { getNicheScript } from "@/lib/niche-scripts";
-import { ChevronRight, RotateCcw, CheckCircle2, MessageCircle, Phone } from "lucide-react";
+import { ChevronRight, RotateCcw, CheckCircle2, MessageCircle, Phone, Globe } from "lucide-react";
+
+type Lang = "kannada" | "hindi" | "english";
 
 interface CallScriptGuideProps {
   lead: {
@@ -54,6 +56,14 @@ interface Stage {
   fmosAction?: string;
 }
 
+// ── Language-aware script text ───────────────────────────────────────────────
+
+function t(lang: Lang, kn: string, hi: string, en: string): string {
+  if (lang === "hindi") return hi;
+  if (lang === "english") return en;
+  return kn; // kannada (default)
+}
+
 function buildStages(
   businessName: string,
   niche: string,
@@ -67,21 +77,34 @@ function buildStages(
     no_budget: string;
     callback_later: string;
     doing_own_marketing: string;
-  }
+  },
+  lang: Lang = "kannada"
 ): Record<StageId, Stage> {
   const nicheLabel = niche || "business";
   const name = businessName || "your business";
 
   const gapScript = hasWebsite
-    ? `"Nimma website ide — aadre Hubli alli ${volume} jana prathi ${nicheLabel} search maadtaare Google mele. Aa traffic yellige haadtide yaaru padetidaare? Nimma competitors elli idaare, nimdu elli ide — aa data namma hatra ide."`
-    : `"Hubli alli ${volume} jana prathi ${nicheLabel} search maadtaare Google mele prathi thumba. Nimma business Google mele illa anta artha — aa entire traffic competitors ge haadtide. Adannu thorisbeku anta call maadidivi."`;
+    ? t(lang,
+        `"Nimma website ide — aadre Hubli alli ${volume} jana prathi ${nicheLabel} search maadtaare Google mele. Aa traffic yellige haadtide yaaru padetidaare? Nimma competitors elli idaare, nimdu elli ide — aa data namma hatra ide."`,
+        `"Aapka website toh hai — lekin Hubli mein ${volume} log har mahine ${nicheLabel} Google pe search karte hain. Woh traffic kahan ja raha hai? Aapke competitors le rahe hain. Yeh data hamare paas hai."`,
+        `"You have a website — but ${volume} people in Hubli search for ${nicheLabel} on Google every month. Where is that traffic going? Your competitors are getting it. We have that data."`
+      )
+    : t(lang,
+        `"Hubli alli ${volume} jana prathi ${nicheLabel} search maadtaare Google mele prathi thumba. Nimma business Google mele illa anta artha — aa entire traffic competitors ge haadtide. Adannu thorisbeku anta call maadidivi."`,
+        `"Hubli mein ${volume} log ${nicheLabel} Google pe dhundhte hain. Aapka business Google pe nahi hai — matlab sara traffic competitors ke paas ja raha hai. Isi liye call kiya."`,
+        `"${volume} people in Hubli search for ${nicheLabel} on Google every month. Your business isn't on Google — which means all that traffic is going to your competitors. That's why we called."`
+      );
 
   return {
     intro: {
       id: "intro",
       step: 1,
       title: "Introduction",
-      script: `"Hello, nanu Afifa haeltidini, FortuneMarq ninda call maadtidini. ${name} ge call maadtidini — nimma ${nicheLabel} bagge matter ide."`,
+      script: t(lang,
+        `"Hello, nanu Afifa haeltidini, FortuneMarq ninda call maadtidini. ${name} ge call maadtidini — nimma ${nicheLabel} bagge matter ide."`,
+        `"Hello, main Afifa bol rahi hun, FortuneMarq se call kar rahi hun. ${name} ke liye call kiya — aapke ${nicheLabel} ke baare mein kuch important hai."`,
+        `"Hello, this is Afifa calling from FortuneMarq. I'm calling for ${name} — it's regarding your ${nicheLabel}."`
+      ),
       responses: [
         { label: "Owner / Decision maker on line", next: "language", highlight: true },
         { label: "Staff answered — asking to hold", next: "intro" },
@@ -96,17 +119,21 @@ function buildStages(
       title: "Language Preference",
       script: `"Nimma jathe Kannada alli maatanaadabeka, Hindi alli, illa English alli?"`,
       responses: [
-        { label: "Kannada — continue", next: "permission", highlight: true },
-        { label: "Hindi — switch language", next: "permission", highlight: true },
-        { label: "English — switch language", next: "permission", highlight: true },
-      ],
+        { label: "🟢 Kannada (Kanglish)", next: "permission", highlight: true, lang: "kannada" },
+        { label: "🔵 Hindi (Hinglish)", next: "permission", highlight: true, lang: "hindi" },
+        { label: "⚪ English", next: "permission", lang: "english" },
+      ] as any,
     },
 
     permission: {
       id: "permission",
       step: 3,
       title: "Permission to Speak",
-      script: `"2 nimisha time idya nimge? Thumba important data ide nimma ${nicheLabel} bagge — share maadabekunagide."`,
+      script: t(lang,
+        `"2 nimisha time idya nimge? Thumba important data ide nimma ${nicheLabel} bagge — share maadabekunagide."`,
+        `"2 minute ka time hai? Aapke ${nicheLabel} ke baare mein kuch important data hai — share karna chahti hun."`,
+        `"Do you have 2 minutes? We have some really important data about your ${nicheLabel} that I'd like to share."`
+      ),
       responses: [
         { label: "Yes, go ahead", next: "data_hook", highlight: true },
         { label: "Busy / Call me later", next: "outcome_callback" },
@@ -118,7 +145,11 @@ function buildStages(
       id: "data_hook",
       step: 4,
       title: "Data Hook",
-      script: `"Navu ond market research maadidivi — ${dataHook}"`,
+      script: t(lang,
+        `"Navu ond market research maadidivi — ${dataHook}"`,
+        `"Humne ek market research ki hai — ${dataHook}"`,
+        `"We did a market research — ${dataHook}"`
+      ),
       responses: [
         { label: "Curious / Tell me more", next: "gap", highlight: true },
         { label: "Already knew this", next: "gap" },
@@ -144,7 +175,11 @@ function buildStages(
       id: "pitch",
       step: 6,
       title: "How We Fit In",
-      script: `"Naavu local ${nicheLabel} ge help maadtivi — customers JustDial bidu neeravaagi nimma business find maadkobeku anta Google mele, direct call barthidhare."`,
+      script: t(lang,
+        `"Naavu local ${nicheLabel} ge help maadtivi — customers JustDial bidu neeravaagi nimma business find maadkobeku anta Google mele, direct call barthidhare."`,
+        `"Hum local ${nicheLabel} ko help karte hain — customers JustDial chhod ke directly Google pe aapka business dhundhen aur seedha call karein."`,
+        `"We help local ${nicheLabel} businesses — so customers find you directly on Google instead of JustDial, and call you directly."`
+      ),
       responses: [
         { label: "Sounds good / Interested", next: "meeting_ask", highlight: true },
         { label: "How much does it cost?", next: "outcome_no_budget" },
@@ -157,7 +192,11 @@ function buildStages(
       id: "meeting_ask",
       step: 7,
       title: "Meeting Ask",
-      script: `"${meetingAsk}"`,
+      script: t(lang,
+        `"${meetingAsk}"`,
+        `"Ek 15 minute ki call set kar sakte hain — aapke liye specific data aur plan dikhana chahte hain. Kab convenient rahega?"`,
+        `"Can we set up a 15-minute call? We want to show you the specific data and plan for your business. When works for you?"`
+      ),
       responses: [
         { label: "Meeting Booked!", next: "outcome_meeting", highlight: true },
         { label: "Send WhatsApp first", next: "outcome_whatsapp" },
@@ -170,13 +209,18 @@ function buildStages(
       ],
     },
 
-    // Outcome flows
+    // ── Outcome stages ────────────────────────────────────────────────────────
+
     outcome_meeting: {
       id: "outcome_meeting",
       title: "Meeting Booked",
       isOutcome: true,
       outcomeType: "success",
-      script: "Excellent! Meeting confirmed.",
+      script: t(lang,
+        "Excellent! Meeting confirmed. FMOS mele date/time log maadi.",
+        "Excellent! Meeting confirm ho gayi. FMOS pe date/time log karo.",
+        "Excellent! Meeting confirmed. Log the date/time in FMOS."
+      ),
       whatsappMsg: `Hi! Afifa here from FortuneMarq. Thank you for your time — as discussed, our founder Jabeer will call you for a 15-minute session. Looking forward to showing you the data for ${name}. 😊`,
       fmosAction: "Log outcome: Meeting Booked → advance to meeting_booked stage",
       responses: [{ label: "Start a new call", next: "intro" }],
@@ -187,7 +231,11 @@ function buildStages(
       title: "WhatsApp Requested",
       isOutcome: true,
       outcomeType: "followup",
-      script: `"Sari — nimma WhatsApp number correct idya? Abhi send maadtini."`,
+      script: t(lang,
+        `"Sari — nimma WhatsApp number correct idya? Abhi send maadtini."`,
+        `"Theek hai — aapka WhatsApp number sahi hai? Abhi send karta hun."`,
+        `"Sure — is your WhatsApp number correct? I'll send it right now."`
+      ),
       whatsappMsg: `Hi! Afifa here from FortuneMarq. We spoke just now about the digital marketing opportunity for ${name}. Here's a quick overview of what we discussed. Our founder Jabeer can walk you through the data — shall we schedule a 15-min call? 🙏`,
       fmosAction: "Log outcome: WhatsApp Requested → stage: touch1_sent",
       responses: [{ label: "Sent — start new call", next: "intro" }],
@@ -198,7 +246,11 @@ function buildStages(
       title: "Callback Scheduled",
       isOutcome: true,
       outcomeType: "followup",
-      script: `"Sari, yaava time convenient? Naalidu 11am ge call maadali?"  →  Note the callback time and set a follow-up in FMOS.`,
+      script: t(lang,
+        `"Sari, yaava time convenient? Naalidu 11am ge call maadali?" → Callback time note maadi, FMOS mele set maadi.`,
+        `"Theek hai, kab convenient rahega? Kal 11am ko call kar sakta hun?" → Callback time note karo, FMOS pe set karo.`,
+        `"No problem — when's a good time? Can I call tomorrow at 11am?" → Note the time and set follow-up in FMOS.`
+      ),
       fmosAction: "Log outcome: Callback Requested → set follow_up_date in FMOS",
       responses: [{ label: "Follow-up set — start new call", next: "intro" }],
     },
@@ -208,7 +260,11 @@ function buildStages(
       title: "Not Interested",
       isOutcome: true,
       outcomeType: "lost",
-      script: `Say: "${objections.not_interested}"`,
+      script: t(lang,
+        `Say: "${objections.not_interested}"`,
+        `Say: "Koi baat nahi — ek mahine baad follow up karein? Market data change hota rehta hai."`,
+        `Say: "No problem at all — can we follow up in a month? The market data changes and we might have something relevant for you."`
+      ),
       fmosAction: "Log outcome: Not Interested → stage stays, add note",
       responses: [
         { label: "They softened — continue to gap", next: "gap" },
@@ -221,7 +277,11 @@ function buildStages(
       title: "Has an Agency",
       isOutcome: true,
       outcomeType: "neutral",
-      script: `Say: "${objections.has_agency}"`,
+      script: t(lang,
+        `Say: "${objections.has_agency}"`,
+        `Say: "Achha — toh Google pe aapki ranking kahan hai abhi? First page pe hain?"`,
+        `Say: "That's great — where is your Google ranking right now? Are you on the first page?"`
+      ),
       fmosAction: "Log outcome: Has Agency → add note, schedule revival follow-up",
       responses: [
         { label: "Opened up — continue pitch", next: "pitch" },
@@ -234,7 +294,11 @@ function buildStages(
       title: "Doing Own Marketing",
       isOutcome: true,
       outcomeType: "neutral",
-      script: `Say: "${objections.doing_own_marketing}"`,
+      script: t(lang,
+        `Say: "${objections.doing_own_marketing}"`,
+        `Say: "Wah — toh in ${volume} searches mein se kitne aapke paas aa rahe hain abhi?"`,
+        `Say: "That's great — of those ${volume} searches happening in Hubli, how many are coming to you right now?"`
+      ),
       fmosAction: "Log outcome: Own Marketing → add note",
       responses: [
         { label: "Interested now — continue", next: "pitch" },
@@ -247,7 +311,11 @@ function buildStages(
       title: "No Budget",
       isOutcome: true,
       outcomeType: "neutral",
-      script: `Say: "${objections.no_budget}"`,
+      script: t(lang,
+        `Say: "${objections.no_budget}"`,
+        `Say: "Samajh gaya — chhote packages bhi hain. Sirf information bhej dun WhatsApp pe?"`,
+        `Say: "Understood — we have small packages too. Can I just send you the information on WhatsApp?"`
+      ),
       fmosAction: "Log outcome: No Budget → add note, offer PDF",
       responses: [
         { label: "Interested in info — send WhatsApp", next: "outcome_whatsapp" },
@@ -260,7 +328,11 @@ function buildStages(
       title: "Info / PDF Requested",
       isOutcome: true,
       outcomeType: "followup",
-      script: `"Sari — WhatsApp mele ond PDF send maadtini nimge. Nimma number correct idya?"`,
+      script: t(lang,
+        `"Sari — WhatsApp mele ond PDF send maadtini nimge. Nimma number correct idya?"`,
+        `"Theek hai — WhatsApp pe ek PDF bhejta hun. Number sahi hai?"`,
+        `"Sure — I'll send a PDF on WhatsApp. Is this number correct?"`
+      ),
       whatsappMsg: `Hi! Afifa here from FortuneMarq. As promised, here's the information about how we help ${name} grow on Google. Our founder Jabeer can give you a full walkthrough — shall we schedule 15 mins? 🙏`,
       fmosAction: "Log outcome: Info Requested → mark pdf_due, send PDF",
       responses: [{ label: "PDF sent — start new call", next: "intro" }],
@@ -302,9 +374,16 @@ const OUTCOME_BADGE: Record<string, string> = {
   neutral: "bg-slate-100 text-slate-700",
 };
 
+const LANG_LABELS: Record<Lang, string> = {
+  kannada: "🟢 Kanglish",
+  hindi: "🔵 Hinglish",
+  english: "⚪ English",
+};
+
 export default function CallScriptGuide({ lead, marketInsight }: CallScriptGuideProps) {
   const [currentStageId, setCurrentStageId] = useState<StageId>("intro");
   const [history, setHistory] = useState<StageId[]>([]);
+  const [selectedLang, setSelectedLang] = useState<Lang>("kannada");
 
   const nicheScript = getNicheScript(lead.industry || "");
   const volume =
@@ -312,17 +391,18 @@ export default function CallScriptGuide({ lead, marketInsight }: CallScriptGuide
     marketInsight?.search_volume ||
     "thousands";
 
-  const stages = nicheScript
-    ? buildStages(
+  const buildArgs: [string, string, string, boolean, string, string, any, Lang] = nicheScript
+    ? [
         lead.company_name || "",
         nicheScript.niche,
         volume,
         !!lead.has_website,
         nicheScript.dataHook,
         nicheScript.meetingAsk,
-        nicheScript.objections
-      )
-    : buildStages(
+        nicheScript.objections,
+        selectedLang,
+      ]
+    : [
         lead.company_name || "",
         lead.industry || "business",
         volume,
@@ -335,12 +415,17 @@ export default function CallScriptGuide({ lead, marketInsight }: CallScriptGuide
           no_budget: "Understand maadtini — small packages ide, just information maatra send maadbahudu?",
           callback_later: "Sari, yaava time convenient? Naalidu 11am ge call maadali?",
           doing_own_marketing: `Channagide — ee ${volume} searches alli eshtu nimge bartide currently?`,
-        }
-      );
+        },
+        selectedLang,
+      ];
 
+  const stages = buildStages(...buildArgs);
   const stage = stages[currentStageId];
 
-  const go = (next: StageId) => {
+  const go = (next: StageId, lang?: Lang) => {
+    // If a language was passed (from the language stage buttons), set it
+    if (lang) setSelectedLang(lang);
+
     if (next === "intro") {
       setHistory([]);
       setCurrentStageId("intro");
@@ -363,7 +448,7 @@ export default function CallScriptGuide({ lead, marketInsight }: CallScriptGuide
   return (
     <div className="space-y-4">
       {/* Lead context bar */}
-      <div className="flex items-center gap-3 rounded-lg bg-slate-800 px-4 py-2.5 text-sm text-white">
+      <div className="flex items-center gap-3 rounded-lg bg-slate-800 px-4 py-2.5 text-sm text-white flex-wrap">
         <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
         <span className="font-semibold text-green-400">{lead.company_name}</span>
         {lead.industry && (
@@ -385,6 +470,13 @@ export default function CallScriptGuide({ lead, marketInsight }: CallScriptGuide
             }`}
           >
             {lead.has_website ? "Has Website" : "No Website"}
+          </span>
+        )}
+        {/* Language badge — only show once language is confirmed (past intro) */}
+        {currentStageId !== "intro" && currentStageId !== "language" && (
+          <span className="ml-auto flex items-center gap-1 rounded-full bg-slate-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+            <Globe className="h-3 w-3" />
+            {LANG_LABELS[selectedLang]}
           </span>
         )}
       </div>
@@ -495,7 +587,7 @@ export default function CallScriptGuide({ lead, marketInsight }: CallScriptGuide
             {stage.responses.map((r, i) => (
               <button
                 key={i}
-                onClick={() => go(r.next)}
+                onClick={() => go(r.next, (r as any).lang)}
                 className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold text-left transition-colors ${
                   r.highlight
                     ? "border-2 border-indigo-300 bg-indigo-50 text-indigo-800 hover:bg-indigo-100"

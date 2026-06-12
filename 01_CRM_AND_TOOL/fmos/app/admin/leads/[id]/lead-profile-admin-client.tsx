@@ -1,21 +1,29 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft, Phone, MessageCircle, FileText, Calendar,
   Clock, User, MapPin, Building, Globe, Edit3,
   CheckCircle, XCircle, AlertOctagon, RefreshCw,
   ChevronDown, ChevronUp, Plus, Send, Copy, Loader2,
-  Rocket, ClipboardCheck
+  FileSignature, Trash2
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { generateClientOnboarding } from "@/lib/onboarding/generateClientOnboarding";
+import { calculatePackageTier } from "@/lib/performance";
+import { logAudit } from "@/lib/audit";
+import { toast as notify } from "@/components/ui/toast";
+import { leadStageUpdate, STAGE_LABELS, PIPELINE_STAGES } from "@/lib/pipeline";
+import { deleteSingleLead } from "@/actions/delete-data";
+import ActivityTimeline from "@/components/ActivityTimeline";
 
 // ─── Types ────────────────────────────────────────────────────
 interface Lead { [key: string]: any; }
 interface OutreachLog { id: string; created_at: string; touch_type: string; outcome: string | null; note: string | null; pdf_name: string | null; actor?: { full_name: string } | null; }
 interface Proposal { id: string; sent_at: string | null; amount: number | null; status: string | null; services?: any; }
-interface Agreement { id: string; created_at: string; status: string | null; start_date: string | null; }
+interface Agreement { id: string; created_at: string; status: string | null; start_date: string | null; proposal_id?: string | null; }
 
 interface Props {
   lead: Lead;
@@ -28,36 +36,19 @@ interface Props {
   userId: string | null;
 }
 
-const STAGE_LABELS: Record<string, string> = {
-  touch1_pending: "Touch 1 Pending",
-  curiosity_sent: "Curiosity Sent",
-  pdf_sent: "PDF Sent",
-  follow_up_due: "Follow-up Due",
-  meeting_booked: "Meeting Booked",
-  proposal_sent: "Proposal Sent",
-  won: "Won",
-  lost: "Lost",
-  dead: "Dead",
-  revival: "Revival",
-};
-
-const STAGE_COLORS: Record<string, string> = {
-  touch1_pending: "bg-slate-100 text-slate-600",
-  curiosity_sent: "bg-blue-100 text-blue-700",
-  pdf_sent: "bg-indigo-100 text-indigo-700",
-  follow_up_due: "bg-amber-100 text-amber-700",
-  meeting_booked: "bg-green-100 text-green-700",
-  proposal_sent: "bg-purple-100 text-purple-700",
-  won: "bg-emerald-100 text-emerald-700",
-  lost: "bg-red-100 text-red-700",
-  dead: "bg-slate-100 text-slate-400",
-  revival: "bg-orange-100 text-orange-700",
-};
+// Stage labels/colors come from the shared state machine so every
+// stage (including parked ones) renders and is selectable here.
+const STAGE_COLORS: Record<string, string> = Object.fromEntries(
+  PIPELINE_STAGES.map((s) => [s.key, s.badge])
+);
 
 const TOUCH_TYPE_LABELS: Record<string, { label: string; icon: React.ElementType; color: string }> = {
+  call: { label: "Call Made", icon: Phone, color: "text-blue-600" },
+  whatsapp_sent: { label: "WhatsApp Sent", icon: MessageCircle, color: "text-green-600" },
   whatsapp_curiosity: { label: "WhatsApp Curiosity Sent", icon: MessageCircle, color: "text-green-600" },
+  whatsapp_template: { label: "WhatsApp Template Sent", icon: MessageCircle, color: "text-green-600" },
   pdf_sent: { label: "PDF Sent", icon: FileText, color: "text-indigo-600" },
-  follow_up_call: { label: "Call Made", icon: Phone, color: "text-blue-600" },
+  follow_up: { label: "Follow-up", icon: Clock, color: "text-orange-600" },
   meeting_booked: { label: "Meeting Booked", icon: Calendar, color: "text-emerald-600" },
   proposal_sent: { label: "Proposal Sent", icon: FileText, color: "text-purple-600" },
   note: { label: "Note", icon: Edit3, color: "text-slate-500" },
@@ -85,39 +76,248 @@ function formatDateTime(dateStr: string | null): string {
 
 export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, agreements, marketInsight, whatsappTemplates, isAdmin, userId }: Props) {
   const [currentLead, setCurrentLead] = useState(lead);
-  const [editingFollowUp, setEditingFollowUp] = useState(false);
-  const [followUpDate, setFollowUpDate] = useState(lead.follow_up_date || "");
-  const [editingLeadType, setEditingLeadType] = useState(false);
-  const [leadType, setLeadType] = useState(lead.lead_type || "");
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState("");
   const [isPending, startTransition] = useTransition();
   const [showConfirmDead, setShowConfirmDead] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [team, setTeam] = useState<Array<{ id: string; full_name: string | null }>>([]);
+  const [assigning, setAssigning] = useState(false);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
-  const [showAgreementModal, setShowAgreementModal] = useState(false);
-  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
-  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
+  const [confirmingProposalId, setConfirmingProposalId] = useState<string | null>(null);
+  const [confirmStartDate, setConfirmStartDate] = useState(new Date().toISOString().split("T")[0]);
+  const [confirmChecked, setConfirmChecked] = useState(false);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
   const supabase = createClient();
 
+  const router = useRouter();
+
+  function showToast(msg: string) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 4000);
+  }
+
   async function updateField(field: string, value: string) {
+    const oldValue = currentLead[field];
     setCurrentLead((prev: any) => ({ ...prev, [field]: value }));
-    await supabase.from("leads").update({ [field]: value } as any).eq("id", lead.id);
+    const { error } = await supabase.from("leads").update({ [field]: value } as any).eq("id", lead.id);
+    if (error) {
+      setCurrentLead((prev: any) => ({ ...prev, [field]: oldValue }));
+      showToast(`Save failed: ${error.message}`);
+      return;
+    }
+    logAudit({ action: "update", resourceType: "lead", resourceId: lead.id, resourceLabel: currentLead.company_name, oldValue: { [field]: oldValue }, newValue: { [field]: value }, summary: `Updated ${field}: "${oldValue}" → "${value}"` });
+  }
+
+  function startEdit(field: string) {
+    setEditingField(field);
+    setEditDraft(String(currentLead[field] ?? ""));
+  }
+
+  async function commitEdit(field: string) {
+    const current = String(currentLead[field] ?? "");
+    if (editDraft !== current) await updateField(field, editDraft);
+    setEditingField(null);
+  }
+
+  function cancelEdit() { setEditingField(null); setEditDraft(""); }
+
+  async function toggleBoolean(field: string) {
+    const oldVal = currentLead[field];
+    const newVal = !oldVal;
+    setCurrentLead((prev: any) => ({ ...prev, [field]: newVal }));
+    const { error } = await supabase.from("leads").update({ [field]: newVal } as any).eq("id", lead.id);
+    if (error) {
+      setCurrentLead((prev: any) => ({ ...prev, [field]: oldVal }));
+      showToast(`Save failed: ${error.message}`);
+      return;
+    }
+    logAudit({ action: "update", resourceType: "lead", resourceId: lead.id, resourceLabel: currentLead.company_name, oldValue: { [field]: oldVal }, newValue: { [field]: newVal }, summary: `Toggled ${field}: ${oldVal} → ${newVal}` });
+  }
+
+  async function changeStage(newStage: string) {
+    const oldStage = currentLead.outreach_stage;
+    setCurrentLead((prev: any) => ({ ...prev, outreach_stage: newStage }));
+    const { error } = await supabase.from("leads").update(leadStageUpdate(newStage) as any).eq("id", lead.id);
+    if (error) {
+      setCurrentLead((prev: any) => ({ ...prev, outreach_stage: oldStage }));
+      showToast(`Stage change failed: ${error.message}`);
+      return;
+    }
+    logAudit({ action: "stage_change", resourceType: "lead", resourceId: lead.id, resourceLabel: currentLead.company_name, oldValue: { stage: oldStage }, newValue: { stage: newStage }, summary: `Stage manually changed: ${oldStage} → ${newStage}` });
+    showToast(`Stage updated to ${STAGE_LABELS[newStage] || newStage}`);
   }
 
   async function markAsDead() {
+    const oldStage = currentLead.outreach_stage;
     setCurrentLead((prev: any) => ({ ...prev, outreach_stage: "dead" }));
-    await supabase.from("leads").update({ outreach_stage: "dead" } as any).eq("id", lead.id);
+    const { error } = await supabase.from("leads").update(leadStageUpdate("dead") as any).eq("id", lead.id);
+    if (error) {
+      setCurrentLead((prev: any) => ({ ...prev, outreach_stage: oldStage }));
+      showToast(`Could not mark as dead: ${error.message}`);
+      return;
+    }
     setShowConfirmDead(false);
+    showToast("Lead marked as dead. You can move it to Revival anytime.");
+    logAudit({ action: "stage_change", resourceType: "lead", resourceId: lead.id, resourceLabel: lead.company_name, oldValue: { stage: oldStage }, newValue: { stage: "dead" }, summary: `Lead marked as dead` });
   }
 
   async function moveToRevival() {
+    const oldStage = currentLead.outreach_stage;
     setCurrentLead((prev: any) => ({ ...prev, outreach_stage: "revival" }));
-    await supabase.from("leads").update({ outreach_stage: "revival" } as any).eq("id", lead.id);
+    const { error } = await supabase.from("leads").update(leadStageUpdate("revival") as any).eq("id", lead.id);
+    if (error) {
+      setCurrentLead((prev: any) => ({ ...prev, outreach_stage: oldStage }));
+      showToast(`Could not move to revival: ${error.message}`);
+      return;
+    }
+    showToast("Lead moved to Revival — pick up the outreach again.");
+    logAudit({ action: "stage_change", resourceType: "lead", resourceId: lead.id, resourceLabel: lead.company_name, oldValue: { stage: oldStage }, newValue: { stage: "revival" }, summary: `Moved to Revival` });
+  }
+
+  // Assignable team members (for the Assigned To dropdown)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("role", ["admin", "telecaller", "strategist"])
+        .order("full_name");
+      if (!cancelled && data) setTeam(data as any);
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function changeAssignee(newAssignee: string) {
+    setAssigning(true);
+    const { error } = await supabase
+      .from("leads")
+      .update({ assigned_sales_exec: newAssignee || null } as any)
+      .eq("id", lead.id);
+    setAssigning(false);
+    if (error) {
+      showToast(`Could not assign: ${error.message}`);
+      return;
+    }
+    setCurrentLead((prev: any) => ({ ...prev, assigned_sales_exec: newAssignee || null }));
+    const name = team.find(t => t.id === newAssignee)?.full_name;
+    showToast(newAssignee ? `Assigned to ${name || "team member"}` : "Lead unassigned");
+    logAudit({ action: "update", resourceType: "lead", resourceId: lead.id, resourceLabel: currentLead.company_name, newValue: { assigned_sales_exec: newAssignee || null }, summary: `Lead ${newAssignee ? `assigned to ${name}` : "unassigned"}` });
+  }
+
+  async function deleteLead() {
+    setDeleteLoading(true);
+    const res = await deleteSingleLead(lead.id);
+    setDeleteLoading(false);
+    if (!res.success) {
+      showToast(`Delete failed: ${res.message}`);
+      return;
+    }
+    notify.success("Lead deleted", currentLead.company_name);
+    router.push("/admin/sales/leads");
+  }
+
+  async function confirmProposal(proposal: any) {
+    if (!confirmChecked) return;
+    setConfirmError(null);
+    setConfirmLoading(true);
+    try {
+      // 1. Generate agreement number
+      const { count } = await (supabase as any)
+        .from("agreements")
+        .select("id", { count: "exact", head: true });
+      const agreementNumber = `AGR-2026-${String((count || 0) + 1).padStart(3, "0")}`;
+
+      // 2. Save agreement record
+      const { data: agr, error: agrErr } = await (supabase as any)
+        .from("agreements")
+        .insert({
+          lead_id: lead.id,
+          proposal_id: proposal.id,
+          agreement_number: agreementNumber,
+          proposal_ref: proposal.proposal_number,
+          services: proposal.services,
+          total_setup: proposal.total_setup,
+          total_monthly: proposal.total_monthly,
+          start_date: confirmStartDate || null,
+          status: "confirmed",
+          confirmed_at: new Date().toISOString(),
+          created_by: userId,
+          created_at: new Date().toISOString(),
+        })
+        .select("id")
+        .single();
+      if (agrErr) { setConfirmError(agrErr.message); setConfirmLoading(false); return; }
+
+      // 3. Mark proposal confirmed
+      const { error: propErr } = await supabase.from("proposals").update({ status: "confirmed" } as any).eq("id", proposal.id);
+      if (propErr) { setConfirmError(`Agreement saved, but proposal update failed: ${propErr.message}`); setConfirmLoading(false); return; }
+
+      // 4. Mark lead won
+      const { error: wonErr } = await supabase.from("leads").update(leadStageUpdate("won") as any).eq("id", lead.id);
+      if (wonErr) { setConfirmError(`Proposal confirmed, but lead stage update failed: ${wonErr.message}`); setConfirmLoading(false); return; }
+
+      // 5. Create or find client
+      const { data: existing } = await supabase
+        .from("clients").select("id").eq("business_name", lead.company_name).maybeSingle();
+      let clientId = existing?.id;
+
+      if (!clientId) {
+        const serviceIds = (proposal.services || []).map((s: any) => s.id);
+        const monthlyVal = proposal.total_monthly ?? 0;
+        const { data: newClient, error: clientErr } = await supabase
+          .from("clients")
+          .insert({
+            business_name: lead.company_name,
+            owner_name: lead.contact_person,
+            city: lead.city,
+            niche: lead.industry,
+            status: "onboarding",
+            onboarding_completed: false,
+            package_tier: calculatePackageTier(monthlyVal),
+            services_active: serviceIds as any,
+            monthly_value: monthlyVal,
+            start_date: confirmStartDate || new Date().toISOString().split("T")[0],
+            created_at: new Date().toISOString(),
+          })
+          .select("id")
+          .single();
+        if (clientErr || !newClient?.id) {
+          setConfirmError(`Deal won, but client creation failed: ${clientErr?.message ?? "no row returned"}. Create the client manually from /admin/clients.`);
+          setConfirmLoading(false);
+          return;
+        }
+        clientId = newClient.id;
+        await generateClientOnboarding(supabase, clientId, serviceIds);
+      }
+
+      logAudit({ action: "proposal_confirmed", resourceType: "proposal", resourceId: proposal.id, resourceLabel: `${proposal.proposal_number} — ${lead.company_name}`, newValue: { agreement_number: agreementNumber, client_id: clientId }, summary: `Proposal confirmed → agreement ${agreementNumber} created, client onboarding started` });
+      if (clientId) router.push(`/admin/clients/${clientId}?tab=onboarding`);
+    } catch (e: any) {
+      setConfirmError(e.message || "Something went wrong");
+    } finally {
+      setConfirmLoading(false);
+    }
   }
 
   const stage = currentLead.outreach_stage || "touch1_pending";
   const typeKey = (currentLead.lead_type || "").toUpperCase();
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-full bg-slate-50">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <CheckCircle className="h-4 w-4 text-[#42CA80] flex-shrink-0" />
+          {toast}
+        </div>
+      )}
+
       {/* Back nav */}
       <div className="px-4 py-3 bg-white border-b border-slate-200">
         <Link href="/admin/outreach" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#42CA80] transition-colors">
@@ -158,11 +358,6 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                   <MessageCircle className="h-4 w-4" /> WhatsApp
                 </a>
               )}
-              {isAdmin && (
-                <Link href={`/sales/leads/${lead.id}`} className="flex items-center gap-2 border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
-                  <Edit3 className="h-4 w-4" /> Full Profile
-                </Link>
-              )}
             </div>
           </div>
         </div>
@@ -170,6 +365,17 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* ── LEFT: Activity + Proposals ─────────────────── */}
           <div className="lg:col-span-2 space-y-6">
+
+            {/* Full Activity Trail (audit triggers + activity events) */}
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100">
+                <h2 className="text-sm font-bold text-slate-900">Activity Trail</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Every change to this lead — stage moves, edits, proposals</p>
+              </div>
+              <div className="p-5">
+                <ActivityTimeline entityType="lead" entityId={lead.id} compact limit={8} />
+              </div>
+            </div>
 
             {/* Outreach History Timeline */}
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
@@ -234,35 +440,100 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
               {proposals.length === 0 && (
                 <div className="flex items-center justify-center py-10 text-sm text-slate-400 italic">No proposals yet.</div>
               )}
-              {proposals.map((proposal, i) => (
-                <div key={proposal.id} className="flex items-center gap-4 px-5 py-4 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-800">Proposal #{i + 1}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Sent {formatDate(proposal.sent_at)}</p>
-                    {proposal.amount && (
-                      <p className="text-xs text-slate-600 mt-0.5 font-medium">₹{proposal.amount.toLocaleString("en-IN")}</p>
+              {proposals.map((proposal, i) => {
+                const isConfirmed = proposal.status === "confirmed";
+                const canConfirm = isAdmin && proposal.status === "sent";
+                const isExpanded = confirmingProposalId === proposal.id;
+                return (
+                  <div key={proposal.id} className="border-b border-slate-50 last:border-0">
+                    {/* Proposal row */}
+                    <div className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50/60 transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-slate-800">Proposal #{i + 1}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Sent {formatDate(proposal.sent_at)}</p>
+                        {proposal.amount && (
+                          <p className="text-xs font-mono font-bold text-slate-700 mt-0.5">
+                            ₹{proposal.amount.toLocaleString("en-IN")}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
+                          isConfirmed ? "bg-emerald-100 text-emerald-700" :
+                          proposal.status === "sent" ? "bg-blue-100 text-blue-700" :
+                          proposal.status === "rejected" ? "bg-red-100 text-red-600" :
+                          "bg-slate-100 text-slate-500"
+                        }`}>
+                          {proposal.status || "Draft"}
+                        </span>
+                        {isConfirmed && (() => {
+                          const matchedAgreement = agreements.find((a: Agreement) => a.proposal_id === proposal.id) || agreements[0];
+                          return matchedAgreement ? (
+                            <Link href={`/admin/agreements/${matchedAgreement.id}`} className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 hover:underline">
+                              <CheckCircle className="h-3 w-3" /> View Agreement
+                            </Link>
+                          ) : (
+                            <Link href="/admin/agreements" className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 hover:underline">
+                              <CheckCircle className="h-3 w-3" /> View Agreement
+                            </Link>
+                          );
+                        })()}
+                        {canConfirm && (
+                          <button
+                            onClick={() => {
+                              setConfirmingProposalId(isExpanded ? null : proposal.id);
+                              setConfirmChecked(false);
+                              setConfirmError(null);
+                            }}
+                            className="flex items-center gap-1 text-[10px] font-bold bg-slate-900 hover:bg-slate-700 text-white px-2.5 py-1.5 rounded-lg transition-colors"
+                          >
+                            <FileSignature className="h-3 w-3" />
+                            {isExpanded ? "Cancel" : "Client Confirmed →"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Inline confirm panel */}
+                    {isExpanded && (
+                      <div className="mx-5 mb-4 bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-4">
+                        <p className="text-xs font-bold text-slate-700">Log client confirmation</p>
+
+                        <label className="flex items-start gap-3 cursor-pointer bg-white border-2 rounded-xl p-3 transition-all" style={{ borderColor: confirmChecked ? "#42CA80" : "#e2e8f0" }}>
+                          <div className={`h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all ${confirmChecked ? "bg-[#42CA80] border-[#42CA80]" : "border-slate-300"}`}>
+                            {confirmChecked && <CheckCircle className="h-3 w-3 text-white" />}
+                          </div>
+                          <input type="checkbox" checked={confirmChecked} onChange={e => setConfirmChecked(e.target.checked)} className="sr-only" />
+                          <p className="text-xs text-slate-700">{lead.company_name} confirmed verbally or via WhatsApp.</p>
+                        </label>
+
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">Start Date</label>
+                          <input
+                            type="date"
+                            value={confirmStartDate}
+                            onChange={e => setConfirmStartDate(e.target.value)}
+                            className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30"
+                          />
+                        </div>
+
+                        {confirmError && (
+                          <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{confirmError}</p>
+                        )}
+
+                        <button
+                          onClick={() => confirmProposal(proposal)}
+                          disabled={!confirmChecked || confirmLoading}
+                          className="w-full bg-[#42CA80] hover:bg-[#35A66A] disabled:opacity-40 text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+                        >
+                          {confirmLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
+                          Confirm & Create Client
+                        </button>
+                      </div>
                     )}
                   </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
-                      proposal.status === "confirmed" ? "bg-emerald-100 text-emerald-700" :
-                      proposal.status === "sent" ? "bg-blue-100 text-blue-700" :
-                      proposal.status === "rejected" ? "bg-red-100 text-red-600" :
-                      "bg-slate-100 text-slate-500"
-                    }`}>
-                      {proposal.status || "Draft"}
-                    </span>
-                    {proposal.status === "confirmed" && isAdmin && (
-                      <button
-                        onClick={() => { setSelectedProposal(proposal); setShowAgreementModal(true); }}
-                        className="text-[10px] font-bold bg-[#42CA80] text-white px-2 py-1 rounded hover:bg-[#35A66A] transition-colors"
-                      >
-                        Create Agreement
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Agreements */}
@@ -291,60 +562,157 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
 
           {/* ── RIGHT: Lead Details + Quick Actions ─────────── */}
           <div className="space-y-4">
-            {/* Lead Details */}
+            {/* Lead Details — fully editable */}
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Lead Details</h3>
-              <div className="space-y-3">
-                {[
-                  { label: "Business", value: currentLead.company_name },
-                  { label: "Owner", value: currentLead.contact_person },
-                  { label: "Phone", value: currentLead.phone },
-                  { label: "City", value: currentLead.city },
-                  { label: "Niche", value: currentLead.industry },
-                  { label: "Source", value: currentLead.source },
-                  { label: "Has Website", value: currentLead.has_website ? "Yes" : "No" },
-                  { label: "SERP Ranked", value: currentLead.serp_ranked ? "Yes" : "No" },
-                  { label: "Uploaded", value: formatDate(currentLead.created_at) },
-                  marketInsight && { label: "Search Volume", value: marketInsight.search_volume || "—" },
-                ].filter(Boolean).map((item: any) => (
-                  <div key={item.label} className="flex items-start gap-2">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-24 shrink-0 pt-0.5">{item.label}</span>
-                    <span className="text-xs text-slate-700 font-medium">{item.value || "—"}</span>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Lead Details</h3>
+                {isAdmin && <span className="text-[10px] text-slate-400 font-medium">Click any field to edit</span>}
+              </div>
+              <div className="space-y-1">
+
+                {/* Text fields */}
+                {([
+                  { label: "Business",  field: "company_name",   type: "text" },
+                  { label: "Owner",     field: "contact_person", type: "text" },
+                  { label: "Phone",     field: "phone",          type: "tel"  },
+                  { label: "City",      field: "city",           type: "text" },
+                  { label: "Niche",     field: "industry",       type: "text" },
+                  { label: "Source",    field: "source",         type: "text" },
+                  { label: "Website",   field: "website_link",   type: "url"  },
+                  { label: "GMB Link",  field: "gmb_link",       type: "url"  },
+                ] as { label: string; field: string; type: string }[]).map(({ label, field, type }) => (
+                  <div key={field} className="group flex items-center gap-2 py-1.5 rounded-lg px-1 hover:bg-slate-50 transition-colors">
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">{label}</span>
+                    {isAdmin && editingField === field ? (
+                      <div className="flex items-center gap-1.5 flex-1">
+                        <input
+                          autoFocus
+                          type={type}
+                          value={editDraft}
+                          onChange={e => setEditDraft(e.target.value)}
+                          onKeyDown={e => { if (e.key === "Enter") commitEdit(field); if (e.key === "Escape") cancelEdit(); }}
+                          onBlur={() => commitEdit(field)}
+                          className="flex-1 text-xs border border-[#42CA80] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#42CA80] bg-white"
+                        />
+                        <button onMouseDown={() => commitEdit(field)} className="text-[#42CA80] hover:text-[#35A66A]"><CheckCircle className="h-3.5 w-3.5" /></button>
+                        <button onMouseDown={cancelEdit} className="text-slate-400 hover:text-slate-600"><XCircle className="h-3.5 w-3.5" /></button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => isAdmin && startEdit(field)}
+                        className={`flex-1 text-left text-xs font-medium transition-colors ${isAdmin ? "cursor-pointer hover:text-[#42CA80]" : "cursor-default"} ${currentLead[field] ? "text-slate-700" : "text-slate-400 italic"}`}
+                      >
+                        {currentLead[field] || (isAdmin ? "Click to add" : "—")}
+                      </button>
+                    )}
+                    {isAdmin && editingField !== field && (
+                      <Edit3 className="h-3 w-3 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                    )}
                   </div>
                 ))}
 
-                {/* Editable: Lead Type */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-24 shrink-0">Script Type</span>
-                  {isAdmin && editingLeadType ? (
-                    <select value={leadType} onChange={e => { setLeadType(e.target.value); updateField("lead_type", e.target.value); setEditingLeadType(false); }}
-                      className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#42CA80]">
+                <div className="border-t border-slate-100 my-2" />
+
+                {/* Boolean toggles */}
+                {([
+                  { label: "Has Website", field: "has_website"  },
+                  { label: "SERP Ranked", field: "serp_ranked"  },
+                ] as { label: string; field: string }[]).map(({ label, field }) => (
+                  <div key={field} className="flex items-center gap-2 py-1.5 px-1">
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">{label}</span>
+                    <button
+                      onClick={() => isAdmin && toggleBoolean(field)}
+                      className={`text-xs font-bold px-2.5 py-0.5 rounded-full transition-colors ${
+                        currentLead[field]
+                          ? "bg-emerald-100 text-emerald-700 " + (isAdmin ? "hover:bg-emerald-200" : "")
+                          : "bg-slate-100 text-slate-500 " + (isAdmin ? "hover:bg-slate-200" : "")
+                      } ${isAdmin ? "cursor-pointer" : "cursor-default"}`}
+                    >
+                      {currentLead[field] ? "Yes" : "No"}
+                    </button>
+                  </div>
+                ))}
+
+                <div className="border-t border-slate-100 my-2" />
+
+                {/* Script Type dropdown */}
+                <div className="flex items-center gap-2 py-1.5 px-1">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">Script Type</span>
+                  {isAdmin ? (
+                    <select
+                      value={currentLead.lead_type || ""}
+                      onChange={e => updateField("lead_type", e.target.value)}
+                      className="text-xs border border-slate-200 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-[#42CA80] font-bold text-indigo-700"
+                    >
+                      <option value="">Not set</option>
                       {["A", "B", "C", "D"].map(t => <option key={t} value={t}>Type {t}</option>)}
                     </select>
                   ) : (
-                    <button onClick={() => isAdmin && setEditingLeadType(true)}
-                      className={`text-xs font-bold px-2 py-0.5 rounded ${isAdmin ? "cursor-pointer hover:ring-1 hover:ring-[#42CA80]" : ""} ${leadType ? "bg-indigo-100 text-indigo-700" : "text-slate-400"}`}>
-                      {leadType ? `Type ${leadType}` : "Not set"}
-                    </button>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${currentLead.lead_type ? "bg-indigo-100 text-indigo-700" : "text-slate-400"}`}>
+                      {currentLead.lead_type ? `Type ${currentLead.lead_type}` : "—"}
+                    </span>
                   )}
                 </div>
 
-                {/* Editable: Follow-up Date */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-24 shrink-0">Follow-up</span>
-                  {isAdmin && editingFollowUp ? (
-                    <input type="datetime-local" value={followUpDate} onChange={e => setFollowUpDate(e.target.value)}
-                      onBlur={() => { updateField("follow_up_date", followUpDate); setEditingFollowUp(false); }}
-                      className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
-                      autoFocus
-                    />
+                {/* Stage override */}
+                <div className="flex items-center gap-2 py-1.5 px-1">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">Stage</span>
+                  {isAdmin ? (
+                    <select
+                      value={currentLead.outreach_stage || "touch1_pending"}
+                      onChange={e => changeStage(e.target.value)}
+                      className="text-xs border border-slate-200 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-[#42CA80] font-semibold"
+                    >
+                      {Object.entries(STAGE_LABELS).map(([key, label]) => (
+                        <option key={key} value={key}>{label}</option>
+                      ))}
+                    </select>
                   ) : (
-                    <button onClick={() => isAdmin && setEditingFollowUp(true)}
-                      className={`text-xs font-medium ${isAdmin ? "cursor-pointer hover:text-[#42CA80]" : ""} ${currentLead.follow_up_date ? "text-slate-700" : "text-slate-400"}`}>
-                      {currentLead.follow_up_date ? formatDateTime(currentLead.follow_up_date) : "Set date"}
-                    </button>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${STAGE_COLORS[currentLead.outreach_stage] || "bg-slate-100 text-slate-600"}`}>
+                      {STAGE_LABELS[currentLead.outreach_stage] || currentLead.outreach_stage}
+                    </span>
                   )}
                 </div>
+
+                {/* Follow-up Date */}
+                <div className="flex items-center gap-2 py-1.5 px-1 group">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">Follow-up</span>
+                  {isAdmin && editingField === "follow_up_date" ? (
+                    <div className="flex items-center gap-1.5 flex-1">
+                      <input
+                        autoFocus
+                        type="datetime-local"
+                        value={editDraft}
+                        onChange={e => setEditDraft(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter") commitEdit("follow_up_date"); if (e.key === "Escape") cancelEdit(); }}
+                        onBlur={() => commitEdit("follow_up_date")}
+                        className="flex-1 text-xs border border-[#42CA80] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => isAdmin && startEdit("follow_up_date")}
+                      className={`flex-1 text-left text-xs font-medium transition-colors ${isAdmin ? "cursor-pointer hover:text-[#42CA80]" : "cursor-default"} ${currentLead.follow_up_date ? "text-slate-700" : "text-slate-400 italic"}`}
+                    >
+                      {currentLead.follow_up_date ? formatDateTime(currentLead.follow_up_date) : (isAdmin ? "Click to set" : "—")}
+                    </button>
+                  )}
+                  {isAdmin && editingField !== "follow_up_date" && (
+                    <Edit3 className="h-3 w-3 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  )}
+                </div>
+
+                {/* Read-only */}
+                <div className="flex items-center gap-2 py-1.5 px-1">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">Added</span>
+                  <span className="text-xs text-slate-500">{formatDate(currentLead.created_at)}</span>
+                </div>
+                {marketInsight?.search_volume && (
+                  <div className="flex items-center gap-2 py-1.5 px-1">
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">Search Vol</span>
+                    <span className="text-xs text-slate-700 font-medium">{marketInsight.search_volume}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -353,6 +721,22 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
               <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
                 <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Quick Actions</h3>
                 <div className="space-y-2">
+                  {/* Assigned To */}
+                  <div className="mb-1">
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">Assigned To</label>
+                    <select
+                      value={currentLead.assigned_sales_exec || ""}
+                      onChange={(e) => changeAssignee(e.target.value)}
+                      disabled={assigning}
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand/30 disabled:opacity-50 cursor-pointer"
+                    >
+                      <option value="">Unassigned</option>
+                      {team.map((t) => (
+                        <option key={t.id} value={t.id}>{t.full_name || "Unnamed"}</option>
+                      ))}
+                    </select>
+                  </div>
+
                   <Link href={`/admin/leads/${lead.id}/proposal/new`}
                     className="flex items-center gap-2 w-full bg-[#42CA80] hover:bg-[#35A66A] text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">
                     <Plus className="h-4 w-4" /> Create Proposal
@@ -364,15 +748,6 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                   >
                     <MessageCircle className="h-4 w-4" /> WhatsApp Template
                   </button>
-
-                  {(stage === "won" || lead.outreach_stage === "won") && (
-                    <button
-                      onClick={() => setShowOnboardingModal(true)}
-                      className="flex items-center gap-2 w-full border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors"
-                    >
-                      <Rocket className="h-4 w-4" /> Activate Onboarding
-                    </button>
-                  )}
 
                   <button
                     onClick={() => moveToRevival()}
@@ -397,6 +772,23 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                       </div>
                     </div>
                   )}
+
+                  {!showConfirmDelete ? (
+                    <button
+                      onClick={() => setShowConfirmDelete(true)}
+                      className="flex items-center gap-2 w-full border border-slate-200 bg-white hover:border-red-200 hover:bg-red-50 text-slate-500 hover:text-red-600 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" /> Delete Lead
+                    </button>
+                  ) : (
+                    <div className="rounded-xl border border-red-200 bg-red-50 p-3">
+                      <p className="text-xs text-red-700 font-semibold mb-2">Permanently delete this lead and its call history? This can't be undone. Prefer "Mark as Dead" if you may revive it.</p>
+                      <div className="flex gap-2">
+                        <button onClick={deleteLead} disabled={deleteLoading} className="flex-1 bg-red-600 text-white text-xs font-bold py-1.5 rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors">{deleteLoading ? "Deleting…" : "Yes, delete"}</button>
+                        <button onClick={() => setShowConfirmDelete(false)} className="flex-1 bg-white text-slate-600 text-xs font-bold py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">Cancel</button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -415,22 +807,6 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
         />
       )}
 
-      {showAgreementModal && selectedProposal && (
-        <AgreementModal
-          onClose={() => { setShowAgreementModal(false); setSelectedProposal(null); }}
-          proposal={selectedProposal}
-          lead={currentLead}
-          userId={userId}
-        />
-      )}
-
-      {showOnboardingModal && (
-        <OnboardingModal
-          onClose={() => setShowOnboardingModal(false)}
-          lead={currentLead}
-          userId={userId}
-        />
-      )}
     </div>
   );
 }
@@ -470,15 +846,24 @@ function WhatsAppTemplateModal({ onClose, templates, lead, userId }: { onClose: 
   const copyAndLog = async () => {
     setIsCopying(true);
     await navigator.clipboard.writeText(getMessage());
-    await supabase.from("outreach_logs" as any).insert({
+    const { error: logErr } = await supabase.from("outreach_logs" as any).insert({
       lead_id: lead.id,
       touch_type: "whatsapp_template",
       note: `Sent WhatsApp: ${selectedTemplate.name}`,
       outcome: "SENT",
       created_by: userId,
     });
-    if (selectedTemplate.category === "CURIOSITY") {
-      await supabase.from("leads").update({ outreach_stage: "curiosity_sent" } as any).eq("id", lead.id);
+    if (logErr) notify.error("Could not log WhatsApp send", logErr.message);
+    const categoryStageMap: Record<string, string> = {
+      CURIOSITY:   "curiosity_sent",
+      PDF:         "pdf_sent",
+      FOLLOW_UP:   "follow_up_due",
+      REVIVAL:     "revival",
+    };
+    const newStage = categoryStageMap[selectedTemplate.category?.toUpperCase()];
+    if (newStage) {
+      const { error: stageErr } = await supabase.from("leads").update(leadStageUpdate(newStage) as any).eq("id", lead.id);
+      if (stageErr) notify.error("Could not update lead stage", stageErr.message);
     }
     setTimeout(() => {
       setIsCopying(false);
@@ -549,123 +934,3 @@ function WhatsAppTemplateModal({ onClose, templates, lead, userId }: { onClose: 
   );
 }
 
-function AgreementModal({ onClose, proposal, lead, userId }: { onClose: () => void; proposal: any; lead: any; userId: string | null }) {
-  const [startDate, setStartDate] = useState(proposal.start_date || new Date().toISOString().split("T")[0]);
-  const [isSaving, setIsSaving] = useState(false);
-  const supabase = createClient();
-
-  const handleCreate = async () => {
-    setIsSaving(true);
-    await supabase.from("agreements" as any).insert({
-      lead_id: lead.id,
-      proposal_id: proposal.id,
-      services: proposal.services,
-      total_setup: proposal.total_setup,
-      total_monthly: proposal.total_monthly,
-      start_date: startDate,
-      status: "pending",
-      created_by: userId,
-    });
-    onClose();
-    window.location.reload();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl animate-in fade-in zoom-in duration-200">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-bold text-slate-900">Confirm Agreement</h3>
-        </div>
-        <div className="p-6 space-y-4">
-          <p className="text-sm text-slate-600">Creating agreement based on proposal <strong>{proposal.proposal_number}</strong> for <strong>{lead.company_name}</strong>.</p>
-          <div>
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1.5">Proposed Start Date</label>
-            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20" />
-          </div>
-        </div>
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3 rounded-b-3xl">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:bg-slate-200 rounded-xl">Cancel</button>
-          <button onClick={handleCreate} disabled={isSaving}
-            className="bg-[#42CA80] hover:bg-[#35A66A] text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-            {isSaving && <Loader2 className="h-4 w-4 animate-spin" />} Confirm & Create
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function OnboardingModal({ onClose, lead, userId }: { onClose: () => void; lead: any; userId: string | null }) {
-  const [isActivating, setIsActivating] = useState(false);
-  const supabase = createClient();
-
-  const handleActivate = async () => {
-    setIsActivating(true);
-    // 1. Get latest agreement for services (look for pending or confirmed)
-    const { data: agreement } = await supabase
-      .from("agreements" as any)
-      .select("*")
-      .eq("lead_id", lead.id)
-      .in("status", ["pending", "confirmed"])
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
-
-    const services = (agreement as any)?.services || [];
-    
-    if (services.length > 0) {
-      const onboardingTasks = services.flatMap((svc: any) => [
-        { 
-          client_id: lead.client_id || lead.id, 
-          service_id: svc.id, 
-          task_id: `${svc.id}_INIT`, 
-          task: `Initialize ${svc.label} setup`, 
-          owner: "PM", 
-          status: "PENDING" 
-        },
-        { 
-          client_id: lead.client_id || lead.id, 
-          service_id: svc.id, 
-          task_id: `${svc.id}_ASSETS`, 
-          task: `Collect assets for ${svc.label}`, 
-          owner: "ADMIN", 
-          status: "PENDING" 
-        }
-      ]);
-      await (supabase as any).from("client_onboarding_tasks").insert(onboardingTasks);
-    }
-    await supabase.from("leads").update({ outreach_stage: "won" } as any).eq("id", lead.id);
-    setIsActivating(false);
-    onClose();
-    window.location.reload();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl animate-in fade-in zoom-in duration-200">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-bold text-slate-900 flex items-center gap-2">
-            <Rocket className="h-5 w-5 text-indigo-500" /> Activate Onboarding
-          </h3>
-        </div>
-        <div className="p-6 space-y-4 text-center">
-          <div className="h-16 w-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-2 text-indigo-600">
-            <ClipboardCheck className="h-8 w-8" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-slate-900">Ready to start for {lead.company_name}?</p>
-            <p className="text-xs text-slate-500 mt-2">This will generate onboarding checklists and initialize the asset vault.</p>
-          </div>
-        </div>
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3 rounded-b-3xl">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-slate-500 hover:bg-slate-200 rounded-xl">Hold on</button>
-          <button onClick={handleActivate} disabled={isActivating}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-            {isActivating && <Loader2 className="h-4 w-4 animate-spin" />} Activate Now
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}

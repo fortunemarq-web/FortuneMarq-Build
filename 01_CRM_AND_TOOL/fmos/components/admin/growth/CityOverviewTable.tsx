@@ -1,34 +1,50 @@
 import Link from "next/link";
 import { fetchAcquisitionTargets } from "@/app/admin/growth/actions";
-import { Plus, ArrowRight } from "lucide-react";
+import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { ArrowRight } from "lucide-react";
+import AddCityModal from "@/components/admin/growth/add-city-modal";
+
+const CLOSED_STAGES = ["won", "lost", "dead", "not_interested"];
 
 export default async function CityOverviewTable() {
   const targets = await fetchAcquisitionTargets();
-  
-  // Group by city
+
+  // Real per-city lead counts (no fabricated numbers)
+  const supabase = await createServerClientWithCookies();
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+  const { data: leads } = await supabase
+    .from("leads")
+    .select("city, outreach_stage, meeting_booked_at, last_activity_at");
+
+  const leadStats: Record<string, { total: number; pipeline: number; meetings_mtd: number; won_mtd: number }> = {};
+  (leads || []).forEach((l: any) => {
+    const key = (l.city || "").trim().toLowerCase();
+    if (!key) return;
+    if (!leadStats[key]) leadStats[key] = { total: 0, pipeline: 0, meetings_mtd: 0, won_mtd: 0 };
+    leadStats[key].total++;
+    if (!CLOSED_STAGES.includes(l.outreach_stage || "")) leadStats[key].pipeline++;
+    if (l.meeting_booked_at && l.meeting_booked_at >= monthStart) leadStats[key].meetings_mtd++;
+    if (l.outreach_stage === "won" && l.last_activity_at && l.last_activity_at >= monthStart) leadStats[key].won_mtd++;
+  });
+
+  // Group acquisition targets by city
   const cityGroups = targets.reduce((acc: any, t) => {
     if (!acc[t.city]) {
+      const stats = leadStats[(t.city || "").trim().toLowerCase()] || { total: 0, pipeline: 0, meetings_mtd: 0, won_mtd: 0 };
       acc[t.city] = {
         city: t.city,
         city_slug: t.city_slug,
         active_niches: 0,
-        total_leads: 0, // Mocked for now, in real app query leads table
-        in_pipeline: 0,
-        demos_this_month: 0,
-        closed_this_month: 0,
-        campaigns_active: 0
+        total_leads: stats.total,
+        in_pipeline: stats.pipeline,
+        meetings_mtd: stats.meetings_mtd,
+        won_mtd: stats.won_mtd,
       };
     }
     if (t.is_active) acc[t.city].active_niches++;
-    
-    // Some placeholder aggregated stats
-    acc[t.city].total_leads += Math.floor(Math.random() * 50) + 20;
-    acc[t.city].in_pipeline += Math.floor(Math.random() * 10) + 2;
-    acc[t.city].campaigns_active += Math.floor(Math.random() * 3);
-    
     return acc;
   }, {});
-  
+
   const rows = Object.values(cityGroups);
 
   return (
@@ -37,10 +53,7 @@ export default async function CityOverviewTable() {
         <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">
           City Overview
         </h3>
-        <button className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:border-[#42CA80] hover:text-[#42CA80] transition-all min-h-[36px]">
-          <Plus className="h-3 w-3" />
-          Add City
-        </button>
+        <AddCityModal />
       </div>
       
       <div className="overflow-x-auto">
@@ -51,9 +64,8 @@ export default async function CityOverviewTable() {
               <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Active Niches</th>
               <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Leads</th>
               <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">In Pipeline</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Demos (MTD)</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Closed (MTD)</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Active Campaigns</th>
+              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Meetings (MTD)</th>
+              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Won (MTD)</th>
               <th className="px-6 py-3 text-right"></th>
             </tr>
           </thead>
@@ -72,9 +84,8 @@ export default async function CityOverviewTable() {
                 </td>
                 <td className="px-6 py-4 text-sm font-semibold text-slate-700">{r.total_leads}</td>
                 <td className="px-6 py-4 text-sm font-semibold text-amber-600">{r.in_pipeline}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-blue-600">{r.demos_this_month}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-emerald-600">{r.closed_this_month}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-purple-600">{r.campaigns_active}</td>
+                <td className="px-6 py-4 text-sm font-semibold text-blue-600">{r.meetings_mtd}</td>
+                <td className="px-6 py-4 text-sm font-semibold text-emerald-600">{r.won_mtd}</td>
                 <td className="px-6 py-4 text-right">
                   <Link href={`/admin/growth/acquisition/${r.city_slug}`} className="inline-flex items-center text-xs font-bold text-[#42CA80] hover:text-[#38b571]">
                     Manage <ArrowRight className="h-3 w-3 ml-1" />

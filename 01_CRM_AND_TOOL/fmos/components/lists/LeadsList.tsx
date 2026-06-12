@@ -13,11 +13,26 @@ import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
+import { getStage, leadStageUpdate, PIPELINE_STAGES } from "@/lib/pipeline";
+import LeadPeekPanel from "@/components/leads/lead-peek-panel";
+
+// Quick filter chips over outreach_stage (the real pipeline position)
+const STAGE_CHIPS: Array<{ label: string; stages: string[] | null }> = [
+    { label: "All", stages: null },
+    { label: "New", stages: ["touch1_pending"] },
+    { label: "Follow-up", stages: ["follow_up_due", "no_answer", "follow_back"] },
+    { label: "Engaged", stages: ["curiosity_sent", "pdf_sent"] },
+    { label: "Meeting", stages: ["meeting_booked"] },
+    { label: "Proposal", stages: ["proposal_sent"] },
+    { label: "Won", stages: ["won"] },
+];
 
 export default function LeadsList({ userId }: { userId: string }) {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [total, setTotal] = useState(0);
+    const [peekLead, setPeekLead] = useState<any | null>(null);
 
     // View State
     const [currentView, setCurrentView] = useState<SavedView | null>(null);
@@ -35,9 +50,16 @@ export default function LeadsList({ userId }: { userId: string }) {
         count: selectedCount,
     } = useBulkSelection<string>();
 
+    const PAGE_SIZE = 50;
+    const [page, setPage] = useState(0);
+
+    useEffect(() => {
+        setPage(0);
+    }, [filters, sort]);
+
     useEffect(() => {
         fetchData();
-    }, [filters, sort]);
+    }, [filters, sort, page]);
 
     const fetchData = async () => {
         setLoading(true);
@@ -47,8 +69,8 @@ export default function LeadsList({ userId }: { userId: string }) {
         query = applyFilters(query, filters);
         query = applySort(query, sort);
 
-        // Limit for now, pagination to be added if needed
-        query = query.limit(50);
+        // DB-level pagination
+        query = query.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
         const { data: leads, error, count } = await query;
         if (error) {
@@ -59,6 +81,8 @@ export default function LeadsList({ userId }: { userId: string }) {
         }
         setLoading(false);
     };
+
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
     const handleViewSelect = (view: SavedView) => {
         setCurrentView(view);
@@ -79,9 +103,15 @@ export default function LeadsList({ userId }: { userId: string }) {
         let updates = {};
 
         if (action === "change_status") {
-            const status = prompt("Enter new status (new, contacting, qualified, closed_lost, etc):");
-            if (!status) return;
-            updates = { status };
+            const valid = PIPELINE_STAGES.map(s => s.key);
+            const stage = prompt(`Enter new stage:\n${valid.join(", ")}`);
+            if (!stage) return;
+            if (!valid.includes(stage.trim())) {
+                toast.error("Invalid stage", `Use one of: ${valid.slice(0, 6).join(", ")}…`);
+                return;
+            }
+            // Stage writes only via lib/pipeline.ts — keeps status in lockstep
+            updates = leadStageUpdate(stage.trim());
         } else if (action === "assign_sales") {
             const salesId = prompt("Enter Sales Exec UUID:"); // Ideally a picker
             if (!salesId) return;
@@ -109,15 +139,15 @@ export default function LeadsList({ userId }: { userId: string }) {
                         newValue: { filters, sort }
                     });
                 } else {
-                    alert("Export failed");
+                    toast.error("Export failed");
                 }
-            } catch (e) { console.error(e); alert("Export error"); }
+            } catch (e) { console.error(e); toast.error("Export error"); }
             return;
         }
 
         if (Object.keys(updates).length > 0) {
             const result = await bulkUpdateEntity("lead", ids, updates, action);
-            alert(`Updated ${result.successCount} leads.`);
+            toast.success(`Updated ${result.successCount} leads`);
 
             // Log Audit
             await logAudit({
@@ -159,7 +189,9 @@ export default function LeadsList({ userId }: { userId: string }) {
                         <Skeleton className="h-3 w-32" />
                     </td>
                     <td className="px-4 py-4"><Skeleton className="h-6 w-24 rounded-full" /></td>
-                    <td className="px-4 py-4"><Skeleton className="h-4 w-32" /></td>
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-10" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
                 </tr>
             ))}
@@ -184,24 +216,35 @@ export default function LeadsList({ userId }: { userId: string }) {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <input
                         type="text"
-                        placeholder="Search company, contact, or type..."
-                        className="w-full bg-white text-slate-900 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 transition-shadow shadow-sm"
+                        placeholder="Search company, contact, or phone..."
+                        className="w-full bg-white text-slate-900 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-brand/30 transition-shadow shadow-sm"
                         value={filters.search || ""}
                         onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                     />
                 </div>
 
-                <select
-                    className="bg-white text-slate-900 border border-slate-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 transition-shadow shadow-sm"
-                    onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value ? [e.target.value] : undefined }))}
-                    value={filters.status?.[0] || ""}
-                >
-                    <option value="">All Statuses</option>
-                    <option value="new">New</option>
-                    <option value="contacted">Contacted</option>
-                    <option value="qualified">Qualified</option>
-                    <option value="closed_won">Closed Won</option>
-                </select>
+                {/* Stage chips */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                    {STAGE_CHIPS.map((chip) => {
+                        const isActive = chip.stages === null
+                            ? !filters.outreach_stage
+                            : JSON.stringify(filters.outreach_stage) === JSON.stringify(chip.stages);
+                        return (
+                            <button
+                                key={chip.label}
+                                onClick={() => setFilters(prev => ({ ...prev, outreach_stage: chip.stages ?? undefined }))}
+                                className={clsx(
+                                    "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
+                                    isActive
+                                        ? "border-slate-900 bg-slate-900 text-white"
+                                        : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                                )}
+                            >
+                                {chip.label}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
             {/* Table */}
@@ -218,23 +261,30 @@ export default function LeadsList({ userId }: { userId: string }) {
                                         onChange={handleSelectAllPage}
                                     />
                                 </th>
-                                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('company_name')}>
+                                <th className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('company_name')}>
                                     <div className="flex items-center gap-1">
                                         Company
-                                        {sort.field === 'company_name' && <ArrowUpDown className="h-3 w-3 text-[#42CA80]" />}
+                                        {sort.field === 'company_name' && <ArrowUpDown className="h-3 w-3 text-brand-deep" />}
                                     </div>
                                 </th>
-                                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('status')}>
+                                <th className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('outreach_stage')}>
                                     <div className="flex items-center gap-1">
-                                        Status
-                                        {sort.field === 'status' && <ArrowUpDown className="h-3 w-3 text-[#42CA80]" />}
+                                        Stage
+                                        {sort.field === 'outreach_stage' && <ArrowUpDown className="h-3 w-3 text-brand-deep" />}
                                     </div>
                                 </th>
-                                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Lead Type</th>
-                                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('created_at')}>
+                                <th className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('city')}>
+                                    <div className="flex items-center gap-1">
+                                        City
+                                        {sort.field === 'city' && <ArrowUpDown className="h-3 w-3 text-brand-deep" />}
+                                    </div>
+                                </th>
+                                <th className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Phone</th>
+                                <th className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Type</th>
+                                <th className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 cursor-pointer hover:text-slate-700 transition-colors" onClick={() => toggleSort('created_at')}>
                                     <div className="flex items-center gap-1">
                                         Created
-                                        {sort.field === 'created_at' && <ArrowUpDown className="h-3 w-3 text-[#42CA80]" />}
+                                        {sort.field === 'created_at' && <ArrowUpDown className="h-3 w-3 text-brand-deep" />}
                                     </div>
                                 </th>
                             </tr>
@@ -244,7 +294,7 @@ export default function LeadsList({ userId }: { userId: string }) {
                                 <TableSkeleton />
                             ) : data.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="py-0">
+                                    <td colSpan={7} className="py-0">
                                         <div className="p-8">
                                             <EmptyState
                                                 icon={Inbox}
@@ -261,42 +311,53 @@ export default function LeadsList({ userId }: { userId: string }) {
                                     </td>
                                 </tr>
                             ) : (
-                                data.map((lead) => (
-                                    <tr key={lead.id} className={clsx(
-                                        "group transition-colors duration-100 hover:bg-slate-50/70",
-                                        isSelected(lead.id) && "bg-slate-50"
-                                    )}>
-                                        <td className="px-4 py-3">
+                                data.map((lead) => {
+                                    const stageDef = getStage(lead.outreach_stage);
+                                    return (
+                                    <tr
+                                        key={lead.id}
+                                        onClick={() => setPeekLead(lead)}
+                                        className={clsx(
+                                            "group cursor-pointer transition-colors duration-100 hover:bg-slate-50/70",
+                                            isSelected(lead.id) && "bg-slate-50"
+                                        )}
+                                    >
+                                        <td className="px-4 py-2" onClick={(e) => e.stopPropagation()}>
                                             <input
                                                 type="checkbox"
-                                                className="h-4 w-4 rounded border-slate-300 text-[#42CA80] focus:ring-[#42CA80] focus:ring-offset-0"
+                                                className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand focus:ring-offset-0"
                                                 checked={isSelected(lead.id)}
                                                 onChange={() => toggleSelection(lead.id)}
                                             />
                                         </td>
-                                        <td className="px-4 py-3">
-                                            <div className="font-semibold text-slate-900 leading-none mb-1">
+                                        <td className="px-4 py-2">
+                                            <div className="text-[13px] font-semibold text-slate-900 leading-tight">
                                                 {lead.company_name}
                                             </div>
-                                            <div className="text-[11px] font-medium text-slate-500">{lead.contact_person}</div>
+                                            {lead.contact_person && (
+                                                <div className="text-[11px] font-medium text-slate-400">{lead.contact_person}</div>
+                                            )}
                                         </td>
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-2">
                                             <span className={clsx(
-                                                "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border",
-                                                lead.status === 'new' ? 'bg-blue-50 text-blue-700 border-blue-100' :
-                                                    lead.status === 'qualified' ? 'bg-purple-50 text-purple-700 border-purple-100' :
-                                                        lead.status === 'closed_won' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
-                                                            'bg-slate-100 text-slate-700 border-slate-200'
+                                                "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider",
+                                                stageDef ? stageDef.badge : "bg-slate-100 text-slate-600"
                                             )}>
-                                                {lead.status.replace('_', ' ')}
+                                                {stageDef?.label || (lead.outreach_stage || "—").replace(/_/g, ' ')}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3">
-                                            <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded">
-                                                {lead.lead_type || 'General'}
+                                        <td className="px-4 py-2 text-[13px] text-slate-600">
+                                            {lead.city || "—"}
+                                        </td>
+                                        <td className="px-4 py-2 font-mono text-[12px] text-slate-500 tabular-nums">
+                                            {lead.phone || "—"}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                                                {lead.lead_type || '—'}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 font-mono text-[11px] text-slate-500 tabular-nums">
+                                        <td className="px-4 py-2 font-mono text-[11px] text-slate-400 tabular-nums whitespace-nowrap">
                                             {new Date(lead.created_at).toLocaleDateString(undefined, {
                                                 year: 'numeric',
                                                 month: 'short',
@@ -304,10 +365,37 @@ export default function LeadsList({ userId }: { userId: string }) {
                                             })}
                                         </td>
                                     </tr>
-                                ))
+                                    );
+                                })
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3">
+                    <p className="text-xs text-slate-500">
+                        Showing {total === 0 ? 0 : page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, total)} of {total} leads
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setPage((p) => Math.max(0, p - 1))}
+                            disabled={page === 0 || loading}
+                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                            Previous
+                        </button>
+                        <span className="text-xs font-medium text-slate-500 tabular-nums">
+                            {page + 1} / {totalPages}
+                        </span>
+                        <button
+                            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                            disabled={page >= totalPages - 1 || loading}
+                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -317,6 +405,18 @@ export default function LeadsList({ userId }: { userId: string }) {
                 onClearSelection={clearSelection}
                 onAction={handleBulkAction}
             />
+
+            {/* Slide-over lead preview */}
+            {peekLead && (
+                <LeadPeekPanel
+                    lead={peekLead}
+                    onClose={() => setPeekLead(null)}
+                    onUpdated={(patch) => {
+                        setData(prev => prev.map(l => l.id === patch.id ? { ...l, ...patch } : l));
+                        setPeekLead((prev: any) => prev && prev.id === patch.id ? { ...prev, ...patch } : prev);
+                    }}
+                />
+            )}
         </div>
     );
 }

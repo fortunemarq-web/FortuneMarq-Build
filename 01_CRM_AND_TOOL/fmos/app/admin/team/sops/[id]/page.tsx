@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import SopEditor from "@/components/team/sop-editor";
 import { updateSopAction } from "@/app/admin/team/actions";
+import DeleteSopButton from "@/components/team/delete-sop-button";
 import { revalidatePath } from "next/cache";
 
 export default async function SopDetailPage({
@@ -33,7 +34,7 @@ export default async function SopDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12">
+    <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
@@ -47,9 +48,7 @@ export default async function SopDetailPage({
           
           <div className="flex items-center gap-2">
             {id !== "new" && (
-                <button className="p-3 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                    <Trash2 className="h-5 w-5" />
-                </button>
+                <DeleteSopButton sopId={id} sopTitle={(sop as any).title} />
             )}
           </div>
         </div>

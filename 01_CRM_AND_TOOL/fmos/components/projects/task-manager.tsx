@@ -24,6 +24,7 @@ import {
 import { createClient } from "@/lib/supabase";
 import clsx from "clsx";
 import { sendNotification, NotificationType } from "@/lib/notifications";
+import { toast } from "@/components/ui/toast";
 
 interface Task {
   id: string;
@@ -219,7 +220,7 @@ export default function TaskManager({
       router.refresh();
     } catch (error: any) {
       console.error("Error saving task:", error);
-      alert("Failed to save task. Please try again.");
+      toast.error("Failed to save task", "Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -239,7 +240,7 @@ export default function TaskManager({
       router.refresh();
     } catch (error: any) {
       console.error("Error deleting task:", error);
-      alert("Failed to delete task.");
+      toast.error("Failed to delete task");
     } finally {
       setUpdatingTaskId(null);
     }

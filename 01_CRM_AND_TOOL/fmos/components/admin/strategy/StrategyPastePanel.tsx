@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Bot, FileText, ArrowRight, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { extractStrategyTasks } from "@/app/admin/strategy/actions";
 
 export default function StrategyPastePanel({ 
   destination, 
@@ -23,102 +24,35 @@ export default function StrategyPastePanel({
 
   const handleGenerate = async () => {
     if (!text) return;
-    
-    const key = sessionStorage.getItem("ANTHROPIC_API_KEY");
-    const model = sessionStorage.getItem("ANTHROPIC_MODEL") || "claude-sonnet-4-20250514";
-    
-    if (!key) {
-      setError("Please save your Anthropic API Key in Step 2 before generating.");
-      return;
-    }
 
     setIsProcessing(true);
     setError(null);
 
     try {
-      const systemPrompt = `You are a task extraction engine for FortuneMarq, a digital marketing agency.
+      const result = await extractStrategyTasks({ text, destination, timeframe, assignee });
 
-You will receive a strategy document. Your job is to extract ALL actionable tasks and return them as a JSON array.
-
-DESTINATION CONTEXT: ${destination}
-TIMEFRAME: ${timeframe}
-DEFAULT ASSIGNEE: ${assignee}
-TODAY'S DATE: ${new Date().toISOString().split('T')[0]}
-
-Rules:
-1. Extract EVERY specific action item from the document
-2. If a task has no explicit due date, distribute tasks evenly across the timeframe
-3. If a task has no assignee, use the default assignee
-4. Break large vague tasks into smaller specific ones (max 2 hours of work per task)
-5. Priority: use 'high' for week 1 items, 'medium' for week 2-3, 'low' for later
-6. Every task MUST have: title, description, due_date (YYYY-MM-DD), priority, assignee, section_tag
-
-Return ONLY valid JSON, no preamble, no explanation. Format:
-{
-  "strategy_title": "string",
-  "total_tasks": number,
-  "tasks": [
-    {
-      "title": "string (max 80 chars, action verb first)",
-      "description": "string (1-2 sentences of context/guidance)",
-      "due_date": "YYYY-MM-DD",
-      "priority": "high|medium|low",
-      "assignee": "admin|telecaller|user_id",
-      "section_tag": "string (matches destination, e.g. 'instagram', 'acquisition_hubli_dental')",
-      "estimated_minutes": number
-    }
-  ]
-}`;
-
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": key,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
-        },
-        body: JSON.stringify({
-          model: model,
-          max_tokens: 4000,
-          temperature: 0,
-          system: systemPrompt,
-          messages: [
-            {
-              role: "user",
-              content: `Here is the strategy document. Please extract the tasks into the requested JSON format:\n\n${text}`
-            }
-          ]
-        })
-      });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error?.message || `API Error: ${response.status}`);
+      if (!result.success) {
+        throw new Error(result.error);
       }
 
-      const data = await response.json();
-      const resultText = data.content?.[0]?.text || "{}";
-      
-      const cleanedText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const parsedTasks = JSON.parse(cleanedText);
+      const parsedTasks = result.data;
 
       sessionStorage.setItem("STRATEGY_REVIEW_DATA", JSON.stringify({
         sourceText: text,
         destination,
         timeframe,
-        generated: parsedTasks
+        generated: parsedTasks,
       }));
 
       router.push("/admin/strategy/review");
-
     } catch (err) {
       console.error(err);
       const message = err instanceof Error ? err.message : "Unknown error";
-      setError(`Failed to process strategy: ${message}. Check your API key and ensure the document format is valid.`);
+      setError(`Failed to process strategy: ${message}`);
       setIsProcessing(false);
     }
   };
+
 
   if (isProcessing) {
     return (

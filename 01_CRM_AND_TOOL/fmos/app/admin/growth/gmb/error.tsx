@@ -10,7 +10,7 @@ export default function AcquisitionError({
   reset: () => void;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-full bg-slate-50 flex items-center justify-center px-4">
       <div className="max-w-md text-center space-y-4">
         <h2 className="text-xl font-bold text-slate-900">Failed to load Client Acquisition Tracker</h2>
         <p className="text-sm text-slate-500">{error.message}</p>

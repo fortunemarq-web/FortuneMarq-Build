@@ -1,5 +1,5 @@
-# FMOS — Phase A: Cleanup, Nav Fixes & Bug Fixes
-**Give this file to Antigravity. Execute before any other phase.**
+# DEPRECATED — Do not use this file
+**See `00_FIX_MASTER.md` and `PHASE_1_DATABASE_MIGRATIONS.md` through `PHASE_6_WHATSAPP_AND_UI.md` instead.**
 
 ---
 

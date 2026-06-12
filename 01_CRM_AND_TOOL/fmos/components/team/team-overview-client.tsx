@@ -11,9 +11,11 @@ interface TeamOverviewClientProps {
   profiles: any[];
   targets: any[];
   taskStats: Record<string, any>;
+  /** Real per-user daily actuals: calls (lead_outcomes today), tasks (completed today) */
+  actuals?: Record<string, { calls: number; tasks: number }>;
 }
 
-export default function TeamOverviewClient({ profiles, targets, taskStats }: TeamOverviewClientProps) {
+export default function TeamOverviewClient({ profiles, targets, taskStats, actuals }: TeamOverviewClientProps) {
   const [isSetTargetsOpen, setIsSetTargetsOpen] = useState(false);
   const [isAssignTaskOpen, setIsAssignTaskOpen] = useState(false);
 
@@ -37,10 +39,8 @@ export default function TeamOverviewClient({ profiles, targets, taskStats }: Tea
             <Plus className="h-4 w-4" />
             Assign Task
           </button>
-          <button className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800 transition-all shadow-md active:scale-95">
-            <Plus className="h-4 w-4" />
-            Add Member
-          </button>
+          {/* "Add Member" removed — team invites need a Supabase auth admin
+              flow (decide approach first, see handoff). */}
         </div>
       </div>
 
@@ -111,7 +111,7 @@ export default function TeamOverviewClient({ profiles, targets, taskStats }: Tea
               Set Targets
             </button>
           </div>
-          <DailyTargetsTable targets={targets || []} profiles={profiles} />
+          <DailyTargetsTable targets={targets || []} profiles={profiles} actuals={actuals} />
         </div>
       </div>
 

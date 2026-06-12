@@ -69,3 +69,14 @@ export async function updateTelecallerStats(userId: string, outcome: string) {
 
     return { currentStreak, totalCalls };
 }
+
+/**
+ * Calculate the package tier based on monthly MRR value.
+ * Used when creating new clients from confirmed agreements.
+ */
+export function calculatePackageTier(monthlyMrr: number): string {
+  if (monthlyMrr >= 50000) return "custom";
+  if (monthlyMrr >= 25000) return "pro";
+  if (monthlyMrr >= 10000) return "growth";
+  return "starter";
+}

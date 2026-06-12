@@ -2,10 +2,11 @@ import { createServerClientWithCookies } from "@/lib/supabase-server";
 import {
   DollarSign, TrendingUp, TrendingDown, Clock,
   Wallet, Users, ArrowRight, Send, CheckCircle2,
-  AlertCircle, Layers, Package
+  AlertCircle, Layers, Package, Receipt
 } from "lucide-react";
 import Link from "next/link";
 import { autoMarkOverdueInvoices, getRevenueVsExpensesChartData } from "./actions";
+import { getBusinessSettings } from "@/app/admin/settings/actions";
 import FinanceChart from "@/components/admin/finance/FinanceChart";
 import { Suspense } from "react";
 
@@ -27,6 +28,7 @@ export default async function FinanceDashboard() {
     overdueResult,
     chartData,
     expensesResult,
+    allPaidInvoicesGST,
   ] = await Promise.all([
     // MRR this month (paid)
     supabase.from("invoices").select("amount").eq("revenue_type", "mrr").eq("status", "paid")
@@ -56,7 +58,26 @@ export default async function FinanceDashboard() {
 
     // Expenses MTD
     supabase.from("expenses").select("amount").gte("date", monthStart).lte("date", monthEnd),
+    // GST from paid invoices this quarter
+    supabase.from("invoices").select("gst_amount, issue_date").eq("status", "paid"),
   ]);
+
+  // Compute current quarter GST
+  function getCurrentQuarterBounds() {
+    const m = now.getMonth() + 1;
+    const y = now.getFullYear();
+    if (m >= 4 && m <= 6) return { start: `${y}-04-01`, end: `${y}-06-30`, label: `Q1 FY${y}-${(y+1).toString().slice(2)}` };
+    if (m >= 7 && m <= 9) return { start: `${y}-07-01`, end: `${y}-09-30`, label: `Q2 FY${y}-${(y+1).toString().slice(2)}` };
+    if (m >= 10 && m <= 12) return { start: `${y}-10-01`, end: `${y}-12-31`, label: `Q3 FY${y}-${(y+1).toString().slice(2)}` };
+    return { start: `${y-1}-01-01`, end: `${y}-03-31`, label: `Q4 FY${y-1}-${y.toString().slice(2)}` };
+  }
+  const qBounds = getCurrentQuarterBounds();
+  const currentQtrGST = (allPaidInvoicesGST.data || [])
+    .filter((inv: any) => {
+      const d = (inv.issue_date || "").slice(0, 10);
+      return d >= qBounds.start && d <= qBounds.end;
+    })
+    .reduce((s: number, inv: any) => s + (Number(inv.gst_amount) || 0), 0);
 
   const mrr = (mrrResult.data || []).reduce((s: number, i: any) => s + (i.amount || 0), 0);
   const setupFees = (setupFeeResult.data || []).reduce((s: number, i: any) => s + (i.amount || 0), 0);
@@ -130,7 +151,7 @@ export default async function FinanceDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
@@ -291,6 +312,27 @@ export default async function FinanceDashboard() {
               </div>
             </div>
 
+            {/* GST Summary Card */}
+            <div className="bg-white border border-indigo-100 rounded-2xl shadow-sm p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Receipt className="h-4 w-4 text-indigo-500" />
+                  <h3 className="text-sm font-bold text-slate-900">GST — {qBounds.label}</h3>
+                </div>
+                <Link href="/admin/finance/gst" className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">
+                  Full Report <ArrowRight className="h-2.5 w-2.5" />
+                </Link>
+              </div>
+              <p className="text-2xl font-bold font-mono text-slate-900">{formatINR(currentQtrGST)}</p>
+              <p className="text-[10px] text-slate-400 mt-1">Output GST collected this quarter (18%)</p>
+              <div className="mt-3 flex items-center gap-2">
+                <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-full rounded-full bg-indigo-400" style={{ width: "100%" }} />
+                </div>
+                <span className="text-[10px] font-bold text-slate-500">CGST+SGST: {formatINR(currentQtrGST / 2)} each</span>
+              </div>
+            </div>
+
             {/* Overdue */}
             <div className="bg-white border border-red-100 rounded-2xl shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-5 py-3.5 bg-red-50/50 border-b border-red-100">
@@ -332,6 +374,7 @@ export default async function FinanceDashboard() {
                   { label: "P&L View", href: "/admin/finance/pnl", icon: TrendingUp },
                   { label: "Expense Audit", href: "/admin/finance/expenses", icon: DollarSign },
                   { label: "Manage Invoices", href: "/admin/finance/invoices", icon: Wallet },
+                  { label: "GST Report", href: "/admin/finance/gst", icon: Receipt },
                 ].map(link => (
                   <Link key={link.href} href={link.href}
                     className="flex justify-between items-center p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">

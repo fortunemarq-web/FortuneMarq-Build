@@ -10,7 +10,7 @@ export default async function ProjectsListPage() {
     if (!user) return <div>Unauthorized</div>;
 
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-6">
+        <div className="min-h-full bg-slate-50 px-4 py-6">
             <div className="mx-auto max-w-7xl">
                 <div className="mb-6">
                     <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#42CA80] mb-4">
