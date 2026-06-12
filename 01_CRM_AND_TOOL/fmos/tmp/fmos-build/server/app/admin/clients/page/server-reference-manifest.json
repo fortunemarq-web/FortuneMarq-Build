@@ -1,0 +1,260 @@
+{
+  "node": {
+    "00007a952d85aeccda7e022dc102c3beb924903761": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "fetchClients",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "fetchClients",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "400c3d62e40f30d9fc9031f8222a8e33935fcc14be": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "fetchOnboardingItems",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "fetchOnboardingItems",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "4011a86fa3e24995604862d42fe8a28a69a75f96b2": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "fetchClientById",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "fetchClientById",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "404f6d511dcc617176bcc35099a934f0cd3e4cbc40": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "addClientAsset",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "addClientAsset",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "40593a295e77872c624392330bc74ab85f8eca7388": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "deleteClient",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "action-browser"
+      },
+      "exportedName": "deleteClient",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "40631d0679076fa6031618d33b001022b218279828": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "createClient",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "action-browser"
+      },
+      "exportedName": "createClient",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "4078f42534b859edd9fca32dc63d10cbcbed28ea95": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "logClientCall",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "logClientCall",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "40ac852edfbe835157a5dd031d8ae858dc3faa12ba": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "fetchClientCallLogs",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "fetchClientCallLogs",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "40ade7d3706eb00842df9d06d7fd39f13d339affff": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "fetchClientAssets",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "fetchClientAssets",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "40f1a15429104ec4b2cb1fdc281aadeef6da940267": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "fetchClientProjects",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "fetchClientProjects",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "6023d43be5b82596631d3f88830761167aecf253a1": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "updateClientNotes",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "updateClientNotes",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "6036d57df157279e002c7e7129d5096cdfc5001b63": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "deleteClientAsset",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "deleteClientAsset",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "609abc73c04e05ec01b4fb45bb5705ac66bc9d90a0": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "toggleOnboardingItem",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "rsc"
+      },
+      "exportedName": "toggleOnboardingItem",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "70cd248a7abb3b8f659aff54163d690711a3b4faa2": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "updateClientField",
+          "filename": "app/admin/clients/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "action-browser"
+      },
+      "exportedName": "updateClientField",
+      "filename": "app/admin/clients/actions.ts"
+    },
+    "6067066a73b6921016c85d39f49bd0f0d213b63f7a": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "saveClientPackage",
+          "filename": "app/admin/clients/client-actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "action-browser"
+      },
+      "exportedName": "saveClientPackage",
+      "filename": "app/admin/clients/client-actions.ts"
+    },
+    "7077a09492bc1188adc48c4262202c20737a95eded": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "updateHealthScore",
+          "filename": "app/admin/clients/client-actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "action-browser"
+      },
+      "exportedName": "updateHealthScore",
+      "filename": "app/admin/clients/client-actions.ts"
+    },
+    "70a467d4d976ea3b2fbadc2e51cb211fe58bbc4443": {
+      "workers": {
+        "app/admin/clients/page": {
+          "moduleId": 349482,
+          "async": false,
+          "exportedName": "logUpsellAttempt",
+          "filename": "app/admin/clients/client-actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/page": "action-browser"
+      },
+      "exportedName": "logUpsellAttempt",
+      "filename": "app/admin/clients/client-actions.ts"
+    }
+  },
+  "edge": {}
+}

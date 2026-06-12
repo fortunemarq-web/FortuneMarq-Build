@@ -1,6 +1,9 @@
 {
   "category": "BOT_REPLY",
-  "description": "Auto-sent by bot when a lead replies to the curiosity message. Sends the niche landing page link with context about what they will find there. One per lead type. No Meta pre-approval needed — these are session messages within the 24-hour reply window.",
+  "status": "DEPRECATED",
+  "deprecatedOn": "2026-06-08",
+  "deprecationReason": "Replaced by direct PDF send flow in curiosity_templates.json. The curiosity message step has been removed — leads now receive the PDF report directly with Quick Reply buttons. Auto-replies on button taps are now defined in curiosity_templates.json under autoReplies. These bot reply templates are no longer used.",
+  "description": "DEPRECATED — Auto-sent by bot when a lead replies to the curiosity message. Sends the niche landing page link with context about what they will find there. One per lead type. No Meta pre-approval needed — these are session messages within the 24-hour reply window.",
   "sentBy": "bot_auto",
   "requiresMetaApproval": false,
   "trigger": "lead_replies_to_curiosity",

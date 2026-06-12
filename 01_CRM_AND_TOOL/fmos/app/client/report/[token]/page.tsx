@@ -27,6 +27,7 @@ export default function MagicReportPage() {
                 const res = await fetch(`/api/public/client-report/${token}`);
                 if (!res.ok) throw new Error(`Report fetch failed (${res.status})`);
                 const json = await res.json();
+                if (!json.report) throw new Error("Report missing in response");
                 setReport(json.report);
             } catch (err) {
                 console.error("Error fetching report:", err);

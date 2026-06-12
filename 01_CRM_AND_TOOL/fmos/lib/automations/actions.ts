@@ -43,12 +43,18 @@ export async function executeAction(action: Action, entityType: string, entityId
                     await updateEntity(supabase, entityType, entityId, { stale_flag: true, stale_reason: action.value?.reason || 'Automation Rule' });
                 }
                 break;
-            case 'notify_owner':
-                const ownerId = snapshot.assigned_to || snapshot.created_by; // fallback
+            case 'notify_owner': {
+                // Snapshot predates same-run assign_owner — re-fetch the live assignee
+                let ownerId = snapshot.assigned_sales_exec || snapshot.assigned_to || snapshot.created_by;
+                if (!ownerId && entityType === 'lead') {
+                    const { data: fresh } = await supabase.from("leads").select("assigned_sales_exec").eq("id", entityId).single();
+                    ownerId = fresh?.assigned_sales_exec;
+                }
                 if (ownerId) {
                     await createNotification(supabase, ownerId, "Automation Alert", action.value?.message || "Action required on " + (snapshot.company_name || "item"), entityType, entityId);
                 }
                 break;
+            }
             case 'notify_admin':
                 // Fetch all admins
                 const { data: admins } = await supabase.from("profiles").select("id").eq("role", "admin");
@@ -113,7 +119,13 @@ async function handleAssign(supabase: any, type: string, id: string, value: stri
 
 async function updateEntity(supabase: any, type: string, id: string, updates: any) {
     const table = type === 'lead' ? 'leads' : type + 's'; // simple pluralization
-    await (supabase.from(table) as any).update(updates).eq("id", id);
+    // leads has no assigned_to column — the owner lives in assigned_sales_exec
+    if (type === 'lead' && 'assigned_to' in updates) {
+        const { assigned_to, ...rest } = updates;
+        updates = { ...rest, assigned_sales_exec: assigned_to };
+    }
+    const { error } = await (supabase.from(table) as any).update(updates).eq("id", id);
+    if (error) console.error(`[automation] update ${table} failed:`, error.message);
 }
 
 function calculateDate(config: any): string | null {

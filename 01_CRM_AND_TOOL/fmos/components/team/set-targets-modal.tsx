@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X, Save, Plus, Trash2, Loader2, Target } from "lucide-react";
 import { upsertTeamTargets } from "@/app/admin/team/actions";
 import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/toast";
 
 interface SetTargetsModalProps {
   profiles: any[];
@@ -54,11 +55,11 @@ export default function SetTargetsModal({ profiles, existingTargets, onClose }: 
         onClose();
         router.refresh();
       } else {
-        alert("Error saving targets: " + error);
+        toast.error("Error saving targets", String(error));
       }
     } catch (e) {
       console.error(e);
-      alert("Error saving targets");
+      toast.error("Error saving targets");
     } finally {
       setIsSaving(false);
     }

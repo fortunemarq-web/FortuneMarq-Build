@@ -1,5 +1,5 @@
 # 06 — Paid Marketing (FortuneMarq's Own)
-**Last Updated:** 2026-04-28 | **Status:** Not started — last step. Must wait for FMOS deployment, telecaller live, and landing pages ready.
+**Last Updated:** 2026-06-12 | **Status:** PLANNED + TRACKING INFRA BUILT. Full plan lives in `01_CRM_AND_TOOL/fmos/PHASE_F_INBOUND_MARKETING.md` (inbound capture + Meta/Google/WhatsApp-ads tracking, plan→execute→optimize→scale loop). FMOS Stage 0 shipped 2026-06-12: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, full lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. Campaign LAUNCH still waits for FMOS deploy + LPs live (critical rule below unchanged).
 
 ## Folder Purpose
 Plan and execute FortuneMarq's own paid ad campaigns (Meta Ads + Google Ads) to generate inbound leads. Niche-specific, city-specific campaigns targeting local business owners in Hubli-Dharwad. This folder covers FortuneMarq's own marketing spend — not client campaigns (those are in 02_SERVICE_DELIVERY_AUTOMATION/Ads_Automation).
@@ -49,7 +49,7 @@ Already created in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — 11 HTML files. N
 3. Jabeer records video ad (1 core video per niche — 60–90 seconds)
 4. Create ad creatives (thumbnails, copy) in Canva
 5. Setup Meta Business Manager ad account
-6. Launch campaigns — Gyms first, then Skin Clinics
+6. Launch campaigns — Healthcare (Dental + Skin) first, then Real Estate → Car Rental → Gyms → Education
 7. Week 2: analyze data, cut underperformers, double down on winner
 
 ## What's Blocked

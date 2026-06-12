@@ -1,5 +1,5 @@
 # 08 — Pricing Decisions
-**Last Updated:** 2026-04-28 | **Status:** All pricing locked — do not change without explicit review session
+**Last Updated:** 2026-06-08 | **Status:** All pricing locked — do not change without explicit review session
 
 ## Folder Purpose
 Documents all locked pricing decisions for FortuneMarq services. These are the prices used in all proposals, agreements, and invoices.
@@ -15,15 +15,15 @@ Documents all locked pricing decisions for FortuneMarq services. These are the p
 | Package | Setup Fee | Monthly |
 |---|---|---|
 | Landing Page | ₹5,000–₹8,000 | One-time (no retainer unless maintenance opted) |
-| Standard Website (5–7 pages) | ₹8,000 | One-time |
+| Standard Website (5–7 pages) | ₹8,000–₹15,000 | One-time |
 | Premium Website (8–12 pages) | ₹15,000–₹20,000 | One-time |
 
 ### Digital Marketing Services
 | Service | Setup Fee | Monthly Retainer |
 |---|---|---|
-| GMB Optimization | — | ₹2,500/month |
-| Google Ads Management | ₹4,500 | ₹2,500/month |
-| Meta Ads Management | ₹4,500 | ₹2,500/month |
+| GMB Optimization | — | ₹3,500/month |
+| Google Ads Management | ₹4,500 | ₹2,500/month + 5% of ad spend if spend exceeds ₹15,000/month |
+| Meta Ads Management | ₹4,500 | ₹2,500/month + 5% of ad spend if spend exceeds ₹15,000/month |
 | SEO Starter | — | ₹7,000/month |
 | SEO Growth | — | ₹10,000–₹12,000/month |
 | SEO Dominate | — | ₹15,000+/month |
@@ -33,7 +33,7 @@ Documents all locked pricing decisions for FortuneMarq services. These are the p
 *Ad spend is always client's own budget paid directly to Google/Meta — FortuneMarq charges management fee only.*
 
 ## Pricing Rationale
-- Accessible entry point (₹2,500/month GMB) to get local businesses to start
+- Accessible entry point (₹3,500/month GMB) to get local businesses to start
 - Upsell path built in — start small, prove results, add services
 - Pricing designed for 30–50 client volume with automation reducing delivery cost
 - Prices will increase as portfolio and results strengthen
@@ -60,3 +60,4 @@ Documents all locked pricing decisions for FortuneMarq services. These are the p
 |---|---|
 | March 2026 | Folder created. All pricing locked. |
 | 2026-04-28 | CONTEXT.md rewritten with full pricing table. |
+| 2026-06-08 | Pricing update: Standard Website ₹8K → ₹8K–₹15K. GMB ₹2,500 → ₹3,500/month. Google Ads + Meta Ads: added variable fee — +5% of ad spend for months where client spend exceeds ₹15,000. |

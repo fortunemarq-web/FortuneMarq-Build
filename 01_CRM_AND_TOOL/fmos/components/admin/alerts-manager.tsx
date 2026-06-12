@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { CheckCircle2, AlertTriangle, Eye, XCircle, Search, Filter, Inbox } from "lucide-react";
 import clsx from "clsx";
 import { EmptyState } from "@/components/ui/empty-state";
+import { toast } from "@/components/ui/toast";
 
 interface Alert {
     id: string;
@@ -38,7 +39,7 @@ export default function AlertsManager({ initialAlerts }: { initialAlerts: Alert[
             if (error) throw error;
         } catch (e) {
             console.error(e);
-            alert("Failed to update alert");
+            toast.error("Failed to update alert");
         }
     };
 

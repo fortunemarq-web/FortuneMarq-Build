@@ -1,0 +1,20 @@
+{
+  "node": {
+    "405cf432b81cef81197ca372653997d65262794afd": {
+      "workers": {
+        "app/lp/[niche]/[city]/page": {
+          "moduleId": 342643,
+          "async": false,
+          "exportedName": "captureInboundLead",
+          "filename": "lib/automations/inbound-leads.ts"
+        }
+      },
+      "layer": {
+        "app/lp/[niche]/[city]/page": "action-browser"
+      },
+      "exportedName": "captureInboundLead",
+      "filename": "lib/automations/inbound-leads.ts"
+    }
+  },
+  "edge": {}
+}

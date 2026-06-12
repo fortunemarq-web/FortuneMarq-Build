@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import MergeLeadWizard from "./MergeLeadWizard";
+import { toast } from "@/components/ui/toast";
 
 export default function DuplicatesReviewCenter() {
     const [candidates, setCandidates] = useState<any[]>([]);
@@ -54,9 +55,9 @@ export default function DuplicatesReviewCenter() {
         try {
             await fetch("/api/leads/duplicates/scan", { method: "POST" });
             await fetchCandidates();
-            alert("Scan complete!");
+            toast.success("Scan complete");
         } catch (e) {
-            alert("Scan failed");
+            toast.error("Scan failed");
         } finally {
             setScanning(false);
         }
@@ -138,7 +139,7 @@ export default function DuplicatesReviewCenter() {
                     onSuccess={() => {
                         setActiveMergePair(null);
                         setCandidates(prev => prev.filter(c => c.id !== activeMergePair.id));
-                        alert("Merge successful!");
+                        toast.success("Merge successful");
                     }}
                 />
             )}

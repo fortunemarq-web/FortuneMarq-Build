@@ -20,6 +20,7 @@ import {
 import { createClient } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface Task {
   id: string;
@@ -136,7 +137,7 @@ export default function TaskExecutionModal({
 
       if (error) {
         console.error("Task update failed:", error.message);
-        alert("Failed to save. Please try again.");
+        toast.error("Failed to save", "Please try again.");
         return;
       }
 
@@ -148,7 +149,7 @@ export default function TaskExecutionModal({
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("Failed to update status. Please try again.");
+      toast.error("Failed to update status", "Please try again.");
     } finally {
       setIsUpdating(false);
       setActiveAction(null);

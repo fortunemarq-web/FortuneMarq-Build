@@ -127,11 +127,11 @@ export default function SavedViewsBar({
             .eq("id", activeViewId);
 
         if (error) {
-            alert("Error updating view. You may not have permission.");
+            toast.error("Error updating view", "You may not have permission.");
         } else {
             // Update local state
             setViews(views.map(v => v.id === activeViewId ? { ...v, filters: currentFilters, sort: currentSort } : v));
-            alert("View updated!");
+            toast.success("View updated");
         }
     };
 
@@ -142,7 +142,7 @@ export default function SavedViewsBar({
         const { error } = await supabase.from("saved_views" as any).delete().eq("id", id);
 
         if (error) {
-            alert("Error deleting view");
+            toast.error("Error deleting view");
         } else {
             setViews(views.filter(v => v.id !== id));
             if (activeViewId === id) {

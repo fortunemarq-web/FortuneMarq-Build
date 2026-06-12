@@ -207,6 +207,35 @@
       ],
       "actions": ["mark_lead_dead"],
       "whatsappTemplate": null
+    },
+    {
+      "id": "GATEKEEPER",
+      "label": "Gatekeeper — Owner Unavailable",
+      "category": "FOLLOW_BACK",
+      "note": "Reached receptionist or staff but couldn't speak to owner or decision maker",
+      "actions": ["capture_note", "schedule_afifa_reminder"],
+      "whatsappTemplate": null
+    },
+    {
+      "id": "NO_ANSWER",
+      "label": "No Answer / Not Reachable",
+      "category": "FOLLOW_BACK",
+      "subOptions": [
+        "No answer",
+        "Switched off",
+        "Voicemail / IVR only",
+        "Number busy"
+      ],
+      "actions": ["schedule_afifa_reminder"],
+      "whatsappTemplate": null
+    },
+    {
+      "id": "LANGUAGE_BARRIER",
+      "label": "Language Barrier",
+      "category": "FOLLOW_BACK",
+      "note": "Lead speaks a language Afifa cannot communicate in. Flag for Jabeer to handle or reassign.",
+      "actions": ["capture_note", "flag_for_jabeer"],
+      "whatsappTemplate": null
     }
   ],
   "postCallWhatsApp": [

@@ -11,6 +11,7 @@ import { SavedView, FilterConfig, SortConfig } from "@/types/view";
 import { Loader2, ArrowUpDown } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface DealWithClient {
     id: string;
@@ -78,7 +79,18 @@ export default function DealsList({ userId }: { userId: string }) {
         const ids = Array.from(selectedIds);
         let updates = {};
         if (action === "change_status") {
-            const val = prompt("New status:");
+            const val = await promptModal({
+                title: "Change deal status",
+                description: `Applies to ${ids.length} selected deal${ids.length === 1 ? "" : "s"}.`,
+                type: "select",
+                options: [
+                    { value: "pending", label: "Pending" },
+                    { value: "accepted", label: "Accepted" },
+                    { value: "won", label: "Won" },
+                    { value: "lost", label: "Lost" },
+                ],
+                confirmLabel: "Update",
+            });
             if (val) updates = { status: val };
         } else if (action === "export_csv") {
             // ... export logic

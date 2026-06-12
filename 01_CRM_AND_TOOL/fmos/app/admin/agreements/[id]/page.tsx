@@ -22,7 +22,8 @@ const formatINR = (n: number | null) => (n ? `₹${n.toLocaleString("en-IN")}` :
 const formatDate = (d: string | null) =>
   d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "—";
 
-export default async function AgreementViewPage({ params }: { params: { id: string } }) {
+export default async function AgreementViewPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createServerClientWithCookies();
 
   const { data: agreement, error } = await (supabase as any)
@@ -34,7 +35,7 @@ export default async function AgreementViewPage({ params }: { params: { id: stri
       lead:leads(id, company_name, contact_person, city, industry),
       proposal:proposals(id, proposal_number)
     `)
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !agreement) notFound();

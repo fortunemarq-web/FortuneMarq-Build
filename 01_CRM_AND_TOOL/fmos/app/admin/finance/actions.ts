@@ -418,7 +418,7 @@ export async function deleteExpense(expenseId: string) {
  */
 export async function markInvoiceAsPaid(invoiceId: string, paidAmount: number) {
   const supabase = await createServerClientWithCookies();
-  
+
   const { data, error } = await (supabase.from('invoices') as any)
     .update({
       status: 'paid',
@@ -432,6 +432,50 @@ export async function markInvoiceAsPaid(invoiceId: string, paidAmount: number) {
   revalidatePath("/admin/finance/invoices");
   revalidatePath("/admin/finance");
   return { success: true };
+}
+
+/**
+ * Record a (possibly partial) payment against an invoice.
+ * Accumulates paid_amount; flips status to 'paid' when fully covered,
+ * 'partially_paid' otherwise. paid_at = date of the latest payment.
+ */
+export async function recordInvoicePayment(
+  invoiceId: string,
+  amount: number,
+  paymentMethod?: string
+) {
+  const supabase = await createServerClientWithCookies();
+
+  if (!amount || amount <= 0) return { success: false, error: "Amount must be positive" };
+
+  const { data: inv, error: fetchError } = await (supabase.from('invoices') as any)
+    .select('total_amount, paid_amount, status')
+    .eq('id', invoiceId)
+    .single();
+  if (fetchError) return { success: false, error: fetchError.message };
+  if (inv.status === 'cancelled') return { success: false, error: "Invoice is cancelled" };
+
+  const newPaid = (Number(inv.paid_amount) || 0) + amount;
+  const fullyPaid = newPaid >= Number(inv.total_amount) - 0.01;
+
+  const { error } = await (supabase.from('invoices') as any)
+    .update({
+      paid_amount: newPaid,
+      status: fullyPaid ? 'paid' : 'partially_paid',
+      paid_at: new Date().toISOString(),
+      ...(paymentMethod ? { payment_method: paymentMethod } : {}),
+    })
+    .eq('id', invoiceId);
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath("/admin/finance/invoices");
+  revalidatePath("/admin/finance");
+  return {
+    success: true,
+    paidAmount: newPaid,
+    status: fullyPaid ? 'paid' : 'partially_paid',
+    remaining: Math.max(0, Number(inv.total_amount) - newPaid),
+  };
 }
 
 /**

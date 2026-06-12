@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Search, Filter, Download, MoreVertical, Send, CheckCircle2, AlertCircle, FileText, Trash2, X, ChevronRight, Pencil, Ban, Repeat, Loader2, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createInvoice, markInvoiceAsPaid, cancelInvoice, deleteInvoice, generateMonthlyInvoices } from "@/app/admin/finance/actions";
+import { createInvoice, recordInvoicePayment, cancelInvoice, deleteInvoice, generateMonthlyInvoices } from "@/app/admin/finance/actions";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 import InvoiceCreateModal from "@/components/admin/finance/InvoiceCreateModal";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import InvoicePDF from "@/components/admin/finance/InvoicePDF";
@@ -19,6 +20,12 @@ interface InvoiceManagerClientProps {
 export default function InvoiceManagerClient({ initialInvoices, clients, settings }: InvoiceManagerClientProps) {
   const router = useRouter();
   const [invoices, setInvoices] = useState(initialInvoices);
+
+  // router.refresh() re-renders the server page with fresh data; without this
+  // sync the list keeps showing the stale snapshot from first mount.
+  useEffect(() => {
+    setInvoices(initialInvoices);
+  }, [initialInvoices]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editInvoice, setEditInvoice] = useState<any | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -65,17 +72,50 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
     return matchesSearch && matchesStatus && matchesRevenue;
   });
 
-  const handleMarkAsPaid = async (id: string, amount: number) => {
-    if (!confirm("Are you sure you want to mark this invoice as paid?")) return;
-    try {
-      await markInvoiceAsPaid(id, amount);
-      setInvoices(prev => prev.map(inv =>
-        inv.id === id ? { ...inv, status: 'paid', paid_at: new Date().toISOString(), paid_amount: amount } : inv
-      ));
-      toast.success("Invoice marked as paid");
-    } catch (err) {
-      toast.error("Error marking invoice as paid: " + (err instanceof Error ? err.message : "Unknown error"));
+  const handleRecordPayment = async (inv: any) => {
+    const remaining = Math.max(0, Number(inv.total_amount) - (Number(inv.paid_amount) || 0));
+    const amountStr = await promptModal({
+      title: `Record payment — ${inv.invoice_number}`,
+      description: `Outstanding: ${formatCurrency(remaining)}. Enter the amount received (partial payments allowed).`,
+      type: "text",
+      defaultValue: String(remaining),
+      confirmLabel: "Next",
+    });
+    if (!amountStr) return;
+    const amount = Number(amountStr.replace(/[^0-9.]/g, ""));
+    if (!amount || amount <= 0) {
+      toast.error("Invalid amount", "Enter a positive number.");
+      return;
     }
+    const method = await promptModal({
+      title: "Payment method",
+      type: "select",
+      options: [
+        { value: "upi", label: "UPI" },
+        { value: "bank_transfer", label: "Bank Transfer" },
+        { value: "cash", label: "Cash" },
+        { value: "cheque", label: "Cheque" },
+        { value: "card", label: "Card" },
+        { value: "other", label: "Other" },
+      ],
+      confirmLabel: "Record Payment",
+    });
+    if (!method) return;
+
+    const res = await recordInvoicePayment(inv.id, amount, method);
+    if (!res.success) {
+      toast.error("Could not record payment", res.error);
+      return;
+    }
+    setInvoices(prev => prev.map(i =>
+      i.id === inv.id
+        ? { ...i, status: res.status, paid_amount: res.paidAmount, paid_at: new Date().toISOString(), payment_method: method }
+        : i
+    ));
+    toast.success(
+      res.status === 'paid' ? "Invoice fully paid" : "Partial payment recorded",
+      res.status === 'paid' ? "" : `${formatCurrency(res.remaining || 0)} still outstanding`
+    );
   };
 
   const handleCancel = async (id: string) => {
@@ -111,9 +151,12 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
   const statusColors: Record<string, string> = {
     paid: 'bg-emerald-50 text-emerald-600 border-emerald-100',
     unpaid: 'bg-amber-50 text-amber-600 border-amber-100',
+    partially_paid: 'bg-blue-50 text-blue-600 border-blue-100',
     overdue: 'bg-red-50 text-red-600 border-red-100',
     cancelled: 'bg-slate-50 text-slate-600 border-slate-100'
   };
+
+  const isPayable = (s: string) => s === 'unpaid' || s === 'overdue' || s === 'partially_paid';
 
   return (
     <div className="space-y-6">
@@ -168,6 +211,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
           >
             <option value="all">All Status</option>
             <option value="unpaid">Unpaid</option>
+            <option value="partially_paid">Partially Paid</option>
             <option value="paid">Paid</option>
             <option value="overdue">Overdue</option>
             <option value="cancelled">Cancelled</option>
@@ -230,23 +274,28 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                     </span>
                   </td>
                   <td className="px-6 py-3 text-center">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusColors[inv.status]}`}>
-                      {inv.status}
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusColors[inv.status] || statusColors.unpaid}`}>
+                      {String(inv.status).replace("_", " ")}
                     </span>
+                    {inv.status === 'partially_paid' && (
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        {formatCurrency(Number(inv.paid_amount) || 0)} received
+                      </p>
+                    )}
                   </td>
                   <td className="px-6 py-3 text-right pr-6">
                     <div className="flex items-center justify-end gap-1">
-                      {(inv.status === 'unpaid' || inv.status === 'overdue') && (
+                      {isPayable(inv.status) && (
                         <button
-                          onClick={() => handleMarkAsPaid(inv.id, inv.total_amount)}
-                          title="Mark as Paid"
+                          onClick={() => handleRecordPayment(inv)}
+                          title="Record payment (full or partial)"
                           className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors"
                         >
                           <CheckCircle2 className="h-4 w-4" />
                         </button>
                       )}
 
-                      {(inv.status === 'unpaid' || inv.status === 'overdue') && buildReminderLink(inv) && (
+                      {isPayable(inv.status) && buildReminderLink(inv) && (
                         <a
                           href={buildReminderLink(inv)!}
                           target="_blank"

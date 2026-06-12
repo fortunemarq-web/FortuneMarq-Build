@@ -33,6 +33,7 @@ import {
   MessageSquare,
   History,
   Database,
+  Megaphone,
 } from "lucide-react";
 
 
@@ -77,6 +78,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
       label: "Insights",
       items: [
         { label: "Finance",   href: "/admin/finance",   icon: DollarSign },
+        { label: "Marketing", href: "/admin/marketing", icon: Megaphone },
         { label: "Growth",    href: "/admin/growth",    icon: TrendingUp },
         { label: "Strategy",  href: "/admin/strategy",  icon: Target },
         { label: "Reports",   href: "/admin/reports",   icon: BarChart2 },

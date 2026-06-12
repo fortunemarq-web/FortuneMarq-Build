@@ -11,6 +11,7 @@ import { FilterConfig, SortConfig } from "@/types/view";
 import { Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 export default function TasksList({ userId }: { userId: string }) {
     const [data, setData] = useState<any[]>([]);
@@ -68,7 +69,19 @@ export default function TasksList({ userId }: { userId: string }) {
         const ids = Array.from(selectedIds);
         let updates: any = {};
         if (action === "change_status") {
-            const val = prompt("New status:");
+            const val = await promptModal({
+                title: "Change task status",
+                description: `Applies to ${ids.length} selected task${ids.length === 1 ? "" : "s"}.`,
+                type: "select",
+                options: [
+                    { value: "pending", label: "Pending" },
+                    { value: "not_started", label: "Not Started" },
+                    { value: "in_progress", label: "In Progress" },
+                    { value: "in_review", label: "In Review" },
+                    { value: "completed", label: "Completed" },
+                ],
+                confirmLabel: "Update",
+            });
             if (val) updates.status = val;
         } else if (action === "mark_completed") {
             updates.status = "completed";

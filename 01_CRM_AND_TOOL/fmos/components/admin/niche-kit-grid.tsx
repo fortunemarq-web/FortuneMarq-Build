@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
+import { toast } from "@/components/ui/toast";
 
 interface Niche {
     id: string;
@@ -161,7 +162,7 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
 
         } catch (err) {
             console.error(err);
-            alert("File upload failed. Make sure the 'niche-kits' bucket exists in your Supabase Storage.");
+            toast.error("File upload failed", "Make sure the 'niche-kits' bucket exists in your Supabase Storage.");
         } finally {
             setUploadingField(null);
         }
@@ -196,7 +197,7 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
             onSave(kitData);
         } catch (err) {
             console.error(err);
-            alert("Failed to save kit data.");
+            toast.error("Failed to save kit data");
         } finally {
             setIsSaving(false);
         }

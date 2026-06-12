@@ -18,7 +18,7 @@ Store the client service agreement template and service-specific terms. The agre
 **Parties:** FortuneMarq (Jabeer) and [Client Business] (Owner Name)
 **Services table:** Service name, setup fee, monthly retainer per row
 **Payment terms:** Setup fee before work, monthly invoice 1st/due 5th, overdue consequences
-**Key rules:** 30-day exit notice, non-refundable setup fees, asset handover on exit
+**Key rules:** 30-day exit notice, asset handover on exit
 **Confirmation:** "Reply 'Yes, confirmed' or 'Confirmed' to start"
 
 ## Service Terms Summary (`service_terms.json`)
@@ -28,7 +28,7 @@ Store the client service agreement template and service-specific terms. The agre
 - 7 days overdue: ads paused; 30 days overdue: website offline
 - No guaranteed results (market conditions, competition, client cooperation)
 - Client provides accurate info and assets on time
-- 30-day exit notice, setup fees non-refundable, monthly fees pro-rated
+- 30-day exit notice, monthly fees pro-rated
 
 **Per-Service Terms cover:**
 - WEBSITE: 2 revision rounds, go-live only after Jabeer review + client approval, scope changes quoted separately

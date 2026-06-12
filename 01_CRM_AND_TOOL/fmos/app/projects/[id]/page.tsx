@@ -81,12 +81,13 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     return (
       <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
         <div className="text-center">
-          <p className="text-red-500">
-            {projectError ? `Error: ${projectError.message}` : "Project not found"}
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Project not found</h2>
+          <p className="text-sm text-slate-500">
+            This project doesn&apos;t exist or may have been deleted.
           </p>
           <Link
             href="/projects"
-            className="mt-4 inline-block text-[#42CA80] hover:underline"
+            className="mt-4 inline-block font-semibold text-brand-deep hover:underline"
           >
             Back to Projects
           </Link>

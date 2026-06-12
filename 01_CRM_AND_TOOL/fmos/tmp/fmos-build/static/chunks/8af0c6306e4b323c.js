@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,924631,e=>{"use strict";e.s([],375695),e.i(375695);var r=e.i(95187);let t=(0,r.createServerReference)("0060c6aaadde4d5ebc3e1746cba9c7622c25487241",r.callServer,void 0,r.findSourceMapURL,"analyzeIndustryDistribution");e.s(["analyzeIndustryDistribution",()=>t],924631)}]);

@@ -1,0 +1,20 @@
+{
+  "node": {
+    "405de2d118e28e5a8b0782b92c43ee5c3b445b949f": {
+      "workers": {
+        "app/admin/marketing/page": {
+          "moduleId": 39040,
+          "async": false,
+          "exportedName": "importSpendRows",
+          "filename": "app/admin/marketing/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/marketing/page": "action-browser"
+      },
+      "exportedName": "importSpendRows",
+      "filename": "app/admin/marketing/actions.ts"
+    }
+  },
+  "edge": {}
+}

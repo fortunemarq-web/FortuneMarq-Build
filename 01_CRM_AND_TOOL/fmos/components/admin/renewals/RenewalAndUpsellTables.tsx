@@ -9,6 +9,7 @@ import {
 } from "@/app/admin/clients/renewals/actions";
 import { CalendarClock, Check, X, Loader2, TrendingUp, MessageCircle } from "lucide-react";
 import ServicePills from "@/components/admin/clients/ServicePills";
+import { promptModal } from "@/components/ui/prompt-modal";
 import HealthScoreStars from "@/components/admin/clients/HealthScoreStars";
 
 interface ClientForRenewal {
@@ -51,11 +52,14 @@ export function RenewalTable({
     return "text-emerald-600 bg-emerald-50";
   };
 
-  const handleRenew = (clientId: string) => {
-    const newDate = prompt(
-      "Enter new renewal date (YYYY-MM-DD):",
-      new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0]
-    );
+  const handleRenew = async (clientId: string) => {
+    const newDate = await promptModal({
+      title: "Renew client",
+      description: "Pick the new renewal date for this client.",
+      type: "date",
+      defaultValue: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+      confirmLabel: "Renew",
+    });
     if (!newDate) return;
 
     setPendingId(clientId);
@@ -211,8 +215,14 @@ export function UpsellTable({
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  const handleLogUpsell = (clientId: string) => {
-    const notes = prompt("Upsell notes (service pitched, outcome, follow-up):");
+  const handleLogUpsell = async (clientId: string) => {
+    const notes = await promptModal({
+      title: "Log upsell attempt",
+      description: "What was pitched, the outcome, and any follow-up.",
+      type: "textarea",
+      placeholder: "Service pitched, outcome, follow-up…",
+      confirmLabel: "Log",
+    });
     if (!notes) return;
 
     setPendingId(clientId);

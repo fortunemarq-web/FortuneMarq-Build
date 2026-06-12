@@ -1,15 +1,25 @@
 {
   "category": "FOLLOWBACK_REMINDER",
-  "description": "Sent by Afifa via FMOS button on the day of a scheduled follow-back call. Reminds the lead that a call is coming and includes the niche landing page link.",
+  "description": "Sent by Afifa via FMOS button on the day of a scheduled follow-back call. Two separate templates — one for leads who heard the pitch (INTERESTED_FOLLOW_UP_LATER), one for leads who just said busy before hearing anything (FOLLOW_BACK). Both include the landing page link but with different messaging.",
   "sentBy": "afifa_fmos_button",
   "requiresMetaApproval": true,
   "metaCategory": "UTILITY",
   "templates": [
     {
-      "id": "FOLLOWBACK_REMINDER",
-      "label": "Follow-Back Day Reminder",
+      "id": "FOLLOWBACK_REMINDER_INTERESTED",
+      "label": "Follow-Back Reminder — Heard Pitch (INTERESTED_FOLLOW_UP_LATER)",
+      "linkedOutcome": "INTERESTED_FOLLOW_UP_LATER",
+      "note": "Lead heard the pitch and showed interest. They know what FortuneMarq is. Message continues from where the conversation left off.",
       "variables": ["businessName", "callTime", "landingPageLink"],
-      "message": "Hi {{businessName}}! 👋\n\nJust a heads up — I'll be giving you a call today as we discussed, sometime around {{callTime}}.\n\nHere's the link again if you'd like to look before the call: {{landingPageLink}}\n\nTalk soon!\n— Afifa, FortuneMarq"
+      "message": "Hi {{businessName}}! 👋\n\nJust a heads up — I'm calling you today around {{callTime}} as we discussed.\n\nHave a look at the link before the call if you haven't yet: {{landingPageLink}}\n\nTalk soon!\n— Afifa, FortuneMarq"
+    },
+    {
+      "id": "FOLLOWBACK_REMINDER_BUSY",
+      "label": "Follow-Back Reminder — Said Busy Before Pitch (FOLLOW_BACK)",
+      "linkedOutcome": "FOLLOW_BACK",
+      "note": "Lead barely heard the intro and said busy. They don't know what FortuneMarq is yet. Message reintroduces FortuneMarq and teases the market research.",
+      "variables": ["businessName", "niche", "city", "callTime", "landingPageLink"],
+      "message": "Hi {{businessName}}! 👋\n\nThis is Afifa from FortuneMarq — we spoke briefly earlier. I'm calling back today around {{callTime}}.\n\nWe have some interesting market research for {{niche}} businesses in {{city}} to share with you. Have a quick look before the call: {{landingPageLink}}\n\nTalk soon!\n— Afifa, FortuneMarq"
     }
   ]
 }

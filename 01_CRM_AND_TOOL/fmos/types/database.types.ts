@@ -96,43 +96,136 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "activity_events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       ad_campaigns: {
         Row: {
           campaign_name: string
+          clicks: number | null
+          conversions: number | null
+          cpc: number | null
           cpl: number | null
+          cpl_target: number | null
           created_at: string | null
+          end_date: string | null
+          external_campaign_id: string | null
           id: string
+          impressions: number | null
           leads_generated: number | null
           monthly_budget: number | null
+          notes: string | null
+          objective: string | null
           platform: string | null
+          roas: number | null
           spend_mtd: number | null
+          start_date: string | null
           status: string | null
         }
         Insert: {
           campaign_name: string
+          clicks?: number | null
+          conversions?: number | null
+          cpc?: number | null
           cpl?: number | null
+          cpl_target?: number | null
           created_at?: string | null
+          end_date?: string | null
+          external_campaign_id?: string | null
           id?: string
+          impressions?: number | null
           leads_generated?: number | null
           monthly_budget?: number | null
+          notes?: string | null
+          objective?: string | null
           platform?: string | null
+          roas?: number | null
           spend_mtd?: number | null
+          start_date?: string | null
           status?: string | null
         }
         Update: {
           campaign_name?: string
+          clicks?: number | null
+          conversions?: number | null
+          cpc?: number | null
           cpl?: number | null
+          cpl_target?: number | null
           created_at?: string | null
+          end_date?: string | null
+          external_campaign_id?: string | null
           id?: string
+          impressions?: number | null
           leads_generated?: number | null
           monthly_budget?: number | null
+          notes?: string | null
+          objective?: string | null
           platform?: string | null
+          roas?: number | null
           spend_mtd?: number | null
+          start_date?: string | null
           status?: string | null
         }
         Relationships: []
+      }
+      ad_insights_daily: {
+        Row: {
+          ad_name: string | null
+          adset_name: string | null
+          campaign_external_id: string | null
+          campaign_id: string | null
+          clicks: number | null
+          created_at: string | null
+          date: string
+          id: string
+          impressions: number | null
+          leads: number | null
+          platform: string
+          spend: number | null
+        }
+        Insert: {
+          ad_name?: string | null
+          adset_name?: string | null
+          campaign_external_id?: string | null
+          campaign_id?: string | null
+          clicks?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          impressions?: number | null
+          leads?: number | null
+          platform: string
+          spend?: number | null
+        }
+        Update: {
+          ad_name?: string | null
+          adset_name?: string | null
+          campaign_external_id?: string | null
+          campaign_id?: string | null
+          clicks?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          impressions?: number | null
+          leads?: number | null
+          platform?: string
+          spend?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_insights_daily_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       admin_kpi_snapshots: {
         Row: {
@@ -204,6 +297,13 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "agency_growth_metrics_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       agreements: {
@@ -268,6 +368,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "agreements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "agreements_lead_id_fkey"
             columns: ["lead_id"]
             isOneToOne: false
@@ -282,6 +389,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ai_usage_logs: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          feature: string
+          id: string
+          input_summary: string | null
+          model: string
+          output_summary: string | null
+          tokens_used: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          feature: string
+          id?: string
+          input_summary?: string | null
+          model: string
+          output_summary?: string | null
+          tokens_used?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          feature?: string
+          id?: string
+          input_summary?: string | null
+          model?: string
+          output_summary?: string | null
+          tokens_used?: number | null
+        }
+        Relationships: []
       }
       alert_rules: {
         Row: {
@@ -387,6 +527,224 @@ export type Database = {
         }
         Relationships: []
       }
+      assignment_pools: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          pool_name: string
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          pool_name: string
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          pool_name?: string
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      assignment_state: {
+        Row: {
+          last_user_id: string | null
+          pool_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          last_user_id?: string | null
+          pool_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          last_user_id?: string | null
+          pool_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      attendance_adjustments: {
+        Row: {
+          adjustment_minutes: number
+          created_at: string | null
+          created_by: string | null
+          day: string
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          adjustment_minutes?: number
+          created_at?: string | null
+          created_by?: string | null
+          day: string
+          id?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          adjustment_minutes?: number
+          created_at?: string | null
+          created_by?: string | null
+          day?: string
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      attendance_breaks: {
+        Row: {
+          break_end_at: string | null
+          break_start_at: string
+          created_at: string | null
+          id: string
+          session_id: string
+        }
+        Insert: {
+          break_end_at?: string | null
+          break_start_at: string
+          created_at?: string | null
+          id?: string
+          session_id: string
+        }
+        Update: {
+          break_end_at?: string | null
+          break_start_at?: string
+          created_at?: string | null
+          id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_breaks_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance_daily_summary: {
+        Row: {
+          break_minutes: number
+          day: string
+          flags: Json
+          gross_minutes: number
+          id: string
+          is_complete: boolean
+          net_minutes: number
+          sessions_count: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          break_minutes?: number
+          day: string
+          flags?: Json
+          gross_minutes?: number
+          id?: string
+          is_complete?: boolean
+          net_minutes?: number
+          sessions_count?: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          break_minutes?: number
+          day?: string
+          flags?: Json
+          gross_minutes?: number
+          id?: string
+          is_complete?: boolean
+          net_minutes?: number
+          sessions_count?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      attendance_policies: {
+        Row: {
+          break_required_after_minutes: number
+          created_at: string | null
+          grace_late_minutes: number
+          id: string
+          is_enabled: boolean | null
+          max_session_hours: number
+          name: string
+          standard_daily_minutes: number
+          timezone: string
+        }
+        Insert: {
+          break_required_after_minutes?: number
+          created_at?: string | null
+          grace_late_minutes?: number
+          id?: string
+          is_enabled?: boolean | null
+          max_session_hours?: number
+          name: string
+          standard_daily_minutes?: number
+          timezone?: string
+        }
+        Update: {
+          break_required_after_minutes?: number
+          created_at?: string | null
+          grace_late_minutes?: number
+          id?: string
+          is_enabled?: boolean | null
+          max_session_hours?: number
+          name?: string
+          standard_daily_minutes?: number
+          timezone?: string
+        }
+        Relationships: []
+      }
+      attendance_sessions: {
+        Row: {
+          clock_in_at: string
+          clock_out_at: string | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          session_date: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          clock_in_at: string
+          clock_out_at?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          session_date: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          clock_in_at?: string
+          clock_out_at?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          session_date?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -394,12 +752,20 @@ export type Database = {
           after_data: Json | null
           before_data: Json | null
           created_at: string | null
-          entity_id: string
-          entity_type: string
+          entity_id: string | null
+          entity_type: string | null
           id: string
           ip_address: string | null
+          new_value: Json | null
+          old_value: Json | null
           request_id: string | null
+          resource_id: string | null
+          resource_label: string | null
+          resource_type: string | null
+          summary: string | null
           user_agent: string | null
+          user_name: string | null
+          user_role: string | null
         }
         Insert: {
           action: string
@@ -407,12 +773,20 @@ export type Database = {
           after_data?: Json | null
           before_data?: Json | null
           created_at?: string | null
-          entity_id: string
-          entity_type: string
+          entity_id?: string | null
+          entity_type?: string | null
           id?: string
           ip_address?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
           request_id?: string | null
+          resource_id?: string | null
+          resource_label?: string | null
+          resource_type?: string | null
+          summary?: string | null
           user_agent?: string | null
+          user_name?: string | null
+          user_role?: string | null
         }
         Update: {
           action?: string
@@ -420,12 +794,20 @@ export type Database = {
           after_data?: Json | null
           before_data?: Json | null
           created_at?: string | null
-          entity_id?: string
-          entity_type?: string
+          entity_id?: string | null
+          entity_type?: string | null
           id?: string
           ip_address?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
           request_id?: string | null
+          resource_id?: string | null
+          resource_label?: string | null
+          resource_type?: string | null
+          summary?: string | null
           user_agent?: string | null
+          user_name?: string | null
+          user_role?: string | null
         }
         Relationships: [
           {
@@ -441,6 +823,140 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "audit_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      automation_rules: {
+        Row: {
+          actions: Json
+          conditions: Json
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          entity_type: string
+          id: string
+          is_enabled: boolean | null
+          name: string
+          priority: number | null
+          throttle_minutes: number | null
+          trigger: string
+          updated_at: string | null
+        }
+        Insert: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          entity_type: string
+          id?: string
+          is_enabled?: boolean | null
+          name: string
+          priority?: number | null
+          throttle_minutes?: number | null
+          trigger: string
+          updated_at?: string | null
+        }
+        Update: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          entity_type?: string
+          id?: string
+          is_enabled?: boolean | null
+          name?: string
+          priority?: number | null
+          throttle_minutes?: number | null
+          trigger?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      automation_runs: {
+        Row: {
+          actions_executed: Json | null
+          created_at: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          input_snapshot: Json | null
+          reason: string | null
+          rule_id: string | null
+          status: string
+          trigger: string
+        }
+        Insert: {
+          actions_executed?: Json | null
+          created_at?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          input_snapshot?: Json | null
+          reason?: string | null
+          rule_id?: string | null
+          status: string
+          trigger: string
+        }
+        Update: {
+          actions_executed?: Json | null
+          created_at?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          input_snapshot?: Json | null
+          reason?: string | null
+          rule_id?: string | null
+          status?: string
+          trigger?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "automation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_throttle: {
+        Row: {
+          entity_id: string
+          entity_type: string
+          id: string
+          last_ran_at: string
+          rule_id: string
+        }
+        Insert: {
+          entity_id: string
+          entity_type: string
+          id?: string
+          last_ran_at?: string
+          rule_id: string
+        }
+        Update: {
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          last_ran_at?: string
+          rule_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_throttle_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "automation_rules"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -538,7 +1054,77 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "build_tracker_modules_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      business_settings: {
+        Row: {
+          account_name: string | null
+          account_number: string | null
+          address_line1: string | null
+          address_line2: string | null
+          bank_name: string | null
+          business_name: string | null
+          city: string | null
+          email: string | null
+          gst_rate: number | null
+          gstin: string | null
+          id: string
+          ifsc: string | null
+          invoice_prefix: string | null
+          payment_terms_days: number | null
+          phone: string | null
+          pincode: string | null
+          state: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_name?: string | null
+          account_number?: string | null
+          address_line1?: string | null
+          address_line2?: string | null
+          bank_name?: string | null
+          business_name?: string | null
+          city?: string | null
+          email?: string | null
+          gst_rate?: number | null
+          gstin?: string | null
+          id?: string
+          ifsc?: string | null
+          invoice_prefix?: string | null
+          payment_terms_days?: number | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_name?: string | null
+          account_number?: string | null
+          address_line1?: string | null
+          address_line2?: string | null
+          bank_name?: string | null
+          business_name?: string | null
+          city?: string | null
+          email?: string | null
+          gst_rate?: number | null
+          gstin?: string | null
+          id?: string
+          ifsc?: string | null
+          invoice_prefix?: string | null
+          payment_terms_days?: number | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       call_activities: {
         Row: {
@@ -593,7 +1179,135 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "call_activities_user_id_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      call_logs: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          id: string
+          lead_id: string | null
+          niche: string | null
+          outcome: string
+          telecaller_id: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          id?: string
+          lead_id?: string | null
+          niche?: string | null
+          outcome: string
+          telecaller_id?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          id?: string
+          lead_id?: string | null
+          niche?: string | null
+          outcome?: string
+          telecaller_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      change_requests: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          decision_at: string | null
+          decision_by: string | null
+          decision_note: string | null
+          description: string
+          id: string
+          impact_cost: number | null
+          impact_timeline_days: number | null
+          priority: string | null
+          project_id: string
+          status: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          decision_at?: string | null
+          decision_by?: string | null
+          decision_note?: string | null
+          description: string
+          id?: string
+          impact_cost?: number | null
+          impact_timeline_days?: number | null
+          priority?: string | null
+          project_id: string
+          status?: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          decision_at?: string | null
+          decision_by?: string | null
+          decision_note?: string | null
+          description?: string
+          id?: string
+          impact_cost?: number | null
+          impact_timeline_days?: number | null
+          priority?: string | null
+          project_id?: string
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "change_requests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cities: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          state: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          state?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          state?: string | null
+        }
+        Relationships: []
       }
       client_asset_vault: {
         Row: {
@@ -775,6 +1489,60 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "client_call_logs_logged_by_fkey"
+            columns: ["logged_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      client_deliverables: {
+        Row: {
+          client_feedback: string | null
+          created_at: string | null
+          deliverable_type: string
+          description: string | null
+          file_url: string | null
+          id: string
+          project_id: string | null
+          reviewed_at: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          client_feedback?: string | null
+          created_at?: string | null
+          deliverable_type: string
+          description?: string | null
+          file_url?: string | null
+          id?: string
+          project_id?: string | null
+          reviewed_at?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          client_feedback?: string | null
+          created_at?: string | null
+          deliverable_type?: string
+          description?: string | null
+          file_url?: string | null
+          id?: string
+          project_id?: string | null
+          reviewed_at?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_deliverables_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
         ]
       }
       client_onboarding_tasks: {
@@ -847,6 +1615,13 @@ export type Database = {
             columns: ["completed_by"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "client_onboarding_tasks_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
         ]
@@ -944,6 +1719,121 @@ export type Database = {
           },
         ]
       }
+      client_reports: {
+        Row: {
+          ai_summary: string | null
+          client_id: string | null
+          created_at: string | null
+          created_by: string | null
+          data_snapshot: Json | null
+          id: string
+          is_published: boolean | null
+          magic_link_expires_at: string | null
+          magic_link_token: string | null
+          pdf_url: string | null
+          project_id: string | null
+          report_month: string
+          report_type: string
+        }
+        Insert: {
+          ai_summary?: string | null
+          client_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          data_snapshot?: Json | null
+          id?: string
+          is_published?: boolean | null
+          magic_link_expires_at?: string | null
+          magic_link_token?: string | null
+          pdf_url?: string | null
+          project_id?: string | null
+          report_month: string
+          report_type: string
+        }
+        Update: {
+          ai_summary?: string | null
+          client_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          data_snapshot?: Json | null
+          id?: string
+          is_published?: boolean | null
+          magic_link_expires_at?: string | null
+          magic_link_token?: string | null
+          pdf_url?: string | null
+          project_id?: string | null
+          report_month?: string
+          report_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_reports_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_reports_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "renewal_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_reports_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_resources: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          id: string
+          resource_type: string | null
+          title: string
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          id?: string
+          resource_type?: string | null
+          title: string
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          id?: string
+          resource_type?: string | null
+          title?: string
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_resources_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_resources_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "renewal_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           business_name: string
@@ -1032,6 +1922,13 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "clients_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       content_pieces: {
@@ -1108,6 +2005,13 @@ export type Database = {
             columns: ["author_id"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "content_pieces_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
         ]
@@ -1234,7 +2138,152 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "deals_strategist_id_fkey"
+            columns: ["strategist_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      deliverables: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          milestone_id: string | null
+          project_id: string
+          storage_path: string | null
+          title: string
+          type: string
+          uploaded_by: string | null
+          url: string | null
+          version: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          milestone_id?: string | null
+          project_id: string
+          storage_path?: string | null
+          title: string
+          type: string
+          uploaded_by?: string | null
+          url?: string | null
+          version?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          milestone_id?: string | null
+          project_id?: string
+          storage_path?: string | null
+          title?: string
+          type?: string
+          uploaded_by?: string | null
+          url?: string | null
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deliverables_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliverables_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      duplicate_candidates: {
+        Row: {
+          confidence: number
+          created_at: string | null
+          created_by: string | null
+          duplicate_id: string
+          entity_type: string
+          id: string
+          match_type: string
+          primary_id: string
+          reason: Json | null
+          status: string
+        }
+        Insert: {
+          confidence: number
+          created_at?: string | null
+          created_by?: string | null
+          duplicate_id: string
+          entity_type?: string
+          id?: string
+          match_type: string
+          primary_id: string
+          reason?: Json | null
+          status?: string
+        }
+        Update: {
+          confidence?: number
+          created_at?: string | null
+          created_by?: string | null
+          duplicate_id?: string
+          entity_type?: string
+          id?: string
+          match_type?: string
+          primary_id?: string
+          reason?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duplicate_candidates_duplicate_id_fkey"
+            columns: ["duplicate_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "duplicate_candidates_primary_id_fkey"
+            columns: ["primary_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_tags: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          tag: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          tag: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          tag?: string
+        }
+        Relationships: []
       }
       expenses: {
         Row: {
@@ -1300,6 +2349,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "expenses_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
         ]
@@ -1373,6 +2429,63 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "files_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      follow_ups: {
+        Row: {
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          follow_up_type: string | null
+          id: string
+          lead_id: string | null
+          notes: string | null
+          outcome_note: string | null
+          scheduled_at: string
+          status: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          follow_up_type?: string | null
+          id?: string
+          lead_id?: string | null
+          notes?: string | null
+          outcome_note?: string | null
+          scheduled_at: string
+          status?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          follow_up_type?: string | null
+          id?: string
+          lead_id?: string | null
+          notes?: string | null
+          outcome_note?: string | null
+          scheduled_at?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follow_ups_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
         ]
       }
       gmb_checklist_items: {
@@ -1435,6 +2548,47 @@ export type Database = {
         }
         Relationships: []
       }
+      inbound_events: {
+        Row: {
+          channel: string
+          created_at: string | null
+          error: string | null
+          external_id: string | null
+          id: string
+          lead_id: string | null
+          payload: Json
+          status: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string | null
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          lead_id?: string | null
+          payload?: Json
+          status?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string | null
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          lead_id?: string | null
+          payload?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbound_events_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoice_line_items: {
         Row: {
           amount: number
@@ -1483,6 +2637,7 @@ export type Database = {
           notes: string | null
           paid_amount: number | null
           paid_at: string | null
+          payment_method: string | null
           pdf_url: string | null
           revenue_type: string | null
           status: string | null
@@ -1502,6 +2657,7 @@ export type Database = {
           notes?: string | null
           paid_amount?: number | null
           paid_at?: string | null
+          payment_method?: string | null
           pdf_url?: string | null
           revenue_type?: string | null
           status?: string | null
@@ -1521,6 +2677,7 @@ export type Database = {
           notes?: string | null
           paid_amount?: number | null
           paid_at?: string | null
+          payment_method?: string | null
           pdf_url?: string | null
           revenue_type?: string | null
           status?: string | null
@@ -1555,6 +2712,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "invoices_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
         ]
@@ -1603,11 +2767,139 @@ export type Database = {
           },
         ]
       }
+      lead_reason_codes: {
+        Row: {
+          code: string
+          id: string
+          is_active: boolean | null
+          label: string
+          outcome: string
+          sort_order: number | null
+        }
+        Insert: {
+          code: string
+          id?: string
+          is_active?: boolean | null
+          label: string
+          outcome: string
+          sort_order?: number | null
+        }
+        Update: {
+          code?: string
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          outcome?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
+      lead_redirects: {
+        Row: {
+          created_at: string | null
+          merged_id: string
+          survivor_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          merged_id: string
+          survivor_id: string
+        }
+        Update: {
+          created_at?: string | null
+          merged_id?: string
+          survivor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_redirects_merged_id_fkey"
+            columns: ["merged_id"]
+            isOneToOne: true
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_redirects_survivor_id_fkey"
+            columns: ["survivor_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_source_attribution: {
+        Row: {
+          ad_campaign_id: string | null
+          content_piece_id: string | null
+          created_at: string | null
+          id: string
+          landing_page: string | null
+          lead_id: string | null
+          referrer_url: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          ad_campaign_id?: string | null
+          content_piece_id?: string | null
+          created_at?: string | null
+          id?: string
+          landing_page?: string | null
+          lead_id?: string | null
+          referrer_url?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          ad_campaign_id?: string | null
+          content_piece_id?: string | null
+          created_at?: string | null
+          id?: string
+          landing_page?: string | null
+          lead_id?: string | null
+          referrer_url?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_source_attribution_ad_campaign_id_fkey"
+            columns: ["ad_campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_source_attribution_content_piece_id_fkey"
+            columns: ["content_piece_id"]
+            isOneToOne: false
+            referencedRelation: "content_pieces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_source_attribution_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           assigned_sales_exec: string | null
           assigned_strategist: string | null
           call_attempts: number | null
+          captured_at: string | null
           city: string | null
           company_name: string
           contact_person: string | null
@@ -1615,7 +2907,10 @@ export type Database = {
           current_traffic_estimate: string | null
           deal_probability: number | null
           email: string | null
+          email_normalized: string | null
+          first_contact_at: string | null
           follow_up_date: string | null
+          gatekeeper_count: number | null
           gmb_link: string | null
           has_gmb: boolean | null
           has_website: boolean | null
@@ -1623,18 +2918,22 @@ export type Database = {
           import_batch_id: string | null
           industry: string | null
           intent_score: number | null
+          is_merged: boolean | null
           last_activity_at: string | null
           last_call_outcome: string | null
           last_connected_at: string | null
           last_contacted_at: string | null
           last_interaction_note: string | null
           last_outcome: string | null
+          last_outcome_reason: string | null
           last_outreach_at: string | null
+          lead_quality_score: number | null
           lead_source: string | null
           lead_type: string | null
           meeting_booked_at: string | null
           meeting_link: string | null
           meeting_notes: string | null
+          merged_into: string | null
           next_action_date: string | null
           no_answer_count: number | null
           notes: string | null
@@ -1642,6 +2941,8 @@ export type Database = {
           pdf_name: string | null
           pdf_sent_at: string | null
           phone: string | null
+          phone_normalized: string | null
+          phone_raw: string | null
           proposal_link: string | null
           proposal_sent_at: string | null
           search_volume: number | null
@@ -1649,9 +2950,11 @@ export type Database = {
           serp_source: string | null
           source: string | null
           stale_flag: boolean | null
+          stale_reason: string | null
           status: Database["public"]["Enums"]["lead_status"] | null
           strategy_session_at: string | null
           tags: string[] | null
+          website_domain: string | null
           website_link: string | null
           website_url: string | null
         }
@@ -1659,6 +2962,7 @@ export type Database = {
           assigned_sales_exec?: string | null
           assigned_strategist?: string | null
           call_attempts?: number | null
+          captured_at?: string | null
           city?: string | null
           company_name: string
           contact_person?: string | null
@@ -1666,7 +2970,10 @@ export type Database = {
           current_traffic_estimate?: string | null
           deal_probability?: number | null
           email?: string | null
+          email_normalized?: string | null
+          first_contact_at?: string | null
           follow_up_date?: string | null
+          gatekeeper_count?: number | null
           gmb_link?: string | null
           has_gmb?: boolean | null
           has_website?: boolean | null
@@ -1674,18 +2981,22 @@ export type Database = {
           import_batch_id?: string | null
           industry?: string | null
           intent_score?: number | null
+          is_merged?: boolean | null
           last_activity_at?: string | null
           last_call_outcome?: string | null
           last_connected_at?: string | null
           last_contacted_at?: string | null
           last_interaction_note?: string | null
           last_outcome?: string | null
+          last_outcome_reason?: string | null
           last_outreach_at?: string | null
+          lead_quality_score?: number | null
           lead_source?: string | null
           lead_type?: string | null
           meeting_booked_at?: string | null
           meeting_link?: string | null
           meeting_notes?: string | null
+          merged_into?: string | null
           next_action_date?: string | null
           no_answer_count?: number | null
           notes?: string | null
@@ -1693,6 +3004,8 @@ export type Database = {
           pdf_name?: string | null
           pdf_sent_at?: string | null
           phone?: string | null
+          phone_normalized?: string | null
+          phone_raw?: string | null
           proposal_link?: string | null
           proposal_sent_at?: string | null
           search_volume?: number | null
@@ -1700,9 +3013,11 @@ export type Database = {
           serp_source?: string | null
           source?: string | null
           stale_flag?: boolean | null
+          stale_reason?: string | null
           status?: Database["public"]["Enums"]["lead_status"] | null
           strategy_session_at?: string | null
           tags?: string[] | null
+          website_domain?: string | null
           website_link?: string | null
           website_url?: string | null
         }
@@ -1710,6 +3025,7 @@ export type Database = {
           assigned_sales_exec?: string | null
           assigned_strategist?: string | null
           call_attempts?: number | null
+          captured_at?: string | null
           city?: string | null
           company_name?: string
           contact_person?: string | null
@@ -1717,7 +3033,10 @@ export type Database = {
           current_traffic_estimate?: string | null
           deal_probability?: number | null
           email?: string | null
+          email_normalized?: string | null
+          first_contact_at?: string | null
           follow_up_date?: string | null
+          gatekeeper_count?: number | null
           gmb_link?: string | null
           has_gmb?: boolean | null
           has_website?: boolean | null
@@ -1725,18 +3044,22 @@ export type Database = {
           import_batch_id?: string | null
           industry?: string | null
           intent_score?: number | null
+          is_merged?: boolean | null
           last_activity_at?: string | null
           last_call_outcome?: string | null
           last_connected_at?: string | null
           last_contacted_at?: string | null
           last_interaction_note?: string | null
           last_outcome?: string | null
+          last_outcome_reason?: string | null
           last_outreach_at?: string | null
+          lead_quality_score?: number | null
           lead_source?: string | null
           lead_type?: string | null
           meeting_booked_at?: string | null
           meeting_link?: string | null
           meeting_notes?: string | null
+          merged_into?: string | null
           next_action_date?: string | null
           no_answer_count?: number | null
           notes?: string | null
@@ -1744,6 +3067,8 @@ export type Database = {
           pdf_name?: string | null
           pdf_sent_at?: string | null
           phone?: string | null
+          phone_normalized?: string | null
+          phone_raw?: string | null
           proposal_link?: string | null
           proposal_sent_at?: string | null
           search_volume?: number | null
@@ -1751,9 +3076,11 @@ export type Database = {
           serp_source?: string | null
           source?: string | null
           stale_flag?: boolean | null
+          stale_reason?: string | null
           status?: Database["public"]["Enums"]["lead_status"] | null
           strategy_session_at?: string | null
           tags?: string[] | null
+          website_domain?: string | null
           website_link?: string | null
           website_url?: string | null
         }
@@ -1773,6 +3100,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "leads_assigned_sales_exec_fkey"
+            columns: ["assigned_sales_exec"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "leads_assigned_strategist_fkey"
             columns: ["assigned_strategist"]
             isOneToOne: false
@@ -1785,6 +3119,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "leads_assigned_strategist_fkey"
+            columns: ["assigned_strategist"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "leads_merged_into_fkey"
+            columns: ["merged_into"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1824,6 +3172,51 @@ export type Database = {
           pitch_angle?: string | null
           search_volume?: string | null
           top_competitors?: Json | null
+        }
+        Relationships: []
+      }
+      marketing_weekly_briefs: {
+        Row: {
+          created_at: string | null
+          generated_by: string | null
+          id: string
+          key_concerns: string[] | null
+          key_wins: string[] | null
+          leads_delta: number | null
+          organic_sessions_delta: number | null
+          paid_spend_delta: number | null
+          recommended_action: string | null
+          summary_text: string | null
+          week_end_date: string
+          week_start_date: string
+        }
+        Insert: {
+          created_at?: string | null
+          generated_by?: string | null
+          id?: string
+          key_concerns?: string[] | null
+          key_wins?: string[] | null
+          leads_delta?: number | null
+          organic_sessions_delta?: number | null
+          paid_spend_delta?: number | null
+          recommended_action?: string | null
+          summary_text?: string | null
+          week_end_date: string
+          week_start_date: string
+        }
+        Update: {
+          created_at?: string | null
+          generated_by?: string | null
+          id?: string
+          key_concerns?: string[] | null
+          key_wins?: string[] | null
+          leads_delta?: number | null
+          organic_sessions_delta?: number | null
+          paid_spend_delta?: number | null
+          recommended_action?: string | null
+          summary_text?: string | null
+          week_end_date?: string
+          week_start_date?: string
         }
         Relationships: []
       }
@@ -1896,6 +3289,101 @@ export type Database = {
           },
         ]
       }
+      merges: {
+        Row: {
+          created_at: string | null
+          entity_type: string
+          id: string
+          is_undone: boolean | null
+          merge_strategy: Json | null
+          merged_by: string | null
+          merged_id: string
+          survivor_id: string
+          undo_until: string
+        }
+        Insert: {
+          created_at?: string | null
+          entity_type?: string
+          id?: string
+          is_undone?: boolean | null
+          merge_strategy?: Json | null
+          merged_by?: string | null
+          merged_id: string
+          survivor_id: string
+          undo_until: string
+        }
+        Update: {
+          created_at?: string | null
+          entity_type?: string
+          id?: string
+          is_undone?: boolean | null
+          merge_strategy?: Json | null
+          merged_by?: string | null
+          merged_id?: string
+          survivor_id?: string
+          undo_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merges_merged_id_fkey"
+            columns: ["merged_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merges_survivor_id_fkey"
+            columns: ["survivor_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      milestone_approvals: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string | null
+          feedback: string | null
+          id: string
+          milestone_id: string
+          requested_at: string | null
+          requested_by: string | null
+          status: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          milestone_id: string
+          requested_at?: string | null
+          requested_by?: string | null
+          status?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          milestone_id?: string
+          requested_at?: string | null
+          requested_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "milestone_approvals_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       milestone_templates: {
         Row: {
           id: string
@@ -1914,6 +3402,137 @@ export type Database = {
           name?: string
           order_index?: number | null
           service_type?: Database["public"]["Enums"]["service_type"]
+        }
+        Relationships: []
+      }
+      niche_kits: {
+        Row: {
+          case_study_url: string | null
+          created_at: string | null
+          id: string
+          landing_page_url: string | null
+          market_research_url: string | null
+          niche_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          case_study_url?: string | null
+          created_at?: string | null
+          id?: string
+          landing_page_url?: string | null
+          market_research_url?: string | null
+          niche_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          case_study_url?: string | null
+          created_at?: string | null
+          id?: string
+          landing_page_url?: string | null
+          market_research_url?: string | null
+          niche_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "niche_kits_niche_id_fkey"
+            columns: ["niche_id"]
+            isOneToOne: true
+            referencedRelation: "niches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      niches: {
+        Row: {
+          created_at: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          is_read: boolean | null
+          link: string | null
+          title: string
+          type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          title: string
+          type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          title?: string
+          type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      objection_bank: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          industry: string | null
+          objection: string
+          rebuttal: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          objection: string
+          rebuttal: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          objection?: string
+          rebuttal?: string
         }
         Relationships: []
       }
@@ -1983,7 +3602,53 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "onboarding_checklists_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      organic_traffic_snapshots: {
+        Row: {
+          avg_session_duration: number | null
+          bounce_rate: number | null
+          created_at: string | null
+          id: string
+          new_users: number | null
+          organic_sessions: number | null
+          snapshot_date: string
+          source: string | null
+          top_landing_page: string | null
+          total_sessions: number | null
+        }
+        Insert: {
+          avg_session_duration?: number | null
+          bounce_rate?: number | null
+          created_at?: string | null
+          id?: string
+          new_users?: number | null
+          organic_sessions?: number | null
+          snapshot_date: string
+          source?: string | null
+          top_landing_page?: string | null
+          total_sessions?: number | null
+        }
+        Update: {
+          avg_session_duration?: number | null
+          bounce_rate?: number | null
+          created_at?: string | null
+          id?: string
+          new_users?: number | null
+          organic_sessions?: number | null
+          snapshot_date?: string
+          source?: string | null
+          top_landing_page?: string | null
+          total_sessions?: number | null
+        }
+        Relationships: []
       }
       outreach_logs: {
         Row: {
@@ -2029,6 +3694,13 @@ export type Database = {
             columns: ["actor_id"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "outreach_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
           {
@@ -2194,6 +3866,7 @@ export type Database = {
           first_name: string | null
           full_name: string | null
           id: string
+          is_active: boolean | null
           last_name: string | null
           role: string | null
         }
@@ -2204,6 +3877,7 @@ export type Database = {
           first_name?: string | null
           full_name?: string | null
           id: string
+          is_active?: boolean | null
           last_name?: string | null
           role?: string | null
         }
@@ -2214,6 +3888,7 @@ export type Database = {
           first_name?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean | null
           last_name?: string | null
           role?: string | null
         }
@@ -2380,6 +4055,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "project_qa_items_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "project_qa_items_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
@@ -2456,6 +4138,13 @@ export type Database = {
             columns: ["assigned_to"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "projects_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
           {
@@ -2570,6 +4259,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "proposals_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "proposals_lead_id_fkey"
             columns: ["lead_id"]
             isOneToOne: false
@@ -2643,6 +4339,120 @@ export type Database = {
           },
         ]
       }
+      sales_daily_metrics: {
+        Row: {
+          calls_made: number | null
+          connected: number | null
+          created_at: string | null
+          day: string
+          followups_set: number | null
+          id: string
+          not_interested: number | null
+          strategy_booked: number | null
+          user_id: string | null
+        }
+        Insert: {
+          calls_made?: number | null
+          connected?: number | null
+          created_at?: string | null
+          day: string
+          followups_set?: number | null
+          id?: string
+          not_interested?: number | null
+          strategy_booked?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          calls_made?: number | null
+          connected?: number | null
+          created_at?: string | null
+          day?: string
+          followups_set?: number | null
+          id?: string
+          not_interested?: number | null
+          strategy_booked?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      sales_scripts: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          industry: string | null
+          language: string | null
+          script_body: string
+          script_title: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          language?: string | null
+          script_body: string
+          script_title: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          language?: string | null
+          script_body?: string
+          script_title?: string
+        }
+        Relationships: []
+      }
+      saved_views: {
+        Row: {
+          columns: Json
+          created_at: string | null
+          entity_type: string
+          filters: Json
+          id: string
+          is_default: boolean
+          name: string
+          owner_id: string | null
+          role_scope: string | null
+          sort: Json
+          updated_at: string | null
+          visibility: string
+        }
+        Insert: {
+          columns?: Json
+          created_at?: string | null
+          entity_type: string
+          filters?: Json
+          id?: string
+          is_default?: boolean
+          name: string
+          owner_id?: string | null
+          role_scope?: string | null
+          sort?: Json
+          updated_at?: string | null
+          visibility?: string
+        }
+        Update: {
+          columns?: Json
+          created_at?: string | null
+          entity_type?: string
+          filters?: Json
+          id?: string
+          is_default?: boolean
+          name?: string
+          owner_id?: string | null
+          role_scope?: string | null
+          sort?: Json
+          updated_at?: string | null
+          visibility?: string
+        }
+        Relationships: []
+      }
       seo_keywords: {
         Row: {
           belongs_to: string | null
@@ -2715,6 +4525,42 @@ export type Database = {
         }
         Relationships: []
       }
+      sla_policies: {
+        Row: {
+          condition: Json | null
+          contact_within_minutes: number | null
+          created_at: string | null
+          entity_type: string
+          followup_missed_minutes: number | null
+          id: string
+          is_enabled: boolean | null
+          lead_type: string | null
+          name: string
+        }
+        Insert: {
+          condition?: Json | null
+          contact_within_minutes?: number | null
+          created_at?: string | null
+          entity_type?: string
+          followup_missed_minutes?: number | null
+          id?: string
+          is_enabled?: boolean | null
+          lead_type?: string | null
+          name: string
+        }
+        Update: {
+          condition?: Json | null
+          contact_within_minutes?: number | null
+          created_at?: string | null
+          entity_type?: string
+          followup_missed_minutes?: number | null
+          id?: string
+          is_enabled?: boolean | null
+          lead_type?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
       sops: {
         Row: {
           category: string
@@ -2762,6 +4608,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "sops_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
             referencedColumns: ["user_id"]
           },
         ]
@@ -2864,6 +4717,93 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "strategy_runs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      task_checklist_items: {
+        Row: {
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string | null
+          id: string
+          is_done: boolean | null
+          sort_order: number | null
+          task_id: string
+          title: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          id?: string
+          is_done?: boolean | null
+          sort_order?: number | null
+          task_id: string
+          title: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          id?: string
+          is_done?: boolean | null
+          sort_order?: number | null
+          task_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_checklist_items_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_dependencies: {
+        Row: {
+          created_at: string | null
+          dependency_type: string
+          depends_on_task_id: string
+          id: string
+          task_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dependency_type?: string
+          depends_on_task_id: string
+          id?: string
+          task_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dependency_type?: string
+          depends_on_task_id?: string
+          id?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_dependencies_depends_on_task_id_fkey"
+            columns: ["depends_on_task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_dependencies_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2989,6 +4929,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "tasks_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "tasks_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
@@ -3062,6 +5009,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "team_targets_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "team_targets_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -3075,7 +5029,44 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "team_targets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      telecaller_stats: {
+        Row: {
+          current_streak: number | null
+          highest_streak: number | null
+          last_call_at: string | null
+          total_calls: number | null
+          total_interested: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number | null
+          highest_streak?: number | null
+          last_call_at?: string | null
+          total_calls?: number | null
+          total_interested?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          current_streak?: number | null
+          highest_streak?: number | null
+          last_call_at?: string | null
+          total_calls?: number | null
+          total_interested?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       upsell_attempts: {
         Row: {
@@ -3168,6 +5159,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          created_at: string | null
+          ended_reason: string | null
+          id: string
+          ip_address: string | null
+          last_seen_at: string
+          login_at: string
+          logout_at: string | null
+          metadata: Json
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          ended_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          last_seen_at?: string
+          login_at?: string
+          logout_at?: string | null
+          metadata?: Json
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          ended_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          last_seen_at?: string
+          login_at?: string
+          logout_at?: string | null
+          metadata?: Json
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_settings: {
         Row: {
           preferred_filters: Json | null
@@ -3182,6 +5212,105 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      whatsapp_logs: {
+        Row: {
+          id: string
+          lead_id: string | null
+          message_sent: string | null
+          outcome: string | null
+          sent_at: string | null
+          sent_by: string | null
+          template_id: string | null
+        }
+        Insert: {
+          id?: string
+          lead_id?: string | null
+          message_sent?: string | null
+          outcome?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          template_id?: string | null
+        }
+        Update: {
+          id?: string
+          lead_id?: string | null
+          message_sent?: string | null
+          outcome?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whatsapp_logs_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_message_templates: {
+        Row: {
+          city_id: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          message_body: string
+          niche_id: string | null
+          outcome: string
+          updated_at: string | null
+          version: number | null
+        }
+        Insert: {
+          city_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          message_body: string
+          niche_id?: string | null
+          outcome: string
+          updated_at?: string | null
+          version?: number | null
+        }
+        Update: {
+          city_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          message_body?: string
+          niche_id?: string | null
+          outcome?: string
+          updated_at?: string | null
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_message_templates_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whatsapp_message_templates_niche_id_fkey"
+            columns: ["niche_id"]
+            isOneToOne: false
+            referencedRelation: "niches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       whatsapp_templates: {
         Row: {
@@ -3327,6 +5456,13 @@ export type Database = {
             referencedRelation: "telecaller_analytics"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "clients_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "telecaller_leaderboard"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       telecaller_analytics: {
@@ -3340,8 +5476,108 @@ export type Database = {
         }
         Relationships: []
       }
+      telecaller_leaderboard: {
+        Row: {
+          avatar_url: string | null
+          conversion_rate: number | null
+          full_name: string | null
+          interested_count: number | null
+          streak: number | null
+          total_calls: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      user_sessions_clamped: {
+        Row: {
+          created_at: string | null
+          duration_hours_clamped: number | null
+          ended_reason: string | null
+          id: string | null
+          ip_address: string | null
+          last_seen_at: string | null
+          login_at: string | null
+          logout_at: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_hours_clamped?: never
+          ended_reason?: string | null
+          id?: string | null
+          ip_address?: string | null
+          last_seen_at?: string | null
+          login_at?: string | null
+          logout_at?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_hours_clamped?: never
+          ended_reason?: string | null
+          id?: string | null
+          ip_address?: string | null
+          last_seen_at?: string | null
+          login_at?: string | null
+          logout_at?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_sessions_view: {
+        Row: {
+          created_at: string | null
+          duration_seconds: number | null
+          ended_reason: string | null
+          id: string | null
+          ip_address: string | null
+          last_seen_at: string | null
+          login_at: string | null
+          logout_at: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_seconds?: never
+          ended_reason?: string | null
+          id?: string | null
+          ip_address?: string | null
+          last_seen_at?: string | null
+          login_at?: string | null
+          logout_at?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_seconds?: never
+          ended_reason?: string | null
+          id?: string | null
+          ip_address?: string | null
+          last_seen_at?: string | null
+          login_at?: string | null
+          logout_at?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      cleanup_inactive_sessions: {
+        Args: { timeout_minutes?: number }
+        Returns: number
+      }
       create_default_onboarding: {
         Args: { p_client_id: string }
         Returns: undefined
@@ -3350,12 +5586,19 @@ export type Database = {
         Args: { p_project_id: string }
         Returns: undefined
       }
+      extract_domain: { Args: { url: string }; Returns: string }
+      fmos_client_id: { Args: never; Returns: string }
+      fmos_is_staff: { Args: never; Returns: boolean }
+      fmos_jsonb_diff: { Args: { new_row: Json; old_row: Json }; Returns: Json }
+      fmos_role: { Args: never; Returns: string }
       get_dashboard_state: { Args: never; Returns: Json }
       get_my_role: { Args: never; Returns: string }
       increment_package_value: {
         Args: { p_amount: number; p_package_id: string }
         Returns: undefined
       }
+      normalize_email: { Args: { raw_email: string }; Returns: string }
+      normalize_phone: { Args: { raw_phone: string }; Returns: string }
       save_dashboard_state: { Args: { new_state: Json }; Returns: undefined }
     }
     Enums: {

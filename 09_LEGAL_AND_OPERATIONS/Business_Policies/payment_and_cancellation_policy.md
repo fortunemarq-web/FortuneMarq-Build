@@ -22,7 +22,6 @@
 **Setup Fees**
 - All setup fees are due **before work begins**.
 - No work starts — no brief form, no account creation, no campaign setup — until the setup fee invoice is settled.
-- Setup fees are **non-refundable** once work has started.
 
 ---
 
@@ -33,7 +32,6 @@
 - Notice is counted from the date the message is sent and acknowledged.
 
 **Fees on Exit**
-- Setup fees are non-refundable.
 - Monthly fees are **pro-rated** — the client pays only for days of active service in the final month.
 - If the client owes any outstanding amount, it must be settled within 7 days of the exit date.
 

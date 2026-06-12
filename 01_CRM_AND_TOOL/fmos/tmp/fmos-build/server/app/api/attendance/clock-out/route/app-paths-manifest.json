@@ -1,0 +1,3 @@
+{
+  "/api/attendance/clock-out/route": "app/api/attendance/clock-out/route.js"
+}

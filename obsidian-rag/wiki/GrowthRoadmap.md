@@ -22,8 +22,8 @@ FortuneMarq's growth targets are defined in clear monthly milestones. The model 
 ## What ₹50K MRR Looks Like
 
 At current pricing, ₹50,000 MRR could come from combinations like:
-- 20 × GMB clients at ₹2,500/month
-- 10 × Ads Management at ₹2,500/month + 10 × GMB
+- ~14 × GMB clients at ₹3,500/month
+- 10 × Ads Management at ₹2,500/month + 8 × GMB at ₹3,500/month
 - Mix of retainers across niches
 
 The key is retainer stacking — each client ideally holds 2–3 monthly services.

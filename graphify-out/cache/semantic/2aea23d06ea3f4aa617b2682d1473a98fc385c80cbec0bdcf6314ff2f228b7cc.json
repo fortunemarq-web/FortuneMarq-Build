@@ -1,0 +1,1 @@
+{"nodes": [{"id": "phase_a_cleanup_profiles_migration", "label": "Profiles Table Migration", "file_type": "code", "source_file": "01_CRM_AND_TOOL/Antigravity_Prompts/PHASE_A_CLEANUP.md", "source_location": "A1 \u2014 Run SQL Migration", "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

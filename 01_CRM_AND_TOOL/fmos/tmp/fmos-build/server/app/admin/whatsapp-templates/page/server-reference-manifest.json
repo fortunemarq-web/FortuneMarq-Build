@@ -1,0 +1,20 @@
+{
+  "node": {
+    "006b79b8fc90593709f4d536b4bb65a2f5986a1e12": {
+      "workers": {
+        "app/admin/whatsapp-templates/page": {
+          "moduleId": 923062,
+          "async": false,
+          "exportedName": "seedWhatsAppTemplates",
+          "filename": "app/admin/whatsapp-templates/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/whatsapp-templates/page": "action-browser"
+      },
+      "exportedName": "seedWhatsAppTemplates",
+      "filename": "app/admin/whatsapp-templates/actions.ts"
+    }
+  },
+  "edge": {}
+}

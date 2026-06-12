@@ -1,8 +1,9 @@
 "use client";
 
-import { Mail, Calendar, ListTodo, CheckCircle2, Trophy, MoreHorizontal } from "lucide-react";
+import { Mail, Calendar, ListTodo, CheckCircle2, Trophy } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
+import MemberMenu from "@/components/team/member-menu";
 
 interface TeamMemberCardProps {
   profile: any;
@@ -11,9 +12,10 @@ interface TeamMemberCardProps {
     completedToday: number;
     completedThisWeek: number;
   };
+  onAssign?: () => void;
 }
 
-export default function TeamMemberCard({ profile, stats }: TeamMemberCardProps) {
+export default function TeamMemberCard({ profile, stats, onAssign }: TeamMemberCardProps) {
   const roleColors: Record<string, string> = {
     admin: "bg-red-500",
     manager: "bg-indigo-500",
@@ -39,12 +41,15 @@ export default function TeamMemberCard({ profile, stats }: TeamMemberCardProps) 
             <div className="flex items-center gap-1.5 text-slate-400 mt-1">
               <span className={clsx("h-2 w-2 rounded-full", roleColors[profile.role] || "bg-slate-400")} />
               <span className="text-[10px] font-bold uppercase tracking-widest">{profile.role || 'guest'}</span>
+              {profile.is_active === false && (
+                <span className="ml-1 rounded-full bg-red-50 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-red-600 border border-red-200">
+                  Deactivated
+                </span>
+              )}
             </div>
           </div>
         </div>
-        <button className="p-2 text-slate-400 hover:text-slate-900 transition-colors">
-          <MoreHorizontal className="h-5 w-5" />
-        </button>
+        <MemberMenu profile={profile} />
       </div>
 
       <div className="grid grid-cols-3 gap-2 mb-6">
@@ -78,7 +83,10 @@ export default function TeamMemberCard({ profile, stats }: TeamMemberCardProps) 
         >
           View Tasks
         </Link>
-        <button className="flex-1 text-center py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 transition-all shadow-md shadow-slate-900/10">
+        <button
+          onClick={onAssign}
+          className="flex-1 text-center py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 transition-all shadow-md shadow-slate-900/10"
+        >
           Assign
         </button>
       </div>

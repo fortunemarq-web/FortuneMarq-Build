@@ -119,6 +119,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
   // Notifications
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>("default");
+  const [notifSupported, setNotifSupported] = useState(false);
   const notifTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   const supabase = createClient();
@@ -127,6 +128,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
   // ── Browser Notifications ─────────────────────────────────
   useEffect(() => {
     if (!("Notification" in window)) return;
+    setNotifSupported(true);
     setNotifPermission(Notification.permission);
   }, []);
 
@@ -318,7 +320,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
           </div>
           <div className="flex items-center gap-2">
             {/* Notification toggle */}
-            {"Notification" in window && (
+            {notifSupported && (
               <button
                 onClick={requestNotifPermission}
                 className={`flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-xl border transition-colors ${
@@ -363,7 +365,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
         </div>
 
         {/* Notification banner */}
-        {notifPermission === "default" && "Notification" in window && (
+        {notifPermission === "default" && notifSupported && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <Bell className="h-5 w-5 text-amber-600 shrink-0" />

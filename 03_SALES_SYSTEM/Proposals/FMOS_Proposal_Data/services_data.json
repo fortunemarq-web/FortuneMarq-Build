@@ -31,12 +31,18 @@
       "tagline": "Your Google Business Profile, fully set up and actively working to bring you local customers every day.",
       "whatWeDo": "Most businesses set up their Google Business Profile once and forget it. We treat it as an active marketing channel — optimised categories, regular posts, photo strategy, review management, Q&A setup. A properly managed GMB profile is one of the most cost-effective ways to get local leads.",
       "deliverables": [
-        "Fully optimised Google Business Profile",
-        "Category and service area setup",
-        "Monthly posts (4 per month)",
-        "Review response management",
-        "Photo uploads and ongoing updates",
-        "Monthly performance snapshot"
+        "Fully optimised GBP profile",
+        "8 posts/month — offers, updates, events, promotions",
+        "Q&A management — seed FAQs, monitor and answer customer questions",
+        "Offer/event posts for festivals, sales, and promotions",
+        "Monthly keyword refresh — update business description, services, and attributes",
+        "Competitor GBP monitoring — track competitor review growth, services, and positioning changes",
+        "Category and service list audit every quarter",
+        "Detailed monthly GBP insights report — calls, direction requests, website clicks, photo views, search query breakdown",
+        "Review sentiment analysis — monthly summary of themes in customer reviews",
+        "Review generation system — WhatsApp/SMS template sequence to generate more Google reviews",
+        "Customized review response templates per niche",
+        "Photo uploads (ongoing)"
       ],
       "timeline": "Setup complete in week 1. Results visible in 30–60 days.",
       "whatWeNeed": [
@@ -101,7 +107,8 @@
       "pricingReference": {
         "note": "Pricing entered manually by Jabeer in FMOS",
         "setupFee": 4500,
-        "monthlyManagement": 2500
+        "monthlyManagement": 2500,
+        "adSpendFee": "If client monthly ad spend exceeds ₹15,000, an additional 5% of total ad spend is added to the management fee for that month. Example: ₹20,000 ad spend → ₹2,500 + ₹1,000 (5% of ₹20,000) = ₹3,500 that month."
       }
     },
 
@@ -129,7 +136,8 @@
       "pricingReference": {
         "note": "Pricing entered manually by Jabeer in FMOS",
         "setupFee": 4500,
-        "monthlyManagement": 2500
+        "monthlyManagement": 2500,
+        "adSpendFee": "If client monthly ad spend exceeds ₹15,000, an additional 5% of total ad spend is added to the management fee for that month. Example: ₹20,000 ad spend → ₹2,500 + ₹1,000 (5% of ₹20,000) = ₹3,500 that month."
       }
     },
 

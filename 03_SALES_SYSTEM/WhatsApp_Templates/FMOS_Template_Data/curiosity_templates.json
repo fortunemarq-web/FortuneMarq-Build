@@ -1,37 +1,105 @@
 {
-  "category": "CURIOSITY",
-  "description": "Sent by Jabeer manually as a batch send before calling begins. One per lead type. Goal: get a reply and let them explore FortuneMarq.",
+  "category": "DIRECT_REPORT",
+  "description": "Sent by Jabeer manually as a batch send before calling begins. Sends the matching PDF report directly with Quick Reply buttons. No curiosity message — lead gets the report immediately. One template per lead type. FMOS looks up lead_type and niche, sends the matching PDF from 07_DATA_AND_RESEARCH/PDF_Generator/output/{city}/ as a WhatsApp document message.",
   "sentBy": "jabeer_manual",
   "requiresMetaApproval": true,
   "metaCategory": "MARKETING",
+  "messageType": "document",
+  "pdfMapping": {
+    "A": "Type1_Visibility_Report",
+    "B": "Type3_Website_Performance_Report",
+    "C": "Type2_Market_Opportunity_Report",
+    "D": "Type4_Niche_Market_Report"
+  },
+  "buttons": [
+    { "type": "QUICK_REPLY", "text": "Book a meeting 📅" },
+    { "type": "QUICK_REPLY", "text": "Tell me more" }
+  ],
+  "buttonActions": {
+    "Book a meeting 📅": {
+      "fmosAction": "tag_report_engaged",
+      "engagedTag": "tapped_book_meeting",
+      "priorityQueue": true,
+      "autoReply": "MEETING_REQUEST_REPLY"
+    },
+    "Tell me more": {
+      "fmosAction": "tag_report_engaged",
+      "engagedTag": "tapped_tell_me_more",
+      "priorityQueue": true,
+      "autoReply": "TELL_ME_MORE_REPLY"
+    }
+  },
   "templates": [
     {
-      "id": "CURIOSITY_TYPE_A",
+      "id": "DIRECT_REPORT_TYPE_A",
       "leadType": "A",
-      "label": "Curiosity — Already Ranking",
+      "label": "Direct Report — Already Ranking",
       "variables": ["businessName", "city", "niche"],
-      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses here in {{city}} and found some interesting data about your online position.\n\nYour business is already showing up on Google — but there's a clear gap in how much of that traffic is actually reaching you vs going elsewhere.\n\nWe've put together a short report on this. Want me to send it across? Takes 2 mins to read.\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses in {{city}} and put together a report on your online presence — how visible your business is on Google, how many potential customers are searching for your service every month, and where the lead generation gap is.\n\nHave a look — it's specific to your niche in {{city}}.\n\n— FortuneMarq, {{city}}"
     },
     {
-      "id": "CURIOSITY_TYPE_B",
+      "id": "DIRECT_REPORT_TYPE_B",
       "leadType": "B",
-      "label": "Curiosity — Has Website, Not Ranking",
-      "variables": ["businessName", "city", "niche", "searchVolume"],
-      "message": "Hi {{businessName}}! 👋\n\nWe recently did a market research for {{niche}} businesses in {{city}} and noticed something interesting — {{searchVolume}}+ people here search for your service on Google every month, but your website isn't showing up in those results.\n\nWe've put together a short report on exactly why that's happening and what the opportunity looks like. Want me to send it?\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
-    },
-    {
-      "id": "CURIOSITY_TYPE_C",
-      "leadType": "C",
-      "label": "Curiosity — No Website, GMB Only",
-      "variables": ["businessName", "city", "niche", "searchVolume"],
-      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses in {{city}} and found that {{searchVolume}}+ people here search for your service on Google every month — and most of them look for a website before deciding who to call.\n\nWe've put together a short report on this opportunity. Want me to send it across?\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
-    },
-    {
-      "id": "CURIOSITY_TYPE_D",
-      "leadType": "D",
-      "label": "Curiosity — Low Search Volume",
+      "label": "Direct Report — Has Website, Not Ranking",
       "variables": ["businessName", "city", "niche"],
-      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses here in {{city}} and found something interesting — most people looking for your service aren't finding businesses through direct search. They're coming through Google Maps, social media, and referrals.\n\nWe've put together a short report on where the actual demand is coming from and how much of it is being missed. Want me to send it?\n\n— FortuneMarq, {{city}}\n🔗 fortunemarq.com"
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses in {{city}} and put together a report on your website's performance — why it isn't showing up when people search for your service on Google, how many potential customers are searching every month, and what it's costing your business in missed leads.\n\nHave a look — it's specific to your business in {{city}}.\n\n— FortuneMarq, {{city}}"
+    },
+    {
+      "id": "DIRECT_REPORT_TYPE_C",
+      "leadType": "C",
+      "label": "Direct Report — No Website, GMB Only",
+      "variables": ["businessName", "city", "niche"],
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses in {{city}} and put together a report on the online opportunity you're currently missing — how many people search for your service on Google every month, where those leads are going right now, and what getting online would mean for your business.\n\nHave a look — it's specific to your niche in {{city}}.\n\n— FortuneMarq, {{city}}"
+    },
+    {
+      "id": "DIRECT_REPORT_TYPE_D",
+      "leadType": "D",
+      "label": "Direct Report — Low Search Volume",
+      "variables": ["businessName", "city", "niche"],
+      "message": "Hi {{businessName}}! 👋\n\nWe did a market research for {{niche}} businesses in {{city}} and put together a report on where your customers are actually coming from online — how people in {{city}} find and choose businesses like yours, where the demand is, and what the lead generation opportunity looks like for your niche specifically.\n\nHave a look — it's specific to your niche in {{city}}.\n\n— FortuneMarq, {{city}}"
     }
-  ]
+  ],
+  "autoReplies": {
+    "TELL_ME_MORE_REPLY": {
+      "id": "TELL_ME_MORE_REPLY",
+      "requiresMetaApproval": false,
+      "note": "Session message — sent within 24hr reply window. No approval needed.",
+      "variables": ["businessName", "city", "landingPageLink"],
+      "message": "Thanks for your interest! 😊\n\nFortuneMarq is a digital marketing agency based right here in {{city}}. We build complete online growth systems for local businesses — website, Google visibility, lead generation, all connected and built specifically for your business.\n\nSee our work here: {{landingPageLink}}\n\nOur founder Jabeer does a free 15-minute Zoom call where he walks you through exactly what the opportunity looks like for {{businessName}}. No commitment, no pressure.\n\nWould you like to book that call?",
+      "buttons": [
+        { "type": "QUICK_REPLY", "text": "Book a meeting 📅" },
+        { "type": "QUICK_REPLY", "text": "Not right now" }
+      ],
+      "buttonActions": {
+        "Book a meeting 📅": {
+          "fmosAction": "tag_report_engaged",
+          "engagedTag": "tapped_book_meeting",
+          "priorityQueue": true,
+          "autoReply": "MEETING_REQUEST_REPLY"
+        },
+        "Not right now": {
+          "fmosAction": "schedule_followup",
+          "followUpDays": 3,
+          "autoReply": "NOT_RIGHT_NOW_REPLY"
+        }
+      }
+    },
+    "MEETING_REQUEST_REPLY": {
+      "id": "MEETING_REQUEST_REPLY",
+      "requiresMetaApproval": false,
+      "note": "Session message — sent within 24hr reply window. No approval needed.",
+      "variables": [],
+      "message": "Perfect! 🙌 Jabeer will reach out shortly to confirm a time that works for you. You'll get a WhatsApp message with the Zoom link once it's booked.\n\nTalk soon!\n— FortuneMarq",
+      "fmosAction": "notify_jabeer_meeting_requested",
+      "cockpitTag": "meeting_requested"
+    },
+    "NOT_RIGHT_NOW_REPLY": {
+      "id": "NOT_RIGHT_NOW_REPLY",
+      "requiresMetaApproval": false,
+      "variables": [],
+      "message": "No problem at all! We'll check back in a few days. 😊\n— FortuneMarq",
+      "fmosAction": "schedule_followup",
+      "followUpDays": 3
+    }
+  }
 }

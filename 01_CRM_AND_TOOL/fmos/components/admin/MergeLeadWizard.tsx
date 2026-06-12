@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { X, ArrowRight, CheckCircle2, ShieldAlert, AlertTriangle, Loader2 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface MergeLeadWizardProps {
     pair: {
@@ -48,7 +49,7 @@ export default function MergeLeadWizard({ pair, onClose, onSuccess }: MergeLeadW
             if (!json.success) throw new Error(json.error);
             onSuccess();
         } catch (e) {
-            alert("Merge failed. Check console.");
+            toast.error("Merge failed", "Check the console for details.");
             console.error(e);
             setIsSubmitting(false);
         }

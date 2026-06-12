@@ -1,0 +1,3 @@
+{
+  "/api/leads/duplicates/scan/route": "app/api/leads/duplicates/scan/route.js"
+}

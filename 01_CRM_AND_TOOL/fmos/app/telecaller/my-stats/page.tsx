@@ -41,11 +41,12 @@ export default function MyStatsPage() {
     const [stats, setStats] = useState<MyStats | null>(null);
     const [logs, setLogs] = useState<CallLog[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [logLimit, setLogLimit] = useState(10);
     const supabase = createClient();
 
     useEffect(() => {
         fetchMyStats();
-    }, []);
+    }, [logLimit]);
 
     const fetchMyStats = async () => {
         setIsLoading(true);
@@ -81,13 +82,13 @@ export default function MyStatsPage() {
                 .eq("actor_id", userData.user.id)
                 .eq("touch_type", "call");
 
-            // Fetch recent logs for activity feed
+            // Fetch recent logs for activity feed (joined with lead name)
             const { data: recentLogs } = await supabase
                 .from("outreach_logs")
-                .select("id, outcome, created_at, touch_type, notes, lead_id")
+                .select("id, outcome, created_at, touch_type, notes, lead_id, leads(company_name)")
                 .eq("actor_id", userData.user.id)
                 .order("created_at", { ascending: false })
-                .limit(10);
+                .limit(logLimit);
 
             const interestedOutcomes = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO"];
             const totalInterested = allTimeLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0;
@@ -103,7 +104,7 @@ export default function MyStatsPage() {
 
             setLogs((recentLogs || []).map((l: any) => ({
                 id: l.id,
-                lead_name: l.lead_id?.slice(0, 8) || "Lead",
+                lead_name: l.leads?.company_name || l.lead_id?.slice(0, 8) || "Lead",
                 outcome: l.outcome || l.touch_type || "call",
                 duration_seconds: 0,
                 created_at: l.created_at
@@ -210,7 +211,12 @@ export default function MyStatsPage() {
                             <History className="h-5 w-5 text-slate-400" />
                             <h2 className="font-bold text-slate-900">Recent Call Logs</h2>
                         </div>
-                        <button className="text-xs font-bold text-blue-600 hover:underline">View All</button>
+                        <button
+                            onClick={() => setLogLimit(logLimit === 10 ? 100 : 10)}
+                            className="text-xs font-bold text-blue-600 hover:underline"
+                        >
+                            {logLimit === 10 ? "View All" : "Show Less"}
+                        </button>
                     </div>
 
                     <div className="divide-y divide-slate-50">

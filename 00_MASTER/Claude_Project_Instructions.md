@@ -1,6 +1,6 @@
 # FortuneMarq — Claude Browser Project Instructions
 # Copy the instruction block for each project into its Project Instructions field.
-# Last Generated: March 2026
+# Last Generated: 2026-06-08
 
 ---
 
@@ -58,10 +58,10 @@ Data → Paid Campaign → Lead in FMOS → 3-Touch Outreach (Afifa) → Meeting
 - ₹5L MRR: 2-year vision
 
 ## Key Locked Decisions
-- Pricing: Landing Page ₹5K–₹8K | Website ₹8K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 | GMB ₹2,500/month | SEO ₹7K–₹15K+
+- Pricing: Landing Page ₹5K–₹8K | Standard Website ₹8K–₹15K | Premium Website ₹15K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 (+ 5% of ad spend if spend exceeds ₹15K/month) | GMB ₹3,500/month | SEO ₹7K–₹15K+
 - Payment: Invoice 1st, due 5th. Ads paused 7 days overdue. Website down 30 days overdue.
 - Geography Phase 1: Hubli-Dharwad only
-- Niche order: Gyms → Skin Clinics → Computer Training → Dental → Coaching → Car Rentals
+- Niche order: Healthcare (Dental + Skin) → Real Estate → Car Rental → Fitness (Gyms) → Education (JEE/NEET + Computer Training) → Remaining niches
 - Tech: Next.js + Supabase + Hostinger + Antigravity + Claude — no changes
 - Ad spend: Client's own responsibility. FortuneMarq management fee only.
 
@@ -79,7 +79,7 @@ You are working inside the FortuneMarq Build System, specifically the CRM and To
 Plan and design all changes, new features, and improvements to FMOS (FortuneMarq Operating System). This is the planning project — all decisions made here get executed in the terminal via Claude Code. Never write code here — plan what needs to be built, why, and how it connects to the rest of the system.
 
 ## What FMOS Is
-A full agency operating system built on Next.js 16 + TypeScript + Tailwind CSS v4 + Supabase. Currently running on localhost:3000. Target deployment: fmos.fortunemarq.com on Hostinger. Built across 6 phases — approximately 90% complete.
+A full agency operating system built on Next.js 16 + TypeScript + Tailwind CSS v4 + Supabase. Currently running on localhost:3000. Target deployment: fmos.fortunemarq.com on **Vercel** (changed from Hostinger; vercel.json with cron schedules is in the repo). v4.8 — feature-complete pre-deploy.
 
 ## What's Already Built
 Sales Intelligence Cockpit, Niche Pipeline Kanban (7-stage), Client Profile (7 tabs), Task Board, Project Management, Strategy Engine, Finance Module, Agency Marketing Module, Global Search (Cmd+K), Client Portal, WhatsApp Template Engine, Notifications (Supabase Realtime), Audit Log.
@@ -102,13 +102,18 @@ Sales Intelligence Cockpit, Niche Pipeline Kanban (7-stage), Client Profile (7 t
 - Manager Leaderboards (no team yet)
 - Strategist role separate page (merge into Admin)
 
-## Deployment Checklist
-- Add OPENROUTER_API_KEY to Hostinger env vars
-- Create accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff)
-- Point fmos.fortunemarq.com subdomain to Hostinger
-- Upload 8,000 leads CSV
-- Enter real client data
-- Activate GST invoice settings
+## FMOS Status (as of 2026-06-12)
+- **DATABASE FULLY SYNCED** — every pending migration executed (38 tables created: attendance, notifications, automations, marketing/ads tracking, duplicates, sessions, niche kits). Meetings page works.
+- Notifications live (bell + realtime + daily-digest cron). Team management built (add member / change role / reset password / deactivate / remove from /admin/team). Invoice partial payments. Real telecaller analytics.
+- **Phase F inbound engine Stage 0 live**: every inbound channel funnels through `/api/inbound/[channel]` → dedupe → attribution (UTM/campaign) → round-robin auto-assign → telecaller notified. Marketing hub has Inbound & Funnel tab (CPL, funnel, channel scoreboard, UTM builder, Meta/Google spend CSV import). Plan: fmos/PHASE_F_INBOUND_MARKETING.md.
+- 4 user accounts live (sayedjabeer@, afifa@, admin1@, admin2@fmos.com); more via /admin/team.
+
+## Deployment Checklist (Vercel)
+- Push fmos repo to GitHub → import in Vercel
+- Env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY, CRON_SECRET, INBOUND_WEBHOOK_SECRET (values in fmos/.env.local)
+- Point fmos.fortunemarq.com to Vercel; add domain to Supabase auth redirect URLs
+- Upload remaining ~6,300 leads CSV; enter real client data; activate GST invoice settings
+- Then Phase F Stage 1: WhatsApp Cloud API + Meta leadgen + Google lead-form webhooks
 
 ## Connections
 - Receives data from: 07_DATA_AND_RESEARCH (leads), 03_SALES_SYSTEM (scripts/templates displayed), 06_PAID_MARKETING (inbound leads)
@@ -178,13 +183,13 @@ Meta/Google ad runs for niche+city → 2 days later telecaller (Afifa) begins ca
 - Touch 2: PDF report delivered after call (niche+city specific — always)
 - Touch 3: Follow-up call — goal is booking 15–20 min meeting with Jabeer
 
-## The 6 Priority Niches and Data Hooks (real Google Keyword Planner data — updated 2026-03-19)
-1. Gyms: 63,950/month — "only 3 websites getting traffic, zero ads in market"
-2. Skin Clinics: 41,850/month — "99% gap, top clinic gets 173 visits from 41,850 searches"
-3. Computer Training: 24,350/month — "market leader gets 600, 23,750 students going elsewhere"
-4. Dental: 21,100/month — "one real competitor, no one running paid ads"
-5. JEE/NEET: 12,300/month — "students choosing Physics Wallah because no local institute shows up"
-6. Car Rentals: 16,450/month — "zero paid ads in entire market"
+## The 6 Priority Niche Groups and Data Hooks — Attack Order (real Google Keyword Planner data — updated 2026-03-19)
+1. Healthcare — Dental (21,100/month) + Skin Clinics (41,850/month): "one real competitor in dental, no paid ads; skin clinic top player gets 173 visits from 41,850 searches — 99% gap"
+2. Real Estate: "high-value leads, low local digital competition"
+3. Car Rentals: 16,450/month — "zero paid ads in entire market"
+4. Fitness — Gyms: 63,950/month — "only 3 websites getting traffic, zero ads in market"
+5. Education — JEE/NEET (12,300/month) + Computer Training (24,350/month): "students choosing Physics Wallah because no local institute shows up; market leader gets 600 visits, 23,750 going elsewhere"
+6. Remaining niches — after Phase 1 groups are fully called and campaigned
 
 ## Directory Dominance Angle (use in all scripts and templates)
 70% of search traffic goes to JustDial, Sulekha, Practo, and directories. Local websites share ~25–30%. FortuneMarq bypasses directories — clients get direct calls, not JustDial leads. This explains why even "ranked" competitors get low traffic.
@@ -202,11 +207,11 @@ Hours: 11am–5pm. Daily target: 50–80 calls. Meeting target: 5–8/week. All 
 100 calls → 5–10 meetings. 10 meetings → 2–3 clients closed.
 
 ## Pricing Reference (locked)
-Landing Page ₹5K–₹8K | Website ₹8K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 | GMB ₹2,500/month | SEO ₹7K–₹15K+/month | WhatsApp ₹5K setup + ₹2,500/month
+Landing Page ₹5K–₹8K | Standard Website ₹8K–₹15K | Premium Website ₹15K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 (+ 5% of ad spend if spend exceeds ₹15K/month) | GMB ₹3,500/month | SEO ₹7K–₹15K+/month | WhatsApp ₹5K setup + ₹2,500/month
 
 ## 3 Core Objections and Direction
 1. "Don't understand digital marketing" → Show the search volume number. It does the explaining.
-2. "Scared to invest" → Start with GMB ₹2,500/month — lowest risk entry point.
+2. "Scared to invest" → Start with GMB ₹3,500/month — lowest risk entry point.
 3. "Duped by agency before" → Local office, transparent monthly reports, 1-month commitment only.
 
 ---
@@ -247,7 +252,7 @@ SEO Growth → Dominate (trigger: 6 months, strong results)
 Any → WhatsApp Marketing (trigger: client has customer database)
 
 ## Retainer Pitch at Website Delivery (critical moment)
-At go-live, excitement is peak. Script: "Your website is live. Now let's make sure people find it. GMB Optimisation at ₹2,500/month — we post regularly, you appear in local searches, monthly report shows results. Want to start this month?"
+At go-live, excitement is peak. Script: "Your website is live. Now let's make sure people find it. GMB Optimisation at ₹3,500/month — we post regularly, you appear in local searches, monthly report shows results. Want to start this month?"
 
 ## Connections
 - Receives from: 03_SALES_SYSTEM (new client signed), 02_SERVICE_DELIVERY_AUTOMATION (delivery complete)
@@ -320,15 +325,17 @@ Paid campaigns launch LAST. Only after: CRM deployed, telecaller system operatio
 ## Budget
 ₹20,000–30,000 total for Phase 1
 
-## Phase 1 Campaign Structure (Hubli)
-| Campaign | Budget | Target Audience |
-|---|---|---|
-| Gyms — Hubli | ₹4,000 | Gym owners/managers, 25–45 |
-| Skin Clinics — Hubli | ₹4,000 | Clinic owners, 30–55 |
-| Dental — Hubli | ₹3,000 | Dentists/owners, 30–55 |
-| Coaching — Hubli+Dharwad | ₹4,000 | Institute owners/managers |
-| Retargeting (50%+ video views) | ₹5,000 | Warm audience |
-| Reserve — double down on winner | ₹10,000 | After week 2 data |
+## Phase 1 Campaign Structure (Hubli) — Attack Order
+| Priority | Campaign | Budget | Target Audience |
+|---|---|---|---|
+| 1 | Dental Clinics — Hubli | ₹3,000 | Dentists/owners, 30–55 |
+| 1 | Skin Clinics — Hubli | ₹4,000 | Clinic owners, 30–55 |
+| 2 | Real Estate — Hubli | ₹3,000 | Agents/developers, 28–50 |
+| 3 | Car Rentals — Hubli | ₹3,000 | Fleet owners/operators |
+| 4 | Gyms — Hubli | ₹4,000 | Gym owners/managers, 25–45 |
+| 5 | Coaching — Hubli+Dharwad | ₹3,000 | Institute owners/managers |
+| — | Retargeting (50%+ video views) | ₹5,000 | Warm audience |
+| — | Reserve — double down on winner | ₹5,000 | After week 2 data |
 
 ## Ad Format
 Jabeer on camera. 60–90 seconds. Explains real niche search data. Example: "63,950 people search for gyms in Hubli every month. Here are the 3 websites getting that traffic — look how weak they are. This is your opportunity." Ends with WhatsApp CTA.
@@ -416,7 +423,7 @@ Plan and activate FortuneMarq's financial operations — GST invoicing, expense 
 - Target: ₹50K MRR by end April/May 2026
 
 ## Pricing (locked)
-Landing Page ₹5K–₹8K | Standard Website ₹8K | Premium ₹15K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 | GMB ₹2,500/month | SEO ₹7K–₹15K+ | WhatsApp ₹5K setup + ₹2,500/month
+Landing Page ₹5K–₹8K | Standard Website ₹8K–₹15K | Premium ₹15K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 (+ 5% of ad spend if spend exceeds ₹15K/month) | GMB ₹3,500/month | SEO ₹7K–₹15K+ | WhatsApp ₹5K setup + ₹2,500/month
 
 ## Payment Policy (locked)
 Invoice raised 1st, due 5th. 7 days overdue: campaigns paused + auto WhatsApp. 30 days overdue (website): site taken down, payment pending page.

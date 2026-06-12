@@ -1,0 +1,3 @@
+module.exports=[156133,a=>{"use strict";var b=a.i(907997);function c(){return(0,b.jsx)("div",{className:"min-h-full bg-slate-50 px-4 py-8 animate-pulse",children:(0,b.jsxs)("div",{className:"mx-auto max-w-7xl",children:[(0,b.jsx)("div",{className:"h-4 w-28 rounded bg-slate-200 mb-2"}),(0,b.jsx)("div",{className:"h-10 w-64 rounded-lg bg-slate-200 mb-8"}),(0,b.jsx)("div",{className:"h-6 w-48 rounded bg-slate-200 mb-4"}),(0,b.jsx)("div",{className:"h-64 rounded-xl bg-white border border-slate-200 mb-10"}),(0,b.jsx)("div",{className:"h-6 w-56 rounded bg-slate-200 mb-4"}),(0,b.jsx)("div",{className:"h-48 rounded-xl bg-white border border-slate-200"})]})})}a.s(["default",()=>c])}];
+
+//# sourceMappingURL=app_admin_clients_renewals_loading_tsx_24fe9059._.js.map

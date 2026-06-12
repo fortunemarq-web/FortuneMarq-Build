@@ -155,7 +155,7 @@
           "heading": "Your Investment",
           "tableColumns": ["Service", "Setup Fee", "Monthly Retainer"],
           "rows": "dynamic — populated from Jabeer's manual entries in FMOS",
-          "footerNote": "Ad spend for Google Ads and Meta Ads is your own budget, managed by us, billed directly by Google and Meta. FortuneMarq charges a management fee only."
+          "footerNote": "Ad spend for Google Ads and Meta Ads is your own budget, managed by us, billed directly by Google and Meta. FortuneMarq charges a management fee only. If your monthly ad spend exceeds ₹15,000, an additional 5% of the total ad spend is added to the management fee for that month."
         },
         {
           "sectionId": "PAYMENT_TERMS",

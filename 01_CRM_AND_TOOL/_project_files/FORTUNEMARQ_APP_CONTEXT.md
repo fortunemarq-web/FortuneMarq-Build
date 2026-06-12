@@ -1,6 +1,11 @@
 # FortuneMarq Agency OS — Full App Context
 *Last updated: March 12, 2026 — Post Phase 6 Completion*
 
+> ⚠️ **STALE — historical reference only (superseded 2026-06-12).** App is now v4.8:
+> DB fully migrated (112 tables), notifications/digest live, team management, inbound
+> engine (Phase F Stage 0), partial payments. For current state read
+> `../fmos/CLAUDE.md`, `../fmos/COWORK_HANDOFF.md`, `../fmos/00_MASTER_BUILD_PLAN.md`.
+
 ---
 
 ## App Overview
@@ -36,15 +41,13 @@
 
 ---
 
-## Auth Users (Test Accounts)
+## Auth Users (the ONLY accounts — updated 2026-06-12)
 | Email | Role |
 |-------|------|
-| admin@test.com | admin |
-| staff@test.com | staff |
-| pm@test.com | pm |
-| strategy@test.com | strategist |
-| sales@test.com | telecaller |
-| contact@austindental.com | client |
+| sayedjabeer@fmos.com | admin (Jabeer) |
+| admin1@fmos.com | admin |
+| admin2@fmos.com | admin |
+| afifa@fmos.com | telecaller |
 
 ---
 

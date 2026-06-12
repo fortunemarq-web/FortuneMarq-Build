@@ -1,18 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
-import { Download, Calendar, ArrowRight, User, Clock, Activity } from "lucide-react";
+import { Download, Calendar, ArrowRight, User, Clock, Activity, ChevronDown } from "lucide-react";
 import clsx from "clsx";
 
 export default function WorkHoursReportPage() {
     const [period, setPeriod] = useState('week'); // today, week, month
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [profiles, setProfiles] = useState<Record<string, string>>({});
+    const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchReport();
     }, [period]);
+
+    useEffect(() => {
+        const supabase = createClient();
+        supabase
+            .from("profiles")
+            .select("id, full_name")
+            .then(({ data: rows }) => {
+                if (!rows) return;
+                const map: Record<string, string> = {};
+                rows.forEach((p: any) => { map[p.id] = p.full_name; });
+                setProfiles(map);
+            });
+    }, []);
 
     const fetchReport = async () => {
         setLoading(true);
@@ -33,7 +48,7 @@ export default function WorkHoursReportPage() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
                     <div>
-                        <h1 className="text-4xl font-mono tabular-nums font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                        <h1 className="text-4xl font-bold text-slate-900">
                             Work Hours Analytics
                         </h1>
                         <p className="text-slate-500 mt-2">Team time tracking and engagement reports</p>
@@ -98,8 +113,8 @@ export default function WorkHoursReportPage() {
 
                 {/* Main Table */}
                 <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xl">
-                    <div className="px-6 py-4 border-b border-slate-200 bg-[#1f1f1f]">
-                        <h3 className="font-bold text-lg">User Performance</h3>
+                    <div className="px-6 py-4 border-b border-slate-200 bg-white">
+                        <h3 className="font-bold text-lg text-slate-900">User Performance</h3>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
@@ -117,13 +132,16 @@ export default function WorkHoursReportPage() {
                                 {loading ? (
                                     <tr><td colSpan={6} className="px-6 py-12 text-center text-slate-600">Loading analytics...</td></tr>
                                 ) : data?.aggregated?.map((u: any) => (
-                                    <tr key={u.user_id} className="hover:bg-slate-100 group transition-colors">
+                                    <Fragment key={u.user_id}>
+                                    <tr className="hover:bg-slate-100 group transition-colors">
                                         <td className="px-6 py-4 font-medium text-slate-900">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold">
-                                                    {u.user_id.slice(0, 2).toUpperCase()}
+                                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
+                                                    {(profiles[u.user_id] || u.user_id).slice(0, 2).toUpperCase()}
                                                 </div>
-                                                <span className="font-mono text-slate-600">{u.user_id.slice(0, 8)}...</span>
+                                                <span className={profiles[u.user_id] ? "text-slate-900" : "font-mono text-slate-600"}>
+                                                    {profiles[u.user_id] || `${u.user_id.slice(0, 8)}...`}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right font-bold text-slate-900">{u.total_hours}h</td>
@@ -139,11 +157,36 @@ export default function WorkHoursReportPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right text-slate-500">{u.sessions}</td>
                                         <td className="px-6 py-4 text-right">
-                                            <button className="text-indigo-400 hover:text-slate-900 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-end gap-1 ml-auto text-xs">
-                                                Details <ArrowRight className="h-3 w-3" />
+                                            <button
+                                                onClick={() => setExpandedUserId(expandedUserId === u.user_id ? null : u.user_id)}
+                                                className="text-brand-deep hover:text-slate-900 transition-all flex items-center justify-end gap-1 ml-auto text-xs font-semibold"
+                                            >
+                                                Details <ChevronDown className={clsx("h-3 w-3 transition-transform", expandedUserId === u.user_id && "rotate-180")} />
                                             </button>
                                         </td>
                                     </tr>
+                                    {expandedUserId === u.user_id && (
+                                        <tr className="bg-slate-50">
+                                            <td colSpan={6} className="px-6 py-4">
+                                                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Daily breakdown</p>
+                                                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                                                    {(data?.daily_stats || [])
+                                                        .filter((d: any) => d.user_id === u.user_id)
+                                                        .map((d: any) => (
+                                                            <div key={`${d.user_id}-${d.work_date || d.date}`} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                                                                <span className="font-medium text-slate-900">{d.work_date || d.date}</span>
+                                                                <span className="float-right font-mono tabular-nums text-slate-700">{parseFloat(d.total_hours).toFixed(1)}h</span>
+                                                                <span className="block text-xs text-slate-400">{d.sessions_count} session{Number(d.sessions_count) === 1 ? "" : "s"}</span>
+                                                            </div>
+                                                        ))}
+                                                    {(data?.daily_stats || []).filter((d: any) => d.user_id === u.user_id).length === 0 && (
+                                                        <p className="text-sm text-slate-500">No daily data for this period.</p>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    </Fragment>
                                 ))}
                                 {!loading && (!data?.aggregated || data.aggregated.length === 0) && (
                                     <tr><td colSpan={6} className="px-6 py-12 text-center text-slate-600">No activity found for this period.</td></tr>

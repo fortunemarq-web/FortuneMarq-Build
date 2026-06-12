@@ -70,7 +70,7 @@ Create and store all legal documents, business policies, and compliance material
 - Agreement is confirmed by WhatsApp/email reply — no physical signature required
 - Agreement number format: AGR-2026-001 (auto-incremented by FMOS)
 - Service terms are universal + service-specific (layered approach)
-- Exit: 30-day written notice, setup fees non-refundable, monthly fees pro-rated
+- Exit: 30-day written notice, monthly fees pro-rated
 - All assets created for client remain the client's property and are handed over on exit
 
 ## Session History

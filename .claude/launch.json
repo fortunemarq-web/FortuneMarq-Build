@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fmos-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "01_CRM_AND_TOOL/fmos"],
+      "port": 3000,
+      "autoPort": false
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "node": {
+    "6000fb3b193a97d7a1bceff83cf6ea62b8885492b4": {
+      "workers": {
+        "app/admin/clients/renewals/page": {
+          "moduleId": 586225,
+          "async": false,
+          "exportedName": "markClientRenewed",
+          "filename": "app/admin/clients/renewals/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/renewals/page": "action-browser"
+      },
+      "exportedName": "markClientRenewed",
+      "filename": "app/admin/clients/renewals/actions.ts"
+    },
+    "407b866cb072ee7a8700558c758dd1d368a9d6cb61": {
+      "workers": {
+        "app/admin/clients/renewals/page": {
+          "moduleId": 586225,
+          "async": false,
+          "exportedName": "markClientChurned",
+          "filename": "app/admin/clients/renewals/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/renewals/page": "action-browser"
+      },
+      "exportedName": "markClientChurned",
+      "filename": "app/admin/clients/renewals/actions.ts"
+    },
+    "606a6eef038a65fe801f3b518726418ae3dd8d3ec7": {
+      "workers": {
+        "app/admin/clients/renewals/page": {
+          "moduleId": 586225,
+          "async": false,
+          "exportedName": "logUpsellAttempt",
+          "filename": "app/admin/clients/renewals/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/clients/renewals/page": "action-browser"
+      },
+      "exportedName": "logUpsellAttempt",
+      "filename": "app/admin/clients/renewals/actions.ts"
+    }
+  },
+  "edge": {}
+}

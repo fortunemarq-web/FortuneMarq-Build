@@ -1,0 +1,20 @@
+{
+  "node": {
+    "605ea8b410c293cc81d5fe7cc61f6801d1dbfb7f78": {
+      "workers": {
+        "app/sales/leads/[id]/page": {
+          "moduleId": 524139,
+          "async": false,
+          "exportedName": "logCallOutcome",
+          "filename": "app/sales/leads/[id]/lead-actions.ts"
+        }
+      },
+      "layer": {
+        "app/sales/leads/[id]/page": "action-browser"
+      },
+      "exportedName": "logCallOutcome",
+      "filename": "app/sales/leads/[id]/lead-actions.ts"
+    }
+  },
+  "edge": {}
+}

@@ -5,6 +5,7 @@ import { Trash2, Search, Filter, AlertTriangle, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase"; // Client-side search
 import { deleteLeadsByIndustry, deleteSingleLead } from "@/actions/delete-data"; // Server-side delete
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 // Use the existing industries from config (could be imported to share source of truth)
 const FALLBACK_INDUSTRIES = [
@@ -109,7 +110,7 @@ export default function DataManager() {
             // Remove from local list
             setSearchResults(prev => prev.filter(l => l.id !== id));
         } else {
-            alert("Failed to delete: " + res.message);
+            toast.error("Failed to delete", res.message);
         }
         setDeletingId(null);
     };
@@ -122,7 +123,7 @@ export default function DataManager() {
                         // Quick hack to show distribution in alert for debugging
                         const { analyzeIndustryDistribution } = await import("@/actions/analyze-data");
                         const dist = await analyzeIndustryDistribution();
-                        alert(JSON.stringify(dist, null, 2));
+                        toast.info("Industry distribution", JSON.stringify(dist, null, 2));
                     }}
                     className="text-xs text-slate-600 hover:text-slate-900 underline"
                 >

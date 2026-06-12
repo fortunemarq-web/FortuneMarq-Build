@@ -45,7 +45,7 @@ Jabeer makes all decisions that affect strategy, technology, or money. Specifica
 
 ## Open Questions
 
-- [ ] Personal brand vs. FortuneMarq brand — which to build publicly?
+- [x] Personal brand vs. FortuneMarq brand — both will be built through content creation, starting Phase 2 (after FMOS live + landing pages + performance marketing set up)
 
 ## Sources
 

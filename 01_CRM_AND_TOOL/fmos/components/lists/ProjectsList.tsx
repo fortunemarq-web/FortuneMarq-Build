@@ -11,6 +11,7 @@ import { SavedView, FilterConfig, SortConfig } from "@/types/view";
 import { Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 export default function ProjectsList({ userId }: { userId: string }) {
     const [data, setData] = useState<any[]>([]);
@@ -51,7 +52,19 @@ export default function ProjectsList({ userId }: { userId: string }) {
         const ids = Array.from(selectedIds);
         let updates = {};
         if (action === "change_status") {
-            const val = prompt("New status:");
+            const val = await promptModal({
+                title: "Change project status",
+                description: `Applies to ${ids.length} selected project${ids.length === 1 ? "" : "s"}.`,
+                type: "select",
+                options: [
+                    { value: "not_started", label: "Not Started" },
+                    { value: "in_progress", label: "In Progress" },
+                    { value: "on_hold", label: "On Hold" },
+                    { value: "completed", label: "Completed" },
+                    { value: "cancelled", label: "Cancelled" },
+                ],
+                confirmLabel: "Update",
+            });
             if (val) updates = { status: val };
         }
         if (Object.keys(updates).length > 0) {

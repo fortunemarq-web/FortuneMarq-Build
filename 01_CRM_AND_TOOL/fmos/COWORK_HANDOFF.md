@@ -1,343 +1,243 @@
-# Cowork Handoff — FMOS UI/UX Session (2026-06-11, evening)
+# HANDOFF — 2026-06-12 (Claude Code session, tokens exhausted mid-Stage-0)
+# READ THIS FULLY before continuing. Pick up at "PART 2 → NOT DONE" below.
+#
+# ───────────────────────────────────────────────────────────────────────
+# ⬆ NEWER SESSION (2026-06-12 night, Cowork): PHASE F STAGE 1 part 1 —
+# WhatsApp Cloud API. See "PART 0 — STAGE 1 STATE" immediately below.
+# ───────────────────────────────────────────────────────────────────────
+#
+# ## PART 0 — STAGE 1 STATE (2026-06-12 night)
+#
+# DECISION LOCKED: WABA Option A — NEW dedicated Jio number 79759 18980 for
+# Cloud API (SIM active, NEVER install WhatsApp on it). 93530 82656 stays in
+# the WA Business app. The old "use 93530 82656" note in PENDING_ACTIONS.md
+# is superseded.
+#
+# BUILT (FMOS side complete):
+# - app/api/webhooks/whatsapp/route.ts — GET handshake (WHATSAPP_VERIFY_TOKEN,
+#   real value already in .env.local), POST X-Hub-Signature-256 HMAC verify
+#   (META_APP_SECRET, fail-closed). Idempotent via inbound_events.external_id
+#   = wamid. Unknown → processInboundLead (channel whatsapp/ctwa; referral
+#   source_id+headline → campaign_external_id/campaign_name = WhatsApp-ads
+#   attribution). Known → whatsapp_logs/activity_events/inbound_events +
+#   notify assignee. Statuses → delivery_status. "Yes, confirmed" → admins.
+# - Button replies → tags [report_engaged, tapped_book_meeting|tapped_tell_me_more]
+#   + follow_up_date=now (cockpit already surfaces these) + notify + auto-reply
+#   (lib/whatsapp/auto-replies.ts; "Not right now" = +3d follow-up).
+# - lib/whatsapp/send.ts — text/template/buttons/document/uploadMedia,
+#   Graph v23.0, all sends logged to whatsapp_logs. No-ops gracefully on
+#   placeholder creds.
+# - Auto-greeting (session text, default ON) on new inbound leads; toggle in
+#   /admin/whatsapp-templates header (components/admin/auto-greeting-toggle.tsx);
+#   stored in NEW app_settings table.
+# - next.config.ts: distDir override via NEXT_DIST_DIR (sandbox builds).
+#
+# ⚠️ PENDING BEFORE STAGE 1 IS DONE:
+# 1. RUN SQL: new block at the END of supabase/2026-06-12_full_schema_sync.sql
+#    ("PHASE F STAGE 1") — whatsapp_logs columns + app_settings. Usual method.
+# 2. Meta side (in progress, guided): BM verification (GSTIN) → Meta App
+#    (Business type) → WABA + register 7975918980 → permanent system-user
+#    token → fill WHATSAPP_API_TOKEN / WHATSAPP_PHONE_NUMBER_ID /
+#    META_APP_SECRET in .env.local (+ Vercel later) → submit templates
+#    (03_SALES_SYSTEM/WhatsApp_Templates; 2–7 day approval).
+# 3. On Mac: npx tsc --noEmit && npm run build (tsc clean in sandbox; build
+#    blocked there only by Google Fonts fetch). E2E: npm run dev +
+#    scripts/test-whatsapp-webhook.sh (needs META_APP_SECRET=fmos_test_secret
+#    env override when testing pre-credentials), verify DB rows, delete test data.
+# 4. AFTER DEPLOY: Meta App → WhatsApp → Configuration → webhook URL
+#    https://<domain>/api/webhooks/whatsapp + verify token from .env.local,
+#    subscribe to `messages` field. Test with a real message.
+# - NOT built (later wishlist): PDF report/proposal/agreement/invoice sends
+#   (sendWhatsAppDocument + uploadWhatsAppMedia are ready), date-time picker
+#   flows, followback reminder template selection logic, Meta Lead Ads webhook,
+#   SLA cron wiring.
+# (This replaces the 2026-06-11 UI/UX handoff — that work is merged & documented
+#  in 00_MASTER_BUILD_PLAN.md and CLAUDE.md.)
 
-> **UPDATE 2026-06-12 (Cowork session):** see "2026-06-12 session" section at the
-> bottom for the CRUD pass, bug fixes, and the in-progress ClickUp-style
-> frontend sweep checklist.
-
-> **Purpose:** Open this file in Claude Cowork (or any new Claude session) to continue
-> exactly where the previous Claude Code session left off. Read `CLAUDE.md` in this
-> directory first for project-wide conventions, then this file for the latest state.
-
----
-
-## What this session did (in order)
-
-### 1. Folder rename
-`~/Desktop/ FortuneMarq-Build` (leading space) → `~/Desktop/FortuneMarq-Build`.
-All docs now reference the no-space path. App path:
-`/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos`
-
-### 2. Dev server
-`npm run dev` binds `0.0.0.0`. Mobile view on same Wi-Fi: **http://192.168.1.2:3000**
-
-### 3. UI/UX overhaul — "industry-grade, not AI-made"
-Design philosophy now: **neutral-first, one brand accent, semantic color only for status**
-(Linear/Stripe style). Done:
-
-- **Fonts**: self-hosted via `next/font` in `app/layout.tsx` (DM Sans display,
-  IBM Plex Sans body, IBM Plex Mono). The render-blocking Google Fonts `<link>` is gone.
-- **`app/globals.css`** now defines the design system:
-  - Brand tokens (Tailwind v4 `@theme`): `brand` #42CA80, `brand-hover` #35A66A,
-    `brand-active` #2D9960, **`brand-deep` #1E7A4F (the ONLY green for text/buttons
-    on white — #42CA80 fails contrast)**, `brand-soft` #ECFAF3, `brand-ring`.
-  - Global focus-visible ring, thin scrollbars, brand selection color,
-    tabular numerals for tables, reduced-motion support, print rules (see §6).
-- **Deleted `tailwind.config.ts`** — dead v3 config, Tailwind v4 never read it.
-- **Login page** (`app/login/page.tsx`): rebuilt visual layer (auth logic untouched).
-- **Admin dashboard** (`app/admin/page.tsx`): neutral KPI cards (red only when
-  outstanding invoices exist), `ActionSection` now takes `tone?: "neutral"|"danger"|"warning"`,
-  one quiet bordered action-button style, single-color (brand) pipeline bars, emojis removed.
-- **7 error pages**: ⚠️ emoji → `AlertTriangle` icon, buttons → `bg-brand-deep`.
-- **Telecaller cockpit**: gradient call button → solid `bg-brand-deep` white text;
-  dark stats bar uses uniform white numerals; UI-chrome emojis removed.
-- Emojis in WhatsApp templates / call scripts are **content — deliberately kept**.
-
-### 4. Bug fix: outreach board crash
-`leads.updated_at` and `leads.assigned_to` **do not exist**. Real columns:
-`last_activity_at`, `assigned_sales_exec`, `meeting_booked_at`.
-- `app/admin/outreach/page.tsx` + `outreach-board-client.tsx` fixed
-  (stalled badge uses `last_activity_at ?? created_at`).
-- `app/admin/page.tsx` "Meetings booked today" now counts on `meeting_booked_at`
-  (was silently failing on `updated_at`).
-- **`lib/pipeline.ts`**: `leadStageUpdate()` / `leadStatusUpdate()` now auto-stamp
-  `last_activity_at` always, and `meeting_booked_at` when stage → `meeting_booked`.
-  Caller-passed `extra` still overrides. Cockpit's manual payload stamps the same.
-
-### 5. Layout fix: white-space overscroll + scrolling sidebar
-- `components/ui/layout-wrapper.tsx`: app shell is `flex h-dvh overflow-hidden`;
-  **`<main>` is the ONLY scroll container** (`overflow-y-auto`). Sidebar can't scroll away.
-- All 106 shell-rendered files: `min-h-screen` → `min-h-full`.
-  **Rule: pages inside the shell use `min-h-full`, never `min-h-screen`.**
-  Public/standalone routes keep `min-h-screen`: `app/page.tsx`, `/login`, `/lp/*`,
-  `/client/report/*`.
-
-### 6. PDF / document design upgrade
-- **`components/admin/finance/InvoicePDF.tsx`** (@react-pdf/renderer): full redesign —
-  brand top bar, status chip (Paid/Due/Overdue from `invoice.status`), grey info band
-  (From / Billed To / dates), dark zebra table, green "Total Due" block, bank panel,
-  fixed page footer. (Also fixed old `borderBottomV` typo.)
-- **Print-to-PDF system** for HTML documents (proposals + agreements had no PDF path):
-  - `@media print` block in `globals.css`: A4 + 12mm margins, app chrome hidden,
-    `.print-area` documents print flush, exact colors, `tr`/`.avoid-break` don't split.
-  - **Pattern**: wrap the document in `className="print-area"`, mark surrounding
-    chrome `print:hidden`, add `<PrintButton />` (`components/ui/print-button.tsx`)
-    → browser print → Save as PDF.
-  - ⚠️ History: first implementation used the visibility-hidden isolation trick →
-    **all-blank PDFs** (specificity bug + absolute-positioning pagination).
-    Current normal-flow approach is the fix. Don't reintroduce the visibility trick.
-- **Agreement page** (`app/admin/agreements/[id]/page.tsx`): PrintButton, signature
-  blocks ("Agreed & Accepted", auto-fills confirmed date), document footer strip,
-  `Check` icons instead of ✓ glyphs.
-- **Proposal creator step 2** (`components/proposals/proposal-creator.tsx`):
-  "Download PDF" button (`window.print()`), document wrapped in `print-area`.
-
-**Verification state:** `npx tsc --noEmit` clean, `npm run build` clean after every step.
-User confirmed pages render; blank-PDF fix delivered but **awaiting user re-test**.
+## WHO/WHAT
+FMOS = FortuneMarq Agency OS. Owner: Jabeer. App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase cnwooodktqwvpzkucskm). v4.8, pre-deploy.
 
 ---
 
-## Known issues / deferred — STATUS AS OF 2026-06-12 (end of Cowork session)
+## PART 1 — WHAT THIS SESSION SHIPPED (all verified, tsc + build clean)
 
-> Original 06-11 list, updated. Items 2, 4, 5, 6 were FIXED on 06-12
-> (see the session log at the bottom of this file).
+### 1. FULL SCHEMA SYNC EXECUTED IN SUPABASE ✅ (the big unlock)
+- `supabase/2026-06-12_full_schema_sync.sql` (now ~2,280 lines) ran successfully in the
+  dashboard SQL editor. Consolidates ~19 previously-unrun migration files.
+- 38 missing tables created (attendance_*, notifications, automation_*, saved_views,
+  client_reports, client_resources, user_sessions, niche_kits, niches, cities, follow_ups,
+  call_logs, duplicate_*, telecaller_stats + leaderboard VIEW, task_dependencies,
+  marketing tables incl. ad_campaigns + lead_source_attribution, whatsapp_logs…).
+- Also: RLS hardening, audit triggers, indexes, leads.meeting_link/meeting_notes,
+  leads.lead_quality_score, profiles.is_active, invoices.payment_method,
+  notifications.type + notifications.link (were missing → ALL notification inserts had
+  been silently failing; fixed + verified).
+- `types/database.types.ts` REGENERATED from live schema (110 tables).
+  ⚠️ Regenerate AGAIN — Stage 0 added inbound_events + ad_insights_daily + 3 leads
+  columns AFTER the regen (code uses service-role `as any`, so tsc passes regardless).
 
-1. **Awaiting user confirmation:** proposal/agreement PDF download — desktop
-   page breaks confirmed fixed through the footer fix; mobile print untested.
-2. ~~Growth emoji icons~~ → DONE (content-type-icons.tsx, Lucide).
-3. **Hardcoded `#42CA80` hexes** — many migrated during the 06-12 sweep;
-   remainder still migrate opportunistically when touching files.
-4. ~~/manager pipeline-board broken queries~~ → DONE (rewired to outreach_stage).
-5. ~~calc(100vh) scroll areas~~ → DONE (dvh-aware, top-bar offset).
-6. ~~UI pass for outreach/meetings/clients/finance~~ → DONE (Phases 2–7).
+**HOW TO RUN SQL (no psql/docker/CLI on this machine, no DB password):**
+Chrome MCP → user's "FM" Chrome profile (has Supabase logged in via GitHub) →
+supabase.com/dashboard/project/cnwooodktqwvpzkucskm/sql/new → `pbcopy < file.sql` →
+click editor, cmd+a, cmd+v, cmd+Enter → confirm "Run query" on the destructive-op modal.
+ALWAYS append any new DDL to `supabase/2026-06-12_full_schema_sync.sql` (idempotent, versioned).
+Service-role REST/node one-liners work for data ops:
+`export SRK=$(grep '^SUPABASE_SERVICE_ROLE_KEY' .env.local | cut -d= -f2)` + @supabase/supabase-js.
 
-## Standing pre-deploy checklist (unchanged from morning session)
+### 2. Audit fixes ✅
+- /projects/[id]: friendly not-found (was raw Postgres error). /client/report/[token]:
+  "link expired" state (was blank). InvoiceManagerClient: list refreshes after MRR gen
+  (useEffect sync on initialInvoices).
+- **alert()/prompt() are GONE app-wide.** New `components/ui/prompt-modal.tsx`:
+  `await promptModal({title, type: select|text|date|textarea, options…})` → value|null.
+  `<PromptHost />` mounted in app/layout.tsx next to `<Toaster />`. USE THIS for all
+  confirmations/inputs going forward.
+- Dead buttons fixed: work-hours Details (expandable daily breakdown + profile names),
+  my-stats View All (limit 10⇄100) + company names via leads join, team card Assign.
 
-1. Run the four `20260611*` migrations in Supabase SQL editor **in order**
-   (RLS hardening → meeting columns → audit triggers → indexes).
-2. Vercel env: `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` (+ existing publics).
-3. WhatsApp Cloud API integration deferred (needs deployed HTTPS URL + credentials).
+### 3. Team management ✅ (tested end-to-end via UI)
+- `app/admin/team/user-actions.ts`: inviteTeamMember / updateMemberRole /
+  resetMemberPassword / setMemberActive (auth ban 876000h) / removeMember.
+  All requireAdmin()-gated (checks caller's profile.role==='admin'), audit-logged.
+- UI: `components/team/add-member-modal.tsx` + `components/team/member-menu.tsx`
+  (⋯ menu on cards), wired in team-overview-client.tsx. AssignTaskModal takes defaultAssignee.
+- Auth users are exactly: admin1@, admin2@, afifa@, sayedjabeer@fmos.com.
+  ⚠️ Passwords were CHANGED by Jabeer (not the create-users.js ones; Jabeer's login
+  works in the preview browser session). For smoke tests: create a temp admin via
+  service role, delete it after via the team UI (pattern used + verified this session).
 
-## Conventions added this session (enforce in all future work)
+### 4. /manager/performance rewritten with REAL data ✅
+Was hardcoded fake (trends, niches, team pace). Now computes from outreach_logs for
+today/week/month (buttons actually filter), real period-over-period trend chips,
+real niche/peak-hour/top-region. outreach_logs is EMPTY in prod → page shows honest zeros.
 
-- Buttons/text in green = `brand-deep` (+ `brand-hover`/`brand-active` states);
-  `brand` (#42CA80) only for accents/fills/bars, never text on white.
-- No emoji as UI chrome (icons, headers, badges). Emoji in outbound message
-  content (WhatsApp templates, scripts) is fine.
-- Shell pages: `min-h-full`. Only no-sidebar routes use `min-h-screen`.
-- Printable documents: `.print-area` + `print:hidden` chrome + `PrintButton`.
-- Stage writes still ONLY via `lib/pipeline.ts` helpers (they now stamp activity
-  timestamps too — don't hand-write `last_activity_at`).
+### 5. Notifications + digest + partial payments ✅
+- notifications.type/link columns added → bell + all 10 sendNotification call sites work.
+- `/api/cron/daily-digest`: per-user morning digest (meetings, follow-ups per assignee,
+  overdue invoices ₹, overdue tasks, at-risk clients = overdue payments or renewal ≤30d
+  with MRR at stake). Idempotent/day. TESTED live (sent real data).
+- ALL cron routes now `export { POST as GET }` (Vercel cron calls GET). `vercel.json`
+  created: daily-digest 03:30 UTC, admin-alerts 03:00 UTC (Hobby = 2 daily crons max).
+- Invoices: `recordInvoicePayment(id, amount, method)` in finance/actions.ts —
+  accumulates paid_amount, status → partially_paid|paid. UI: Record Payment flow
+  (promptModal amount → method), blue "partially paid" badge + ₹ received, filter option.
 
----
-
-## 2026-06-12 session (Cowork)
-
-### Done
-1. **Proposal print pagination** — `avoid-break` on every discrete block in
-   proposal-creator preview; `keep-with-next` utility added to globals.css;
-   service cards drop borders in print; footer bound to get-started section.
-2. **CRUD pass** (all verified tsc-clean):
-   - Invoices: edit modal (pre-paid only), cancel/void, delete (non-paid);
-     `updateInvoice/cancelInvoice/deleteInvoice` in finance/actions.ts.
-   - Expenses: `updateExpense/deleteExpense`; wired previously-dead edit/delete
-     buttons; fixed invalid default category ("Marketing" wasn't an option).
-   - Proposals: edit via `/admin/leads/[id]/proposal/new?edit=<proposalId>`
-     (creator accepts `existingProposal`); void sent → rejected; delete drafts
-     (`components/proposals/proposal-row-actions.tsx`).
-   - Agreements: void/delete rows (`agreement-row-actions.tsx`). Confirmed ones
-     are untouchable.
-   - Leads: Delete button on admin lead profile (uses existing
-     `deleteSingleLead` from actions/delete-data.ts).
-   - Clients: status dropdown in table (active/onboarding/paused/churned) +
-     hard delete with child-table cleanup (`deleteClient` in clients/actions.ts).
-   - WhatsApp templates: wired dead delete button in template-manager.
-   - Growth content: `deleteContentPiece` action + Delete in ContentPostModal
-     (calendar + kanban both pass onDelete).
-3. **Bug fixes**: /manager pipeline-board fully rewired to `outreach_stage` via
-   `leadStageUpdate()` (was querying non-existent `pipeline_updated_at`,
-   `profiles!leads_assigned_to_fkey`; showed fake $425k/12.4% stats — now real
-   counts); h-screen → h-full on /manager/pipeline; alert() → toast in
-   task-card, strategist-pipeline, whatsapp-template-button, ContentPostModal;
-   invoice table title-attr + colSpan bugs; removed fake "reminder sent" button.
-4. **ClickUp-style shell (Phase 1 of frontend sweep)**:
-   - `components/ui/top-bar.tsx` (new): desktop breadcrumb bar + ⌘K trigger +
-     NotificationBell (moved out of floating position), wired into
-     layout-wrapper (shell is now sidebar | column(topbar, main)).
-   - Command palette fixed: ilike search on real columns (fts_tokens migration
-     may not be applied), nav actions now mirror the sidebar, lead links go to
-     /admin/leads/[id].
-   - Sidebar densified: 13px items, py-1.5, tighter icons/labels.
-
-### Frontend sweep checklist (ClickUp/Jira vibes) — remaining phases
-User wants the whole app to feel like ClickUp/Jira. Order agreed:
-- [x] Phase 1: shell (top bar, ⌘K, sidebar density)
-- [x] Phase 2: Leads/Outreach — DONE 2026-06-12: LeadsList rebuilt (13px dense
-      rows, outreach_stage column + badge via getStage(), city/phone columns,
-      stage filter chips, row click opens components/leads/lead-peek-panel.tsx
-      slide-over with stage select + call/WhatsApp + full-profile link);
-      lib/filtering.ts supports outreach_stage[]; outreach board columns now
-      dvh-aware (calc(100dvh-280px), accounts for new top bar) + brand tokens.
-- [x] Phase 3: Tasks/Projects — DONE 2026-06-12: TaskBoard gets quick-add row
-      (Enter to create, assigns to self), working "My Tasks" tab (was showing
-      all), brand-deep buttons; TaskCard rebuilt (priority Flag icons via
-      PRIORITY_FLAGS, assignee initials avatar, dark-theme #2a2a2a leftovers
-      removed, contrast-safe due-date colors); app/tasks/page.tsx role-query
-      bug fixed (.single() without .eq(id) returned a random profile!);
-      pm-dashboard cleaned (broken pasted className on Completed card, green/
-      black toggles → slate segmented, brand tokens); all 11 projects-module
-      alert() → toast.
-- [x] Phase 4: Meetings — DONE 2026-06-12: raw greens → brand tokens (buttons
-      brand-deep, focus rings brand), notification titles de-emojied. Page was
-      already well-structured; WhatsApp template emojis kept (content).
-- [x] Phase 5: Clients — DONE 2026-06-12: ClientsTable fully on brand tokens,
-      rows densified (py-2.5). Slide-over preview NOT built (profile page has
-      6 tabs already — build only if asked).
-- [x] Phase 6: Finance — DONE 2026-06-12: invoice/expense managers densified
-      (py-3 rows), create buttons brand-deep, indigo focus/breadcrumb accents
-      → brand/neutral.
-- [x] Phase 7: Growth — DONE 2026-06-12: emoji icons → Lucide via
-      components/admin/growth/content-type-icons.tsx (getContentTypeIcon(id));
-      icon prop now optional/unused on the 4 channel pages; modal status
-      options de-emojied; kanban hexes → brand tokens.
-- [ ] Sweep-wide: migrate raw #42CA80 → brand-* tokens in touched files;
-      replace remaining alert() (users page, reports/new, strategy review,
-      task-board, task-dependencies); kill remaining stray emojis in UI chrome.
-
-### Still pending from before
-- Proposal/agreement PDF re-test on mobile/print (user confirmed desktop page
-  breaks fixed up to footer fix — awaiting final confirmation).
-- 4 Supabase migrations (20260611*) before deploy; Vercel env vars; WhatsApp
-  Cloud API integration (needs HTTPS).
-- Team member invite/deactivate/remove needs Supabase auth admin flow —
-  discussed, not built (decide approach first).
-
-### Full app audit (2026-06-12, after stale-snapshot bug)
-**Deleted 23 verified-orphan files** (nothing imported them; tsc clean after):
-old sales subtree (sales-page-client, sales-intelligence-cockpit,
-SalesOutcomeModal, follow-up-list, schedule-follow-up-modal, power-dialer,
-ai-objection-handler, ai-script-suggester, daily-brief), old dashboard widgets
-(dashboard/{PipelineSnapshot,QuickActions,PriorityList,AgencyGrowthCard,
-BuildProgressSummary,CityAcquisitionCard}, pipeline-bar-chart,
-task-completion-pie-chart, task-status-chart), agreement-generator,
-projects/{milestone-manager,project-task-list}, admin/clients/tabs/OnboardingTab
-(dupe), layout/followup-checker.
-
-**Status-desync fixes** (same class as the pipeline-snapshot bug):
-- admin dashboard snapshot + "Leads in Pipeline" KPI now read outreach_stage
-- call-outcome-modal (used on /sales/leads/[id]) now uses leadStageUpdate()
-  with per-outcome stages (was raw status writes)
-- LeadsList bulk change-status now prompts for stage keys + leadStageUpdate()
-
-**Dead links/buttons**: bell "View all" → /admin/audit-log (was /notifications,
-404); automations "New Rule" removed (route doesn't exist); sidebar Settings
-gear now links /admin/settings; fake export/filter icon buttons removed from
-invoice + expense managers; manager board kebab removed; CSV_UPLOAD_FORMAT.md
-copied to public/ so the upload-page link works. All remaining live alert()s
-→ toast (users, reports/new, strategy review, task-dependencies,
-ScriptObjectionPanel, saved-views, lists).
-
-**Known, reported, NOT fixed (need decisions/features):**
-- ~20 dead buttons on server pages needing real features: exports (reports,
-  audit-log, attendance, work-hours), growth acquisition "Add City", team
-  member card actions, my-stats "View All", SOPs delete, StrategyTab edit.
-- components/team/daily-targets-table.tsx shows mock zeros for "actual" —
-  needs real counts from lead_outcomes.
-- /admin/upload TODO: no admin role check.
-- lists/*.tsx bulk actions still use prompt() (work, but crude).
-
-### Feature pass after audit (2026-06-12, late)
-- components/ui/export-csv-button.tsx (new): client-side CSV export from
-  already-fetched rows. Wired on /admin/attendance. Reports page Download now
-  saves the AI report as .md. (Audit-log already had a working export.)
-- Team page: REAL daily actuals — calls = today's lead_outcomes per actor_id,
-  tasks = completed today; daily-targets-table shows actual/goal · %, and
-  "Not tracked" for revenue/sites/demos (no fake 0%). mockActuals removed.
-  "Add Member" button removed (auth-admin flow undecided).
-- /admin/upload now admin-only (role check, friendly block screen).
-- SOPs: deleteSopAction + DeleteSopButton wired on /admin/team/sops/[id].
-- Growth acquisition: components/admin/growth/add-city-modal.tsx (new) wired
-  as "Add City" (overview) and "Add Niche" (city page, fixedCity prop), using
-  existing addAcquisitionCity action. Dead Filter/Table-Settings buttons gone.
-- ⚠️ CityOverviewTable was rendering Math.random() numbers as metrics —
-  replaced with real per-city counts from leads (total, in-pipeline,
-  meetings MTD via meeting_booked_at, won MTD). Demos/campaigns columns
-  removed (no data source).
-
-### Page-level audit (2026-06-12, final)
-82 pages total. Inbound-link analysis of every route:
-- **Duplicate hubs → redirects** (old URLs still work): /admin/financials →
-  /admin/finance · /admin/operations → /projects · /admin/bulk-import →
-  /admin/upload · /sales/outreach → /sales · /admin/growth/acquisition →
-  /admin/growth?tab=acquisition. /telecaller already redirects to /sales.
-- **Unreachable-but-useful pages now navigable**: new sidebar "Tools" group
-  (WA Templates, Attendance, Audit Log, Data Tools) + Reports under Insights;
-  ~18 tool routes added to ⌘K palette (work-hours, duplicates, automations,
-  niche-kits, scorecards, SOPs, sessions, settings, upload, manager pages).
-  Staff/telecaller nav got "My Attendance" (/attendance).
-- **Growth hub fake data removed**: hardcoded follower counts/fake % deltas →
-  real posts-published MTD per channel from content_pieces; follower metrics
-  honestly show "— (not connected)" until social APIs are integrated.
-- **Intentionally unlinked, kept**: /lp/[niche]/[city] (ad landing pages),
-  /client/report/[token] + /client-portal/[id] (shared-by-link),
-  /sales/pitch/[industry]/[city] (call-time tool — consider linking from
-  cockpit), /admin/build-tracker + /admin/upload/debug (dev tools).
-
-### Dashboard alert rework (2026-06-12, evening — after user caught gaps)
-User spotted: no overdue-meeting alert + "1 item needs your attention" gave no
-details. Fixed in app/admin/page.tsx:
-- **Overdue Meetings** section (danger, pinned first): meeting_booked with
-  follow_up_date < today — these previously vanished from every view.
-- Attention line now lists WHAT needs attention ("1 overdue meeting, 2 overdue
-  invoices") and is an anchor link to #action-list.
-- Empty action sections no longer render (real items were buried between six
-  "Nothing due" boxes). All-clear state shows only when truly zero.
-- "View Invoice" action now goes to /admin/finance/invoices (was /admin/finance).
-
-### Absent-feature build (2026-06-12, night)
-1. **Generate MRR Invoices** button on /admin/finance/invoices —
-   `generateMonthlyInvoices()` in finance/actions.ts: one invoice per active
-   client with monthly_value > 0, skips already-billed-this-month, numbers
-   FM-YYYYMM-###, 18% GST, due +7d, line item "Monthly retainer — Month YYYY".
-2. **WhatsApp payment reminder** icon on unpaid/overdue invoice rows
-   (wa.me deep link with invoice no., amount, due/overdue wording). Invoices
-   page query now selects clients(primary_email, phone) — was selecting a
-   non-existent `email` column.
-3. **Lead assignment UI** — "Assigned To" dropdown (profiles with role
-   admin/telecaller/strategist) on the lead peek panel AND admin lead profile;
-   writes assigned_sales_exec with audit log.
-4. **Duplicate check on cockpit manual add** — checks phone (last 10 digits)
-   + business name before insert; confirm-to-override.
-5. **Missed Follow-ups** section on admin dashboard (follow_up stages with
-   follow_up_date < today, warning tone, capped 10) + counted in the
-   attention breakdown. (Joins Overdue Meetings from earlier.)
-6. **Cockpit today strip** — green banner listing today's booked meetings
-   (chips with times); stats bar shows "Calls / <target>" with a progress bar
-   when a team_targets calls row exists for the user.
-7. **Stale-proposal "Follow up"** WhatsApp button on dashboard alert;
-   **renewal conversation** WhatsApp button on renewals table (page query +
-   ClientForRenewal now include phone). Removed 🎉 from empty state.
-8. **Repeat-monthly tasks** — create-task-modal: when a due date is set, a
-   "Repeat monthly ×3/×6/×12" select creates future-dated copies (no schema
-   change). Client FinanceTab already existed & is wired — gap report #9 was
-   wrong.
-
+### 6. PHASE F PLAN written → `PHASE_F_INBOUND_MARKETING.md` (Jabeer approved; said "build stage 0")
 
 ---
 
-## CURRENT STATE (end of 2026-06-12 Cowork session) — read this first
+## PART 2 — STAGE 0 STATE (MID-FLIGHT — work stopped here)
 
-**Verification:** `npx tsc --noEmit` clean after every change. `npm run build`
-must be run on the Mac (sandbox lacks darwin SWC binary).
+### Done ✅
+1. **Schema RUN in Supabase + appended to sync script:**
+   - `inbound_events` (channel, external_id, payload jsonb, status received/processed/duplicate/failed, error, lead_id)
+   - `ad_insights_daily` (date, campaign_id→ad_campaigns, platform, campaign_external_id,
+     adset_name, ad_name, spend, impressions, clicks, leads; unique idx on
+     date+platform+coalesce(ext_id,adset,ad))
+   - leads += lead_source (NOTE: column pre-existed with values like "Manual Upload" —
+     it's the HUMAN LABEL; `leads.source` is the machine slug e.g. 'manual','landing_page'),
+     captured_at, first_contact_at.
+2. **`lib/inbound/capture.ts`** — THE pipeline. processInboundLead(input):
+   logs inbound_event → normalizePhone (last-10) → dedupe by phone suffix
+   (dup → activity_events 'inbound_reenquiry' + bump last_activity/follow_up + notify
+   assignee, NO new lead) → resolve/auto-create ad_campaigns from
+   campaign_external_id|utm_campaign|campaign_name → insert lead (lead_type='inbound',
+   source=channel slug, lead_source=label, captured_at) → lead_source_attribution row →
+   audit → `runTrigger("lead_created","lead",id)` ← FIRST EVER CALLER of this trigger;
+   fires the seeded "Auto-Assign Inbound" rule (round-robin assignment_pools →
+   notify owner → SLA). CHANNEL_LABELS: lp, meta_lead_ad, ctwa, whatsapp,
+   google_lead_form, call, gbp, referral, dm, manual.
+3. **`app/api/inbound/[channel]/route.ts`** — universal webhook. Auth =
+   `INBOUND_WEBHOOK_SECRET` (ADDED to .env.local this session — add to Vercel at deploy!)
+   via Bearer / x-webhook-key / ?key= / body.google_key. Native Google Ads lead-form
+   payload adapter included (user_column_data mapping, gcl_id, campaign_id). GET = handshake.
+4. **LP wired:** `lib/automations/inbound-leads.ts` refactored → validates then calls
+   pipeline (duplicate = friendly success msg). `components/lp/lead-capture-form.tsx`
+   now captures utm_*/gclid/fbclid/landing_page/referrer from URL.
+5. tsc clean at stop point. Dev server runs via preview tool on :3000.
 
-**The app now:** ClickUp-style shell (top bar + breadcrumbs + working ⌘K,
-dense sidebar with Tools group), full CRUD on every entity, no orphan
-pages/components, no fabricated metrics (all Math.random()/hardcoded stats
-replaced with real queries or honest "not connected"), every visible button
-does something, stage-space (outreach_stage) is the single source of truth
-everywhere, alert() → toast app-wide.
+### ✅ STAGE 0 COMPLETED (later in the same session — all items below are DONE)
+- Pipeline TESTED end-to-end: create / duplicate-with-format-drift / Google adapter /
+  401 on bad key. Full chain verified: webhook → lead → round-robin assign (Afifa) →
+  owner notification. Test data deleted after.
+- FIXED during testing: live ad_campaigns predated sync with old shape → ALTERed in
+  all expected columns + cpl_target (in sync script). Automation engine wrote
+  `assigned_to` (leads uses assigned_sales_exec) → mapped in updateEntity;
+  notify_owner now re-fetches live assignee (snapshot predates same-run assign).
+  assignment_pools seeded: pool 'sales' = all 4 team members.
+- Cockpit quick-add: source picker (cold list/call/gbp/referral/walk-in) → source +
+  lead_source + captured_at + inbound lead_type for inbound-ish sources.
+- logOutcome stamps leads.first_contact_at on first touch (speed-to-lead).
+- DISCOVERED: /admin/marketing already had a 4-tab dashboard (overview/organic/paid/
+  content, dark-themed, 2,300 lines) — dead until migration, now live. Stage 0 added
+  a NEW FIRST TAB "Inbound & Funnel" (components/admin/marketing/tabs/inbound-funnel-tab.tsx):
+  KPIs (spend/leads/CPL/meetings/cost-per-meeting/won/speed-to-lead), funnel bars,
+  channel scoreboard, UTM link builder (niche LP + source + campaign), spend CSV
+  import (Meta + Google daily exports, auto-creates campaigns by name), recent
+  inbound events. Server actions: app/admin/marketing/actions.ts (saveCampaign,
+  setCampaignStatus, deleteCampaign, importSpendRows — delete+insert upsert because
+  the unique index uses coalesce()).
+- Sidebar: Marketing added under Insights. Daily digest: "📣 Yesterday: ₹X ad spend,
+  N inbound leads (by source)" line for admins.
+- types/database.types.ts regenerated AGAIN (112 tables, includes inbound_events +
+  ad_insights_daily). tsc clean, build clean (91 pages), marketing hub smoke-tested.
+- NOT user-tested yet: CSV import with a real Meta/Google export file (parser written
+  for standard daily exports; verify with Jabeer's first real file).
 
-**Open items (in priority order):**
-1. User re-test pending: proposal PDF print (mobile), MRR invoice generator,
-   lead peek panel, ⌘K palette.
-2. Pre-deploy: run 4× 20260611* migrations in order; Vercel env vars
-   (SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET); cron routes are built but dormant
-   until deployed.
-3. Team invite/deactivate — needs a Supabase auth-admin approach decision.
-4. WhatsApp Cloud API (needs deployed HTTPS); until then all WhatsApp actions
-   are wa.me deep links (reminders, nudges, renewals — all built).
-5. Social follower metrics — "not connected" until API integration.
-6. Remaining crude-but-working: lists/*.tsx bulk actions use prompt();
-   work-hours "Details" button still dead (needs a detail view);
-   /sales/pitch page unlinked (link from cockpit if used).
-7. Regenerate types/database.types.ts (whatsapp_templates columns TODO,
-   tasks.updated_at exists in DB but not in types).
+### ORIGINAL STAGE 0 TASK LIST (kept for reference — all done)
+1. **TEST the pipeline end-to-end:**
+   `curl -X POST http://localhost:3000/api/inbound/test -H "Authorization: Bearer $(grep INBOUND_WEBHOOK_SECRET .env.local | cut -d= -f2)" -H "Content-Type: application/json" -d '{"name":"Test Lead","phone":"9876500001","niche":"Gym","city":"Hubli","utm":{"campaign":"test-campaign"}}'`
+   Verify: lead created (source='manual'), attribution row, ad_campaigns auto-created
+   'test-campaign', inbound_events status=processed, automation fired —
+   ⚠️ assignment_pools is probably EMPTY → seed pool 'sales' with telecaller/admin ids
+   or the assign action no-ops (check lib/automations/actions.ts for pool name).
+   Test duplicate (same phone) → 'duplicate' + re-enquiry activity + notification.
+   Test google_lead_form payload shape. DELETE test leads/campaigns after.
+2. **Cockpit quick-add Source picker** — telecaller-cockpit.tsx add-lead modal:
+   source select (call/gbp/referral/walk_in/manual) → leads.source + lead_source label
+   + captured_at. (Manual adds currently bypass the pipeline.)
+3. **first_contact_at stamping** — cockpit `logOutcome()` after outreach_logs insert:
+   if lead.first_contact_at null → set = now. Powers speed-to-lead.
+4. **`/admin/marketing` hub page** (biggest remaining piece — spec in
+   PHASE_F_INBOUND_MARKETING.md Part 3):
+   - First: `alter table ad_campaigns add column if not exists cpl_target numeric(10,2);`
+   - Campaign Manager (CRUD on ad_campaigns incl. cpl_target, pause/activate),
+   - Funnel: spend (Σ ad_insights_daily) → leads (by source / campaign via
+     lead_source_attribution) → contacted (first_contact_at) → meetings → proposals →
+     won, with ₹-cost per stage,
+   - Channel scoreboard (group by leads.source), UTM link builder
+     (`/lp/[niche]?utm_source=&utm_medium=&utm_campaign=<name>` + copy),
+   - speed-to-lead panel, recent inbound_events list (debug visibility),
+   - Sidebar: "Marketing" under INSIGHTS in components/ui/app-sidebar.tsx.
+5. **Spend CSV importer** on the hub — client-side parse → server action upserts
+   ad_insights_daily (onConflict unique idx) + auto-create campaigns by name.
+   Meta headers: "Day","Campaign name","Amount spent (INR)","Impressions","Link clicks","Results".
+   Google headers: "Day","Campaign","Cost","Impr.","Clicks".
+6. **Daily digest marketing line** — yesterday's spend + new inbound leads by source → admins.
+7. Regenerate database.types.ts (browser trick: on a dashboard page, token =
+   JSON.parse(localStorage['supabase.dashboard.auth.token']).access_token → fetch
+   api.supabase.com/v1/projects/cnwooodktqwvpzkucskm/types/typescript → store on window →
+   click page for focus → navigator.clipboard.writeText → `pbpaste > types/database.types.ts`).
+8. Update docs (this file, 00_MASTER_BUILD_PLAN.md, CLAUDE.md header) + `npx tsc --noEmit`
+   + `npm run build` + smoke the marketing hub in the preview browser.
+
+### Stage 1+ (after Vercel deploy — see PHASE_F_INBOUND_MARKETING.md)
+WhatsApp Cloud API webhook (CTWA referral = WhatsApp-ads attribution), Meta leadgen
+webhook, SLA cron wiring, Meta insights sync cron, optimize flags, weekly brief.
+Jabeer still owes: Meta BM access, WABA number decision (recommend dedicated number),
+Google Ads account ID, CPL targets per niche.
+
+---
+
+## PART 3 — DEPLOY CHECKLIST (pending; Jabeer wants more setup first)
+- Push to GitHub → Vercel env: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY, CRON_SECRET, **INBOUND_WEBHOOK_SECRET**.
+- vercel.json crons exist. Supabase auth redirect URLs += Vercel domain.
+- Nothing has been committed this session — large modified tree; commit when Jabeer says.
+
+## CONVENTIONS (beyond CLAUDE.md)
+- toast + promptModal only (no alert/prompt — a few confirm() remain, low priority).
+- brand-deep green for text/buttons; no emoji as UI chrome (OK inside message/notification content).
+- leads: NO updated_at/assigned_to → use last_activity_at, assigned_sales_exec.
+- Stage writes ONLY via lib/pipeline.ts leadStageUpdate()/leadStatusUpdate().
+- `source` = machine slug, `lead_source` = human label.

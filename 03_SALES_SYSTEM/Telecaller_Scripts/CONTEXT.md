@@ -56,14 +56,14 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 | ID | Label | Category |
 |---|---|---|
 | INTERESTED_BOOK_NOW | Interested — Book Meeting Now | INTERESTED |
-| INTERESTED_CALLBACK | Interested — Call Back to Book | INTERESTED |
-| INTERESTED_SEND_PDF | Interested — Send PDF First | INTERESTED |
-| GATEKEEPER | Gatekeeper — Owner Unavailable | FOLLOW_BACK |
-| NO_ANSWER | No Answer / Voicemail | FOLLOW_BACK |
-| NOT_INTERESTED | Not Interested (reason required, 7 options) | NOT_INTERESTED |
+| INTERESTED_FOLLOW_UP_LATER | Interested — Follow Up Later | INTERESTED |
+| INTERESTED_SEND_INFO | Interested — Send More Info First | INTERESTED |
+| NOT_INTERESTED | Not Interested (reason required, 6 options) | NOT_INTERESTED |
 | FOLLOW_BACK | Follow Back Later | FOLLOW_BACK |
 | WRONG_NUMBER | Wrong Number / Dead Lead | DEAD |
-| LANGUAGE_BARRIER | Language Barrier / Couldn't Communicate | FOLLOW_BACK |
+| GATEKEEPER | Gatekeeper — Owner Unavailable | FOLLOW_BACK |
+| NO_ANSWER | No Answer / Not Reachable (4 sub-options) | FOLLOW_BACK |
+| LANGUAGE_BARRIER | Language Barrier — Flag for Jabeer | FOLLOW_BACK |
 
 ### WhatsApp Templates (postCallWhatsApp — 5 per script)
 | templateId | Trigger | Description |
@@ -102,3 +102,4 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 | April 2026 | Architecture changed to type-based. 4 JSON files created in FMOS_Script_Data/. TypeScript loader written. Telecaller_Scripts_Review.docx reviewed and finalized. |
 | 2026-04-28 | CONTEXT.md fully rewritten to reflect actual file inventory and current architecture. |
 | 2026-04-29 | All 4 JSON files (A/B/C/D) updated in fmos/lib/data/scripts/: "Jabeer" → "our founder" everywhere; 7-step structure (added Language Preference as Step 2); meeting ask rewritten as 15–20 min Zoom call; permission step objections rewritten; pricing objection rewritten; 9 outcomes; 2 new WhatsApp templates (follow_back_report_sent, send_portfolio). Real search volumes now live in scripts via searchVolumeMap from market_insights table. |
+| 2026-06-08 | Added 3 missing outcomes to all 4 JSON files: GATEKEEPER (owner unavailable — FOLLOW_BACK), NO_ANSWER (not reachable, 4 sub-options — FOLLOW_BACK), LANGUAGE_BARRIER (flag for Jabeer — FOLLOW_BACK). CONTEXT.md outcome table corrected: IDs now match actual JSON (INTERESTED_FOLLOW_UP_LATER, INTERESTED_SEND_INFO, not _CALLBACK/_SEND_PDF). All 4 files now have 9 outcomes. |

@@ -32,6 +32,7 @@ export const metadata: Metadata = {
 import { SessionHeartbeat } from "@/components/session-heartbeat";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { Toaster } from "@/components/ui/toast";
+import { PromptHost } from "@/components/ui/prompt-modal";
 
 export default function RootLayout({
   children,
@@ -50,6 +51,7 @@ export default function RootLayout({
         <SessionHeartbeat />
         <CommandPalette />
         <Toaster />
+        <PromptHost />
         <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>

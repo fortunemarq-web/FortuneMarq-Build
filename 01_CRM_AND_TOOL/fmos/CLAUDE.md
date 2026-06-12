@@ -1,9 +1,17 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-11 evening (UI/UX overhaul + layout/PDF session — see COWORK_HANDOFF.md)
+# Last updated: 2026-06-12 (schema sync + PHASE F Stage 0 in progress)
+# ➤ CONTINUING WORK? Read COWORK_HANDOFF.md FIRST — full session state,
+#   Stage 0 remaining tasks, and the SQL-execution method live there.
 #
-# LATEST SESSION: see COWORK_HANDOFF.md (full detail) — UI design system,
-# layout shell fix, outreach board column fix, invoice/proposal/agreement PDFs.
+# LATEST SESSION (2026-06-12): ALL pending migrations are now RUN in Supabase
+# (38 missing tables created, RLS hardened, audit triggers, indexes,
+# profiles.is_active). database.types.ts regenerated (110 tables). The
+# "4 migrations pending" note below is OBSOLETE — done. Team management
+# (invite/role/password/deactivate/remove) built at app/admin/team/user-actions.ts.
+# alert()/prompt() fully eliminated — use toast + promptModal()
+# (components/ui/prompt-modal.tsx). /manager/performance now computes real
+# stats from outreach_logs. Details: last_session.md.
 #
 # KEY CONVENTIONS ADDED 2026-06-11 (evening — UI/UX session):
 # - Design system lives in app/globals.css (@theme): green text/buttons use
@@ -237,15 +245,13 @@ activity_events:
 
 ## PENDING TASKS (do these next)
 
-### 🔴 CRITICAL — Run in Supabase SQL Editor (in this order)
-1. `supabase/migrations/20260611000000_harden_rls_policies.sql` — locks the DB (anon had full read/write before)
-2. `supabase/migrations/20260611000001_leads_meeting_columns.sql` — meeting_link / meeting_notes
-3. `supabase/migrations/20260611000002_audit_triggers.sql` — server-side audit trail
-4. `supabase/migrations/20260611000003_hot_column_indexes.sql` — leads/tasks/finance indexes
+### ✅ DONE 2026-06-12 — DATABASE FULLY SYNCED
+All pending migrations (the four 20260611* files PLUS ~15 older unrun ones) were executed
+in Supabase as `supabase/2026-06-12_full_schema_sync.sql`. 38 missing tables created;
+RLS hardened; audit triggers + indexes live; smoke-tested. Any new DDL: append to that
+file and run via the dashboard SQL editor (method in COWORK_HANDOFF.md).
 
-After #1, smoke-test login + cockpit + outreach board + client portal.
-
-### 🟡 DEPLOY TO VERCEL
+### 🟡 DEPLOY TO VERCEL (next infrastructure step)
 - Push to GitHub first
 - Set these env vars in Vercel dashboard:
   - `NEXT_PUBLIC_SUPABASE_URL`
@@ -253,23 +259,28 @@ After #1, smoke-test login + cockpit + outreach board + client portal.
   - `SUPABASE_SERVICE_ROLE_KEY` (required — cron + public lead capture run on it)
   - `ANTHROPIC_API_KEY`
   - `CRON_SECRET` (required — all /api/cron/* routes 503 without it; use the value from .env.local)
+  - `INBOUND_WEBHOOK_SECRET` (required — /api/inbound/* webhooks; value in .env.local)
+- `vercel.json` already schedules daily-digest + admin-alerts crons
 - After deploy: update Supabase auth redirect URLs to include the Vercel domain
 
-### 🟡 WHATSAPP CRM INTEGRATION
-- Needs live HTTPS URL (deploy first)
-- Then set up Meta webhook for incoming WhatsApp messages
-- Goal: log incoming WhatsApp replies as activity events on the lead
+### 🟡 PHASE F STAGE 1 — in progress (plan: PHASE_F_INBOUND_MARKETING.md)
+- ✅ 2026-06-12 night: WhatsApp Cloud API FMOS side BUILT — webhook
+  app/api/webhooks/whatsapp (handshake + signature + CTWA attribution +
+  known-lead logging + button replies + auto-greeting toggle), lib/whatsapp/send.ts.
+  See COWORK_HANDOFF.md PART 0 for full state + pending SQL run.
+- ✅ WABA decision: Option A — NEW Jio number 79759 18980 (never install WhatsApp on it)
+- ⏳ Meta side in progress: BM verify → App → WABA → token → templates submission
+- ⏳ Run "PHASE F STAGE 1" SQL block (end of supabase/2026-06-12_full_schema_sync.sql)
+- ⏳ After deploy: configure webhook URL in Meta App + subscribe `messages`
+- Meta Lead Ads `leadgen` webhook → Graph API pull → `/api/inbound/meta_lead_ad`
+- Google Ads lead-form webhook URL configured in Google Ads
+- SLA cron wiring (speed-to-lead alerts)
+- Still needs from Jabeer: Google Ads ID, CPL targets/niche
 
-### 🟡 AUTOMATED REMINDERS
-- 24h + 15-min WhatsApp reminders for meetings
-- Use scheduled tasks (needs deployed URL for cron)
-
-### 🟢 PAGES TO TEST NEXT
-- Outreach board drag/drop between columns
-- Clients page — health scores, MRR
-- Finance page — invoice generation
-- Team page — assign task, set targets
-- Admin dashboard KPIs (check ₹ figures are real not zero)
+### 🟢 USER TESTING OPEN
+- CSV spend import on /admin/marketing → Inbound & Funnel (with a real Meta/Google daily export)
+- PDF downloads re-test (invoice/proposal/agreement)
+- Team management flows (add member, role change, deactivate)
 
 ---
 

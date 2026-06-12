@@ -175,7 +175,7 @@ export default function TemplateManager() {
             setIsDrawerOpen(false);
         } catch (error) {
             console.error(error);
-            alert("Failed to save template");
+            toast.error("Failed to save template");
         } finally {
             setIsSaving(false);
         }

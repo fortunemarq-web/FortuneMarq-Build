@@ -89,13 +89,25 @@ export default async function ClientProfilePage({
   let whatsappLogs: any[] = [];
   if (client.phone) {
     const supabaseAny: any = supabase;
-    const { data: wlogs } = await supabaseAny
-      .from("whatsapp_message_log")
-      .select("id, message_body, sent_at, template_name")
-      .eq("phone_number", client.phone)
-      .order("sent_at", { ascending: false })
-      .limit(20);
-    whatsappLogs = wlogs ?? [];
+    // WhatsApp sends are logged per-lead in whatsapp_logs; match leads by phone.
+    const { data: phoneLeads } = await supabaseAny
+      .from("leads")
+      .select("id")
+      .eq("phone", client.phone);
+    if (phoneLeads?.length) {
+      const { data: wlogs } = await supabaseAny
+        .from("whatsapp_logs")
+        .select("id, message_sent, sent_at")
+        .in("lead_id", phoneLeads.map((l: any) => l.id))
+        .order("sent_at", { ascending: false })
+        .limit(20);
+      whatsappLogs = (wlogs ?? []).map((w: any) => ({
+        id: w.id,
+        message_body: w.message_sent,
+        sent_at: w.sent_at,
+        template_name: null,
+      }));
+    }
   }
 
   const statusBadge = (status: string) => {

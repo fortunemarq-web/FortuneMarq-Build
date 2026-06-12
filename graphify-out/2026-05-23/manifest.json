@@ -1,0 +1,2507 @@
+{
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/patch_pdf_v2.py": {
+    "mtime": 1776150419.5913677,
+    "ast_hash": "5b58edd91dfb2f9b877ad1946b998ba4",
+    "semantic_hash": "5b58edd91dfb2f9b877ad1946b998ba4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/phone_scrape_progress.json": {
+    "mtime": 1776150419.5931044,
+    "ast_hash": "36d320df6d05ea2f3286c99d6ee2f690",
+    "semantic_hash": "36d320df6d05ea2f3286c99d6ee2f690"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/patch_pdf.py": {
+    "mtime": 1776150419.5909173,
+    "ast_hash": "2ea6b7ca8b15248b631233e83ccd4bd6",
+    "semantic_hash": "2ea6b7ca8b15248b631233e83ccd4bd6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/scrape_phones.py": {
+    "mtime": 1776150419.5951366,
+    "ast_hash": "4914b84903febacf3f8ffa931efa19eb",
+    "semantic_hash": "4914b84903febacf3f8ffa931efa19eb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/fix_location.py": {
+    "mtime": 1776150419.5878394,
+    "ast_hash": "af971ef398aa936d453dc5e0cbc419a5",
+    "semantic_hash": "af971ef398aa936d453dc5e0cbc419a5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/scrape_google_results.py": {
+    "mtime": 1776150419.593976,
+    "ast_hash": "6763c3219b225ef6ae56881a88547283",
+    "semantic_hash": "6763c3219b225ef6ae56881a88547283"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/project_data.json": {
+    "mtime": 1776150419.5933015,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/generate_sample_pdf.py": {
+    "mtime": 1776150419.5887556,
+    "ast_hash": "53780f66005d66bc2e45d0e78f357818",
+    "semantic_hash": "53780f66005d66bc2e45d0e78f357818"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/generate_sample_pdf_v3.py": {
+    "mtime": 1776150419.5904462,
+    "ast_hash": "c5798c3fbea1567fbd7ffad82beee951",
+    "semantic_hash": "c5798c3fbea1567fbd7ffad82beee951"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/scrape_google_results_v2.py": {
+    "mtime": 1776150419.5945897,
+    "ast_hash": "bc0871451ecb44d26c157c576b9dc520",
+    "semantic_hash": "bc0871451ecb44d26c157c576b9dc520"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/generate_sample_pdf_v2.py": {
+    "mtime": 1776150419.5896616,
+    "ast_hash": "13bc41bd41d9714dd873009c18cfab8b",
+    "semantic_hash": "13bc41bd41d9714dd873009c18cfab8b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/cleanup.py": {
+    "mtime": 1776150419.5385363,
+    "ast_hash": "009ab10e99f4439099c7f6c806eb6955",
+    "semantic_hash": "009ab10e99f4439099c7f6c806eb6955"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/PDF_Generator/generate_all_pdfs.py": {
+    "mtime": 1776150419.2614417,
+    "ast_hash": "f4f26dfb9e95c8be92401155eb2cffdf",
+    "semantic_hash": "f4f26dfb9e95c8be92401155eb2cffdf"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/PDF_Generator/generate_all_pdfs_kn.py": {
+    "mtime": 1776150419.2620187,
+    "ast_hash": "5d2093a7adcace11c2d295ce79e8f9f7",
+    "semantic_hash": "5d2093a7adcace11c2d295ce79e8f9f7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/PDF_Generator/pdf_generator.py": {
+    "mtime": 1776150419.5357962,
+    "ast_hash": "80338e2d40591319e09d505defbcb395",
+    "semantic_hash": "80338e2d40591319e09d505defbcb395"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/PDF_Generator/data_loader.py": {
+    "mtime": 1776150419.2609477,
+    "ast_hash": "7c62f4fc4f14fde44b49bebc51aae6bf",
+    "semantic_hash": "7c62f4fc4f14fde44b49bebc51aae6bf"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/PDF_Generator/pdf_generator_kn.py": {
+    "mtime": 1776150419.5369706,
+    "ast_hash": "3b16774cebd2f2d017cab73953464c48",
+    "semantic_hash": "3b16774cebd2f2d017cab73953464c48"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/PDF_Generator/translator.py": {
+    "mtime": 1776150419.5374756,
+    "ast_hash": "85150e0df828bb3188e1319344b35e73",
+    "semantic_hash": "85150e0df828bb3188e1319344b35e73"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Keyword_Data/generate_master_excel.py": {
+    "mtime": 1776150419.1811752,
+    "ast_hash": "8137e42cb72774c679908d7396ff59cd",
+    "semantic_hash": "8137e42cb72774c679908d7396ff59cd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Keyword_Data/analyze_keywords.py": {
+    "mtime": 1776150419.1807623,
+    "ast_hash": "3bab36ff8c6f43fb88b1af4e3472f8ce",
+    "semantic_hash": "3bab36ff8c6f43fb88b1af4e3472f8ce"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Lead_Database/analyze_leads.py": {
+    "mtime": 1776150419.2502267,
+    "ast_hash": "e84442d38b1e69beec92c0d12a42d59b",
+    "semantic_hash": "e84442d38b1e69beec92c0d12a42d59b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Lead_Database/process_hubli_leads_v2.py": {
+    "mtime": 1776150419.2589579,
+    "ast_hash": "15b5e689ca81d2ff7630807e26ba9bf8",
+    "semantic_hash": "15b5e689ca81d2ff7630807e26ba9bf8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Lead_Database/website_phone_scraper.py": {
+    "mtime": 1776150419.2595644,
+    "ast_hash": "9d4262cde7fcb6968c97d6f8f84188ad",
+    "semantic_hash": "9d4262cde7fcb6968c97d6f8f84188ad"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/IVF_Clinics_results.json": {
+    "mtime": 1776150416.0674212,
+    "ast_hash": "a07539d9ce22ca20245a6d806edbe16d",
+    "semantic_hash": "a07539d9ce22ca20245a6d806edbe16d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/_ALL_RESULTS.json": {
+    "mtime": 1776150418.1277983,
+    "ast_hash": "ce92307e47301bf167a538652a9014b1",
+    "semantic_hash": "ce92307e47301bf167a538652a9014b1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Tuition_Centres_results.json": {
+    "mtime": 1776150418.1261315,
+    "ast_hash": "42701e2685d543605d7878d87a71b5d6",
+    "semantic_hash": "42701e2685d543605d7878d87a71b5d6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Dental_Clinics_results.json": {
+    "mtime": 1776150416.06338,
+    "ast_hash": "0aa12212bba4659280fc6627f75727dd",
+    "semantic_hash": "0aa12212bba4659280fc6627f75727dd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Interior_Designers_results.json": {
+    "mtime": 1776150416.0679517,
+    "ast_hash": "0fbfa998a6863999d66333e2062db2e8",
+    "semantic_hash": "0fbfa998a6863999d66333e2062db2e8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Modular_Kitchen_results.json": {
+    "mtime": 1776150416.0689902,
+    "ast_hash": "81c306cb66aeeafe4ef4166476cc28b0",
+    "semantic_hash": "81c306cb66aeeafe4ef4166476cc28b0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/build_report.py": {
+    "mtime": 1776150418.1282992,
+    "ast_hash": "95074d57d017fce045e985442d8aede2",
+    "semantic_hash": "95074d57d017fce045e985442d8aede2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/JEE_NEET_Coaching_results.json": {
+    "mtime": 1776150416.0684848,
+    "ast_hash": "8991bc9d68aa3c0d5aaf887d8e27f2a1",
+    "semantic_hash": "8991bc9d68aa3c0d5aaf887d8e27f2a1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Computer_Training_results.json": {
+    "mtime": 1776150416.0627184,
+    "ast_hash": "4243c315c21192e85c33f540e2341b2a",
+    "semantic_hash": "4243c315c21192e85c33f540e2341b2a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Physiotherapy_results.json": {
+    "mtime": 1776150416.0695133,
+    "ast_hash": "e8a4689f2b87bd5d6a4a807b13a58474",
+    "semantic_hash": "e8a4689f2b87bd5d6a4a807b13a58474"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Skin_Clinics_results.json": {
+    "mtime": 1776150418.1255586,
+    "ast_hash": "278201edc6eac6b444a4896448e2c4ec",
+    "semantic_hash": "278201edc6eac6b444a4896448e2c4ec"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Car_Rentals_results.json": {
+    "mtime": 1776150416.0620325,
+    "ast_hash": "273a036a46bf8190fe2efe99fc524170",
+    "semantic_hash": "273a036a46bf8190fe2efe99fc524170"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Gyms_results.json": {
+    "mtime": 1776150416.0639513,
+    "ast_hash": "78a97d72288bcf2b6f809db340fa307d",
+    "semantic_hash": "78a97d72288bcf2b6f809db340fa307d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/IELTS_Coaching_results.json": {
+    "mtime": 1776150416.066873,
+    "ast_hash": "cf89489e7767c0bc607c0fd0f180e22e",
+    "semantic_hash": "cf89489e7767c0bc607c0fd0f180e22e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/07_DATA_AND_RESEARCH/Competitor_Data/Hubli/Real_Estate_results.json": {
+    "mtime": 1776150416.0700235,
+    "ast_hash": "ccb44f42ee40f39f3b9c32516bbd124d",
+    "semantic_hash": "ccb44f42ee40f39f3b9c32516bbd124d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/script_type_D.json": {
+    "mtime": 1777184106.2733045,
+    "ast_hash": "ea1eed71cf47cc854b8e377fb298f4e5",
+    "semantic_hash": "ea1eed71cf47cc854b8e377fb298f4e5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/script_type_B.json": {
+    "mtime": 1777184031.4261832,
+    "ast_hash": "5fb685e9a03514ad41975e928ee3d99f",
+    "semantic_hash": "5fb685e9a03514ad41975e928ee3d99f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/script_type_C.json": {
+    "mtime": 1777184068.9417007,
+    "ast_hash": "24385b8dc501d088720884ad487d9d42",
+    "semantic_hash": "24385b8dc501d088720884ad487d9d42"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/script_type_A.json": {
+    "mtime": 1777183992.9929929,
+    "ast_hash": "14cc2a1440c4ccb1237102b8c6b61510",
+    "semantic_hash": "14cc2a1440c4ccb1237102b8c6b61510"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/script.types.ts": {
+    "mtime": 1776150413.0631936,
+    "ast_hash": "aaa6f543821214c4b83489e1fe1b458d",
+    "semantic_hash": "aaa6f543821214c4b83489e1fe1b458d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Telecaller_Scripts/FMOS_Script_Data/index.ts": {
+    "mtime": 1776150413.0627785,
+    "ast_hash": "45a44234b438a8240e24684f5fbaa859",
+    "semantic_hash": "45a44234b438a8240e24684f5fbaa859"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/curiosity_templates.json": {
+    "mtime": 1776150413.0884905,
+    "ast_hash": "44d067105603ebaedb5eb5af259d0431",
+    "semantic_hash": "44d067105603ebaedb5eb5af259d0431"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/outcome_templates.json": {
+    "mtime": 1776150413.089905,
+    "ast_hash": "8825d581df050e1fbe6555aa7177d8ba",
+    "semantic_hash": "8825d581df050e1fbe6555aa7177d8ba"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/followback_reminder_templates.json": {
+    "mtime": 1776150413.0889018,
+    "ast_hash": "601bc910639186c6ca477dd8e61e6baa",
+    "semantic_hash": "601bc910639186c6ca477dd8e61e6baa"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/bot_reply_templates.json": {
+    "mtime": 1776150413.0880685,
+    "ast_hash": "b72c6d25ffa94a3a9cfef3aaf7e91b82",
+    "semantic_hash": "b72c6d25ffa94a3a9cfef3aaf7e91b82"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/whatsapp.types.ts": {
+    "mtime": 1776150413.0908322,
+    "ast_hash": "b93a7a740903f5b1f86da96d7ec74016",
+    "semantic_hash": "b93a7a740903f5b1f86da96d7ec74016"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/index.ts": {
+    "mtime": 1776150413.089374,
+    "ast_hash": "5505580b74f6b05e16c50dfff7466f83",
+    "semantic_hash": "5505580b74f6b05e16c50dfff7466f83"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/post_meeting_templates.json": {
+    "mtime": 1776150413.090394,
+    "ast_hash": "7fb17ff89ace0c4911ec38a01b1a5e46",
+    "semantic_hash": "7fb17ff89ace0c4911ec38a01b1a5e46"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/proposal.types.ts": {
+    "mtime": 1776150413.0552194,
+    "ast_hash": "b952856a448afd35d52767df215bdcee",
+    "semantic_hash": "b952856a448afd35d52767df215bdcee"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/services_data.json": {
+    "mtime": 1776150413.0563865,
+    "ast_hash": "d9ad982aa566bb473418307c35a1d14a",
+    "semantic_hash": "d9ad982aa566bb473418307c35a1d14a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/agreement_template.json": {
+    "mtime": 1776150413.054284,
+    "ast_hash": "cd832cde7ccb49264d0adfde2da2f0d7",
+    "semantic_hash": "cd832cde7ccb49264d0adfde2da2f0d7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/proposal_schema.json": {
+    "mtime": 1776150413.055776,
+    "ast_hash": "ed3ae729b6877ae34044ea855e4a5865",
+    "semantic_hash": "ed3ae729b6877ae34044ea855e4a5865"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/03_SALES_SYSTEM/Proposals/FMOS_Proposal_Data/index.ts": {
+    "mtime": 1776150413.054787,
+    "ast_hash": "50d9430f080ee5b65598b0c9737b97db",
+    "semantic_hash": "50d9430f080ee5b65598b0c9737b97db"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/09_LEGAL_AND_OPERATIONS/Agreement_Templates/service_terms.json": {
+    "mtime": 1776150419.5448375,
+    "ast_hash": "2db7eb174edd6a755171bd2fe3b738f7",
+    "semantic_hash": "2db7eb174edd6a755171bd2fe3b738f7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/obsidian-rag/.obsidian/workspace.json": {
+    "mtime": 1779451742.0948055,
+    "ast_hash": "949b6ff981a57d7a44e3b1809b5ccd4d",
+    "semantic_hash": "949b6ff981a57d7a44e3b1809b5ccd4d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/obsidian-rag/.obsidian/app.json": {
+    "mtime": 1779451742.0272973,
+    "ast_hash": "99914b932bd37a50b983c5e7c90ae93b",
+    "semantic_hash": "99914b932bd37a50b983c5e7c90ae93b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/obsidian-rag/.obsidian/core-plugins.json": {
+    "mtime": 1779451742.0173526,
+    "ast_hash": "7c877bea49eaeabb100563bd157b9051",
+    "semantic_hash": "7c877bea49eaeabb100563bd157b9051"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/obsidian-rag/.obsidian/graph.json": {
+    "mtime": 1779451743.266,
+    "ast_hash": "acc875a48a9532e9c5daac1ae416ce01",
+    "semantic_hash": "acc875a48a9532e9c5daac1ae416ce01"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/obsidian-rag/.obsidian/appearance.json": {
+    "mtime": 1779451742.0275044,
+    "ast_hash": "99914b932bd37a50b983c5e7c90ae93b",
+    "semantic_hash": "99914b932bd37a50b983c5e7c90ae93b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/obsidian-rag/scripts/lint.py": {
+    "mtime": 1777375568.5280313,
+    "ast_hash": "153ca3e8a2032595bfa6311713dfe07d",
+    "semantic_hash": "153ca3e8a2032595bfa6311713dfe07d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/script_type_D.json": {
+    "mtime": 1777460063.8514347,
+    "ast_hash": "4e6b3c9e9c3512851c325f429930843e",
+    "semantic_hash": "4e6b3c9e9c3512851c325f429930843e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/proposal.types.ts": {
+    "mtime": 1776150412.7297218,
+    "ast_hash": "b952856a448afd35d52767df215bdcee",
+    "semantic_hash": "b952856a448afd35d52767df215bdcee"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/curiosity_templates.json": {
+    "mtime": 1776150412.7256026,
+    "ast_hash": "44d067105603ebaedb5eb5af259d0431",
+    "semantic_hash": "44d067105603ebaedb5eb5af259d0431"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/whatsapp_index.ts": {
+    "mtime": 1776150412.7362707,
+    "ast_hash": "5505580b74f6b05e16c50dfff7466f83",
+    "semantic_hash": "5505580b74f6b05e16c50dfff7466f83"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/services_data.json": {
+    "mtime": 1776150412.7352324,
+    "ast_hash": "d9ad982aa566bb473418307c35a1d14a",
+    "semantic_hash": "d9ad982aa566bb473418307c35a1d14a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/script_type_B.json": {
+    "mtime": 1777460063.850161,
+    "ast_hash": "aedc6f91985c384d12b7f9717ec6fa21",
+    "semantic_hash": "aedc6f91985c384d12b7f9717ec6fa21"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/agreement_template.json": {
+    "mtime": 1776150412.7247465,
+    "ast_hash": "cd832cde7ccb49264d0adfde2da2f0d7",
+    "semantic_hash": "cd832cde7ccb49264d0adfde2da2f0d7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/onboarding.types.ts": {
+    "mtime": 1776150412.7266421,
+    "ast_hash": "86f7c136401f1154480cabeed4357dea",
+    "semantic_hash": "86f7c136401f1154480cabeed4357dea"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/script_type_C.json": {
+    "mtime": 1777460063.8511658,
+    "ast_hash": "43fe079401e7a44504ac8e439f465c6c",
+    "semantic_hash": "43fe079401e7a44504ac8e439f465c6c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/proposal_index.ts": {
+    "mtime": 1776150412.7302485,
+    "ast_hash": "50d9430f080ee5b65598b0c9737b97db",
+    "semantic_hash": "50d9430f080ee5b65598b0c9737b97db"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/outcome_templates.json": {
+    "mtime": 1776150412.728635,
+    "ast_hash": "8825d581df050e1fbe6555aa7177d8ba",
+    "semantic_hash": "8825d581df050e1fbe6555aa7177d8ba"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/script_type_A.json": {
+    "mtime": 1777460063.8498807,
+    "ast_hash": "ef82f9a103e002c1122d2596b31cdf1e",
+    "semantic_hash": "ef82f9a103e002c1122d2596b31cdf1e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/followback_reminder_templates.json": {
+    "mtime": 1776150412.7261927,
+    "ast_hash": "601bc910639186c6ca477dd8e61e6baa",
+    "semantic_hash": "601bc910639186c6ca477dd8e61e6baa"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/bot_reply_templates.json": {
+    "mtime": 1776150412.7251804,
+    "ast_hash": "b72c6d25ffa94a3a9cfef3aaf7e91b82",
+    "semantic_hash": "b72c6d25ffa94a3a9cfef3aaf7e91b82"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/script.types.ts": {
+    "mtime": 1776150412.7313795,
+    "ast_hash": "aaa6f543821214c4b83489e1fe1b458d",
+    "semantic_hash": "aaa6f543821214c4b83489e1fe1b458d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/whatsapp.types.ts": {
+    "mtime": 1776150412.7357552,
+    "ast_hash": "b93a7a740903f5b1f86da96d7ec74016",
+    "semantic_hash": "b93a7a740903f5b1f86da96d7ec74016"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/proposal_schema.json": {
+    "mtime": 1776150412.7308912,
+    "ast_hash": "ed3ae729b6877ae34044ea855e4a5865",
+    "semantic_hash": "ed3ae729b6877ae34044ea855e4a5865"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/post_meeting_templates.json": {
+    "mtime": 1776150412.729267,
+    "ast_hash": "7fb17ff89ace0c4911ec38a01b1a5e46",
+    "semantic_hash": "7fb17ff89ace0c4911ec38a01b1a5e46"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/onboarding_index.ts": {
+    "mtime": 1776150412.728096,
+    "ast_hash": "d1b293af4ba1f496dd0dce236e2af363",
+    "semantic_hash": "d1b293af4ba1f496dd0dce236e2af363"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/onboarding_checklists.json": {
+    "mtime": 1776150412.7275646,
+    "ast_hash": "944ddeceaa308f2d06da6915a47c78f2",
+    "semantic_hash": "944ddeceaa308f2d06da6915a47c78f2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/FMOS_Change_Specs/data/scripts_index.ts": {
+    "mtime": 1776150412.7346187,
+    "ast_hash": "45a44234b438a8240e24684f5fbaa859",
+    "semantic_hash": "45a44234b438a8240e24684f5fbaa859"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/postcss.config.mjs": {
+    "mtime": 1776150413.0032542,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/ADD_BUILD_TYPE_COLUMN.sql": {
+    "mtime": 1776150412.7429266,
+    "ast_hash": "7856d24bd724d68dbec9402e29bf6729",
+    "semantic_hash": "7856d24bd724d68dbec9402e29bf6729"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/next-env.d.ts": {
+    "mtime": 1777442948.011287,
+    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
+    "semantic_hash": "d0f8375ae1199dc7acd3977fc33b78b8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/tailwind.config.ts": {
+    "mtime": 1776150413.0345843,
+    "ast_hash": "686f097cbe5bfb197b5f56ea2f67afc7",
+    "semantic_hash": "686f097cbe5bfb197b5f56ea2f67afc7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/package.json": {
+    "mtime": 1777460063.8593276,
+    "ast_hash": "84b87978339d1b62fedb13f2b49d8c9c",
+    "semantic_hash": "84b87978339d1b62fedb13f2b49d8c9c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/proxy.ts": {
+    "mtime": 1776150413.0036623,
+    "ast_hash": "ce39cce5d89ceff4cb66ff61a416aacb",
+    "semantic_hash": "ce39cce5d89ceff4cb66ff61a416aacb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/tsconfig.json": {
+    "mtime": 1776150413.0370922,
+    "ast_hash": "02fc19ad21338c2ab820a70136310db4",
+    "semantic_hash": "02fc19ad21338c2ab820a70136310db4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/playwright.config.ts": {
+    "mtime": 1776150413.00282,
+    "ast_hash": "07eed3232b8d61d8d38a00636640a2a0",
+    "semantic_hash": "07eed3232b8d61d8d38a00636640a2a0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/eslint.config.mjs": {
+    "mtime": 1776150412.9637718,
+    "ast_hash": "7eaf404a4515687eab22ea830c7ae623",
+    "semantic_hash": "7eaf404a4515687eab22ea830c7ae623"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/next.config.ts": {
+    "mtime": 1776150412.9945033,
+    "ast_hash": "6b7a28238d89fff937b69287ede62c59",
+    "semantic_hash": "6b7a28238d89fff937b69287ede62c59"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/.cursor/worktrees.json": {
+    "mtime": 1776150412.7404325,
+    "ast_hash": "7c8c7dc774d94edc48e694c7aafbe07b",
+    "semantic_hash": "7c8c7dc774d94edc48e694c7aafbe07b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/types/database.types.all.ts": {
+    "mtime": 1776150413.0394764,
+    "ast_hash": "fe282d67f7c20fe4a594cd1b844dd1e5",
+    "semantic_hash": "fe282d67f7c20fe4a594cd1b844dd1e5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/types/marketing.types.ts": {
+    "mtime": 1776150413.0451262,
+    "ast_hash": "c472d77158371719947e6a40aec3445b",
+    "semantic_hash": "c472d77158371719947e6a40aec3445b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/types/view.ts": {
+    "mtime": 1776150413.0455384,
+    "ast_hash": "7f0e376fc37ffb6ca0fdc7784d9b0014",
+    "semantic_hash": "7f0e376fc37ffb6ca0fdc7784d9b0014"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/types/database.types.ts": {
+    "mtime": 1777185298.1947541,
+    "ast_hash": "d51e3c1d9cff381a304c9fb3c197cc58",
+    "semantic_hash": "d51e3c1d9cff381a304c9fb3c197cc58"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/types/index.ts": {
+    "mtime": 1776150413.044668,
+    "ast_hash": "2edd5ce36af2a6164dac94504b9e0b17",
+    "semantic_hash": "2edd5ce36af2a6164dac94504b9e0b17"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/types/database.types.test.ts": {
+    "mtime": 1776150413.0417,
+    "ast_hash": "fe282d67f7c20fe4a594cd1b844dd1e5",
+    "semantic_hash": "fe282d67f7c20fe4a594cd1b844dd1e5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/layout.tsx": {
+    "mtime": 1776150412.84623,
+    "ast_hash": "1ca892265ff1366c1a8ad736647d7b86",
+    "semantic_hash": "1ca892265ff1366c1a8ad736647d7b86"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/page.tsx": {
+    "mtime": 1776150412.850976,
+    "ast_hash": "71196b80f7098e80f8c1ee3d8efeed60",
+    "semantic_hash": "71196b80f7098e80f8c1ee3d8efeed60"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/attendance/page.tsx": {
+    "mtime": 1776150412.8404984,
+    "ast_hash": "5a68efa7a698db151804fdd3c8938352",
+    "semantic_hash": "5a68efa7a698db151804fdd3c8938352"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/strategist/page.tsx": {
+    "mtime": 1776150412.8622584,
+    "ast_hash": "303efb9af36d1ae5a22fc454ee7fbfac",
+    "semantic_hash": "303efb9af36d1ae5a22fc454ee7fbfac"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/strategist/deals/page.tsx": {
+    "mtime": 1776150412.8618138,
+    "ast_hash": "fed77e89640bbe09157f4e258fb321d0",
+    "semantic_hash": "fed77e89640bbe09157f4e258fb321d0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/tasks/page.tsx": {
+    "mtime": 1776150412.8638194,
+    "ast_hash": "531e6d76f7f05e83f19c9037126b7458",
+    "semantic_hash": "531e6d76f7f05e83f19c9037126b7458"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/tasks/list/page.tsx": {
+    "mtime": 1776150412.8632634,
+    "ast_hash": "1f2a7cc3cade0a7acfc1fa3992ad4edf",
+    "semantic_hash": "1f2a7cc3cade0a7acfc1fa3992ad4edf"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/sales-page-client.tsx": {
+    "mtime": 1776150412.8602593,
+    "ast_hash": "6fc07d011a7c9485ee6917143f9bfd69",
+    "semantic_hash": "6fc07d011a7c9485ee6917143f9bfd69"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/page.tsx": {
+    "mtime": 1777460063.8528912,
+    "ast_hash": "12f879f64bd2d5f079c8a917933519bb",
+    "semantic_hash": "12f879f64bd2d5f079c8a917933519bb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/pitch/[industry]/[city]/page.tsx": {
+    "mtime": 1776150412.8597724,
+    "ast_hash": "7894d726dd3d3cd191090b27dd4f07ac",
+    "semantic_hash": "7894d726dd3d3cd191090b27dd4f07ac"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/leads/[id]/call-script-guide.tsx": {
+    "mtime": 1776150412.8554983,
+    "ast_hash": "27c319d78e229ec1af558aca7edb1401",
+    "semantic_hash": "27c319d78e229ec1af558aca7edb1401"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/leads/[id]/call-outcome-modal.tsx": {
+    "mtime": 1776150412.8546684,
+    "ast_hash": "513eba4f34362a45752992c3f1317317",
+    "semantic_hash": "513eba4f34362a45752992c3f1317317"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/leads/[id]/lead-actions.ts": {
+    "mtime": 1776150412.8559816,
+    "ast_hash": "21e64a5c62cd1e6c2e04093a48b86f7e",
+    "semantic_hash": "21e64a5c62cd1e6c2e04093a48b86f7e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/leads/[id]/lead-profile-client.tsx": {
+    "mtime": 1776150412.8569567,
+    "ast_hash": "8f9b74260ba4e11e7d0ffcaab4ea375c",
+    "semantic_hash": "8f9b74260ba4e11e7d0ffcaab4ea375c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/leads/[id]/page.tsx": {
+    "mtime": 1776150412.8574066,
+    "ast_hash": "7f20449e9ac185a8ad13d1b73e4c04da",
+    "semantic_hash": "7f20449e9ac185a8ad13d1b73e4c04da"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/outreach/page.tsx": {
+    "mtime": 1776150412.858066,
+    "ast_hash": "bf09f951b268235f33733147c95a6df1",
+    "semantic_hash": "bf09f951b268235f33733147c95a6df1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/projects/actions.ts": {
+    "mtime": 1776150412.8523037,
+    "ast_hash": "46103cdb5acdc45acec3363681c0b449",
+    "semantic_hash": "46103cdb5acdc45acec3363681c0b449"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/projects/page.tsx": {
+    "mtime": 1776150412.8534114,
+    "ast_hash": "571427425d3f7be9f800e423733417c5",
+    "semantic_hash": "571427425d3f7be9f800e423733417c5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/projects/list/page.tsx": {
+    "mtime": 1776150412.8529904,
+    "ast_hash": "12162fa99662f797f500422e85398391",
+    "semantic_hash": "12162fa99662f797f500422e85398391"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/projects/[id]/page.tsx": {
+    "mtime": 1776150412.8518999,
+    "ast_hash": "1b360721d7cd0aacb9a42a79eafbb9b4",
+    "semantic_hash": "1b360721d7cd0aacb9a42a79eafbb9b4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/lp/[niche]/[city]/page.tsx": {
+    "mtime": 1776150412.8486266,
+    "ast_hash": "4cc8c6fed50364c25c5d6ec7ca37f051",
+    "semantic_hash": "4cc8c6fed50364c25c5d6ec7ca37f051"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/actions.ts": {
+    "mtime": 1776150412.755377,
+    "ast_hash": "7058e47fd5c1a4f1bff89e63969b7a6f",
+    "semantic_hash": "7058e47fd5c1a4f1bff89e63969b7a6f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/page.tsx": {
+    "mtime": 1776150412.8018894,
+    "ast_hash": "df7059b7b042b109ce4bdd6230a409c0",
+    "semantic_hash": "df7059b7b042b109ce4bdd6230a409c0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/attendance/page.tsx": {
+    "mtime": 1776150412.7570298,
+    "ast_hash": "734ce1e7c6b27ff3010c2ce32b1b15f3",
+    "semantic_hash": "734ce1e7c6b27ff3010c2ce32b1b15f3"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/client-actions.ts": {
+    "mtime": 1776150412.7665515,
+    "ast_hash": "60f88a376f584820a04670d3b246802d",
+    "semantic_hash": "60f88a376f584820a04670d3b246802d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/health-score-modal.tsx": {
+    "mtime": 1776150412.7675202,
+    "ast_hash": "01e0b447a579678098af5cf75952a132",
+    "semantic_hash": "01e0b447a579678098af5cf75952a132"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/upsell-attempt-modal.tsx": {
+    "mtime": 1776150412.7720218,
+    "ast_hash": "bb6ec781af2e9fdfc3267540c3fdf7b2",
+    "semantic_hash": "bb6ec781af2e9fdfc3267540c3fdf7b2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/package-modal.tsx": {
+    "mtime": 1776150412.7685237,
+    "ast_hash": "f957e08ee4046abcc249810c4f81ea08",
+    "semantic_hash": "f957e08ee4046abcc249810c4f81ea08"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/actions.ts": {
+    "mtime": 1776150412.766005,
+    "ast_hash": "f8db5fd67ec5abe1d80a0d13630d46c3",
+    "semantic_hash": "f8db5fd67ec5abe1d80a0d13630d46c3"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/error.tsx": {
+    "mtime": 1776150412.7670012,
+    "ast_hash": "7dfe3faad6085a90973c7063361f6f43",
+    "semantic_hash": "7dfe3faad6085a90973c7063361f6f43"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/loading.tsx": {
+    "mtime": 1776150412.7679665,
+    "ast_hash": "801842e020c099d46cc4e89dbacd5639",
+    "semantic_hash": "801842e020c099d46cc4e89dbacd5639"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/page.tsx": {
+    "mtime": 1777185357.334287,
+    "ast_hash": "101bc2daed24e7e67a8f0ad9f90d30d5",
+    "semantic_hash": "101bc2daed24e7e67a8f0ad9f90d30d5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/renewals/actions.ts": {
+    "mtime": 1776150412.7697847,
+    "ast_hash": "cf2a8a46a06de95eb39727e3fcea6f93",
+    "semantic_hash": "cf2a8a46a06de95eb39727e3fcea6f93"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/renewals/error.tsx": {
+    "mtime": 1776150412.7702892,
+    "ast_hash": "2ca2c4043659915e2432f03137232af9",
+    "semantic_hash": "2ca2c4043659915e2432f03137232af9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/renewals/loading.tsx": {
+    "mtime": 1776150412.7707717,
+    "ast_hash": "6f699575205aac984279a443dd28b029",
+    "semantic_hash": "6f699575205aac984279a443dd28b029"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/renewals/page.tsx": {
+    "mtime": 1776150412.771351,
+    "ast_hash": "42b129874a33768fe21950ffdd765f4a",
+    "semantic_hash": "42b129874a33768fe21950ffdd765f4a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/[id]/error.tsx": {
+    "mtime": 1776150412.7632697,
+    "ast_hash": "67a458ad70c464cfe48a6615f38db399",
+    "semantic_hash": "67a458ad70c464cfe48a6615f38db399"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/[id]/loading.tsx": {
+    "mtime": 1776150412.763731,
+    "ast_hash": "0baac3cc794d21ea694226e29e2342ec",
+    "semantic_hash": "0baac3cc794d21ea694226e29e2342ec"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/[id]/page.tsx": {
+    "mtime": 1776150412.764293,
+    "ast_hash": "9311202bcda1401e11f4b433589d88a9",
+    "semantic_hash": "9311202bcda1401e11f4b433589d88a9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/[id]/reports/new/page.tsx": {
+    "mtime": 1776150412.765419,
+    "ast_hash": "c9242829e0cc7c30a75e44cf885b5816",
+    "semantic_hash": "c9242829e0cc7c30a75e44cf885b5816"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/financials/page.tsx": {
+    "mtime": 1776150412.7783668,
+    "ast_hash": "ac00cdb8e2a000c78a5ef42d2522631e",
+    "semantic_hash": "ac00cdb8e2a000c78a5ef42d2522631e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/sales/strategy-page.tsx": {
+    "mtime": 1776150412.8062778,
+    "ast_hash": "b383072e04a8acc19b653e7b05303eca",
+    "semantic_hash": "b383072e04a8acc19b653e7b05303eca"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/sales/page.tsx": {
+    "mtime": 1776150412.8054564,
+    "ast_hash": "95b6c3414baa7086ac9569c2f21d0084",
+    "semantic_hash": "95b6c3414baa7086ac9569c2f21d0084"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/sales/leads/page.tsx": {
+    "mtime": 1776150412.8048365,
+    "ast_hash": "83899d069e2d19af08738c27a9b080a0",
+    "semantic_hash": "83899d069e2d19af08738c27a9b080a0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/build-tracker/actions.ts": {
+    "mtime": 1776150412.7606006,
+    "ast_hash": "b747208d9ced6374ab1b732c3285e205",
+    "semantic_hash": "b747208d9ced6374ab1b732c3285e205"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/build-tracker/error.tsx": {
+    "mtime": 1776150412.7611103,
+    "ast_hash": "f446d5e69588e659c8da2871f9c23b1a",
+    "semantic_hash": "f446d5e69588e659c8da2871f9c23b1a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/build-tracker/loading.tsx": {
+    "mtime": 1776150412.7615979,
+    "ast_hash": "b95ed95fc4705f73915cac021e21a46e",
+    "semantic_hash": "b95ed95fc4705f73915cac021e21a46e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/build-tracker/page.tsx": {
+    "mtime": 1776150412.7621462,
+    "ast_hash": "a5a1548e2f62fcceee02c7ab5e46809e",
+    "semantic_hash": "a5a1548e2f62fcceee02c7ab5e46809e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/data-management/page.tsx": {
+    "mtime": 1776150412.77288,
+    "ast_hash": "d7ec1e201e0c2d6d67936fed4db3c191",
+    "semantic_hash": "d7ec1e201e0c2d6d67936fed4db3c191"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/[id]/lead-profile-admin-client.tsx": {
+    "mtime": 1777185346.933266,
+    "ast_hash": "c2672fe107ceeaf3f9f9f52f6429b278",
+    "semantic_hash": "c2672fe107ceeaf3f9f9f52f6429b278"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/[id]/page.tsx": {
+    "mtime": 1777185339.1803954,
+    "ast_hash": "a53679a65cce5766231e486a7b1bd6e7",
+    "semantic_hash": "a53679a65cce5766231e486a7b1bd6e7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/[id]/proposal/[proposalId]/agreement/page.tsx": {
+    "mtime": 1776150412.7951536,
+    "ast_hash": "70ff425ab993bd519da96fad26bd442c",
+    "semantic_hash": "70ff425ab993bd519da96fad26bd442c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/[id]/proposal/new/page.tsx": {
+    "mtime": 1776150412.795888,
+    "ast_hash": "00455520108eed562d380e37571792bc",
+    "semantic_hash": "00455520108eed562d380e37571792bc"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/audit-log/page.tsx": {
+    "mtime": 1776150412.7580903,
+    "ast_hash": "cbc5b727ebdb1220e8d82326c62f0c59",
+    "semantic_hash": "cbc5b727ebdb1220e8d82326c62f0c59"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/niche-kits/page.tsx": {
+    "mtime": 1776150412.797324,
+    "ast_hash": "22971d61757eed25cceb23f7317666d4",
+    "semantic_hash": "22971d61757eed25cceb23f7317666d4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/operations/page.tsx": {
+    "mtime": 1776150412.798305,
+    "ast_hash": "040a382a0eab63aff7590205d86da123",
+    "semantic_hash": "040a382a0eab63aff7590205d86da123"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/actions.ts": {
+    "mtime": 1776150412.7828033,
+    "ast_hash": "2e5250603df224e51993a224d855138c",
+    "semantic_hash": "2e5250603df224e51993a224d855138c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/error.tsx": {
+    "mtime": 1776150412.7835252,
+    "ast_hash": "115d9d342c00b7359fb28b548ddc597c",
+    "semantic_hash": "115d9d342c00b7359fb28b548ddc597c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/loading.tsx": {
+    "mtime": 1776150412.7894592,
+    "ast_hash": "d2e86e5306b78eb63c8dbb29d001d7f7",
+    "semantic_hash": "d2e86e5306b78eb63c8dbb29d001d7f7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/page.tsx": {
+    "mtime": 1776150412.7900493,
+    "ast_hash": "6b61c8a576492d5371e9d0fc249ec82c",
+    "semantic_hash": "6b61c8a576492d5371e9d0fc249ec82c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/gmb/error.tsx": {
+    "mtime": 1776150412.785501,
+    "ast_hash": "703884f0385d687a980a1804b35bf96a",
+    "semantic_hash": "703884f0385d687a980a1804b35bf96a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/gmb/loading.tsx": {
+    "mtime": 1776150412.7860103,
+    "ast_hash": "2db8aa70462064d22bb6aff9df91d4f1",
+    "semantic_hash": "2db8aa70462064d22bb6aff9df91d4f1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/gmb/page.tsx": {
+    "mtime": 1776150412.786559,
+    "ast_hash": "8c8ad27f4638abffa2f756d1c950b95b",
+    "semantic_hash": "8c8ad27f4638abffa2f756d1c950b95b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/acquisition/error.tsx": {
+    "mtime": 1776150412.7812924,
+    "ast_hash": "703884f0385d687a980a1804b35bf96a",
+    "semantic_hash": "703884f0385d687a980a1804b35bf96a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/acquisition/loading.tsx": {
+    "mtime": 1776150412.781754,
+    "ast_hash": "5e75b4445c5aa361e981d43c2b208d7b",
+    "semantic_hash": "5e75b4445c5aa361e981d43c2b208d7b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/acquisition/page.tsx": {
+    "mtime": 1776150412.7822514,
+    "ast_hash": "f80c98a46c73d6a4251207e20e258c95",
+    "semantic_hash": "f80c98a46c73d6a4251207e20e258c95"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/acquisition/[city]/error.tsx": {
+    "mtime": 1776150412.7798681,
+    "ast_hash": "703884f0385d687a980a1804b35bf96a",
+    "semantic_hash": "703884f0385d687a980a1804b35bf96a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/acquisition/[city]/loading.tsx": {
+    "mtime": 1776150412.780324,
+    "ast_hash": "5e75b4445c5aa361e981d43c2b208d7b",
+    "semantic_hash": "5e75b4445c5aa361e981d43c2b208d7b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/acquisition/[city]/page.tsx": {
+    "mtime": 1776150412.780838,
+    "ast_hash": "9605d0b89c4c53182f1bfe4c731fd6cf",
+    "semantic_hash": "9605d0b89c4c53182f1bfe4c731fd6cf"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/facebook/loading.tsx": {
+    "mtime": 1776150412.7842457,
+    "ast_hash": "bc11aba47a3fceb0f332a070b4f8196f",
+    "semantic_hash": "bc11aba47a3fceb0f332a070b4f8196f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/facebook/page.tsx": {
+    "mtime": 1776150412.784732,
+    "ast_hash": "bdb85f0dc7e7995f78279cac714686de",
+    "semantic_hash": "bdb85f0dc7e7995f78279cac714686de"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/seo/error.tsx": {
+    "mtime": 1776150412.7908208,
+    "ast_hash": "703884f0385d687a980a1804b35bf96a",
+    "semantic_hash": "703884f0385d687a980a1804b35bf96a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/seo/loading.tsx": {
+    "mtime": 1776150412.7912593,
+    "ast_hash": "91191c993ff91ec5eddfac79526813d9",
+    "semantic_hash": "91191c993ff91ec5eddfac79526813d9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/seo/page.tsx": {
+    "mtime": 1776150412.7918963,
+    "ast_hash": "2408c129d97471b021f68500f76c6cb1",
+    "semantic_hash": "2408c129d97471b021f68500f76c6cb1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/instagram/loading.tsx": {
+    "mtime": 1776150412.7873077,
+    "ast_hash": "bc11aba47a3fceb0f332a070b4f8196f",
+    "semantic_hash": "bc11aba47a3fceb0f332a070b4f8196f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/instagram/page.tsx": {
+    "mtime": 1776150412.787866,
+    "ast_hash": "4459461fdc3088c34e9a1b4425bd2e6b",
+    "semantic_hash": "4459461fdc3088c34e9a1b4425bd2e6b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/linkedin/loading.tsx": {
+    "mtime": 1776150412.7885618,
+    "ast_hash": "601d28fe78289c543d7581be26a2d364",
+    "semantic_hash": "601d28fe78289c543d7581be26a2d364"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/linkedin/page.tsx": {
+    "mtime": 1776150412.789022,
+    "ast_hash": "f174d4dccfb892493afea0520ea0d568",
+    "semantic_hash": "f174d4dccfb892493afea0520ea0d568"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/alerts/page.tsx": {
+    "mtime": 1776150412.7562222,
+    "ast_hash": "e5830691259bf9e19e997950469358e5",
+    "semantic_hash": "e5830691259bf9e19e997950469358e5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/sessions/page.tsx": {
+    "mtime": 1776150412.807014,
+    "ast_hash": "98e4db39a2c5b87ed3e1383db65e78ee",
+    "semantic_hash": "98e4db39a2c5b87ed3e1383db65e78ee"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/briefing/page.tsx": {
+    "mtime": 1776150412.7596564,
+    "ast_hash": "e94baa51dbfe373a28e3838db072f037",
+    "semantic_hash": "e94baa51dbfe373a28e3838db072f037"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/bulk-import/actions.ts": {
+    "mtime": 1777460063.8523273,
+    "ast_hash": "4fdf53a8bef5783b22b1d2ba670dfdf4",
+    "semantic_hash": "4fdf53a8bef5783b22b1d2ba670dfdf4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/bulk-import/page.tsx": {
+    "mtime": 1777460063.8524914,
+    "ast_hash": "94d5702ecf20f52e0766318d1356434f",
+    "semantic_hash": "94d5702ecf20f52e0766318d1356434f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/actions.ts": {
+    "mtime": 1776150412.814332,
+    "ast_hash": "589de194f8d5d9d875404fdd47cd52f4",
+    "semantic_hash": "589de194f8d5d9d875404fdd47cd52f4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/page.tsx": {
+    "mtime": 1776150412.8148065,
+    "ast_hash": "8d697ddfe4ad1e5f750e5672e7381129",
+    "semantic_hash": "8d697ddfe4ad1e5f750e5672e7381129"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/sops/page.tsx": {
+    "mtime": 1776150412.8176234,
+    "ast_hash": "e0a312ebcabb762be8441c0687e98408",
+    "semantic_hash": "e0a312ebcabb762be8441c0687e98408"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/sops/new/page.tsx": {
+    "mtime": 1776150412.8171523,
+    "ast_hash": "598f43a40f8a035ba59ee5fca8e3691c",
+    "semantic_hash": "598f43a40f8a035ba59ee5fca8e3691c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/sops/[id]/page.tsx": {
+    "mtime": 1776150412.8165014,
+    "ast_hash": "5d26716a80c3760949cd633221396679",
+    "semantic_hash": "5d26716a80c3760949cd633221396679"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/scorecards/page.tsx": {
+    "mtime": 1776150412.815571,
+    "ast_hash": "55e7985c09844fbb247524c62a04e353",
+    "semantic_hash": "55e7985c09844fbb247524c62a04e353"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/users/page.tsx": {
+    "mtime": 1776150412.8207345,
+    "ast_hash": "ec747636284b8333881eba3b86eaafba",
+    "semantic_hash": "ec747636284b8333881eba3b86eaafba"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/whatsapp-templates/seed-button.tsx": {
+    "mtime": 1777187392.6797376,
+    "ast_hash": "168596b876f6bd739e225f5730df8ad1",
+    "semantic_hash": "168596b876f6bd739e225f5730df8ad1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/whatsapp-templates/actions.ts": {
+    "mtime": 1777187434.0470755,
+    "ast_hash": "4a2901ad6681323575e7aabe32ef9bc0",
+    "semantic_hash": "4a2901ad6681323575e7aabe32ef9bc0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/whatsapp-templates/page.tsx": {
+    "mtime": 1777187408.2456977,
+    "ast_hash": "1a289b65e3ddb5bb36d78741d9a90b21",
+    "semantic_hash": "1a289b65e3ddb5bb36d78741d9a90b21"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/marketing/page.tsx": {
+    "mtime": 1776150412.7966306,
+    "ast_hash": "70479ac37f9f7cc93ab1030b3b4c51bb",
+    "semantic_hash": "70479ac37f9f7cc93ab1030b3b4c51bb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/finance/actions.ts": {
+    "mtime": 1776150412.7744026,
+    "ast_hash": "4c68dfafd7b85645c471a79176e2973c",
+    "semantic_hash": "4c68dfafd7b85645c471a79176e2973c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/finance/page.tsx": {
+    "mtime": 1776150412.7767024,
+    "ast_hash": "2ba1565089bd4baea5c2bffcf47861b9",
+    "semantic_hash": "2ba1565089bd4baea5c2bffcf47861b9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/finance/invoices/page.tsx": {
+    "mtime": 1776150412.7759235,
+    "ast_hash": "ad04bf45498b1db75ca83f118158a5df",
+    "semantic_hash": "ad04bf45498b1db75ca83f118158a5df"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/finance/expenses/page.tsx": {
+    "mtime": 1776150412.7751718,
+    "ast_hash": "f1c1fcf0c4b6cffc2a8e97cb10d6875d",
+    "semantic_hash": "f1c1fcf0c4b6cffc2a8e97cb10d6875d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/finance/pnl/page.tsx": {
+    "mtime": 1776150412.7774951,
+    "ast_hash": "4daa896bb2b713ee5d4a386f6457989b",
+    "semantic_hash": "4daa896bb2b713ee5d4a386f6457989b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/automations/page.tsx": {
+    "mtime": 1776150412.7587943,
+    "ast_hash": "c53dbb4933cc6b1b5f7d9cc0936c7e1d",
+    "semantic_hash": "c53dbb4933cc6b1b5f7d9cc0936c7e1d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/outreach/outreach-board-client.tsx": {
+    "mtime": 1776150412.7992973,
+    "ast_hash": "769226bb6ba9275f7907b7cf8fc84140",
+    "semantic_hash": "769226bb6ba9275f7907b7cf8fc84140"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/outreach/page.tsx": {
+    "mtime": 1776150412.7997327,
+    "ast_hash": "9d638f9486378e73c8f6e7cf307c030b",
+    "semantic_hash": "9d638f9486378e73c8f6e7cf307c030b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/outreach/pdf-log/pdf-log-client.tsx": {
+    "mtime": 1776150412.8009524,
+    "ast_hash": "8b40403fa869632f17a647e004293a44",
+    "semantic_hash": "8b40403fa869632f17a647e004293a44"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/outreach/pdf-log/page.tsx": {
+    "mtime": 1776150412.8003864,
+    "ast_hash": "a78fdaaf688e8586b233d2100002fd76",
+    "semantic_hash": "a78fdaaf688e8586b233d2100002fd76"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/work-hours/page.tsx": {
+    "mtime": 1776150412.8222113,
+    "ast_hash": "b637b4216262b7b4ea2cefa33f8cf2e4",
+    "semantic_hash": "b637b4216262b7b4ea2cefa33f8cf2e4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/duplicates/page.tsx": {
+    "mtime": 1776150412.7736473,
+    "ast_hash": "428f3c7c15271ed0fc1691e9f438e608",
+    "semantic_hash": "428f3c7c15271ed0fc1691e9f438e608"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/proposals/page.tsx": {
+    "mtime": 1776150412.8026824,
+    "ast_hash": "0797792b62d31e524e6b64fb7562d8b2",
+    "semantic_hash": "0797792b62d31e524e6b64fb7562d8b2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/upload/page.tsx": {
+    "mtime": 1776150412.819874,
+    "ast_hash": "d97e78aa420db29267a9d1974995ba0a",
+    "semantic_hash": "d97e78aa420db29267a9d1974995ba0a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/upload/history/page.tsx": {
+    "mtime": 1776150412.8193908,
+    "ast_hash": "49607d9c7627b26b590c371304c6920e",
+    "semantic_hash": "49607d9c7627b26b590c371304c6920e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/upload/debug/page.tsx": {
+    "mtime": 1776150412.8186185,
+    "ast_hash": "00965596fed80883fff6d10d3e4432a5",
+    "semantic_hash": "00965596fed80883fff6d10d3e4432a5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/reports/page.tsx": {
+    "mtime": 1776150412.8035753,
+    "ast_hash": "95c48362a02dd1d68fd7994a6cedbbb2",
+    "semantic_hash": "95c48362a02dd1d68fd7994a6cedbbb2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/page.client.tsx": {
+    "mtime": 1776150412.810797,
+    "ast_hash": "bf26f8a4ec2e8d52288cb77ac86bf8e4",
+    "semantic_hash": "bf26f8a4ec2e8d52288cb77ac86bf8e4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/actions.ts": {
+    "mtime": 1776150412.8077705,
+    "ast_hash": "b1b4a637994145b97f1d7dca03fa6649",
+    "semantic_hash": "b1b4a637994145b97f1d7dca03fa6649"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/error.tsx": {
+    "mtime": 1776150412.8098807,
+    "ast_hash": "115d9d342c00b7359fb28b548ddc597c",
+    "semantic_hash": "115d9d342c00b7359fb28b548ddc597c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/loading.tsx": {
+    "mtime": 1776150412.8103013,
+    "ast_hash": "6c1c74dce18f0acd507ffd1b7f08b72d",
+    "semantic_hash": "6c1c74dce18f0acd507ffd1b7f08b72d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/page.tsx": {
+    "mtime": 1776150412.8112419,
+    "ast_hash": "ab78ca662fd0cc887437a5bcc735a11c",
+    "semantic_hash": "ab78ca662fd0cc887437a5bcc735a11c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/archive/error.tsx": {
+    "mtime": 1776150412.8084729,
+    "ast_hash": "115d9d342c00b7359fb28b548ddc597c",
+    "semantic_hash": "115d9d342c00b7359fb28b548ddc597c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/archive/loading.tsx": {
+    "mtime": 1776150412.8089075,
+    "ast_hash": "6c1c74dce18f0acd507ffd1b7f08b72d",
+    "semantic_hash": "6c1c74dce18f0acd507ffd1b7f08b72d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/archive/page.tsx": {
+    "mtime": 1776150412.809425,
+    "ast_hash": "43d2c7edc8a5cd311a93a1626e6902e1",
+    "semantic_hash": "43d2c7edc8a5cd311a93a1626e6902e1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/review/page.client.tsx": {
+    "mtime": 1776150412.813228,
+    "ast_hash": "7f7555b25a1356d1470107a7d9f9f3a5",
+    "semantic_hash": "7f7555b25a1356d1470107a7d9f9f3a5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/review/error.tsx": {
+    "mtime": 1776150412.8119175,
+    "ast_hash": "115d9d342c00b7359fb28b548ddc597c",
+    "semantic_hash": "115d9d342c00b7359fb28b548ddc597c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/review/loading.tsx": {
+    "mtime": 1776150412.81248,
+    "ast_hash": "6c1c74dce18f0acd507ffd1b7f08b72d",
+    "semantic_hash": "6c1c74dce18f0acd507ffd1b7f08b72d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/review/page.tsx": {
+    "mtime": 1776150412.8136747,
+    "ast_hash": "06a208d283483f85a921fb6445ccaf51",
+    "semantic_hash": "06a208d283483f85a921fb6445ccaf51"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/manager/pipeline/page.tsx": {
+    "mtime": 1776150412.850566,
+    "ast_hash": "52a44361dc81501211440e05c0981abd",
+    "semantic_hash": "52a44361dc81501211440e05c0981abd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/manager/performance/page.tsx": {
+    "mtime": 1776150412.8498802,
+    "ast_hash": "26e849189338e48a3d271cfdec2ab45a",
+    "semantic_hash": "26e849189338e48a3d271cfdec2ab45a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/attendance/clock-out/route.ts": {
+    "mtime": 1776150412.8261118,
+    "ast_hash": "cea2c6709f69406cf8daae4c97e0b086",
+    "semantic_hash": "cea2c6709f69406cf8daae4c97e0b086"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/attendance/clock-in/route.ts": {
+    "mtime": 1776150412.8253846,
+    "ast_hash": "d452f7c8fae77415de36fdca3acd39da",
+    "semantic_hash": "d452f7c8fae77415de36fdca3acd39da"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/attendance/break/route.ts": {
+    "mtime": 1776150412.8245904,
+    "ast_hash": "38836146f54760a67f74e8789a3e042d",
+    "semantic_hash": "38836146f54760a67f74e8789a3e042d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/leads/merge/route.ts": {
+    "mtime": 1776150412.8335752,
+    "ast_hash": "456b27b019d159aa7a8cf79ce9646c14",
+    "semantic_hash": "456b27b019d159aa7a8cf79ce9646c14"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/leads/merge/undo/route.ts": {
+    "mtime": 1776150412.8343122,
+    "ast_hash": "c252c2d620529b2f8450f97197500531",
+    "semantic_hash": "c252c2d620529b2f8450f97197500531"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/leads/duplicates/scan/route.ts": {
+    "mtime": 1776150412.8327546,
+    "ast_hash": "f1fc66ec59429a1aaa8dfd809285e65a",
+    "semantic_hash": "f1fc66ec59429a1aaa8dfd809285e65a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/ai/actions.ts": {
+    "mtime": 1776150412.823504,
+    "ast_hash": "5bfbc64992ed8d23f8f54c3264ea9acc",
+    "semantic_hash": "5bfbc64992ed8d23f8f54c3264ea9acc"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/export/route.ts": {
+    "mtime": 1776150412.8314238,
+    "ast_hash": "4f33a674d8f9970413e0ffae397a4a5a",
+    "semantic_hash": "4f33a674d8f9970413e0ffae397a4a5a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/notifications/verify/route.ts": {
+    "mtime": 1776150412.835265,
+    "ast_hash": "cb8e4e70dc6ffc464c515f4d17bb5d82",
+    "semantic_hash": "cb8e4e70dc6ffc464c515f4d17bb5d82"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/cron/session-timeout/route.ts": {
+    "mtime": 1776150412.8300989,
+    "ast_hash": "f394fa0baf08bf7cee5fcd60460bfb7c",
+    "semantic_hash": "f394fa0baf08bf7cee5fcd60460bfb7c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/cron/automations/tasks/route.ts": {
+    "mtime": 1776150412.8294165,
+    "ast_hash": "b3286fdba1d394888baa84982aab9dc6",
+    "semantic_hash": "b3286fdba1d394888baa84982aab9dc6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/cron/automations/followups/route.ts": {
+    "mtime": 1776150412.8279495,
+    "ast_hash": "ce5fc5036c9460db93da37bd9a392b4f",
+    "semantic_hash": "ce5fc5036c9460db93da37bd9a392b4f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/cron/automations/sla/route.ts": {
+    "mtime": 1776150412.8286314,
+    "ast_hash": "76d57bc2d7160dd8ec275c45feae7bb0",
+    "semantic_hash": "76d57bc2d7160dd8ec275c45feae7bb0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/cron/sla/route.ts": {
+    "mtime": 1776150412.8307831,
+    "ast_hash": "7c588ea2533f2c0e4c1bbf4c69edfabc",
+    "semantic_hash": "7c588ea2533f2c0e4c1bbf4c69edfabc"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/cron/admin-alerts/route.ts": {
+    "mtime": 1776150412.8270452,
+    "ast_hash": "3e4a43a4fa13368ad2e01fce95008776",
+    "semantic_hash": "3e4a43a4fa13368ad2e01fce95008776"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/reports/sessions/export.csv/route.ts": {
+    "mtime": 1776150412.8364925,
+    "ast_hash": "1e11e75621068e10c8cb08659de2884a",
+    "semantic_hash": "1e11e75621068e10c8cb08659de2884a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/reports/work-hours/route.ts": {
+    "mtime": 1776150412.8371904,
+    "ast_hash": "b88bd9931192f94d8242007d682f2d10",
+    "semantic_hash": "b88bd9931192f94d8242007d682f2d10"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/session/ping/route.ts": {
+    "mtime": 1776150412.838972,
+    "ast_hash": "5e49b32ababa1e8607b2b62719cb5b7b",
+    "semantic_hash": "5e49b32ababa1e8607b2b62719cb5b7b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/session/start/route.ts": {
+    "mtime": 1776150412.8396704,
+    "ast_hash": "3be8b4d7f84879af767e990ae9325aa9",
+    "semantic_hash": "3be8b4d7f84879af767e990ae9325aa9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/api/session/end/route.ts": {
+    "mtime": 1776150412.8381908,
+    "ast_hash": "299d86b237fb135c8d4e59ebb008c261",
+    "semantic_hash": "299d86b237fb135c8d4e59ebb008c261"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/staff/page.tsx": {
+    "mtime": 1776150412.8609502,
+    "ast_hash": "28eeec4575564ebf45b8da456fc3b0b5",
+    "semantic_hash": "28eeec4575564ebf45b8da456fc3b0b5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/telecaller/my-stats/page.tsx": {
+    "mtime": 1776150412.8650076,
+    "ast_hash": "6300bf9724f2d370791955bdc3d11ce4",
+    "semantic_hash": "6300bf9724f2d370791955bdc3d11ce4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/client/dashboard/page.tsx": {
+    "mtime": 1776150412.8430946,
+    "ast_hash": "318b1d9ba93d8324812e0c6a7ce64b3d",
+    "semantic_hash": "318b1d9ba93d8324812e0c6a7ce64b3d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/client/report/[token]/page.tsx": {
+    "mtime": 1776150412.8442476,
+    "ast_hash": "07e7d5667ec71071736027b08d72babd",
+    "semantic_hash": "07e7d5667ec71071736027b08d72babd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/login/page.tsx": {
+    "mtime": 1776150412.8471508,
+    "ast_hash": "95e2f86ae22599d94cf5261224c20e14",
+    "semantic_hash": "95e2f86ae22599d94cf5261224c20e14"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/client-portal/[id]/page.tsx": {
+    "mtime": 1776150412.841562,
+    "ast_hash": "72f532b4989fe54dc09f1e01d519e778",
+    "semantic_hash": "72f532b4989fe54dc09f1e01d519e778"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/tests/pipeline.spec.ts": {
+    "mtime": 1776150413.0362384,
+    "ast_hash": "67f20d89f6c6720e090cbf8601801441",
+    "semantic_hash": "67f20d89f6c6720e090cbf8601801441"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/tests/financials.spec.ts": {
+    "mtime": 1776150413.0357358,
+    "ast_hash": "d718c095c13964b64305e793cce3d008",
+    "semantic_hash": "d718c095c13964b64305e793cce3d008"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/tests/auth.spec.ts": {
+    "mtime": 1776150413.0352437,
+    "ast_hash": "8cd94c0e6c10a6d45d31c971b969a32b",
+    "semantic_hash": "8cd94c0e6c10a6d45d31c971b969a32b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/tests/role-access.spec.ts": {
+    "mtime": 1776150413.0367012,
+    "ast_hash": "d1cae115cd72e0f931abba8b9909a873",
+    "semantic_hash": "d1cae115cd72e0f931abba8b9909a873"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/phase_d_migrations.sql": {
+    "mtime": 1776150413.0337248,
+    "ast_hash": "9af6292135f8f7afe38e88db074a51d0",
+    "semantic_hash": "9af6292135f8f7afe38e88db074a51d0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/phase_e_migrations.sql": {
+    "mtime": 1776150413.034159,
+    "ast_hash": "f898cf9740768baeb0ba590db1de622b",
+    "semantic_hash": "f898cf9740768baeb0ba590db1de622b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/rules_engine.sql": {
+    "mtime": 1776150413.0301852,
+    "ast_hash": "138344966d252016551f3a8ebab9bd67",
+    "semantic_hash": "138344966d252016551f3a8ebab9bd67"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/ai_brain_system.sql": {
+    "mtime": 1776150413.0176933,
+    "ast_hash": "fae5cf1baff65e77fb8a08b0f31f3f34",
+    "semantic_hash": "fae5cf1baff65e77fb8a08b0f31f3f34"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/admin_cron_engine.sql": {
+    "mtime": 1776150413.0170045,
+    "ast_hash": "65d4bdbfffc1eab0443236006be8307c",
+    "semantic_hash": "65d4bdbfffc1eab0443236006be8307c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/admin_command_center.sql": {
+    "mtime": 1776150413.0165014,
+    "ast_hash": "dd0d2ed284ea6e2059d7a6e14ae6a05f",
+    "semantic_hash": "dd0d2ed284ea6e2059d7a6e14ae6a05f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase4_extension_strategy.sql": {
+    "mtime": 1776150413.028209,
+    "ast_hash": "34a93a5e345bf0fc83d47b7081baaece",
+    "semantic_hash": "34a93a5e345bf0fc83d47b7081baaece"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/create_activity_and_audit_tables.sql": {
+    "mtime": 1776150413.0200336,
+    "ast_hash": "28b464133f3746363345eb606f42026c",
+    "semantic_hash": "28b464133f3746363345eb606f42026c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase1_build_tracker.sql": {
+    "mtime": 1776150413.0257623,
+    "ast_hash": "11837fd9689c2df66434a8369aea7c22",
+    "semantic_hash": "11837fd9689c2df66434a8369aea7c22"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_lead_type_and_source.sql": {
+    "mtime": 1776150413.0139472,
+    "ast_hash": "c1179f4470edca75883a6ef0261cabc2",
+    "semantic_hash": "c1179f4470edca75883a6ef0261cabc2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/follow_up_engine.sql": {
+    "mtime": 1776150413.0238965,
+    "ast_hash": "90fedd25ed21f163bf7304603d515634",
+    "semantic_hash": "90fedd25ed21f163bf7304603d515634"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_gmb_link_to_leads.sql": {
+    "mtime": 1776150413.0133877,
+    "ast_hash": "c16f8082af256a7d544285d57a62ec3e",
+    "semantic_hash": "c16f8082af256a7d544285d57a62ec3e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/upgrade_sales_workflow.sql": {
+    "mtime": 1776150413.0315707,
+    "ast_hash": "a6573dd33eaedc9a18a9065d8f050e22",
+    "semantic_hash": "a6573dd33eaedc9a18a9065d8f050e22"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/fix_has_website_generated_column.sql": {
+    "mtime": 1776150413.0228872,
+    "ast_hash": "f4945b64ce9e3a3789e87b0dc3fc1ad3",
+    "semantic_hash": "f4945b64ce9e3a3789e87b0dc3fc1ad3"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase4_strategy_engine.sql": {
+    "mtime": 1776150413.0286381,
+    "ast_hash": "c6e30a49bf4210b1642e6f68fa3d594f",
+    "semantic_hash": "c6e30a49bf4210b1642e6f68fa3d594f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_market_insights_json_columns.sql": {
+    "mtime": 1776150413.0146039,
+    "ast_hash": "db4dce731ce613124b8aa395894e4588",
+    "semantic_hash": "db4dce731ce613124b8aa395894e4588"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase3_agency_growth.sql": {
+    "mtime": 1776150413.027772,
+    "ast_hash": "d3859b2d1e05ba5523676353d6f6f9d6",
+    "semantic_hash": "d3859b2d1e05ba5523676353d6f6f9d6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/update_lead_statuses.sql": {
+    "mtime": 1776150413.0310903,
+    "ast_hash": "886b32e66bc9d8a39297fce2876c384d",
+    "semantic_hash": "886b32e66bc9d8a39297fce2876c384d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_tags_to_leads.sql": {
+    "mtime": 1776150413.0155396,
+    "ast_hash": "21a06b72e45bec6000fc7857836e83ab",
+    "semantic_hash": "21a06b72e45bec6000fc7857836e83ab"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/fix_has_website_column.sql": {
+    "mtime": 1776150413.022278,
+    "ast_hash": "b925c67ba635ea68d14203e440a04e5f",
+    "semantic_hash": "b925c67ba635ea68d14203e440a04e5f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase5_finance_module.sql": {
+    "mtime": 1776150413.029073,
+    "ast_hash": "616958f0a45b7d7070efb98ff766c0b4",
+    "semantic_hash": "616958f0a45b7d7070efb98ff766c0b4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_serp_fields_to_leads.sql": {
+    "mtime": 1776150413.0150967,
+    "ast_hash": "3313cc38933a0f37700895dfd1cbf6e5",
+    "semantic_hash": "3313cc38933a0f37700895dfd1cbf6e5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/20260311000001_niche_kit_manager.sql": {
+    "mtime": 1776150413.0110712,
+    "ast_hash": "94d8deeb01c3f5e2a2c916c22c84cac7",
+    "semantic_hash": "94d8deeb01c3f5e2a2c916c22c84cac7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/20260311000000_audit_log_system.sql": {
+    "mtime": 1776150413.0106373,
+    "ast_hash": "e7173b1e25f4440be7f5b460f2349208",
+    "semantic_hash": "e7173b1e25f4440be7f5b460f2349208"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/niche_pipeline_system.sql": {
+    "mtime": 1776150413.024816,
+    "ast_hash": "ea88bb7b851054c6d9c961387c5abe1e",
+    "semantic_hash": "ea88bb7b851054c6d9c961387c5abe1e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_website_fields_to_leads.sql": {
+    "mtime": 1776150413.0160332,
+    "ast_hash": "986709d70909152be9915d5e539e5dbb",
+    "semantic_hash": "986709d70909152be9915d5e539e5dbb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/fix_leads_rls_policies.sql": {
+    "mtime": 1776150413.023442,
+    "ast_hash": "40cec02fd68071a6326a6f0fe2f94aa7",
+    "semantic_hash": "40cec02fd68071a6326a6f0fe2f94aa7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/complete_leads_schema_update.sql": {
+    "mtime": 1776150413.0195827,
+    "ast_hash": "2dbf1386463cb09f325a5377e023ba50",
+    "semantic_hash": "2dbf1386463cb09f325a5377e023ba50"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase2_client_lifecycle.sql": {
+    "mtime": 1776150413.027226,
+    "ast_hash": "1c3e2e594c522a4c711541bfe991d36e",
+    "semantic_hash": "1c3e2e594c522a4c711541bfe991d36e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/create_saved_views_and_tags.sql": {
+    "mtime": 1776150413.0211873,
+    "ast_hash": "2b49e8a1c42d68dc6b07e30f23e2e9a7",
+    "semantic_hash": "2b49e8a1c42d68dc6b07e30f23e2e9a7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/20260312000000_phase6_team_management.sql": {
+    "mtime": 1776150413.0115097,
+    "ast_hash": "5f10494c4e06c937d8f997fdb7f29f58",
+    "semantic_hash": "5f10494c4e06c937d8f997fdb7f29f58"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/notifications_system_upgrade.sql": {
+    "mtime": 1776150413.0252528,
+    "ast_hash": "eb73c2694e5fc69401c2412e29c0d1a4",
+    "semantic_hash": "eb73c2694e5fc69401c2412e29c0d1a4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase1_status_patch.sql": {
+    "mtime": 1776150413.026654,
+    "ast_hash": "9c5ea9b278634a4f6626ef7337a3a382",
+    "semantic_hash": "9c5ea9b278634a4f6626ef7337a3a382"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_build_type_to_projects.sql": {
+    "mtime": 1776150413.0124197,
+    "ast_hash": "068ffa25678248839c605826d368cb17",
+    "semantic_hash": "068ffa25678248839c605826d368cb17"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/client_portal_enhancement.sql": {
+    "mtime": 1776150413.0187347,
+    "ast_hash": "ee13a2454da6bc42abb965acc5530a29",
+    "semantic_hash": "ee13a2454da6bc42abb965acc5530a29"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/telecaller_performance_system.sql": {
+    "mtime": 1776150413.030665,
+    "ast_hash": "6bdd69a55d9f7c60d1ced93dad074d24",
+    "semantic_hash": "6bdd69a55d9f7c60d1ced93dad074d24"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/add_client_resources.sql": {
+    "mtime": 1776150413.0129325,
+    "ast_hash": "7e085cd3f74bc62cec74255ee344c716",
+    "semantic_hash": "7e085cd3f74bc62cec74255ee344c716"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/work_hours_analytics.sql": {
+    "mtime": 1776150413.0330837,
+    "ast_hash": "50e02bece23891fd287e0ef3e19ed9fb",
+    "semantic_hash": "50e02bece23891fd287e0ef3e19ed9fb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/duplicates_merge.sql": {
+    "mtime": 1776150413.0217447,
+    "ast_hash": "7827b133441475d92e618991d28ac20f",
+    "semantic_hash": "7827b133441475d92e618991d28ac20f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/whatsapp_template_system.sql": {
+    "mtime": 1776150413.0326023,
+    "ast_hash": "186e29f12ae7d05149e7d6c5bc2b1700",
+    "semantic_hash": "186e29f12ae7d05149e7d6c5bc2b1700"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/create_csv_uploads_table.sql": {
+    "mtime": 1776150413.020627,
+    "ast_hash": "831a71f2f5882186b6908f5761f5a495",
+    "semantic_hash": "831a71f2f5882186b6908f5761f5a495"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/project_delivery_upgrade.sql": {
+    "mtime": 1776150413.0295887,
+    "ast_hash": "68456c07462fc2cf0fa9368419512666",
+    "semantic_hash": "68456c07462fc2cf0fa9368419512666"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/user_sessions.sql": {
+    "mtime": 1776150413.0320725,
+    "ast_hash": "8445f831df2611be36f99e0ce941a25c",
+    "semantic_hash": "8445f831df2611be36f99e0ce941a25c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/attendance_module.sql": {
+    "mtime": 1776150413.0182006,
+    "ast_hash": "0611cba36f76f171144b259c3d29e140",
+    "semantic_hash": "0611cba36f76f171144b259c3d29e140"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/phase1_clients_and_metrics.sql": {
+    "mtime": 1776150413.0262308,
+    "ast_hash": "95572cd439c4f1d11189d7678317459c",
+    "semantic_hash": "95572cd439c4f1d11189d7678317459c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/20260325120000_patch_team_targets_schema.sql": {
+    "mtime": 1776150413.0119321,
+    "ast_hash": "230287df2006ca08432aa137179d53db",
+    "semantic_hash": "230287df2006ca08432aa137179d53db"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/global_search_indexes.sql": {
+    "mtime": 1776150413.0243487,
+    "ast_hash": "3472020373cf190425a4056be1857e32",
+    "semantic_hash": "3472020373cf190425a4056be1857e32"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/supabase/migrations/20260309184740_create_agency_marketing_tables.sql": {
+    "mtime": 1776150413.0101385,
+    "ast_hash": "6974c3c4768dbeb52806bc638777b175",
+    "semantic_hash": "6974c3c4768dbeb52806bc638777b175"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/session-heartbeat.tsx": {
+    "mtime": 1776150412.9427667,
+    "ast_hash": "85712ba4068f1b3f1eb69925bd9a7efe",
+    "semantic_hash": "85712ba4068f1b3f1eb69925bd9a7efe"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ActivityTimeline.tsx": {
+    "mtime": 1776150412.8657513,
+    "ast_hash": "e50b9d284425ecc285a018b2ad16d700",
+    "semantic_hash": "e50b9d284425ecc285a018b2ad16d700"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/strategist/close-deal-modal.tsx": {
+    "mtime": 1776150412.9456327,
+    "ast_hash": "90fb16b2e6507d094cc17b4e40abb471",
+    "semantic_hash": "90fb16b2e6507d094cc17b4e40abb471"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/strategist/strategist-pipeline.tsx": {
+    "mtime": 1776150412.9469447,
+    "ast_hash": "eb3e4e9b28a899097e3d40785efde500",
+    "semantic_hash": "eb3e4e9b28a899097e3d40785efde500"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/strategist/strategy-session-modal.tsx": {
+    "mtime": 1776150412.947703,
+    "ast_hash": "1de5987f14ce0b96618cb05f2916a5b0",
+    "semantic_hash": "1de5987f14ce0b96618cb05f2916a5b0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/clients/onboarding-tab.tsx": {
+    "mtime": 1776150412.9095395,
+    "ast_hash": "8415bedbf5b4683815c2701bb5a60664",
+    "semantic_hash": "8415bedbf5b4683815c2701bb5a60664"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/notification-bell.tsx": {
+    "mtime": 1776150412.9603512,
+    "ast_hash": "8f923f439d21611e58d42318bb7cd4e7",
+    "semantic_hash": "8f923f439d21611e58d42318bb7cd4e7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/empty-state.tsx": {
+    "mtime": 1776150412.9583085,
+    "ast_hash": "fdcdf28a6b9d076b120e1d79f266c541",
+    "semantic_hash": "fdcdf28a6b9d076b120e1d79f266c541"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/command-palette.tsx": {
+    "mtime": 1776150412.9578667,
+    "ast_hash": "5c9530dd561338a96699860088f075e0",
+    "semantic_hash": "5c9530dd561338a96699860088f075e0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/layout-wrapper.tsx": {
+    "mtime": 1776150412.9597473,
+    "ast_hash": "9e8fe5d66f4fb9c5debceaf05c6d365f",
+    "semantic_hash": "9e8fe5d66f4fb9c5debceaf05c6d365f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/app-sidebar.tsx": {
+    "mtime": 1776150412.9570315,
+    "ast_hash": "8c3cc3fff58239a665cc930f145e1717",
+    "semantic_hash": "8c3cc3fff58239a665cc930f145e1717"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/fortune-marq-logo.tsx": {
+    "mtime": 1776150412.9593215,
+    "ast_hash": "1e65d32bc8163814749e1ff0728cd5e6",
+    "semantic_hash": "1e65d32bc8163814749e1ff0728cd5e6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/file-manager.tsx": {
+    "mtime": 1776150412.9589114,
+    "ast_hash": "a630ec53c0d235746515814a1d5bbf31",
+    "semantic_hash": "a630ec53c0d235746515814a1d5bbf31"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/skeleton.tsx": {
+    "mtime": 1776150412.9607704,
+    "ast_hash": "14bf53d33f719947a60a765d8b16c2af",
+    "semantic_hash": "14bf53d33f719947a60a765d8b16c2af"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/tasks/task-dependencies.tsx": {
+    "mtime": 1776150412.9515736,
+    "ast_hash": "4714360377d567ad2a1fa2b0699c66b2",
+    "semantic_hash": "4714360377d567ad2a1fa2b0699c66b2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/tasks/create-task-modal.tsx": {
+    "mtime": 1776150412.9485786,
+    "ast_hash": "528f6c503b4fa3c0dab483f12636fdf9",
+    "semantic_hash": "528f6c503b4fa3c0dab483f12636fdf9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/tasks/task-card.tsx": {
+    "mtime": 1776150412.9504316,
+    "ast_hash": "98bf249a02e283e7b257d00b2a1654d1",
+    "semantic_hash": "98bf249a02e283e7b257d00b2a1654d1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/tasks/task-board.tsx": {
+    "mtime": 1776150412.949818,
+    "ast_hash": "5ec637b2af45cd138fe06662e241f418",
+    "semantic_hash": "5ec637b2af45cd138fe06662e241f418"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/tasks/staff-task-board.tsx": {
+    "mtime": 1776150412.9492586,
+    "ast_hash": "367a21b5173b19db82d6121dab6a0955",
+    "semantic_hash": "367a21b5173b19db82d6121dab6a0955"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/tasks/task-checklist.tsx": {
+    "mtime": 1776150412.951043,
+    "ast_hash": "81d9f4f397776b683f69102435e4faba",
+    "semantic_hash": "81d9f4f397776b683f69102435e4faba"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/strategy-booking-modal.tsx": {
+    "mtime": 1776150412.9389343,
+    "ast_hash": "2941147a445074909f271edff2b26e46",
+    "semantic_hash": "2941147a445074909f271edff2b26e46"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/whatsapp-template-button.tsx": {
+    "mtime": 1776150412.9404693,
+    "ast_hash": "86054b200f7ce2b78a60e29bd4ca09ed",
+    "semantic_hash": "86054b200f7ce2b78a60e29bd4ca09ed"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/lead-call-row.tsx": {
+    "mtime": 1776150412.9313676,
+    "ast_hash": "f6da552645dfe8e94e732e38d84acbe5",
+    "semantic_hash": "f6da552645dfe8e94e732e38d84acbe5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/ScriptObjectionPanel.tsx": {
+    "mtime": 1776150412.928188,
+    "ast_hash": "13867033a26d5a215b6f55055cf443d2",
+    "semantic_hash": "13867033a26d5a215b6f55055cf443d2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/call-outcome-modal.tsx": {
+    "mtime": 1776150412.9298186,
+    "ast_hash": "1c23d49a18712409b201e85dd1583c64",
+    "semantic_hash": "1c23d49a18712409b201e85dd1583c64"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/leads-list.tsx": {
+    "mtime": 1776150412.9317892,
+    "ast_hash": "3e6a2bfa76d2737ad9d6b61ac376127d",
+    "semantic_hash": "3e6a2bfa76d2737ad9d6b61ac376127d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/sales-intelligence-cockpit.tsx": {
+    "mtime": 1777460063.8549166,
+    "ast_hash": "8179dd8f604c5abd1faa9df6c0840b57",
+    "semantic_hash": "8179dd8f604c5abd1faa9df6c0840b57"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/telecaller-cockpit.tsx": {
+    "mtime": 1777460063.8553517,
+    "ast_hash": "179e2df53ec28d9c7a5c89bac835c8df",
+    "semantic_hash": "179e2df53ec28d9c7a5c89bac835c8df"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/sales-lead-type-switcher.tsx": {
+    "mtime": 1776150412.9377701,
+    "ast_hash": "45c7bb22ff3105491151ba3e5fde5a90",
+    "semantic_hash": "45c7bb22ff3105491151ba3e5fde5a90"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/whatsapp-template-picker.tsx": {
+    "mtime": 1776150412.9409769,
+    "ast_hash": "0c83a121f05366332c12656cf0e928a6",
+    "semantic_hash": "0c83a121f05366332c12656cf0e928a6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/market-insight-card.tsx": {
+    "mtime": 1776150412.932199,
+    "ast_hash": "29cd23caaabe2841030850a3421bbb15",
+    "semantic_hash": "29cd23caaabe2841030850a3421bbb15"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/SalesOutcomeModal.tsx": {
+    "mtime": 1776150412.9276402,
+    "ast_hash": "257749a57fe37765c97dfd6666dd2cf8",
+    "semantic_hash": "257749a57fe37765c97dfd6666dd2cf8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/ai-script-suggester.tsx": {
+    "mtime": 1776150412.929163,
+    "ast_hash": "a63874bb84e2111a2002d5cdb64e18dd",
+    "semantic_hash": "a63874bb84e2111a2002d5cdb64e18dd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/ai-objection-handler.tsx": {
+    "mtime": 1776150412.9287238,
+    "ast_hash": "c929451a0a2e57bc7e4b7dcfec194fa9",
+    "semantic_hash": "c929451a0a2e57bc7e4b7dcfec194fa9"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/daily-brief.tsx": {
+    "mtime": 1776150412.9303186,
+    "ast_hash": "110f843acea01948d8d8137d0cce6a4b",
+    "semantic_hash": "110f843acea01948d8d8137d0cce6a4b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/follow-up-list.tsx": {
+    "mtime": 1776150412.9309597,
+    "ast_hash": "0e8af68da82c312f0850b218b1096a5f",
+    "semantic_hash": "0e8af68da82c312f0850b218b1096a5f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/schedule-follow-up-modal.tsx": {
+    "mtime": 1776150412.9383307,
+    "ast_hash": "ccd8a6f23c3f32f085c3b72334cd5888",
+    "semantic_hash": "ccd8a6f23c3f32f085c3b72334cd5888"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/power-dialer.tsx": {
+    "mtime": 1776150412.936089,
+    "ast_hash": "bf470b660c5b42aec9efd0ef623d047c",
+    "semantic_hash": "bf470b660c5b42aec9efd0ef623d047c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/outreach/outreach-actions.ts": {
+    "mtime": 1776150412.933867,
+    "ast_hash": "230bc908b3381dcff847f69a8c288497",
+    "semantic_hash": "230bc908b3381dcff847f69a8c288497"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/outreach/outreach-lead-card.tsx": {
+    "mtime": 1776150412.9351444,
+    "ast_hash": "00511ad43411b3b4dcc6dfa1f895588b",
+    "semantic_hash": "00511ad43411b3b4dcc6dfa1f895588b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/outreach/advance-stage-modal.tsx": {
+    "mtime": 1776150412.9330447,
+    "ast_hash": "f462ff5786c0dcbae206d4b6a3ae3d8c",
+    "semantic_hash": "f462ff5786c0dcbae206d4b6a3ae3d8c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/outreach/outreach-board.tsx": {
+    "mtime": 1776150412.9344635,
+    "ast_hash": "a1be3e770c5f15bfe8f5af69d73b6418",
+    "semantic_hash": "a1be3e770c5f15bfe8f5af69d73b6418"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/lists/TasksList.tsx": {
+    "mtime": 1776150412.916715,
+    "ast_hash": "b1c067dd164301cc9b5e920118f56560",
+    "semantic_hash": "b1c067dd164301cc9b5e920118f56560"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/lists/ProjectsList.tsx": {
+    "mtime": 1776150412.9161906,
+    "ast_hash": "e0f155310ce9ca7e4a36cbb61ebf9d83",
+    "semantic_hash": "e0f155310ce9ca7e4a36cbb61ebf9d83"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/lists/DealsList.tsx": {
+    "mtime": 1776150412.9150443,
+    "ast_hash": "e6fe1234341cbf9541288e39b1d20514",
+    "semantic_hash": "e6fe1234341cbf9541288e39b1d20514"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/lists/LeadsList.tsx": {
+    "mtime": 1776150412.9157171,
+    "ast_hash": "697c0f79da9067491b343784c6e0c821",
+    "semantic_hash": "697c0f79da9067491b343784c6e0c821"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/saved-views/BulkActionBar.tsx": {
+    "mtime": 1776150412.9417026,
+    "ast_hash": "33313e58314efd3faf45be7fb931f011",
+    "semantic_hash": "33313e58314efd3faf45be7fb931f011"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/saved-views/SavedViewsBar.tsx": {
+    "mtime": 1776150412.942281,
+    "ast_hash": "c62caa43b5d9c2d34ccadcb97c4fb484",
+    "semantic_hash": "c62caa43b5d9c2d34ccadcb97c4fb484"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/layout/notification-bell.tsx": {
+    "mtime": 1776150412.9142175,
+    "ast_hash": "df7e2cb2b207abc2b74f3d9b019304fd",
+    "semantic_hash": "df7e2cb2b207abc2b74f3d9b019304fd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/layout/followup-checker.tsx": {
+    "mtime": 1776150412.9130342,
+    "ast_hash": "6ba5cec6cd957479e23e4d4dd3201f02",
+    "semantic_hash": "6ba5cec6cd957479e23e4d4dd3201f02"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/task-manager.tsx": {
+    "mtime": 1776150412.9243615,
+    "ast_hash": "ef6ddadee2a23fb9c258701e57f1957d",
+    "semantic_hash": "ef6ddadee2a23fb9c258701e57f1957d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/deliverable-manager.tsx": {
+    "mtime": 1776150412.9205115,
+    "ast_hash": "65c9cc813ab45b96b4ff7978466da008",
+    "semantic_hash": "65c9cc813ab45b96b4ff7978466da008"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/pm-dashboard.tsx": {
+    "mtime": 1776150412.9222546,
+    "ast_hash": "3269f9acbc7bff3c0490d125f93a5f47",
+    "semantic_hash": "3269f9acbc7bff3c0490d125f93a5f47"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/project-dashboard.tsx": {
+    "mtime": 1776150412.9228368,
+    "ast_hash": "61387b4b44503a817ab9a5817b1d9608",
+    "semantic_hash": "61387b4b44503a817ab9a5817b1d9608"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/milestone-manager.tsx": {
+    "mtime": 1776150412.9210927,
+    "ast_hash": "5f963b2cba230178b1469469bac5410d",
+    "semantic_hash": "5f963b2cba230178b1469469bac5410d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/project-task-list.tsx": {
+    "mtime": 1776150412.9233816,
+    "ast_hash": "12beb6a31b44aea1c71e24de6bee514b",
+    "semantic_hash": "12beb6a31b44aea1c71e24de6bee514b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/change-request-board.tsx": {
+    "mtime": 1776150412.9192219,
+    "ast_hash": "eb9aef6f64d5360f0622daa0f583e661",
+    "semantic_hash": "eb9aef6f64d5360f0622daa0f583e661"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/create-project-modal.tsx": {
+    "mtime": 1776150412.9199836,
+    "ast_hash": "96f4c131b7d6c1ab6b99ea4bc8352c23",
+    "semantic_hash": "96f4c131b7d6c1ab6b99ea4bc8352c23"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/projects/task-modal-content.tsx": {
+    "mtime": 1776150412.92493,
+    "ast_hash": "17457316e56df7c54a205d2f5b2f71cd",
+    "semantic_hash": "17457316e56df7c54a205d2f5b2f71cd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/lp/lead-capture-form.tsx": {
+    "mtime": 1776150412.9174848,
+    "ast_hash": "1071bdd6051b47108e5e9dd47820d779",
+    "semantic_hash": "1071bdd6051b47108e5e9dd47820d779"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/task-completion-pie-chart.tsx": {
+    "mtime": 1776150412.9060678,
+    "ast_hash": "2c2671f8ceb2bb8e09c1ea9b7347385b",
+    "semantic_hash": "2c2671f8ceb2bb8e09c1ea9b7347385b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/pipeline-bar-chart.tsx": {
+    "mtime": 1776150412.9013202,
+    "ast_hash": "e3aec6ee8151a69a5957ef73fadc265d",
+    "semantic_hash": "e3aec6ee8151a69a5957ef73fadc265d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/duplicates-review-center.tsx": {
+    "mtime": 1776150412.883701,
+    "ast_hash": "6e93e8469edb84a59dd81d449afa6ffd",
+    "semantic_hash": "6e93e8469edb84a59dd81d449afa6ffd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/funnel-chart.tsx": {
+    "mtime": 1776150412.88807,
+    "ast_hash": "6dfa0aee272037fc6307aeabf9dda098",
+    "semantic_hash": "6dfa0aee272037fc6307aeabf9dda098"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/data-reset-button.tsx": {
+    "mtime": 1776150412.8831475,
+    "ast_hash": "65b1c692aa8fec0f055da749fceb9df5",
+    "semantic_hash": "65b1c692aa8fec0f055da749fceb9df5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/monthly-revenue-chart.tsx": {
+    "mtime": 1776150412.9002194,
+    "ast_hash": "945711e5f5530277048cdde14af8f6a5",
+    "semantic_hash": "945711e5f5530277048cdde14af8f6a5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/service-distribution-chart.tsx": {
+    "mtime": 1776150412.9042056,
+    "ast_hash": "f08460dab67f6675ef288ade065899b6",
+    "semantic_hash": "f08460dab67f6675ef288ade065899b6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/revenue-pie-chart.tsx": {
+    "mtime": 1776150412.9037492,
+    "ast_hash": "0e25783de972472a2a5018d4398eaebe",
+    "semantic_hash": "0e25783de972472a2a5018d4398eaebe"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/niche-kit-grid.tsx": {
+    "mtime": 1776150412.9008975,
+    "ast_hash": "85288cbb09628e778c6b6ac4bfc3955a",
+    "semantic_hash": "85288cbb09628e778c6b6ac4bfc3955a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/revenue-forecast-widget.tsx": {
+    "mtime": 1776150412.9032376,
+    "ast_hash": "6577b96e3346bd3c9e4d3d66e57b4918",
+    "semantic_hash": "6577b96e3346bd3c9e4d3d66e57b4918"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/revenue-by-source-chart.tsx": {
+    "mtime": 1776150412.9026828,
+    "ast_hash": "9de0b873c8a137a3dfe0dbb8f62080e1",
+    "semantic_hash": "9de0b873c8a137a3dfe0dbb8f62080e1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/MergeLeadWizard.tsx": {
+    "mtime": 1776150412.866571,
+    "ast_hash": "cbcb654733a5465547f32202ac8cf5e4",
+    "semantic_hash": "cbcb654733a5465547f32202ac8cf5e4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/team-load-chart.tsx": {
+    "mtime": 1776150412.9069374,
+    "ast_hash": "9b976ebe0a0d7487fb3368f02593f079",
+    "semantic_hash": "9b976ebe0a0d7487fb3368f02593f079"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/template-manager.tsx": {
+    "mtime": 1776150412.90789,
+    "ast_hash": "39f3689663a2eae66c4dbeea96d82547",
+    "semantic_hash": "39f3689663a2eae66c4dbeea96d82547"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/task-status-chart.tsx": {
+    "mtime": 1776150412.906498,
+    "ast_hash": "f5c49191c0ff1617a8d84bf2a0039933",
+    "semantic_hash": "f5c49191c0ff1617a8d84bf2a0039933"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/data-manager.tsx": {
+    "mtime": 1776150412.8826807,
+    "ast_hash": "5707d94b011c38dbe0a46f5bd1c4ec49",
+    "semantic_hash": "5707d94b011c38dbe0a46f5bd1c4ec49"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/lead-status-chart.tsx": {
+    "mtime": 1776150412.8942254,
+    "ast_hash": "1b8eb337c0880ed165b98015ca0ddb10",
+    "semantic_hash": "1b8eb337c0880ed165b98015ca0ddb10"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/alerts-manager.tsx": {
+    "mtime": 1776150412.867094,
+    "ast_hash": "df5870fbcfa6a7256aaa2afc9deb47c1",
+    "semantic_hash": "df5870fbcfa6a7256aaa2afc9deb47c1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/HealthScoreStars.tsx": {
+    "mtime": 1776150412.8721356,
+    "ast_hash": "3e8ae4683c2f39e459e604b54fd63089",
+    "semantic_hash": "3e8ae4683c2f39e459e604b54fd63089"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/ClientProfileTabs.tsx": {
+    "mtime": 1776150412.8710701,
+    "ast_hash": "ffce1eb5ebd5453819ab737cb1356959",
+    "semantic_hash": "ffce1eb5ebd5453819ab737cb1356959"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/ClientsTable.tsx": {
+    "mtime": 1776150412.8717115,
+    "ast_hash": "cb12f0d8ec1aaf1332442238631b5090",
+    "semantic_hash": "cb12f0d8ec1aaf1332442238631b5090"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/AddClientModal.tsx": {
+    "mtime": 1776150412.870595,
+    "ast_hash": "34e8116a7d7b3668b0d5ee9df47def98",
+    "semantic_hash": "34e8116a7d7b3668b0d5ee9df47def98"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/ServicePills.tsx": {
+    "mtime": 1776150412.8725884,
+    "ast_hash": "4cfeb099b6d75dd9103859a98be831cc",
+    "semantic_hash": "4cfeb099b6d75dd9103859a98be831cc"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/CommunicationsTab.tsx": {
+    "mtime": 1776150412.8741782,
+    "ast_hash": "2a56b7e6a7df4249ef2e105f8f9e15a2",
+    "semantic_hash": "2a56b7e6a7df4249ef2e105f8f9e15a2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/OverviewTab.tsx": {
+    "mtime": 1776150412.8758256,
+    "ast_hash": "a67a78948e267bbbbc1cfd64b59e730b",
+    "semantic_hash": "a67a78948e267bbbbc1cfd64b59e730b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/StrategyGeneratorModal.tsx": {
+    "mtime": 1776150412.876964,
+    "ast_hash": "ba77664f58018d709071422d04a9abdb",
+    "semantic_hash": "ba77664f58018d709071422d04a9abdb"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/AssetVaultTab.tsx": {
+    "mtime": 1776150412.873578,
+    "ast_hash": "f3364c4eeb076de2b8e7f0df06985b82",
+    "semantic_hash": "f3364c4eeb076de2b8e7f0df06985b82"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/ProjectsTab.tsx": {
+    "mtime": 1776150412.876361,
+    "ast_hash": "3db2c8fe0b34414a8f23e9d94126adbe",
+    "semantic_hash": "3db2c8fe0b34414a8f23e9d94126adbe"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/OnboardingTab.tsx": {
+    "mtime": 1776150412.8752337,
+    "ast_hash": "a11a17ead1f7eda7c202657df59e8e32",
+    "semantic_hash": "a11a17ead1f7eda7c202657df59e8e32"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/StrategyTab.tsx": {
+    "mtime": 1776150412.8775084,
+    "ast_hash": "d2de07290e365a567bc3ada35fdbd4a3",
+    "semantic_hash": "d2de07290e365a567bc3ada35fdbd4a3"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/clients/tabs/FinanceTab.tsx": {
+    "mtime": 1776150412.8747191,
+    "ast_hash": "c2ec87aa5e70f9538521154c91baac5e",
+    "semantic_hash": "c2ec87aa5e70f9538521154c91baac5e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/build-tracker/RefreshButton.tsx": {
+    "mtime": 1776150412.8688097,
+    "ast_hash": "27fe82c326618ecc5b0635d34e67d265",
+    "semantic_hash": "27fe82c326618ecc5b0635d34e67d265"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/build-tracker/SystemCard.tsx": {
+    "mtime": 1776150412.8697565,
+    "ast_hash": "fb1bad6073e0033ef73a27135cbcd760",
+    "semantic_hash": "fb1bad6073e0033ef73a27135cbcd760"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/build-tracker/StatusBadge.tsx": {
+    "mtime": 1776150412.86924,
+    "ast_hash": "709233507784eee74c243cbe618d6b90",
+    "semantic_hash": "709233507784eee74c243cbe618d6b90"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/build-tracker/NotesEditor.tsx": {
+    "mtime": 1776150412.868341,
+    "ast_hash": "b447eb4eca4d406ed24d99e69ed29170",
+    "semantic_hash": "b447eb4eca4d406ed24d99e69ed29170"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/build-tracker/AddModuleModal.tsx": {
+    "mtime": 1776150412.8678896,
+    "ast_hash": "236e4116e1f0f146b62b8006cef64b03",
+    "semantic_hash": "236e4116e1f0f146b62b8006cef64b03"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/ReviewRequestsTable.tsx": {
+    "mtime": 1776150412.893308,
+    "ast_hash": "8d37337c8cb4de566c47c0300f037067",
+    "semantic_hash": "8d37337c8cb4de566c47c0300f037067"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/GMBChecklist.tsx": {
+    "mtime": 1776150412.8916285,
+    "ast_hash": "d13af0c41f4e28b2d0fa41e7ae0178d7",
+    "semantic_hash": "d13af0c41f4e28b2d0fa41e7ae0178d7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/ContentCalendar.tsx": {
+    "mtime": 1776150412.889992,
+    "ast_hash": "54d923b0405d1cf5ca3e4349437ef821",
+    "semantic_hash": "54d923b0405d1cf5ca3e4349437ef821"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/CityOverviewTable.tsx": {
+    "mtime": 1776150412.8894424,
+    "ast_hash": "23d76abe6efa213ce971eae710765122",
+    "semantic_hash": "23d76abe6efa213ce971eae710765122"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/ContentKanbanBoard.tsx": {
+    "mtime": 1776150412.8905175,
+    "ast_hash": "4b6ddff620d855daba4facc3aafb9227",
+    "semantic_hash": "4b6ddff620d855daba4facc3aafb9227"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/NicheAccordion.tsx": {
+    "mtime": 1776150412.8922377,
+    "ast_hash": "2e70cc1a80a599a53956f846c29320dc",
+    "semantic_hash": "2e70cc1a80a599a53956f846c29320dc"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/StrategyInputPanel.tsx": {
+    "mtime": 1776150412.8937972,
+    "ast_hash": "d90dce37185ee79e34e2882431e41d12",
+    "semantic_hash": "d90dce37185ee79e34e2882431e41d12"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/OrganicTrendChart.tsx": {
+    "mtime": 1776150412.892728,
+    "ast_hash": "be3d80255d57eed45db818e50987bc32",
+    "semantic_hash": "be3d80255d57eed45db818e50987bc32"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/ActiveCampaignsTable.tsx": {
+    "mtime": 1776150412.8889,
+    "ast_hash": "d213121c3a138a0e6a77428b66f48044",
+    "semantic_hash": "d213121c3a138a0e6a77428b66f48044"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/growth/ContentPostModal.tsx": {
+    "mtime": 1776150412.8911316,
+    "ast_hash": "28af1109eae54754339111bda58eef04",
+    "semantic_hash": "28af1109eae54754339111bda58eef04"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/PriorityList.tsx": {
+    "mtime": 1776150412.8811643,
+    "ast_hash": "4f6bf378341738466a5efb857d958590",
+    "semantic_hash": "4f6bf378341738466a5efb857d958590"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/AgencyGrowthCard.tsx": {
+    "mtime": 1776150412.8783042,
+    "ast_hash": "228fd8f88197d31f16308a6a40c7dece",
+    "semantic_hash": "228fd8f88197d31f16308a6a40c7dece"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/PipelineSnapshot.tsx": {
+    "mtime": 1776150412.880617,
+    "ast_hash": "08bead8f7e83c1605d83af11a7a8c735",
+    "semantic_hash": "08bead8f7e83c1605d83af11a7a8c735"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/BuildProgressSummary.tsx": {
+    "mtime": 1776150412.8787925,
+    "ast_hash": "90ff0475e66fd05adacada0f18b78b46",
+    "semantic_hash": "90ff0475e66fd05adacada0f18b78b46"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/CityAcquisitionCard.tsx": {
+    "mtime": 1776150412.8793857,
+    "ast_hash": "7168096b34b8f931dc8361e08c6649d7",
+    "semantic_hash": "7168096b34b8f931dc8361e08c6649d7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/QuickActions.tsx": {
+    "mtime": 1776150412.8818893,
+    "ast_hash": "2c336ac6fcdc6800046e9a00eaa823d8",
+    "semantic_hash": "2c336ac6fcdc6800046e9a00eaa823d8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/dashboard/KpiBar.tsx": {
+    "mtime": 1776150412.8800232,
+    "ast_hash": "a8bad5d72f54929642d941fe542ee24c",
+    "semantic_hash": "a8bad5d72f54929642d941fe542ee24c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/renewals/RenewalAndUpsellTables.tsx": {
+    "mtime": 1776150412.9021742,
+    "ast_hash": "604ff5804c6e7c477504f7824c934bc6",
+    "semantic_hash": "604ff5804c6e7c477504f7824c934bc6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/marketing/marketing-dashboard.tsx": {
+    "mtime": 1776150412.8949282,
+    "ast_hash": "2a1c2b62c8be324b2574d3de6ef1d4e6",
+    "semantic_hash": "2a1c2b62c8be324b2574d3de6ef1d4e6"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/marketing/tabs/content-calendar-tab.tsx": {
+    "mtime": 1776150412.8963816,
+    "ast_hash": "af96cdae43ebd194437d055c4e9b37b8",
+    "semantic_hash": "af96cdae43ebd194437d055c4e9b37b8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/marketing/tabs/overview-tab.tsx": {
+    "mtime": 1776150412.8985982,
+    "ast_hash": "9f02722817f5d65f41878ed02dc379f0",
+    "semantic_hash": "9f02722817f5d65f41878ed02dc379f0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/marketing/tabs/organic-seo-tab.tsx": {
+    "mtime": 1776150412.8976824,
+    "ast_hash": "94dcaa23b8ab6a0c818c2abd0d0ba62e",
+    "semantic_hash": "94dcaa23b8ab6a0c818c2abd0d0ba62e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/marketing/tabs/paid-campaigns-tab.tsx": {
+    "mtime": 1776150412.899801,
+    "ast_hash": "5e98771bfaac41ea0e2cce3d5f06e531",
+    "semantic_hash": "5e98771bfaac41ea0e2cce3d5f06e531"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/finance/InvoicePDF.tsx": {
+    "mtime": 1776150412.8876078,
+    "ast_hash": "ef9f93c62b9bd541a03b6e48cd2d2659",
+    "semantic_hash": "ef9f93c62b9bd541a03b6e48cd2d2659"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/finance/ExpenseCreateModal.tsx": {
+    "mtime": 1776150412.8846083,
+    "ast_hash": "f5f051f4ab900a06a80a5ec6190e28b5",
+    "semantic_hash": "f5f051f4ab900a06a80a5ec6190e28b5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/finance/ExpenseLogClient.tsx": {
+    "mtime": 1776150412.8852758,
+    "ast_hash": "8e33d2c363932196269bf3850d6737fc",
+    "semantic_hash": "8e33d2c363932196269bf3850d6737fc"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/finance/InvoiceCreateModal.tsx": {
+    "mtime": 1776150412.8864157,
+    "ast_hash": "20b5a37ad134f22e069362c521616721",
+    "semantic_hash": "20b5a37ad134f22e069362c521616721"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/finance/FinanceChart.tsx": {
+    "mtime": 1776150412.885758,
+    "ast_hash": "2f520eb3160a140f626ff14f6623a39e",
+    "semantic_hash": "2f520eb3160a140f626ff14f6623a39e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/finance/InvoiceManagerClient.tsx": {
+    "mtime": 1776150412.8870153,
+    "ast_hash": "1485575b8f59bf8f94881a9759a392fa",
+    "semantic_hash": "1485575b8f59bf8f94881a9759a392fa"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/strategy/LLMKeyManager.tsx": {
+    "mtime": 1776150412.905058,
+    "ast_hash": "0cc9189188fe3770240f2e4605f9909f",
+    "semantic_hash": "0cc9189188fe3770240f2e4605f9909f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/admin/strategy/StrategyPastePanel.tsx": {
+    "mtime": 1776150412.9056046,
+    "ast_hash": "346e95eb791ce2d0debe0cfc50af04f7",
+    "semantic_hash": "346e95eb791ce2d0debe0cfc50af04f7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/dashboard/kpi-card.tsx": {
+    "mtime": 1776150412.9115274,
+    "ast_hash": "dd381a1561e9409b7a6b7b4dd5118676",
+    "semantic_hash": "dd381a1561e9409b7a6b7b4dd5118676"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/dashboard/csv-uploader.tsx": {
+    "mtime": 1776150412.9110475,
+    "ast_hash": "9ae50b1e0b85669576aa25340ae1d700",
+    "semantic_hash": "9ae50b1e0b85669576aa25340ae1d700"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/manager/pipeline-board.tsx": {
+    "mtime": 1776150412.91849,
+    "ast_hash": "784059fffe5518bf00ae7e3d339a885f",
+    "semantic_hash": "784059fffe5518bf00ae7e3d339a885f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/role-scorecard.tsx": {
+    "mtime": 1776150412.953338,
+    "ast_hash": "3fc34a8b217886d9a0a4e30c787584db",
+    "semantic_hash": "3fc34a8b217886d9a0a4e30c787584db"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/team-member-card.tsx": {
+    "mtime": 1776150412.9553347,
+    "ast_hash": "c919450a4332618b26c1cfb25f4459b2",
+    "semantic_hash": "c919450a4332618b26c1cfb25f4459b2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/team-overview-client.tsx": {
+    "mtime": 1776150412.9558518,
+    "ast_hash": "2bbe426dfd32d84c0044328dba2995f5",
+    "semantic_hash": "2bbe426dfd32d84c0044328dba2995f5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/sop-editor.tsx": {
+    "mtime": 1776150412.9548774,
+    "ast_hash": "6b0e61520da8df2a0c7ba84ee2223e70",
+    "semantic_hash": "6b0e61520da8df2a0c7ba84ee2223e70"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/sop-card.tsx": {
+    "mtime": 1776150412.9543877,
+    "ast_hash": "35ff34e6c620c6ac0810c3fd6239e201",
+    "semantic_hash": "35ff34e6c620c6ac0810c3fd6239e201"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/daily-targets-table.tsx": {
+    "mtime": 1776150412.9528418,
+    "ast_hash": "d9145f9aeb04db58f2e4766a1e649463",
+    "semantic_hash": "d9145f9aeb04db58f2e4766a1e649463"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/set-targets-modal.tsx": {
+    "mtime": 1776150412.9538217,
+    "ast_hash": "ebcda7e1a0ce23183ba93572897b6271",
+    "semantic_hash": "ebcda7e1a0ce23183ba93572897b6271"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/team/assign-task-modal.tsx": {
+    "mtime": 1776150412.9523387,
+    "ast_hash": "8d8f7fb577256067273ef217543d94ca",
+    "semantic_hash": "8d8f7fb577256067273ef217543d94ca"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/staff/task-execution-modal.tsx": {
+    "mtime": 1776150412.944586,
+    "ast_hash": "9073b4ffc8408c452b847f6bf1964f09",
+    "semantic_hash": "9073b4ffc8408c452b847f6bf1964f09"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/staff/staff-dashboard.tsx": {
+    "mtime": 1776150412.9438517,
+    "ast_hash": "8eb6bd36bd72ae8c1bdfa33b2be94128",
+    "semantic_hash": "8eb6bd36bd72ae8c1bdfa33b2be94128"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/proposals/proposal-creator.tsx": {
+    "mtime": 1776150412.9266768,
+    "ast_hash": "eab7e7273a7079de672988ab47318bf5",
+    "semantic_hash": "eab7e7273a7079de672988ab47318bf5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/proposals/agreement-generator.tsx": {
+    "mtime": 1776150412.9258745,
+    "ast_hash": "e2416f80a0cd0401cf166c6fa3f815d3",
+    "semantic_hash": "e2416f80a0cd0401cf166c6fa3f815d3"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/client-portal/client-milestone-list.tsx": {
+    "mtime": 1776150412.9086452,
+    "ast_hash": "0626b4ff3e1c6bdcac3a070dffdbddce",
+    "semantic_hash": "0626b4ff3e1c6bdcac3a070dffdbddce"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/hooks/useBulkSelection.ts": {
+    "mtime": 1776150412.9644244,
+    "ast_hash": "2a5412d713b0e6209f897df12d80fa1e",
+    "semantic_hash": "2a5412d713b0e6209f897df12d80fa1e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/scripts/import_hubli_leads.py": {
+    "mtime": 1776150413.0078979,
+    "ast_hash": "251fc3debfab465d22512f78e8869f8d",
+    "semantic_hash": "251fc3debfab465d22512f78e8869f8d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/scripts/create-users.js": {
+    "mtime": 1777189328.0311475,
+    "ast_hash": "9ace589d87c9084ec47c6353da2de327",
+    "semantic_hash": "9ace589d87c9084ec47c6353da2de327"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/scripts/delete-old-users.js": {
+    "mtime": 1777189478.8653984,
+    "ast_hash": "b4787b9db32891b3df225cc8a2e7bbab",
+    "semantic_hash": "b4787b9db32891b3df225cc8a2e7bbab"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/analyze-data.ts": {
+    "mtime": 1776150412.7525277,
+    "ast_hash": "2566cf28b4aa73d2cf5fe830a3fad890",
+    "semantic_hash": "2566cf28b4aa73d2cf5fe830a3fad890"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/reset-database.ts": {
+    "mtime": 1776150412.7539778,
+    "ast_hash": "5ab746859bb98e1f2024ee845176530f",
+    "semantic_hash": "5ab746859bb98e1f2024ee845176530f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/bulk-actions.ts": {
+    "mtime": 1776150412.7529857,
+    "ast_hash": "56951a3fea409d1ca5ea45033bd6afb8",
+    "semantic_hash": "56951a3fea409d1ca5ea45033bd6afb8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/upload-leads.ts": {
+    "mtime": 1776150412.7544088,
+    "ast_hash": "9c928afacfabb37de50268b1b570b666",
+    "semantic_hash": "9c928afacfabb37de50268b1b570b666"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/delete-data.ts": {
+    "mtime": 1776150412.7535148,
+    "ast_hash": "7350b0e59559b1b6134fa2a0f5c47411",
+    "semantic_hash": "7350b0e59559b1b6134fa2a0f5c47411"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/niche-scripts.ts": {
+    "mtime": 1776150412.980506,
+    "ast_hash": "fcc0f78155da03894cc5b34a80d02407",
+    "semantic_hash": "fcc0f78155da03894cc5b34a80d02407"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/performance.ts": {
+    "mtime": 1776150412.982287,
+    "ast_hash": "c38d5c5439189fb855a7af4d6709696a",
+    "semantic_hash": "c38d5c5439189fb855a7af4d6709696a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/project-utils.ts": {
+    "mtime": 1776150412.9834647,
+    "ast_hash": "c45caedfbd4b6658b4011fc50235b4fd",
+    "semantic_hash": "c45caedfbd4b6658b4011fc50235b4fd"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/supabase-server.ts": {
+    "mtime": 1776150412.9932446,
+    "ast_hash": "9b2a5f5df893b1c46c530f2dab1bc1ce",
+    "semantic_hash": "9b2a5f5df893b1c46c530f2dab1bc1ce"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/notifications.ts": {
+    "mtime": 1776150412.9813259,
+    "ast_hash": "518222c2e8affdc74e029c89a93aefbf",
+    "semantic_hash": "518222c2e8affdc74e029c89a93aefbf"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/utils.ts": {
+    "mtime": 1776150412.994102,
+    "ast_hash": "a22d8ba668a599b3cc37c3abc6075b27",
+    "semantic_hash": "a22d8ba668a599b3cc37c3abc6075b27"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/normalize.ts": {
+    "mtime": 1776150412.9809163,
+    "ast_hash": "9bc8981c5caddaa38dad30746fe3aa81",
+    "semantic_hash": "9bc8981c5caddaa38dad30746fe3aa81"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/filtering.ts": {
+    "mtime": 1776150412.978185,
+    "ast_hash": "87b429b4f4a39a4eef87b14f440174f1",
+    "semantic_hash": "87b429b4f4a39a4eef87b14f440174f1"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/openrouter.ts": {
+    "mtime": 1776150412.9818068,
+    "ast_hash": "d00b0649e49d5824d6021675b18080f2",
+    "semantic_hash": "d00b0649e49d5824d6021675b18080f2"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/lead-scoring.ts": {
+    "mtime": 1776150412.9794204,
+    "ast_hash": "9dc948a321597e876593f0aa37422ed0",
+    "semantic_hash": "9dc948a321597e876593f0aa37422ed0"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/supabase.ts": {
+    "mtime": 1776150412.9936786,
+    "ast_hash": "a32e9adcddad6f3f06eb10779ec2f66c",
+    "semantic_hash": "a32e9adcddad6f3f06eb10779ec2f66c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/audit.ts": {
+    "mtime": 1777188743.2815988,
+    "ast_hash": "38313da56ef1f6400838bb65cd5c2025",
+    "semantic_hash": "38313da56ef1f6400838bb65cd5c2025"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/pitch-engine.ts": {
+    "mtime": 1776150412.9829173,
+    "ast_hash": "1d08f0cab9de77b0d43e954dc306352b",
+    "semantic_hash": "1d08f0cab9de77b0d43e954dc306352b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/file-service.ts": {
+    "mtime": 1776150412.9777632,
+    "ast_hash": "12fd24ccd98b8d3a7ec7cbf4af111f57",
+    "semantic_hash": "12fd24ccd98b8d3a7ec7cbf4af111f57"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/attendance/calc.ts": {
+    "mtime": 1776150412.969979,
+    "ast_hash": "cdb36e38fb121d11167937f29bafe7af",
+    "semantic_hash": "cdb36e38fb121d11167937f29bafe7af"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/FMOS_Script_Data/script_type_D.json": {
+    "mtime": 1777460063.8562224,
+    "ast_hash": "4e6b3c9e9c3512851c325f429930843e",
+    "semantic_hash": "4e6b3c9e9c3512851c325f429930843e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/FMOS_Script_Data/script_type_B.json": {
+    "mtime": 1777460063.8559163,
+    "ast_hash": "aedc6f91985c384d12b7f9717ec6fa21",
+    "semantic_hash": "aedc6f91985c384d12b7f9717ec6fa21"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/FMOS_Script_Data/script_type_C.json": {
+    "mtime": 1777460063.8560662,
+    "ast_hash": "43fe079401e7a44504ac8e439f465c6c",
+    "semantic_hash": "43fe079401e7a44504ac8e439f465c6c"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/FMOS_Script_Data/script_type_A.json": {
+    "mtime": 1777460063.8557372,
+    "ast_hash": "ef82f9a103e002c1122d2596b31cdf1e",
+    "semantic_hash": "ef82f9a103e002c1122d2596b31cdf1e"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/FMOS_Script_Data/script.types.ts": {
+    "mtime": 1776150412.9661496,
+    "ast_hash": "aaa6f543821214c4b83489e1fe1b458d",
+    "semantic_hash": "aaa6f543821214c4b83489e1fe1b458d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/FMOS_Script_Data/index.ts": {
+    "mtime": 1776150412.9657338,
+    "ast_hash": "45a44234b438a8240e24684f5fbaa859",
+    "semantic_hash": "45a44234b438a8240e24684f5fbaa859"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/projects/task-logic.ts": {
+    "mtime": 1776150412.984142,
+    "ast_hash": "dd98d98e2a6477eaf4e1ad139c34bbbf",
+    "semantic_hash": "dd98d98e2a6477eaf4e1ad139c34bbbf"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/admin/kpi-logic.ts": {
+    "mtime": 1776150412.9692683,
+    "ast_hash": "d46b5e1c7404f20729f388bbd61111e4",
+    "semantic_hash": "d46b5e1c7404f20729f388bbd61111e4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/hooks/use-marketing-data.ts": {
+    "mtime": 1776150412.978965,
+    "ast_hash": "79a75cb4202cd105867adfad21dd2003",
+    "semantic_hash": "79a75cb4202cd105867adfad21dd2003"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/automations/engine.ts": {
+    "mtime": 1776150412.9721553,
+    "ast_hash": "6e608574b161d15df0b7abd6c03992a5",
+    "semantic_hash": "6e608574b161d15df0b7abd6c03992a5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/automations/conditions.ts": {
+    "mtime": 1776150412.9715867,
+    "ast_hash": "f1bf6cd02038fc0bf5324b34f9aeef29",
+    "semantic_hash": "f1bf6cd02038fc0bf5324b34f9aeef29"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/automations/types.ts": {
+    "mtime": 1776150412.9730444,
+    "ast_hash": "0d2cafa250f0d6bebd27f42c67b60056",
+    "semantic_hash": "0d2cafa250f0d6bebd27f42c67b60056"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/automations/actions.ts": {
+    "mtime": 1776150412.9710968,
+    "ast_hash": "8b58899cbf0780f225642ec556c1070f",
+    "semantic_hash": "8b58899cbf0780f225642ec556c1070f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/automations/inbound-leads.ts": {
+    "mtime": 1776150412.9726267,
+    "ast_hash": "a51c0a73f51c6a168acd45476a9c4ed5",
+    "semantic_hash": "a51c0a73f51c6a168acd45476a9c4ed5"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/services_data.json": {
+    "mtime": 1776150412.9772985,
+    "ast_hash": "d9ad982aa566bb473418307c35a1d14a",
+    "semantic_hash": "d9ad982aa566bb473418307c35a1d14a"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/scripts/script_type_D.json": {
+    "mtime": 1777460063.8580227,
+    "ast_hash": "12973cd0ae752f03f389c571176f0b70",
+    "semantic_hash": "12973cd0ae752f03f389c571176f0b70"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/scripts/script_type_B.json": {
+    "mtime": 1777460063.8570695,
+    "ast_hash": "f0902eb26c53031623f499fe59fc3c18",
+    "semantic_hash": "f0902eb26c53031623f499fe59fc3c18"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/scripts/script_type_C.json": {
+    "mtime": 1777460063.8573747,
+    "ast_hash": "ba967bf906d95fb6330095f2a766f95f",
+    "semantic_hash": "ba967bf906d95fb6330095f2a766f95f"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/scripts/script_type_A.json": {
+    "mtime": 1777460063.8567307,
+    "ast_hash": "23e3c90c405949164cff61c3a1c7b715",
+    "semantic_hash": "23e3c90c405949164cff61c3a1c7b715"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/scripts/script.types.ts": {
+    "mtime": 1776150412.973944,
+    "ast_hash": "aaa6f543821214c4b83489e1fe1b458d",
+    "semantic_hash": "aaa6f543821214c4b83489e1fe1b458d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/scripts/scripts_index.ts": {
+    "mtime": 1776150412.9767556,
+    "ast_hash": "45a44234b438a8240e24684f5fbaa859",
+    "semantic_hash": "45a44234b438a8240e24684f5fbaa859"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/onboarding/generateClientOnboarding.ts": {
+    "mtime": 1777187318.6502912,
+    "ast_hash": "968b53936dd85602cfc25ce7544628d8",
+    "semantic_hash": "968b53936dd85602cfc25ce7544628d8"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Upsell_System/FMOS_Upsell_Data/upsell_rules.json": {
+    "mtime": 1777184968.7459548,
+    "ast_hash": "cfdd84f3835d5533c30f26cea3f3c9f7",
+    "semantic_hash": "cfdd84f3835d5533c30f26cea3f3c9f7"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Upsell_System/FMOS_Upsell_Data/upsell_scripts.json": {
+    "mtime": 1777185009.2447386,
+    "ast_hash": "0ffb846c1f857a2026404eb60a4881a4",
+    "semantic_hash": "0ffb846c1f857a2026404eb60a4881a4"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Monthly_Reports/FMOS_Report_Data/client_health_score.json": {
+    "mtime": 1777184729.4289577,
+    "ast_hash": "da2b19fde493bad6c3a6e5708acba17b",
+    "semantic_hash": "da2b19fde493bad6c3a6e5708acba17b"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Monthly_Reports/FMOS_Report_Data/report_index.ts": {
+    "mtime": 1777184753.348328,
+    "ast_hash": "f72b718037b9adc5c18dd483e80eacce",
+    "semantic_hash": "f72b718037b9adc5c18dd483e80eacce"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Monthly_Reports/FMOS_Report_Data/monthly_report_schema.json": {
+    "mtime": 1777184700.570177,
+    "ast_hash": "475ca2021fea1aca64d3635483dba08d",
+    "semantic_hash": "475ca2021fea1aca64d3635483dba08d"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Onboarding/FMOS_Onboarding_Data/onboarding.types.ts": {
+    "mtime": 1776150413.0958862,
+    "ast_hash": "86f7c136401f1154480cabeed4357dea",
+    "semantic_hash": "86f7c136401f1154480cabeed4357dea"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Onboarding/FMOS_Onboarding_Data/index.ts": {
+    "mtime": 1776150413.0953856,
+    "ast_hash": "d1b293af4ba1f496dd0dce236e2af363",
+    "semantic_hash": "d1b293af4ba1f496dd0dce236e2af363"
+  },
+  "/Users/fortunemarq/Desktop/FortuneMarq-Build/04_CLIENT_MANAGEMENT/Onboarding/FMOS_Onboarding_Data/onboarding_checklists.json": {
+    "mtime": 1776150413.0968237,
+    "ast_hash": "944ddeceaa308f2d06da6915a47c78f2",
+    "semantic_hash": "944ddeceaa308f2d06da6915a47c78f2"
+  }
+}

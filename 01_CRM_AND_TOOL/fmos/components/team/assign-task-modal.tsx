@@ -4,19 +4,21 @@ import { useState } from "react";
 import { X, Save, Plus, Loader2, Calendar, Layout } from "lucide-react";
 import { createAssignedTask } from "@/app/admin/team/actions";
 import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/toast";
 
 interface AssignTaskModalProps {
   profiles: any[];
+  defaultAssignee?: string;
   onClose: () => void;
 }
 
-export default function AssignTaskModal({ profiles, onClose }: AssignTaskModalProps) {
+export default function AssignTaskModal({ profiles, defaultAssignee, onClose }: AssignTaskModalProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [task, setTask] = useState({
     title: "",
     description: "",
-    assigned_to: profiles[0]?.id || "",
+    assigned_to: defaultAssignee || profiles[0]?.id || "",
     due_date: new Date().toISOString().split('T')[0],
     priority: "medium"
   });
@@ -31,11 +33,11 @@ export default function AssignTaskModal({ profiles, onClose }: AssignTaskModalPr
         onClose();
         router.refresh();
       } else {
-        alert("Error assigning task: " + error);
+        toast.error("Error assigning task", String(error));
       }
     } catch (e) {
       console.error(e);
-      alert("Error assigning task");
+      toast.error("Error assigning task");
     } finally {
       setIsSaving(false);
     }

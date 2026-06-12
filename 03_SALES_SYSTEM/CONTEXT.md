@@ -1,5 +1,5 @@
 # 03 — Sales System
-**Last Updated:** 2026-04-29 | **Status:** COMPLETE through L4b. Scripts live in FMOS with real search volumes. Waiting on FMOS deployment and bulk lead import to execute outreach.
+**Last Updated:** 2026-06-12 | **Status:** COMPLETE through L4b. Scripts live in FMOS with real search volumes. Waiting on FMOS deployment (now Vercel) and bulk lead import to execute outreach. NEW 2026-06-12: inbound leads auto-arrive in the cockpit (round-robin assigned + notified) via the Phase F inbound engine; cockpit quick-add has a source picker; WhatsApp Cloud API webhook is Phase F Stage 1 (post-deploy) — see `01_CRM_AND_TOOL/fmos/PHASE_F_INBOUND_MARKETING.md`.
 
 ## Folder Purpose
 Plan and create everything related to acquiring clients — telecaller scripts, WhatsApp templates, proposals, agreements, and the outreach sequence. This folder is the content layer for the sales function. The execution happens in FMOS (01_CRM_AND_TOOL). The content lives here.

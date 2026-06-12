@@ -28,11 +28,11 @@ Plan and manage all financial operations — invoicing, GST compliance, expense 
 | Service | Setup Fee | Monthly |
 |---|---|---|
 | Landing Page | ₹5,000–₹8,000 | One-time |
-| Standard Website | ₹8,000 | One-time |
+| Standard Website | ₹8,000–₹15,000 | One-time |
 | Premium Website | ₹15,000–₹20,000 | One-time |
-| Google Ads Management | ₹4,500 | ₹2,500/month |
-| Meta Ads Management | — | ₹2,500/month |
-| GMB Optimization | — | ₹2,500/month |
+| Google Ads Management | ₹4,500 | ₹2,500/month + 5% of ad spend if spend exceeds ₹15,000/month |
+| Meta Ads Management | — | ₹2,500/month + 5% of ad spend if spend exceeds ₹15,000/month |
+| GMB Optimization | — | ₹3,500/month |
 | SEO Starter | — | ₹7,000/month |
 | SEO Growth | — | ₹10,000–₹12,000/month |
 | SEO Dominate | — | ₹15,000+/month |
@@ -57,22 +57,46 @@ Plan and manage all financial operations — invoicing, GST compliance, expense 
 - Invoice settings not yet activated in FMOS
 - To activate: enter GSTIN + bank details in FMOS `/admin/finance` settings
 
-## Revenue Milestones
-| Target | Timeline |
+## June 2026 Focus (This Month)
+No revenue target for June. Entire month focused on:
+- Completing and deploying FMOS
+- Building strategies (sales, content, ads)
+- Setting up online presence (GMB, social)
+- Preparing marketing campaigns to launch in July
+
+## Revenue Targets (Reset: 2026-06-08)
+| Period | Target | Notes |
+|---|---|---|
+| June 2026 | ₹0 target | Build month — app, strategy, presence |
+| Q3 2026 (Jul–Sep) | ₹1,00,000 total revenue | First revenue quarter. Mix of one-time + retainer. |
+| Oct 2026 onwards | 20% month-on-month growth | Compounding from Q3 baseline |
+
+**Projected trajectory at 20% MoM from Q3 baseline (₹33K/month avg):**
+| Month | Target |
 |---|---|
-| ₹50K MRR | End April/May 2026 |
-| ₹1L MRR | Month 4–5 |
-| ₹2L MRR | Hiring trigger |
-| ₹5L MRR | 2-year vision |
+| July 2026 | ₹25,000 |
+| August 2026 | ₹35,000 |
+| September 2026 | ₹40,000 |
+| October 2026 | ₹48,000 |
+| November 2026 | ₹58,000 |
+| December 2026 | ₹70,000 |
+| January 2027 | ₹84,000 |
+| February 2027 | ₹1,00,800 |
+| March 2027 | ₹1,21,000 |
+| Hiring trigger | ₹2,00,000 MRR | Month 12–14 at this trajectory |
 
 ## Current Revenue
-- Company MRR: ₹0 (as of April 2026)
+- Company MRR: ₹0 (as of June 2026)
 - Personal freelance income: ₹15,000–₹20,000/month (Jabeer — not counted in company revenue)
 
 ## What's Pending
 - FMOS Phase E: MRR vs one-time revenue split in Finance dashboard
-- FMOS Phase E: Revenue Forecast Widget (pipeline × close rate vs ₹50K target)
-- Activate GST invoice settings in FMOS once deployed
+- FMOS Phase E: Revenue Forecast Widget (pipeline × close rate vs monthly target)
+- **Activate GST invoice settings in FMOS post-deployment:**
+  - Enter GSTIN: 29ICWPS9816Q1ZS in `/admin/finance` settings
+  - Enter bank details: Karnataka Bank, A/C 0332202500001101, IFSC KARB0000332
+  - Enable GST invoice generation (18% GST on all services)
+  - Test invoice PDF generation before first client
 - First invoice to be raised: will be for the first signed company client
 
 ## What's Blocked
@@ -95,3 +119,4 @@ Plan and manage all financial operations — invoicing, GST compliance, expense 
 |---|---|
 | March 2026 | Context file created. Finance module noted as existing in FMOS but needing activation. Pricing locked. |
 | 2026-04-28 | CONTEXT.md fully rewritten. GSTIN confirmed. Current revenue confirmed zero. Phase E requirements documented. |
+| 2026-06-08 | Revenue targets reset. June = build month, no revenue target. Q3 (Jul–Sep) = ₹1L total revenue. 20% MoM growth after Q3. GST activation steps documented with bank details from BUSINESS_MASTER_INFO.md. |

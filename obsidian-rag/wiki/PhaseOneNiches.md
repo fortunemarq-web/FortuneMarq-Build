@@ -10,18 +10,18 @@
 
 FortuneMarq's Phase 1 targets six priority niches in Hubli-Dharwad, selected based on real Google Keyword Planner search volume data. These niches have high monthly search volumes with very few competitors actively running digital ads or ranking organically — creating a strong opportunity gap.
 
-## Priority Niches (Hubli)
+## Priority Niches (Hubli) — Attack Order
 
-| Niche | Monthly Searches | Opportunity |
-|-------|-----------------|-------------|
-| Gyms | 63,950 | Only 3 websites getting traffic |
-| Skin Clinics | 41,850 | Top clinic gets only 173 visits — 99% traffic gap |
-| Computer Training | 24,350 | High search, low digital presence |
-| Dental Clinics | 21,100 | Strong intent, underserved online |
-| Car Rentals | 16,450 | Zero paid ads running |
-| JEE/NEET Coaching | 12,300 | High-value, strong conversion intent |
+| Priority | Niche Group | Niches | Combined Monthly Searches | Opportunity |
+|----------|-------------|--------|--------------------------|-------------|
+| 1 | Healthcare | Dental Clinics + Skin Clinics | 62,950 | Strong local intent, underserved online, no paid ads |
+| 2 | Real Estate | Real Estate | — | High-value leads, low digital competition |
+| 3 | Car Rental | Car Rentals | 16,450 | Zero paid ads in entire market |
+| 4 | Fitness | Gyms | 63,950 | Only 3 websites getting traffic |
+| 5 | Education | JEE/NEET Coaching + Computer Training | 36,650 | High intent, students going to national platforms |
+| 6 | Remaining | All other niches | — | After Phase 1 groups are called and campaigned |
 
-**Total across all 6 niches: ~180,000 monthly searches in Hubli alone.**
+**Total across all 6 priority groups: ~180,000+ monthly searches in Hubli alone.**
 
 ## Key Market Insight
 

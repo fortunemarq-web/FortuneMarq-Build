@@ -7,19 +7,22 @@ import {
     TrendingUp,
     Megaphone,
     CalendarDays,
-    ChevronDown
+    ChevronDown,
+    Inbox
 } from "lucide-react";
 import OverviewTab from "./tabs/overview-tab";
 import OrganicSeoTab from "./tabs/organic-seo-tab";
 import PaidCampaignsTab from "./tabs/paid-campaigns-tab";
 import ContentCalendarTab from "./tabs/content-calendar-tab";
+import InboundFunnelTab from "./tabs/inbound-funnel-tab";
 
-type TabType = "overview" | "organic" | "paid" | "content";
+type TabType = "overview" | "inbound" | "organic" | "paid" | "content";
 
 export default function MarketingDashboard() {
-    const [activeTab, setActiveTab] = useState<TabType>("overview");
+    const [activeTab, setActiveTab] = useState<TabType>("inbound");
 
     const tabs = [
+        { id: "inbound", label: "Inbound & Funnel", icon: Inbox },
         { id: "overview", label: "Overview", icon: LayoutDashboard },
         { id: "organic", label: "Organic & SEO", icon: TrendingUp },
         { id: "paid", label: "Paid Campaigns", icon: Megaphone },
@@ -79,6 +82,7 @@ export default function MarketingDashboard() {
 
             {/* Tab Content Area */}
             <div className="mt-8">
+                {activeTab === "inbound" && <InboundFunnelTab />}
                 {activeTab === "overview" && <OverviewTab />}
                 {activeTab === "organic" && <OrganicSeoTab />}
                 {activeTab === "paid" && <PaidCampaignsTab />}

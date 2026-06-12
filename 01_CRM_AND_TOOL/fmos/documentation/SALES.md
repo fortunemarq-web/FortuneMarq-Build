@@ -7,6 +7,13 @@
 
 ---
 
+## ⚡ Updates — 2026-06-12 (Inbound + DB sync)
+
+- **Quick-add lead modal has a Source picker** ("Where did this lead come from?"): cold list / they called us / Google Business Profile / referral / walk-in. Inbound-ish sources set `lead_type='inbound'`, `captured_at`, and the human `lead_source` label.
+- **Speed-to-lead**: the first outcome logged on any lead stamps `leads.first_contact_at`. Median response time per channel shows on `/admin/marketing` → Inbound & Funnel.
+- **Inbound leads auto-arrive**: LP submissions and webhook leads (`/api/inbound/[channel]`) are deduped by phone, attributed (UTMs/campaign), **round-robin assigned via the `sales` assignment pool, and the assignee gets a notification**. Duplicate enquiries bump the existing lead into the follow-up queue instead of creating noise.
+- DB is fully migrated now — telecaller leaderboard (`/manager/performance`) computes real stats from `outreach_logs` with working Today/Week/Month filters.
+
 ## ⚡ Updates — 2026-06-11 Hardening
 
 - **Outcome logging now fails loudly.** If the `outreach_logs` insert or the lead update fails, the rep sees an error toast, the logger stays open for retry, and the cockpit does NOT advance to the next lead. A success toast confirms every logged outcome.

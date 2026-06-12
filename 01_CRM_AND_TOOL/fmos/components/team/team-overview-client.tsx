@@ -6,6 +6,7 @@ import TeamMemberCard from "@/components/team/team-member-card";
 import DailyTargetsTable from "@/components/team/daily-targets-table";
 import SetTargetsModal from "@/components/team/set-targets-modal";
 import AssignTaskModal from "@/components/team/assign-task-modal";
+import AddMemberModal from "@/components/team/add-member-modal";
 
 interface TeamOverviewClientProps {
   profiles: any[];
@@ -18,6 +19,8 @@ interface TeamOverviewClientProps {
 export default function TeamOverviewClient({ profiles, targets, taskStats, actuals }: TeamOverviewClientProps) {
   const [isSetTargetsOpen, setIsSetTargetsOpen] = useState(false);
   const [isAssignTaskOpen, setIsAssignTaskOpen] = useState(false);
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+  const [assignDefault, setAssignDefault] = useState<string | undefined>(undefined);
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -32,15 +35,20 @@ export default function TeamOverviewClient({ profiles, targets, taskStats, actua
         </div>
         
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setIsAssignTaskOpen(true)}
+          <button
+            onClick={() => { setAssignDefault(undefined); setIsAssignTaskOpen(true); }}
             className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95"
           >
             <Plus className="h-4 w-4" />
             Assign Task
           </button>
-          {/* "Add Member" removed — team invites need a Supabase auth admin
-              flow (decide approach first, see handoff). */}
+          <button
+            onClick={() => setIsAddMemberOpen(true)}
+            className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800 transition-all shadow-md active:scale-95"
+          >
+            <Plus className="h-4 w-4" />
+            Add Member
+          </button>
         </div>
       </div>
 
@@ -91,10 +99,11 @@ export default function TeamOverviewClient({ profiles, targets, taskStats, actua
           <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Internal Team</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {profiles.map((profile: any) => (
-              <TeamMemberCard 
-                key={profile.id} 
-                profile={profile} 
-                stats={taskStats[profile.id] || { active: 0, completedToday: 0, completedThisWeek: 0 }} 
+              <TeamMemberCard
+                key={profile.id}
+                profile={profile}
+                stats={taskStats[profile.id] || { active: 0, completedToday: 0, completedThisWeek: 0 }}
+                onAssign={() => { setAssignDefault(profile.id); setIsAssignTaskOpen(true); }}
               />
             ))}
           </div>
@@ -125,10 +134,15 @@ export default function TeamOverviewClient({ profiles, targets, taskStats, actua
       )}
       
       {isAssignTaskOpen && (
-        <AssignTaskModal 
-          profiles={profiles} 
-          onClose={() => setIsAssignTaskOpen(false)} 
+        <AssignTaskModal
+          profiles={profiles}
+          defaultAssignee={assignDefault}
+          onClose={() => setIsAssignTaskOpen(false)}
         />
+      )}
+
+      {isAddMemberOpen && (
+        <AddMemberModal onClose={() => setIsAddMemberOpen(false)} />
       )}
     </div>
   );

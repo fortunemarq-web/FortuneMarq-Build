@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 import { getStage, leadStageUpdate, PIPELINE_STAGES } from "@/lib/pipeline";
 import LeadPeekPanel from "@/components/leads/lead-peek-panel";
 
@@ -103,17 +104,33 @@ export default function LeadsList({ userId }: { userId: string }) {
         let updates = {};
 
         if (action === "change_status") {
-            const valid = PIPELINE_STAGES.map(s => s.key);
-            const stage = prompt(`Enter new stage:\n${valid.join(", ")}`);
+            const stage = await promptModal({
+                title: "Move to stage",
+                description: `Applies to ${ids.length} selected lead${ids.length === 1 ? "" : "s"}.`,
+                type: "select",
+                options: PIPELINE_STAGES.map(s => ({ value: s.key, label: s.label })),
+                confirmLabel: "Move",
+            });
             if (!stage) return;
-            if (!valid.includes(stage.trim())) {
-                toast.error("Invalid stage", `Use one of: ${valid.slice(0, 6).join(", ")}…`);
+            // Stage writes only via lib/pipeline.ts — keeps status in lockstep
+            updates = leadStageUpdate(stage);
+        } else if (action === "assign_sales") {
+            const supabase = createClient();
+            const { data: execs } = await supabase
+                .from("profiles")
+                .select("id, full_name, role")
+                .order("full_name");
+            if (!execs || execs.length === 0) {
+                toast.error("No team members found");
                 return;
             }
-            // Stage writes only via lib/pipeline.ts — keeps status in lockstep
-            updates = leadStageUpdate(stage.trim());
-        } else if (action === "assign_sales") {
-            const salesId = prompt("Enter Sales Exec UUID:"); // Ideally a picker
+            const salesId = await promptModal({
+                title: "Assign to sales exec",
+                description: `Applies to ${ids.length} selected lead${ids.length === 1 ? "" : "s"}.`,
+                type: "select",
+                options: execs.map((p: any) => ({ value: p.id, label: `${p.full_name} (${p.role})` })),
+                confirmLabel: "Assign",
+            });
             if (!salesId) return;
             updates = { assigned_sales_exec: salesId };
         } else if (action === "export_csv") {

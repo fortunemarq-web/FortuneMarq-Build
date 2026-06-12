@@ -6,7 +6,7 @@
 ## App Context
 - **App Name**: FortuneMarq Agency OS
 - **Stack**: Next.js 16.1.6 App Router | TypeScript | Tailwind CSS v4 | Supabase | Recharts | Framer Motion | @react-pdf/renderer
-- **Current Version**: v4.6 — All Phases 1–6 Built + Security/Reliability Hardening (2026-06-11)
+- **Current Version**: v4.8 — DB fully synced + notifications/digest + team mgmt + Phase F inbound Stage 0 (2026-06-12)
 - **Design**: SaaS Light theme (Slate-50 bg, White cards, Slate-900 sidebar, #42CA80 green accent)
 
 ## What's Already Built — NEVER REBUILD THESE
@@ -57,7 +57,18 @@ has_website (boolean), website_link, gmb_link
 serp_ranked (boolean), serp_source (text)
 tags (text[])
 last_contacted_at, last_outcome, next_action_date, attempts, notes
+source (machine slug: lp/meta_lead_ad/ctwa/call/gbp/referral/manual…)
+lead_source (human label), captured_at, first_contact_at (speed-to-lead)
+meeting_link, meeting_notes, lead_quality_score, last_activity_at, meeting_booked_at
 ```
+
+## Inbound Capture (PHASE F — added 2026-06-12)
+- ALL inbound channels → `processInboundLead()` in `lib/inbound/capture.ts`
+  (event log → phone dedupe → lead + attribution → fires "Auto-Assign Inbound" automation)
+- Webhook: `POST /api/inbound/[channel]` — auth via `INBOUND_WEBHOOK_SECRET`
+- Marketing hub: `/admin/marketing` → "Inbound & Funnel" tab (funnel, channels,
+  UTM builder, spend CSV import). Tables: `inbound_events`, `ad_insights_daily`,
+  `ad_campaigns`, `lead_source_attribution`. Round-robin pool: `assignment_pools` (pool 'sales').
 
 ## CSV Upload Columns Supported
 ```
@@ -66,10 +77,11 @@ SERP_Ranked (Y/N) | SERP_Source | Niche | City
 ```
 
 ## Pending Tasks
-- ⚠️ Run the four `20260611*` migrations in Supabase SQL editor, in order (RLS hardening → meeting columns → audit triggers → indexes) — app is hardened in code but DB policies apply only after these run
-- At deploy: set `SUPABASE_SERVICE_ROLE_KEY` + `CRON_SECRET` in Vercel
-- Re-test proposal/agreement PDF download (blank-page fix shipped 2026-06-11 evening)
-- UI pass remaining: outreach board, meetings, clients, finance; growth-page emoji icons → Lucide
+- ✅ ALL migrations executed 2026-06-12 (`supabase/2026-06-12_full_schema_sync.sql`) — append new DDL there
+- Deploy to Vercel: env vars `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `INBOUND_WEBHOOK_SECRET`; vercel.json crons exist
+- Phase F Stage 1 after deploy: WhatsApp Cloud API + Meta leadgen webhooks (plan: `PHASE_F_INBOUND_MARKETING.md`)
+- Re-test proposal/agreement PDF download; test spend CSV import with a real Meta/Google export
+- UI: growth-page emoji icons → Lucide; old marketing tabs are dark-themed (restyle later)
 - Latest session context for continuing work: `COWORK_HANDOFF.md`
 
 ## Non-Negotiable Rules

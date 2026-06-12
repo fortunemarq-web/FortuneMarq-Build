@@ -11,7 +11,7 @@
       "FortuneMarq does not guarantee specific results (rankings, leads, sales) as outcomes depend on market conditions, competition, and client cooperation.",
       "Client is responsible for providing accurate business information, logos, photos, and access credentials in a timely manner.",
       "FortuneMarq will not be held responsible for delays caused by late asset delivery from the client.",
-      "Either party can exit the agreement with 30 days written notice. Setup fees are non-refundable. Monthly fees are pro-rated to the cancellation date.",
+      "Either party can exit the agreement with 30 days written notice. Monthly fees are pro-rated to the cancellation date.",
       "All logins, accounts, and assets created for the client remain the client's property and will be handed over upon exit.",
       "FortuneMarq will never post content that is false, misleading, or violates platform policies on the client's behalf."
     ]
@@ -36,7 +36,7 @@
       "label": "GMB Optimization",
       "terms": [
         "Client must provide access to their Google Business Profile. If the profile is not verified, verification is the client's responsibility.",
-        "FortuneMarq will post 4 times per month on the profile. Post topics are decided by FortuneMarq based on niche best practices.",
+        "FortuneMarq will post 8 times per month on the profile — offers, updates, events, and promotions. Post topics are decided by FortuneMarq based on niche best practices.",
         "Review responses will be drafted and posted by FortuneMarq in a professional tone. Jabeer will alert the client to any negative reviews before responding.",
         "GMB results (ranking improvements, views, calls) are tracked and reported monthly. Results typically become visible in 30–60 days.",
         "Client must not make changes to the GMB profile without informing FortuneMarq, as this can interfere with the optimization strategy.",
@@ -64,6 +64,7 @@
       "terms": [
         "Ad spend is the client's own budget, paid directly to Google. FortuneMarq charges a management fee only.",
         "Minimum recommended ad spend: ₹5,000/month. Below this, campaign performance is limited.",
+        "If the client's monthly ad spend exceeds ₹15,000, an additional 5% of the total ad spend is added to the management fee for that month. Example: ₹20,000 ad spend → management fee = ₹2,500 + ₹1,000 (5% of ₹20,000) = ₹3,500 for that month. This will be reflected in the monthly invoice.",
         "Campaigns go live within 5–7 working days of account access and budget confirmation.",
         "FortuneMarq will not increase the client's daily budget without explicit written approval.",
         "Weekly performance summaries and a detailed monthly report are provided for every active campaign.",
@@ -78,6 +79,7 @@
       "terms": [
         "Ad spend is the client's own budget, paid directly to Meta (Facebook/Instagram). FortuneMarq charges a management fee only.",
         "Minimum recommended ad spend: ₹5,000/month. Below this, campaign performance is limited.",
+        "If the client's monthly ad spend exceeds ₹15,000, an additional 5% of the total ad spend is added to the management fee for that month. Example: ₹20,000 ad spend → management fee = ₹2,500 + ₹1,000 (5% of ₹20,000) = ₹3,500 for that month. This will be reflected in the monthly invoice.",
         "Client must provide Facebook Page admin access and Meta Business Manager access.",
         "Campaigns go live within 5–7 working days of access and budget confirmation.",
         "FortuneMarq will not increase the client's daily budget without explicit written approval.",
@@ -120,7 +122,6 @@
     "title": "Exiting the Agreement",
     "points": [
       "Either party can exit with 30 days written notice via WhatsApp or email.",
-      "Setup fees are non-refundable.",
       "Monthly fees are pro-rated to the last day of active service.",
       "All accounts, credentials, and assets created for the client are handed over within 7 working days of exit.",
       "FortuneMarq removes its access to all client accounts within 3 working days of the final invoice being settled."

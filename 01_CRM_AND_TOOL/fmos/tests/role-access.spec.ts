@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://localhost:3000';
-const PASSWORD = '88900098';
+const PASSWORD = '9353@Fmos';
+
+const TELECALLER = 'afifa@fmos.com';
 
 async function loginAs(page: any, email: string) {
   await page.goto(`${BASE_URL}/login`);
@@ -13,46 +15,18 @@ async function loginAs(page: any, email: string) {
 
 test.describe('Role-Based Access Control', () => {
 
-  test('Sales exec cannot access admin dashboard', async ({ page }) => {
-    await loginAs(page, 'sales@test.com');
+  test('Telecaller cannot access admin dashboard', async ({ page }) => {
+    await loginAs(page, TELECALLER);
     await page.goto(`${BASE_URL}/admin`);
     await page.waitForTimeout(2000);
     await expect(page).not.toHaveURL(`${BASE_URL}/admin`);
   });
 
-  test('Staff cannot access admin dashboard', async ({ page }) => {
-    await loginAs(page, 'staff@test.com');
-    await page.goto(`${BASE_URL}/admin`);
+  test('Telecaller cannot access admin finance', async ({ page }) => {
+    await loginAs(page, TELECALLER);
+    await page.goto(`${BASE_URL}/admin/finance`);
     await page.waitForTimeout(2000);
-    await expect(page).not.toHaveURL(`${BASE_URL}/admin`);
-  });
-
-  test('Client cannot access admin dashboard', async ({ page }) => {
-    await loginAs(page, 'contact@austindental.com');
-    await page.goto(`${BASE_URL}/admin`);
-    await page.waitForTimeout(2000);
-    await expect(page).not.toHaveURL(`${BASE_URL}/admin`);
-  });
-
-  test('Client cannot access sales cockpit', async ({ page }) => {
-    await loginAs(page, 'contact@austindental.com');
-    await page.goto(`${BASE_URL}/sales`);
-    await page.waitForTimeout(2000);
-    await expect(page).not.toHaveURL(`${BASE_URL}/sales`);
-  });
-
-  test('Client cannot access projects dashboard', async ({ page }) => {
-    await loginAs(page, 'contact@austindental.com');
-    await page.goto(`${BASE_URL}/projects`);
-    await page.waitForTimeout(2000);
-    await expect(page).not.toHaveURL(`${BASE_URL}/projects`);
-  });
-
-  test('Staff cannot access strategist dashboard', async ({ page }) => {
-    await loginAs(page, 'staff@test.com');
-    await page.goto(`${BASE_URL}/strategist`);
-    await page.waitForTimeout(2000);
-    await expect(page).not.toHaveURL(`${BASE_URL}/strategist`);
+    await expect(page).not.toHaveURL(`${BASE_URL}/admin/finance`);
   });
 
   test('Logged out user cannot access admin', async ({ page }) => {

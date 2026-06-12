@@ -42,8 +42,21 @@ interface PerformanceMetric {
     color: string;
 }
 
+const INTERESTED_OUTCOMES = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO", "MEETING", "CURIOUS", "PDF_SENT"];
+
+interface NicheStat { name: string; calls: number; conv: number; }
+interface Insights {
+    interestedNow: number;
+    interestedPrev: number;
+    peakTime: string | null;
+    topRegion: string | null;
+}
+
 export default function ManagerPerformance() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+    const [niches, setNiches] = useState<NicheStat[]>([]);
+    const [insights, setInsights] = useState<Insights>({ interestedNow: 0, interestedPrev: 0, peakTime: null, topRegion: null });
+    const [prevTotals, setPrevTotals] = useState<{ calls: number; interested: number }>({ calls: 0, interested: 0 });
     const [isLoading, setIsLoading] = useState(true);
     const [timeframe, setTimeframe] = useState<"today" | "week" | "month">("week");
     const [searchQuery, setSearchQuery] = useState("");
@@ -57,46 +70,134 @@ export default function ManagerPerformance() {
     const fetchPerformanceData = async () => {
         setIsLoading(true);
         try {
-            // In a real app, we'd filter by timeframe in the query
-            const { data, error } = await supabase
-                .from("telecaller_leaderboard" as any)
-                .select("*")
-                .order("interested_count", { ascending: false });
+            const days = timeframe === "today" ? 1 : timeframe === "week" ? 7 : 30;
+            const now = Date.now();
+            const start = new Date(now - days * 86400000).toISOString();
+            const prevStart = new Date(now - 2 * days * 86400000).toISOString();
 
+            // Current + previous period in one fetch; everything below derives from it
+            const [{ data: logs, error }, { data: profiles }] = await Promise.all([
+                supabase
+                    .from("outreach_logs")
+                    .select("actor_id, outcome, created_at, leads(industry, city)")
+                    .gte("created_at", prevStart)
+                    .order("created_at", { ascending: false })
+                    .limit(10000),
+                supabase.from("profiles").select("id, full_name"),
+            ]);
             if (error) throw error;
-            setLeaderboard((data as unknown) as LeaderboardEntry[]);
-        } catch (error) {
-            console.error("Error fetching performance data:", error);
+
+            const nameOf: Record<string, string> = {};
+            (profiles || []).forEach((p: any) => { nameOf[p.id] = p.full_name; });
+
+            const current = (logs || []).filter((l: any) => l.created_at >= start);
+            const previous = (logs || []).filter((l: any) => l.created_at < start);
+            const isInterested = (o: string | null) => INTERESTED_OUTCOMES.includes(o || "");
+
+            // Leaderboard per actor (with day-streak within the window)
+            const byActor: Record<string, { calls: number; interested: number; days: Set<string> }> = {};
+            current.forEach((l: any) => {
+                if (!l.actor_id) return;
+                byActor[l.actor_id] ??= { calls: 0, interested: 0, days: new Set() };
+                byActor[l.actor_id].calls++;
+                if (isInterested(l.outcome)) byActor[l.actor_id].interested++;
+                byActor[l.actor_id].days.add(l.created_at.slice(0, 10));
+            });
+            const board: LeaderboardEntry[] = Object.entries(byActor).map(([id, s]) => {
+                let streak = 0;
+                for (let d = 0; d < days; d++) {
+                    const day = new Date(now - d * 86400000).toISOString().slice(0, 10);
+                    if (s.days.has(day)) streak++;
+                    else if (d > 0) break; // today not started yet doesn't break the streak
+                }
+                return {
+                    user_id: id,
+                    full_name: nameOf[id] || "Unknown",
+                    avatar_url: "",
+                    total_calls: s.calls,
+                    interested_count: s.interested,
+                    conversion_rate: s.calls > 0 ? Math.round((s.interested / s.calls) * 1000) / 10 : 0,
+                    streak,
+                };
+            }).sort((a, b) => b.interested_count - a.interested_count || b.total_calls - a.total_calls);
+            setLeaderboard(board);
+
+            // Niche breakdown (top 4 by call volume)
+            const byNiche: Record<string, { calls: number; interested: number }> = {};
+            current.forEach((l: any) => {
+                const niche = l.leads?.industry || "Unknown";
+                byNiche[niche] ??= { calls: 0, interested: 0 };
+                byNiche[niche].calls++;
+                if (isInterested(l.outcome)) byNiche[niche].interested++;
+            });
+            setNiches(
+                Object.entries(byNiche)
+                    .map(([name, s]) => ({ name, calls: s.calls, conv: s.calls > 0 ? Math.round((s.interested / s.calls) * 1000) / 10 : 0 }))
+                    .sort((a, b) => b.calls - a.calls)
+                    .slice(0, 4)
+            );
+
+            // Insights: peak calling hour + top region + interested vs previous period
+            const hourCount: Record<number, number> = {};
+            const regionCount: Record<string, number> = {};
+            current.forEach((l: any) => {
+                hourCount[new Date(l.created_at).getHours()] = (hourCount[new Date(l.created_at).getHours()] || 0) + 1;
+                const city = l.leads?.city;
+                if (city) regionCount[city] = (regionCount[city] || 0) + 1;
+            });
+            const peakHour = Object.entries(hourCount).sort((a, b) => b[1] - a[1])[0]?.[0];
+            const fmtHour = (h: number) => `${((h + 11) % 12) + 1}:00 ${h < 12 ? "AM" : "PM"}`;
+            setInsights({
+                interestedNow: current.filter((l: any) => isInterested(l.outcome)).length,
+                interestedPrev: previous.filter((l: any) => isInterested(l.outcome)).length,
+                peakTime: peakHour !== undefined ? `${fmtHour(Number(peakHour))} – ${fmtHour((Number(peakHour) + 2) % 24)}` : null,
+                topRegion: Object.entries(regionCount).sort((a, b) => b[1] - a[1])[0]?.[0] || null,
+            });
+            setPrevTotals({
+                calls: previous.length,
+                interested: previous.filter((l: any) => isInterested(l.outcome)).length,
+            });
+        } catch (error: any) {
+            console.error("Error fetching performance data:", error?.message || error);
         } finally {
             setIsLoading(false);
         }
     };
 
+    // Real period-over-period trends; chip hidden when there's no prior data
+    const trendOf = (nowVal: number, prevVal: number): Pick<PerformanceMetric, "trend" | "trendValue"> => {
+        if (prevVal === 0) return {};
+        const pct = ((nowVal - prevVal) / prevVal) * 100;
+        return { trend: pct >= 0 ? "up" : "down", trendValue: `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%` };
+    };
+
+    const totalCalls = leaderboard.reduce((acc, curr) => acc + curr.total_calls, 0);
+    const totalInterested = leaderboard.reduce((acc, curr) => acc + curr.interested_count, 0);
+    const avgConv = totalCalls > 0 ? (totalInterested / totalCalls) * 100 : 0;
+    const prevConv = prevTotals.calls > 0 ? (prevTotals.interested / prevTotals.calls) * 100 : 0;
+
     const metrics: PerformanceMetric[] = [
         {
             label: "Total Agency Calls",
-            value: leaderboard.reduce((acc, curr) => acc + curr.total_calls, 0),
-            subtext: "Across all telecallers",
-            trend: "up",
-            trendValue: "+12.5%",
+            value: totalCalls,
+            subtext: `vs ${prevTotals.calls} previous ${timeframe}`,
+            ...trendOf(totalCalls, prevTotals.calls),
             icon: BarChart3,
             color: "blue"
         },
         {
             label: "Total Interested",
-            value: leaderboard.reduce((acc, curr) => acc + curr.interested_count, 0),
-            subtext: "Qualified Leads",
-            trend: "up",
-            trendValue: "+8.2%",
+            value: totalInterested,
+            subtext: `vs ${prevTotals.interested} previous ${timeframe}`,
+            ...trendOf(totalInterested, prevTotals.interested),
             icon: Target,
             color: "emerald"
         },
         {
             label: "Avg. Conversion",
-            value: (leaderboard.reduce((acc, curr) => acc + curr.conversion_rate, 0) / (leaderboard.length || 1)).toFixed(1) + "%",
+            value: avgConv.toFixed(1) + "%",
             subtext: "Call-to-Interested",
-            trend: "down",
-            trendValue: "-1.4%",
+            ...trendOf(avgConv, prevConv),
             icon: TrendingUp,
             color: "amber"
         }
@@ -279,27 +380,23 @@ export default function ManagerPerformance() {
                     </div>
 
                     <div className="space-y-6">
-                        {[
-                            { name: "Dental Clinics", calls: 450, conv: "14.2%", color: "emerald" },
-                            { name: "Real Estate", calls: 320, conv: "8.5%", color: "blue" },
-                            { name: "Personal Training", calls: 280, conv: "11.1%", color: "amber" },
-                            { name: "Law Firms", calls: 150, conv: "5.2%", color: "slate" }
-                        ].map((niche) => (
+                        {niches.map((niche, i) => (
                             <div key={niche.name} className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span className="font-bold text-slate-700">{niche.name}</span>
-                                    <span className="text-slate-500 font-medium">{niche.calls} calls • <span className="text-slate-900 font-bold">{niche.conv} CR</span></span>
+                                    <span className="text-slate-500 font-medium">{niche.calls} calls • <span className="text-slate-900 font-bold">{niche.conv}% CR</span></span>
                                 </div>
                                 <div className="h-2.5 bg-slate-50 rounded-full overflow-hidden">
                                     <div className={clsx(
                                         "h-full rounded-full transition-all duration-1000",
-                                        niche.color === 'emerald' ? 'bg-emerald-500' :
-                                            niche.color === 'blue' ? 'bg-blue-500' :
-                                                niche.color === 'amber' ? 'bg-amber-500' : 'bg-slate-400'
-                                    )} style={{ width: niche.conv }} />
+                                        i === 0 ? 'bg-emerald-500' : i === 1 ? 'bg-blue-500' : i === 2 ? 'bg-amber-500' : 'bg-slate-400'
+                                    )} style={{ width: `${Math.min(niche.conv, 100)}%` }} />
                                 </div>
                             </div>
                         ))}
+                        {niches.length === 0 && !isLoading && (
+                            <p className="text-sm text-slate-400 italic">No calls logged this {timeframe} yet — niche stats appear as calls come in.</p>
+                        )}
                     </div>
                 </div>
 
@@ -314,15 +411,15 @@ export default function ManagerPerformance() {
 
                     <div className="space-y-8 relative z-10">
                         <div className="flex items-end gap-2">
-                            <span className="text-5xl font-bold">842</span>
-                            <span className="text-blue-400 font-bold mb-1">/ 1,000</span>
+                            <span className="text-5xl font-bold">{insights.interestedNow}</span>
+                            <span className="text-blue-400 font-bold mb-1">vs {insights.interestedPrev} last {timeframe}</span>
                         </div>
-                        <p className="text-slate-400 font-medium">Monthly "Interested" Goal Progress</p>
+                        <p className="text-slate-400 font-medium">&quot;Interested&quot; outcomes this {timeframe}</p>
 
                         <div className="h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 p-1">
                             <motion.div
                                 initial={{ width: 0 }}
-                                animate={{ width: "84.2%" }}
+                                animate={{ width: `${insights.interestedPrev > 0 ? Math.min((insights.interestedNow / insights.interestedPrev) * 50, 100) : insights.interestedNow > 0 ? 100 : 0}%` }}
                                 className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                             />
                         </div>
@@ -330,11 +427,11 @@ export default function ManagerPerformance() {
                         <div className="grid grid-cols-2 gap-4 pt-4">
                             <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
                                 <p className="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Peak Time</p>
-                                <p className="text-lg font-bold">11:00 AM - 1:00 PM</p>
+                                <p className="text-lg font-bold">{insights.peakTime || "—"}</p>
                             </div>
                             <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
                                 <p className="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Top Region</p>
-                                <p className="text-lg font-bold">Hubli-Dharwad</p>
+                                <p className="text-lg font-bold">{insights.topRegion || "—"}</p>
                             </div>
                         </div>
                     </div>

@@ -46,7 +46,7 @@ The market has a massive digital gap. Thousands of local searchers can't find lo
 
 ## Open Questions
 
-- [ ] Personal brand vs company brand — does Jabeer build a public presence?
+- [x] Personal brand vs company brand — both will be built through content creation, starting Phase 2 (after FMOS live + landing pages + performance marketing set up). Scheduled, not undecided.
 
 ## Sources
 

@@ -1,6 +1,6 @@
 # ServiceOfferings
 
-**Last updated:** 2026-04-28  
+**Last updated:** 2026-06-08  
 **Tags:** #evergreen #decision  
 **Related:** [[FortuneMarq]], [[GrowthRoadmap]], [[LockedDecisions]], [[SalesSystem]]
 
@@ -16,10 +16,10 @@ FortuneMarq offers digital marketing services priced for accessibility, with a v
 |---------|------|-------|
 | Landing Page | One-time | ₹5,000–₹8,000 |
 | Website | One-time | ₹8,000–₹20,000 |
-| Google My Business (GMB) | Monthly retainer | ₹2,500/month |
+| Google My Business (GMB) | Monthly retainer | ₹3,500/month |
 | Google Ads Setup | One-time | ₹4,500 |
-| Google Ads Management | Monthly retainer | ₹2,500/month |
-| Meta Ads Management | Monthly retainer | ₹2,500/month |
+| Google Ads Management | Monthly retainer | ₹2,500/month + 5% of ad spend if spend exceeds ₹15,000/month |
+| Meta Ads Management | Monthly retainer | ₹2,500/month + 5% of ad spend if spend exceeds ₹15,000/month |
 | SEO | Monthly retainer | ₹7,000–₹15,000+/month |
 | WhatsApp Marketing Setup | One-time | ₹5,000 |
 | WhatsApp Marketing Management | Monthly retainer | ₹2,500/month |
@@ -27,7 +27,7 @@ FortuneMarq offers digital marketing services priced for accessibility, with a v
 
 ## Key Policy
 
-Client always pays for their own ad spend (Google/Meta budget). FortuneMarq charges a management fee only — it does not bundle ad spend into service fees.
+Client always pays for their own ad spend (Google/Meta budget). FortuneMarq charges a management fee only — it does not bundle ad spend into service fees. If monthly ad spend exceeds ₹15,000, an additional 5% of the total ad spend is charged on top of the base management fee for that month.
 
 ## Payment Policy (Locked)
 

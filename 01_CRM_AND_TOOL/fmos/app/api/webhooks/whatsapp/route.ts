@@ -1,0 +1,353 @@
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { createAdminClient } from "@/lib/supabase-admin";
+import { processInboundLead, normalizePhone } from "@/lib/inbound/capture";
+import { sendWhatsAppText, sendWhatsAppButtons } from "@/lib/whatsapp/send";
+import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
+
+/**
+ * PHASE F STAGE 1 — WhatsApp Cloud API webhook.
+ *
+ *   GET  /api/webhooks/whatsapp — Meta verification handshake
+ *   POST /api/webhooks/whatsapp — message + status events (signature-verified)
+ *
+ * Flow per inbound message:
+ *   UNKNOWN number → processInboundLead() (channel 'ctwa' when a referral
+ *   payload is present — ad id/headline mapped for automatic ad attribution)
+ *   → optional auto-greeting (app_settings.whatsapp_auto_greeting, default ON).
+ *   KNOWN number → whatsapp_logs + activity_events + inbound_events + notify
+ *   the assigned exec.
+ *   Button replies → tag lead (tapped_book_meeting / tapped_tell_me_more),
+ *   bump to top of follow-up queue, notify assignee, send mapped auto-reply.
+ *
+ * Service-role DB access — public-by-design path, auth = HMAC signature.
+ */
+
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const mode = url.searchParams.get("hub.mode");
+  const token = url.searchParams.get("hub.verify_token");
+  const challenge = url.searchParams.get("hub.challenge");
+  const expected = process.env.WHATSAPP_VERIFY_TOKEN;
+
+  if (mode === "subscribe" && expected && token === expected && challenge) {
+    return new NextResponse(challenge, { status: 200 });
+  }
+  return NextResponse.json({ error: "Verification failed" }, { status: 403 });
+}
+
+function verifySignature(rawBody: string, signatureHeader: string | null): boolean {
+  const secret = process.env.META_APP_SECRET;
+  if (!secret || secret.startsWith("PLACEHOLDER")) return false; // fail closed
+  if (!signatureHeader?.startsWith("sha256=")) return false;
+  const expected = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
+  const received = signatureHeader.slice(7);
+  if (received.length !== expected.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(received, "hex"));
+}
+
+export async function POST(req: NextRequest) {
+  const rawBody = await req.text();
+
+  if (!verifySignature(rawBody, req.headers.get("x-hub-signature-256"))) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
+
+  let body: any;
+  try {
+    body = JSON.parse(rawBody);
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // Always 200 after this point — Meta retries non-200s and disables flaky webhooks.
+  try {
+    for (const entry of body?.entry ?? []) {
+      for (const change of entry?.changes ?? []) {
+        if (change?.field !== "messages") continue;
+        const value = change.value ?? {};
+        for (const message of value.messages ?? []) {
+          await handleInboundMessage(message, value);
+        }
+        for (const status of value.statuses ?? []) {
+          await handleStatusUpdate(status);
+        }
+      }
+    }
+  } catch (e) {
+    console.error("[webhooks/whatsapp] processing error:", e);
+  }
+
+  return NextResponse.json({ ok: true });
+}
+
+/** Delivery receipts → stamp whatsapp_logs.delivery_status by wa_message_id. */
+async function handleStatusUpdate(status: any) {
+  if (!status?.id || !status?.status) return;
+  const supabase = createAdminClient() as any;
+  await supabase
+    .from("whatsapp_logs")
+    .update({ delivery_status: status.status })
+    .eq("wa_message_id", status.id);
+}
+
+function extractText(message: any): string {
+  switch (message?.type) {
+    case "text":
+      return message.text?.body ?? "";
+    case "button": // template quick-reply taps arrive as type 'button'
+      return message.button?.text ?? "";
+    case "interactive":
+      return (
+        message.interactive?.button_reply?.title ??
+        message.interactive?.list_reply?.title ??
+        ""
+      );
+    case "image":
+    case "video":
+    case "audio":
+    case "document":
+    case "sticker":
+      return message[message.type]?.caption
+        ? `[${message.type}] ${message[message.type].caption}`
+        : `[${message.type}]`;
+    case "location":
+      return "[location]";
+    case "contacts":
+      return "[contact card]";
+    default:
+      return `[${message?.type ?? "unknown"}]`;
+  }
+}
+
+async function handleInboundMessage(message: any, value: any) {
+  const supabase = createAdminClient() as any;
+  const waMessageId: string | undefined = message?.id;
+  const from: string = message?.from ?? ""; // e.g. "917975918980"
+  const phone10 = normalizePhone(from);
+  if (!phone10) return;
+
+  // Idempotency — Meta retries webhooks; skip messages we've already seen.
+  if (waMessageId) {
+    const { data: seen } = await supabase
+      .from("inbound_events")
+      .select("id")
+      .eq("external_id", waMessageId)
+      .limit(1)
+      .maybeSingle();
+    if (seen) return;
+  }
+
+  const profileName: string | undefined = value?.contacts?.[0]?.profile?.name;
+  const text = extractText(message);
+  const referral = message?.referral; // present when chat started from a CTWA ad
+  const buttonReply =
+    message?.type === "interactive" && message?.interactive?.type === "button_reply"
+      ? message.interactive.button_reply
+      : message?.type === "button"
+        ? { id: message.button?.payload, title: message.button?.text }
+        : null;
+
+  // Find an existing lead by phone suffix
+  const { data: lead } = await supabase
+    .from("leads")
+    .select("id, company_name, contact_person, phone, city, assigned_sales_exec, tags, follow_up_date")
+    .like("phone", `%${phone10}`)
+    .limit(1)
+    .maybeSingle();
+
+  // ── UNKNOWN number → inbound capture pipeline ────────────────────────
+  if (!lead) {
+    const isCtwa = !!referral;
+    const result = await processInboundLead({
+      channel: isCtwa ? "ctwa" : "whatsapp",
+      external_id: waMessageId,
+      contact_person: profileName,
+      phone: from,
+      message: text,
+      // CTWA referral → automatic ad attribution
+      campaign_external_id: referral?.source_id ? String(referral.source_id) : undefined,
+      campaign_name: referral?.headline || referral?.source_url || undefined,
+      utm: isCtwa ? { source: "meta", medium: "ctwa" } : undefined,
+      raw: { message, contacts: value?.contacts, metadata: value?.metadata },
+    });
+
+    // Auto-greeting (session message — lead just messaged us, window is open)
+    if (result.status === "created" && result.leadId) {
+      const { data: setting } = await supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "whatsapp_auto_greeting")
+        .maybeSingle();
+      const enabled = setting?.value?.enabled !== false; // default ON
+      const greeting: string =
+        setting?.value?.message || "Got your enquiry — we'll call you shortly. 😊\n— FortuneMarq";
+      if (enabled) {
+        await sendWhatsAppText(from, greeting, { leadId: result.leadId });
+      }
+    }
+
+    // Button tap from a number we don't know yet (rare) — still apply the action
+    if (buttonReply && result.leadId) {
+      await applyButtonAction(buttonReply, result.leadId, from, waMessageId);
+    }
+    return;
+  }
+
+  // ── KNOWN lead ───────────────────────────────────────────────────────
+  // Log the webhook hit (pipeline does this for new leads; mirror it here)
+  await supabase.from("inbound_events").insert({
+    channel: referral ? "ctwa" : "whatsapp",
+    external_id: waMessageId ?? null,
+    payload: { message, contacts: value?.contacts, metadata: value?.metadata },
+    status: "processed",
+    lead_id: lead.id,
+  });
+
+  // Log the message itself
+  await supabase.from("whatsapp_logs").insert({
+    lead_id: lead.id,
+    message_sent: text.slice(0, 4000),
+    direction: "inbound",
+    message_type: message?.type ?? "text",
+    wa_message_id: waMessageId ?? null,
+    phone: from,
+  });
+
+  // Timeline event
+  await supabase.from("activity_events").insert({
+    entity_type: "lead",
+    entity_id: lead.id,
+    event_type: "whatsapp_inbound",
+    title: buttonReply ? `Tapped "${buttonReply.title}" on WhatsApp` : "WhatsApp message received",
+    body: text || null,
+    metadata: { wa_message_id: waMessageId, type: message?.type, referral: referral ?? null },
+  });
+
+  await supabase
+    .from("leads")
+    .update({ last_activity_at: new Date().toISOString() })
+    .eq("id", lead.id);
+
+  if (buttonReply) {
+    await applyButtonAction(buttonReply, lead.id, from, waMessageId, lead);
+    return;
+  }
+
+  // Plain message from a known lead → notify the assigned exec
+  if (lead.assigned_sales_exec) {
+    await supabase.from("notifications").insert({
+      user_id: lead.assigned_sales_exec,
+      type: "lead_status_changed",
+      title: "WhatsApp reply",
+      body: `${lead.company_name}: "${text.slice(0, 140)}"`,
+      link: `/admin/leads/${lead.id}`,
+      entity_type: "lead",
+      entity_id: lead.id,
+    });
+  }
+
+  // Agreement confirmation catch ("Yes, confirmed" — see PENDING_ACTIONS Button Flow)
+  if (/yes,?\s*confirmed/i.test(text)) {
+    const { data: admins } = await supabase.from("profiles").select("id").eq("role", "admin");
+    for (const admin of admins ?? []) {
+      await supabase.from("notifications").insert({
+        user_id: admin.id,
+        type: "deal_closed",
+        title: "Agreement confirmed on WhatsApp",
+        body: `${lead.company_name} replied "${text.slice(0, 100)}"`,
+        link: `/admin/leads/${lead.id}`,
+        entity_type: "lead",
+        entity_id: lead.id,
+      });
+    }
+  }
+}
+
+/**
+ * Button tap → tag lead + bump to top of follow-up queue + notify assignee
+ * + send the mapped auto-reply (session message).
+ */
+async function applyButtonAction(
+  buttonReply: { id?: string; title?: string },
+  leadId: string,
+  phone: string,
+  waMessageId?: string,
+  leadRow?: any
+) {
+  const supabase = createAdminClient() as any;
+  const action = resolveButtonAction(buttonReply.id || buttonReply.title || "");
+  if (!action) return;
+
+  const lead =
+    leadRow ??
+    (
+      await supabase
+        .from("leads")
+        .select("id, company_name, contact_person, city, assigned_sales_exec, tags")
+        .eq("id", leadId)
+        .maybeSingle()
+    ).data;
+  if (!lead) return;
+
+  const updates: Record<string, unknown> = { last_activity_at: new Date().toISOString() };
+
+  if (action.tag) {
+    const tags: string[] = Array.isArray(lead.tags) ? lead.tags : [];
+    updates.tags = Array.from(new Set([...tags, "report_engaged", action.tag]));
+  }
+  if (action.priorityQueue) {
+    // Now = top of the queue (cockpit sorts by scheduled callback time;
+    // report_engaged leads always surface first)
+    updates.follow_up_date = new Date().toISOString();
+  } else if (action.followUpDays) {
+    updates.follow_up_date = new Date(
+      Date.now() + action.followUpDays * 24 * 60 * 60 * 1000
+    ).toISOString();
+  }
+
+  const { error: updateError } = await supabase.from("leads").update(updates).eq("id", leadId);
+  if (updateError) console.error("[webhooks/whatsapp] button update failed:", updateError);
+
+  await supabase.from("activity_events").insert({
+    entity_type: "lead",
+    entity_id: leadId,
+    event_type: "whatsapp_button_tap",
+    title: `Tapped "${action.label}"`,
+    body: null,
+    metadata: { button: buttonReply, tag: action.tag ?? null, wa_message_id: waMessageId ?? null },
+  });
+
+  // Notify assignee (or all admins if unassigned)
+  const notif = {
+    type: "follow_up_due" as const,
+    title: action.tag === "tapped_book_meeting" ? "🔥 Lead wants a meeting!" : `Lead tapped "${action.label}"`,
+    body: `${lead.company_name} tapped "${action.label}" on WhatsApp — bumped to top of the queue.`,
+    link: `/admin/leads/${leadId}`,
+    entity_type: "lead",
+    entity_id: leadId,
+  };
+  if (lead.assigned_sales_exec) {
+    await supabase.from("notifications").insert({ user_id: lead.assigned_sales_exec, ...notif });
+  } else {
+    const { data: admins } = await supabase.from("profiles").select("id").eq("role", "admin");
+    for (const admin of admins ?? []) {
+      await supabase.from("notifications").insert({ user_id: admin.id, ...notif });
+    }
+  }
+
+  // Auto-reply (session message — the tap just reopened the 24h window)
+  if (action.autoReply) {
+    const reply = AUTO_REPLIES[action.autoReply];
+    const messageBody = fillTemplate(reply.message, {
+      businessName: lead.company_name || "your business",
+      city: lead.city || "Hubli",
+      landingPageLink: process.env.WHATSAPP_LP_FALLBACK_URL || "https://fortunemarq.com",
+    });
+    if (reply.buttons.length > 0) {
+      await sendWhatsAppButtons(phone, messageBody, [...reply.buttons], { leadId });
+    } else {
+      await sendWhatsAppText(phone, messageBody, { leadId });
+    }
+  }
+}

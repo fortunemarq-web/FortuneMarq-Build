@@ -187,7 +187,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
   // Add lead modal
   const [showAddLead, setShowAddLead] = useState(false);
-  const [newLead, setNewLead] = useState({ company_name: "", phone: "", industry: "", city: "", contact_person: "", has_website: false, notes: "" });
+  const [newLead, setNewLead] = useState({ company_name: "", phone: "", industry: "", city: "", contact_person: "", has_website: false, notes: "", source: "manual" });
   const [addLeadError, setAddLeadError] = useState<string | null>(null);
   const [addLeadLoading, setAddLeadLoading] = useState(false);
   const [localLeads, setLocalLeads] = useState<Lead[]>(leads);
@@ -406,6 +406,11 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
       let leadUpdates: any = { last_outcome: selectedOutcome };
 
+      // Speed-to-lead: stamp the very first contact on this lead
+      if (!(currentLead as any).first_contact_at) {
+        leadUpdates.first_contact_at = new Date().toISOString();
+      }
+
       if (outcome.stage) {
         const mappedStage = stageMap[outcome.stage] || outcome.stage;
         leadUpdates.outreach_stage = mappedStage;
@@ -533,8 +538,10 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       contact_person: newLead.contact_person.trim() || null,
       has_website: newLead.has_website,
       notes: newLead.notes.trim() || null,
-      lead_type: "outbound",
-      source: "manual",
+      lead_type: ["call", "gbp", "referral", "walk_in"].includes(newLead.source) ? "inbound" : "outbound",
+      source: newLead.source,
+      lead_source: ({ manual: "Manual Entry", call: "Phone Call", gbp: "Google Business Profile", referral: "Referral", walk_in: "Walk-in" } as Record<string, string>)[newLead.source] || "Manual Entry",
+      captured_at: newLead.source === "manual" ? null : new Date().toISOString(),
       status: null,
     }).select().single();
     setAddLeadLoading(false);
@@ -543,7 +550,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       setLocalLeads((prev) => [data as Lead, ...prev]);
     }
     setShowAddLead(false);
-    setNewLead({ company_name: "", phone: "", industry: "", city: "", contact_person: "", has_website: false, notes: "" });
+    setNewLead({ company_name: "", phone: "", industry: "", city: "", contact_person: "", has_website: false, notes: "", source: "manual" });
   }
 
   // My daily call target (team_targets) — shown as progress in the stats bar
@@ -1617,6 +1624,20 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                   className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
                   placeholder="e.g. Dr. Sharma"
                 />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Where did this lead come from?</label>
+                <select
+                  value={newLead.source}
+                  onChange={(e) => setNewLead((p) => ({ ...p, source: e.target.value }))}
+                  className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                >
+                  <option value="manual">Cold list / manual entry</option>
+                  <option value="call">They called us</option>
+                  <option value="gbp">Google Business Profile</option>
+                  <option value="referral">Referral</option>
+                  <option value="walk_in">Walk-in</option>
+                </select>
               </div>
               <div className="flex items-center gap-3 py-1">
                 <input

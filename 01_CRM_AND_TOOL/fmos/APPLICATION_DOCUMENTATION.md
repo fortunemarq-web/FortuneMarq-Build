@@ -1,9 +1,24 @@
 # FortuneMarq Agency OS (FMOS) — Complete Application Documentation
 
-> **Last Updated:** June 11, 2026
-> **Version:** 0.1.0 (app v4.6 — security/reliability hardening)
+> **Last Updated:** June 12, 2026
+> **Version:** 0.1.0 (app v4.8 — DB fully synced + inbound engine Stage 0)
 > **Owner:** Jabeer (sayedjabir33@gmail.com)
 > **App Name:** `agency-os`
+
+> ⚠️ **2026-06-12 — major additions not yet folded into the chapters below**
+> (see `COWORK_HANDOFF.md` + `00_MASTER_BUILD_PLAN.md` for detail):
+> - **Database**: ALL pending migrations executed via `supabase/2026-06-12_full_schema_sync.sql`
+>   (38 new tables incl. notifications, attendance_*, automation_*, ad_campaigns,
+>   lead_source_attribution, inbound_events, ad_insights_daily, saved_views, niche_kits…).
+>   `types/database.types.ts` regenerated (112 tables).
+> - **Inbound engine (Phase F Stage 0)**: `lib/inbound/capture.ts` pipeline,
+>   `POST /api/inbound/[channel]` webhook (INBOUND_WEBHOOK_SECRET), LP UTM capture,
+>   cockpit source picker, `leads.source/lead_source/captured_at/first_contact_at`,
+>   round-robin auto-assign (assignment_pools 'sales'), Inbound & Funnel tab on /admin/marketing.
+> - **Team management**: `app/admin/team/user-actions.ts` (invite/role/password/deactivate/remove).
+> - **Notifications**: bell + realtime live; `/api/cron/daily-digest`; all cron routes accept GET; `vercel.json` crons.
+> - **Finance**: `recordInvoicePayment()` partial payments (`partially_paid` status, `payment_method`).
+> - **UI**: `promptModal()` (`components/ui/prompt-modal.tsx`) replaced every `prompt()`/`alert()`.
 
 ---
 

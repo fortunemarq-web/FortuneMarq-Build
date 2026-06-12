@@ -1,6 +1,6 @@
 # FortuneMarq — Master Context File
-**Last Updated:** March 2026
-**Version:** 1.0
+**Last Updated:** 2026-06-12
+**Version:** 1.1
 **Owner:** sayed Jabeer, Founder — FortuneMarq Media & Marketing
 
 > This is the master context file for the entire FortuneMarq build system.
@@ -275,8 +275,8 @@ Everything in this list needs to be built. Tracked across the relevant folders.
 
 | What | Folder Responsible | Status |
 |---|---|---|
-| FMOS deployed to fmos.fortunemarq.com | 01_CRM_AND_TOOL | PENDING — highest priority blocker |
-| CRM changes from blueprint plan | 01_CRM_AND_TOOL | PENDING — Outreach Board, Lead Profile, role views, Revenue Forecast |
+| FMOS deployed to fmos.fortunemarq.com | 01_CRM_AND_TOOL | PENDING — highest priority blocker. WhatsApp templates bug fixed (RLS + filter). /telecaller redirect fixed. Meetings page needs 2 SQL columns (meeting_link, meeting_notes) + SUPABASE_SERVICE_ROLE_KEY in .env.local before deploy. |
+| CRM changes from blueprint plan | 01_CRM_AND_TOOL | PARTIALLY DONE — WhatsApp templates, telecaller redirect, and RLS fixed. Remaining: Outreach Board, Lead Profile full view, Revenue Forecast widget. |
 | Lead upload to FMOS (Hubli_Final — 11 files ready) | 01_CRM_AND_TOOL + 07_DATA_AND_RESEARCH | BLOCKED — awaiting FMOS deployment |
 | Finalise leads for other 8 cities (cleaned, not formatted) | 07_DATA_AND_RESEARCH | PENDING — Dharwad next |
 | PDF pipeline for Dharwad, Belgaum, Mangalore, Davangere, Ballari | 07_DATA_AND_RESEARCH | PENDING — SERP HTML ready, just needs pipeline run |
@@ -301,23 +301,41 @@ Everything in this list needs to be built. Tracked across the relevant folders.
 
 ---
 
-## 9. Revenue Targets & Milestones
+## 8b. Pending Technical Actions (as of 2026-06-08)
 
-| Milestone | Target | What It Looks Like |
+These are specific technical steps that must be done before FMOS meetings page works and before deployment. Track here and remove when done.
+
+### Critical — Do Next Session
+
+✅ **1. Run these 2 SQL statements in Supabase SQL Editor** (meetings page columns missing) — DONE 2026-06-08
+```sql
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_link TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
+```
+
+✅ **2. Add SUPABASE_SERVICE_ROLE_KEY to .env.local** — DONE 2026-06-08
+
+---
+
+## 9. Revenue Targets & Milestones
+**Reset: 2026-06-08**
+
+| Period | Target | Notes |
 |---|---|---|
-| ₹50,000 MRR | End of April / May 2026 | ~16 retainer clients, mix of GMB + Ads + SEO packages |
-| ₹1,00,000 MRR | Month 4–5 | ~28 retainer clients, expanded to Dharwad |
-| ₹2,00,000 MRR | Month 7–8 | ~50 clients, hiring trigger — PM, 2nd telecaller, SMM |
-| ₹5,00,000 MRR | 2 years | Full team, all Karnataka cities, SaaS product live |
+| June 2026 | ₹0 (build month) | App, deployment, strategy, online presence, campaigns setup |
+| Q3 2026 (Jul–Sep) | ₹1,00,000 total revenue | First revenue quarter. Mix of one-time + retainer. |
+| Oct 2026 onwards | 20% month-on-month growth | Compounding from Q3 baseline |
+| ₹2,00,000 MRR | Month 12–14 | Hiring trigger — PM, 2nd telecaller, SMM |
+| ₹5,00,000 MRR | 2-year vision | Full team, all Karnataka cities, SaaS product live |
 
 **Niche attack order — Phase 1 (Hubli-Dharwad):**
-1. Gyms (63,950 searches/month)
-2. Skin Clinics (41,850/month)
-3. Computer Training (24,350/month)
-4. Dental Clinics (21,100/month)
-5. Car Rentals (16,450/month)
-6. JEE/NEET Coaching (12,300/month)
-7. Avoid for now: Interior Designers (strong competitor present)
+1. Healthcare — Dental Clinics + Skin Clinics (62,950 combined searches/month)
+2. Real Estate
+3. Car Rental (16,450/month)
+4. Fitness — Gyms (63,950/month)
+5. Education — JEE/NEET Coaching + Computer Training (36,650 combined/month)
+6. Remaining niches (after Phase 1 groups are fully called and campaigned)
+- Avoid for now: Interior Designers (strong competitor present)
 
 ---
 
@@ -346,7 +364,7 @@ These need to be decided. Each has a folder responsible for resolving it.
 
 | Decision | Folder | Notes |
 |---|---|---|
-| WhatsApp API vs Business Account for lead outreach | 03_SALES_SYSTEM | API gives automation, Business Account is manual. Decision affects how follow-ups are automated. |
+| WhatsApp API vs Business Account for lead outreach | 03_SALES_SYSTEM | DECIDED 2026-06-08: Official Meta WhatsApp Cloud API on existing business number (+91 93530 82656). ~₹0.58/marketing conversation. 1,000 service conversations/month free. Number migrates off WhatsApp Business app — managed entirely through FMOS. Setup steps in PENDING_ACTIONS. |
 | Performance-based pricing / guarantees | 03_SALES_SYSTEM + 08_FINANCE | Decide after 3 months with results data. |
 | Social Media Management as a service | 02_SERVICE_DELIVERY_AUTOMATION | Never delivered before. Decide after 3 months. |
 | Price increases for new clients | 08_FINANCE | Decide after 3 months with portfolio and results. |
@@ -402,6 +420,11 @@ If a decision affects another folder — note it. Update that folder's context t
 | 2026-03-31 | 00_MASTER | Full audit and cleanup of 00_MASTER folder. Fixed wrong niche volumes across all Claude_Project_Instructions.md projects (old estimated numbers replaced with real data). Fixed UNIVERSAL_PROJECT_PROMPT.md encoding corruption. Updated MASTER_CONTEXT.md Section 8 to reflect true status: PDF_Index COMPLETE, Hubli scripts COMPLETE. Misplaced CRM files (APPLICATION_DOCUMENTATION.md, FORTUNEMARQ_APP_CONTEXT.md) noted for relocation to 01_CRM_AND_TOOL. Duplicate _project_files/ subfolder identified as archive — not to be used for active work. |
 | 2026-04-01 | 03_SALES_SYSTEM | Script architecture (L2) + WhatsApp Templates (L3) + Proposal and Agreement data (L4) all completed.
 | 2026-04-02 | 09_LEGAL_AND_OPERATIONS + 04_CLIENT_MANAGEMENT | Agreement Template document (L4b) complete: agreement_template.md (1-page client-facing doc), service_terms.json (all 7 services), payment_and_cancellation_policy.md. Onboarding Checklists + SOP (L5b) complete: onboarding_checklists.json covers all 7 services with full task lists, asset collection lists, and team tasks. TypeScript types + FMOS loader built. onboarding_sop.md written — full 10-step SOP for Jabeer. | Services finalised: Website, GMB, SEO, Google Ads, Meta Ads, WhatsApp Marketing, AI Automations. Closing sequence locked: Proposal → Agreement doc → Client confirms by reply → Invoice → Onboarding. | Old generic per-niche scripts replaced with 4 lead-type variants based on SERP_Ranked + Has_Website columns: Type A (ranked), Type B (website, not ranked), Type C (no website), Type D (low volume). Language set to English. Script structure: Introduction → Opening Hook (market research angle) → Data Hook → FOMO Point (opportunity before competitors catch up) → Differentiator (not just ads — full online growth system) → Meeting Ask (30-45min with Jabeer, founder, presentation, valuable even without signing). Call outcomes: INTERESTED (book now / follow up later / send info), NOT INTERESTED (reason required), FOLLOW BACK (date+time), WRONG NUMBER/DEAD. 4 JSON files created in FMOS_Script_Data/ for direct code loading. TypeScript types + loader utility created. |
+| 2026-06-08 | 08_FINANCE + 09_LEGAL_AND_OPERATIONS + ALL | Pricing update across all files: (1) Standard Website changed from ₹8,000 flat to ₹8,000–₹15,000 range. (2) GMB monthly fee increased from ₹2,500 to ₹3,500 with expanded 12-point deliverables scope. (3) Google Ads management fee now includes variable component: +5% of total ad spend for months where client spend exceeds ₹15,000. (4) Meta Ads same variable fee rule added. (5) All "non-refundable" language removed from setup fee and payment/cancellation policy. Updated files: services_data.json, service_terms.json, proposal_schema.json, payment_and_cancellation_policy.md, ServiceOfferings.md, Claude_Project_Instructions.md, 08_FINANCE/Pricing_Decisions/CONTEXT.md. |
+| 2026-06-08 | ALL SECTIONS — Full Project Review | Complete project review across all sections. WhatsApp template system overhauled: curiosity messages replaced with direct PDF send + Quick Reply buttons (Book meeting / Tell me more). bot_reply_templates deprecated. All outcome templates updated: landing page added to NOT_INTERESTED, time added to FOLLOW_UP_LATER, date/time picker added to both FOLLOW_BACK and FOLLOW_UP_LATER, calendar button added to meeting confirmation. Follow-back reminder split into 2 templates (heard pitch vs said busy). Post-meeting templates changed to PDF document sends (proposal, agreement, invoice). 7 new FMOS feature requirements added to PENDING_ACTIONS. Online Presence reviewed: website + niche pages flagged for redesign, GMB + SEO start June 15, ad accounts pending. Finance targets reset: June = build month, Q3 (Jul–Sep) = ₹1L total revenue, 20% MoM growth after. CRITICAL_PATH.md created. |
+| 2026-06-08 | 00_MASTER + 01_CRM_AND_TOOL + ALL | Vision & positioning: FortuneMarq_Vision_And_Positioning.md created in 00_MASTER as the single authoritative vision doc. Niche attack order confirmed and locked: Healthcare → Real Estate → Car Rental → Fitness → Education → Remaining. Updated across MASTER_CONTEXT.md Section 9, PhaseOneNiches.md, Claude_Project_Instructions.md, OpenDecisions.md. FMOS bugs fixed: (1) WhatsApp templates now load — RLS policy deployed to Supabase + lead_type filter fixed in whatsapp-template-picker.tsx. (2) /telecaller now redirects to /sales (the actual calling cockpit) via app/telecaller/page.tsx redirect. Pending: meetings page needs 2 SQL columns (meeting_link, meeting_notes) — not yet run. SUPABASE_SERVICE_ROLE_KEY not yet added to .env.local. |
+| 2026-06-11 | 01_CRM_AND_TOOL | FMOS v4.7: security hardening (RLS migrations written, cron auth, service-role isolation) + full UI/UX overhaul (design system in globals.css, brand-deep green, layout shell fix, invoice/proposal/agreement PDF redesign). 82-page audit found 38 DB tables missing (migrations never run) + UX debt. |
+| 2026-06-12 | 01_CRM_AND_TOOL | **FMOS v4.8 — DATABASE FULLY SYNCED**: all ~19 pending migrations executed in Supabase as one consolidated script (38 tables created: attendance, notifications, automations, marketing, duplicates, sessions, niche kits). Notifications system fixed + live (bell, realtime), daily-digest cron (meetings/follow-ups/overdue invoices/at-risk clients/marketing line), team management built (invite/role change/password reset/deactivate/remove from /admin/team), invoice partial payments, alert()/prompt() eliminated app-wide, /manager/performance now real data. **PHASE F (Inbound + Performance Marketing) planned (fmos/PHASE_F_INBOUND_MARKETING.md) + Stage 0 built and tested**: universal inbound pipeline with phone dedupe + attribution + round-robin auto-assign, /api/inbound/[channel] webhook (Google lead-form adapter), LP UTM capture, cockpit source picker, speed-to-lead, "Inbound & Funnel" tab on /admin/marketing (funnel, channel scoreboard, UTM builder, Meta/Google spend CSV import). Deploy target now Vercel (vercel.json crons ready). Next: deploy → Stage 1 webhooks (WhatsApp Cloud API, Meta leadgen). |
 
 ---
 

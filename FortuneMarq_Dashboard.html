@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FortuneMarq Build — Project Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#42CA80;--green-light:#D6F4E5;--green-dark:#195C38;
+  --dark:#1A1A2E;--darker:#0D0D1A;
+  --done-bg:#D6F4E5;--done-text:#195C38;--done-border:#9EE5C2;
+  --progress-bg:#FFF3CD;--progress-text:#856404;--progress-border:#FFD966;
+  --todo-bg:#F3F3F3;--todo-text:#555;--todo-border:#CCCCCC;
+  --red-bg:#FDECEA;--red-text:#842029;
+  --card-bg:#fff;--page-bg:#F4F6FA;--text:#1A1A2E;--muted:#666;
+  --border:#E2E2E2;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--page-bg);color:var(--text);min-height:100vh}
+.dashboard{max-width:1200px;margin:0 auto;padding:24px 20px 60px}
+
+/* ── TOP HEADER ── */
+.header{background:var(--dark);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.logo-block{flex:1;min-width:200px}
+.logo-title{font-size:22px;font-weight:700;color:var(--green);letter-spacing:-0.3px}
+.logo-sub{font-size:13px;color:#aaa;margin-top:3px}
+.header-stats{display:flex;gap:16px;flex-wrap:wrap}
+.stat-pill{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 18px;text-align:center;min-width:80px}
+.stat-pill .val{font-size:24px;font-weight:700;color:#fff;line-height:1}
+.stat-pill .lbl{font-size:11px;color:#aaa;margin-top:3px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-pill.done .val{color:var(--green)}
+.stat-pill.prog .val{color:#FFD166}
+.stat-pill.todo .val{color:#aaa}
+
+/* ── OVERALL PROGRESS BAR ── */
+.overall-bar-wrap{background:var(--card-bg);border-radius:16px;padding:22px 28px;margin-bottom:24px;border:1px solid var(--border)}
+.overall-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.overall-bar-title{font-size:15px;font-weight:600;color:var(--text)}
+.overall-pct{font-size:20px;font-weight:700;color:var(--green)}
+.bar-track{height:12px;background:#E8E8E8;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#2DBD6E,#42CA80);transition:width 0.6s cubic-bezier(.4,0,.2,1)}
+.bar-segments{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.seg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.seg-dot{width:10px;height:10px;border-radius:50%}
+
+/* ── FOLDER GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+
+/* ── FOLDER CARD ── */
+.card{background:var(--card-bg);border-radius:14px;border:1px solid var(--border);overflow:hidden;transition:box-shadow 0.2s}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.card-header{padding:16px 20px 14px;cursor:pointer;user-select:none;display:flex;flex-direction:column;gap:10px}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-name-wrap{display:flex;align-items:center;gap:10px}
+.folder-num{font-size:11px;font-weight:700;color:var(--green);background:#E8FFF3;border-radius:6px;padding:3px 8px;white-space:nowrap;letter-spacing:0.5px}
+.card-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
+.status-badge{font-size:11px;font-weight:600;border-radius:6px;padding:3px 9px;white-space:nowrap;flex-shrink:0}
+.badge-done{background:var(--done-bg);color:var(--done-text)}
+.badge-progress{background:var(--progress-bg);color:var(--progress-text)}
+.badge-todo{background:var(--todo-bg);color:var(--todo-text)}
+.badge-blocked{background:var(--red-bg);color:var(--red-text)}
+
+.card-progress-row{display:flex;align-items:center;gap:10px}
+.card-bar-track{flex:1;height:7px;background:#E8E8E8;border-radius:99px;overflow:hidden}
+.card-bar-fill{height:100%;border-radius:99px;transition:width 0.5s cubic-bezier(.4,0,.2,1)}
+.card-pct{font-size:12px;font-weight:700;min-width:34px;text-align:right}
+.card-task-counts{display:flex;gap:10px}
+.count-chip{font-size:11px;border-radius:5px;padding:2px 7px;display:flex;align-items:center;gap:4px}
+.cc-done{background:var(--done-bg);color:var(--done-dark,#195C38)}
+.cc-prog{background:var(--progress-bg);color:var(--progress-text)}
+.cc-todo{background:var(--todo-bg);color:var(--todo-text)}
+
+.expand-icon{font-size:13px;color:var(--muted);transition:transform 0.2s;margin-left:auto;flex-shrink:0}
+.expand-icon.open{transform:rotate(180deg)}
+
+/* ── TASKS ── */
+.task-list{display:none;padding:0 20px 16px;border-top:1px solid var(--border)}
+.task-list.open{display:block}
+.task-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin:12px 0 6px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:8px;cursor:pointer;transition:background 0.15s;margin-bottom:2px}
+.task-item:hover{background:#F8F8F8}
+.task-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;font-weight:700;border:1.5px solid}
+.ti-done{background:var(--done-bg);color:var(--done-text);border-color:var(--done-border)}
+.ti-prog{background:var(--progress-bg);color:var(--progress-text);border-color:var(--progress-border)}
+.ti-todo{background:#fff;color:#aaa;border-color:#ccc}
+.task-text{font-size:13px;color:var(--text);line-height:1.4;flex:1}
+.task-item.is-done .task-text{color:var(--muted);text-decoration:line-through;text-decoration-color:#bbb}
+.task-cycle-btn{font-size:10px;color:#aaa;background:none;border:none;cursor:pointer;padding:2px 5px;border-radius:4px;white-space:nowrap;opacity:0;transition:opacity 0.15s;flex-shrink:0}
+.task-item:hover .task-cycle-btn{opacity:1}
+
+/* ── FOOTER ── */
+.footer-note{text-align:center;font-size:12px;color:var(--muted);margin-top:28px}
+
+/* ── ACTIONS & SYNC ── */
+.top-actions{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+.action-btn{font-size:12px;color:var(--muted);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;transition:background 0.15s}
+.action-btn:hover{background:#eee}
+.action-btn.green{color:var(--green-dark);border-color:var(--done-border);background:var(--done-bg)}
+.action-btn.primary{color:#fff;border-color:var(--green);background:var(--green);font-weight:600}
+.action-btn.primary:hover{background:#35b56e}
+.sync-pill{font-size:11px;padding:5px 12px;border-radius:20px;background:var(--done-bg);color:var(--green-dark);border:1px solid var(--done-border);display:none;align-items:center;gap:5px;white-space:nowrap}
+.sync-pill.show{display:flex}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+@media(max-width:680px){.grid{grid-template-columns:1fr}.header{padding:20px}.header-stats{gap:10px}.stat-pill{padding:8px 12px;min-width:60px}.stat-pill .val{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+<div class="top-actions">
+  <button class="action-btn" onclick="collapseAll()">Collapse all</button>
+  <button class="action-btn" onclick="expandAll()">Expand all</button>
+  <button class="action-btn green" onclick="exportStatus()">Export status</button>
+  <button class="action-btn" onclick="resetAll()">Reset to defaults</button>
+</div>
+
+<div class="header">
+  <div class="logo-block">
+    <div class="logo-title">FortuneMarq Build</div>
+    <div class="logo-sub">Project Dashboard · Hubli, Karnataka · As of April 29, 2026</div>
+    <div id="sync-status" style="font-size:11px;margin-top:5px;color:#aaa;font-weight:500">Connecting…</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill"><div class="val" id="stat-total">0</div><div class="lbl">Total Tasks</div></div>
+    <div class="stat-pill done"><div class="val" id="stat-done">0</div><div class="lbl">Completed</div></div>
+    <div class="stat-pill prog"><div class="val" id="stat-prog">0</div><div class="lbl">In Progress</div></div>
+    <div class="stat-pill todo"><div class="val" id="stat-todo">0</div><div class="lbl">Not Started</div></div>
+  </div>
+</div>
+
+<div class="overall-bar-wrap">
+  <div class="overall-bar-header">
+    <div class="overall-bar-title">Overall Project Progress</div>
+    <div class="overall-pct" id="overall-pct">0%</div>
+  </div>
+  <div class="bar-track"><div class="bar-fill" id="overall-bar" style="width:0%"></div></div>
+  <div class="bar-segments">
+    <div class="seg"><div class="seg-dot" style="background:#42CA80"></div><span id="seg-done">0 completed</span></div>
+    <div class="seg"><div class="seg-dot" style="background:#FFD166"></div><span id="seg-prog">0 in progress</span></div>
+    <div class="seg"><div class="seg-dot" style="background:#CCCCCC"></div><span id="seg-todo">0 not started</span></div>
+    <div class="seg"><div class="seg-dot" style="background:#1A1A2E"></div><span id="seg-folders">0 folders</span></div>
+  </div>
+</div>
+
+<div class="grid" id="folder-grid"></div>
+
+<div class="footer-note">Click any task to cycle status · Progress syncs automatically across all your devices via Supabase</div>
+</div>
+
+<script>
+const FOLDERS = [
+  {
+    id:'f00', num:'00', name:'MASTER', badge:'done', badgeLabel:'Complete',
+    purpose:'Strategic hub — master business plan, content hierarchy, Claude instructions, brand assets.',
+    tasks:[
+      {id:'f00_1',text:'Agency_OS_Master_Plan.docx — master business and operations plan',s:'done'},
+      {id:'f00_2',text:'FortuneMarq_Master_Blueprint.docx — full agency blueprint',s:'done'},
+      {id:'f00_3',text:'FortuneMarq_Content_Hierarchy.docx — L0–L7 content architecture',s:'done'},
+      {id:'f00_4',text:'UNIVERSAL_PROJECT_PROMPT.md — Claude session start prompt finalized',s:'done'},
+      {id:'f00_5',text:'Claude_Project_Instructions.md — Claude operating rules in place',s:'done'},
+      {id:'f00_6',text:'Brand assets: 3 logo variants + Alliance, JetBrains Mono fonts',s:'done'},
+      {id:'f00_7',text:'Niche data reference sheet complete with real Keyword Planner volumes',s:'done'},
+      {id:'f00_8',text:'MASTER_CONTEXT.md kept up to date through all sessions',s:'done'},
+      {id:'f00_9',text:'Update MASTER_CONTEXT.md each session as decisions are made',s:'in-progress'},
+    ]
+  },
+  {
+    id:'f01', num:'01', name:'CRM AND TOOL (FMOS)', badge:'progress', badgeLabel:'Deploy Pending',
+    purpose:'FMOS — custom Next.js + Supabase CRM. v4.5 production-ready. Manages leads, outreach, proposals, invoicing, team roles.',
+    tasks:[
+      {id:'f01_1',text:'Full Next.js application built — 35+ admin modules',s:'done'},
+      {id:'f01_2',text:'All 5 phases (A–E) of FMOS change specs implemented',s:'done'},
+      {id:'f01_3',text:'All 21 data files (scripts, templates, proposals, onboarding) in FMOS_Change_Specs/data/',s:'done'},
+      {id:'f01_4',text:'858 Hubli leads imported and live in the CRM',s:'done'},
+      {id:'f01_5',text:'Bulk-import tool built at /admin/bulk-import for remaining ~6,300 leads',s:'done'},
+      {id:'f01_6',text:'Real search volumes wired into TelecallerCockpit via searchVolumeMap',s:'done'},
+      {id:'f01_7',text:'Telecaller scripts (A/B/C/D) updated with "our founder" language',s:'done'},
+      {id:'f01_8',text:'All API routes and server actions complete',s:'done'},
+      {id:'f01_9',text:'Role-based views for Jabeer, Afifa, Zaid/Sufiyan built',s:'done'},
+      {id:'f01_10',text:'Add OPENROUTER_API_KEY to Hostinger environment variables',s:'todo'},
+      {id:'f01_11',text:'Point fmos.fortunemarq.com subdomain to Hostinger server',s:'todo'},
+      {id:'f01_12',text:'Deploy the Next.js application to Hostinger',s:'todo'},
+      {id:'f01_13',text:'Create Afifa\'s telecaller account in /admin/users',s:'todo'},
+      {id:'f01_14',text:'Create Zaid and Sufiyan accounts in /admin/users',s:'todo'},
+      {id:'f01_15',text:'Run /admin/bulk-import to load remaining ~6,300 leads',s:'todo'},
+      {id:'f01_16',text:'Enter Austin Dental Spa and OM SAI TRAVELS real client data',s:'todo'},
+      {id:'f01_17',text:'Activate GST invoice settings with GSTIN 29ICWPS9816Q1ZS',s:'todo'},
+      {id:'f01_18',text:'Run SQL migrations for Phase C columns (outreach_stage, pdf_sent_at, etc.)',s:'todo'},
+      {id:'f01_19',text:'Seed WhatsApp templates into Supabase whatsapp_templates table (Phase D)',s:'todo'},
+    ]
+  },
+  {
+    id:'f02', num:'02', name:'SERVICE DELIVERY AUTOMATION', badge:'todo', badgeLabel:'Not Started',
+    purpose:'Automation layer: Website Brief App, Ads Automation engine, SEO Automation engine. All blocked on FMOS deployment and first clients.',
+    tasks:[
+      {id:'f02_1',text:'Agency_OS_Master_Plan.docx — full automation roadmap documented',s:'done'},
+      {id:'f02_2',text:'Phase sequence defined: Website Brief App → Ads → SEO',s:'done'},
+      {id:'f02_3',text:'Folder structure and CONTEXT.md files created',s:'done'},
+      {id:'f02_4',text:'SOPs planned as blueprint for each automation system',s:'done'},
+      {id:'f02_5',text:'Website Brief App (Phase 1: Months 1–2 after FMOS deploy)',s:'todo'},
+      {id:'f02_6',text:'Ads Automation Engine (Phase 2: Months 3–4)',s:'todo'},
+      {id:'f02_7',text:'SEO Automation Engine (Phase 3: Months 5–6)',s:'todo'},
+      {id:'f02_8',text:'Full automation + unified reporting (Phase 4: Months 7–8)',s:'todo'},
+      {id:'f02_9',text:'Write SOPs for each service (blueprint before automating)',s:'todo'},
+      {id:'f02_10',text:'Complete Zaid + Sufiyan basic training (required for Website Brief App)',s:'todo'},
+      {id:'f02_11',text:'Reach 5+ paying clients (required to justify automation API costs)',s:'todo'},
+    ]
+  },
+  {
+    id:'f03', num:'03', name:'SALES SYSTEM', badge:'done', badgeLabel:'Content Complete',
+    purpose:'Full outbound sales engine — telecaller scripts (4 types), 17 WhatsApp templates, proposals, agreements, onboarding. L2–L7 complete.',
+    tasks:[
+      {id:'f03_1',text:'L2 — Telecaller Scripts: 4 types (A/B/C/D) with 9 outcomes each',s:'done'},
+      {id:'f03_2',text:'L3 — WhatsApp Templates: 17 templates across 5 categories',s:'done'},
+      {id:'f03_3',text:'L4a — Proposal template: schema, services data, TypeScript types',s:'done'},
+      {id:'f03_4',text:'L4b — Agreement document: 1-page with service-specific terms',s:'done'},
+      {id:'f03_5',text:'L5 — Onboarding SOPs and checklists for all 7 services',s:'done'},
+      {id:'f03_6',text:'L6 — Monthly report templates + client health score system',s:'done'},
+      {id:'f03_7',text:'L7 — Upsell rules and scripts complete',s:'done'},
+      {id:'f03_8',text:'Scripts updated: "our founder" language, Zoom meeting ask, objection responses',s:'done'},
+      {id:'f03_9',text:'Script loader TypeScript utility built for FMOS integration',s:'done'},
+      {id:'f03_10',text:'Sample proposal PDF generated for Gyms niche (TypeB)',s:'done'},
+      {id:'f03_11',text:'Load all content into live FMOS once deployed',s:'todo'},
+      {id:'f03_12',text:'Seed WhatsApp templates into Supabase (Phase D spec)',s:'todo'},
+      {id:'f03_13',text:'Purchase and connect Meta WhatsApp Business API',s:'todo'},
+      {id:'f03_14',text:'Deploy niche landing pages (required for bot reply templates)',s:'todo'},
+      {id:'f03_15',text:'Afifa to begin calling from TelecallerCockpit after FMOS is live',s:'todo'},
+    ]
+  },
+  {
+    id:'f04', num:'04', name:'CLIENT MANAGEMENT', badge:'done', badgeLabel:'Content Complete',
+    purpose:'Post-signup client systems — onboarding SOP, monthly reporting schema, client health score, upsell system. L5–L7 all complete.',
+    tasks:[
+      {id:'f04_1',text:'L5a — 10-step Onboarding SOP (onboarding_sop.md)',s:'done'},
+      {id:'f04_2',text:'L5b — Per-service onboarding checklists for all 7 services',s:'done'},
+      {id:'f04_3',text:'L6a — Monthly report schema (monthly_report_schema.json)',s:'done'},
+      {id:'f04_4',text:'L6b — Client health score: 4 pillars (Rankings+Traffic+Leads+GMB, 25pts each)',s:'done'},
+      {id:'f04_5',text:'L7 — Upsell rules and scripts (upsell_rules.json + upsell_scripts.json)',s:'done'},
+      {id:'f04_6',text:'TypeScript types and FMOS loaders built for all 3 data systems',s:'done'},
+      {id:'f04_7',text:'FMOS Phase D: Onboarding tab with per-service task checklists in CRM',s:'todo'},
+      {id:'f04_8',text:'FMOS Phase D: Asset vault for client credentials and files',s:'todo'},
+      {id:'f04_9',text:'FMOS Phase E: Build upsell queue in admin dashboard',s:'todo'},
+      {id:'f04_10',text:'Monthly PDF report generation directly from FMOS',s:'todo'},
+      {id:'f04_11',text:'Health score auto-calculation from live client data',s:'todo'},
+      {id:'f04_12',text:'Renewals alert: FMOS alerts Jabeer 30 days before renewal date',s:'todo'},
+    ]
+  },
+  {
+    id:'f05', num:'05', name:'FORTUNEMARQ ONLINE PRESENCE', badge:'progress', badgeLabel:'In Progress',
+    purpose:'FortuneMarq\'s own digital presence — fortunemarq.com is live. 11 niche landing pages built, not yet deployed. Social media not started.',
+    tasks:[
+      {id:'f05_1',text:'fortunemarq.com is live on Hostinger',s:'done'},
+      {id:'f05_2',text:'Google My Business: created, verified, basic info added',s:'done'},
+      {id:'f05_3',text:'11 niche HTML landing pages generated (April 2026) — all 11 niches covered',s:'done'},
+      {id:'f05_4',text:'2 Gemini-generated brand visuals created for niche pages',s:'done'},
+      {id:'f05_5',text:'Deploy 11 niche pages to fortunemarq.com/[niche]-hubli',s:'todo'},
+      {id:'f05_6',text:'GMB full optimization: categories, service areas, monthly posts, review strategy',s:'todo'},
+      {id:'f05_7',text:'Instagram: bio, first 9 posts, reel strategy',s:'todo'},
+      {id:'f05_8',text:'LinkedIn: company page, Jabeer personal page, first 5 posts',s:'todo'},
+      {id:'f05_9',text:'SEO keyword targeting for fortunemarq.com',s:'todo'},
+    ]
+  },
+  {
+    id:'f06', num:'06', name:'PAID MARKETING', badge:'todo', badgeLabel:'Not Started',
+    purpose:'Google Ads and Meta Ads client acquisition campaigns. Last step in build sequence — blocked on FMOS deployment, Afifa live, and landing pages deployed.',
+    tasks:[
+      {id:'f06_1',text:'Strategy documented: Gyms niche first, then Skin Clinics',s:'done'},
+      {id:'f06_2',text:'Niche data reference sheet available for ad targeting',s:'done'},
+      {id:'f06_3',text:'Campaign sequence planned: landing pages → FMOS → Afifa → ads launch',s:'done'},
+      {id:'f06_4',text:'Set up Meta Business Manager ad account',s:'todo'},
+      {id:'f06_5',text:'Record 1 core video ad per niche (60–90 seconds, Jabeer on camera)',s:'todo'},
+      {id:'f06_6',text:'Create ad creatives — thumbnails and copy in Canva',s:'todo'},
+      {id:'f06_7',text:'Launch first Meta Ads campaign — Gyms niche, Hubli',s:'todo'},
+      {id:'f06_8',text:'Week 2: analyze performance, cut underperformers, scale winner',s:'todo'},
+      {id:'f06_9',text:'Set up Google Ads campaign for priority niches',s:'todo'},
+      {id:'f06_10',text:'Deploy niche landing pages before any paid campaigns launch',s:'todo'},
+    ]
+  },
+  {
+    id:'f07', num:'07', name:'DATA AND RESEARCH', badge:'progress', badgeLabel:'In Progress',
+    purpose:'Lead database (8,000+ leads across 9 cities), keyword research (9 cities × 14 niches), competitor SERP data, and PDF generator pipeline.',
+    tasks:[
+      {id:'f07_1',text:'858 Hubli leads cleaned into 11 niche CSVs and imported into FMOS',s:'done'},
+      {id:'f07_2',text:'Hubli_All_Leads_Clean.csv — combined 858-row master CSV',s:'done'},
+      {id:'f07_3',text:'PDF Generator pipeline complete and reusable (English + Kannada)',s:'done'},
+      {id:'f07_4',text:'37 English Hubli PDFs generated and approved',s:'done'},
+      {id:'f07_5',text:'Master keyword Excel complete — all 9 cities × 14 niches',s:'done'},
+      {id:'f07_6',text:'Competitor SERP analysis complete for Hubli across 6 priority niches',s:'done'},
+      {id:'f07_7',text:'Cleaned lead data available for all 9 cities (Hubli, Dharwad, Belgaum, etc.)',s:'done'},
+      {id:'f07_8',text:'Bulk-import tool built in FMOS for one-click CSV upload',s:'done'},
+      {id:'f07_9',text:'Regenerate 38 Kannada Hubli PDFs after fixing misspellings in pdf_generator_kn.py',s:'todo'},
+      {id:'f07_10',text:'Upload Hubli_Final/ CSVs to FMOS via /admin/bulk-import (needs deployment)',s:'todo'},
+      {id:'f07_11',text:'Run Dharwad pipeline — SERP assets ready, needs processing',s:'todo'},
+      {id:'f07_12',text:'Belgaum, Mangalore, Davangere, Ballari — SERP assets partially ready',s:'todo'},
+      {id:'f07_13',text:'Mysuru, Kalaburgi, Vijayapura — collect SERP HTML then run pipeline',s:'todo'},
+    ]
+  },
+  {
+    id:'f08', num:'08', name:'FINANCE', badge:'progress', badgeLabel:'In Progress',
+    purpose:'Pricing (locked), invoicing, revenue tracking, and GST compliance. FMOS finance module built. No invoices raised yet — first client triggers first invoice.',
+    tasks:[
+      {id:'f08_1',text:'All pricing locked and documented in ServiceOfferings wiki',s:'done'},
+      {id:'f08_2',text:'Payment policy locked: 50% advance + 50% on delivery',s:'done'},
+      {id:'f08_3',text:'Revenue model defined: MRR vs one-time tracking',s:'done'},
+      {id:'f08_4',text:'GST details documented (GSTIN: 29ICWPS9816Q1ZS)',s:'done'},
+      {id:'f08_5',text:'Monthly burn calculated: ₹15,600–₹16,600/month',s:'done'},
+      {id:'f08_6',text:'Finance module built in FMOS at /admin/finance',s:'done'},
+      {id:'f08_7',text:'FMOS Phase E: MRR vs one-time revenue split in Finance dashboard',s:'todo'},
+      {id:'f08_8',text:'FMOS Phase E: Revenue Forecast Widget vs ₹50K MRR target',s:'todo'},
+      {id:'f08_9',text:'Activate GST invoice settings in FMOS once deployed',s:'todo'},
+      {id:'f08_10',text:'Raise first invoice on first signed client',s:'todo'},
+    ]
+  },
+  {
+    id:'f09', num:'09', name:'LEGAL AND OPERATIONS', badge:'done', badgeLabel:'Mostly Complete',
+    purpose:'GST and Udyam registered. Agreement templates, service terms, and payment policy complete. Two minor items remain.',
+    tasks:[
+      {id:'f09_1',text:'GST registered — GSTIN: 29ICWPS9816Q1ZS (valid from 05/11/2025)',s:'done'},
+      {id:'f09_2',text:'MSME/Udyam registered — UDYAM-KR-13-0088191',s:'done'},
+      {id:'f09_3',text:'1-page client agreement template complete (agreement_template.md)',s:'done'},
+      {id:'f09_4',text:'Service-specific terms for all 7 services (service_terms.json)',s:'done'},
+      {id:'f09_5',text:'Full payment and cancellation policy written',s:'done'},
+      {id:'f09_6',text:'Complete business identity documented (BUSINESS_MASTER_INFO.md)',s:'done'},
+      {id:'f09_7',text:'Privacy Policy for fortunemarq.com',s:'todo'},
+      {id:'f09_8',text:'Website Ownership Transfer document for exiting clients',s:'todo'},
+      {id:'f09_9',text:'GST invoice compliance checklist for FMOS activation',s:'todo'},
+      {id:'f09_10',text:'Enter GSTIN and bank details in FMOS /admin/finance settings',s:'todo'},
+    ]
+  },
+  {
+    id:'f10', num:'10', name:'PERSONAL GROWTH', badge:'todo', badgeLabel:'Not Started',
+    purpose:'Jabeer\'s personal development — AI learning, communication skills, digital marketing. Three tracks defined. No logs exist yet.',
+    tasks:[
+      {id:'f10_1',text:'Three growth tracks defined: AI Learning, Communication Skills, Digital Marketing',s:'done'},
+      {id:'f10_2',text:'CONTEXT.md created for each track with goals and scope',s:'done'},
+      {id:'f10_3',text:'Start logging real meeting insights in Communication_Skills/',s:'todo'},
+      {id:'f10_4',text:'Document AI workflows that work well in AI_Learning/',s:'todo'},
+      {id:'f10_5',text:'Note Meta Ads learnings in Digital_Marketing_Learning/',s:'todo'},
+      {id:'f10_6',text:'Build learning habit: 30 minutes/day dedicated learning time',s:'todo'},
+    ]
+  },
+  {
+    id:'fba', num:'BA', name:'BRAND ASSETS', badge:'done', badgeLabel:'Complete',
+    purpose:'Master brand asset library — logos, brand fonts. Used across all documents, landing pages, PDFs, and the website.',
+    tasks:[
+      {id:'fba_1',text:'Logo on white background (Logo1_whitebackground.jpg)',s:'done'},
+      {id:'fba_2',text:'Logo on dark background (Logo2_blackbackground.jpg)',s:'done'},
+      {id:'fba_3',text:'Logo on brand green (Logo3_greenbackground.jpg)',s:'done'},
+      {id:'fba_4',text:'Brand Guidelines reference image complete',s:'done'},
+      {id:'fba_5',text:'Alliance No.1 and No.2 fonts in OTF + TTF (primary display)',s:'done'},
+      {id:'fba_6',text:'JetBrains Mono font in TTF + WOFF2',s:'done'},
+      {id:'fba_7',text:'Noto Sans Kannada TTF for Kannada language PDFs',s:'done'},
+      {id:'fba_8',text:'Fixed font variants generated for PDF generator compatibility',s:'done'},
+      {id:'fba_9',text:'Add new assets if brand evolves',s:'todo'},
+    ]
+  },
+  {
+    id:'for', num:'OR', name:'OBSIDIAN RAG (Knowledge Base)', badge:'done', badgeLabel:'Complete',
+    purpose:'Claude-powered institutional memory — 17 wiki pages covering all business context. Feeds Claude at session start.',
+    tasks:[
+      {id:'for_1',text:'17 wiki pages created and cross-referenced',s:'done'},
+      {id:'for_2',text:'cla.md finalized with Jabeer\'s context and session checklist',s:'done'},
+      {id:'for_3',text:'SCHEMA.md governing wiki conventions in place',s:'done'},
+      {id:'for_4',text:'10 raw input files ingested on April 28, 2026',s:'done'},
+      {id:'for_5',text:'lint.py wiki consistency checking script available',s:'done'},
+      {id:'for_6',text:'All locked decisions, open decisions, and blockers documented',s:'done'},
+      {id:'for_7',text:'Full team structure, tech stack, and growth roadmap in wiki',s:'done'},
+      {id:'for_8',text:'Update FMOS.md once deployment is complete',s:'todo'},
+      {id:'for_9',text:'Update CurrentBlockers.md once FMOS is deployed',s:'todo'},
+      {id:'for_10',text:'Update GrowthRoadmap.md when first revenue is recorded',s:'todo'},
+      {id:'for_11',text:'Keep all wiki pages current as decisions are made',s:'in-progress'},
+    ]
+  },
+];
+
+// ── SUPABASE SYNC ──────────────────────────────────────────────
+const SB_URL = 'https://cnwooodktqwvpzkucskm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud29vb2RrdHF3dnB6a3Vjc2ttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNDA3NDEsImV4cCI6MjA4MDYxNjc0MX0.IMaJkvxUyauj6ZsHv79cJGZuP1UrnzXK0tdFvbaqQgs';
+const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+const STORAGE_KEY = 'fm_dashboard_v2';
+
+function setSyncStatus(msg, color) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color || '#aaa';
+}
+
+async function rpc(fn, params) {
+  return fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: SB_HEADERS,
+    body: JSON.stringify(params || {})
+  });
+}
+
+async function loadState() {
+  setSyncStatus('Connecting…', '#FFD166');
+  try {
+    const res = await rpc('get_dashboard_state');
+    if (!res.ok) { throw new Error('HTTP ' + res.status + ': ' + await res.text()); }
+    const state = await res.json();
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+    setSyncStatus('● Cloud sync active', '#42CA80');
+    return state || {};
+  } catch(e) {
+    setSyncStatus('⚠ ' + e.message, '#F96167');
+    console.error('Supabase load error:', e);
+  }
+  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
+}
+
+let saveTimer = null;
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  setSyncStatus('Saving…', '#FFD166');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      const res = await rpc('save_dashboard_state', { new_state: state });
+      if (res.ok || res.status === 204) {
+        setSyncStatus('● Saved to cloud', '#42CA80');
+      } else {
+        const err = await res.text();
+        setSyncStatus('⚠ Save failed ' + res.status, '#F96167');
+        console.error('Supabase save error:', res.status, err);
+      }
+    } catch(e) {
+      setSyncStatus('⚠ Offline — local only', '#F5A623');
+      console.error('Supabase save error:', e);
+    }
+  }, 400);
+}
+
+let taskState = {};
+let expandState = {};
+
+function getTaskStatus(taskId, defaultStatus) {
+  return taskState[taskId] !== undefined ? taskState[taskId] : defaultStatus;
+}
+
+function cycleStatus(taskId, currentStatus) {
+  const cycle = { 'todo': 'in-progress', 'in-progress': 'done', 'done': 'todo' };
+  const next = cycle[currentStatus] || 'todo';
+  taskState[taskId] = next;
+  saveState(taskState);
+  return next;
+}
+
+function calcFolderProgress(folder) {
+  let done = 0, prog = 0, todo = 0;
+  folder.tasks.forEach(t => {
+    const s = getTaskStatus(t.id, t.s);
+    if (s === 'done') done++;
+    else if (s === 'in-progress') prog++;
+    else todo++;
+  });
+  const total = folder.tasks.length;
+  const pct = total > 0 ? Math.round((done + prog * 0.5) / total * 100) : 0;
+  return { done, prog, todo, total, pct };
+}
+
+function calcOverall() {
+  let done = 0, prog = 0, todo = 0, total = 0;
+  FOLDERS.forEach(f => {
+    f.tasks.forEach(t => {
+      const s = getTaskStatus(t.id, t.s);
+      if (s === 'done') done++;
+      else if (s === 'in-progress') prog++;
+      else todo++;
+      total++;
+    });
+  });
+  const pct = total > 0 ? Math.round((done + prog * 0.5) / total * 100) : 0;
+  return { done, prog, todo, total, pct };
+}
+
+function badgeClass(badge) {
+  if (badge === 'done') return 'badge-done';
+  if (badge === 'progress') return 'badge-progress';
+  if (badge === 'todo') return 'badge-todo';
+  if (badge === 'blocked') return 'badge-blocked';
+  return 'badge-todo';
+}
+
+function barColor(pct) {
+  if (pct >= 80) return '#42CA80';
+  if (pct >= 50) return '#F5A623';
+  if (pct >= 20) return '#FFD166';
+  return '#CCC';
+}
+
+function renderAll() {
+  const overall = calcOverall();
+  document.getElementById('stat-total').textContent = overall.total;
+  document.getElementById('stat-done').textContent = overall.done;
+  document.getElementById('stat-prog').textContent = overall.prog;
+  document.getElementById('stat-todo').textContent = overall.todo;
+  document.getElementById('overall-pct').textContent = overall.pct + '%';
+  document.getElementById('overall-bar').style.width = overall.pct + '%';
+  document.getElementById('seg-done').textContent = overall.done + ' completed';
+  document.getElementById('seg-prog').textContent = overall.prog + ' in progress';
+  document.getElementById('seg-todo').textContent = overall.todo + ' not started';
+  document.getElementById('seg-folders').textContent = FOLDERS.length + ' folders';
+
+  const grid = document.getElementById('folder-grid');
+  grid.innerHTML = '';
+
+  FOLDERS.forEach(folder => {
+    const stats = calcFolderProgress(folder);
+    const isOpen = expandState[folder.id] || false;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + folder.id;
+
+    const taskRows = folder.tasks.map(t => {
+      const s = getTaskStatus(t.id, t.s);
+      const iconMap = {
+        'done': '<span style="font-size:12px">✓</span>',
+        'in-progress': '<span style="font-size:9px">▶</span>',
+        'todo': '<span style="font-size:10px">○</span>'
+      };
+      const iconClass = s === 'done' ? 'ti-done' : s === 'in-progress' ? 'ti-prog' : 'ti-todo';
+      const btnLabels = { 'done': 'Mark not started', 'in-progress': 'Mark done', 'todo': 'Mark in progress' };
+      return `<div class="task-item${s==='done'?' is-done':''}" onclick="handleTask('${folder.id}','${t.id}','${s}')">
+        <div class="task-icon ${iconClass}">${iconMap[s]||''}</div>
+        <div class="task-text">${t.text}</div>
+        <button class="task-cycle-btn" onclick="event.stopPropagation();handleTask('${folder.id}','${t.id}','${s}')">${btnLabels[s]}</button>
+      </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="card-header" onclick="toggleCard('${folder.id}')">
+        <div class="card-top">
+          <div class="card-name-wrap">
+            <span class="folder-num">${folder.num}</span>
+            <span class="card-name">${folder.name}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="status-badge ${badgeClass(folder.badge)}">${folder.badgeLabel}</span>
+            <span class="expand-icon ${isOpen?'open':''}">▼</span>
+          </div>
+        </div>
+        <div class="card-progress-row">
+          <div class="card-bar-track">
+            <div class="card-bar-fill" style="width:${stats.pct}%;background:${barColor(stats.pct)}"></div>
+          </div>
+          <div class="card-pct" style="color:${barColor(stats.pct)}">${stats.pct}%</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="card-task-counts">
+            <span class="count-chip cc-done">✓ ${stats.done} done</span>
+            ${stats.prog>0?`<span class="count-chip cc-prog">▶ ${stats.prog} active</span>`:''}
+            <span class="count-chip cc-todo">○ ${stats.todo} todo</span>
+          </div>
+          <span style="font-size:11px;color:var(--muted)">${stats.total} tasks</span>
+        </div>
+      </div>
+      <div class="task-list${isOpen?' open':''}" id="tasks-${folder.id}">
+        <div style="padding:12px 10px 6px;font-size:12px;color:var(--muted);font-style:italic;line-height:1.4;border-bottom:1px solid var(--border);margin-bottom:6px">${folder.purpose}</div>
+        ${taskRows}
+      </div>`;
+
+    grid.appendChild(card);
+  });
+}
+
+function handleTask(folderId, taskId, currentStatus) {
+  cycleStatus(taskId, currentStatus);
+  renderAll();
+}
+
+function toggleCard(folderId) {
+  expandState[folderId] = !expandState[folderId];
+  renderAll();
+}
+
+function expandAll() {
+  FOLDERS.forEach(f => { expandState[f.id] = true; });
+  renderAll();
+}
+
+function collapseAll() {
+  FOLDERS.forEach(f => { expandState[f.id] = false; });
+  renderAll();
+}
+
+function resetAll() {
+  if (confirm('Reset all task statuses to defaults? This cannot be undone.')) {
+    taskState = {};
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    saveState({});
+    renderAll();
+  }
+}
+
+function exportStatus() {
+  const lines = ['FortuneMarq Build — Task Status Export', 'Generated: ' + new Date().toLocaleDateString(), ''];
+  FOLDERS.forEach(f => {
+    const stats = calcFolderProgress(f);
+    lines.push(`## ${f.num} — ${f.name} (${stats.pct}%)`);
+    f.tasks.forEach(t => {
+      const s = getTaskStatus(t.id, t.s);
+      const icon = s === 'done' ? '[x]' : s === 'in-progress' ? '[~]' : '[ ]';
+      lines.push(`  ${icon} ${t.text}`);
+    });
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FortuneMarq_Status_' + new Date().toISOString().slice(0,10) + '.txt';
+  a.click();
+}
+
+(async () => {
+  taskState = await loadState();
+  renderAll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "node": {
+    "405aec0e533e3159218d0d870cf6a57d794c37c081": {
+      "workers": {
+        "app/admin/data-management/page": {
+          "moduleId": 827204,
+          "async": false,
+          "exportedName": "deleteLeadsByIndustry",
+          "filename": "actions/delete-data.ts"
+        }
+      },
+      "layer": {
+        "app/admin/data-management/page": "action-browser"
+      },
+      "exportedName": "deleteLeadsByIndustry",
+      "filename": "actions/delete-data.ts"
+    },
+    "409f122917fc11e10c50d0ce5f28795257a000c212": {
+      "workers": {
+        "app/admin/data-management/page": {
+          "moduleId": 827204,
+          "async": false,
+          "exportedName": "deleteSingleLead",
+          "filename": "actions/delete-data.ts"
+        }
+      },
+      "layer": {
+        "app/admin/data-management/page": "action-browser"
+      },
+      "exportedName": "deleteSingleLead",
+      "filename": "actions/delete-data.ts"
+    },
+    "0060c6aaadde4d5ebc3e1746cba9c7622c25487241": {
+      "workers": {
+        "app/admin/data-management/page": {
+          "moduleId": 827204,
+          "async": false,
+          "exportedName": "analyzeIndustryDistribution",
+          "filename": "actions/analyze-data.ts"
+        }
+      },
+      "layer": {
+        "app/admin/data-management/page": "action-browser"
+      },
+      "exportedName": "analyzeIndustryDistribution",
+      "filename": "actions/analyze-data.ts"
+    }
+  },
+  "edge": {}
+}

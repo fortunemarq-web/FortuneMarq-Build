@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, Clock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface Milestone {
   id: string;
@@ -71,7 +72,7 @@ export default function ClientMilestoneList({
 
       if (error) {
         console.error("Error approving milestone:", error);
-        alert("Failed to approve milestone. Please try again.");
+        toast.error("Failed to approve milestone", "Please try again.");
         return;
       }
 
@@ -83,7 +84,7 @@ export default function ClientMilestoneList({
       );
     } catch (error) {
       console.error("Error approving milestone:", error);
-      alert("Failed to approve milestone. Please try again.");
+      toast.error("Failed to approve milestone", "Please try again.");
     } finally {
       setApprovingId(null);
     }

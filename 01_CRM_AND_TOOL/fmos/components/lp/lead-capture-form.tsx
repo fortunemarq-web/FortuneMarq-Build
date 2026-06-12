@@ -4,6 +4,7 @@ import { useState } from "react";
 import { captureInboundLead } from "@/lib/automations/inbound-leads";
 import { Loader2, CheckCircle2, ChevronRight, User, Mail, Phone, Building2 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "@/components/ui/toast";
 
 interface LeadFormProps {
     niche: string;
@@ -24,16 +25,29 @@ export default function LeadCaptureForm({ niche, city }: LeadFormProps) {
         e.preventDefault();
         setIsSubmitting(true);
 
+        // Attribution: UTMs + click ids from the URL the visitor landed on
+        const params = new URLSearchParams(window.location.search);
         const result = await captureInboundLead({
             ...formData,
             industry: niche,
-            city: city
+            city: city,
+            utm: {
+                source: params.get("utm_source") || undefined,
+                medium: params.get("utm_medium") || undefined,
+                campaign: params.get("utm_campaign") || undefined,
+                content: params.get("utm_content") || undefined,
+                term: params.get("utm_term") || undefined,
+            },
+            gclid: params.get("gclid") || undefined,
+            fbclid: params.get("fbclid") || undefined,
+            landing_page: window.location.pathname + window.location.search,
+            referrer_url: document.referrer || undefined,
         });
 
         if (result.success) {
             setIsSuccess(true);
         } else {
-            alert(result.message || "Something went wrong. Please try again.");
+            toast.error(result.message || "Something went wrong. Please try again.");
         }
         setIsSubmitting(false);
     };

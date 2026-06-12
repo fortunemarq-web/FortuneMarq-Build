@@ -1,10 +1,42 @@
 # FortuneMarq Agency OS — Master Build Plan
-**Version**: 3.2 | **Updated**: 2026-06-11 (evening)
-**Status**: Hardened + UI overhauled, pre-deploy (4 SQL migrations pending) | **Current App Version**: v4.7
+**Version**: 3.5 | **Updated**: 2026-06-12 (night)
+**Status**: Phase F Stage 1 (WhatsApp Cloud API) code complete, pre-deploy | **Current App Version**: v4.9
 
 ---
 
 ## Build Status — All Systems
+
+### ✅ PHASE F Stage 1 (part 1) — WhatsApp Cloud API, FMOS side (2026-06-12, night)
+Meta-side setup in progress (Option A locked: NEW dedicated Jio number 79759 18980 on Cloud API; 93530 82656 stays in the WA Business app). FMOS side built:
+- **Webhook** `app/api/webhooks/whatsapp/route.ts` — GET Meta handshake (`WHATSAPP_VERIFY_TOKEN`), POST verifies `X-Hub-Signature-256` HMAC (`META_APP_SECRET`, timing-safe, fail-closed). Idempotent on `wamid` via `inbound_events.external_id`. Unknown numbers → `processInboundLead()` (channel `whatsapp`, or `ctwa` when a `referral` payload is present — ad `source_id`/`headline` mapped to campaign for automatic WhatsApp-ads attribution). Known numbers → `whatsapp_logs` (direction inbound) + `activity_events` + `inbound_events` + assignee notification. Delivery receipts stamp `whatsapp_logs.delivery_status`. "Yes, confirmed" agreement replies notify admins.
+- **Button replies** (`interactive.button_reply` + template `button` type): tag `report_engaged` + `tapped_book_meeting`/`tapped_tell_me_more`, bump `follow_up_date=now` (top of queue — cockpit already renders these), notify assignee/admins, send mapped auto-reply ("Not right now" → +3-day follow-up). Copy mirrored in `lib/whatsapp/auto-replies.ts` (source of truth: `03_SALES_SYSTEM/.../curiosity_templates.json`).
+- **Send library** `lib/whatsapp/send.ts` (server-only): text / template / interactive-buttons / document(link or media id) / media upload via Graph v23.0; every send logged to `whatsapp_logs`. Graceful no-op while creds are placeholders.
+- **Auto-greeting** to new inbound WhatsApp/CTWA leads (session text — no template approval needed), toggle in `/admin/whatsapp-templates` header, stored in new `app_settings` table, default ON.
+- **Schema** (appended to `supabase/2026-06-12_full_schema_sync.sql`, ⚠️ RUN PENDING): `whatsapp_logs` += direction/wa_message_id/message_type/delivery_status/phone; new `app_settings` + auto-greeting seed.
+- Env added: `WHATSAPP_API_TOKEN`/`WHATSAPP_PHONE_NUMBER_ID`/`META_APP_SECRET` (placeholders), `WHATSAPP_VERIFY_TOKEN` (real value generated). Test harness: `scripts/test-whatsapp-webhook.sh` (handshake ✓, bad-signature 401 ✓, all payload shapes 200 ✓ in sandbox; DB-write verification pending on-Mac run).
+- Remaining for Stage 1: Meta-side (BM verify → app → WABA → number → token → templates), run schema SQL, on-Mac `npm run build` + e2e curl, webhook URL config after Vercel deploy.
+
+### ✅ PHASE F Stage 0 — Inbound Engine (2026-06-12, evening)
+Plan: `PHASE_F_INBOUND_MARKETING.md` (approved). Stage 0 shipped + tested end-to-end:
+- **Universal inbound pipeline** `lib/inbound/capture.ts`: raw event log (`inbound_events`) → phone normalize/dedupe (suffix-match handles +91/format drift; duplicates become re-enquiry activity + assignee notification, never new leads) → lead with `source`/`lead_source`/`captured_at` → `lead_source_attribution` row (UTMs, auto-created `ad_campaigns` match) → fires `lead_created` automation (first ever caller) → round-robin assign via `assignment_pools` ('sales' pool seeded with team) → owner notified.
+- **Webhook** `POST /api/inbound/[channel]` (`INBOUND_WEBHOOK_SECRET`), native Google Ads lead-form adapter. LP form captures UTMs/gclid/fbclid. Cockpit quick-add has a source picker; `first_contact_at` stamped on first logged outcome (speed-to-lead).
+- **Marketing hub**: existing 4-tab `/admin/marketing` dashboard (alive post-migration) gained a default "Inbound & Funnel" tab — spend/CPL/cost-per-meeting/CAC/speed-to-lead KPIs, funnel with stage conversion, channel scoreboard, UTM link builder, **spend CSV import** (Meta/Google daily exports → `ad_insights_daily`, campaigns auto-created), inbound-events feed. "Marketing" in sidebar. Daily digest gained a marketing line.
+- **Engine fixes found by testing**: live `ad_campaigns` had pre-sync shape (columns aligned + `cpl_target`); automation engine wrote `assigned_to` → mapped to `assigned_sales_exec`; `notify_owner` re-fetches live assignee.
+- Stage 1 (needs deploy): WhatsApp Cloud API + Meta leadgen webhooks, SLA cron, Meta insights sync.
+
+### ✅ Notifications + Finance Session (2026-06-12, continued)
+- **Notifications fixed for real**: `notifications` table was missing `type` + `link` columns that `sendNotification()` inserts — every notification insert had been silently failing. Columns added (also in sync script); insert verified. All 10 existing `sendNotification` call sites now work, bell realtime included.
+- **Daily Digest cron** (`/api/cron/daily-digest`): per-user morning notification — meetings due/overdue, follow-ups due (per assignee + team total for admins), overdue invoices with ₹ outstanding, overdue tasks, **at-risk clients** (overdue payments or renewal ≤30 days, with MRR at stake). Idempotent per day. Tested live.
+- **All cron routes now export GET** (Vercel Cron invokes via GET; they were POST-only → would 405 in prod). `vercel.json` created with daily-digest + admin-alerts schedules (Hobby-plan-safe; trigger others via external pinger if needed).
+- **Invoice partial payments**: `recordInvoicePayment()` accumulates `paid_amount`, auto-flips status `partially_paid`→`paid`, records `payment_method` (new column). UI: Record Payment flow (amount → method), partial badge + received amount, filter option.
+
+### ✅ Schema Sync + Audit-Fix Session (2026-06-12)
+Full detail in `last_session.md`. Highlights:
+- **All ~19 unrun migrations executed** in Supabase as one consolidated script — 38 missing tables created (attendance, notifications, automations, saved views, niche kits, follow-ups, duplicates, sessions, marketing, telecaller stats…), RLS hardened, audit triggers + indexes live. `database.types.ts` regenerated (110 tables). The previous "4 migrations pending" status is resolved.
+- **Team management built**: invite / change role / reset password / deactivate / remove from `/admin/team`, admin-gated via service role, audit-logged, tested end-to-end.
+- **UX debt cleared**: zero `alert()`/`prompt()` left — toast + `promptModal()` (dropdowns/date pickers/textareas) everywhere; dead buttons (work-hours Details, my-stats View All, team Assign) now functional.
+- **Bugs**: project not-found page, expired report-link state, invoice list refresh after MRR generation.
+- **/manager/performance** now computes real timeframe-filtered stats from `outreach_logs` (fake hardcoded numbers removed).
 
 ### ✅ UI/UX Overhaul + Layout/PDF Session (2026-06-11 evening)
 Full detail in `COWORK_HANDOFF.md`. Highlights:

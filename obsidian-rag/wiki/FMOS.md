@@ -1,6 +1,6 @@
 # FMOS
 
-**Last updated:** 2026-04-29  
+**Last updated:** 2026-06-08  
 **Tags:** #project #active #evergreen  
 **Related:** [[FortuneMarq]], [[TechStack]], [[TeamStructure]], [[CurrentBlockers]], [[SalesSystem]]
 
@@ -62,9 +62,25 @@ Next.js 16.1.6 + TypeScript strict + Tailwind CSS v4 frontend. Supabase (Postgre
 - Audit Log — all actions tracked
 - 50+ database tables
 
-## Deployment Checklist (Only Remaining Work)
+## Recent Bug Fixes (2026-06-08)
+
+- [x] **WhatsApp templates loading** — RLS policy fixed via SQL migration (`fix_whatsapp_templates_rls.sql`). `lead_type` filter corrected in `whatsapp-template-picker.tsx`. Templates now load correctly for telecallers.
+- [x] **/telecaller redirect** — `app/telecaller/page.tsx` now redirects to `/sales`, the actual calling cockpit. No more dead route.
+
+## Pending — Do Before Deployment (as of 2026-06-08)
+
+- [ ] **Run SQL in Supabase SQL Editor** (meetings page needs these):
+  ```sql
+  ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_link TEXT;
+  ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
+  ```
+- [ ] **Add `SUPABASE_SERVICE_ROLE_KEY` to `.env.local`** — get from Supabase Dashboard → Project Settings → API → service_role
+
+## Deployment Checklist (Full)
 
 - [ ] Add `OPENROUTER_API_KEY` to Hostinger environment variables
+- [ ] Add `SUPABASE_SERVICE_ROLE_KEY` to `.env.local` before build
+- [ ] Run meetings page SQL columns (meeting_link, meeting_notes) — see above
 - [ ] Point `fmos.fortunemarq.com` subdomain DNS to Hostinger
 - [ ] Create user accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff)
 - [x] Upload Hubli leads — 858 live ✅

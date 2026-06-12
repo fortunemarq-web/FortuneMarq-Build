@@ -1,0 +1,245 @@
+{
+  "node": {
+    "000b99bb63d420d0da1cfb12a238aefb5c32a49ebd": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "getRevenueVsExpensesChartData",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "getRevenueVsExpensesChartData",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "00710989d7138248330895f4d7f14ad2dfdec396ea": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "autoMarkOverdueInvoices",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "autoMarkOverdueInvoices",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "0075c9a13d530f27295e2ff43525c8562b049670c4": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "generateMonthlyInvoices",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "action-browser"
+      },
+      "exportedName": "generateMonthlyInvoices",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "008f347ae823607227fbfab4cf5be5eaffe3b7486f": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "getFinanceDashboardStats",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "getFinanceDashboardStats",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "4000cd371423b9f63ad76039e85140205ea3b04e3e": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "deleteExpense",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "deleteExpense",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "403a0baa8f741850815db75d254d7c6e17eb90c920": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "cancelInvoice",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "action-browser"
+      },
+      "exportedName": "cancelInvoice",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "4047f347d490037c9575852b449c5cbea6d2137ab5": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "getInvoicesByClient",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "getInvoicesByClient",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "4094e7b7246ddcdb21fb53505ee8e2223f1d119b7b": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "createExpense",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "createExpense",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "40e3534d1a62f5c3e903bbc87b86b51686d08de1e0": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "deleteInvoice",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "action-browser"
+      },
+      "exportedName": "deleteInvoice",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "600c14bbc47e2ab4fca7e0f3c59c712240547d676f": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "markInvoiceAsPaid",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "markInvoiceAsPaid",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "6095c872ffeb58ccb77664b02eb9d9659b0f421937": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "updateExpense",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "updateExpense",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "60fc923c90704a29e023a229445c4c84b265d4e130": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "createInvoice",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "action-browser"
+      },
+      "exportedName": "createInvoice",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "7095f438dd82e75f470560ac1d1d66736f3954ad5e": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "updateInvoice",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "action-browser"
+      },
+      "exportedName": "updateInvoice",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "70eb6525d82f7ad8c761ae9a495be03e3391364bc0": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "recordInvoicePayment",
+          "filename": "app/admin/finance/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "action-browser"
+      },
+      "exportedName": "recordInvoicePayment",
+      "filename": "app/admin/finance/actions.ts"
+    },
+    "0005d0bdfe8d19335cde4b60ac6a0eec7720403f0d": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "getBusinessSettings",
+          "filename": "app/admin/settings/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "getBusinessSettings",
+      "filename": "app/admin/settings/actions.ts"
+    },
+    "409e5371ac796014a46147a0464d93d31c61f3bc07": {
+      "workers": {
+        "app/admin/finance/invoices/page": {
+          "moduleId": 288427,
+          "async": false,
+          "exportedName": "saveBusinessSettings",
+          "filename": "app/admin/settings/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/finance/invoices/page": "rsc"
+      },
+      "exportedName": "saveBusinessSettings",
+      "filename": "app/admin/settings/actions.ts"
+    }
+  },
+  "edge": {}
+}

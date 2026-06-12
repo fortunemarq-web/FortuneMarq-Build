@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { AlertTriangle, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface ChangeRequest {
     id: string;
@@ -115,8 +116,27 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
                         )}
                         {!isClientView && req.status === 'reviewing' && (
                             <div className="flex items-center gap-2 self-start md:self-center">
-                                <button onClick={() => updateStatus(req.id, 'rejected', prompt("Reason?") || "Policy")} className="p-2 bg-red-500/10 text-red-500 rounded hover:bg-red-500/20" title="Reject"><XCircle className="h-5 w-5" /></button>
-                                <button onClick={() => updateStatus(req.id, 'approved', prompt("Approval Note?") || "Approved")} className="p-2 bg-green-500/10 text-green-500 rounded hover:bg-green-500/20" title="Approve"><CheckCircle2 className="h-5 w-5" /></button>
+                                <button onClick={async () => {
+                                    const reason = await promptModal({
+                                        title: "Reject change request",
+                                        description: `"${req.title}" — give the client a reason for the rejection.`,
+                                        type: "textarea",
+                                        placeholder: "Why is this request being rejected?",
+                                        confirmLabel: "Reject",
+                                        destructive: true,
+                                    });
+                                    if (reason) updateStatus(req.id, 'rejected', reason);
+                                }} className="p-2 bg-red-500/10 text-red-500 rounded hover:bg-red-500/20" title="Reject"><XCircle className="h-5 w-5" /></button>
+                                <button onClick={async () => {
+                                    const note = await promptModal({
+                                        title: "Approve change request",
+                                        description: `"${req.title}" — add an approval note (scope, cost, timeline).`,
+                                        type: "textarea",
+                                        defaultValue: "Approved",
+                                        confirmLabel: "Approve",
+                                    });
+                                    if (note) updateStatus(req.id, 'approved', note);
+                                }} className="p-2 bg-green-500/10 text-green-500 rounded hover:bg-green-500/20" title="Approve"><CheckCircle2 className="h-5 w-5" /></button>
                             </div>
                         )}
                     </div>

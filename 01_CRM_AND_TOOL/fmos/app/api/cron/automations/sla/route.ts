@@ -58,3 +58,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: e.message }, { status: 500 });
     }
 }
+
+// Vercel Cron invokes via GET; same handler, same secret check.
+export { POST as GET };
