@@ -51,6 +51,8 @@ interface Lead {
   no_answer_count?: number | null;
   gatekeeper_count?: number | null;
   outreach_stage: string | null;
+  lead_source?: string | null;
+  captured_at?: string | null;
 }
 
 interface DailyStats {
@@ -270,6 +272,11 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
   const safeIndex = Math.min(currentIndex, Math.max(0, filteredLeads.length - 1));
   const currentLead = filteredLeads[safeIndex] || null;
+
+  // Inbound lead that hasn't been contacted yet → gets the dedicated
+  // inbound script (they enquired — this is a response call, not cold outreach)
+  const isInboundFresh =
+    !!currentLead && currentLead.lead_type === "inbound" && !currentLead.last_outcome;
 
   // Script type auto-detection
   const effectiveScriptType: ScriptType | null = (() => {
@@ -571,6 +578,10 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
   // Today's booked meetings from the live lead list
   const todayStr = new Date().toLocaleDateString("en-CA");
+  // Follow-ups DUE today or overdue (live count — not "logged today")
+  const followupsDueCount = localLeads.filter(
+    (l) => isFollowUp(l) && (!l.follow_up_date || String(l.follow_up_date).slice(0, 10) <= todayStr)
+  ).length;
   const meetingsTodayList = localLeads
     .filter((l) => l.outreach_stage === "meeting_booked" && l.follow_up_date && String(l.follow_up_date).startsWith(todayStr))
     .sort((a, b) => String(a.follow_up_date).localeCompare(String(b.follow_up_date)));
@@ -588,7 +599,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 { label: callTarget ? `Calls / ${callTarget}` : "Calls", value: stats.callsToday },
                 { label: "PDFs", value: stats.pdfsSentToday },
                 { label: "Meetings", value: stats.meetingsBookedToday },
-                { label: "Follow-ups", value: stats.followupsLoggedToday },
+                { label: "Follow-ups due", value: followupsDueCount },
               ].map((s) => (
                 <div key={s.label} className="text-center">
                   <p className="text-lg font-semibold tabular-nums text-white">{s.value}</p>
@@ -923,17 +934,66 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               )}
             </div>
 
-            {/* ── FOLLOW-UP SCRIPTS ─────────────────── */}
-            {activeTab === "followups" && (() => {
+            {/* ── FOLLOW-UP + INBOUND SCRIPTS ─────────────────── */}
+            {(activeTab === "followups" || isInboundFresh) && (() => {
               const name = currentLead.contact_person || "there";
               const biz = currentLead.company_name || "your business";
               const niche = currentLead.industry || "your industry";
               const city = currentLead.city || "your city";
               const stage = currentLead.outreach_stage;
+              const channel = currentLead.lead_source || "WhatsApp / our website";
+              const capturedAgo = (() => {
+                if (!currentLead.captured_at) return null;
+                const mins = Math.round((Date.now() - new Date(currentLead.captured_at).getTime()) / 60000);
+                if (mins < 60) return `${mins} min ago`;
+                if (mins < 24 * 60) return `${Math.round(mins / 60)} hr ago`;
+                return `${Math.round(mins / (24 * 60))} days ago`;
+              })();
 
               type FUStep = { title: string; lines: string[]; objections?: { trigger: string; response: string }[] };
 
               const scripts: Record<string, { label: string; color: string; headerBg: string; borderColor: string; steps: FUStep[] }> = {
+                inbound: {
+                  label: `Inbound Enquiry — They Came To You${capturedAgo ? ` (via ${channel}, ${capturedAgo})` : ` (via ${channel})`}`,
+                  color: "text-emerald-800",
+                  headerBg: "bg-emerald-50",
+                  borderColor: "border-emerald-200",
+                  steps: [
+                    {
+                      title: "Respond Fast — Warm Open",
+                      lines: [
+                        `"Hi ${name}! This is Afifa from FortuneMarq. You reached out to us through ${channel} about growing ${biz} online — so I'm calling you right back. Is this a good time?"`,
+                        `"Thanks for getting in touch! I just want to understand what you're looking for so we can actually help — this will take 2 minutes."`,
+                      ],
+                      objections: [
+                        { trigger: "I didn't enquire / don't remember", response: `"No problem! We received an enquiry from this number for ${biz}${niche !== "your industry" ? ` regarding ${niche} marketing` : ""}. Maybe someone from your team sent it. Either way — happy to share in 30 seconds what we do for ${niche} businesses in ${city}."` },
+                        { trigger: "I'm busy right now", response: `"Totally understand. When should I call back today — evening or tomorrow morning? I don't want you to miss what you enquired about."` },
+                      ],
+                    },
+                    {
+                      title: "Understand Their Need",
+                      lines: [
+                        `"Tell me a bit about ${biz} — what made you reach out today?"`,
+                        `"What's the bigger challenge right now: getting NEW customers to find you, or converting the enquiries you already get?"`,
+                        `(LISTEN. Note their exact words — they go in the lead notes and Jabeer uses them in the meeting.)`,
+                      ],
+                      objections: [
+                        { trigger: "Just tell me the price", response: `"Fair question! It genuinely depends on what ${biz} needs — could be ₹3,500, could be more. That's exactly why the free 15-minute call exists: you'll know the exact plan and price before spending anything."` },
+                      ],
+                    },
+                    {
+                      title: "Book the Meeting",
+                      lines: [
+                        `"Here's the best next step: our founder Jabeer does a free 15-minute Zoom call where he shows you exactly what the opportunity looks like for ${biz} in ${city} — real search numbers, what competitors are doing, and what it would take. No commitment."`,
+                        `"Does tomorrow morning or evening work better for you?"`,
+                      ],
+                      objections: [
+                        { trigger: "Just send details on WhatsApp", response: `"Absolutely, I'll send our portfolio right after this call. But the call is where Jabeer shows the specific opportunity for ${biz} — 15 minutes, and you'll know exactly where you stand. Shall I block a slot?"` },
+                        { trigger: "I need to think about it", response: `"Of course! The call doesn't commit you to anything though — it's literally free analysis of ${biz}'s online presence. Most owners say it was worth it even when they didn't sign up. What's a low-pressure time for you?"` },
+                      ],
+                    },
+                  ],
+                },
                 follow_up_due: {
                   label: "Interested — Follow-Up Call",
                   color: "text-amber-800",
@@ -1057,7 +1117,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 },
               };
 
-              const scriptKey = (stage === "follow_up_due" || stage === "no_answer" || stage === "follow_back") ? stage : "follow_up_due";
+              const scriptKey = isInboundFresh
+                ? "inbound"
+                : (stage === "follow_up_due" || stage === "no_answer" || stage === "follow_back") ? stage : "follow_up_due";
               const s = scripts[scriptKey];
               const totalSteps = s.steps.length;
               const step = s.steps[currentStep] || s.steps[0];
@@ -1166,7 +1228,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
             })()}
 
             {/* ── SCRIPT (queue tab) ─────────────────── */}
-            {activeTab === "queue" && (
+            {activeTab === "queue" && !isInboundFresh && (
               !effectiveScriptType ? (
                 <div className="bg-white border border-amber-200 rounded-2xl p-5 shadow-sm">
                   <p className="text-sm font-semibold text-amber-700 mb-4">

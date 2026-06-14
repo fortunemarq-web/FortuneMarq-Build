@@ -34,8 +34,10 @@ These folders/topics have not been opened in the current build phase. Each needs
 
 ### 03_SALES_SYSTEM
 - [x] WhatsApp API vs Business Account — DECIDED (updated 2026-06-12): official Meta WhatsApp Cloud API on a **NEW dedicated Jio number 79759 18980** (Option A — purchased & active). +91 93530 82656 stays in the WhatsApp Business app for manual chats. Never install WhatsApp on the new SIM. Cost: ~₹0.58/marketing conversation; 1,000 free service conversations/month.
-- [ ] **WhatsApp Cloud API Setup** (IN PROGRESS 2026-06-12, guided session):
-  - Step 1: Create/verify Meta Business Manager account (fortunemarq@gmail.com, GSTIN ready) — ⏳ in progress (Facebook outage mid-session)
+- [~] **WhatsApp Cloud API Setup** (LIVE 2026-06-14 — number registered, BV approved, payment added, **first real message DELIVERED end-to-end** via Graph API to 93530 82656). Remaining: resubmit display name + finalise templates. Steps below:
+  - ✅ 2026-06-14: Number REGISTERED · Business Verification APPROVED · India payment method ADDED to WABA FortuneMarq (1499408311884474) · live hello_world send DELIVERED (token+PHONE_NUMBER_ID 1084263481446667 proven).
+  - ⏳ STILL OPEN: (a) display name "FortuneMarq" was REJECTED → resubmit as "FortuneMarq Media and Marketing"; (b) verify direct_report_type_a/b/c approval + resubmit direct_report_type_d; (c) clean up stray Test WABA (1852036272835920) + duplicate "Fortunemarq" (705784465410369); (d) set webhook callback URL after Vercel deploy.
+  - Step 1: Create/verify Meta Business Manager account (fortunemarq@gmail.com, GSTIN ready) — ✅ DONE (BM portfolio 879084085296794)
   - Step 2: Link Facebook Business Page to Meta Business Manager
   - Step 3: Create Meta App (type: Business) at developers.facebook.com + add WhatsApp product
   - Step 4: Register 79759 18980 as the WABA number (SMS/call OTP to the new SIM)

@@ -1,6 +1,6 @@
 # CurrentBlockers
 
-**Last updated:** 2026-04-28  
+**Last updated:** 2026-06-14  
 **Tags:** #active #needs-review  
 **Related:** [[FMOS]], [[TeamStructure]], [[FortuneMarq]], [[OpenDecisions]]
 
@@ -8,27 +8,30 @@
 
 ## Summary
 
-As of 2026-04-28, FMOS is **production-ready (v4.5)**. All phases are complete. The only thing between FortuneMarq and its first paying client is deploying FMOS and getting Afifa on the phones.
+As of 2026-06-14: **WhatsApp Cloud API is LIVE** (dedicated number +91 79759 18980, real message delivered). FMOS is feature-rich and tsc-clean but **not deployed** — deploy is gated on fixing a P0 auth gap found in QA. Authoritative current state: `01_CRM_AND_TOOL/fmos/HANDOFF_CONTINUE_ON_WINDOWS.md`.
 
-## 🚀 FMOS Status — Production Ready
+## 🚦 FMOS Status — QA done, deploy GATED
 
-All phases complete. TypeScript strict build passes clean. Zero pending features. See [[FMOS]] for full feature list.
+Static QA complete (`fmos/FMOS_QA_VERIFICATION_2026-06-13.md`). Core app solid, old critical bugs fixed, tsc 0 errors. **Not "zero pending features"** — see blockers below.
 
-## Blocker 1 — FMOS Not Yet Deployed (CRITICAL PATH)
+## Blocker 1 — P0: page-level auth/RBAC missing (MUST FIX before deploy)
 
-FMOS is complete and running on localhost but not yet live on fmos.fortunemarq.com. Until this ships:
-- 8,000 Hubli leads cannot be uploaded
-- Afifa cannot start calling
-- The outbound sales machine is offline
-- Revenue is impossible
+No `middleware.ts`; ~40 admin pages have no login/role gate (reads rely on Supabase RLS; mutations gated by `requireAdmin`). Fix: add middleware redirect-to-/login + role enforcement, then verify RLS. **Deploy is blocked on this per Jabeer.**
 
-**Deployment checklist:**
-- [ ] Add `OPENROUTER_API_KEY` to Hostinger env vars
-- [ ] Point `fmos.fortunemarq.com` subdomain DNS to Hostinger
-- [ ] Create accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff)
-- [ ] Upload 8,000 Hubli leads CSV
-- [ ] Enter real client data and run smoke test
-- [ ] Activate GST invoice settings
+## Blocker 2 — FMOS Not Yet Deployed (depends on Blocker 1)
+
+Runs on localhost, not yet on fmos.fortunemarq.com. Until it ships: leads can't be bulk-imported, Afifa can't call, outbound machine is offline. **Deploy target is VERCEL (not Hostinger).** Guide: `fmos/DEPLOY_VERCEL.md`.
+
+**Deployment checklist (corrected):**
+- [ ] Vercel project, **Root Directory = `01_CRM_AND_TOOL/fmos`**
+- [ ] Env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, **ANTHROPIC_API_KEY** (not OpenRouter), CRON_SECRET, INBOUND_WEBHOOK_SECRET, + 4 WhatsApp vars
+- [ ] Point `fmos.fortunemarq.com` DNS to Vercel + add domain in Supabase auth redirects
+- [ ] Create accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff) — admins already exist
+- [ ] Bulk-import remaining leads, enter real client data, smoke test, activate GST settings
+
+## Blocker 3 — P1: outbound-WhatsApp send UI unbuilt
+
+Send library ready; no UI calls it. The "send report/proposal/invoice PDF via WhatsApp from FMOS" flow isn't built. Also externally gated until type_d approves + display-name appeal. Decide: build now vs after launch.
 
 ## Blocker 2 — Antigravity Team Access
 

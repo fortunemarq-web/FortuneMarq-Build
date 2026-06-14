@@ -32,21 +32,51 @@
 #   stored in NEW app_settings table.
 # - next.config.ts: distDir override via NEXT_DIST_DIR (sandbox builds).
 #
-# ⚠️ PENDING BEFORE STAGE 1 IS DONE:
-# 1. RUN SQL: new block at the END of supabase/2026-06-12_full_schema_sync.sql
-#    ("PHASE F STAGE 1") — whatsapp_logs columns + app_settings. Usual method.
-# 2. Meta side (in progress, guided): BM verification (GSTIN) → Meta App
-#    (Business type) → WABA + register 7975918980 → permanent system-user
-#    token → fill WHATSAPP_API_TOKEN / WHATSAPP_PHONE_NUMBER_ID /
-#    META_APP_SECRET in .env.local (+ Vercel later) → submit templates
-#    (03_SALES_SYSTEM/WhatsApp_Templates; 2–7 day approval).
-# 3. On Mac: npx tsc --noEmit && npm run build (tsc clean in sandbox; build
-#    blocked there only by Google Fonts fetch). E2E: npm run dev +
-#    scripts/test-whatsapp-webhook.sh (needs META_APP_SECRET=fmos_test_secret
-#    env override when testing pre-credentials), verify DB rows, delete test data.
-# 4. AFTER DEPLOY: Meta App → WhatsApp → Configuration → webhook URL
-#    https://<domain>/api/webhooks/whatsapp + verify token from .env.local,
-#    subscribe to `messages` field. Test with a real message.
+# ✅ COMPLETED LATER SAME SESSION (2026-06-12/13 night):
+# - Stage 1 SQL RUN in Supabase ✓. Mac build clean (92 routes) + e2e webhook
+#   curl tests passed (401 unsigned / 200 text+ctwa+button); test leads verified
+#   in cockpit. Committed+pushed as 40e9f49 (v4.9).
+# - META SIDE DONE: BM portfolio (ID 879084085296794) · developer account ·
+#   Meta App "FMOS" (ID 1713470496330818, app secret in .env.local) · WABA
+#   "FortuneMarq" (ID 1499408311884474) · number +91 79759 18980 added,
+#   PHONE_NUMBER_ID 1084263481446667 · permanent system-user token
+#   (user: fmos-server, never expires) generated + TESTED via Graph GET ✓.
+#   ALL 4 env vars in .env.local are now REAL values.
+# - Business verification SUBMITTED (record: "Sayed jabeer DBA FortuneMarq
+#   Media & Marketing", GSTIN …ZS) — in review 1–5 days.
+# - Templates SUBMITTED: direct_report_type_a/b/c (Marketing, Document header,
+#   2 quick replies "Book a meeting 📅"/"Tell me more"). ⚠️ NAMED variables
+#   ({{business_name}}, {{niche}}, {{city}} — no repeats allowed, can't
+#   start/end body). type_d submission FAILED (likely rate limit) → RESUBMIT.
+# - Cockpit: NEW inbound script (3 steps, emerald) for lead_type='inbound'
+#   with no last_outcome, both tabs; "Follow-ups due" header stat FIXED
+#   (was callsToday count → now live due-today count from queue).
+#
+# ✅ 2026-06-14 UPDATE — CLOUD API IS LIVE:
+#    Number REGISTERED · BV APPROVED · India payment method ADDED to the REAL
+#    WABA FortuneMarq (1499408311884474) · FIRST REAL MESSAGE DELIVERED
+#    end-to-end (hello_world → 93530 82656, landed on handset). Token +
+#    PHONE_NUMBER_ID 1084263481446667 proven. Gotcha: card first attached to
+#    the TEST WABA (1852036272835920) by mistake — must add to the REAL WABA;
+#    a NEW-card entry at WABA level fails RBI e-mandate, so use "select existing
+#    card". Stray duplicate WABA to clean up: 705784465410369.
+#
+# ⚠️ STILL PENDING:
+# 1. ✅ DONE — number registration (was blocked by Meta outage 2026-06-12).
+# 2. Resubmit direct_report_type_d (body in 03_SALES_SYSTEM template JSON,
+#    use named-variable rules above).
+# 3. Display name "FortuneMarq" was REJECTED → resubmit as
+#    "FortuneMarq Media and Marketing" (matches verified DBA; spell out "and",
+#    no "&"). BV is now approved so it should pass.
+# 4. ✅ DONE — India payment method added to the real WABA.
+# 5. ⚠️ sendWhatsAppTemplate callers must use NAMED parameters
+#    (components: [{type:'body', parameters:[{type:'text',
+#    parameter_name:'business_name', text:'…'}, …]}]).
+# 6. AFTER DEPLOY (Jabeer deferred deploy — app not ready): Meta App →
+#    WhatsApp → Configuration → Callback URL
+#    https://<domain>/api/webhooks/whatsapp + WHATSAPP_VERIFY_TOKEN from
+#    .env.local → Verify and save → subscribe to `messages` field. Add all
+#    WhatsApp env vars to Vercel. Test with a real message to 79759 18980.
 # - NOT built (later wishlist): PDF report/proposal/agreement/invoice sends
 #   (sendWhatsAppDocument + uploadWhatsAppMedia are ready), date-time picker
 #   flows, followback reminder template selection logic, Meta Lead Ads webhook,

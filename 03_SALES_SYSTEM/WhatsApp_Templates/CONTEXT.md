@@ -1,5 +1,12 @@
 # 03 — WhatsApp Templates
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — 17 templates across 5 JSON files in FMOS_Template_Data/
+**Last Updated:** 2026-06-14 | **Status:** Content COMPLETE (17 templates in FMOS_Template_Data/). **Meta approval LIVE:** the DIRECT_REPORT family (curiosity_templates.json) is what was submitted — `direct_report_type_a/b/c` are **APPROVED/active**, `direct_report_type_d` resubmitted (de-duplicated named vars) → **in review**.
+
+> **2026-06-14 Meta submission rules (for any new template):**
+> - Category **MARKETING**, **Document** header, 2 Quick Reply buttons ("Book a meeting 📅", "Tell me more").
+> - Use **named** variables `{{business_name}}`, `{{niche}}`, `{{city}}`. **Each variable may appear only ONCE** (Meta rejects duplicate variable parameters) — the source JSON repeats `{{city}}`, so de-duplicate first.
+> - Body must **not start or end with a variable**. The `&` symbol is **blocked** by the validator (use "and"/omit).
+> - Fastest path: **duplicate an approved template** in WhatsApp Manager, edit only the body.
+> - Auto-replies (TELL_ME_MORE_REPLY, MEETING_REQUEST_REPLY, NOT_RIGHT_NOW_REPLY) are session messages — **no approval needed**.
 
 ## Folder Purpose
 All WhatsApp message templates used throughout the sales flow. Templates are pre-written and loaded by FMOS. Some are sent manually by Jabeer, others are triggered automatically by Afifa's outcome logging or by bot.

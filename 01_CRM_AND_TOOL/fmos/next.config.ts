@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ["192.168.1.4:3000", "localhost:3000"],
+      allowedOrigins: [
+        "192.168.1.4:3000",
+        "localhost:3000",
+        "fmos.fortunemarq.com",
+        "*.vercel.app",
+      ],
     },
   },
 };

@@ -19,7 +19,7 @@ export default async function SalesPage() {
       // All active leads — no limit so niche/city filters see the full dataset
       supabase
         .from("leads")
-        .select("id, company_name, contact_person, phone, industry, city, status, notes, lead_type, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, outreach_stage")
+        .select("id, company_name, contact_person, phone, industry, city, status, notes, lead_type, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, outreach_stage, lead_source, captured_at")
         .or("status.is.null,status.not.in.(closed_won,closed_lost,disqualified)")
         .order("follow_up_date", { ascending: true, nullsFirst: true })
         .limit(2000),

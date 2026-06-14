@@ -1,15 +1,16 @@
 # FortuneMarq — Critical Path
-**Last Updated:** 2026-06-12
+**Last Updated:** 2026-06-14
 **Owner:** Jabeer
-**Current Phase:** June 2026 — Build, Deploy, Strategy, Presence
+**Current Phase:** June 2026 — QA → Deploy → Presence → Campaigns
 
-> **2026-06-12 reality check:** the June 9-11 dates below slipped, but Phase 1 substance
-> is DONE (FMOS v4.8: DB fully synced, notifications, team mgmt, inbound engine Stage 0,
-> build clean). Current critical path: (1) Deploy to **Vercel** (not Hostinger),
-> (2) Phase F Stage 1 webhooks (WhatsApp Cloud API + Meta leadgen — needs deploy),
-> (3) LPs/presence, (4) campaigns. WhatsApp API setup checklist below still applies,
-> with one open decision: dedicated WABA number vs migrating +91 93530 82656
-> (see fmos/PHASE_F_INBOUND_MARKETING.md).
+> **2026-06-14 reality check (supersedes the dated June 9–15 timeline below — treat those as a checklist, not dates):**
+> ✅ **WhatsApp Cloud API is LIVE** — dedicated number **+91 79759 18980** (NOT 93530 82656; that stays in the WA Business app). BV approved, payment added, real message delivered. Templates a/b/c approved, type_d in review. (Open WABA-number question is now CLOSED — Option A, dedicated number.)
+> 🔜 **CURRENT CRITICAL PATH:**
+> 1. **FMOS QA → fix P0 auth/RBAC** (no middleware.ts) — see `fmos/FMOS_QA_VERIFICATION_2026-06-13.md`. Deploy is GATED on this per Jabeer.
+> 2. **Deploy to Vercel** (NOT Hostinger) — guide ready: `fmos/DEPLOY_VERCEL.md`. Env now uses ANTHROPIC_API_KEY (not OpenRouter), plus CRON_SECRET + INBOUND_WEBHOOK_SECRET.
+> 3. **Phase F Stage 1 webhooks** after deploy — WhatsApp callback URL + Meta leadgen.
+> 4. **LPs / presence**, then **campaigns** (Meta + Google).
+> ⚠️ The "disconnect 93530 82656" step below is OBSOLETE — a new SIM is used instead.
 
 > This file tracks the exact sequence of what needs to happen and when.
 > June = build month. No revenue target. Everything here feeds Q3 (Jul–Sep) ₹1L revenue goal.

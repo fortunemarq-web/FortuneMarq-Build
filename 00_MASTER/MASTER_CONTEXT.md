@@ -1,7 +1,11 @@
 # FortuneMarq — Master Context File
-**Last Updated:** 2026-06-12
-**Version:** 1.1
+**Last Updated:** 2026-06-14
+**Version:** 1.2
 **Owner:** sayed Jabeer, Founder — FortuneMarq Media & Marketing
+
+> **CURRENT STATE (2026-06-14) — read `01_CRM_AND_TOOL/fmos/HANDOFF_CONTINUE_ON_WINDOWS.md` first.**
+> - **WhatsApp Cloud API is LIVE** on dedicated number **+91 79759 18980** (PHONE_NUMBER_ID 1084263481446667, WABA 1499408311884474). BV approved, payment method added, first real message delivered end-to-end. Templates type_a/b/c approved; type_d in review. Display name pending appeal (not a blocker). 93530 82656 stays in the WhatsApp Business app.
+> - **FMOS app: NOT deployed yet — deploy gated on QA.** Static QA done (`fmos/FMOS_QA_VERIFICATION_2026-06-13.md`): app is solidly built, but P0 = page-level auth/RBAC missing (no middleware) → must fix before public deploy; P1 = outbound-WhatsApp send UI unbuilt. Deploy guide ready: `fmos/DEPLOY_VERCEL.md`.
 
 > This is the master context file for the entire FortuneMarq build system.
 > Every subfolder context file is built on top of this foundation.
@@ -364,7 +368,7 @@ These need to be decided. Each has a folder responsible for resolving it.
 
 | Decision | Folder | Notes |
 |---|---|---|
-| WhatsApp API vs Business Account for lead outreach | 03_SALES_SYSTEM | DECIDED 2026-06-08: Official Meta WhatsApp Cloud API on existing business number (+91 93530 82656). ~₹0.58/marketing conversation. 1,000 service conversations/month free. Number migrates off WhatsApp Business app — managed entirely through FMOS. Setup steps in PENDING_ACTIONS. |
+| WhatsApp API vs Business Account for lead outreach | 03_SALES_SYSTEM | ✅ RESOLVED + LIVE 2026-06-14. Superseded the 2026-06-08 plan: instead of porting 93530 82656, a NEW dedicated number **+91 79759 18980** runs the Cloud API (Option A). 93530 82656 stays in the WhatsApp Business app for manual chats — NEVER install WhatsApp on the new SIM. Cloud API proven end-to-end (BV approved, payment added, message delivered). ~₹0.58/marketing conversation; 1,000 free service conversations/month. |
 | Performance-based pricing / guarantees | 03_SALES_SYSTEM + 08_FINANCE | Decide after 3 months with results data. |
 | Social Media Management as a service | 02_SERVICE_DELIVERY_AUTOMATION | Never delivered before. Decide after 3 months. |
 | Price increases for new clients | 08_FINANCE | Decide after 3 months with portfolio and results. |
@@ -425,6 +429,8 @@ If a decision affects another folder — note it. Update that folder's context t
 | 2026-06-08 | 00_MASTER + 01_CRM_AND_TOOL + ALL | Vision & positioning: FortuneMarq_Vision_And_Positioning.md created in 00_MASTER as the single authoritative vision doc. Niche attack order confirmed and locked: Healthcare → Real Estate → Car Rental → Fitness → Education → Remaining. Updated across MASTER_CONTEXT.md Section 9, PhaseOneNiches.md, Claude_Project_Instructions.md, OpenDecisions.md. FMOS bugs fixed: (1) WhatsApp templates now load — RLS policy deployed to Supabase + lead_type filter fixed in whatsapp-template-picker.tsx. (2) /telecaller now redirects to /sales (the actual calling cockpit) via app/telecaller/page.tsx redirect. Pending: meetings page needs 2 SQL columns (meeting_link, meeting_notes) — not yet run. SUPABASE_SERVICE_ROLE_KEY not yet added to .env.local. |
 | 2026-06-11 | 01_CRM_AND_TOOL | FMOS v4.7: security hardening (RLS migrations written, cron auth, service-role isolation) + full UI/UX overhaul (design system in globals.css, brand-deep green, layout shell fix, invoice/proposal/agreement PDF redesign). 82-page audit found 38 DB tables missing (migrations never run) + UX debt. |
 | 2026-06-12 | 01_CRM_AND_TOOL | **FMOS v4.8 — DATABASE FULLY SYNCED**: all ~19 pending migrations executed in Supabase as one consolidated script (38 tables created: attendance, notifications, automations, marketing, duplicates, sessions, niche kits). Notifications system fixed + live (bell, realtime), daily-digest cron (meetings/follow-ups/overdue invoices/at-risk clients/marketing line), team management built (invite/role change/password reset/deactivate/remove from /admin/team), invoice partial payments, alert()/prompt() eliminated app-wide, /manager/performance now real data. **PHASE F (Inbound + Performance Marketing) planned (fmos/PHASE_F_INBOUND_MARKETING.md) + Stage 0 built and tested**: universal inbound pipeline with phone dedupe + attribution + round-robin auto-assign, /api/inbound/[channel] webhook (Google lead-form adapter), LP UTM capture, cockpit source picker, speed-to-lead, "Inbound & Funnel" tab on /admin/marketing (funnel, channel scoreboard, UTM builder, Meta/Google spend CSV import). Deploy target now Vercel (vercel.json crons ready). Next: deploy → Stage 1 webhooks (WhatsApp Cloud API, Meta leadgen). |
+| 2026-06-13 | 01_CRM_AND_TOOL | **FMOS static QA pass** (`fmos/FMOS_QA_VERIFICATION_2026-06-13.md`). tsc 0 errors; May-audit critical bugs confirmed fixed (total_amount, stage-sync, follow-ups-due). Found P0: page-level auth/RBAC missing (no middleware.ts, ~40 admin pages have no login/role gate; reads rely on RLS, mutations gated by requireAdmin). P1: outbound-WhatsApp send UI unbuilt (lib ready, 0 callers); proposal/agreement "PDF" = browser print (invoices = real react-pdf). Deploy guide written (`fmos/DEPLOY_VERCEL.md`). **Deploy gated on QA per Jabeer — do NOT deploy until P0 fixed + runtime smoke test passes.** |
+| 2026-06-14 | 03_SALES_SYSTEM | **WhatsApp Cloud API LIVE.** Number +91 79759 18980 REGISTERED, Business Verification APPROVED, India payment method ADDED to WABA FortuneMarq (1499408311884474), first real hello_world message DELIVERED end-to-end to 93530 82656 (token + PHONE_NUMBER_ID 1084263481446667 proven). Templates direct_report_type_a/b/c APPROVED; type_d resubmitted (de-duplicated named variables) → in review. Display name "FortuneMarq" rejected (auto) → appeal pending with GST/Udyam (not a blocker). Profile saved (logo, description, email, website, address). Gotchas logged in COWORK_HANDOFF: card must attach to REAL WABA via "select existing card"; WABA-level new-card entry fails RBI e-mandate; stray Test WABA 1852036272835920 + dup 705784465410369 to clean up. |
 
 ---
 
