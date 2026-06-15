@@ -125,7 +125,20 @@ Commit: `fmos: DB hardening — RLS, baseline schema, WhatsApp unify, token expi
 
 ---
 
-## 4. PHASE 2 — hosting/cron/secrets. Needs Vercel + GitHub + Anthropic access.
+## 4. PHASE 2 — hosting/cron/secrets.
+
+**STATUS 2026-06-15 (committed `c1c237f`):** all CODE done.
+- H3 ✅ StrategyGeneratorModal now uses the `extractStrategyTasks` server action;
+  browser Anthropic calls + sessionStorage key removed; LLMKeyManager deleted.
+- H2 ✅ removed vercel.json crons (double-fired with GitHub Actions); GH Actions is
+  the single scheduler; routes keep GET alias.
+- M5 ✅ `.env.example` documents all 19 vars; outcome-send warns (not silent) in prod.
+- M6 ✅ untracked `tmp/` (2064 files) + gitignored.
+**OWNER ACTIONS REMAINING (no code):** rotate `ANTHROPIC_API_KEY` + set in Vercel;
+set `CRON_SECRET` (Vercel optional now) + `FMOS_BASE_URL` + `CRON_SECRET` in GitHub
+Actions secrets; provide real WhatsApp/report env values when Meta is live.
+
+Original task detail (for reference):
 
 - **H2 (HIGH).** `vercel.json` schedules `daily-digest` + `admin-alerts` but those
   routes export **POST only** → Vercel Cron (GET) 405s; they never run. Add GET
