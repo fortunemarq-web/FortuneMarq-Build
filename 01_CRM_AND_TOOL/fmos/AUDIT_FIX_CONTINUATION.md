@@ -208,27 +208,59 @@ All Phases 0–2 code is committed. These remain, all owner-gated:
    triggers a Vercel redeploy. Before recommending push, re-run `npx tsc --noEmit`
    (inside fmos) = 0. The owner has NOT pushed yet by choice (reviewing first).
 
-2. **Task 3 — WhatsApp/report env values** (in Vercel). Cloud API creds already set
-   (token, phone id, verify token, Meta app secret). MISSING:
-   - `ADMIN_WHATSAPP_NUMBERS` (no template needed) — daily report target. The live
-     digest currently logs `whatsappReport: skipped "ADMIN_WHATSAPP_NUMBERS not configured"`.
-   - `WHATSAPP_LP_FALLBACK_URL` (no template needed).
-   - `DAILY_REPORT_TEMPLATE` (+`_LANG`), `WA_OUTCOME_TEMPLATES` (+`_LANG`) — **need a
-     Meta-APPROVED template**. GATING QUESTION TO ASK OWNER: do you have any approved
-     WhatsApp templates yet? If no, set only the two no-template vars; leave the rest dormant.
-   See `.env.example` for the exact shapes (esp. `WA_OUTCOME_TEMPLATES` JSON).
+2. **Task 3 — WhatsApp/report env values** (in Vercel). ✅ DONE 2026-06-15 (session 4).
+   - `ADMIN_WHATSAPP_NUMBERS` ✅ SET in Vercel (Production) =
+     `918904192656,919353082656,971502846785` (2 India + 1 UAE admin). Activates on
+     next deploy — flips the digest from `skipped "...not configured"` to actually sending.
+   - `DAILY_REPORT_TEMPLATE` / `_LANG` — NOT set; not needed. Owner's approved Meta
+     template is named exactly `daily_report` (lang `en`), which are the code defaults
+     in `lib/reports/dailyReport.ts`. Template body `FortuneMarq Daily — {{1}} {{2}} ...`
+     uses 2 positional params; code sends [date, summary] in order → matches.
+   - `WHATSAPP_LP_FALLBACK_URL` — NOT set; not needed. Code defaults to
+     `https://fortunemarq.com` (whatsapp webhook auto-reply, route.ts:345). Set only
+     if owner wants a custom landing page.
+   - `WA_OUTCOME_TEMPLATES` — LEFT DORMANT (intentional, do NOT set as-is). Owner's only
+     other approved templates are `direct_report_type_a/b/c_/d` (Marketing), which each
+     require 3 NAMED params ({{business_name}},{{niche}},{{city}}). But `outcome-send.ts`
+     sends the template with ZERO params → mapping any outcome to them fails at runtime
+     (param-count mismatch). Those 4 templates are also referenced NOWHERE in code.
+     To enable outcome-send later: either (a) add a no-param approved template, or
+     (b) change outcome-send.ts to pass the 3 params.
+   Note re WhatsApp GROUP sends: NOT possible via Cloud API (1:1 only). Owner asked;
+   decided individual sends to the 3 admins (functionally equivalent for that audience).
+   Telegram-bot-to-group is the alternative if a shared thread is ever wanted (new build).
 
-3. **Two latent bugs flagged (FIXME, behavior preserved) — owner to decide the fix:**
-   - `app/api/leads/duplicates/scan/route.ts` filters `status = 'active'`, not a valid
-     `lead_status` value → the duplicates scan throws. Likely intended: just `is_merged=false`.
-   - `app/telecaller/my-stats/page.tsx` reads `daily_target`/`target_value` from
-     `team_targets`, which has neither column → daily goal silently defaults to 100.
-     Need the real column/table for a telecaller's daily call goal.
+3. **Two latent bugs — ✅ FIXED 2026-06-15 (session 4), tsc=0.**
+   - `app/api/leads/duplicates/scan/route.ts` — removed the throwing `.eq("status","active")`
+     filter (invalid `lead_status` value); now scans all `is_merged=false` leads.
+   - team_targets daily goal — was broken END-TO-END vs live schema (live has only
+     `target_type`+`target_value`; code used non-existent `daily_target`/`weekly_target`
+     and a non-existent `metric` column). Owner chose **code-only, use existing columns**.
+     Implemented across 4 files: `app/admin/team/actions.ts` (upsert expands each UI row
+     into `daily_<metric>`/`weekly_<metric>` rows, value in `target_value`),
+     `app/telecaller/my-stats/page.tsx` (reads `target_type='daily_calls'` → `target_value`,
+     else 100), `components/team/set-targets-modal.tsx` + `daily-targets-table.tsx` (merge
+     the period-prefixed rows back per metric; UI unchanged; legacy bare rows treated as daily).
+     NOTE: old bare `target_type='calls'` rows won't feed my-stats until admin re-saves
+     (re-save writes the `daily_calls` form). No DB migration needed.
 
-4. **M8 — `outreach_sequences`** is legacy but still used by `/sales/*`
-   (`components/sales/outreach/outreach-actions.ts`, `app/sales/leads/[id]/page.tsx`).
-   Decide: migrate those to `leads.outreach_stage` OR retire the `/sales/*` routes.
-   No behavior change without the owner's call.
+4. **M8 — `outreach_sequences`** ✅ RETIRED 2026-06-15 (session 4). Owner chose full
+   retire of the orphaned subsystem ("delete everything that won't affect the app").
+   Investigation found it was ALREADY dead: `/sales/outreach` is just a redirect to
+   `/sales` (cockpit superseded it), nothing INSERTs into `outreach_sequences`, and the
+   board component was imported by no page. Deleted 9 files (verified by fresh
+   `npm run build` + `tsc` = 0, both clean):
+   - `components/sales/outreach/` (whole folder): outreach-board, outreach-lead-card,
+     advance-stage-modal, outreach-actions.
+   - `app/sales/leads/[id]/` (whole folder, 5 files): page, lead-profile-client,
+     call-outcome-modal, call-script-guide, lead-actions. (UI-unreachable — only the
+     deleted card linked to it.)
+   KEPT: `app/sales/outreach/page.tsx` (the redirect — still useful for old bookmarks).
+   The canonical flow (telecaller cockpit at `/sales` + `/admin/outreach`, both on
+   `leads.outreach_stage`) is untouched — Afifa's calling screen is unaffected.
+   DB LEFTOVER (defer to a DB-cleanup pass): the `outreach_sequences` TABLE still exists,
+   plus `sequence_id` columns on pdf_deliveries/meetings/proposals — harmless, no code
+   reads them now. Drop alongside the A1 renumber if desired.
 
 5. **A1 follow-up** — the baseline migration (`20260101000000_baseline_core_schema.sql`)
    is committed + idempotent (no-op on live). REMAINING: renumber the ~48 non-timestamped

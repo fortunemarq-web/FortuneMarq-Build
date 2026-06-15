@@ -40,18 +40,30 @@ export default function DailyTargetsTable({ targets, profiles, actuals }: DailyT
         </thead>
         <tbody className="divide-y divide-slate-50">
           {profiles.slice(0, 8).map(profile => {
-            const userTargets = targets.filter(t => t.user_id === profile.id);
-            if (userTargets.length === 0) return null;
+            // Merge period-prefixed rows (daily_<m>/weekly_<m>) into one display row per metric.
+            const byMetric = new Map<string, { daily: number; weekly: number }>();
+            for (const t of targets) {
+              if (t.user_id !== profile.id) continue;
+              const tt = String(t.target_type || "");
+              const isWeekly = tt.startsWith("weekly_");
+              const base = tt.startsWith("daily_") || isWeekly ? tt.slice(tt.indexOf("_") + 1) : tt;
+              const entry = byMetric.get(base) || { daily: 0, weekly: 0 };
+              const value = Number(t.target_value ?? t.daily_target ?? t.weekly_target) || 0;
+              if (isWeekly) entry.weekly = value; else entry.daily = value;
+              byMetric.set(base, entry);
+            }
+            const metrics = Array.from(byMetric.entries());
+            if (metrics.length === 0) return null;
 
-            return userTargets.map(target => {
-              const targetGoal = target.daily_target || target.target_value || 0;
-              const actual = getActual(profile.id, target.target_type);
+            return metrics.map(([metric, vals]) => {
+              const targetGoal = vals.daily || 0;
+              const actual = getActual(profile.id, metric);
               const percent = actual === null
                 ? null
                 : Math.min(Math.round((actual / (targetGoal || 1)) * 100), 100) || 0;
 
               return (
-                <tr key={`${profile.id}-${target.target_type}`} className="hover:bg-slate-50 transition-colors">
+                <tr key={`${profile.id}-${metric}`} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg bg-slate-900 flex items-center justify-center text-[10px] font-black text-white">
@@ -66,9 +78,9 @@ export default function DailyTargetsTable({ targets, profiles, actuals }: DailyT
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-xs font-black text-slate-900">
-                        {target.daily_target ?? target.target_value} {target.weekly_target ? `/ ${target.weekly_target}w` : ''}
+                        {vals.daily}{vals.weekly ? ` / ${vals.weekly}w` : ''}
                       </span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">{target.target_type}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase">{metric}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">

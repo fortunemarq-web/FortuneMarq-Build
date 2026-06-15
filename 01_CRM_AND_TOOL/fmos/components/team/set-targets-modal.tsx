@@ -17,12 +17,21 @@ export default function SetTargetsModal({ profiles, existingTargets, onClose }: 
   const [isSaving, setIsSaving] = useState(false);
   const [rows, setRows] = useState<any[]>(() => {
     if (existingTargets.length > 0) {
-      return existingTargets.map(t => ({
-        user_id: t.user_id,
-        target_type: t.target_type,
-        daily_target: t.daily_target || 0,
-        weekly_target: t.weekly_target || 0
-      }));
+      // Stored rows are period-prefixed (daily_<metric> / weekly_<metric>) with the
+      // number in target_value. Merge them back into one editable row per (user, metric).
+      const map = new Map<string, any>();
+      for (const t of existingTargets) {
+        const tt = String(t.target_type || "");
+        const period = tt.startsWith("daily_") ? "daily" : tt.startsWith("weekly_") ? "weekly" : null;
+        const base = period ? tt.slice(period.length + 1) : tt; // legacy bare rows → treated as daily
+        const key = `${t.user_id}:${base}`;
+        if (!map.has(key)) map.set(key, { user_id: t.user_id, target_type: base, daily_target: 0, weekly_target: 0 });
+        const row = map.get(key);
+        const value = Number(t.target_value) || 0;
+        if (period === "weekly") row.weekly_target = value;
+        else row.daily_target = value;
+      }
+      return Array.from(map.values());
     }
     // Default rows: one per member for 'calls'
     return profiles.map(p => ({

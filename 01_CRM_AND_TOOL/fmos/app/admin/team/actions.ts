@@ -16,17 +16,15 @@ export async function upsertTeamTargets(targets: Array<{
   const supabase = await createServerClientWithCookies();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // The prompt asks to upsert into team_targets.
-  // We'll map the data to the schema described in the prompt.
-  // If the columns don't exist yet, we'll assume they are intended to be there.
-  const data = targets.map(t => ({
-    user_id: t.user_id,
-    target_type: t.target_type,
-    daily_target: t.daily_target,
-    weekly_target: t.weekly_target,
-    updated_by: user?.id,
-    updated_at: new Date().toISOString()
-  }));
+  // Live team_targets stores ONE target_value per (user_id, target_type) row
+  // (UNIQUE(user_id, target_type) — there are no daily_target/weekly_target
+  // columns). Encode the period in target_type so daily and weekly each get
+  // their own row: daily_<metric> / weekly_<metric>. The UI merges them back.
+  const now = new Date().toISOString();
+  const data = targets.flatMap(t => [
+    { user_id: t.user_id, target_type: `daily_${t.target_type}`,  target_value: t.daily_target ?? 0,  updated_by: user?.id, updated_at: now },
+    { user_id: t.user_id, target_type: `weekly_${t.target_type}`, target_value: t.weekly_target ?? 0, updated_by: user?.id, updated_at: now },
+  ]);
 
   const { error } = await supabase
     .from("team_targets")

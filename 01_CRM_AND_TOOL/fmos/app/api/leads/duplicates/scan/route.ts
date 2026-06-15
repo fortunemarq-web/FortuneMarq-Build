@@ -15,10 +15,8 @@ export async function POST(req: NextRequest) {
         const { data: leads, error } = await supabase
             .from("leads")
             .select("id, company_name, city, phone, email, website_domain, phone_normalized, email_normalized")
-            // FIXME: "active" is not a valid lead_status enum value (new/contacted/...),
-            // so this filter makes the query throw at runtime. Behavior preserved for
-            // now via the cast; decide the intended filter (likely just is_merged=false).
-            .eq("status" as any, "active")
+            // Scan all non-merged leads. (Previously also filtered status='active', but
+            // 'active' is not a valid lead_status value, which made the query throw.)
             .is("is_merged", false)
             .limit(1000) as any; // Batch size for safety
 
