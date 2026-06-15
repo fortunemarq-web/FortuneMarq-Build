@@ -5215,31 +5215,46 @@ export type Database = {
       }
       whatsapp_logs: {
         Row: {
+          delivery_status: string | null
+          direction: string
           id: string
           lead_id: string | null
           message_sent: string | null
+          message_type: string | null
           outcome: string | null
+          phone: string | null
           sent_at: string | null
           sent_by: string | null
           template_id: string | null
+          wa_message_id: string | null
         }
         Insert: {
+          delivery_status?: string | null
+          direction?: string
           id?: string
           lead_id?: string | null
           message_sent?: string | null
+          message_type?: string | null
           outcome?: string | null
+          phone?: string | null
           sent_at?: string | null
           sent_by?: string | null
           template_id?: string | null
+          wa_message_id?: string | null
         }
         Update: {
+          delivery_status?: string | null
+          direction?: string
           id?: string
           lead_id?: string | null
           message_sent?: string | null
+          message_type?: string | null
           outcome?: string | null
+          phone?: string | null
           sent_at?: string | null
           sent_by?: string | null
           template_id?: string | null
+          wa_message_id?: string | null
         }
         Relationships: [
           {
@@ -5247,67 +5262,6 @@ export type Database = {
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "whatsapp_logs_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "whatsapp_message_templates"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      whatsapp_message_templates: {
-        Row: {
-          city_id: string | null
-          created_at: string | null
-          created_by: string | null
-          id: string
-          is_active: boolean | null
-          message_body: string
-          niche_id: string | null
-          outcome: string
-          updated_at: string | null
-          version: number | null
-        }
-        Insert: {
-          city_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          is_active?: boolean | null
-          message_body: string
-          niche_id?: string | null
-          outcome: string
-          updated_at?: string | null
-          version?: number | null
-        }
-        Update: {
-          city_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          is_active?: boolean | null
-          message_body?: string
-          niche_id?: string | null
-          outcome?: string
-          updated_at?: string | null
-          version?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "whatsapp_message_templates_city_id_fkey"
-            columns: ["city_id"]
-            isOneToOne: false
-            referencedRelation: "cities"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "whatsapp_message_templates_niche_id_fkey"
-            columns: ["niche_id"]
-            isOneToOne: false
-            referencedRelation: "niches"
             referencedColumns: ["id"]
           },
         ]
