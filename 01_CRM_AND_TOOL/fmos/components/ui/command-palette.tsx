@@ -142,7 +142,7 @@ export function CommandPalette() {
 
             // 2. Search Clients (Managers/Admins only)
             if (userProfile?.role !== 'telecaller') {
-                const { data: clients } = await (supabase.from("clients" as any) as any)
+                const { data: clients } = await (supabase.from("clients") as any)
                     .select("id, business_name, owner_name, city")
                     .or(`business_name.ilike.${pattern},owner_name.ilike.${pattern},city.ilike.${pattern}`)
                     .limit(5);
@@ -162,7 +162,7 @@ export function CommandPalette() {
             }
 
             // 3. Search Tasks
-            const { data: tasks } = await (supabase.from("tasks" as any) as any)
+            const { data: tasks } = await (supabase.from("tasks") as any)
                 .select("id, title, project_id, status")
                 .ilike("title", pattern)
                 .limit(5);

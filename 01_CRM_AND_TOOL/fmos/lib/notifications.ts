@@ -36,7 +36,7 @@ export async function sendNotification({
     const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
 
     const { data: existing } = await supabase
-        .from("notifications" as any)
+        .from("notifications")
         .select("id")
         .eq("user_id", userId)
         .eq("type", type)
@@ -48,7 +48,7 @@ export async function sendNotification({
 
     // 2. Insert
     const { error } = await supabase
-        .from("notifications" as any)
+        .from("notifications")
         .insert({
             user_id: userId,
             type,

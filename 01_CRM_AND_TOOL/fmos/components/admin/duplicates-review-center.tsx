@@ -35,7 +35,7 @@ export default function DuplicatesReviewCenter() {
         // We need to join leads twice: for primary and duplicate
         // Supabase JS join syntax:
         const { data, error } = await supabase
-            .from("duplicate_candidates" as any)
+            .from("duplicate_candidates")
             .select(`
         *,
         primary:primary_id (id, company_name, city, phone, email, status),
@@ -65,7 +65,7 @@ export default function DuplicatesReviewCenter() {
 
     const handleIgnore = async (id: string) => {
         const supabase = createClient();
-        await supabase.from("duplicate_candidates" as any).update({ status: "ignored" }).eq("id", id);
+        await supabase.from("duplicate_candidates").update({ status: "ignored" }).eq("id", id);
         setCandidates(prev => prev.filter(c => c.id !== id));
     };
 

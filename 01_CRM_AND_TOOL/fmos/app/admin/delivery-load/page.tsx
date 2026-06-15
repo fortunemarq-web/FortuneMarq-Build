@@ -39,7 +39,7 @@ export default async function DeliveryLoadPage() {
       supabase.from("projects").select("id, name, service_type, status, deadline, assigned_pm, client_id"),
       supabase.from("profiles").select("id, full_name, role"),
       supabase.from("clients").select("id, business_name"),
-      supabase.from("client_deliverables" as any).select("project_id, status"),
+      supabase.from("client_deliverables").select("project_id, status"),
     ]);
 
   const profileName = new Map<string, string>(

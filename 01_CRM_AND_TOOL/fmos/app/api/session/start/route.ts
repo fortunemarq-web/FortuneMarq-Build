@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
     try {
         // Create Session
-        const { data: session, error } = await supabase.from("user_sessions" as any).insert({
+        const { data: session, error } = await supabase.from("user_sessions").insert({
             user_id: user.id,
             login_at: new Date().toISOString(),
             last_seen_at: new Date().toISOString(),

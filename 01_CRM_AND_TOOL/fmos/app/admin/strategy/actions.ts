@@ -120,7 +120,7 @@ export async function saveApprovedTasks(
 
   // 1. Create strategy run
   const { data: runData, error: runError } = await supabase
-    .from("strategy_runs" as any)
+    .from("strategy_runs")
     .insert({
       title: strategyTitle,
       destination,
@@ -171,7 +171,7 @@ export async function saveApprovedTasks(
       task_id: t.id
     }));
     
-    const { error: linkError } = await supabase.from("strategy_run_tasks" as any).insert(linkingRecords);
+    const { error: linkError } = await supabase.from("strategy_run_tasks").insert(linkingRecords);
     if (linkError) console.error("Error creating strategy links:", linkError);
   }
 
@@ -183,7 +183,7 @@ export async function saveApprovedTasks(
 export async function fetchStrategyArchive() {
   const supabase = await createServerClientWithCookies();
   const { data, error } = await supabase
-    .from("strategy_runs" as any)
+    .from("strategy_runs")
     .select("*, profiles!created_by(full_name)")
     .order("created_at", { ascending: false });
     
@@ -251,7 +251,7 @@ export async function fetchStrategyRunOutcome(run: {
   if (dest.startsWith("agency_growth.")) {
     const channel = dest.split(".")[1];
     const { data } = await supabase
-      .from("content_pieces" as any)
+      .from("content_pieces")
       .select("id, channel, status, published_date")
       .eq("channel", channel)
       .eq("status", "published")
@@ -283,7 +283,7 @@ export async function fetchClientStrategyRuns(clientId: string) {
   const supabase = await createServerClientWithCookies();
   
   const { data: runs, error } = await supabase
-    .from("strategy_runs" as any)
+    .from("strategy_runs")
     .select("*")
     .eq("client_id", clientId)
     .order("created_at", { ascending: false });

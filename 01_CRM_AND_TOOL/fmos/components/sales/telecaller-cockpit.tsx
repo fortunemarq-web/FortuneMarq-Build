@@ -604,7 +604,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
     if (!userId) return;
     let cancelled = false;
     (async () => {
-      const { data } = await (supabase.from("team_targets" as any) as any)
+      const { data } = await (supabase.from("team_targets") as any)
         .select("daily_target, target_value")
         .eq("user_id", userId)
         .eq("target_type", "calls")

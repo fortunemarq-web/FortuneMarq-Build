@@ -13,9 +13,12 @@ export async function POST(req: NextRequest) {
         // 1. Fetch active leads
         // We fetch minimal fields needed for matching
         const { data: leads, error } = await supabase
-            .from("leads" as any)
+            .from("leads")
             .select("id, company_name, city, phone, email, website_domain, phone_normalized, email_normalized")
-            .eq("status", "active")
+            // FIXME: "active" is not a valid lead_status enum value (new/contacted/...),
+            // so this filter makes the query throw at runtime. Behavior preserved for
+            // now via the cast; decide the intended filter (likely just is_merged=false).
+            .eq("status" as any, "active")
             .is("is_merged", false)
             .limit(1000) as any; // Batch size for safety
 
@@ -101,7 +104,7 @@ export async function POST(req: NextRequest) {
         // 3. Insert Candidates (ignore duplicates via ON CONFLICT)
         if (candidates.length > 0) {
             const { error: insertError } = await supabase
-                .from("duplicate_candidates" as any)
+                .from("duplicate_candidates")
                 .upsert(candidates, { onConflict: "entity_type, primary_id, duplicate_id, match_type", ignoreDuplicates: true });
 
             if (insertError) throw insertError;

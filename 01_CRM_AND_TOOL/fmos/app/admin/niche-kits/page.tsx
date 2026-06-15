@@ -8,13 +8,13 @@ export default async function AdminNicheKitsPage() {
 
     // Fetch all niches
     const { data: niches } = await supabase
-        .from("niches" as any)
+        .from("niches")
         .select("*")
         .order("name", { ascending: true });
 
     // Fetch existing kits
     const { data: kits } = await supabase
-        .from("niche_kits" as any)
+        .from("niche_kits")
         .select("*");
 
     return (

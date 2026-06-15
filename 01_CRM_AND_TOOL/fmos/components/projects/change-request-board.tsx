@@ -28,7 +28,7 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
     const addRequest = async () => {
         if (!newItem.title) return;
         try {
-            const { data, error } = await supabase.from("change_requests" as any).insert({
+            const { data, error } = await supabase.from("change_requests").insert({
                 project_id: projectId,
                 title: newItem.title,
                 description: newItem.description,
@@ -53,7 +53,7 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
             const updates: any = { status };
             if (note) updates.decision_note = note;
 
-            await supabase.from("change_requests" as any).update(updates).eq("id", id);
+            await supabase.from("change_requests").update(updates).eq("id", id);
             setRequests(prev => prev.map(r => r.id === id ? { ...r, ...updates } : r));
         } catch (e) { console.error(e); }
     };

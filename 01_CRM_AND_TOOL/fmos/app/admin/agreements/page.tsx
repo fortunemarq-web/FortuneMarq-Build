@@ -16,7 +16,7 @@ const STATUS_CONFIG: Record<string, { label: string; classes: string; icon: Elem
 export default async function AgreementsPage() {
   const supabase = await createServerClientWithCookies();
 
-  const { data: agreements, error } = await (supabase as any)
+  const { data: agreements, error } = await supabase
     .from("agreements")
     .select(`
       id,

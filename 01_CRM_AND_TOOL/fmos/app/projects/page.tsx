@@ -68,7 +68,7 @@ export default async function ProjectsPage() {
 
   // Fetch client resources (table not yet in generated types)
   const { data: clientResources, error: resourcesError } = await supabase
-    .from("client_resources" as any)
+    .from("client_resources")
     .select("*");
   if (resourcesError) console.error("client_resources fetch failed:", resourcesError.message);
 

@@ -34,7 +34,7 @@ export default function TaskDependencies({ taskId, projectId, initialDependencie
         if (!selectedTaskId || selectedTaskId === taskId) return;
 
         try {
-            const { data, error } = await supabase.from("task_dependencies" as any).insert({
+            const { data, error } = await supabase.from("task_dependencies").insert({
                 task_id: taskId,
                 depends_on_task_id: selectedTaskId,
                 dependency_type: 'blocks'
@@ -59,7 +59,7 @@ export default function TaskDependencies({ taskId, projectId, initialDependencie
     };
 
     const removeDependency = async (id: string) => {
-        await supabase.from("task_dependencies" as any).delete().eq("id", id);
+        await supabase.from("task_dependencies").delete().eq("id", id);
         setDependencies(prev => prev.filter(d => d.id !== id));
     };
 

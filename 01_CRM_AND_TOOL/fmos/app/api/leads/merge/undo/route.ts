@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
         const { merge_id } = await req.json();
 
         // 1. Get Merge Record
-        const { data: mergeRecord, error: fetchError } = await supabase.from("merges" as any)
+        const { data: mergeRecord, error: fetchError } = await supabase.from("merges")
             .select("*")
             .eq("id", merge_id)
             .single();
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
             .eq("id", merged_id);
 
         // 3. Remove Redirect
-        await supabase.from("lead_redirects" as any)
+        await supabase.from("lead_redirects")
             .delete()
             .eq("merged_id", merged_id);
 
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         // Decision: Only explicit Undo of Lead state and Redirect.
 
         // 5. Mark Merge Undone
-        await supabase.from("merges" as any)
+        await supabase.from("merges")
             .update({ is_undone: true })
             .eq("id", merge_id);
 

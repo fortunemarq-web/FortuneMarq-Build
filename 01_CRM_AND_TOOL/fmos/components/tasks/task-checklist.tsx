@@ -31,7 +31,7 @@ export default function TaskChecklist({ taskId, initialItems }: TaskChecklistPro
         const nextOrder = items.length > 0 ? Math.max(...items.map(i => i.sort_order)) + 1 : 0;
 
         try {
-            const { data, error } = await supabase.from("task_checklist_items" as any).insert({
+            const { data, error } = await supabase.from("task_checklist_items").insert({
                 task_id: taskId,
                 title: newItemTitle.trim(),
                 sort_order: nextOrder
@@ -65,7 +65,7 @@ export default function TaskChecklist({ taskId, initialItems }: TaskChecklistPro
             const { data: { user } } = await supabase.auth.getUser();
             if (newStatus && user) updates.completed_by = user.id;
 
-            await supabase.from("task_checklist_items" as any).update(updates).eq("id", item.id);
+            await supabase.from("task_checklist_items").update(updates).eq("id", item.id);
 
             if (newStatus) {
                 await logAudit({
@@ -88,7 +88,7 @@ export default function TaskChecklist({ taskId, initialItems }: TaskChecklistPro
         const ok = await promptModal({ title: "Delete checklist item?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
         if (!ok) return;
         setItems(prev => prev.filter(i => i.id !== id));
-        await supabase.from("task_checklist_items" as any).delete().eq("id", id);
+        await supabase.from("task_checklist_items").delete().eq("id", id);
     };
 
     const progress = items.length > 0 ? Math.round((items.filter(i => i.is_done).length / items.length) * 100) : 0;

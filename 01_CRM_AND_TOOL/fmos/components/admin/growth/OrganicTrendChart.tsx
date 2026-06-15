@@ -13,12 +13,12 @@ export default async function OrganicTrendChart() {
 
   const [{ data: gmb }, { data: traffic }] = await Promise.all([
     supabase
-      .from("gmb_snapshots" as any)
+      .from("gmb_snapshots")
       .select("snapshot_month, profile_views")
       .order("snapshot_month", { ascending: true })
       .limit(12),
     supabase
-      .from("organic_traffic_snapshots" as any)
+      .from("organic_traffic_snapshots")
       .select("snapshot_date, organic_sessions")
       .order("snapshot_date", { ascending: true })
       .limit(180),

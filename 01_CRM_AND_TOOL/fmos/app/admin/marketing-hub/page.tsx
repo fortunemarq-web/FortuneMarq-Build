@@ -46,9 +46,9 @@ export default async function MarketingHubPage() {
     supabase.from("leads").select("id", { count: "exact", head: true }).gte("created_at", monthStart),
     supabase.from("leads").select("source").gte("created_at", monthStart),
     supabase.from("leads").select("id", { count: "exact", head: true }).eq("outreach_stage", "won").gte("created_at", monthStart),
-    supabase.from("content_pieces" as any).select("id", { count: "exact", head: true }).eq("status", "published").gte("published_date", monthStart),
-    supabase.from("content_pieces" as any).select("id", { count: "exact", head: true }).neq("status", "published"),
-    supabase.from("ad_insights_daily" as any).select("spend").gte("date", monthStartDate),
+    supabase.from("content_pieces").select("id", { count: "exact", head: true }).eq("status", "published").gte("published_date", monthStart),
+    supabase.from("content_pieces").select("id", { count: "exact", head: true }).neq("status", "published"),
+    supabase.from("ad_insights_daily").select("spend").gte("date", monthStartDate),
     fetchStrategyArchive() as Promise<any[]>,
   ]);
 

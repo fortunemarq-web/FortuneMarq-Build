@@ -135,7 +135,7 @@ export default function ClientDashboardPage() {
 
           // Deliverables
           const { data: dlData } = await supabase
-            .from("client_deliverables" as any)
+            .from("client_deliverables")
             .select("*")
             .eq("project_id", primaryProject.id)
             .order("created_at", { ascending: false });
@@ -143,7 +143,7 @@ export default function ClientDashboardPage() {
 
           // Reports
           const { data: rptData } = await supabase
-            .from("client_reports" as any)
+            .from("client_reports")
             .select("*")
             .eq("client_id", clientData.id)
             .eq("is_published", true)
@@ -170,7 +170,7 @@ export default function ClientDashboardPage() {
     setProcessingId(id);
     try {
       const { error: updateError } = await supabase
-        .from("client_deliverables" as any)
+        .from("client_deliverables")
         .update({
           status: action,
           client_feedback: feedback || null,

@@ -59,11 +59,11 @@ export default function TaskModalContent({
             const supabase = createClient();
 
             // Fetch checklist
-            const { data: cl } = await supabase.from("task_checklist_items" as any).select("*").eq("task_id", task.id);
+            const { data: cl } = await supabase.from("task_checklist_items").select("*").eq("task_id", task.id);
             if (cl) setChecklistItems(cl as any);
 
             // Fetch dependencies
-            const { data: deps } = await supabase.from("task_dependencies" as any).select(`
+            const { data: deps } = await supabase.from("task_dependencies").select(`
                 id,
                 dependency_type,
                 depends_on:depends_on_task_id (id, title, status)

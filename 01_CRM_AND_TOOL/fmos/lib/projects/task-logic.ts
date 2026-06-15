@@ -7,7 +7,7 @@ export async function checkTaskBlocked(taskId: string): Promise<{ blocked: boole
     // Query: select depends_on_task_id -> status from task_dependencies where task_id = T
 
     // We need to join with tasks
-    const { data: deps } = await supabase.from("task_dependencies" as any)
+    const { data: deps } = await supabase.from("task_dependencies")
         .select(`
             depends_on_task_id,
             depends_on:depends_on_task_id ( title, status )

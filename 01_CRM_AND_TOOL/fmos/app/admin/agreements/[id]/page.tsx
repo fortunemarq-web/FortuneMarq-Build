@@ -27,7 +27,7 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const supabase = await createServerClientWithCookies();
 
-  const { data: agreement, error } = await (supabase as any)
+  const { data: agreement, error } = await supabase
     .from("agreements")
     .select(`
       id, agreement_number, proposal_ref, status,

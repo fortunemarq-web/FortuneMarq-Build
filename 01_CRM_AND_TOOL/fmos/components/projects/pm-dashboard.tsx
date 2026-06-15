@@ -142,7 +142,7 @@ export default function PMDashboard(props: PMDashboardProps) {
     setIsSubmittingResource(true);
 
     try {
-      const { data, error } = await supabase.from("client_resources" as any).insert({
+      const { data, error } = await supabase.from("client_resources").insert({
         client_id: clientId,
         title: newLinkTitle,
         url: newLinkUrl,
@@ -168,7 +168,7 @@ export default function PMDashboard(props: PMDashboardProps) {
     const ok = await promptModal({ title: "Delete this link?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
     if (!ok) return;
     try {
-      const { error } = await supabase.from("client_resources" as any).delete().eq("id", resourceId);
+      const { error } = await supabase.from("client_resources").delete().eq("id", resourceId);
       if (error) throw error;
       setResources(resources.filter(r => r.id !== resourceId));
     } catch (err) {

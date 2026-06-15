@@ -47,13 +47,14 @@ const DEFAULT_SETTINGS: BusinessSettings = {
 export async function getBusinessSettings(): Promise<BusinessSettings> {
   try {
     const supabase = await createServerClientWithCookies();
-    const { data, error } = await (supabase as any).from("business_settings")
+    const { data, error } = await supabase.from("business_settings")
       .select("*")
       .limit(1)
       .single();
 
     if (error || !data) return DEFAULT_SETTINGS;
-    return { ...DEFAULT_SETTINGS, ...data };
+    // DB row has nullable columns; DEFAULT_SETTINGS supplies the non-null shape.
+    return { ...DEFAULT_SETTINGS, ...data } as BusinessSettings;
   } catch {
     return DEFAULT_SETTINGS;
   }

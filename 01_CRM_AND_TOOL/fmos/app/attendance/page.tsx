@@ -47,7 +47,7 @@ export default function MyAttendancePage() {
 
         // 1. Get Open Session
         const { data: sess } = await supabase
-            .from("attendance_sessions" as any)
+            .from("attendance_sessions")
             .select(`*, attendance_breaks(*)`)
             .eq("user_id", user.id)
             .eq("status", "open")
@@ -70,7 +70,7 @@ export default function MyAttendancePage() {
             timeZone: "Asia/Kolkata",
         });
         const { data: sum } = await supabase
-            .from("attendance_daily_summary" as any)
+            .from("attendance_daily_summary")
             .select("*")
             .eq("user_id", user.id)
             .eq("day", today)

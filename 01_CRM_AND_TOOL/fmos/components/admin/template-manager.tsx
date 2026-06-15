@@ -100,7 +100,7 @@ export default function TemplateManager() {
     const fetchTemplates = async () => {
         setIsLoading(true);
         const { data, error } = await supabase
-            .from("whatsapp_templates" as any)
+            .from("whatsapp_templates")
             .select("*")
             .order("category", { ascending: true });
         if (error) {
@@ -154,7 +154,7 @@ export default function TemplateManager() {
         try {
             if (editingTemplate) {
                 const { error } = await supabase
-                    .from("whatsapp_templates" as any)
+                    .from("whatsapp_templates")
                     .update(payload)
                     .eq("id", editingTemplate.id);
                 if (error) throw error;
@@ -174,7 +174,7 @@ export default function TemplateManager() {
                         ? crypto.randomUUID()
                         : `tmpl_${Date.now()}`;
                 const { error } = await supabase
-                    .from("whatsapp_templates" as any)
+                    .from("whatsapp_templates")
                     .insert([{ id, ...payload }]);
                 if (error) throw error;
 
@@ -208,7 +208,7 @@ export default function TemplateManager() {
         });
         if (!ok) return;
         const { error } = await supabase
-            .from("whatsapp_templates" as any)
+            .from("whatsapp_templates")
             .delete()
             .eq("id", template.id);
         if (error) {

@@ -29,7 +29,7 @@ export async function upsertTeamTargets(targets: Array<{
   }));
 
   const { error } = await supabase
-    .from("team_targets" as any)
+    .from("team_targets")
     .upsert(data, { onConflict: "user_id,target_type" });
 
   if (error) {
@@ -91,7 +91,7 @@ export async function createSopAction(formData: FormData) {
   const steps = JSON.parse(stepsStr);
 
   const { data, error } = await supabase
-    .from("sops" as any)
+    .from("sops")
     .insert({
       title,
       category,
@@ -126,7 +126,7 @@ export async function updateSopAction(id: string, formData: FormData) {
   const steps = JSON.parse(stepsStr);
 
   const { error } = await supabase
-    .from("sops" as any)
+    .from("sops")
     .update({
       title,
       category,
@@ -151,7 +151,7 @@ export async function deleteSopAction(id: string) {
   const supabase = await createServerClientWithCookies();
 
   const { error } = await supabase
-    .from("sops" as any)
+    .from("sops")
     .delete()
     .eq("id", id);
 

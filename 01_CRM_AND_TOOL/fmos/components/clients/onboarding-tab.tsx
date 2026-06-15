@@ -107,7 +107,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
     setTasks(prev => prev.map(t =>
       t.id === taskId ? { ...t, status: next, completed_at: next === "DONE" ? now : null } : t
     ));
-    await (supabase as any).from("client_onboarding_tasks").update({
+    await supabase.from("client_onboarding_tasks").update({
       status: next,
       completed_at: next === "DONE" ? now : null,
     }).eq("id", taskId);
@@ -115,7 +115,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
 
   async function markTaskBlocked(taskId: string) {
     setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "BLOCKED" } : t));
-    await (supabase as any).from("client_onboarding_tasks").update({ status: "BLOCKED" }).eq("id", taskId);
+    await supabase.from("client_onboarding_tasks").update({ status: "BLOCKED" }).eq("id", taskId);
   }
 
   async function handleGenerateOnboarding() {
@@ -125,11 +125,11 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
       await generateClientOnboarding(supabase, clientId, Array.from(selectedServices));
       // Refetch tasks + assets
       const [{ data: newTasks }, { data: newAssets }] = await Promise.all([
-        (supabase as any).from("client_onboarding_tasks").select("*").eq("client_id", clientId).order("service_id"),
-        (supabase as any).from("client_asset_vault").select("*").eq("client_id", clientId).order("category"),
+        supabase.from("client_onboarding_tasks").select("*").eq("client_id", clientId).order("service_id"),
+        supabase.from("client_asset_vault").select("*").eq("client_id", clientId).order("category"),
       ]);
-      setTasks(newTasks ?? []);
-      setAssets(newAssets ?? []);
+      setTasks((newTasks ?? []) as any);
+      setAssets((newAssets ?? []) as any);
       setShowGeneratePanel(false);
       setSelectedServices(new Set());
     } finally {
@@ -141,7 +141,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
     const next = ASSET_STATUS_FLOW[currentStatus];
     if (next === currentStatus) return;
     setAssets(prev => prev.map(a => a.id === assetId ? { ...a, status: next } : a));
-    await supabase.from("client_asset_vault" as any).update({ status: next }).eq("id", assetId);
+    await supabase.from("client_asset_vault").update({ status: next }).eq("id", assetId);
   }
 
   async function activateClient() {

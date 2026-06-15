@@ -41,7 +41,7 @@ export default async function AdminLeadProfilePage({ params }: { params: Promise
     whatsappTemplatesResult,
   ] = await Promise.all([
     supabase
-      .from("outreach_logs" as any)
+      .from("outreach_logs")
       .select("*, actor:profiles(full_name)")
       .eq("lead_id", id)
       .order("created_at", { ascending: false }),
@@ -53,7 +53,7 @@ export default async function AdminLeadProfilePage({ params }: { params: Promise
       .order("sent_at", { ascending: false }),
 
     supabase
-      .from("agreements" as any)
+      .from("agreements")
       .select("*")
       .eq("lead_id", id)
       .order("created_at", { ascending: false }),
@@ -65,7 +65,7 @@ export default async function AdminLeadProfilePage({ params }: { params: Promise
       .eq("city", lead?.city || "")
       .single(),
 
-    (supabase as any)
+    supabase
       .from("whatsapp_templates")
       .select("*")
       .order("name", { ascending: true }),

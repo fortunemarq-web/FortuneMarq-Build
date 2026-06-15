@@ -31,7 +31,7 @@ export default function AgreementRowActions({ agreementId, agreementNumber, stat
     const ok = await promptModal({ title: `Void ${agreementNumber || "this agreement"}?`, description: "It stays listed as rejected for your records.", confirmLabel: "Void", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, void it" }] });
     if (!ok) return;
     setBusy(true);
-    const { error } = await (supabase as any).from("agreements").update({ status: "rejected" }).eq("id", agreementId);
+    const { error } = await supabase.from("agreements").update({ status: "rejected" }).eq("id", agreementId);
     setBusy(false);
     if (error) {
       toast.error("Could not void agreement", error.message);
@@ -46,7 +46,7 @@ export default function AgreementRowActions({ agreementId, agreementNumber, stat
     const ok = await promptModal({ title: `Delete ${agreementNumber || "this agreement"}?`, description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete permanently" }] });
     if (!ok) return;
     setBusy(true);
-    const { error } = await (supabase as any).from("agreements").delete().eq("id", agreementId);
+    const { error } = await supabase.from("agreements").delete().eq("id", agreementId);
     setBusy(false);
     if (error) {
       toast.error("Could not delete agreement", error.message);

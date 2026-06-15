@@ -109,7 +109,7 @@ export default function NotificationBell() {
         if (!user) return;
 
         const { data, error } = await supabase
-            .from("notifications" as any)
+            .from("notifications")
             .select("*")
             .eq("user_id", user.id)
             .order("created_at", { ascending: false })
@@ -125,7 +125,7 @@ export default function NotificationBell() {
     const markRead = async (id: string, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
 
-        const { error } = await supabase.from("notifications" as any)
+        const { error } = await supabase.from("notifications")
             .update({ is_read: true })
             .eq("id", id);
 
@@ -139,7 +139,7 @@ export default function NotificationBell() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { error } = await supabase.from("notifications" as any)
+        const { error } = await supabase.from("notifications")
             .update({ is_read: true })
             .eq("user_id", user.id)
             .eq("is_read", false);

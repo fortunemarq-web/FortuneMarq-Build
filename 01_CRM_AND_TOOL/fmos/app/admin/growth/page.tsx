@@ -45,7 +45,7 @@ export default async function AgencyGrowthHub({
   //    — shown as "—" instead of fabricated numbers.
   const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
   const { data: pieces } = await supabase
-    .from("content_pieces" as any)
+    .from("content_pieces")
     .select("channel, status, published_date");
 
   const channelStats: Record<string, { mtd: number; last: string | null }> = {};

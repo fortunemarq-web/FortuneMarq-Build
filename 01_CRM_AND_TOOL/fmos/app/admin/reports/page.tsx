@@ -33,7 +33,7 @@ export default function WeeklyReportPage() {
             // For this demo, let's pull some actual counts to make it feel real)
 
             const { data: leads } = await supabase.from("leads").select("id, status, created_at") as { data: any[] | null };
-            const { data: niches } = await supabase.from("niches" as any).select("name");
+            const { data: niches } = await supabase.from("niches").select("name");
 
             const stats = {
                 total_leads: leads?.length || 0,

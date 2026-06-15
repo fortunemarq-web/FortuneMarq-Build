@@ -23,7 +23,7 @@ export default function AgreementConfirmButton({ agreementId, clientName }: { ag
     if (!ok) return;
 
     startTransition(async () => {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("agreements")
         .update({ status: "confirmed", confirmed_at: new Date().toISOString() })
         .eq("id", agreementId);

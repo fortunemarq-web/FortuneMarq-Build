@@ -25,7 +25,7 @@ export default function DeliverableManager({ projectId, initialDeliverables, isC
     const addDeliverable = async () => {
         if (!newItem.title) return;
         try {
-            const { data, error } = await supabase.from("deliverables" as any).insert({
+            const { data, error } = await supabase.from("deliverables").insert({
                 project_id: projectId,
                 title: newItem.title,
                 type: newItem.type,
@@ -47,7 +47,7 @@ export default function DeliverableManager({ projectId, initialDeliverables, isC
     const deleteDeliverable = async (id: string) => {
         const ok = await promptModal({ title: "Delete this deliverable?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
         if (!ok) return;
-        await supabase.from("deliverables" as any).delete().eq("id", id);
+        await supabase.from("deliverables").delete().eq("id", id);
         setDeliverables(prev => prev.filter(d => d.id !== id));
     };
 

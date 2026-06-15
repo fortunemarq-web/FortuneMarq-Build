@@ -262,7 +262,7 @@ export async function saveGmbSnapshot(snapshot: {
 }) {
   const supabase = await createServerClientWithCookies();
   const month = new Date().toISOString().slice(0, 7); // YYYY-MM
-  const { error } = await (supabase as any)
+  const { error } = await supabase
     .from("gmb_snapshots")
     .upsert({ ...snapshot, snapshot_month: month }, { onConflict: "snapshot_month" });
   if (error) return { success: false, error: error.message };

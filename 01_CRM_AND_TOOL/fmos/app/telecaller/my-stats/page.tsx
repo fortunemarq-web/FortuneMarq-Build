@@ -64,7 +64,7 @@ export default function MyStatsPage() {
                 supabase.from("outreach_logs").select("id, outcome").eq("actor_id", userData.user.id).eq("touch_type", "call").gte("created_at", `${today}T00:00:00`).lte("created_at", `${today}T23:59:59`),
                 supabase.from("outreach_logs").select("id, outcome").eq("actor_id", userData.user.id).eq("touch_type", "call"),
                 supabase.from("outreach_logs").select("id, outcome, created_at, touch_type, lead_id, leads(company_name)").eq("actor_id", userData.user.id).order("created_at", { ascending: false }).limit(logLimit),
-                (supabase as any).from("team_targets").select("target_value, daily_target").eq("user_id", userData.user.id).eq("metric", "daily_calls").maybeSingle(),
+                supabase.from("team_targets").select("target_value, daily_target").eq("user_id", userData.user.id).eq("metric", "daily_calls").maybeSingle(),
             ]);
 
             // Streak: fetch last 90 days of call activity
@@ -81,7 +81,10 @@ export default function MyStatsPage() {
             }
 
             const totalInterested = allTimeLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0;
-            const dailyGoal = targetRow?.daily_target ?? targetRow?.target_value ?? 100;
+            // FIXME: team_targets has neither daily_target nor target_value columns,
+            // so this select errors and the goal always falls back to 100. Verify the
+            // intended column/table for the telecaller's daily call goal.
+            const dailyGoal = (targetRow as any)?.daily_target ?? (targetRow as any)?.target_value ?? 100;
             setDailyCallGoal(dailyGoal);
 
             setStats({

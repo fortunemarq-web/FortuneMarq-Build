@@ -16,7 +16,7 @@ export async function POST() {
 
         // 1. Check for follow-ups due soon (within 1 hour)
         const { data: dueSoon } = await supabase
-            .from("follow_ups" as any)
+            .from("follow_ups")
             .select("*, lead:leads(company_name)")
             .eq("assigned_to", user.id)
             .eq("status", "pending")
@@ -27,7 +27,7 @@ export async function POST() {
             for (const fu of (dueSoon as any[])) {
                 // Check if we already sent a due_soon notification for this FU
                 const { data: existing } = await supabase
-                    .from("notifications" as any)
+                    .from("notifications")
                     .select("id")
                     .eq("type", "follow_up_due" as any)
                     .eq("entity_id", (fu as any).id)
@@ -49,7 +49,7 @@ export async function POST() {
 
         // 2. Check for overdue follow-ups
         const { data: overdue } = await supabase
-            .from("follow_ups" as any)
+            .from("follow_ups")
             .select("*, lead:leads(company_name)")
             .eq("assigned_to", user.id)
             .eq("status", "pending")
@@ -59,7 +59,7 @@ export async function POST() {
             for (const fu of (overdue as any[])) {
                 // Check if we already sent an overdue notification
                 const { data: existing } = await supabase
-                    .from("notifications" as any)
+                    .from("notifications")
                     .select("id")
                     .eq("type", "follow_up_overdue" as any)
                     .eq("entity_id", (fu as any).id)

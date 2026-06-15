@@ -27,7 +27,7 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
         let query: any;
 
         if (activeTab === "scripts") {
-            query = supabase.from("sales_scripts" as any).select("*");
+            query = supabase.from("sales_scripts").select("*");
             // Logic for relevant scripts: specific to industry OR global (null)
             // Supabase OR syntax: industry.eq.Tech,industry.is.null
             // But query builder is safer with .or()
@@ -37,7 +37,7 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
                 query = query.is("industry", null);
             }
         } else {
-            query = supabase.from("objection_bank" as any).select("*");
+            query = supabase.from("objection_bank").select("*");
             if (leadIndustry) {
                 query = query.or(`industry.eq.${leadIndustry},industry.is.null`);
             } else {

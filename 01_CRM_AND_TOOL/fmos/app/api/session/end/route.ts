@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     if (sessionId) {
         const supabase = await createServerClientWithCookies();
 
-        await supabase.from("user_sessions" as any)
+        await supabase.from("user_sessions")
             .update({
                 logout_at: new Date().toISOString(),
                 ended_reason: 'logout'

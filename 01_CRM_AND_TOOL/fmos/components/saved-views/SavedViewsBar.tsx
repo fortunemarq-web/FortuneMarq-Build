@@ -54,7 +54,7 @@ export default function SavedViewsBar({
         setIsLoading(true);
         const supabase = createClient();
         const { data, error } = await supabase
-            .from("saved_views" as any)
+            .from("saved_views")
             .select("*")
             .eq("entity_type", entityType)
             .order("name");
@@ -97,8 +97,10 @@ export default function SavedViewsBar({
         };
 
         const { data, error } = await supabase
-            .from("saved_views" as any)
-            .insert(newView)
+            .from("saved_views")
+            // filters/sort are typed configs (JSON-serializable) that don't satisfy
+            // the generated Json index-signature; cast the payload narrowly.
+            .insert(newView as any)
             .select()
             .single();
 
@@ -119,12 +121,12 @@ export default function SavedViewsBar({
 
         const supabase = createClient();
         const { error } = await supabase
-            .from("saved_views" as any)
+            .from("saved_views")
             .update({
                 filters: currentFilters,
                 sort: currentSort,
                 updated_at: new Date().toISOString(),
-            })
+            } as any)
             .eq("id", activeViewId);
 
         if (error) {
@@ -141,7 +143,7 @@ export default function SavedViewsBar({
         if (!ok) return;
 
         const supabase = createClient();
-        const { error } = await supabase.from("saved_views" as any).delete().eq("id", id);
+        const { error } = await supabase.from("saved_views").delete().eq("id", id);
 
         if (error) {
             toast.error("Error deleting view");

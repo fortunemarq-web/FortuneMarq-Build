@@ -5,7 +5,7 @@ import AutomationsClient from "@/components/admin/AutomationsClient";
 export default async function AutomationsPage() {
     const supabase = await createServerClientWithCookies();
     const { data: rules } = await supabase
-        .from("automation_rules" as any)
+        .from("automation_rules")
         .select("id, name, description, trigger, entity_type, priority, is_enabled")
         .order("priority", { ascending: true });
 

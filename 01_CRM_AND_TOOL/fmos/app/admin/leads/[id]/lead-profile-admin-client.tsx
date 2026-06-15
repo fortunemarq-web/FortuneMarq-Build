@@ -228,13 +228,13 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
     setConfirmLoading(true);
     try {
       // 1. Generate agreement number
-      const { count } = await (supabase as any)
+      const { count } = await supabase
         .from("agreements")
         .select("id", { count: "exact", head: true });
       const agreementNumber = `AGR-2026-${String((count || 0) + 1).padStart(3, "0")}`;
 
       // 2. Save agreement record
-      const { data: agr, error: agrErr } = await (supabase as any)
+      const { data: agr, error: agrErr } = await supabase
         .from("agreements")
         .insert({
           lead_id: lead.id,
@@ -846,7 +846,7 @@ function WhatsAppTemplateModal({ onClose, templates, lead, userId }: { onClose: 
   const copyAndLog = async () => {
     setIsCopying(true);
     await navigator.clipboard.writeText(getMessage());
-    const { error: logErr } = await supabase.from("outreach_logs" as any).insert({
+    const { error: logErr } = await supabase.from("outreach_logs").insert({
       lead_id: lead.id,
       touch_type: "whatsapp_template",
       note: `Sent WhatsApp: ${selectedTemplate.name}`,

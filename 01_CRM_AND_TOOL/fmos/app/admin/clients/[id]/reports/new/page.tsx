@@ -50,7 +50,7 @@ export default function AdminNewReportPage() {
         try {
             const { data: userData } = await supabase.auth.getUser();
             const { data: rawData, error } = await supabase
-                .from("client_reports" as any)
+                .from("client_reports")
                 .insert({
                     client_id: clientId,
                     report_month: `${reportMonth}-01`,

@@ -85,7 +85,7 @@ export default function ActivityTimeline({
                     .order("created_at", { ascending: false })
                     .range(pageIdx * pageSize, (pageIdx + 1) * pageSize - 1),
                 supabase
-                    .from("audit_logs" as any)
+                    .from("audit_logs")
                     .select("id, action, summary, old_value, new_value, created_at, user_name")
                     .eq("resource_type", entityType)
                     .eq("resource_id", entityId)

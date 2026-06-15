@@ -57,7 +57,7 @@ async function logAIUsage(feature: string, input: string, output: string, tokens
         const supabase = await createServerClientWithCookies();
         const { data: { user } } = await supabase.auth.getUser();
 
-        await supabase.from("ai_usage_logs" as any).insert({
+        await supabase.from("ai_usage_logs").insert({
             feature,
             input_summary: input.substring(0, 500),
             output_summary: output.substring(0, 500),

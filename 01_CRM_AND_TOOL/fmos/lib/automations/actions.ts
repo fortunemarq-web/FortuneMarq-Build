@@ -87,7 +87,7 @@ async function handleAssign(supabase: any, type: string, id: string, value: stri
     if (value.startsWith("round_robin:")) {
         const poolName = value.split(":")[1];
         // 1. Get pool members
-        const { data: pool } = await supabase.from("assignment_pools" as any)
+        const { data: pool } = await supabase.from("assignment_pools")
             .select("user_id")
             .eq("pool_name", poolName)
             .eq("is_active", true)
@@ -95,7 +95,7 @@ async function handleAssign(supabase: any, type: string, id: string, value: stri
 
         if (pool && pool.length > 0) {
             // 2. Get last state
-            const { data: state } = await supabase.from("assignment_state" as any).select("last_user_id").eq("pool_name", poolName).single();
+            const { data: state } = await supabase.from("assignment_state").select("last_user_id").eq("pool_name", poolName).single();
             let nextIndex = 0;
             if (state && state.last_user_id) {
                 const lastIdx = pool.findIndex((p: any) => p.user_id === state.last_user_id);
@@ -106,7 +106,7 @@ async function handleAssign(supabase: any, type: string, id: string, value: stri
             assignedTo = pool[nextIndex].user_id;
 
             // 3. Update state
-            await supabase.from("assignment_state" as any).upsert({ pool_name: poolName, last_user_id: assignedTo });
+            await supabase.from("assignment_state").upsert({ pool_name: poolName, last_user_id: assignedTo });
         }
     } else {
         assignedTo = value; // Direct UUID
@@ -158,7 +158,7 @@ async function appendTag(supabase: any, type: string, id: string, tag: string, s
 }
 
 async function createNotification(supabase: any, userId: string, title: string, body: string, type: string, id: string) {
-    await supabase.from("notifications" as any).insert({
+    await supabase.from("notifications").insert({
         user_id: userId,
         title,
         body,

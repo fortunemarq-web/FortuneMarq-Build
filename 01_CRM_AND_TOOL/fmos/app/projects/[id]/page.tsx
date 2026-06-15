@@ -57,14 +57,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
   // Fetch Deliverables
   const { data: deliverables } = await supabase
-    .from("deliverables" as any)
+    .from("deliverables")
     .select("*")
     .eq("project_id", id)
     .order("created_at", { ascending: false });
 
   // Fetch Change Requests
   const { data: changeRequests } = await supabase
-    .from("change_requests" as any)
+    .from("change_requests")
     .select("*")
     .eq("project_id", id)
     .order("created_at", { ascending: false });

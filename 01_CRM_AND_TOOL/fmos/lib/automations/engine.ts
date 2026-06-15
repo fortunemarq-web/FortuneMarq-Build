@@ -22,7 +22,7 @@ export async function runTrigger(
     try {
         // 1. Fetch Enabled Rules
         const { data: rulesData, error: rulesError } = await supabase
-            .from("automation_rules" as any)
+            .from("automation_rules")
             .select("*")
             .eq("entity_type", entityType)
             .eq("trigger", trigger)
@@ -51,7 +51,7 @@ export async function runTrigger(
                 // A. Throttle Check
                 if (rule.throttle_minutes > 0) {
                     const { data: throttle } = await (supabase
-                        .from("automation_throttle" as any)
+                        .from("automation_throttle")
                         .select("last_ran_at")
                         .eq("rule_id", rule.id)
                         .eq("entity_type", entityType)
@@ -85,7 +85,7 @@ export async function runTrigger(
                 }
 
                 // D. Update Throttle & Log Success
-                await supabase.from("automation_throttle" as any).upsert({
+                await supabase.from("automation_throttle").upsert({
                     rule_id: rule.id,
                     entity_type: entityType,
                     entity_id: entityId,
@@ -111,7 +111,7 @@ export async function runTrigger(
 }
 
 async function logRun(supabase: any, ruleId: string, entityType: string, entityId: string, trigger: string, status: string, reason: string | null, actions: any[] = [], snapshot: any = {}) {
-    await supabase.from("automation_runs" as any).insert({
+    await supabase.from("automation_runs").insert({
         rule_id: ruleId,
         entity_type: entityType,
         entity_id: entityId,

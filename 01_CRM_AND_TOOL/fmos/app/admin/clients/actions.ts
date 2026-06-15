@@ -139,8 +139,9 @@ export async function deleteClient(
     "upsell_attempts",
   ];
   for (const table of childTables) {
-    const { error } = await (supabase as any)
-      .from(table)
+    const { error } = await supabase
+      // dynamic table name over a fixed allow-list (some may not exist)
+      .from(table as any)
       .delete()
       .eq("client_id", clientId);
     if (error && !/does not exist/i.test(error.message)) {

@@ -5,7 +5,7 @@ export async function updateTelecallerStats(userId: string, outcome: string) {
 
     // 1. Get current stats
     const { data: stats, error: fetchError } = await (supabase
-        .from("telecaller_stats" as any)
+        .from("telecaller_stats")
         .select("*")
         .eq("user_id", userId)
         .single()) as { data: any, error: any };
@@ -52,7 +52,7 @@ export async function updateTelecallerStats(userId: string, outcome: string) {
 
     // 4. Upsert stats
     const { error: upsertError } = await (supabase
-        .from("telecaller_stats" as any))
+        .from("telecaller_stats"))
         .upsert({
             user_id: userId,
             current_streak: currentStreak,

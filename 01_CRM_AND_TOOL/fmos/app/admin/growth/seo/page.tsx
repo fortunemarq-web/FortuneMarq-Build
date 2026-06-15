@@ -17,7 +17,7 @@ export default async function WebsiteSEOTrackerPage() {
 
   const supabase = await createServerClientWithCookies();
   const { data: traffic } = await supabase
-    .from("organic_traffic_snapshots" as any)
+    .from("organic_traffic_snapshots")
     .select("*")
     .order("snapshot_date", { ascending: false })
     .limit(12);

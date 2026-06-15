@@ -61,7 +61,7 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
   useEffect(() => {
     async function load() {
       const { data, error } = await (supabase
-        .from("whatsapp_templates" as any)
+        .from("whatsapp_templates")
         .select("id, name, content, category, lead_type, variables, sent_by")
         .order("category") as any);
       if (error) console.error("Failed to load WhatsApp templates:", error);

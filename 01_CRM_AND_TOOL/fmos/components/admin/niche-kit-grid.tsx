@@ -178,7 +178,7 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
                 landing_page_url: landingPageUrl
             };
 
-            const { data, error } = await supabase.from("niche_kits" as any)
+            const { data, error } = await supabase.from("niche_kits")
                 .upsert(payload)
                 .select()
                 .single();

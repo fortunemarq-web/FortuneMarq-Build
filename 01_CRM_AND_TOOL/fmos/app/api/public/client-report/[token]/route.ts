@@ -21,7 +21,7 @@ export async function GET(
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
-    .from("client_reports" as any)
+    .from("client_reports")
     .select(
       "report_month, report_type, ai_summary, pdf_url, data_snapshot, is_published, magic_link_expires_at, clients(business_name)"
     )

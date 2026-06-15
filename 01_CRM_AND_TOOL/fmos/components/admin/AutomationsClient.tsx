@@ -94,7 +94,7 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
     setSaving(rule.id);
     const next = !rule.is_enabled;
     setRules((prev) => prev.map((r) => r.id === rule.id ? { ...r, is_enabled: next } : r));
-    const { error } = await (supabase as any).from("automation_rules").update({ is_enabled: next }).eq("id", rule.id);
+    const { error } = await supabase.from("automation_rules").update({ is_enabled: next }).eq("id", rule.id);
     if (error) {
       toast.error("Failed to update rule", error.message);
       setRules((prev) => prev.map((r) => r.id === rule.id ? { ...r, is_enabled: !next } : r));
@@ -106,7 +106,7 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
 
   const saveEdit = async (rule: AutomationRule) => {
     setSaving(rule.id);
-    const { error } = await (supabase as any).from("automation_rules")
+    const { error } = await supabase.from("automation_rules")
       .update({ name: rule.name, description: rule.description, priority: rule.priority })
       .eq("id", rule.id);
     if (error) { toast.error("Failed to save", error.message); }
@@ -128,7 +128,7 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
     if (!form.name.trim()) { toast.error("Name required", ""); return; }
     if (actions.length === 0) { toast.error("Add at least one action", "A rule with no actions does nothing."); return; }
     setSaving("new");
-    const { data, error } = await (supabase as any).from("automation_rules")
+    const { data, error } = await supabase.from("automation_rules")
       .insert({
         name: form.name,
         description: form.description || null,

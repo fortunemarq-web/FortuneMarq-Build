@@ -61,13 +61,13 @@ export async function POST(req: NextRequest) {
             .eq("entity_id", merged_id);
 
         // 4. Mark Duplicate Candidates as merged
-        await supabase.from("duplicate_candidates" as any)
+        await supabase.from("duplicate_candidates")
             .update({ status: "merged" })
             .or(`primary_id.eq.${merged_id},duplicate_id.eq.${merged_id}`);
 
         // 5. Create Merge Record
         const { data: { user } } = await supabase.auth.getUser();
-        await supabase.from("merges" as any).insert({
+        await supabase.from("merges").insert({
             entity_type: "lead",
             survivor_id,
             merged_id,
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
         });
 
         // 6. Create Redirect
-        await supabase.from("lead_redirects" as any).insert({
+        await supabase.from("lead_redirects").insert({
             merged_id,
             survivor_id
         });

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const supabase = await createServerClientWithCookies();
 
     // Optimistic update, ignoring return to be fast
-    await supabase.from("user_sessions" as any)
+    await supabase.from("user_sessions")
         .update({ last_seen_at: new Date().toISOString() })
         .eq("id", sessionId)
         .is("logout_at", null); // Only if still open

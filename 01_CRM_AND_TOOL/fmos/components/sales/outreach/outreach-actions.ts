@@ -51,7 +51,7 @@ export async function advanceOutreachStage(
           pdf_name: data.pdf_name || null,
         };
         // Insert PDF delivery record
-        await supabase.from("pdf_deliveries" as any).insert({
+        await supabase.from("pdf_deliveries").insert({
           lead_id: leadId,
           sequence_id: sequenceId,
           pdf_name: data.pdf_name || "Niche Report",
@@ -108,7 +108,7 @@ export async function advanceOutreachStage(
           proposal_type: data.proposal_type || null,
         };
         // Insert proposal
-        await supabase.from("proposals" as any).insert({
+        await supabase.from("proposals").insert({
           lead_id: leadId,
           sequence_id: sequenceId,
           proposal_number: proposalNumber,
