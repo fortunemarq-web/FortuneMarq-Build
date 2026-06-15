@@ -298,14 +298,16 @@ export async function seedWhatsAppTemplates(): Promise<{
         continue;
       }
 
-      // TODO: regenerate types after whatsapp_templates columns migration
+      // id is a NOT NULL text PK with no default; the template name is unique
+      // and human-readable, so use it as the id. `label` is not a real column,
+      // and the body column is `content` (not `message`).
       const { error } = await (supabase as any).from("whatsapp_templates").insert({
+        id: template.name,
         name: template.name,
         category: template.category,
-        label: template.label,
         lead_type: template.lead_type,
         variables: template.variables,
-        message: template.message,
+        content: template.message,
         requires_meta_approval: template.requires_meta_approval,
         meta_category: template.meta_category,
         sent_by: template.sent_by,

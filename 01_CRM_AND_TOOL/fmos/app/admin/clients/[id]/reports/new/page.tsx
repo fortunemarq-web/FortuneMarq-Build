@@ -17,6 +17,9 @@ import { sendNotification } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 
+// Public report magic links expire this many days after creation.
+const REPORT_LINK_TTL_DAYS = 30;
+
 export default function AdminNewReportPage() {
     const { id: clientId } = useParams();
     const router = useRouter();
@@ -55,6 +58,9 @@ export default function AdminNewReportPage() {
                     ai_summary: aiSummary,
                     pdf_url: pdfUrl,
                     is_published: publish,
+                    magic_link_expires_at: new Date(
+                        Date.now() + REPORT_LINK_TTL_DAYS * 24 * 60 * 60 * 1000
+                    ).toISOString(),
                     created_by: userData.user?.id
                 } as any)
                 .select()

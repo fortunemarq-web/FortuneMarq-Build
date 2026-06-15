@@ -43,8 +43,8 @@ export default async function WhatsappTemplatesPage() {
                             Template Engine
                         </h1>
                         <p className="text-slate-500 text-sm max-w-lg">
-                            Build and manage context-aware WhatsApp templates for telecaller outcomes.
-                            Personalize messages by niche, city, and outcome.
+                            Build and manage the WhatsApp template library used by the sales
+                            template picker. Organize by category and lead type (A/B/C/D).
                         </p>
                     </div>
 
