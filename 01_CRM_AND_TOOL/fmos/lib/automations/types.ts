@@ -19,7 +19,12 @@ export interface Action {
     | 'create_task'
     | 'mark_stale'
     | 'notify_admin'
-    | 'notify_owner';
+    | 'notify_owner'
+    | 'send_whatsapp';
+    /**
+     * For `send_whatsapp` this is a WaTemplateConfig (lib/whatsapp/params.ts):
+     * { audience, template | leadTypeTemplates, lang?, params? | headline/detail/link }.
+     */
     value: any;
 }
 

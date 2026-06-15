@@ -2,6 +2,9 @@ import { createAdminClient } from "@/lib/supabase-admin";
 import { Action } from "./types";
 import { logAudit } from "@/lib/audit";
 import { leadStatusUpdate } from "@/lib/pipeline";
+import { sendWhatsAppTemplate } from "@/lib/whatsapp/send";
+import { adminNumbers, entityPhone, isOptedOut, staffPhone } from "@/lib/whatsapp/recipients";
+import { resolveTemplate, buildComponents, type WaTemplateConfig } from "@/lib/whatsapp/params";
 
 // We'll use a server-side client passed from engine usually, but here we create one if needed
 // Actually, engine should pass the client to ensure transaction/context sharing if possible,
@@ -66,6 +69,9 @@ export async function executeAction(action: Action, entityType: string, entityId
                 break;
             case 'create_task':
                 await createTask(supabase, entityType, entityId, action.value, snapshot);
+                break;
+            case 'send_whatsapp':
+                await handleSendWhatsApp(action.value as WaTemplateConfig, entityType, entityId, snapshot);
                 break;
         }
 
@@ -184,4 +190,47 @@ async function createTask(supabase: any, type: string, id: string, config: any, 
         // assigned_to?
         // lead_id: type === 'lead' ? id : null
     });
+}
+
+/**
+ * Send an approved WhatsApp template via an automation rule. Fail-open: any missing
+ * piece (no recipient, opted out, no template, creds unset) simply skips — it never
+ * throws or blocks the rest of the rule. Every send is logged to whatsapp_logs by
+ * send.ts. Nothing fires unless a rule with this action is enabled, so this is inert
+ * until configured.
+ */
+async function handleSendWhatsApp(cfg: WaTemplateConfig | null | undefined, entityType: string, entityId: string, snapshot: any): Promise<void> {
+    if (!cfg) return;
+    const audience = cfg.audience || "lead";
+    const lang = cfg.lang || "en";
+
+    // 1. Resolve recipients by channel.
+    let recipients: string[] = [];
+    if (audience === "admin") {
+        recipients = adminNumbers();
+    } else if (audience === "staff") {
+        const p = await staffPhone(snapshot);
+        if (p) recipients = [p];
+    } else {
+        // lead / client — honor opt-out before anything else.
+        if (isOptedOut(snapshot)) return;
+        const p = entityPhone(snapshot);
+        if (p) recipients = [p];
+    }
+    if (recipients.length === 0) return;
+
+    // 2. Resolve template + build body params from the snapshot.
+    const template = resolveTemplate(cfg, snapshot);
+    if (!template) return;
+    const components = buildComponents(cfg, snapshot);
+
+    // 3. Send (per recipient). Link the lead for traceability where applicable.
+    const leadId = entityType === "lead" ? entityId : (snapshot?.lead_id ?? null);
+    for (const phone of recipients) {
+        await sendWhatsAppTemplate(phone, template, {
+            language: lang,
+            components: components.length ? components : undefined,
+            leadId,
+        });
+    }
 }
