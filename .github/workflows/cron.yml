@@ -1,0 +1,91 @@
+name: FMOS Scheduled Jobs
+
+# Free-tier cron for FMOS. Vercel Hobby only runs cron jobs once per day, which
+# is too slow for SLA escalation and follow-up alerts. GitHub Actions runs on any
+# schedule for free and simply pings the CRON_SECRET-protected endpoints.
+#
+# SETUP (one-time, after deploy):
+#   Repo → Settings → Secrets and variables → Actions:
+#     - Variable  FMOS_BASE_URL   = https://fmos.fortunemarq.com
+#     - Secret    CRON_SECRET     = (same value as in .env.local / Vercel)
+#   The workflow no-ops safely until both are set.
+#
+# Endpoints are idempotent + throttled by the automations engine, so frequent
+# pings are safe. Move these to vercel.json crons once on Vercel Pro if preferred.
+
+on:
+  schedule:
+    # Time-sensitive: every 15 minutes — SLA breaches + due follow-ups
+    - cron: "*/15 * * * *"
+    # Daily 03:00 UTC (08:30 IST): digest, admin alerts, stale-session cleanup
+    - cron: "0 3 * * *"
+  workflow_dispatch: {} # allow manual run from the Actions tab
+
+jobs:
+  high-frequency:
+    if: github.event.schedule == '*/15 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Guard — require config
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$BASE_URL" ] || [ -z "$SECRET" ]; then
+            echo "FMOS_BASE_URL or CRON_SECRET not configured yet — skipping."
+            exit 0
+          fi
+      - name: SLA breach check
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/automations/sla" \
+            -H "Authorization: Bearer $SECRET" || echo "sla ping failed (non-fatal)"
+      - name: Due follow-ups
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/automations/followups" \
+            -H "Authorization: Bearer $SECRET" || echo "followups ping failed (non-fatal)"
+
+  daily:
+    if: github.event.schedule == '0 3 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Guard — require config
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$BASE_URL" ] || [ -z "$SECRET" ]; then
+            echo "FMOS_BASE_URL or CRON_SECRET not configured yet — skipping."
+            exit 0
+          fi
+      - name: Daily digest
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/daily-digest" \
+            -H "Authorization: Bearer $SECRET" || echo "daily-digest ping failed (non-fatal)"
+      - name: Admin alerts
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/admin-alerts" \
+            -H "Authorization: Bearer $SECRET" || echo "admin-alerts ping failed (non-fatal)"
+      - name: Session timeout cleanup
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/session-timeout" \
+            -H "Authorization: Bearer $SECRET" || echo "session-timeout ping failed (non-fatal)"
