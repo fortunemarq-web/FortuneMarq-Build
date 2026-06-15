@@ -2,6 +2,7 @@
 
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
+import { ANTHROPIC_MODELS } from "@/lib/ai-models";
 
 // ─── Strategy AI extraction (server-side, key never touches the browser) ───
 
@@ -64,7 +65,7 @@ Return ONLY valid JSON, no preamble, no explanation. Format:
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: ANTHROPIC_MODELS.smart,
         max_tokens: 4000,
         temperature: 0,
         system: systemPrompt,

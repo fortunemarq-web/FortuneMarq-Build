@@ -1,5 +1,5 @@
 # FMOS — Vercel Deployment Guide
-**App:** `agency-os` (Next.js 16) · **Repo:** github.com/sayedjabeer/FortuneMarq-Build
+**App:** `agency-os` (Next.js 16) · **Repo:** github.com/fortunemarq-web/FortuneMarq-Build
 **App lives in subfolder:** `01_CRM_AND_TOOL/fmos` ← this is the Vercel **Root Directory**
 **Target domain:** `fmos.fortunemarq.com`
 
@@ -7,12 +7,11 @@
 
 ## 0. Pre-flight (do first)
 1. Confirm the GitHub repo is **Private** (Settings → General → Danger Zone → Change visibility). The repo contains lead PII.
-2. Commit + push the latest app changes (cockpit, sales page, next.config):
-   ```bash
-   cd "/Users/fortunemarq/Desktop/FortuneMarq-Build"
-   rm -f .git/index.lock
-   git add 01_CRM_AND_TOOL/fmos/app/sales/page.tsx \
-           01_CRM_AND_TOOL/fmos/components/sales/telecaller-cockpit.tsx \
+2. Commit + push the latest app changes (cockpit, sales page, next.config).
+   On Windows (PowerShell), from the repo root `C:\Users\sayed\FortuneMarq-Build`:
+   ```powershell
+   git add 01_CRM_AND_TOOL/fmos/app/sales/page.tsx `
+           01_CRM_AND_TOOL/fmos/components/sales/telecaller-cockpit.tsx `
            01_CRM_AND_TOOL/fmos/next.config.ts
    git commit -m "FMOS: cockpit + sales updates, prod serverAction origins (pre-deploy)"
    git push origin main

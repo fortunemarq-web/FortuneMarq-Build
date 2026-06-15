@@ -14,6 +14,7 @@
 //    which buildDailySummary() guarantees.)
 
 import { sendWhatsAppTemplate } from "@/lib/whatsapp/send";
+import { ANTHROPIC_MODELS } from "@/lib/ai-models";
 
 export interface DailyMetrics {
   date: string;          // e.g. "15 Jun"
@@ -99,7 +100,7 @@ async function aiSummary(m: DailyMetrics): Promise<string | null> {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: ANTHROPIC_MODELS.smart,
         max_tokens: 300,
         temperature: 0.3,
         system:
@@ -161,8 +162,8 @@ export async function sendDailyReport(supabase: any): Promise<{ sent: number; sk
     {
       type: "body",
       parameters: [
-        { type: "text", parameter_name: "report_date", text: metrics.date },
-        { type: "text", parameter_name: "summary", text: summary },
+        { type: "text", text: metrics.date },
+        { type: "text", text: summary },
       ],
     },
   ];

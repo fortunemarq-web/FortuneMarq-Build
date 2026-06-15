@@ -253,7 +253,7 @@ Afifa's complete world in FMOS. She does everything from this page: see her call
 - The follow-up engine / sidebar
 - Personal daily stats (calls today, meetings booked, PDFs sent)
 - The Script Suggester panel (Smart Pitch Engine) — we are REPLACING its data source, not removing it
-- The Objection Handler (uses OpenRouter AI) — keep as-is
+- The Objection Handler (uses Claude/Anthropic via `lib/anthropic.ts`) — keep as-is
 
 ### 6b. What to REMOVE
 - Manager Leaderboard panel — remove entirely (it was already gated in Phase A; now fully remove the component from the telecaller view)

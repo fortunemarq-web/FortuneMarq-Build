@@ -1,5 +1,5 @@
 # DEPRECATED — Do not use this file
-**See `00_FIX_MASTER.md` and `PHASE_1_DATABASE_MIGRATIONS.md` through `PHASE_6_WHATSAPP_AND_UI.md` instead.**
+**See `PHASE_1_DATABASE_MIGRATIONS.md` through `PHASE_6_WHATSAPP_AND_UI.md` instead.**
 
 ---
 

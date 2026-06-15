@@ -1,7 +1,7 @@
 # FortuneMarq Agency OS (FMOS) — Complete Application Documentation
 
-> **Last Updated:** June 12, 2026
-> **Version:** 0.1.0 (app v4.8 — DB fully synced + inbound engine Stage 0)
+> **Last Updated:** June 15, 2026
+> **Version:** 0.1.0 (app v4.9 — DB fully synced + inbound engine Stage 1, pre-deploy)
 > **Owner:** Jabeer (sayedjabir33@gmail.com)
 > **App Name:** `agency-os`
 
@@ -40,7 +40,7 @@ The following supersedes older statements in this document (full detail in `last
 
 | Area | Change |
 |---|---|
-| Route protection | `proxy.ts` is now deny-by-default: all routes require a session except `/login`, `/lp/*`, `/client/report/*`, `/api/*`. `/admin` is admin-only. |
+| Route protection | `proxy.ts` is the auth gate (Next 16 proxy convention). It is intentionally **fail-open**: every Supabase read is guarded so an RLS/profile/transient error ALLOWS the request through (never locks anyone out). It redirects only on a confirmed no-session (for non-public routes) or a positively-known wrong role. Public: `/login`, `/lp/*`, `/client/report/*`, `/api/*`. `/admin` is admin-only. |
 | RLS | All `USING (true)` policies replaced by migration `20260611000000_harden_rls_policies.sql` — staff-only catch-all, admin-only finance/audit, scoped client-portal access. Helpers: `fmos_role()`, `fmos_is_staff()`, `fmos_client_id()`. |
 | Supabase clients | New `lib/supabase-admin.ts` (`createAdminClient()`, service-role) for cron + public flows. All user-context API routes use `createServerClientWithCookies()`. The old anon `createServerClient()` from `lib/supabase.ts` is no longer used anywhere server-side. |
 | Cron | All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET` via `lib/cron-auth.ts` (fail closed). |
@@ -48,7 +48,7 @@ The following supersedes older statements in this document (full detail in `last
 | Errors | Global toast system (`components/ui/toast.tsx`, mounted in root layout) + `lib/mutate.ts`. High-traffic mutations capture errors and roll back optimistic state. |
 | Audit | DB triggers (`20260611000002_audit_triggers.sql`) on 10 core tables write to `audit_logs` server-side. `ActivityTimeline` merges `activity_events` + `audit_logs`; mounted on lead profile and client overview. |
 | Notifications | `components/ui/notification-bell.tsx` is now mounted (mobile header + floating desktop top-right). Duplicate `components/layout/notification-bell.tsx` deleted. |
-| Performance | Hot-column indexes (`20260611000003_hot_column_indexes.sql`); `LeadsList` paginates at the DB (50/page); outreach board fetch fixed (now selects `updated_at`/`assigned_to`) and capped. |
+| Performance | Hot-column indexes (`20260611000003_hot_column_indexes.sql`); `LeadsList` paginates at the DB (50/page); outreach board fetch is capped. (`leads` has no `updated_at`/`assigned_to` columns — see the Leads-columns note above.) |
 | Meetings | `meeting_link` / `meeting_notes` are now a versioned migration (`20260611000001_leads_meeting_columns.sql`) and present in `database.types.ts`. |
 | Public flows | Landing-page lead capture is validated + service-role; magic-link reports served by `app/api/public/client-report/[token]/route.ts`. |
 
@@ -120,7 +120,7 @@ graph LR
 |---|---|
 | **Lead Management** | CSV upload, manual add, A/B/C/D classification, niche scripts |
 | **Telecaller Cockpit** | Power dialer, call scripts, outcome logging, follow-up scheduling |
-| **Outreach Board** | Kanban-style pipeline with 13 stages (8 active + 5 closed) |
+| **Outreach Board** | Kanban-style pipeline with 17 stages in 3 groups (9 active + 4 parked + 4 closed) |
 | **Meetings** | WhatsApp templates, browser notifications, pre-meeting intel, post-meeting flow |
 | **Proposals** | 3-step consultative proposal builder with service selection, preview, and WhatsApp delivery |
 | **Client Management** | Health scores, MRR tracking, onboarding checklists, asset vault, renewals |
@@ -240,7 +240,8 @@ fmos/
 │   ├── normalize.ts        # Data normalization
 │   ├── performance.ts      # Performance metrics
 │   ├── file-service.ts     # File upload/download
-│   ├── openrouter.ts       # AI model integration
+│   ├── anthropic.ts        # Anthropic API integration (callAnthropic)
+│   ├── ai-models.ts        # Centralized Anthropic model IDs
 │   ├── project-utils.ts    # Project helper functions
 │   └── utils.ts            # General utilities (cn function)
 ├── types/                  # TypeScript type definitions
@@ -302,7 +303,7 @@ sequenceDiagram
 
 ### Login Page (`/login`)
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/login/page.tsx)
+**File:** [page.tsx](app/login/page.tsx)
 
 | Element | Description |
 |---|---|
@@ -331,7 +332,7 @@ sequenceDiagram
 
 ### Root Layout
 
-**File:** [layout.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/layout.tsx)
+**File:** [layout.tsx](app/layout.tsx)
 
 The root layout wraps every page with:
 
@@ -342,7 +343,7 @@ The root layout wraps every page with:
 
 ### Sidebar Navigation
 
-**File:** [app-sidebar.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/app-sidebar.tsx)
+**File:** [app-sidebar.tsx](components/ui/app-sidebar.tsx)
 
 | Feature | Description |
 |---|---|
@@ -381,7 +382,7 @@ The root layout wraps every page with:
 
 ### 6.1 Root Page `/`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/page.tsx)
+**File:** [page.tsx](app/page.tsx)
 
 **Purpose:** Authentication gateway — checks if user is logged in and redirects to the appropriate role-based dashboard.
 
@@ -408,7 +409,7 @@ The root layout wraps every page with:
 
 ### 6.3 Admin Dashboard `/admin`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/page.tsx)
+**File:** [page.tsx](app/admin/page.tsx)
 
 **Purpose:** The admin's "Morning Dashboard" — pure operational intelligence. Shows everything the agency owner needs to see first thing in the morning.
 
@@ -475,8 +476,8 @@ The root layout wraps every page with:
 ### 6.4 Sales / Telecaller Cockpit `/sales`
 
 **Files:**
-- [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/sales/page.tsx) (Server component)
-- [telecaller-cockpit.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/sales/telecaller-cockpit.tsx) (Client component — 79,944 bytes)
+- [page.tsx](app/sales/page.tsx) (Server component)
+- [telecaller-cockpit.tsx](components/sales/telecaller-cockpit.tsx) (Client component — 79,944 bytes)
 
 **Purpose:** The primary calling interface. Shows ALL leads and provides scripts, outcome logging, and follow-up management. Available to **ALL roles** (not just telecallers).
 
@@ -513,19 +514,23 @@ Derived automatically by `getLeadScriptType()`:
 | **D** | `serp_ranked = false` + `has_website = false` (low-search niche) | Amber badge |
 
 #### Call Script System
-When a lead is selected, the cockpit shows an industry-specific call script from [niche-scripts.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/niche-scripts.ts) (31,847 bytes). Scripts are personalized based on lead type A/B/C/D.
+When a lead is selected, the cockpit shows an industry-specific call script from [niche-scripts.ts](lib/niche-scripts.ts) (31,847 bytes). Scripts are personalized based on lead type A/B/C/D.
 
-#### 7 Call Outcome Buttons
+#### 9 Call Outcome Buttons
 
-| Button | Outcome ID | Sets `outreach_stage` to |
+Source of truth: the `OUTCOMES` array in `components/sales/telecaller-cockpit.tsx`.
+
+| Button label | Outcome ID | Sets `outreach_stage` to |
 |---|---|---|
-| 📤 **Sent Curiosity** | CURIOUS | `curiosity_sent` |
-| 📄 **Sent PDF** | PDF_SENT | `pdf_sent` |
-| 📅 **Follow-up Booked** | FOLLOW_UP | `follow_up_due` |
-| 📞 **Will Call Back** | FOLLOW_BACK | `follow_back` |
-| ❌ **No Answer** | NO_ANSWER | `no_answer` |
-| 🚫 **Not Interested** | NOT_INTERESTED | `not_interested` |
-| 🤝 **Meeting Booked** | MEETING | `meeting_booked` |
+| Interested — Book Meeting Now | INTERESTED_BOOK | `meeting_booked` |
+| Interested — Follow Up Later | INTERESTED_FOLLOW_UP | `follow_up_due` |
+| Interested — Send Info / PDF | INTERESTED_SEND_INFO | `pdf_sent` |
+| Not Interested | NOT_INTERESTED | `not_interested` |
+| Follow Back Later | FOLLOW_BACK | `follow_back` |
+| Wrong / Dead Number | WRONG_NUMBER | `dead` |
+| No Answer | NO_ANSWER | `no_answer` |
+| Gatekeeper — Owner Not Available | GATEKEEPER | `gatekeeper` |
+| Language Barrier | LANGUAGE_BARRIER | `language_barrier` |
 
 After logging an outcome:
 1. DB write to update lead's `outreach_stage`, `last_outcome`, `last_outreach_at`
@@ -547,8 +552,8 @@ Shows leads where `outreach_stage` IN (`follow_up_due`, `no_answer`, `follow_bac
 ### 6.5 Outreach Board `/admin/outreach`
 
 **Files:**
-- [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/outreach/page.tsx)
-- [outreach-board-client.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/outreach/outreach-board-client.tsx)
+- [page.tsx](app/admin/outreach/page.tsx)
+- [outreach-board-client.tsx](app/admin/outreach/outreach-board-client.tsx)
 
 **Purpose:** Kanban-style pipeline visualization of all leads by outreach stage.
 
@@ -607,8 +612,8 @@ Each lead card shows:
 ### 6.6 Meetings Page `/admin/meetings`
 
 **Files:**
-- [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/meetings/page.tsx)
-- [meetings-client.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/meetings/meetings-client.tsx) (41,847 bytes)
+- [page.tsx](app/admin/meetings/page.tsx)
+- [meetings-client.tsx](app/admin/meetings/meetings-client.tsx) (41,847 bytes)
 
 **Purpose:** Manage all leads with `outreach_stage = 'meeting_booked'`.
 
@@ -646,7 +651,7 @@ Via `getMeetingStatus()`:
 
 ### 6.7 Proposals `/admin/proposals`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/proposals/page.tsx)
+**File:** [page.tsx](app/admin/proposals/page.tsx)
 
 **Purpose:** Lists all proposals and identifies leads that need proposals created.
 
@@ -673,8 +678,8 @@ Via `getMeetingStatus()`:
 ### 6.8 Proposal Creator `/admin/leads/[id]/proposal/new`
 
 **Files:**
-- [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/%5Bid%5D/proposal/new/page.tsx)
-- [proposal-creator.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/proposals/proposal-creator.tsx) (73,910 bytes)
+- [page.tsx](app/admin/leads/[id]/proposal/new/page.tsx)
+- [proposal-creator.tsx](components/proposals/proposal-creator.tsx) (73,910 bytes)
 
 **Purpose:** Full 3-step consultative proposal builder.
 
@@ -689,7 +694,7 @@ Via `getMeetingStatus()`:
 | **Right summary panel** | Sticky panel showing: total setup, total monthly, commitment badges |
 
 #### 7 Available Services
-(From [services_data.json](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/services_data.json)):
+(From [services_data.json](lib/data/services_data.json)):
 
 1. **WEBSITE** — Website Design & Development
 2. **GMB** — Google My Business Optimization
@@ -728,8 +733,8 @@ The preview generates a professional multi-section document:
 ### 6.9 Lead Profile `/admin/leads/[id]`
 
 **Files:**
-- [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/%5Bid%5D/page.tsx)
-- [lead-profile-admin-client.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/leads/%5Bid%5D/lead-profile-admin-client.tsx) (35,930 bytes)
+- [page.tsx](app/admin/leads/[id]/page.tsx)
+- [lead-profile-admin-client.tsx](app/admin/leads/[id]/lead-profile-admin-client.tsx) (35,930 bytes)
 
 **Purpose:** Complete 360° view of a single lead with all outreach history, proposals, and actions.
 
@@ -755,7 +760,7 @@ The preview generates a professional multi-section document:
 
 ### 6.10 Clients List `/admin/clients`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/page.tsx)
+**File:** [page.tsx](app/admin/clients/page.tsx)
 
 **Purpose:** Master client list with health scores, MRR, and operational metrics.
 
@@ -782,7 +787,7 @@ The preview generates a professional multi-section document:
 
 ### 6.11 Client Profile `/admin/clients/[id]`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/clients/%5Bid%5D/page.tsx)
+**File:** [page.tsx](app/admin/clients/[id]/page.tsx)
 
 **Purpose:** Full client profile with 7 tabs covering all aspects of the relationship.
 
@@ -812,13 +817,13 @@ The preview generates a professional multi-section document:
 - Strategy team, strategy runs
 - Activity feed (from `activity_events` table)
 - Invoices (from `getInvoicesByClient()`)
-- WhatsApp logs (from `whatsapp_message_log` table)
+- WhatsApp logs (from `whatsapp_logs` table)
 
 ---
 
 ### 6.12 Tasks `/tasks`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/tasks/page.tsx)
+**File:** [page.tsx](app/tasks/page.tsx)
 
 **Purpose:** Task management board with role-based views.
 
@@ -838,7 +843,7 @@ The preview generates a professional multi-section document:
 
 ### 6.13 Projects `/projects`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/projects/page.tsx)
+**File:** [page.tsx](app/projects/page.tsx)
 
 **Purpose:** Project management dashboard.
 
@@ -858,7 +863,7 @@ The preview generates a professional multi-section document:
 
 ### 6.14 Finance Dashboard `/admin/finance`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/finance/page.tsx)
+**File:** [page.tsx](app/admin/finance/page.tsx)
 
 **Purpose:** Complete financial overview with revenue split, invoicing, and P&L.
 
@@ -899,7 +904,7 @@ The preview generates a professional multi-section document:
 
 ### 6.15 Growth Hub `/admin/growth`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/growth/page.tsx)
+**File:** [page.tsx](app/admin/growth/page.tsx)
 
 **Purpose:** Track FortuneMarq's own marketing and client acquisition growth.
 
@@ -925,7 +930,7 @@ The preview generates a professional multi-section document:
 
 ### 6.16 Team Management `/admin/team`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/team/page.tsx)
+**File:** [page.tsx](app/admin/team/page.tsx)
 
 **Purpose:** Team overview with task stats, targets, and performance tracking.
 
@@ -943,7 +948,7 @@ The preview generates a professional multi-section document:
 
 ### 6.17 Strategy Engine `/admin/strategy`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/admin/strategy/page.tsx)
+**File:** [page.tsx](app/admin/strategy/page.tsx)
 
 **Purpose:** Strategy-to-task engine for structured client strategy planning.
 
@@ -956,7 +961,7 @@ The preview generates a professional multi-section document:
 
 ### 6.18 Strategist Dashboard `/strategist`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/strategist/page.tsx)
+**File:** [page.tsx](app/strategist/page.tsx)
 
 **Purpose:** Pipeline Kanban board for the strategist role.
 
@@ -975,7 +980,7 @@ The preview generates a professional multi-section document:
 
 ### 6.19 Staff Dashboard `/staff`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/staff/page.tsx)
+**File:** [page.tsx](app/staff/page.tsx)
 
 **Purpose:** Personal task dashboard for staff/execution specialists.
 
@@ -996,7 +1001,7 @@ The preview generates a professional multi-section document:
 
 ### 6.21 Client Portal `/client/dashboard`
 
-**File:** [page.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/app/client/dashboard/page.tsx)
+**File:** [page.tsx](app/client/dashboard/page.tsx)
 
 **Purpose:** External-facing dashboard where clients log in to see their project progress.
 
@@ -1069,7 +1074,7 @@ The preview generates a professional multi-section document:
 
 ### Command Palette (⌘K / Ctrl+K)
 
-**File:** [command-palette.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/command-palette.tsx)
+**File:** [command-palette.tsx](components/ui/command-palette.tsx)
 
 **Purpose:** Spotlight-style global search across all data.
 
@@ -1086,7 +1091,7 @@ The preview generates a professional multi-section document:
 
 ### Notification Bell
 
-**File:** [notification-bell.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/notification-bell.tsx)
+**File:** [notification-bell.tsx](components/ui/notification-bell.tsx)
 
 | Feature | Detail |
 |---|---|
@@ -1101,7 +1106,7 @@ The preview generates a professional multi-section document:
 
 ### Session Heartbeat
 
-**File:** [session-heartbeat.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/session-heartbeat.tsx)
+**File:** [session-heartbeat.tsx](components/session-heartbeat.tsx)
 
 - Invisible component rendered in root layout
 - Pings `/api/session/ping` every 120 seconds (2 minutes) via `POST` with `keepalive: true`
@@ -1110,13 +1115,13 @@ The preview generates a professional multi-section document:
 
 ### Activity Timeline
 
-**File:** [ActivityTimeline.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ActivityTimeline.tsx) (8,094 bytes)
+**File:** [ActivityTimeline.tsx](components/ActivityTimeline.tsx) (8,094 bytes)
 
 Reusable timeline component for displaying chronological events with icons, timestamps, and descriptions.
 
 ### File Manager
 
-**File:** [file-manager.tsx](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/components/ui/file-manager.tsx) (14,307 bytes)
+**File:** [file-manager.tsx](components/ui/file-manager.tsx) (14,307 bytes)
 
 File upload and management component with drag-and-drop support via `react-dropzone`.
 
@@ -1218,7 +1223,7 @@ The central entity for the sales pipeline.
 | industry | text | Niche/industry |
 | city | text | City |
 | status | text | Legacy status field |
-| lead_type | text | A/B/C/D classification |
+| lead_type | text | `inbound` or `outbound` (set from lead source). The A/B/C/D script type is DERIVED at runtime by `getLeadScriptType()`, not stored here. |
 | has_website | boolean | Whether they have a website |
 | website_link | text | URL |
 | gmb_link | text | Google My Business URL |
@@ -1343,7 +1348,7 @@ The central entity for the sales pipeline.
 | `market_insights` | Industry + city search volume data |
 | `team_targets` | Team performance targets |
 | `expenses` | Business expenses for P&L |
-| `whatsapp_message_log` | WhatsApp message audit trail |
+| `whatsapp_logs` | WhatsApp message audit trail |
 | `whatsapp_templates` | Reusable WhatsApp message templates |
 | `upsell_attempts` | Client upsell attempt records |
 | `deals` | Deal tracking (links leads to clients) |
@@ -1357,17 +1362,17 @@ The central entity for the sales pipeline.
 
 | File | Function | Description |
 |---|---|---|
-| [upload-leads.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/upload-leads.ts) | `uploadLeads()` | Batch CSV upload with duplicate detection (name + phone normalization). Inserts in batches of 50. Returns `{ addedCount, skippedCount }` |
-| [bulk-actions.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/bulk-actions.ts) | `bulkUpdateEntity()` | Bulk update any entity type (lead/deal/project/task) by IDs. Logs audit for each record. |
-| [delete-data.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/delete-data.ts) | Various delete functions | Data deletion with safety checks |
-| [analyze-data.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/analyze-data.ts) | Data analysis | Analytics and data processing |
-| [reset-database.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/actions/reset-database.ts) | `resetDatabase()` | Full database reset (development only) |
+| [upload-leads.ts](actions/upload-leads.ts) | `uploadLeads()` | Batch CSV upload with duplicate detection (name + phone normalization). Inserts in batches of 50. Returns `{ addedCount, skippedCount }` |
+| [bulk-actions.ts](actions/bulk-actions.ts) | `bulkUpdateEntity()` | Bulk update any entity type (lead/deal/project/task) by IDs. Logs audit for each record. |
+| [delete-data.ts](actions/delete-data.ts) | Various delete functions | Data deletion with safety checks |
+| [analyze-data.ts](actions/analyze-data.ts) | Data analysis | Analytics and data processing |
+| [reset-database.ts](actions/reset-database.ts) | `resetDatabase()` | Full database reset (development only) |
 
 ### API Routes (`/app/api/`)
 
 | Route | Purpose |
 |---|---|
-| `/api/ai/*` | AI-powered features (OpenRouter integration) |
+| `app/api/ai/actions.ts` | AI-powered features — a server-actions module (`"use server"`), NOT an HTTP route. Calls Anthropic via `lib/anthropic.ts`. |
 | `/api/attendance/*` | Attendance tracking endpoints |
 | `/api/cron/*` | Scheduled task handlers |
 | `/api/export/*` | CSV/data export endpoints |
@@ -1380,7 +1385,7 @@ The central entity for the sales pipeline.
 
 ## 12. Services Data Model
 
-Services are defined in [services_data.json](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/data/services_data.json) with full details per service.
+Services are defined in [services_data.json](lib/data/services_data.json) with full details per service.
 
 ### 7 Services
 
@@ -1409,7 +1414,7 @@ Services are defined in [services_data.json](file:///Users/fortunemarq/Desktop/F
 
 ### Audit Logging
 
-**File:** [audit.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/audit.ts)
+**File:** [audit.ts](lib/audit.ts)
 
 ```typescript
 logAudit({
@@ -1428,17 +1433,17 @@ Writes to `audit_logs` table with: actor_id (from session), action, entity_type,
 
 | File | Description |
 |---|---|
-| [niche-scripts.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/niche-scripts.ts) | 31KB of industry-specific call scripts for telecaller cockpit |
-| [pitch-engine.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/pitch-engine.ts) | AI-powered pitch generation engine |
-| [lead-scoring.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/lead-scoring.ts) | Lead quality scoring algorithm |
-| [openrouter.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/openrouter.ts) | OpenRouter API integration for AI features |
-| [notifications.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/notifications.ts) | `sendNotification()` helper function |
-| [filtering.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/filtering.ts) | Reusable data filtering utilities |
-| [normalize.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/normalize.ts) | Data normalization (phone numbers, names) |
-| [performance.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/performance.ts) | Performance metric calculations |
-| [file-service.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/file-service.ts) | File upload/download service |
-| [project-utils.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/project-utils.ts) | Project helper functions |
-| [utils.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/lib/utils.ts) | `cn()` function — Tailwind class merge helper |
+| [niche-scripts.ts](lib/niche-scripts.ts) | 31KB of industry-specific call scripts for telecaller cockpit |
+| [pitch-engine.ts](lib/pitch-engine.ts) | AI-powered pitch generation engine |
+| [lead-scoring.ts](lib/lead-scoring.ts) | Lead quality scoring algorithm |
+| [anthropic.ts](lib/anthropic.ts) | Anthropic API integration for AI features (`callAnthropic()`); model IDs centralized in `lib/ai-models.ts` |
+| [notifications.ts](lib/notifications.ts) | `sendNotification()` helper function |
+| [filtering.ts](lib/filtering.ts) | Reusable data filtering utilities |
+| [normalize.ts](lib/normalize.ts) | Data normalization (phone numbers, names) |
+| [performance.ts](lib/performance.ts) | Performance metric calculations |
+| [file-service.ts](lib/file-service.ts) | File upload/download service |
+| [project-utils.ts](lib/project-utils.ts) | Project helper functions |
+| [utils.ts](lib/utils.ts) | `cn()` function — Tailwind class merge helper |
 
 ---
 
@@ -1448,12 +1453,22 @@ Writes to `audit_logs` table with: actor_id (from session), action, entity_type,
 
 ### Required Variables
 
+All 10 production variables (set in Vercel; values from local `.env.local`):
+
 | Variable | Purpose |
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (`https://cnwooodktqwvpzkucskm.supabase.co`) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous API key (client-side) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) |
-| `ANTHROPIC_API_KEY` | API key for AI features |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only — cron + public lead capture) |
+| `ANTHROPIC_API_KEY` | API key for AI features (`lib/anthropic.ts`) |
+| `CRON_SECRET` | Bearer secret required by all `/api/cron/*` routes (`lib/cron-auth.ts`) |
+| `INBOUND_WEBHOOK_SECRET` | Secret for `/api/inbound/*` webhooks |
+| `WHATSAPP_API_TOKEN` | WhatsApp Cloud API access token |
+| `WHATSAPP_PHONE_NUMBER_ID` | WhatsApp Cloud API phone-number ID |
+| `WHATSAPP_VERIFY_TOKEN` | Verify token for the WhatsApp webhook handshake |
+| `META_APP_SECRET` | Meta app secret (webhook signature verification) |
+
+Optional (add when the feature is enabled): `ADMIN_WHATSAPP_NUMBERS`, `DAILY_REPORT_TEMPLATE`, `DAILY_REPORT_TEMPLATE_LANG`, `WHATSAPP_LP_FALLBACK_URL`, `WA_OUTCOME_TEMPLATES`, `WA_OUTCOME_TEMPLATE_LANG`, `NEXT_DIST_DIR`. See `.env.example` for the full documented list.
 
 ### Config Validation
 The `getSupabaseConfig()` function in `lib/supabase.ts` validates both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` at startup. If either is missing or set to placeholder values, it throws a descriptive error with instructions.
@@ -1488,7 +1503,7 @@ ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
 
 ### Testing
 - **Framework:** Playwright
-- **Config:** [playwright.config.ts](file:///Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/playwright.config.ts)
+- **Config:** [playwright.config.ts](playwright.config.ts)
 - **Tests:** Located in `/tests/` directory
 - **Results:** Stored in `/test-results/`
 

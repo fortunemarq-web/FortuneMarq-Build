@@ -1,11 +1,11 @@
 # 01 — CRM & Tool (FMOS)
-**Last Updated:** 2026-06-12 | **Status:** ✅ v4.8 — DATABASE FULLY SYNCED (all ~19 pending migrations executed 2026-06-12; 38 tables created — attendance, notifications, automations, marketing, duplicates, sessions). Notifications + daily-digest cron live, team management (invite/role/password/deactivate/remove), invoice partial payments, real telecaller analytics. **PHASE F inbound engine Stage 0 built**: universal inbound pipeline + webhook (`/api/inbound/[channel]`), LP UTM attribution, round-robin auto-assignment, "Inbound & Funnel" marketing tab with funnel/CPL/UTM-builder/spend-CSV-import. Deploy target is now **Vercel** (vercel.json crons ready; env needs SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, INBOUND_WEBHOOK_SECRET). Latest detail: `fmos/COWORK_HANDOFF.md` + `fmos/00_MASTER_BUILD_PLAN.md`. Next: deploy → Phase F Stage 1 (WhatsApp Cloud API + Meta leadgen webhooks).
+**Last Updated:** 2026-06-15 | **Status:** ✅ v4.9 — DATABASE FULLY SYNCED (all ~19 pending migrations executed 2026-06-12; 38 tables created — attendance, notifications, automations, marketing, duplicates, sessions). Notifications + daily-digest cron live, team management (invite/role/password/deactivate/remove), invoice partial payments, real telecaller analytics. **PHASE F inbound engine Stage 0 built**: universal inbound pipeline + webhook (`/api/inbound/[channel]`), LP UTM attribution, round-robin auto-assignment, "Inbound & Funnel" marketing tab with funnel/CPL/UTM-builder/spend-CSV-import. Deploy target is now **Vercel** (vercel.json crons ready; env needs SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, INBOUND_WEBHOOK_SECRET). Latest detail: `fmos/COWORK_HANDOFF.md` + `fmos/00_MASTER_BUILD_PLAN.md`. Next: deploy → Phase F Stage 1 (WhatsApp Cloud API + Meta leadgen webhooks).
 
 ## Folder Purpose
 Plan, design, and execute all changes to the FortuneMarq Operating System (FMOS). This is the central nervous system of the entire agency. Every other folder either feeds data into FMOS or is managed through it. Decisions here affect every team member and every workflow.
 
 ## What FMOS Is
-A full agency operating system built on Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Supabase. Currently on localhost:3000. Target deployment: fmos.fortunemarq.com on Hostinger.
+A full agency operating system built on Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Supabase. Currently on localhost:3000. Target deployment: **Vercel** (Hostinger is shared hosting and can't run Next SSR — it is used only for the domain DNS + client sites). The app is reached at `fmos.fortunemarq.com` via a Hostinger CNAME pointing at Vercel.
 
 ---
 
@@ -13,7 +13,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 
 ### fmos/ — The Next.js Application
 **Root documentation files:**
-- `00_MASTER_BUILD_PLAN.md` — Full build plan v4.5, all phase statuses confirmed complete for Phases A+B
+- `00_MASTER_BUILD_PLAN.md` — Full build plan (v4.9), all phase statuses through Phase F Stage 1
 - `00_QUICK_REFERENCE.md` — Quick start guide for Claude/Antigravity sessions
 - `APPLICATION_DOCUMENTATION.md` — Comprehensive technical documentation (DB schema, routes, components)
 - `CLAUDE.md` — Instructions for Claude Code to work on this codebase
@@ -22,7 +22,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `CSV_UPLOAD_FORMAT.md` — Format guide for lead CSV uploads
 - `README.md` — Standard project readme
 - `ADD_BUILD_TYPE_COLUMN.sql` — SQL migration for build_type column
-- `.env.local` — Supabase URL, anon key, OpenRouter API key
+- `.env.local` — Supabase URL, anon key, `ANTHROPIC_API_KEY` (Claude; the app uses Anthropic directly, not OpenRouter)
 - `PHASE_A_CLEANUP.md` — Phase A spec: remove leaderboards, cleanup bugs (COMPLETE)
 - `PHASE_B_ROLE_VIEWS.md` — Phase B spec: telecaller view, cousin view, admin cleanup (COMPLETE)
 - `PHASE_C_OUTREACH_LEADS.md` — Phase C spec: Outreach Board + Lead Profile + PDF Log (✅ COMPLETE)
@@ -161,10 +161,10 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - Upsell Queue: surface clients with Excellent health score for 2+ months
 
 ### Deployment Checklist (after all phases)
-- [ ] Add OPENROUTER_API_KEY to Hostinger env vars
+- [ ] Add `ANTHROPIC_API_KEY` to Vercel env vars
 - [ ] Create Afifa's telecaller account in /admin/users
 - [ ] Create Zaid and Sufiyan accounts
-- [ ] Point fmos.fortunemarq.com subdomain to Hostinger
+- [ ] Point fmos.fortunemarq.com subdomain to Vercel (CNAME added in Hostinger DNS)
 - [x] Upload 11 Hubli_Final CSVs (~858 leads) — DONE via manual upload before 2026-04-29
 - [ ] Run `/admin/bulk-import` to load remaining ~6,300 leads from other cities
 - [ ] Enter Austin Dental Spa and OM SAI TRAVELS real data
@@ -187,7 +187,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 ---
 
 ## Key Decisions Made (Locked)
-- URL: fmos.fortunemarq.com (Hostinger subdomain) — never change
+- URL: fmos.fortunemarq.com (subdomain via Hostinger DNS → Vercel) — never change
 - Auth: cookie-based, `createServerClientWithCookies()` on all server components — never change
 - DB: Supabase (project ID: cnwooodktqwvpzkucskm) — never switch
 - Stack: Next.js 16 + TypeScript + Tailwind CSS v4 — never switch

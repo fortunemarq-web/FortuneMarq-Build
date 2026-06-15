@@ -1,10 +1,11 @@
 import { createServerClientWithCookies } from "./supabase-server";
+import { ANTHROPIC_MODELS } from "./ai-models";
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const MODEL = "claude-haiku-4-5-20251001";
+const MODEL = ANTHROPIC_MODELS.fast;
 
-export async function callOpenRouter(
+export async function callAnthropic(
     systemPrompt: string,
     userPrompt: string,
     feature: string,

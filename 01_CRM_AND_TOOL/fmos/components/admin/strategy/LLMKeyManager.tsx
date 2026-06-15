@@ -3,10 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Copy, Key, Settings2, Code, ArrowRight, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ANTHROPIC_MODELS } from "@/lib/ai-models";
 
 export default function LLMKeyManager() {
   const [key, setKey] = useState("");
-  const [model, setModel] = useState("claude-sonnet-4-20250514");
+  const [model, setModel] = useState<string>(ANTHROPIC_MODELS.smart);
   const [saved, setSaved] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -89,9 +90,8 @@ export default function LLMKeyManager() {
                 onChange={(e) => setModel(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-mono focus:border-indigo-400 focus:outline-none appearance-none"
               >
-                <option value="claude-sonnet-4-20250514">claude-sonnet-4-20250514</option>
-                <option value="claude-3-7-sonnet-20250219">Claude 3.7 Sonnet</option>
-                <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+                <option value={ANTHROPIC_MODELS.smart}>Claude Sonnet 4.6 (recommended)</option>
+                <option value={ANTHROPIC_MODELS.fast}>Claude Haiku 4.5 (faster, cheaper)</option>
               </select>
             </div>
           </div>

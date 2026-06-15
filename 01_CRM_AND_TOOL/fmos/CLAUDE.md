@@ -1,19 +1,26 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-14 (Phase 1 bug-fix sweep complete — ALL critical bugs fixed)
+# Last updated: 2026-06-15 (build phase complete, committed+pushed, MID-DEPLOY on Vercel)
 # ➤ CONTINUING WORK? Read COWORK_HANDOFF.md FIRST — full state + next steps.
 #
-# LATEST SESSION (2026-06-14): PHASE 1 (bug audit) FULLY COMPLETE.
-# 17 critical bugs fixed: admin greeting now dynamic from auth profile + time-aware,
-# P&L health score + cash reserves now calculated from real data, invoice revenue
-# filter fixed (setup_fee), growth hub task checkboxes write to DB, window.location.reload()
-# replaced with router.refresh() everywhere, team scorecards use outreach_logs (not
-# call_logs) + proposals (not deals), GSC placeholder replaces mock organic stats,
-# automations inline CRUD (no more 404 edit links), proposal Done → /admin/proposals,
-# agreement confirm button writes to DB, strategist cards navigate to lead profile,
-# landing page cleaned (no "(Sample)", no dead play button). TypeScript: 0 errors.
-# Confirmed active .env.local on this machine. Dev server running on localhost:3000.
-# NEXT: Phase 2 — new features. Start with middleware.ts auth gate (P0). Details: last_session.md.
+# LATEST SESSION (2026-06-15): Build phase DONE + accounts consolidated + deploy started.
+# - Marketing fixed: 9 fake widgets → real data/honest empty states; strategy→outcome loop;
+#   new Marketing Hub (/admin/marketing-hub). Lead scoring wired into telecaller cockpit
+#   (queue sorts hottest-first). Onboarding tightened into build-ready intake (GENERAL basics +
+#   WEBSITE brief + WhatsApp/AI services + readiness badges). New Delivery Load dashboard
+#   (/admin/delivery-load). GitHub-Actions cron scheduler (.github/workflows/cron.yml).
+# - AUTH GATE: lives in proxy.ts (Next 16 convention, NOT middleware.ts). Rewritten FAIL-OPEN —
+#   this was the historic lockout cause (unguarded getUser + .single()); fixed. Edit proxy.ts, not middleware.ts.
+# - Daily AI WhatsApp report Phase 1 built (lib/reports/dailyReport.ts, wired into daily-digest cron).
+# - SCHEMA: no pending SQL — all columns/tables exist (verify: supabase/2026-06-15_verify_schema.sql).
+# - ACCOUNTS consolidated under company: GitHub fortunemarq-web (repo TRANSFERRED off personal
+#   sayedjabeer), Supabase Owner via that GitHub, Vercel via that GitHub. Repo:
+#   github.com/fortunemarq-web/FortuneMarq-Build (branch main). Committed+pushed: 169a14e. TypeScript: 0 errors.
+# - HOSTING: Hostinger Business = shared (can't run Next SSR) → use for domain DNS + client sites.
+#   FMOS deploys on Vercel free + Hostinger CNAME for fmos.fortunemarq.com.
+# NEXT: finish Vercel deploy (Root Directory=01_CRM_AND_TOOL/fmos + 10 env vars → Deploy), then
+#   post-deploy config (domain CNAME, Supabase redirect URLs, WhatsApp webhook, GitHub cron secrets).
+#   New-feature ideas are parked in FUTURE_FEATURES.md (do NOT build mid-deploy). Details: COWORK_HANDOFF.md.
 #
 # KEY CONVENTIONS ADDED 2026-06-11 (evening — UI/UX session):
 # - Design system lives in app/globals.css (@theme): green text/buttons use
@@ -48,7 +55,7 @@
 
 FMOS = FortuneMarq Marketing Operating System. A Next.js 16 CRM built by and for FortuneMarq — a digital marketing agency in Hubli, Karnataka. The owner is Jabeer (sayedjabir33@gmail.com). The system covers the full agency lifecycle: lead calling → outreach → meetings → proposals → client management → finance → team.
 
-**App path:** `/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos`
+**App path (Windows):** `C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos` · **Repo:** github.com/fortunemarq-web/FortuneMarq-Build (branch `main`; git root is `FortuneMarq-Build`, app in subdir `01_CRM_AND_TOOL/fmos`)
 **Stack:** Next.js 16 App Router | TypeScript | Tailwind CSS v4 | Supabase (cnwooodktqwvpzkucskm.supabase.co) | Lucide React | Recharts
 **Dev command:** `npm run dev` (binds `0.0.0.0` so mobile works on same Wi-Fi)
 **Supabase client rules:**
@@ -78,16 +85,18 @@ FMOS = FortuneMarq Marketing Operating System. A Next.js 16 CRM built by and for
 - **`localLeads` state** initialized from `leads` prop. All mutations update `localLeads` immediately — UI reflects changes without page reload.
 - **Follow-up tab** counts: `isFollowUp = l.outreach_stage === "follow_up_due" || l.outreach_stage === "no_answer" || l.outreach_stage === "follow_back"` — aligned with outreach board.
 - **Manual add lead** modal: `showAddLead` state, `saveNewLead()` function, full form with datalists for niches/cities. `+` button in header.
-- **7 log outcomes and where they go:**
+- **9 log outcomes and where they go** (source of truth: `OUTCOMES` in telecaller-cockpit.tsx):
   | Outcome ID | Label | outreach_stage set to |
   |---|---|---|
-  | CURIOUS | Sent Curiosity | curiosity_sent |
-  | PDF_SENT | Sent PDF | pdf_sent |
-  | FOLLOW_UP | Follow-up Booked | follow_up_due |
-  | FOLLOW_BACK | Will Call Back | follow_back |
-  | NO_ANSWER | No Answer | no_answer |
+  | INTERESTED_BOOK | Interested — Book Meeting Now | meeting_booked |
+  | INTERESTED_FOLLOW_UP | Interested — Follow Up Later | follow_up_due |
+  | INTERESTED_SEND_INFO | Interested — Send Info / PDF | pdf_sent |
   | NOT_INTERESTED | Not Interested | not_interested |
-  | MEETING | Meeting Booked | meeting_booked |
+  | FOLLOW_BACK | Follow Back Later | follow_back |
+  | WRONG_NUMBER | Wrong / Dead Number | dead |
+  | NO_ANSWER | No Answer | no_answer |
+  | GATEKEEPER | Gatekeeper — Owner Not Available | gatekeeper |
+  | LANGUAGE_BARRIER | Language Barrier | language_barrier |
 - **After `logOutcome` DB write:** `setLocalLeads((prev) => prev.map((l) => l.id === currentLead.id ? { ...l, ...leadUpdates } : l))` — keeps UI in sync.
 - **Full multi-step follow-up scripts** based on `outreach_stage`: `follow_up_due` / `no_answer` / `follow_back` — each has 3 steps + objection handlers + progress bar.
 
@@ -175,7 +184,7 @@ Added **"Awaiting Proposal" section** at the top:
 | `/sales` | TelecallerCockpit (all roles) | ✅ |
 | `/admin` | Admin dashboard | ✅ |
 | `/admin/outreach` | Outreach Kanban board | ✅ |
-| `/admin/meetings` | Meetings page | ✅ (needs SQL migration) |
+| `/admin/meetings` | Meetings page | ✅ |
 | `/admin/proposals` | Proposals list + Awaiting section | ✅ |
 | `/admin/leads/[id]` | Lead profile | ✅ |
 | `/admin/leads/[id]/proposal/new` | Proposal creator | ✅ |
@@ -198,7 +207,7 @@ Added **"Awaiting Proposal" section** at the top:
 | File | What it does |
 |---|---|
 | `components/sales/telecaller-cockpit.tsx` | Main sales cockpit — dialer, scripts, log outcome, A/B/C/D filter, localLeads, add lead |
-| `app/admin/outreach/outreach-board-client.tsx` | Outreach Kanban — all 13 stages |
+| `app/admin/outreach/outreach-board-client.tsx` | Outreach Kanban — all 17 stages (3 groups: active/parked/closed) |
 | `app/admin/meetings/meetings-client.tsx` | Meetings client — WhatsApp templates, intel, notes, post-meeting flow |
 | `app/admin/meetings/page.tsx` | Meetings server page |
 | `app/admin/proposals/page.tsx` | Proposals list + Awaiting Proposal section |
@@ -218,14 +227,17 @@ Added **"Awaiting Proposal" section** at the top:
 
 ```
 leads:
-  id, company_name, phone, industry, city, status, lead_type (A/B/C/D)
+  id, company_name, phone, industry, city, status
+  lead_type (text: inbound | outbound — set from source; A/B/C/D is a
+    DERIVED script type via getLeadScriptType(), NOT stored in this column)
   has_website (bool), website_link, gmb_link
   serp_ranked (bool), serp_source, tags (text[])
   outreach_stage (text) — SOURCE OF TRUTH for pipeline position
+    (17 stages / 3 groups — see lib/pipeline.ts PIPELINE_STAGES)
   last_outcome, last_outreach_at, follow_up_date
   notes, contact_person
-  meeting_link (TEXT — ADD COLUMN PENDING)
-  meeting_notes (TEXT — ADD COLUMN PENDING)
+  meeting_link (TEXT — exists in live DB)
+  meeting_notes (TEXT — exists in live DB)
 
 proposals:
   id, lead_id, proposal_number, services (jsonb), total_setup, total_monthly

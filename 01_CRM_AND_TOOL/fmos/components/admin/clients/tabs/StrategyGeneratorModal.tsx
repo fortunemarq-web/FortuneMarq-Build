@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { X, Sparkles, Key, FileText, Bot, XCircle } from "lucide-react";
+import { ANTHROPIC_MODELS } from "@/lib/ai-models";
 
 interface ClientData {
   id: string;
@@ -53,7 +54,7 @@ export default function StrategyGeneratorModal({
       return;
     }
 
-    const model = sessionStorage.getItem("ANTHROPIC_MODEL") || "claude-sonnet-4-20250514";
+    const model = sessionStorage.getItem("ANTHROPIC_MODEL") || ANTHROPIC_MODELS.smart;
     setIsProcessing(true);
     setError(null);
 

@@ -11,17 +11,23 @@ The CSV uploader allows you to bulk import leads into the system. It supports au
 - **Header Row**: Must be the first row of the file.
 
 ### 2. Column Mapping
-The uploader looks for specific column headers. Matches are case-sensitive.
+The uploader reads the following column headers (use the exact names shown; some
+fields accept an alternate spelling). Only `Business Name` is required — every
+other column is optional.
 
 | Column Header | Status | Description |
 | :--- | :--- | :--- |
 | `Business Name` | **Required** | The name of the company or business. |
-| `Phone No` | Optional | Contact number. Recommended for dialer functionality. |
-| `City` | Optional* | Will be **overridden** by the uploader dropdown selection. |
-| `Website Link` | Optional | Full URL (e.g., `https://example.com`). |
-| `Has Website` | Optional | `true`/`false`. If omitted, system guesses based on `Website Link`. |
+| `Phone No` (or `Phone`) | Optional | Contact number. Recommended for dialer functionality. |
+| `Website Link` | Optional | Full URL (e.g., `https://example.com`). Used to infer `Has Website`. |
+| `Has Website` | Optional | `true`/`false`/`yes`/`1`. If omitted, inferred from `Website Link`. |
+| `Google Maps Link` | Optional | GMB / Google Maps profile URL. |
+| `SERP_Ranked` (or `SERP Ranked`) | Optional | Whether the business ranks: `Y`/`Yes`/`True`/`1` → ranked. Drives lead type A/B/C/D. |
+| `SERP_Source` (or `SERP Source`) | Optional | Where the SERP ranking was observed (free text). |
 
-*> **Note on City/Industry**: You select a target City and Industry from the dropdown menu during upload. This selection applies to **ALL** leads in that batch, overriding any "City" or "Industry" columns in the CSV.
+> **Note on City / Industry**: these are **not** CSV columns. You pick a target
+> City and Industry from the dropdown during upload, and that selection applies to
+> **ALL** leads in the batch — any City/Industry columns in the CSV are ignored.
 
 ---
 
@@ -77,7 +83,7 @@ XYZ Ortho,555-0102
 
 ## Troubleshooting
 
-- **"Missing Business Name" Error**: Ensure the column header is exactly `Business Name` (case-sensitive).
+- **"Missing Business Name" Error**: Ensure the column header is exactly `Business Name`.
 - **0 Leads Found**: Check if your file is comma-delimited and not semicolon or tab-delimited.
 - **Encoding Issues**: If business names look garbled (e.g., `CafÃ©`), save your CSV with UTF-8 encoding.
 

@@ -6,7 +6,7 @@
 ## App Context
 - **App Name**: FortuneMarq Agency OS
 - **Stack**: Next.js 16.1.6 App Router | TypeScript | Tailwind CSS v4 | Supabase | Recharts | Framer Motion | @react-pdf/renderer
-- **Current Version**: v4.8 — DB fully synced + notifications/digest + team mgmt + Phase F inbound Stage 0 (2026-06-12)
+- **Current Version**: v4.9 — DB fully synced + notifications/digest + team mgmt + Phase F inbound Stage 1 (WhatsApp Cloud API) code complete, pre-deploy (2026-06-15)
 - **Design**: SaaS Light theme (Slate-50 bg, White cards, Slate-900 sidebar, #42CA80 green accent)
 
 ## What's Already Built — NEVER REBUILD THESE
@@ -56,7 +56,7 @@ company_name, phone, industry, city, status, lead_type
 has_website (boolean), website_link, gmb_link
 serp_ranked (boolean), serp_source (text)
 tags (text[])
-last_contacted_at, last_outcome, next_action_date, attempts, notes
+last_contacted_at, last_outcome, next_action_date, call_attempts, notes
 source (machine slug: lp/meta_lead_ad/ctwa/call/gbp/referral/manual…)
 lead_source (human label), captured_at, first_contact_at (speed-to-lead)
 meeting_link, meeting_notes, lead_quality_score, last_activity_at, meeting_booked_at

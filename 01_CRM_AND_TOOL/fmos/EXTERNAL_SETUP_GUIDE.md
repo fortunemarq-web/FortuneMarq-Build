@@ -51,7 +51,7 @@ subscribe yet. Notes for the free period below.
 ## 2. ANTHROPIC API (Claude)  ✅ key present — verify billing
 
 **What it is:** Powers the AI features — `/admin/strategy` (strategy-to-task engine) and AI sections of `/admin/reports`.
-**Where used in code:** `lib/openrouter.ts`, `app/admin/strategy/actions.ts`, `app/admin/reports/.../actions`.
+**Where used in code:** `lib/anthropic.ts` (model IDs centralized in `lib/ai-models.ts`), `app/admin/strategy/actions.ts`, `lib/reports/dailyReport.ts`.
 
 **What to do:**
 - [ ] Go to console.anthropic.com → Billing → confirm you have **prepaid credits or a card on file**. Without credit, every AI feature returns an error live.

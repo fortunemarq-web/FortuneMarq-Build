@@ -1,6 +1,6 @@
 "use server";
 
-import { callOpenRouter } from "@/lib/openrouter";
+import { callAnthropic } from "@/lib/anthropic";
 import { getNicheScript } from "@/lib/niche-scripts";
 
 /**
@@ -19,7 +19,7 @@ export async function suggestCallOpener(niche: string, businessName: string, cit
 Write short, natural Kanglish (Kannada + English) call scripts for local business owners in Hubli, Karnataka.`;
   const userPrompt = `Write a 7-step cold call script for a ${niche} business called "${businessName}" in ${city}.
 Include: introduction, language check, permission, data hook, curiosity gap, soft pitch, meeting ask. Format as STEP 1 through STEP 7.`;
-  return await callOpenRouter(systemPrompt, userPrompt, "script_suggester");
+  return await callAnthropic(systemPrompt, userPrompt, "script_suggester");
 }
 
 /**
@@ -51,7 +51,7 @@ export async function handleObjection(niche: string, city: string, objectionText
   // Fallback to AI
   const systemPrompt = `You are a sales coach for a digital marketing agency in India. Give short, confident objection responses in Kanglish. 1-2 sentences max each.`;
   const userPrompt = `${niche} owner in ${city} said: "${objectionText}". Give 3 responses numbered 1, 2, 3.`;
-  return await callOpenRouter(systemPrompt, userPrompt, "objection_handler");
+  return await callAnthropic(systemPrompt, userPrompt, "objection_handler");
 }
 
 /**
@@ -74,7 +74,7 @@ Write a short energetic morning brief for a telecaller. Be encouraging and speci
 - Calls yesterday: ${data.callsYesterday}
 - Best niche: ${data.bestNiche}
 Write their morning brief.`;
-  return await callOpenRouter(systemPrompt, userPrompt, "morning_brief");
+  return await callAnthropic(systemPrompt, userPrompt, "morning_brief");
 }
 
 /**
@@ -83,5 +83,5 @@ Write their morning brief.`;
 export async function generateWeeklyAgencyReport(json_data: any) {
   const systemPrompt = `You are a business analyst writing a weekly report for a digital marketing agency owner in India. Be concise and insightful.`;
   const userPrompt = `Last week's data:\n${JSON.stringify(json_data, null, 2)}\n\nWrite a 3-paragraph summary: performance, what worked, 2 recommendations.`;
-  return await callOpenRouter(systemPrompt, userPrompt, "weekly_report", 1000);
+  return await callAnthropic(systemPrompt, userPrompt, "weekly_report", 1000);
 }

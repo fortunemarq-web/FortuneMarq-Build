@@ -40,8 +40,13 @@ const PUBLIC_PREFIXES = [
   '/_next',
 ]
 
-// Areas any signed-in staff member may use regardless of role
-const SHARED_AREAS = ['/tasks', '/projects', '/attendance', '/staff', '/sales']
+// Areas any signed-in staff member may use regardless of role.
+// NOTE: /sales and /staff are role HOMES (see ROLE_ROUTES), NOT shared — they were
+// previously listed here, which let any signed-in role into them. Removed so the
+// owning role (+ admin) is the only one that can enter:
+//   /sales  → telecaller + admin
+//   /staff  → staff + admin
+const SHARED_AREAS = ['/tasks', '/projects', '/attendance']
 
 function isPublic(pathname: string): boolean {
   if (pathname === '/') return true // root page handles its own auth redirect

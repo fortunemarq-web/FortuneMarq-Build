@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FMOS — FortuneMarq Marketing Operating System
 
-## Getting Started
+FMOS is the in-house CRM and operations platform for **FortuneMarq**, a digital
+marketing agency in Hubli, Karnataka. It covers the full agency lifecycle — lead
+calling → outreach → meetings → proposals → agreements → client management →
+finance → team — plus the agency's own inbound-marketing engine. Built with
+**Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, and **Supabase**
+(Postgres + Auth + RLS), with Claude (Anthropic) powering the AI features. It is
+deployed on **Vercel** and reached at `fmos.fortunemarq.com`.
 
-First, run the development server:
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # dev server (binds 0.0.0.0 for LAN/mobile testing) → http://localhost:3000
+npm run build    # production build
+npm run start    # production server
+npm run lint     # ESLint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` and fill in the required values (Supabase URL +
+keys, `ANTHROPIC_API_KEY`, `CRON_SECRET`, WhatsApp/Meta keys, …) before running.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where to look first
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **`CLAUDE.md`** — app map, routes, tables, and the conventions to follow when editing.
+- **`COWORK_HANDOFF.md`** — current project state and next steps.
+- **`APPLICATION_DOCUMENTATION.md`** — full technical reference (schema, routes, components).
+- **`lib/pipeline.ts`** — the single source of truth for lead stages; never write
+  `outreach_stage`/`status` directly, always go through `leadStageUpdate()` /
+  `leadStatusUpdate()`.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The auth gate lives in `proxy.ts` (Next 16's renamed middleware) and is intentionally
+**fail-open** — read the notes in that file before touching it.
