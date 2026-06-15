@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X, CheckCircle2, XCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { leadStageUpdate } from "@/lib/pipeline";
+import { notifyOutcome } from "./outcome-actions";
 
 interface CallOutcomeModalProps {
   leadId: string;
@@ -153,6 +154,14 @@ export default function CallOutcomeModal({
       } catch (err) {
         // Silently fail if call_activities table doesn't exist
         console.warn("call_activities table may not exist:", err);
+      }
+
+      // Optional outbound WhatsApp on outcome (config-gated via
+      // WA_OUTCOME_TEMPLATES; server-side, fail-open — never blocks logging).
+      try {
+        await notifyOutcome(leadId, outcome.type);
+      } catch (err) {
+        console.warn("outcome WhatsApp send failed (non-fatal):", err);
       }
 
       setMessage({

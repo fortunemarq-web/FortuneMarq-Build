@@ -1,6 +1,7 @@
 "use server";
 
 import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { sendOutcomeWhatsApp } from "@/lib/whatsapp/outcome-send";
 
 export async function logCallOutcome(
   leadId: string,
@@ -42,7 +43,11 @@ export async function logCallOutcome(
       created_by: user.id,
     } as any);
 
-    return {};
+    // 4. Optional outbound WhatsApp on outcome (config-gated via
+    //    WA_OUTCOME_TEMPLATES; fail-open — never blocks outcome logging).
+    const wa = await sendOutcomeWhatsApp(leadId, data.outcome, user.id);
+
+    return { wa };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return { error: message };
