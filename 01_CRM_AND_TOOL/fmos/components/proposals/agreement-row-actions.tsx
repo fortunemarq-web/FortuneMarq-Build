@@ -6,6 +6,7 @@ import { Trash2, Ban, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/toast";
 import { logAudit } from "@/lib/audit";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface AgreementRowActionsProps {
   agreementId: string;
@@ -27,7 +28,8 @@ export default function AgreementRowActions({ agreementId, agreementNumber, stat
   const st = status || "pending";
 
   async function handleVoid() {
-    if (!confirm(`Void ${agreementNumber || "this agreement"}? It stays listed as rejected for your records.`)) return;
+    const ok = await promptModal({ title: `Void ${agreementNumber || "this agreement"}?`, description: "It stays listed as rejected for your records.", confirmLabel: "Void", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, void it" }] });
+    if (!ok) return;
     setBusy(true);
     const { error } = await (supabase as any).from("agreements").update({ status: "rejected" }).eq("id", agreementId);
     setBusy(false);
@@ -41,7 +43,8 @@ export default function AgreementRowActions({ agreementId, agreementNumber, stat
   }
 
   async function handleDelete() {
-    if (!confirm(`Permanently delete ${agreementNumber || "this agreement"}? This can't be undone.`)) return;
+    const ok = await promptModal({ title: `Delete ${agreementNumber || "this agreement"}?`, description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete permanently" }] });
+    if (!ok) return;
     setBusy(true);
     const { error } = await (supabase as any).from("agreements").delete().eq("id", agreementId);
     setBusy(false);

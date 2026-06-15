@@ -105,9 +105,10 @@ function mapSpendCsv(rows: string[][]): { rows: SpendRow[]; platform: string } |
     return { rows: out.filter((r) => r.campaign_name), platform };
 }
 
-export default function InboundFunnelTab() {
+export default function InboundFunnelTab({ initialDays = 30 }: { initialDays?: number }) {
     const supabase = createClient() as any;
-    const [days, setDays] = useState(30);
+    const [days, setDays] = useState(initialDays);
+    useEffect(() => { setDays(initialDays); }, [initialDays]);
     const [loading, setLoading] = useState(true);
     const [leads, setLeads] = useState<any[]>([]);
     const [insights, setInsights] = useState<any[]>([]);

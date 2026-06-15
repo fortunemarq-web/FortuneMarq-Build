@@ -17,6 +17,7 @@ import {
 import type { SavedView, EntityType, FilterConfig, SortConfig } from "@/types/view";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface SavedViewsBarProps {
     entityType: EntityType;
@@ -136,7 +137,8 @@ export default function SavedViewsBar({
     };
 
     const handleDeleteView = async (id: string) => {
-        if (!confirm("Delete this view?")) return;
+        const ok = await promptModal({ title: "Delete this view?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+        if (!ok) return;
 
         const supabase = createClient();
         const { error } = await supabase.from("saved_views" as any).delete().eq("id", id);

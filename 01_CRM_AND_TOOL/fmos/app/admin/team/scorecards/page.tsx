@@ -40,28 +40,29 @@ export default async function ScorecardsPage({
   // 2. Fetch Data according to roles (Simplified aggregation)
   // In a high-traffic app, we'd use a single RPC call or pre-aggregated stats table.
   
-  // Telecaller Data (Calls)
+  // Telecaller Data (Calls from outreach_logs)
   const { data: calls } = await supabase
-    .from("call_logs" as any)
-    .select("*")
+    .from("outreach_logs")
+    .select("actor_id, created_at, outcome_id, lead_id")
+    .eq("touch_type", "call")
     .gte("created_at", startStr)
     .lte("created_at", endStr);
 
-  // Staff/Dev Data (Tasks)
+  // Staff/Dev Data (Tasks) — tasks due this week OR completed this week
   const { data: tasks } = await supabase
     .from("tasks")
     .select("*")
-    .gte("due_date", startStr.split('T')[0]);
+    .or(`due_date.gte.${startStr.split('T')[0]},and(status.eq.completed,updated_at.gte.${startStr})`);
 
   // PM Data (Projects/Milestones)
   const { data: projects } = await supabase
     .from("projects")
     .select("*");
 
-  // Strategist Data (Deals)
+  // Strategist Data (Proposals sent/confirmed this week)
   const { data: deals } = await supabase
-    .from("deals")
-    .select("*")
+    .from("proposals")
+    .select("id, lead_id, status, created_by, created_at, total_monthly, total_setup")
     .gte("created_at", startStr)
     .lte("created_at", endStr);
 

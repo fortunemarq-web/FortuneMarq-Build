@@ -1,6 +1,6 @@
-import { fetchStrategyArchive, fetchStrategyRunCompletion } from "@/app/admin/strategy/actions";
+import { fetchStrategyArchive, fetchStrategyRunCompletion, fetchStrategyRunOutcome } from "@/app/admin/strategy/actions";
 import Link from "next/link";
-import { ArrowLeft, Archive, CheckCircle2, CircleDashed } from "lucide-react";
+import { ArrowLeft, Archive } from "lucide-react";
 
 export const metadata = {
   title: "Strategy Archive — FortuneMarq",
@@ -9,11 +9,16 @@ export const metadata = {
 export default async function StrategyArchivePage() {
   const archives = await fetchStrategyArchive() as any[];
 
-  // Map progress counters async 
+  // Map progress counters + real outcomes async
   const progressMap = new Map();
+  const outcomeMap = new Map();
   for (const item of archives) {
-    const counts = await fetchStrategyRunCompletion(item.id);
+    const [counts, outcome] = await Promise.all([
+      fetchStrategyRunCompletion(item.id),
+      fetchStrategyRunOutcome(item),
+    ]);
     progressMap.set(item.id, counts);
+    outcomeMap.set(item.id, outcome);
   }
 
   return (
@@ -33,7 +38,7 @@ export default async function StrategyArchivePage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold tracking-tight text-slate-900">Strategy Archive</h1>
-                <p className="text-sm text-slate-500 mt-1">History of all generated tasks and AI strategy runs</p>
+                <p className="text-sm text-slate-500 mt-1">Plan → work → result. Outcome counts real content published or leads/clients won in each strategy&apos;s destination &amp; timeframe.</p>
               </div>
             </div>
           </div>
@@ -50,13 +55,14 @@ export default async function StrategyArchivePage() {
                   <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Destination</th>
                   <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Timeframe</th>
                   <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Progress</th>
+                  <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Outcome</th>
                   <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Generated</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {archives.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-slate-400">
+                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-slate-400">
                       No strategies have been run yet.
                     </td>
                   </tr>
@@ -64,7 +70,8 @@ export default async function StrategyArchivePage() {
                   archives.map((run: any) => {
                     const counts = progressMap.get(run.id) || { total: 0, completed: 0, remaining: 0 };
                     const progress = counts.total > 0 ? (counts.completed / counts.total) * 100 : 0;
-                    
+                    const outcome = outcomeMap.get(run.id) || { kind: "other", label: "—", value: 0, windowElapsed: false };
+
                     return (
                       <tr key={run.id} className="hover:bg-slate-50/60 transition-colors">
                         <td className="px-6 py-4">
@@ -92,6 +99,19 @@ export default async function StrategyArchivePage() {
                             </div>
                             <span className="text-[10px] font-bold text-slate-400 min-w-[30px]">{counts.completed}/{counts.total}</span>
                           </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span
+                            className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                              outcome.value > 0 ? "text-emerald-700" : "text-slate-400"
+                            }`}
+                            title={outcome.windowElapsed ? "Timeframe complete" : "In progress — timeframe not yet elapsed"}
+                          >
+                            {outcome.label}
+                            {!outcome.windowElapsed && outcome.kind !== "other" && (
+                              <span className="text-[9px] uppercase tracking-wide text-amber-500 font-bold">live</span>
+                            )}
+                          </span>
                         </td>
                         <td className="px-6 py-4 text-right">
                           <span className="inline-flex items-center justify-center font-mono text-sm font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">

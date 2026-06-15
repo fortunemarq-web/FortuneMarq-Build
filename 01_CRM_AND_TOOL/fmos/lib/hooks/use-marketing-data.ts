@@ -239,11 +239,32 @@ export function useMarketingOverviewStats() {
                     .gte('published_date', currentMonthStart)
                     .eq('status', 'published')
 
-                // 4. Leads by source (simplified for now)
+                // 4. Leads this month + last month (real delta)
                 const { count: leadsCount } = await supabase
                     .from('leads')
                     .select('*', { count: 'exact', head: true })
                     .gte('created_at', currentMonthStart)
+
+                const { count: prevLeadsCount } = await supabase
+                    .from('leads')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('created_at', lastMonthStart)
+                    .lte('created_at', lastMonthEnd)
+
+                const leadsDelta = (prevLeadsCount || 0) > 0
+                    ? (((leadsCount || 0) - (prevLeadsCount || 0)) / (prevLeadsCount || 1)) * 100
+                    : 0
+
+                // 5. Won this month (real conversion rate)
+                const { count: wonCount } = await supabase
+                    .from('leads')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('outreach_stage', 'won')
+                    .gte('created_at', currentMonthStart)
+
+                const conversionRate = (leadsCount || 0) > 0
+                    ? ((wonCount || 0) / (leadsCount || 1)) * 100
+                    : 0
 
                 setData({
                     total_organic_sessions_mtd: currentSessions,
@@ -251,13 +272,15 @@ export function useMarketingOverviewStats() {
                     total_ad_spend_mtd: totalSpend,
                     total_ad_budget_mtd: totalBudget,
                     total_leads_from_marketing: leadsCount || 0,
-                    leads_delta_pct: 0, // Mock for now
+                    leads_delta_pct: Math.round(leadsDelta),
                     content_published_mtd: contentCount || 0,
                     content_target_mtd: 8, // Hardcoded target
                     avg_cpl: avgCpl,
                     top_performing_keyword: null,
-                    top_performing_campaign: null
-                })
+                    top_performing_campaign: null,
+                    won_mtd: wonCount || 0,
+                    conversion_rate_pct: Math.round(conversionRate * 10) / 10,
+                } as any)
                 setError(null)
             } catch (err: any) {
                 console.error("Error computing marketing stats:", err)
@@ -271,6 +294,139 @@ export function useMarketingOverviewStats() {
     }, [refetchTrigger])
 
     return { data, loading, error, refetch }
+}
+
+/** Real daily inbound-lead counts for the last N days (for the Overview trend chart). */
+export function useLeadsByDay(days: number = 7) {
+    const [data, setData] = useState<{ name: string; leads: number }[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true)
+            try {
+                const since = new Date(Date.now() - (days - 1) * 86400000)
+                since.setHours(0, 0, 0, 0)
+                const { data: rows } = await supabase
+                    .from('leads')
+                    .select('created_at')
+                    .gte('created_at', since.toISOString())
+
+                // Bucket per day
+                const buckets: { name: string; leads: number; key: string }[] = []
+                for (let i = 0; i < days; i++) {
+                    const d = new Date(since.getTime() + i * 86400000)
+                    buckets.push({
+                        name: d.toLocaleDateString('en-IN', days <= 7 ? { weekday: 'short' } : { day: 'numeric', month: 'short' }),
+                        leads: 0,
+                        key: d.toISOString().split('T')[0],
+                    })
+                }
+                    ; (rows as any[] || []).forEach((r) => {
+                        const k = new Date(r.created_at).toISOString().split('T')[0]
+                        const b = buckets.find((x) => x.key === k)
+                        if (b) b.leads++
+                    })
+                setData(buckets.map(({ name, leads }) => ({ name, leads })))
+            } catch (err) {
+                console.error('Error fetching leads by day:', err)
+                setData([])
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [days])
+
+    return { data, loading }
+}
+
+/** Real lead-source distribution for the current month (for the Overview pie). */
+export function useLeadSourceBreakdown() {
+    const [data, setData] = useState<{ name: string; value: number; color: string }[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true)
+            try {
+                const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
+                const { data: rows } = await supabase
+                    .from('leads')
+                    .select('source, lead_source')
+                    .gte('created_at', monthStart)
+
+                const palette = ['#42CA80', '#3b82f6', '#a855f7', '#fbbf24', '#ef4444', '#06b6d4', '#f97316', '#64748b']
+                const counts: Record<string, { label: string; n: number }> = {}
+                    ; (rows as any[] || []).forEach((r) => {
+                        const key = r.source || 'unknown'
+                        const label = r.lead_source || r.source || 'Unknown'
+                        counts[key] ??= { label, n: 0 }
+                        counts[key].n++
+                    })
+                const entries = Object.values(counts).sort((a, b) => b.n - a.n)
+                setData(entries.map((e, i) => ({ name: e.label, value: e.n, color: palette[i % palette.length] })))
+            } catch (err) {
+                console.error('Error fetching lead source breakdown:', err)
+                setData([])
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [])
+
+    return { data, loading }
+}
+
+/** Real weekly CPL per platform from ad_insights_daily (for the Paid Campaigns trend chart). */
+export function useCplTrend(weeks: number = 8) {
+    const [data, setData] = useState<{ week: string; meta: number | null; google: number | null; linkedin: number | null }[]>([])
+    const [loading, setLoading] = useState(true)
+    const [hasData, setHasData] = useState(false)
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true)
+            try {
+                const since = new Date(Date.now() - weeks * 7 * 86400000)
+                const { data: rows } = await supabase
+                    .from('ad_insights_daily')
+                    .select('date, platform, spend, leads')
+                    .gte('date', since.toISOString().split('T')[0])
+
+                const r = (rows as any[]) || []
+                setHasData(r.length > 0)
+
+                const out: { week: string; meta: number | null; google: number | null; linkedin: number | null }[] = []
+                for (let w = weeks - 1; w >= 0; w--) {
+                    const start = new Date(Date.now() - (w + 1) * 7 * 86400000)
+                    const end = new Date(Date.now() - w * 7 * 86400000)
+                    const inWeek = r.filter((x) => {
+                        const d = new Date(x.date)
+                        return d >= start && d < end
+                    })
+                    const cpl = (platform: string): number | null => {
+                        const rows = inWeek.filter((x) => (x.platform || '').toLowerCase() === platform)
+                        const spend = rows.reduce((s, x) => s + Number(x.spend || 0), 0)
+                        const leads = rows.reduce((s, x) => s + Number(x.leads || 0), 0)
+                        return leads > 0 ? Math.round(spend / leads) : null
+                    }
+                    out.push({ week: `W${weeks - w}`, meta: cpl('meta'), google: cpl('google'), linkedin: cpl('linkedin') })
+                }
+                setData(out)
+            } catch (err) {
+                console.error('Error fetching CPL trend:', err)
+                setData([])
+                setHasData(false)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
+    }, [weeks])
+
+    return { data, loading, hasData }
 }
 
 export function useLatestWeeklyBrief() {

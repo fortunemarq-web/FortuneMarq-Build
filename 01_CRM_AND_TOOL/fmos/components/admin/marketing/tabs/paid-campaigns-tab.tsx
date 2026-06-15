@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import {
     Megaphone,
@@ -11,7 +12,6 @@ import {
     ExternalLink,
     Info,
     Crown,
-    Play,
     X,
     AlertCircle,
     Check
@@ -26,7 +26,7 @@ import {
     ResponsiveContainer,
     Legend
 } from "recharts"
-import { useAdCampaigns } from "@/lib/hooks/use-marketing-data"
+import { useAdCampaigns, useCplTrend } from "@/lib/hooks/use-marketing-data"
 import { createClient } from "@/lib/supabase"
 import { AdPlatform, CampaignStatus, CampaignObjective } from "@/types/marketing.types"
 
@@ -85,6 +85,7 @@ const InlineSpendEdit = ({ id, initialValue, onSave }: { id: string, initialValu
 
 export default function PaidCampaignsTab() {
     const { data: campaigns, loading, error, refetch } = useAdCampaigns()
+    const { data: cplTrendData, hasData: hasCplData } = useCplTrend(8)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitError, setSubmitError] = useState<string | null>(null)
@@ -117,17 +118,6 @@ export default function PaidCampaignsTab() {
         { name: "Meta Ads", id: "meta", color: "#42CA80" },
         { name: "Google Ads", id: "google", color: "#fbbf24" },
         { name: "LinkedIn Ads", id: "linkedin", color: "#ef4444" }
-    ]
-
-    const cplTrendData = [
-        { week: "W1", meta: 620, google: 780, linkedin: 900 },
-        { week: "W2", meta: 580, google: 720, linkedin: 850 },
-        { week: "W3", meta: 540, google: 700, linkedin: 880 },
-        { week: "W4", meta: 510, google: 680, linkedin: 760 },
-        { week: "W5", meta: 490, google: 640, linkedin: 800 },
-        { week: "W6", meta: 500, google: 620, linkedin: 733 },
-        { week: "W7", meta: 470, google: 600, linkedin: 710 },
-        { week: "W8", meta: 485, google: 600, linkedin: 733 },
     ]
 
     const getStatusStyle = (status: string) => {
@@ -455,6 +445,13 @@ export default function PaidCampaignsTab() {
                         <p className="text-[#a1a1aa] text-xs mt-0.5">Is your CPL improving or worsening?</p>
                     </div>
 
+                    {!hasCplData ? (
+                        <div className="h-[200px] w-full flex flex-col items-center justify-center gap-2 border border-dashed border-[#333] rounded-xl">
+                            <AlertCircle className="h-7 w-7 text-[#333]" />
+                            <p className="text-[#666] text-xs font-semibold">No ad spend data yet</p>
+                            <p className="text-[#555] text-[11px]">Import a daily report in the Inbound &amp; Funnel tab to see CPL trends</p>
+                        </div>
+                    ) : (
                     <div className="h-[200px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={cplTrendData}>
@@ -508,6 +505,7 @@ export default function PaidCampaignsTab() {
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
+                    )}
                 </motion.div>
 
                 {/* RIGHT: BEST PERFORMING CREATIVE CARD */}
@@ -526,44 +524,23 @@ export default function PaidCampaignsTab() {
                             <span className="text-[#666] text-[10px] font-bold uppercase tracking-widest">This Month</span>
                         </div>
 
-                        <div className="flex gap-2 mb-4">
-                            <span className="bg-blue-600/10 text-blue-500 border border-blue-600/20 text-[10px] font-bold px-1.5 py-0.5 rounded">META</span>
-                            <span className="bg-purple-600/10 text-purple-500 border border-purple-600/20 text-[10px] font-bold px-1.5 py-0.5 rounded">VIDEO</span>
+                        <div className="bg-[#111] border border-dashed border-[#333] rounded-xl h-32 flex flex-col items-center justify-center gap-2 relative overflow-hidden px-4 text-center">
+                            <Crown className="h-7 w-7 text-[#333]" />
+                            <span className="text-[#666] text-[11px] font-semibold">Creative-level data not connected</span>
                         </div>
 
-                        <div className="bg-[#111] border border-[#222] rounded-xl h-32 flex flex-col items-center justify-center relative overflow-hidden group/creative">
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/creative:opacity-100 transition-opacity z-10" />
-                            <Play className="h-8 w-8 text-[#333] group-hover/creative:text-white transition-colors z-20" />
-                            <span className="text-[#555] text-[10px] mt-2 group-hover/creative:text-white transition-colors z-20 font-medium">Click to Preview</span>
-                        </div>
-
-                        <h4 className="text-white text-sm font-medium mt-4 leading-relaxed line-clamp-2">
-                            3 Restaurant Clients Scaled to ₹1L/month — Case Study Video
-                        </h4>
-
-                        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-[#222]">
-                            <div className="flex flex-col">
-                                <span className="text-[#42CA80] font-mono font-bold text-lg">3.8%</span>
-                                <span className="text-[#666] text-[10px] uppercase tracking-wider font-bold">CTR</span>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-white font-mono font-bold text-lg">42K</span>
-                                <span className="text-[#666] text-[10px] uppercase tracking-wider font-bold">IMPR</span>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-[#42CA80] font-mono font-bold text-lg">16</span>
-                                <span className="text-[#666] text-[10px] uppercase tracking-wider font-bold">LEADS</span>
-                            </div>
-                        </div>
+                        <p className="text-[#555] text-xs mt-4 leading-relaxed">
+                            Per-ad creative performance (CTR, impressions, leads) needs the Meta &amp; Google Ads API connected. Until then, track results at the campaign level in the table above.
+                        </p>
                     </div>
 
-                    <button
-                        onClick={() => console.log("View All Creatives")}
+                    <Link
+                        href="/admin/growth/instagram"
                         className="w-full mt-6 py-2.5 rounded-xl border border-[#333] text-[#a1a1aa] text-xs font-semibold hover:bg-[#222] hover:text-white hover:border-[#444] transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                     >
-                        <span>View All Creatives</span>
+                        <span>Manage Content</span>
                         <ExternalLink className="h-3 w-3" />
-                    </button>
+                    </Link>
                 </motion.div>
             </div>
 

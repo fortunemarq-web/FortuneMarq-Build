@@ -1023,7 +1023,7 @@ FortuneMarq
                 {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Mark as Sent → Move Stage
               </button>
-              <button onClick={() => router.push(`/admin/leads/${lead.id}`)} className="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-semibold px-6 py-3.5 rounded-2xl transition-colors">
+              <button onClick={() => router.push("/admin/proposals")} className="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-semibold px-6 py-3.5 rounded-2xl transition-colors">
                 Done
               </button>
             </div>

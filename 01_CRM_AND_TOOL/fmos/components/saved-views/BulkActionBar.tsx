@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CheckSquare, X, ChevronDown, CheckCircle2 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface BulkActionBarProps {
     selectedCount: number;
@@ -65,7 +66,8 @@ export default function BulkActionBar({
         // Here we just bubble up the intent.
 
         if (action === "mark_completed") {
-            if (!confirm(`Mark ${selectedCount} tasks as completed?`)) return;
+            const ok = await promptModal({ title: `Mark ${selectedCount} tasks as completed?`, confirmLabel: "Mark Complete", type: "select", options: [{ value: "confirm", label: "Yes, mark all complete" }] });
+            if (!ok) return;
         }
 
         setIsProcessing(true);

@@ -28,7 +28,10 @@ type ViewMode = "pipeline" | "calendar"
 
 export default function ContentCalendarTab() {
     const [viewMode, setViewMode] = useState<ViewMode>("pipeline")
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 1)) // March 2026
+    const [currentDate, setCurrentDate] = useState(() => {
+        const now = new Date()
+        return new Date(now.getFullYear(), now.getMonth(), 1) // current month
+    })
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitError, setSubmitError] = useState<string | null>(null)

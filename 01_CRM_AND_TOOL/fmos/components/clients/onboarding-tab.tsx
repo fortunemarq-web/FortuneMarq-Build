@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   CheckCircle, Clock, AlertTriangle, XCircle, Box,
   ChevronDown, ChevronUp, Upload, Loader2, Wand2,
@@ -83,6 +84,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
   const [showGeneratePanel, setShowGeneratePanel] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   // Group by service
   const serviceIds = [...new Set([...tasks.map(t => t.service_id), ...assets.map(a => a.service_id)])];
@@ -144,7 +146,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
 
   async function activateClient() {
     await supabase.from("clients").update({ status: "active", onboarding_completed: true } as any).eq("id", clientId);
-    window.location.reload();
+    router.refresh();
   }
 
   function toggleService(serviceId: string) {
@@ -158,11 +160,19 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
 
   function serviceLabel(id: string) {
     const map: Record<string, string> = {
-      WEBSITE: "Website Building", GMB: "GMB Optimization", SEO: "SEO",
+      GENERAL: "Client Basics", WEBSITE: "Website Building", GMB: "GMB Optimization", SEO: "SEO",
       GOOGLE_ADS: "Google Ads", META_ADS: "Meta Ads",
       WHATSAPP_MARKETING: "WhatsApp Marketing", AI_AUTOMATIONS: "AI Automations",
     };
     return map[id] || id;
+  }
+
+  // Per-service build readiness: green when every required asset is Stored.
+  function serviceReadiness(serviceAssets: AssetRecord[]) {
+    const required = serviceAssets.filter((a) => a.required);
+    if (required.length === 0) return null;
+    const missing = required.filter((a) => a.status !== "STORED").length;
+    return { ready: missing === 0, missing };
   }
 
   if (tasks.length === 0 && assets.length === 0) {
@@ -256,6 +266,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
         const serviceAssets = assets.filter(a => a.service_id === serviceId);
         const doneSvcTasks = serviceTasks.filter(t => t.status === "DONE").length;
         const isCollapsed = collapsedServices.has(serviceId);
+        const readiness = serviceReadiness(serviceAssets);
 
         return (
           <div key={serviceId} className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
@@ -269,6 +280,11 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${doneSvcTasks === serviceTasks.length && serviceTasks.length > 0 ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>
                   {doneSvcTasks}/{serviceTasks.length} tasks
                 </span>
+                {readiness && serviceId !== "GENERAL" && (
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${readiness.ready ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+                    {readiness.ready ? "Ready to build" : `Waiting on ${readiness.missing}`}
+                  </span>
+                )}
               </div>
               {isCollapsed ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronUp className="h-4 w-4 text-slate-400" />}
             </button>

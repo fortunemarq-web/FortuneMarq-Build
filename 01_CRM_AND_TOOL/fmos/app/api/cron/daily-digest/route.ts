@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { verifyCronSecret } from "@/lib/cron-auth";
+import { sendDailyReport } from "@/lib/reports/dailyReport";
 
 /**
  * Daily digest — one in-app notification per user summarising what needs
@@ -158,7 +159,15 @@ export async function POST(req: NextRequest) {
       if (error) throw error;
     }
 
-    return NextResponse.json({ success: true, sent: inserts.length, skippedAlreadySent: alreadySent.size });
+    // AI daily report → admin WhatsApp (non-fatal: never let this break the digest).
+    let whatsappReport: any = { sent: 0, skipped: "not attempted" };
+    try {
+      whatsappReport = await sendDailyReport(supabase);
+    } catch (e: any) {
+      whatsappReport = { sent: 0, error: e?.message || "report failed" };
+    }
+
+    return NextResponse.json({ success: true, sent: inserts.length, skippedAlreadySent: alreadySent.size, whatsappReport });
   } catch (e: any) {
     return NextResponse.json({ success: false, error: e.message }, { status: 500 });
   }

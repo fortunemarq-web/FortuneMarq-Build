@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import type { ClientRecord } from "@/app/admin/clients/actions";
 import { updateClientNotes, updateClientField } from "@/app/admin/clients/actions";
 import { Calendar, FolderKanban, FileText, Save, Loader2, Zap } from "lucide-react";
+import { promptModal } from "@/components/ui/prompt-modal";
 import ActivityTimeline from "@/components/ActivityTimeline";
 
 export default function OverviewTab({
@@ -26,7 +27,8 @@ export default function OverviewTab({
       await updateClientField(client.id, "upsell_eligible", false);
       setTogglingUpsell(false);
     } else {
-      if (confirm(`Mark ${client.business_name} as upsell eligible? This will flag them on the dashboard.`)) {
+      const ok = await promptModal({ title: `Mark ${client.business_name} as upsell eligible?`, description: "This will flag them on the dashboard for upsell outreach.", confirmLabel: "Mark Eligible", type: "select", options: [{ value: "confirm", label: "Yes, flag for upsell" }] });
+      if (ok) {
         setTogglingUpsell(true);
         await updateClientField(client.id, "upsell_eligible", true);
         setTogglingUpsell(false);

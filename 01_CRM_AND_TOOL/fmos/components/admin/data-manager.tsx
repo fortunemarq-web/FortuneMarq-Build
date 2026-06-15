@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase"; // Client-side search
 import { deleteLeadsByIndustry, deleteSingleLead } from "@/actions/delete-data"; // Server-side delete
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 // Use the existing industries from config (could be imported to share source of truth)
 const FALLBACK_INDUSTRIES = [
@@ -103,7 +104,8 @@ export default function DataManager() {
     };
 
     const handleDeleteSingle = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this specific lead?")) return;
+        const ok = await promptModal({ title: "Delete this lead?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete permanently" }] });
+        if (!ok) return;
         setDeletingId(id);
         const res = await deleteSingleLead(id);
         if (res.success) {

@@ -5,6 +5,7 @@ import { ArrowLeft, MapPin, Eye, Map, Phone, MousePointerClick, Image as ImageIc
 import ContentCalendar from "@/components/admin/growth/ContentCalendar";
 import GMBChecklist from "@/components/admin/growth/GMBChecklist";
 import ReviewRequestsTable from "@/components/admin/growth/ReviewRequestsTable";
+import GmbUpdateMetricsButton from "@/components/admin/growth/GmbUpdateMetricsButton";
 
 export const metadata = {
   title: "GMB Manager — FortuneMarq",
@@ -61,9 +62,7 @@ export default async function GMBManagerPage() {
               <h1 className="text-3xl font-bold tracking-tight text-slate-900">Google My Business</h1>
             </div>
             
-            <button className="rounded-lg bg-white border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
-              Update Metrics
-            </button>
+            <GmbUpdateMetricsButton current={currentSnapshot} />
           </div>
         </div>
 

@@ -20,6 +20,7 @@ import {
 import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface Niche {
     id: string;
@@ -204,7 +205,8 @@ export default function TemplateManager() {
     };
 
     const handleDelete = async (template: Template) => {
-        if (!confirm(`Delete this template${template.niche?.name ? ` for ${template.niche.name}` : ""}? This can't be undone.`)) return;
+        const ok = await promptModal({ title: `Delete template${template.niche?.name ? ` for ${template.niche.name}` : ""}?`, description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+        if (!ok) return;
         const { error } = await supabase.from("whatsapp_message_templates" as any)
             .delete()
             .eq("id", template.id);

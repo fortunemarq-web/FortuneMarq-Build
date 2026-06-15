@@ -28,27 +28,17 @@ import {
     Pie,
     Cell
 } from "recharts"
-import { useMarketingOverviewStats, useLatestWeeklyBrief } from "@/lib/hooks/use-marketing-data"
+import { useMarketingOverviewStats, useLatestWeeklyBrief, useLeadsByDay, useLeadSourceBreakdown } from "@/lib/hooks/use-marketing-data"
+import Link from "next/link"
 
 export default function OverviewTab() {
     const { data: stats, loading: statsLoading, error: statsError, refetch: refetchStats } = useMarketingOverviewStats()
     const { data: brief, loading: briefLoading, error: briefError, refetch: refetchBrief } = useLatestWeeklyBrief()
+    const { data: performanceData } = useLeadsByDay(7)
+    const { data: sourceData } = useLeadSourceBreakdown()
 
-    const performanceData = [
-        { name: "Mon", leads: 4 },
-        { name: "Tue", leads: 7 },
-        { name: "Wed", leads: 5 },
-        { name: "Thu", leads: 12 },
-        { name: "Fri", leads: 8 },
-        { name: "Sat", leads: 15 },
-        { name: "Sun", leads: 11 },
-    ]
-
-    const sourceData = [
-        { name: "Organic SEO", value: 35, color: "#42CA80" },
-        { name: "Meta Ads", value: 45, color: "#3b82f6" },
-        { name: "LinkedIn", value: 20, color: "#a855f7" },
-    ]
+    const topChannel = sourceData.length > 0 ? sourceData[0].name : null
+    const conversionRate = (stats as any)?.conversion_rate_pct ?? null
 
     const kpis = [
         {
@@ -79,9 +69,9 @@ export default function OverviewTab() {
             bg: "bg-yellow-500/10",
         },
         {
-            label: "ROI (Marketing)",
-            value: "0x", // ROI not tracked yet
-            delta: "0%",
+            label: "Conversion Rate",
+            value: conversionRate !== null ? `${conversionRate}%` : "—",
+            delta: stats ? `${(stats as any).won_mtd || 0} won` : "0 won",
             isPositive: true,
             icon: TrendingUp,
             color: "text-purple-500",
@@ -231,41 +221,50 @@ export default function OverviewTab() {
                     className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-6 flex flex-col hover:border-[#444] transition-colors"
                 >
                     <h3 className="text-white font-semibold text-lg font-sans">Lead Sources</h3>
-                    <p className="text-[#a1a1aa] text-xs font-sans">Distribution by channel</p>
+                    <p className="text-[#a1a1aa] text-xs font-sans">This month, by channel</p>
 
-                    <div className="h-[240px] w-full mt-4">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={sourceData}
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={5}
-                                    dataKey="value"
-                                >
-                                    {sourceData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                                    ))}
-                                </Pie>
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: "#111", border: "1px solid #333", borderRadius: "12px" }}
-                                    itemStyle={{ fontSize: "12px" }}
-                                />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-
-                    <div className="space-y-3 mt-4">
-                        {sourceData.map((item, i) => (
-                            <div key={i} className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                                    <span className="text-[#a1a1aa] text-xs font-sans">{item.name}</span>
-                                </div>
-                                <span className="text-white text-xs font-bold font-mono">{item.value}%</span>
+                    {sourceData.length === 0 ? (
+                        <div className="h-[240px] w-full mt-4 flex flex-col items-center justify-center gap-2 border border-dashed border-[#333] rounded-xl">
+                            <Users className="h-8 w-8 text-[#333]" />
+                            <p className="text-[#666] text-xs font-semibold">No leads this month yet</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="h-[240px] w-full mt-4">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={sourceData}
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {sourceData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: "#111", border: "1px solid #333", borderRadius: "12px" }}
+                                            itemStyle={{ fontSize: "12px" }}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
                             </div>
-                        ))}
-                    </div>
+
+                            <div className="space-y-3 mt-4">
+                                {sourceData.map((item, i) => (
+                                    <div key={i} className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                                            <span className="text-[#a1a1aa] text-xs font-sans">{item.name}</span>
+                                        </div>
+                                        <span className="text-white text-xs font-bold font-mono">{item.value}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </motion.div>
             </div>
 
@@ -330,12 +329,12 @@ export default function OverviewTab() {
                             <div className="bg-[#111] border border-[#333] rounded-xl p-4 flex items-center justify-between">
                                 <div className="flex flex-col">
                                     <span className="text-[#666] text-[10px] uppercase font-bold tracking-widest font-sans">Top Channel</span>
-                                    <span className="text-white text-sm font-bold font-sans">Meta Ads (Instagram)</span>
+                                    <span className="text-white text-sm font-bold font-sans">{topChannel || "—"}</span>
                                 </div>
                                 <div className="h-8 w-[1px] bg-[#333]" />
                                 <div className="flex flex-col">
                                     <span className="text-[#666] text-[10px] uppercase font-bold tracking-widest font-sans">Conversion Rate</span>
-                                    <span className="text-[#42CA80] text-sm font-bold font-mono">4.2%</span>
+                                    <span className="text-[#42CA80] text-sm font-bold font-mono">{conversionRate !== null ? `${conversionRate}%` : "—"}</span>
                                 </div>
                             </div>
                         </div>
@@ -371,14 +370,14 @@ export default function OverviewTab() {
                 </div>
             )}
 
-            {/* QUICK ACTIONS */}
+            {/* QUICK LINKS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                    { title: "Review SEO Keywords", desc: "4 focus keywords dropped in rank", action: "View SEO", icon: Search },
-                    { title: "Ad Budget Alert", desc: "Meta Ads reaching 90% of budget", action: "Adjust Budget", icon: Zap },
-                    { title: "Review Content", desc: "2 case studies ready for review", action: "Go to Calendar", icon: Calendar },
+                    { title: "Organic & SEO", desc: "Keyword rankings and site traffic", action: "Open SEO", icon: Search, href: "/admin/growth/seo" },
+                    { title: "Paid Campaigns", desc: "Budget pacing, CPL and spend", action: "Open Campaigns", icon: Zap, href: "/admin/marketing?tab=paid" },
+                    { title: "Content Calendar", desc: "Plan and schedule content", action: "Open Calendar", icon: Calendar, href: "/admin/marketing?tab=content" },
                 ].map((item, i) => (
-                    <div key={i} className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-5 flex flex-col gap-4 hover:border-[#444] hover:bg-[#222]/30 transition-all cursor-pointer group">
+                    <Link key={i} href={item.href} className="bg-[#1a1a1a] border border-[#333] rounded-2xl p-5 flex flex-col gap-4 hover:border-[#444] hover:bg-[#222]/30 transition-all cursor-pointer group">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-[#111] rounded-lg group-hover:bg-[#42CA80]/10 transition-colors">
                                 <item.icon className="h-4 w-4 text-[#666] group-hover:text-[#42CA80] transition-colors" />
@@ -392,7 +391,7 @@ export default function OverviewTab() {
                             {item.action}
                             <ChevronRight className="h-3 w-3" />
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>

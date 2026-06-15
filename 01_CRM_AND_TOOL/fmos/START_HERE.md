@@ -1,68 +1,47 @@
-# FMOS — Antigravity Execution Start Point
-**Read this file first. Then follow the phase order below.**
+# START HERE — New Claude Session Entry Point
+**Last updated:** 2026-06-14
 
----
+## What is this?
+FMOS = FortuneMarq Marketing Operating System. Full-stack agency CRM.
+Owner: Jabeer (Sayed Jabeer), Hubli-based digital marketing founder.
 
-## Who You Are
+## Where is the code?
+**Windows 11:** `C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos`
+Stack: Next.js 16 App Router · TypeScript · Tailwind v4 · Supabase (`cnwooodktqwvpzkucskm`)
 
-You are Antigravity — a senior full-stack developer executing a series of planned changes on **FMOS** (FortuneMarq Operating System), a custom CRM for FortuneMarq Media & Marketing, Hubli, Karnataka.
+## What phase are we in?
+**Phase 2: New Features** — Phase 1 (all bugs fixed) is COMPLETE as of 2026-06-14.
 
-**The app is already built and running. You are NOT building from scratch.**
+## What to read first
+1. `CLAUDE.md` — full app map: all routes, all DB tables, all conventions. Read this completely.
+2. `COWORK_HANDOFF.md` — current state, WhatsApp API status, Phase 2 feature priority list, deploy checklist.
+3. `EXTERNAL_SETUP_GUIDE.md` — every account/API key/plan/integration to set up OUTSIDE the code before full-scale use.
+4. `last_session.md` — table of all 17 bugs fixed in the last session + context files changed.
 
----
+## What to do next
+The single highest-priority next task is **`middleware.ts` auth gate** — see `COWORK_HANDOFF.md §4 P0` for the full spec. Every admin route is currently publicly readable. This must be fixed before live testing or deploy.
 
-## App Location
+After middleware: outbound WhatsApp send UI → real PDF generation → feature list in `COWORK_HANDOFF.md §4 P3`.
 
+## How to start the dev server
+```powershell
+cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
+npm run dev
 ```
-/Users/fortunemarq/Desktop/FortuneMarq-Build/01_CRM_AND_TOOL/fmos/
+Then open http://localhost:3000
+
+## TypeScript check
+```powershell
+cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
+npx tsc --noEmit
 ```
+Should be 0 errors. Fix any before writing new code.
 
-**Stack:** Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Supabase (`@supabase/ssr v0.8.0`)
-
-**Supabase project:** `cnwooodktqwvpzkucskm.supabase.co`
-
----
-
-## Read These Before Touching Any Code
-
-1. `CLAUDE.md` — full app context, all routes, all DB tables, current build status
-2. `UI_UX_GUIDELINES.md` — design rules (colours, spacing, component patterns)
-
-Both files are in the fmos root. Read them fully before starting Phase A.
-
----
-
-## How to Work
-
-- **One phase at a time.** Complete a phase fully before moving to the next.
-- **Each phase has a checklist at the bottom.** Do not proceed to the next phase until every item is ticked.
-- **Run `npx tsc --noEmit` at the end of each phase.** Zero errors required before moving on.
-- **SQL migrations always run first** — each phase file tells you exactly what to run in the Supabase SQL Editor before writing code.
-- **Do not introduce new TypeScript errors.** If you need to cast a table that isn't in the generated types, use `(supabase as any).from(...)` and add a `// TODO: regenerate types` comment.
-- **Do not refactor anything outside the scope of the current phase.** Stick to what the phase file asks.
-
----
-
-## Phase Execution Order
-
-| Phase | File | What It Does |
-|---|---|---|
-| A | `PHASE_A_CLEANUP.md` | SQL migration for user names, verify app runs clean, delete old unused sidebar component |
-| B | `PHASE_B_ROLE_VIEWS.md` | Admin morning dashboard, Telecaller view with real scripts, Staff task kanban |
-| C | `PHASE_C_OUTREACH_LEADS.md` | Outreach sequence board (10-stage kanban), Lead profile page, PDF delivery tracker |
-| D | `PHASE_D_PROPOSAL_ONBOARDING.md` | Proposal PDF generator, Agreement flow, Onboarding tab, seed 17 WhatsApp templates |
-| E | `PHASE_E_FINANCE_FORECAST.md` | Finance MRR split, Revenue forecast widget, Retainer package system, invoice reminder |
-
----
-
-## Start With Phase A
-
-Open `PHASE_A_CLEANUP.md` and follow its instructions from top to bottom.
-
-The phase file tells you:
-1. What SQL to run first (in Supabase SQL Editor)
-2. What code changes to make
-3. What to verify
-4. A checklist to complete before proceeding
-
-Once Phase A checklist is fully done → open `PHASE_B_ROLE_VIEWS.md` and repeat.
+## Uncommitted changes
+All Phase 1 bug fixes are NOT yet committed. When Jabeer greenlit, run:
+```powershell
+cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
+git add -A
+git commit -m "Phase 1 complete: all critical bugs fixed, TypeScript 0 errors (2026-06-14)"
+git push origin master
+```

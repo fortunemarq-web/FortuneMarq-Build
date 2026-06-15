@@ -2,6 +2,20 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+/**
+ * FMOS auth gate (Next 16 proxy). FAIL-OPEN by design.
+ *
+ * Goal: stop UNAUTHENTICATED visitors from reading app pages, without ever
+ * locking out a legitimate user. Every Supabase read here is guarded so that
+ * an error (RLS policy change, missing profile row, transient DB issue, missing
+ * env) ALLOWS the request through instead of blocking it. We redirect ONLY on a
+ * confirmed no-session, or a positively-known wrong role.
+ *
+ * This is the fix for the earlier lockouts: the previous version used an
+ * unguarded getUser() + `.single()` on profiles, so any SQL/RLS change that
+ * broke that read took down the whole gate. It no longer can.
+ */
+
 const ROLE_ROUTES: Record<string, string> = {
   admin: '/admin',
   telecaller: '/sales',
@@ -43,12 +57,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next()
   }
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  // Misconfiguration must never lock anyone out.
+  if (!url || !anon) return NextResponse.next()
+
   const response = NextResponse.next()
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  let supabase
+  try {
+    supabase = createServerClient(url, anon, {
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -59,36 +77,57 @@ export async function proxy(request: NextRequest) {
           )
         },
       },
-    }
-  )
+    })
+  } catch {
+    return response // fail-open
+  }
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // ── Auth gate ──────────────────────────────────────────────
+  let user = null
+  try {
+    const { data, error } = await supabase.auth.getUser()
+    if (error) return response // fail-open on verify/transient errors
+    user = data.user
+  } catch {
+    return response // fail-open
+  }
 
-  // Deny by default: every non-public route requires a session.
+  // Confirmed: no session. Deny by default for non-public routes.
   if (!user) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('next', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
+  // ── Best-effort role routing (fully fail-open) ─────────────
+  // Only act on a positively-known role. Unknown role → allow through.
+  let role: string | undefined
+  try {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+    if (error) return response // RLS/permission/transient → allow, never lock out
+    role = (profile as { role?: string } | null)?.role
+  } catch {
+    return response // fail-open
+  }
 
-  const role = profile?.role
-  const allowedBase = role ? ROLE_ROUTES[role] : null
+  // Unknown role (no row yet, RLS block) → allow through. No lockout.
+  if (!role) return response
 
-  // Admin can access everything
+  // Admin can access everything.
   if (role === 'admin') return response
 
-  // /admin is admin-only — send everyone else to their own dashboard
+  const allowedBase = ROLE_ROUTES[role] ?? null
+
+  // /admin is admin-only — send other (known) roles to their own dashboard.
   if (pathname.startsWith('/admin')) {
     return NextResponse.redirect(new URL(allowedBase ?? '/', request.url))
   }
 
-  // Keep users out of other roles' home areas, except shared ones
+  // Keep users out of other roles' home areas, except shared ones.
   if (allowedBase) {
     const foreignBases = Object.values(ROLE_ROUTES).filter(
       (base) => base !== '/admin' && base !== allowedBase

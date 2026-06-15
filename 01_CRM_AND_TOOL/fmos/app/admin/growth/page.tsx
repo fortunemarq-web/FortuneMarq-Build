@@ -11,12 +11,12 @@ import {
   Target,
   ArrowUpRight,
   ArrowDownRight,
-  CheckCircle2,
   Circle
 } from "lucide-react";
 import OrganicTrendChart from "@/components/admin/growth/OrganicTrendChart";
 import CityOverviewTable from "@/components/admin/growth/CityOverviewTable";
 import ActiveCampaignsTable from "@/components/admin/growth/ActiveCampaignsTable";
+import GrowthTaskChecklist from "@/components/admin/growth/GrowthTaskChecklist";
 
 export const metadata: Metadata = {
   title: "Agency Growth — FortuneMarq",
@@ -178,26 +178,7 @@ export default async function AgencyGrowthHub({
                   </span>
                 </div>
                 
-                {(!pendingTasks || pendingTasks.length === 0) ? (
-                  <div className="text-center py-12 m-auto">
-                    <CheckCircle2 className="h-12 w-12 text-slate-200 mx-auto mb-3" />
-                    <p className="text-sm font-medium text-slate-500">All marketing tasks complete!</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3 flex-1 overflow-y-auto pr-2">
-                    {pendingTasks.map((task: any) => (
-                      <label key={task.id} className="flex items-start gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors group">
-                        <input type="checkbox" className="mt-1 flex-shrink-0 appearance-none h-4 w-4 rounded-full border-2 border-slate-300 checked:bg-[#42CA80] checked:border-[#42CA80] transition-all cursor-pointer" />
-                        <div>
-                          <p className="text-sm font-medium text-slate-700 group-hover:text-slate-900">{task.title}</p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            Due {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'N/A'}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                )}
+                <GrowthTaskChecklist initialTasks={(pendingTasks || []) as any} />
               </div>
             </div>
           </div>

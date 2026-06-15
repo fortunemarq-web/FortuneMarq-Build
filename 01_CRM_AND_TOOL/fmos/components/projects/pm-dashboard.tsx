@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Calendar,
@@ -24,6 +25,7 @@ import clsx from "clsx";
 import { createClient } from "@/lib/supabase";
 import CreateProjectModal from "./create-project-modal";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface Task {
   id: string;
@@ -116,6 +118,7 @@ function formatDisplayDate(dateStr: string | null): string {
 
 export default function PMDashboard(props: PMDashboardProps) {
   const { projects, tasks } = props;
+  const router = useRouter();
   const [activeFilter, setActiveFilter] = useState("all");
   const [showTeamDetails, setShowTeamDetails] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -162,7 +165,8 @@ export default function PMDashboard(props: PMDashboardProps) {
   };
 
   const handleDeleteResource = async (resourceId: string) => {
-    if (!confirm("Are you sure you want to delete this link?")) return;
+    const ok = await promptModal({ title: "Delete this link?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+    if (!ok) return;
     try {
       const { error } = await supabase.from("client_resources" as any).delete().eq("id", resourceId);
       if (error) throw error;
@@ -405,7 +409,7 @@ export default function PMDashboard(props: PMDashboardProps) {
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
             setShowCreateModal(false);
-            window.location.reload(); // Simple refresh to show new project
+            router.refresh();
           }}
         />
       )}

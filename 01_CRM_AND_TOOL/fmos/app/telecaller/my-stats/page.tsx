@@ -42,6 +42,7 @@ export default function MyStatsPage() {
     const [logs, setLogs] = useState<CallLog[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [logLimit, setLogLimit] = useState(10);
+    const [dailyCallGoal, setDailyCallGoal] = useState(100);
     const supabase = createClient();
 
     useEffect(() => {
@@ -55,49 +56,39 @@ export default function MyStatsPage() {
             if (!userData.user) return;
 
             const today = new Date().toISOString().split('T')[0];
-            const weekStart = new Date();
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-
-            // Fetch today's calls from outreach_logs
-            const { data: todayLogs } = await supabase
-                .from("outreach_logs")
-                .select("id, outcome, touch_type, created_at")
-                .eq("actor_id", userData.user.id)
-                .eq("touch_type", "call")
-                .gte("created_at", `${today}T00:00:00`)
-                .lte("created_at", `${today}T23:59:59`);
-
-            // Fetch this week's calls
-            const { data: weekLogs } = await supabase
-                .from("outreach_logs")
-                .select("id, outcome")
-                .eq("actor_id", userData.user.id)
-                .eq("touch_type", "call")
-                .gte("created_at", weekStart.toISOString());
-
-            // Fetch all-time stats
-            const { data: allTimeLogs } = await supabase
-                .from("outreach_logs")
-                .select("id, outcome")
-                .eq("actor_id", userData.user.id)
-                .eq("touch_type", "call");
-
-            // Fetch recent logs for activity feed (joined with lead name)
-            const { data: recentLogs } = await supabase
-                .from("outreach_logs")
-                .select("id, outcome, created_at, touch_type, notes, lead_id, leads(company_name)")
-                .eq("actor_id", userData.user.id)
-                .order("created_at", { ascending: false })
-                .limit(logLimit);
 
             const interestedOutcomes = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO"];
+
+            // Fetch today's calls + all-time logs + last 90 days for streak in one parallel batch
+            const [{ data: todayLogs }, { data: allTimeLogs }, { data: recentLogs }, { data: targetRow }] = await Promise.all([
+                supabase.from("outreach_logs").select("id, outcome").eq("actor_id", userData.user.id).eq("touch_type", "call").gte("created_at", `${today}T00:00:00`).lte("created_at", `${today}T23:59:59`),
+                supabase.from("outreach_logs").select("id, outcome").eq("actor_id", userData.user.id).eq("touch_type", "call"),
+                supabase.from("outreach_logs").select("id, outcome, created_at, touch_type, lead_id, leads(company_name)").eq("actor_id", userData.user.id).order("created_at", { ascending: false }).limit(logLimit),
+                (supabase as any).from("team_targets").select("target_value, daily_target").eq("user_id", userData.user.id).eq("metric", "daily_calls").maybeSingle(),
+            ]);
+
+            // Streak: fetch last 90 days of call activity
+            const ninetyDaysAgo = new Date(); ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+            const { data: streakLogs } = await supabase.from("outreach_logs").select("created_at").eq("actor_id", userData.user.id).eq("touch_type", "call").gte("created_at", ninetyDaysAgo.toISOString());
+            const activeDays = new Set((streakLogs || []).map((l: any) => l.created_at.slice(0, 10)));
+            let currentStreak = 0; let highestStreak = 0; let run = 0;
+            for (let i = 0; i < 90; i++) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                const key = d.toISOString().slice(0, 10);
+                if (activeDays.has(key)) { run++; if (i === 0 || currentStreak > 0) currentStreak = run; }
+                else { if (i === 0) currentStreak = 0; else if (currentStreak > 0 && run > 0) { highestStreak = Math.max(highestStreak, run); currentStreak = 0; } run = 0; }
+                highestStreak = Math.max(highestStreak, run);
+            }
+
             const totalInterested = allTimeLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0;
+            const dailyGoal = targetRow?.daily_target ?? targetRow?.target_value ?? 100;
+            setDailyCallGoal(dailyGoal);
 
             setStats({
                 callsToday: todayLogs?.length || 0,
                 interestedToday: todayLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0,
-                currentStreak: 0, // Would need day-by-day calculation — show 0 for now
-                highestStreak: 0,
+                currentStreak,
+                highestStreak,
                 totalCalls: allTimeLogs?.length || 0,
                 totalInterested,
             });
@@ -127,7 +118,6 @@ export default function MyStatsPage() {
         return <div className="p-8">Loading your stats...</div>;
     }
 
-    const dailyCallGoal = 100;
     const progressPercent = Math.min((stats.callsToday / dailyCallGoal) * 100, 100);
 
     return (

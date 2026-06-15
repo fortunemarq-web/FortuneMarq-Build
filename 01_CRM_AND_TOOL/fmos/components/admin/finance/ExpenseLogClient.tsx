@@ -13,6 +13,7 @@ import {
 import ExpenseCreateModal from "@/components/admin/finance/ExpenseCreateModal";
 import { deleteExpense } from "@/app/admin/finance/actions";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface ExpenseLogClientProps {
   initialExpenses: any[];
@@ -31,7 +32,8 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const handleDelete = async (exp: any) => {
-    if (!confirm(`Delete this expense (${exp.description})? This can't be undone.`)) return;
+    const ok = await promptModal({ title: `Delete expense?`, description: `"${exp.description}" — this can't be undone.`, confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+    if (!ok) return;
     try {
       await deleteExpense(exp.id);
       setExpenses(prev => prev.filter(e => e.id !== exp.id));

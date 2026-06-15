@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { X, Calendar as CalendarIcon, Loader2, Save, BarChart3, Image as ImageIcon, Trash2 } from "lucide-react";
 import { upsertContentPiece, deleteContentPiece, ContentPiece } from "@/app/admin/growth/actions";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface ContentPostModalProps {
   post: Partial<ContentPiece>;
@@ -17,9 +18,10 @@ interface ContentPostModalProps {
 export default function ContentPostModal({ post, channel, onClose, onSave, onDelete, availableTypes }: ContentPostModalProps) {
   const [isPending, startTransition] = useTransition();
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!post.id) return;
-    if (!confirm(`Delete "${post.title || "this post"}"? This can't be undone.`)) return;
+    const ok = await promptModal({ title: `Delete "${post.title || "this post"}"?`, description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+    if (!ok) return;
     startTransition(async () => {
       const result = await deleteContentPiece(post.id!, channel);
       if (result.success) {

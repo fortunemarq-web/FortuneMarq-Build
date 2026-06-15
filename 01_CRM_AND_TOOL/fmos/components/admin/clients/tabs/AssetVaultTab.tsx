@@ -16,6 +16,7 @@ import {
   addClientAsset,
   deleteClientAsset,
 } from "@/app/admin/clients/actions";
+import { promptModal } from "@/components/ui/prompt-modal";
 import { useRouter } from "next/navigation";
 
 interface Asset {
@@ -80,8 +81,9 @@ export default function AssetVaultTab({
     });
   };
 
-  const handleDelete = (assetId: string) => {
-    if (!confirm("Delete this asset?")) return;
+  const handleDelete = async (assetId: string) => {
+    const ok = await promptModal({ title: "Delete this asset?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+    if (!ok) return;
     setDeletingId(assetId);
     startTransition(async () => {
       const result = await deleteClientAsset(assetId, clientId);

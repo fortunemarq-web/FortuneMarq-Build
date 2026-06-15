@@ -18,8 +18,16 @@ import InboundFunnelTab from "./tabs/inbound-funnel-tab";
 
 type TabType = "overview" | "inbound" | "organic" | "paid" | "content";
 
+const PERIOD_OPTIONS = [
+    { label: "Last 7 Days", days: 7 },
+    { label: "This Month", days: 30 },
+    { label: "Last 3 Months", days: 90 },
+    { label: "Last 6 Months", days: 180 },
+];
+
 export default function MarketingDashboard() {
     const [activeTab, setActiveTab] = useState<TabType>("inbound");
+    const [periodDays, setPeriodDays] = useState(30);
 
     const tabs = [
         { id: "inbound", label: "Inbound & Funnel", icon: Inbox },
@@ -42,9 +50,17 @@ export default function MarketingDashboard() {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 border border-[#333] rounded-lg px-3 py-1.5 text-sm text-white bg-[#1a1a1a] hover:bg-[#222] cursor-pointer transition-colors w-fit">
-                    <span className="font-medium">This Month</span>
-                    <ChevronDown className="h-4 w-4 text-[#a1a1aa]" />
+                <div className="relative flex items-center gap-2 border border-[#333] rounded-lg px-3 py-1.5 text-sm text-white bg-[#1a1a1a] w-fit">
+                    <select
+                        value={periodDays}
+                        onChange={(e) => setPeriodDays(Number(e.target.value))}
+                        className="appearance-none bg-transparent text-white font-medium pr-6 cursor-pointer focus:outline-none"
+                    >
+                        {PERIOD_OPTIONS.map((o) => (
+                            <option key={o.days} value={o.days} className="bg-[#1a1a1a] text-white">{o.label}</option>
+                        ))}
+                    </select>
+                    <ChevronDown className="h-4 w-4 text-[#a1a1aa] absolute right-2 pointer-events-none" />
                 </div>
             </div>
 
@@ -82,7 +98,7 @@ export default function MarketingDashboard() {
 
             {/* Tab Content Area */}
             <div className="mt-8">
-                {activeTab === "inbound" && <InboundFunnelTab />}
+                {activeTab === "inbound" && <InboundFunnelTab initialDays={periodDays} />}
                 {activeTab === "overview" && <OverviewTab />}
                 {activeTab === "organic" && <OrganicSeoTab />}
                 {activeTab === "paid" && <PaidCampaignsTab />}

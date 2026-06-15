@@ -42,7 +42,7 @@ interface PerformanceMetric {
     color: string;
 }
 
-const INTERESTED_OUTCOMES = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO", "MEETING", "CURIOUS", "PDF_SENT"];
+const INTERESTED_OUTCOMES = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO"];
 
 interface NicheStat { name: string; calls: number; conv: number; }
 interface Insights {

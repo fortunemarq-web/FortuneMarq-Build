@@ -30,7 +30,9 @@ import { getFilledScript } from "@/lib/data/scripts/scripts_index";
 import WhatsAppTemplatePicker from "./whatsapp-template-picker";
 import { sendNotification } from "@/lib/notifications";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 import { FOLLOW_UP_QUEUE_STAGES, stageToStatus } from "@/lib/pipeline";
+import { calculateLeadScore } from "@/lib/lead-scoring";
 
 // ─── Types ──────────────────────────────────────────────────────
 interface Lead {
@@ -225,6 +227,30 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
   const isReportEngaged = (l: Lead) =>
     l.tags?.includes("tapped_book_meeting") || l.tags?.includes("tapped_tell_me_more");
 
+  // ─── Lead score (priority) — decides who Afifa calls first ─────────
+  // Maps the lead's real fields onto the scoring factors in lib/lead-scoring.ts.
+  const scoreLead = (l: Lead): number =>
+    calculateLeadScore({
+      hasPhone: !!l.phone,
+      hasBusinessName: !!l.company_name,
+      // We have a ready PDF/script kit when both niche + city are known.
+      isNicheKitComplete: !!l.industry && !!l.city,
+      hasFollowUpScheduled: !!l.follow_up_date,
+      isInterestedOnce:
+        (l.last_outcome?.startsWith("INTERESTED") ?? false) ||
+        ["pdf_sent", "follow_up_due", "meeting_booked", "curiosity_sent"].includes(l.outreach_stage || "") ||
+        !!isReportEngaged(l),
+      isNotInterested: l.outreach_stage === "not_interested" || l.last_outcome === "NOT_INTERESTED",
+      noContactIn7Days: false, // refine once last_activity_at is surfaced to the cockpit
+    });
+
+  // No-emoji visual (design rule): colour dot + word label only.
+  const scoreVisual = (score: number) => {
+    if (score >= 7) return { label: "Hot", dot: "bg-emerald-500", text: "text-emerald-700", chip: "bg-emerald-50 border-emerald-200" };
+    if (score >= 4) return { label: "Warm", dot: "bg-amber-500", text: "text-amber-700", chip: "bg-amber-50 border-amber-200" };
+    return { label: "Cold", dot: "bg-slate-400", text: "text-slate-500", chip: "bg-slate-100 border-slate-200" };
+  };
+
   const tabLeads = activeTab === "followups" ? localLeads.filter(isFollowUp) : localLeads.filter((l) => !isFollowUp(l));
 
   // Filter
@@ -267,6 +293,16 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       const aDate = a.follow_up_date ? new Date(a.follow_up_date).getTime() : Infinity;
       const bDate = b.follow_up_date ? new Date(b.follow_up_date).getTime() : Infinity;
       return aDate - bDate;
+    });
+  } else {
+    // Priority Queue: hottest leads first so the rep's time goes to the best prospects.
+    filteredLeads.sort((a, b) => {
+      const diff = scoreLead(b) - scoreLead(a);
+      if (diff !== 0) return diff;
+      // Tiebreak: most recently captured first.
+      const aCap = a.captured_at ? new Date(a.captured_at).getTime() : 0;
+      const bCap = b.captured_at ? new Date(b.captured_at).getTime() : 0;
+      return bCap - aCap;
     });
   }
 
@@ -526,10 +562,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       .limit(3);
     if (dupes && dupes.length > 0) {
       const d: any = dupes[0];
-      const proceed = confirm(
-        `Possible duplicate: "${d.company_name}" (${d.phone || "no phone"}) already exists` +
-        `${d.outreach_stage ? ` in stage "${d.outreach_stage.replace(/_/g, " ")}"` : ""}.\n\nAdd anyway?`
-      );
+      const proceed = await promptModal({
+        title: "Possible duplicate found",
+        description: `"${d.company_name}" (${d.phone || "no phone"}) already exists${d.outreach_stage ? ` in stage "${d.outreach_stage.replace(/_/g, " ")}"` : ""}. Add anyway?`,
+        confirmLabel: "Add Anyway",
+        type: "select",
+        options: [{ value: "confirm", label: "Yes, add as new lead" }],
+      });
       if (!proceed) {
         setAddLeadLoading(false);
         setAddLeadError(`Duplicate of "${d.company_name}" — search for it in the list instead.`);
@@ -868,11 +907,23 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       )}
                     </div>
                   </div>
-                  {effectiveScriptType && (
-                    <span className="shrink-0 text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg">
-                      Script {effectiveScriptType}
-                    </span>
-                  )}
+                  <div className="shrink-0 flex flex-col items-end gap-1.5">
+                    {(() => {
+                      const sc = scoreLead(currentLead);
+                      const v = scoreVisual(sc);
+                      return (
+                        <span className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg border ${v.chip} ${v.text}`} title={`Lead score ${sc}/10`}>
+                          <span className={`h-2 w-2 rounded-full ${v.dot}`} />
+                          {v.label} {sc}
+                        </span>
+                      );
+                    })()}
+                    {effectiveScriptType && (
+                      <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg">
+                        Script {effectiveScriptType}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 

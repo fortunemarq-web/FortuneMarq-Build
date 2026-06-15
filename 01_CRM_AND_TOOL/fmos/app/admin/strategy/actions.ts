@@ -208,6 +208,76 @@ export async function fetchStrategyRunCompletion(runId: string) {
   };
 }
 
+// ─── Close the loop: measure real outcomes for a strategy run ───
+// Maps a run's destination + timeframe window to actual results:
+//   organic channels  → content pieces published on that channel
+//   acquisition city   → leads / meetings / clients won in that city
+function timeframeToDays(tf: string): number {
+  const m = (tf || "").match(/^(\d+)_days$/);
+  return m ? parseInt(m[1], 10) : 30;
+}
+
+function slugifyCity(s: string): string {
+  return (s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+}
+
+export interface StrategyOutcome {
+  kind: "organic" | "acquisition" | "other";
+  label: string;       // human summary, e.g. "3 posts published"
+  value: number;       // primary metric
+  windowElapsed: boolean; // has the timeframe fully elapsed?
+}
+
+export async function fetchStrategyRunOutcome(run: {
+  id: string;
+  destination: string;
+  timeframe: string;
+  created_at: string;
+}): Promise<StrategyOutcome> {
+  const supabase = await createServerClientWithCookies();
+  const start = new Date(run.created_at);
+  const days = timeframeToDays(run.timeframe);
+  const plannedEnd = new Date(start.getTime() + days * 86400000);
+  const now = new Date();
+  const end = now < plannedEnd ? now : plannedEnd;
+  const windowElapsed = now >= plannedEnd;
+  const startISO = start.toISOString();
+  const endISO = end.toISOString();
+
+  const dest = run.destination || "";
+
+  // Organic growth destination: agency_growth.<channel>
+  if (dest.startsWith("agency_growth.")) {
+    const channel = dest.split(".")[1];
+    const { data } = await supabase
+      .from("content_pieces" as any)
+      .select("id, channel, status, published_date")
+      .eq("channel", channel)
+      .eq("status", "published")
+      .gte("published_date", startISO)
+      .lte("published_date", endISO);
+    const n = (data as any[])?.length || 0;
+    return { kind: "organic", label: `${n} post${n === 1 ? "" : "s"} published`, value: n, windowElapsed };
+  }
+
+  // Acquisition destination: acquisition.<city_slug>.<niche>
+  if (dest.startsWith("acquisition.")) {
+    const citySlug = dest.split(".")[1];
+    const { data } = await supabase
+      .from("leads")
+      .select("city, outreach_stage, created_at, meeting_booked_at, last_activity_at")
+      .gte("created_at", startISO)
+      .lte("created_at", endISO);
+    const rows = ((data as any[]) || []).filter((l) => slugifyCity(l.city) === citySlug);
+    const won = rows.filter((l) => l.outreach_stage === "won").length;
+    const meetings = rows.filter((l) => l.meeting_booked_at && l.meeting_booked_at >= startISO).length;
+    const label = `${rows.length} lead${rows.length === 1 ? "" : "s"} · ${meetings} mtg · ${won} won`;
+    return { kind: "acquisition", label, value: rows.length, windowElapsed };
+  }
+
+  return { kind: "other", label: "—", value: 0, windowElapsed };
+}
+
 export async function fetchClientStrategyRuns(clientId: string) {
   const supabase = await createServerClientWithCookies();
   

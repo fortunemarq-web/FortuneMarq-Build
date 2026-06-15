@@ -1,17 +1,19 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-12 (schema sync + PHASE F Stage 0 in progress)
-# ➤ CONTINUING WORK? Read COWORK_HANDOFF.md FIRST — full session state,
-#   Stage 0 remaining tasks, and the SQL-execution method live there.
+# Last updated: 2026-06-14 (Phase 1 bug-fix sweep complete — ALL critical bugs fixed)
+# ➤ CONTINUING WORK? Read COWORK_HANDOFF.md FIRST — full state + next steps.
 #
-# LATEST SESSION (2026-06-12): ALL pending migrations are now RUN in Supabase
-# (38 missing tables created, RLS hardened, audit triggers, indexes,
-# profiles.is_active). database.types.ts regenerated (110 tables). The
-# "4 migrations pending" note below is OBSOLETE — done. Team management
-# (invite/role/password/deactivate/remove) built at app/admin/team/user-actions.ts.
-# alert()/prompt() fully eliminated — use toast + promptModal()
-# (components/ui/prompt-modal.tsx). /manager/performance now computes real
-# stats from outreach_logs. Details: last_session.md.
+# LATEST SESSION (2026-06-14): PHASE 1 (bug audit) FULLY COMPLETE.
+# 17 critical bugs fixed: admin greeting now dynamic from auth profile + time-aware,
+# P&L health score + cash reserves now calculated from real data, invoice revenue
+# filter fixed (setup_fee), growth hub task checkboxes write to DB, window.location.reload()
+# replaced with router.refresh() everywhere, team scorecards use outreach_logs (not
+# call_logs) + proposals (not deals), GSC placeholder replaces mock organic stats,
+# automations inline CRUD (no more 404 edit links), proposal Done → /admin/proposals,
+# agreement confirm button writes to DB, strategist cards navigate to lead profile,
+# landing page cleaned (no "(Sample)", no dead play button). TypeScript: 0 errors.
+# Confirmed active .env.local on this machine. Dev server running on localhost:3000.
+# NEXT: Phase 2 — new features. Start with middleware.ts auth gate (P0). Details: last_session.md.
 #
 # KEY CONVENTIONS ADDED 2026-06-11 (evening — UI/UX session):
 # - Design system lives in app/globals.css (@theme): green text/buttons use
@@ -118,12 +120,10 @@ Client features:
 - **Actions**: `handleAction`, `confirmAttended`, `handleReschedule`, `saveMeetingLink`, `saveMeetingNotes`
 - Added to sidebar nav: `{ label: "Meetings", href: "/admin/meetings", icon: CalendarCheck }` between Outreach and Proposals
 
-⚠️ **PENDING SQL MIGRATION** (not yet run in Supabase):
-```sql
-ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_link TEXT;
-ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
-```
-Until this runs, TypeScript shows 2 errors in meetings-client.tsx — these are column-not-in-schema errors, not logic errors.
+✅ **RESOLVED 2026-06-15** — `meeting_link` / `meeting_notes` (and the SLA columns
+last_contacted_at / stale_flag / next_action_date) all exist in the live DB; confirmed
+against generated types. The 2026-06-12 full sync already covered them. There is NO pending
+SQL. Verify anytime with `supabase/2026-06-15_verify_schema.sql`.
 
 ### ✅ /admin/proposals — Proposals Page
 **File:** `app/admin/proposals/page.tsx`

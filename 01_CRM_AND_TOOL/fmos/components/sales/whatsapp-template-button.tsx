@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface Lead {
     id: string;
@@ -118,8 +119,9 @@ export default function WhatsAppTemplateButton({ lead, onOutcomeLogged }: WhatsA
             setIsOpen(false);
 
             // 5. Prompt to update CRM status (simulated by calling callback)
-            if (onOutcomeLogged && confirm(`Message sent! Would you like to mark this lead as ${outcome.replace('_', ' ')} in the CRM?`)) {
-                onOutcomeLogged(outcome);
+            if (onOutcomeLogged) {
+                const doLog = await promptModal({ title: "Update CRM?", description: `Mark this lead as ${outcome.replace(/_/g, ' ')} in the CRM?`, confirmLabel: "Update CRM", type: "select", options: [{ value: "confirm", label: "Yes, update status" }] });
+                if (doLog) onOutcomeLogged(outcome);
             }
 
         } catch (error) {

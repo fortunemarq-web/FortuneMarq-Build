@@ -25,6 +25,7 @@ import { createClient } from "@/lib/supabase";
 import clsx from "clsx";
 import { sendNotification, NotificationType } from "@/lib/notifications";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface Task {
   id: string;
@@ -227,7 +228,8 @@ export default function TaskManager({
   };
 
   const handleDeleteTask = async (taskId: string) => {
-    if (!confirm("Delete this task?")) return;
+    const ok = await promptModal({ title: "Delete this task?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+    if (!ok) return;
 
     setUpdatingTaskId(taskId);
     const supabase = createClient();

@@ -253,6 +253,23 @@ export async function fetchGmbSnapshots() {
   return data;
 }
 
+export async function saveGmbSnapshot(snapshot: {
+  profile_views: number;
+  direction_requests: number;
+  calls: number;
+  website_clicks: number;
+  photo_views: number;
+}) {
+  const supabase = await createServerClientWithCookies();
+  const month = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const { error } = await (supabase as any)
+    .from("gmb_snapshots")
+    .upsert({ ...snapshot, snapshot_month: month }, { onConflict: "snapshot_month" });
+  if (error) return { success: false, error: error.message };
+  revalidatePath("/admin/growth/gmb");
+  return { success: true };
+}
+
 export async function fetchReviewRequests() {
   const supabase = await createServerClientWithCookies();
   const { data, error } = await supabase

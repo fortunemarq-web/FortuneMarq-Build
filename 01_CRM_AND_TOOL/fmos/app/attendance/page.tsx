@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { format } from "date-fns";
 import { Clock, Coffee, Play, Square, AlertCircle } from "lucide-react";
 import clsx from "clsx";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface AttendanceBreak {
     break_end_at: string | null;
@@ -92,7 +93,8 @@ export default function MyAttendancePage() {
     };
 
     const handleClockOut = async () => {
-        if (!confirm("Are you sure you want to clock out?")) return;
+        const ok = await promptModal({ title: "Clock out?", description: "Confirm you're ending your work session.", confirmLabel: "Clock Out", type: "select", options: [{ value: "confirm", label: "Yes, clock out now" }] });
+        if (!ok) return;
         await fetch('/api/attendance/clock-out', { method: 'POST' });
         fetchState();
     };

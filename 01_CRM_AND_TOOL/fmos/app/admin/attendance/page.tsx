@@ -16,22 +16,13 @@ export default function AdminAttendancePage() {
     }, [date]);
 
     const fetchDailyReport = async () => {
-        // Need to join user details. 
-        // NOTE: Standard supabase client might not let us join auth.users easily depending on config.
-        // Assuming we have a 'public_users' view or 'staff' table or just using IDs for now.
-        // Or fetch users separately.
-
-        // 1. Fetch summaries
-        const { data: sums } = await supabase
-            .from('attendance_daily_summary' as any)
-            .select('*')
-            .eq('day', date);
-
-        // 2. Fetch User Map (simplified: assuming we can get email from somewhere, or just show ID)
-        // Ideally: .select('*, user:users(id, email)') if FK exists to public users table.
-        // Let's assume we have a `users` table mirror or just list IDs for v1.
-
-        setSummaries(sums || []);
+        const [{ data: sums }, { data: profiles }] = await Promise.all([
+            supabase.from('attendance_daily_summary' as any).select('*').eq('day', date),
+            supabase.from('profiles').select('id, full_name'),
+        ]);
+        const nameMap: Record<string, string> = {};
+        (profiles || []).forEach((p: any) => { nameMap[p.id] = p.full_name || p.id.slice(0, 8); });
+        setSummaries((sums || []).map((s: any) => ({ ...s, _name: nameMap[s.user_id] || s.user_id.slice(0, 8) })));
     };
 
     const formatTime = (mins: number) => {
@@ -71,7 +62,7 @@ export default function AdminAttendancePage() {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-slate-100 text-slate-500 font-medium uppercase tracking-wider">
                             <tr>
-                                <th className="px-6 py-4">User ID</th>
+                                <th className="px-6 py-4">Team Member</th>
                                 <th className="px-6 py-4">Sessions</th>
                                 <th className="px-6 py-4">Gross</th>
                                 <th className="px-6 py-4">Break</th>
@@ -82,7 +73,7 @@ export default function AdminAttendancePage() {
                         <tbody className="divide-y divide-slate-200">
                             {summaries.map(s => (
                                 <tr key={s.id} className="hover:bg-slate-100">
-                                    <td className="px-6 py-4 font-mono text-slate-600">{s.user_id}</td>
+                                    <td className="px-6 py-4 font-medium text-slate-900">{s._name}</td>
                                     <td className="px-6 py-4">{s.sessions_count}</td>
                                     <td className="px-6 py-4">{formatTime(s.gross_minutes)}</td>
                                     <td className="px-6 py-4 text-amber-500">{formatTime(s.break_minutes)}</td>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle, Clock, Check } from "lucide-react";
 import SERVICES_DATA from "@/lib/data/services_data.json";
 import PrintButton from "@/components/ui/print-button";
+import AgreementConfirmButton from "@/components/admin/agreements/AgreementConfirmButton";
 
 const SERVICE_DETAILS: Record<string, { whatWeDo: string; deliverables: string[]; timeline: string; importantNote?: string }> =
   Object.fromEntries(
@@ -66,6 +67,9 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
                 : <><Clock className="h-3.5 w-3.5" /> Pending</>
               }
             </span>
+            {!isConfirmed && (
+              <AgreementConfirmButton agreementId={agreement.id} clientName={lead?.company_name || "Client"} />
+            )}
             <PrintButton />
           </div>
         </div>

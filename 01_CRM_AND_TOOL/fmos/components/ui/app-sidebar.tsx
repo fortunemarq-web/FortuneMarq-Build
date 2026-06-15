@@ -34,6 +34,7 @@ import {
   History,
   Database,
   Megaphone,
+  Boxes,
 } from "lucide-react";
 
 
@@ -69,19 +70,21 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
     {
       label: "Operations",
       items: [
-        { label: "Tasks",     href: "/tasks",          icon: ListTodo },
-        { label: "Projects",  href: "/projects",       icon: FolderKanban },
-        { label: "Team",      href: "/admin/team",     icon: Users },
+        { label: "Tasks",         href: "/tasks",                icon: ListTodo },
+        { label: "Projects",      href: "/projects",             icon: FolderKanban },
+        { label: "Delivery Load", href: "/admin/delivery-load",  icon: Boxes },
+        { label: "Team",          href: "/admin/team",           icon: Users },
       ],
     },
     {
       label: "Insights",
       items: [
-        { label: "Finance",   href: "/admin/finance",   icon: DollarSign },
-        { label: "Marketing", href: "/admin/marketing", icon: Megaphone },
-        { label: "Growth",    href: "/admin/growth",    icon: TrendingUp },
-        { label: "Strategy",  href: "/admin/strategy",  icon: Target },
-        { label: "Reports",   href: "/admin/reports",   icon: BarChart2 },
+        { label: "Finance",       href: "/admin/finance",      icon: DollarSign },
+        { label: "Marketing Hub", href: "/admin/marketing-hub", icon: Megaphone },
+        { label: "Marketing",     href: "/admin/marketing",    icon: BarChart2 },
+        { label: "Growth",        href: "/admin/growth",       icon: TrendingUp },
+        { label: "Strategy",      href: "/admin/strategy",     icon: Target },
+        { label: "Reports",       href: "/admin/reports",      icon: BarChart2 },
       ],
     },
     {
@@ -213,9 +216,8 @@ export default function AppSidebar() {
   const navGroups = role === "admin" ? NAV_GROUPS.admin : null;
 
   const isActiveLink = (href: string) => {
-    if (href === "/admin" && pathname === "/admin") return true;
-    if (href !== "/admin" && pathname.startsWith(href)) return true;
-    return false;
+    if (href === "/admin") return pathname === "/admin";
+    return pathname === href || pathname.startsWith(href + "/");
   };
 
   // Mobile Header Component

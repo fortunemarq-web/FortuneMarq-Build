@@ -34,6 +34,7 @@ import StrategySessionModal from "./strategy-session-modal";
 import clsx from "clsx";
 import { leadStatusUpdate } from "@/lib/pipeline";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 type Lead = Database["public"]["Tables"]["leads"]["Row"];
 
@@ -238,6 +239,8 @@ export default function StrategistPipeline({
     if (["strategy_booked", "strategy_completed"].includes(lead.status || "")) {
       setSelectedLead(lead);
       setIsSessionModalOpen(true);
+    } else {
+      router.push(`/admin/leads/${lead.id}`);
     }
   };
 
@@ -307,7 +310,8 @@ export default function StrategistPipeline({
 
   const handleNotFit = async (leadId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm("Mark this lead as 'Not Fit'?")) return;
+    const ok = await promptModal({ title: "Mark lead as Not Fit?", description: "This will close the deal as lost.", confirmLabel: "Mark Not Fit", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, mark not fit" }] });
+    if (!ok) return;
 
     setIsUpdating(leadId);
     try {

@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Trash2, Loader2 } from "lucide-react";
 import { deleteSopAction } from "@/app/admin/team/actions";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 export default function DeleteSopButton({ sopId, sopTitle }: { sopId: string; sopTitle?: string | null }) {
   const [busy, setBusy] = useState(false);
 
   async function handleDelete() {
-    if (!confirm(`Delete "${sopTitle || "this SOP"}"? This can't be undone.`)) return;
+    const ok = await promptModal({ title: `Delete "${sopTitle || "this SOP"}"?`, description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+    if (!ok) return;
     setBusy(true);
     try {
       await deleteSopAction(sopId); // redirects on success

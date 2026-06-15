@@ -7,6 +7,7 @@ import { Pencil, Trash2, Ban, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/toast";
 import { logAudit } from "@/lib/audit";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface ProposalRowActionsProps {
   proposalId: string;
@@ -29,7 +30,8 @@ export default function ProposalRowActions({ proposalId, proposalNumber, status,
   const st = status || "draft";
 
   async function handleDelete() {
-    if (!confirm(`Permanently delete ${proposalNumber || "this proposal"}? This can't be undone.`)) return;
+    const ok = await promptModal({ title: `Delete ${proposalNumber || "this proposal"}?`, description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete permanently" }] });
+    if (!ok) return;
     setBusy(true);
     const { error } = await supabase.from("proposals").delete().eq("id", proposalId);
     setBusy(false);
@@ -43,7 +45,8 @@ export default function ProposalRowActions({ proposalId, proposalNumber, status,
   }
 
   async function handleVoid() {
-    if (!confirm(`Void ${proposalNumber || "this proposal"}? It stays in the list as rejected for your records.`)) return;
+    const ok = await promptModal({ title: `Void ${proposalNumber || "this proposal"}?`, description: "It stays in the list as rejected for your records.", confirmLabel: "Void", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, void it" }] });
+    if (!ok) return;
     setBusy(true);
     const { error } = await supabase.from("proposals").update({ status: "rejected" } as any).eq("id", proposalId);
     setBusy(false);

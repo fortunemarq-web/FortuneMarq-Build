@@ -31,7 +31,8 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
   const [generating, setGenerating] = useState(false);
 
   const handleGenerateMrr = async () => {
-    if (!confirm("Generate this month's MRR invoices for all active clients with a retainer? Clients already billed this month are skipped.")) return;
+    const ok = await promptModal({ title: "Generate MRR invoices?", description: "Creates this month's retainer invoices for all active clients. Clients already billed this month are skipped.", confirmLabel: "Generate", type: "select", options: [{ value: "confirm", label: "Yes, generate now" }] });
+    if (!ok) return;
     setGenerating(true);
     try {
       const res = await generateMonthlyInvoices();
@@ -68,7 +69,8 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
     const matchesSearch = inv.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          inv.clients?.business_name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || inv.status === statusFilter;
-    const matchesRevenue = revenueFilter === "all" || (inv.revenue_type || 'mrr') === revenueFilter;
+    const revType = inv.revenue_type || 'mrr';
+    const matchesRevenue = revenueFilter === "all" || revType === revenueFilter || (revenueFilter === "setup_fee" && revType === "setup");
     return matchesSearch && matchesStatus && matchesRevenue;
   });
 
@@ -119,7 +121,8 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
   };
 
   const handleCancel = async (id: string) => {
-    if (!confirm("Cancel (void) this invoice? It stays in the list for your records but stops counting as outstanding.")) return;
+    const ok = await promptModal({ title: "Cancel this invoice?", description: "It stays in the list for your records but stops counting as outstanding.", confirmLabel: "Cancel Invoice", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, cancel it" }] });
+    if (!ok) return;
     try {
       await cancelInvoice(id);
       setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, status: 'cancelled' } : inv));
@@ -130,7 +133,8 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
   };
 
   const handleDelete = async (id: string, invoiceNumber: string) => {
-    if (!confirm(`Permanently delete ${invoiceNumber}? This can't be undone. Use Cancel instead if it was ever sent to the client.`)) return;
+    const ok = await promptModal({ title: `Delete ${invoiceNumber}?`, description: "This can't be undone. Use Cancel instead if the invoice was ever sent to the client.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete permanently" }] });
+    if (!ok) return;
     try {
       await deleteInvoice(id);
       setInvoices(prev => prev.filter(inv => inv.id !== id));
@@ -223,7 +227,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
           >
             <option value="all">All Revenues</option>
             <option value="mrr">MRR</option>
-            <option value="setup">Setup Fee</option>
+            <option value="setup_fee">Setup Fee</option>
             <option value="one_time">One-Time</option>
           </select>
           {/* (export button removed — it did nothing; add back when CSV export exists) */}

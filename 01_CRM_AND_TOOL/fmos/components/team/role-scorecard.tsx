@@ -77,15 +77,17 @@ function StatIcon({ type }: { type: string }) {
 function calculateStats(role: string, userId: string, data: any) {
     switch (role) {
         case 'telecaller': {
-            const userCalls = data.calls?.filter((c: any) => c.telecaller_id === userId) || [];
-            const connected = userCalls.filter((c: any) => c.outcome === 'connected' || c.outcome === 'interested' || c.outcome === 'strategy_booked').length;
-            const booked = userCalls.filter((c: any) => c.outcome === 'strategy_booked').length;
-            const rate = userCalls.length > 0 ? Math.round((connected / userCalls.length) * 100) : 0;
-            
+            const userCalls = data.calls?.filter((c: any) => c.actor_id === userId) || [];
+            const interested = userCalls.filter((c: any) =>
+              c.outcome_id === 'INTERESTED_BOOK' || c.outcome_id === 'INTERESTED_FOLLOW_UP' || c.outcome_id === 'INTERESTED_SEND_INFO'
+            ).length;
+            const booked = userCalls.filter((c: any) => c.outcome_id === 'INTERESTED_BOOK').length;
+            const rate = userCalls.length > 0 ? Math.round((interested / userCalls.length) * 100) : 0;
+
             return [
                 { label: 'Calls Made', value: userCalls.length, type: 'neutral' },
-                { label: 'Connect Rate', value: `${rate}%`, type: rate > 30 ? 'positive' : 'negative' },
-                { label: 'Demos Booked', value: booked, type: 'success' },
+                { label: 'Interest Rate', value: `${rate}%`, type: rate > 30 ? 'positive' : 'negative' },
+                { label: 'Meetings Booked', value: booked, type: 'success' },
                 { label: 'Conversion', value: userCalls.length > 0 ? `${Math.round((booked / userCalls.length) * 100)}%` : '0%', type: 'positive' }
             ];
         }
@@ -115,15 +117,16 @@ function calculateStats(role: string, userId: string, data: any) {
             ];
         }
         case 'strategist': {
-            const userDeals = data.deals?.filter((d: any) => d.created_by === userId) || [];
-            const totalValue = userDeals.reduce((acc: number, d: any) => acc + (d.value || 0), 0);
-            const closeRate = userDeals.length > 0 ? "24%" : "0%";
+            const userProposals = data.deals?.filter((d: any) => d.created_by === userId) || [];
+            const confirmed = userProposals.filter((d: any) => d.status === 'confirmed');
+            const totalValue = confirmed.reduce((acc: number, d: any) => acc + (Number(d.total_monthly) || 0) + (Number(d.total_setup) || 0), 0);
+            const closeRate = userProposals.length > 0 ? Math.round((confirmed.length / userProposals.length) * 100) : 0;
 
             return [
-                { label: 'Deals Closed', value: userDeals.length, type: 'success' },
-                { label: 'Rev. Moved', value: `₹${totalValue.toLocaleString()}`, type: 'positive' },
-                { label: 'Close Rate', value: closeRate, type: 'positive' },
-                { label: 'Pipeline Val.', value: '₹12.4L', type: 'neutral' }
+                { label: 'Proposals Sent', value: userProposals.length, type: 'neutral' },
+                { label: 'Deals Closed', value: confirmed.length, type: 'success' },
+                { label: 'Close Rate', value: `${closeRate}%`, type: closeRate > 30 ? 'positive' : 'neutral' },
+                { label: 'Rev. Closed', value: totalValue > 0 ? `₹${(totalValue / 1000).toFixed(0)}k` : '₹0', type: 'positive' }
             ];
         }
         default: return [];

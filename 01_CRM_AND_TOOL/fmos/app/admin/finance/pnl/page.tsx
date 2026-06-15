@@ -6,6 +6,16 @@ import { getRevenueVsExpensesChartData } from "../actions";
 export default async function PnLPage() {
   const pnlData = await getRevenueVsExpensesChartData();
 
+  const totalRevenue = pnlData.reduce((a, r) => a + r.revenue, 0);
+  const totalProfit = pnlData.reduce((a, r) => a + r.profit, 0);
+  const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+  const healthScore = Math.min(100, Math.max(0, Math.round(avgMargin + 50)));
+  const healthLabel =
+    healthScore >= 90 ? "Optimal" :
+    healthScore >= 75 ? "Healthy" :
+    healthScore >= 60 ? "Good" :
+    healthScore >= 40 ? "Fair" : "Critical";
+
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -122,17 +132,17 @@ export default async function PnLPage() {
               <Percent className="h-6 w-6 mb-4 text-[#42CA80]" />
               <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Health Score</p>
               <div className="flex items-end gap-2">
-                 <h3 className="text-3xl font-black text-slate-900">84/100</h3>
-                 <span className="text-[10px] font-bold text-emerald-500 mb-1">Optimal</span>
+                 <h3 className="text-3xl font-black text-slate-900">{healthScore}/100</h3>
+                 <span className={`text-[10px] font-bold mb-1 ${healthScore >= 75 ? "text-emerald-500" : healthScore >= 50 ? "text-amber-500" : "text-red-500"}`}>{healthLabel}</span>
               </div>
            </div>
 
            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
               <Wallet className="h-6 w-6 mb-4 text-orange-400" />
-              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Cash Reserves</p>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Net Cash (6 Mo)</p>
               <div className="flex items-end gap-2">
-                 <h3 className="text-3xl font-black text-slate-900">₹8.4L</h3>
-                 <span className="text-[10px] font-bold text-slate-400 mb-1">Approx.</span>
+                 <h3 className={`text-3xl font-black ${totalProfit >= 0 ? "text-slate-900" : "text-red-600"}`}>{formatCurrency(totalProfit)}</h3>
+                 <span className="text-[10px] font-bold text-slate-400 mb-1">Cumulative</span>
               </div>
            </div>
         </div>

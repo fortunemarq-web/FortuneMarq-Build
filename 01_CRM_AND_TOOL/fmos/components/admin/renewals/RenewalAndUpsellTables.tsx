@@ -74,8 +74,9 @@ export function RenewalTable({
     });
   };
 
-  const handleChurn = (clientId: string) => {
-    if (!confirm("Mark this client as churned?")) return;
+  const handleChurn = async (clientId: string) => {
+    const ok = await promptModal({ title: "Mark client as churned?", description: "This will move them to churned status and remove from active renewals.", confirmLabel: "Mark Churned", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, mark as churned" }] });
+    if (!ok) return;
     setPendingId(clientId);
     startTransition(async () => {
       await markClientChurned(clientId);

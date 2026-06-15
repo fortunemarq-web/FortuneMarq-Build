@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { UploadCloud, FileText, Link as LinkIcon, Download, Trash2, Tag } from "lucide-react";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface Deliverable {
     id: string;
@@ -44,7 +45,8 @@ export default function DeliverableManager({ projectId, initialDeliverables, isC
     };
 
     const deleteDeliverable = async (id: string) => {
-        if (!confirm("Delete this deliverable?")) return;
+        const ok = await promptModal({ title: "Delete this deliverable?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+        if (!ok) return;
         await supabase.from("deliverables" as any).delete().eq("id", id);
         setDeliverables(prev => prev.filter(d => d.id !== id));
     };
@@ -70,7 +72,7 @@ export default function DeliverableManager({ projectId, initialDeliverables, isC
                         <input type="text" placeholder="Title" value={newItem.title} onChange={e => setNewItem({ ...newItem, title: e.target.value })} className="bg-slate-50 border border-[#222] rounded p-2 text-slate-900 text-sm" />
                         <select value={newItem.type} onChange={e => setNewItem({ ...newItem, type: e.target.value })} className="bg-slate-50 border border-[#222] rounded p-2 text-slate-900 text-sm">
                             <option value="link">Link / URL</option>
-                            <option value="file">File (Upload placeholder)</option>
+                            <option value="file">File (paste URL)</option>
                             <option value="note">Note / Text</option>
                         </select>
                         <input type="text" placeholder="URL or Content" value={newItem.url} onChange={e => setNewItem({ ...newItem, url: e.target.value })} className="bg-slate-50 border border-[#222] rounded p-2 text-slate-900 text-sm md:col-span-2" />

@@ -36,6 +36,12 @@ export default async function AdminCommandHub() {
   const now = new Date().toISOString();
   const fortyEightHoursAgo = new Date(Date.now() - 48 * 3600000).toISOString();
 
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+  const { data: userProfile } = authUser ? await supabase.from("profiles").select("full_name").eq("id", authUser.id).maybeSingle() : { data: null };
+  const userName = (userProfile as any)?.full_name?.split(" ")[0] || "there";
+  const hourIST = (new Date().getUTCHours() + 5) % 24 + (new Date().getUTCMinutes() >= 30 ? 0.5 : 0);
+  const timeGreeting = hourIST < 12 ? "Good morning" : hourIST < 17 ? "Good afternoon" : "Good evening";
+
   // Fetch all dashboard data in parallel
   const [
     mrrResult,
@@ -246,7 +252,7 @@ export default async function AdminCommandHub() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-              Good morning, Jabeer
+              {timeGreeting}, {userName}
             </h1>
             <p className="text-slate-500 mt-1 text-sm">
               {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}
@@ -372,7 +378,7 @@ export default async function AdminCommandHub() {
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/50 py-16 text-center">
                 <CheckCircle className="h-10 w-10 text-emerald-500 mb-3" />
                 <p className="text-lg font-semibold text-emerald-700">Nothing urgent today.</p>
-                <p className="text-sm text-emerald-600 mt-1">Good morning, Jabeer.</p>
+                <p className="text-sm text-emerald-600 mt-1">{timeGreeting}, {userName}.</p>
               </div>
             )}
 

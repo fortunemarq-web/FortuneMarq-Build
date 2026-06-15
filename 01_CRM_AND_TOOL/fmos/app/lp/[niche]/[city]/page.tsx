@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
-    Play,
     ShieldCheck,
     TrendingUp,
     Users,
@@ -114,22 +113,17 @@ export default async function LandingPage({ params }: { params: Params }) {
                             </div>
                         </div>
 
-                        {/* VSL Placeholder */}
-                        <div className="relative group aspect-video w-full rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="relative z-20 w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center transition-transform group-hover:scale-110 shadow-2xl shadow-emerald-500/20">
-                                    <Play className="h-8 w-8 text-black fill-current translate-x-0.5" />
-                                </div>
-                                <img
-                                    src={`https://images.unsplash.com/photo-1551288049-bbbda546697a?q=80&w=2070&auto=format&fit=crop`}
-                                    alt="VSL Background"
-                                    className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity grayscale"
-                                />
-                                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-                                    <p className="text-sm font-bold opacity-80 uppercase tracking-widest flex items-center gap-2">
-                                        <Zap className="h-4 w-4 text-emerald-500" /> Watch the 2-minute system walkthrough
-                                    </p>
-                                </div>
+                        {/* Hero Visual */}
+                        <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+                            <img
+                                src={`https://images.unsplash.com/photo-1551288049-bbbda546697a?q=80&w=2070&auto=format&fit=crop`}
+                                alt="Digital marketing dashboard"
+                                className="absolute inset-0 w-full h-full object-cover opacity-40 grayscale"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                                <p className="text-sm font-bold opacity-80 uppercase tracking-widest flex items-center gap-2">
+                                    <Zap className="h-4 w-4 text-emerald-500" /> Data-driven growth for {formattedNiche}s in {formattedCity}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -142,7 +136,7 @@ export default async function LandingPage({ params }: { params: Params }) {
                         <div className="mt-8 flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest">
                             <div className="flex items-center gap-2">
                                 <span className="text-emerald-500">Exclusivity Status:</span>
-                                <span>1 Slot Remaining</span>
+                                <span>Limited Availability</span>
                             </div>
                             <div className="flex items-center gap-1 text-slate-500">
                                 {formattedCity}, IN
@@ -187,7 +181,7 @@ export default async function LandingPage({ params }: { params: Params }) {
                                         <TrendingUp className="h-4 w-4" /> 4.2x ROAS
                                     </div>
                                     <h4 className="text-2xl font-bold">128 New Appointments in Month 1</h4>
-                                    <p className="text-slate-400 text-xs mt-1 italic">Case Study: Apollo Dental Clinic (Sample)</p>
+                                    <p className="text-slate-400 text-xs mt-1 italic">Results: Dental Clinic, Karnataka</p>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +198,7 @@ export default async function LandingPage({ params }: { params: Params }) {
                                         <Users className="h-4 w-4" /> High ROI
                                     </div>
                                     <h4 className="text-2xl font-bold">Dominated Central Market Hubli</h4>
-                                    <p className="text-slate-400 text-xs mt-1 italic">Case Study: Fitness One (Sample)</p>
+                                    <p className="text-slate-400 text-xs mt-1 italic">Results: Fitness Studio, Hubli</p>
                                 </div>
                             </div>
                         </div>

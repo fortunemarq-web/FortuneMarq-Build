@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { CheckSquare, Square, Plus, Trash2, GripVertical } from "lucide-react";
 import { logAudit } from "@/lib/audit";
+import { promptModal } from "@/components/ui/prompt-modal";
 
 interface ChecklistItem {
     id: string;
@@ -84,7 +85,8 @@ export default function TaskChecklist({ taskId, initialItems }: TaskChecklistPro
     };
 
     const deleteItem = async (id: string) => {
-        if (!confirm("Delete item?")) return;
+        const ok = await promptModal({ title: "Delete checklist item?", description: "This can't be undone.", confirmLabel: "Delete", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete" }] });
+        if (!ok) return;
         setItems(prev => prev.filter(i => i.id !== id));
         await supabase.from("task_checklist_items" as any).delete().eq("id", id);
     };

@@ -7,6 +7,7 @@ import Link from "next/link";
 import type { ClientRecord } from "@/app/admin/clients/actions";
 import { updateClientField, deleteClient } from "@/app/admin/clients/actions";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 import HealthScoreStars from "./HealthScoreStars";
 import ServicePills from "./ServicePills";
 import PackageModal from "@/app/admin/clients/package-modal";
@@ -60,7 +61,8 @@ export default function ClientsTable({
   };
 
   const handleDelete = async (c: ClientRecord) => {
-    if (!confirm(`Permanently delete ${c.business_name} and all their package/onboarding data? This can't be undone.\n\nIf they're leaving, mark them Churned instead so finance history stays intact.`)) return;
+    const ok = await promptModal({ title: `Delete ${c.business_name}?`, description: "This removes all their package and onboarding data permanently. If they're leaving, mark them Churned instead so finance history stays intact.", confirmLabel: "Delete Client", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, delete permanently" }] });
+    if (!ok) return;
     const res = await deleteClient(c.id);
     if (!res.success) {
       toast.error("Could not delete client", res.error ?? "");

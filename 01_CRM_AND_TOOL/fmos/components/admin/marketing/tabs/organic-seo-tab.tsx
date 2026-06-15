@@ -30,15 +30,7 @@ import {
 import { useSeoKeywords, useContentPieces } from "@/lib/hooks/use-marketing-data";
 import { createClient } from "@/lib/supabase";
 
-const trafficTrendData = Array.from({ length: 30 }, (_, i) => {
-    const organic = Math.floor(Math.random() * (140 - 60 + 1) + 60);
-    const paid = Math.floor(Math.random() * (60 - 20 + 1) + 20);
-    return {
-        date: `Mar ${i + 1}`,
-        organic,
-        total: organic + paid
-    };
-});
+// No GSC integration — traffic chart shows placeholder until connected
 
 export default function OrganicSeoTab() {
     const { data: keywords, loading: keywordsLoading, error: keywordsError, refetch: refetchKeywords } = useSeoKeywords();
@@ -59,10 +51,10 @@ export default function OrganicSeoTab() {
     });
 
     const stats = [
-        { label: "Organic Sessions", value: "2,847", delta: "↑ 18%", positive: true },
-        { label: "Avg. Position", value: "14.3", delta: "↑ 2.1", positive: true },
-        { label: "Total Impressions", value: "84,200", delta: "↑ 9%", positive: true },
-        { label: "Click-Through Rate", value: "3.38%", delta: "↓ 0.2%", positive: false }
+        { label: "Organic Sessions", value: "—", delta: "GSC not connected", positive: true },
+        { label: "Avg. Position", value: "—", delta: "GSC not connected", positive: true },
+        { label: "Total Impressions", value: "—", delta: "GSC not connected", positive: true },
+        { label: "Click-Through Rate", value: "—", delta: "GSC not connected", positive: false }
     ];
 
     const getPositionColor = (pos: number | null) => {
@@ -340,28 +332,10 @@ export default function OrganicSeoTab() {
                     </div>
                 </div>
 
-                <div className="h-[220px] w-full relative">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={trafficTrendData}>
-                            <defs>
-                                <linearGradient id="colorOrganic" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#42CA80" stopOpacity={0.2} />
-                                    <stop offset="95%" stopColor="#42CA80" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f1f1f" />
-                            <XAxis dataKey="date" tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} interval={5} />
-                            <YAxis tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
-                            <Tooltip
-                                contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '12px', fontSize: '10px', color: '#fff', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}
-                                itemStyle={{ fontSize: '10px', fontWeight: 'bold' }}
-                                labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}
-                            />
-                            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', color: '#666', paddingTop: '15px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }} />
-                            <Area type="monotone" dataKey="organic" name="Organic Sessions" stroke="#42CA80" strokeWidth={2.5} fillOpacity={1} fill="url(#colorOrganic)" />
-                            <Area type="monotone" dataKey="total" name="Total Sessions" stroke="#3b82f6" strokeWidth={2} strokeDasharray="4 4" fill="transparent" />
-                        </AreaChart>
-                    </ResponsiveContainer>
+                <div className="h-[220px] w-full relative flex flex-col items-center justify-center gap-3 border border-dashed border-[#333] rounded-xl">
+                    <Search className="h-8 w-8 text-[#444]" />
+                    <p className="text-[#666] text-sm font-semibold">Google Search Console not connected</p>
+                    <p className="text-[#555] text-xs">Connect GSC to see real organic traffic data here</p>
                 </div>
             </motion.div>
 
