@@ -1,21 +1,39 @@
 # Audit-Fix Continuation Guide
 **For a fresh Claude Code session continuing the 24-issue audit fix.**
-**Last worked:** 2026-06-15 · **Last commit:** `c12f943` (local, NOT pushed) · **Branch:** `main`
+**Last worked:** 2026-06-15 (session 3) · **HEAD:** `b86a011` (local, **NOT pushed**) · **Branch:** `main`
 
 Read this file FIRST, then `CLAUDE.md` and `COWORK_HANDOFF.md`. The full audit write-up
 is `FortuneMarq_Consolidated_Audit.docx` at the repo root (24 issues).
 
 ---
 
-## 0. The one-paragraph situation
+## 0. WHERE WE ARE NOW (read this first)
 
-The FMOS app lives in `01_CRM_AND_TOOL/fmos` (Next.js 16 App Router + Supabase +
-Tailwind v4). An audit found 24 issues, being fixed in 3 phases. **Phase 0
-(code hygiene + docs) is DONE and committed locally as `c12f943` — not pushed.**
-Phases 1 (database) and 2 (hosting/cron/secrets) are NOT started; they need the
-owner's Supabase / Vercel / GitHub / Anthropic access and several decisions
-(marked `[NEEDS OWNER]` below). Do Phase 1 next, but **stop and ask** at every
-`[NEEDS OWNER]` point — do not guess schema or delete data.
+The FMOS app lives in `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4).
+**ALL CODE for Phases 0, 1, and 2 is DONE and committed locally — nothing is pushed.**
+The app is deployed and live at https://fmos.fortunemarq.com (Vercel).
+
+**The 8 local commits on `main` (oldest→newest):**
+- `c12f943` Phase 0 — code hygiene + doc accuracy
+- `39a36d1` Phase 1 partial — S1 RLS re-opener removed, M2 report token expiry, H1 WhatsApp unify
+- `d8cc759` A1 baseline core-schema migration + drop orphan whatsapp_message_templates
+- `38a6100` M4 prep — regenerated database.types.ts from live schema
+- `5fb0ec4` M4 — stripped 114 redundant `as any` casts (499→385); 2 latent bugs flagged
+- `c1c237f` Phase 2 — server-side AI (H3), cron consolidation (H2), .env.example (M5), untrack tmp (M6)
+- `2fb714e` + `b86a011` — this continuation guide
+
+**Verified working this session:** Cron is LIVE. GitHub Actions `FMOS Scheduled Jobs`
+runs against the deployed app; a manual run returned `{"success":true,...}` — `CRON_SECRET`
+matches between GitHub + Vercel, `FMOS_BASE_URL` set. vercel.json crons removed (were
+double-firing).
+
+**Owner decisions locked in:** do NOT rotate `ANTHROPIC_API_KEY` (kept as-is; code keeps
+it server-side anyway). Doc version = v4.9. WhatsApp canonical table = `whatsapp_templates`.
+Report token TTL = 30 days. M1 roles = /sales→telecaller+admin, /staff→staff+admin.
+
+**WHAT'S LEFT (all owner-gated — see §6):** push the 8 commits (triggers redeploy);
+Task 3 WhatsApp env values (gated on Meta-approved templates); 2 flagged code bugs;
+M8 outreach_sequences decision; A1 follow-up (renumber + scratch-DB replay).
 
 ---
 
@@ -182,10 +200,40 @@ Commit: `fmos: cron GET handlers, server-side AI, env docs, untrack tmp`.
 
 ---
 
-## 6. Open `[NEEDS OWNER]` decisions to collect before Phase 1 work lands
+## 6. WHAT'S LEFT — the only open items (everything else is DONE)
 
-1. S1 — OK to delete `fix_leads_rls_policies.sql`? (confirm live policy)
-2. A1 — paste `pg_dump --schema-only` for `leads, clients, projects, proposals, profiles`.
-3. H1 — canonical table: `whatsapp_templates` or `whatsapp_message_templates`?
-4. M2 — client-report token validity window (proposed 60 days)?
-5. Phase 2: rotate `ANTHROPIC_API_KEY`; set `CRON_SECRET`/`FMOS_BASE_URL`; M5 env values; M8 decision.
+All Phases 0–2 code is committed. These remain, all owner-gated:
+
+1. **PUSH the 8 local commits** to `origin/main` when the owner approves. Pushing
+   triggers a Vercel redeploy. Before recommending push, re-run `npx tsc --noEmit`
+   (inside fmos) = 0. The owner has NOT pushed yet by choice (reviewing first).
+
+2. **Task 3 — WhatsApp/report env values** (in Vercel). Cloud API creds already set
+   (token, phone id, verify token, Meta app secret). MISSING:
+   - `ADMIN_WHATSAPP_NUMBERS` (no template needed) — daily report target. The live
+     digest currently logs `whatsappReport: skipped "ADMIN_WHATSAPP_NUMBERS not configured"`.
+   - `WHATSAPP_LP_FALLBACK_URL` (no template needed).
+   - `DAILY_REPORT_TEMPLATE` (+`_LANG`), `WA_OUTCOME_TEMPLATES` (+`_LANG`) — **need a
+     Meta-APPROVED template**. GATING QUESTION TO ASK OWNER: do you have any approved
+     WhatsApp templates yet? If no, set only the two no-template vars; leave the rest dormant.
+   See `.env.example` for the exact shapes (esp. `WA_OUTCOME_TEMPLATES` JSON).
+
+3. **Two latent bugs flagged (FIXME, behavior preserved) — owner to decide the fix:**
+   - `app/api/leads/duplicates/scan/route.ts` filters `status = 'active'`, not a valid
+     `lead_status` value → the duplicates scan throws. Likely intended: just `is_merged=false`.
+   - `app/telecaller/my-stats/page.tsx` reads `daily_target`/`target_value` from
+     `team_targets`, which has neither column → daily goal silently defaults to 100.
+     Need the real column/table for a telecaller's daily call goal.
+
+4. **M8 — `outreach_sequences`** is legacy but still used by `/sales/*`
+   (`components/sales/outreach/outreach-actions.ts`, `app/sales/leads/[id]/page.tsx`).
+   Decide: migrate those to `leads.outreach_stage` OR retire the `/sales/*` routes.
+   No behavior change without the owner's call.
+
+5. **A1 follow-up** — the baseline migration (`20260101000000_baseline_core_schema.sql`)
+   is committed + idempotent (no-op on live). REMAINING: renumber the ~48 non-timestamped
+   migrations onto one ordered prefix AND verify a clean full replay in a throwaway
+   Postgres before prod. Needs a scratch DB (e.g. `supabase db reset` on a branch).
+
+**DEAD/RESOLVED — do not redo:** ANTHROPIC_API_KEY rotation (owner declined; code keeps
+it server-side). Cron secrets (DONE + verified). M3 (no change needed). All of Phase 0/1/2 code.
