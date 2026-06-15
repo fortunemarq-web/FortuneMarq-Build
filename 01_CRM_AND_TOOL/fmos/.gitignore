@@ -20,6 +20,9 @@
 # production
 /build
 
+# local build output / scratch (never commit)
+/tmp/
+
 # misc
 .DS_Store
 *.pem

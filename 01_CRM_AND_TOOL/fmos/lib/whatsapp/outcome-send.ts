@@ -40,12 +40,26 @@ function outcomeTemplateMap(): Record<string, string> {
   return {};
 }
 
+// Warn (once per process) rather than silently skip when the feature is
+// entirely unconfigured in production — so a misconfigured deploy is visible.
+let warnedUnset = false;
+
 export async function sendOutcomeWhatsApp(
   leadId: string,
   outcomeKey: string,
   sentBy?: string | null
 ): Promise<OutcomeSendResult> {
   try {
+    if (!process.env.WA_OUTCOME_TEMPLATES) {
+      if (process.env.NODE_ENV === "production" && !warnedUnset) {
+        warnedUnset = true;
+        console.warn(
+          "[outcome-send] WA_OUTCOME_TEMPLATES is not set — outcome-driven WhatsApp is disabled in production. Set it to enable (see .env.example)."
+        );
+      }
+      return { sent: false, skipped: "WA_OUTCOME_TEMPLATES not configured" };
+    }
+
     const templateName = outcomeTemplateMap()[outcomeKey];
     if (!templateName) return { sent: false, skipped: "no template mapped for outcome" };
 

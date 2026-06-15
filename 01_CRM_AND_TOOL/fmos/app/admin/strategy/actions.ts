@@ -11,26 +11,46 @@ export async function extractStrategyTasks({
   destination,
   timeframe,
   assignee,
+  client,
+  strategyLabel,
 }: {
   text: string;
   destination: string;
   timeframe: string;
   assignee: string;
+  client?: {
+    business_name: string;
+    niche?: string | null;
+    city?: string | null;
+    services?: string[] | null;
+  };
+  strategyLabel?: string;
 }): Promise<{ success: true; data: any } | { success: false; error: string }> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return { success: false, error: "ANTHROPIC_API_KEY is not configured on the server." };
   }
 
+  const clientContext = client
+    ? `
+CLIENT CONTEXT:
+- Client Name: ${client.business_name}
+- Niche: ${client.niche || "N/A"}
+- City: ${client.city || "N/A"}
+- Active Services: ${client.services?.join(", ") || "N/A"}
+- Strategy Type: ${strategyLabel || "N/A"}
+`
+    : "";
+
   const systemPrompt = `You are a task extraction engine for FortuneMarq, a digital marketing agency.
 
 You will receive a strategy document. Your job is to extract ALL actionable tasks and return them as a JSON array.
 
-DESTINATION CONTEXT: ${destination}
+DESTINATION CONTEXT: ${strategyLabel ? `${strategyLabel} (${destination})` : destination}
 TIMEFRAME: ${timeframe}
 DEFAULT ASSIGNEE: ${assignee}
 TODAY'S DATE: ${new Date().toISOString().split("T")[0]}
-
+${clientContext}
 Rules:
 1. Extract EVERY specific action item from the document
 2. If a task has no explicit due date, distribute tasks evenly across the timeframe
@@ -50,7 +70,7 @@ Return ONLY valid JSON, no preamble, no explanation. Format:
       "due_date": "YYYY-MM-DD",
       "priority": "high|medium|low",
       "assignee": "admin|telecaller|user_id",
-      "section_tag": "string",
+      "section_tag": "${destination}",
       "estimated_minutes": number
     }
   ]

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import LLMKeyManager from "@/components/admin/strategy/LLMKeyManager";
 import StrategyPastePanel from "@/components/admin/strategy/StrategyPastePanel";
 import { ArrowLeft, Brain, Cpu, MapPin } from "lucide-react";
 import Link from "next/link";
@@ -114,14 +113,9 @@ export default function StrategyEngineClient({
           </div>
         </section>
 
-        {/* Step 2: LLM Config Key storage */}
+        {/* Step 2: Paste and Render (AI runs server-side; no API key in the browser) */}
         <section>
-          <LLMKeyManager />
-        </section>
-
-        {/* Step 3: Paste and Render */}
-        <section>
-          <StrategyPastePanel 
+          <StrategyPastePanel
             destination={destination}
             timeframe={timeframe}
             assignee={assignee}

@@ -78,7 +78,7 @@ export default function StrategyPastePanel({
             <FileText className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-slate-900">Step 3: Paste Strategy File</h2>
+            <h2 className="text-base font-bold text-slate-900">Step 2: Paste Strategy File</h2>
             <p className="text-[11px] font-semibold text-slate-500 mt-0.5">
               Paste the raw markdown from Claude.
             </p>
