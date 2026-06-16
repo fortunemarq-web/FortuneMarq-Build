@@ -29,6 +29,7 @@ import type { TelecallerScript, ScriptType } from "@/lib/data/scripts/script.typ
 import { getFilledScript } from "@/lib/data/scripts/scripts_index";
 import WhatsAppTemplatePicker from "./whatsapp-template-picker";
 import { sendNotification } from "@/lib/notifications";
+import { fireTrigger } from "@/actions/automations";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
 import { FOLLOW_UP_QUEUE_STAGES, stageToStatus } from "@/lib/pipeline";
@@ -505,6 +506,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       setLocalLeads((prev) => prev.map((l) =>
         l.id === currentLead.id ? { ...l, ...leadUpdates } : l
       ));
+
+      // Fire automation triggers (fire-and-forget — never block the UI path)
+      void fireTrigger("lead_outcome_logged", "lead", currentLead.id, { outcome: selectedOutcome });
+      if (leadUpdates.outreach_stage === "meeting_booked") {
+        void fireTrigger("meeting_booked", "lead", currentLead.id);
+      }
 
       if (selectedOutcome === "INTERESTED_BOOK") {
         const { data: adminProfile } = await supabase.from('profiles').select('id').eq('role', 'admin').limit(1).single();

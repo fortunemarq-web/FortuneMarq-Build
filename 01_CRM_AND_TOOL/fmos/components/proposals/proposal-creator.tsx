@@ -15,6 +15,7 @@ import { sendNotification } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 import { leadStageUpdate } from "@/lib/pipeline";
+import { fireTrigger } from "@/actions/automations";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Lead {
@@ -399,6 +400,7 @@ export default function ProposalCreator({ lead, proposalNumber, userId, existing
         toast.error("Proposal marked sent, but lead stage update failed", leadError.message);
         return;
       }
+      void fireTrigger("proposal_sent", "lead", lead.id);
       toast.success("Proposal sent", `${lead.company_name} moved to Proposal Sent`);
       logAudit({ action: "proposal_sent", resourceType: "proposal", resourceId: savedProposalId, resourceLabel: `${proposalNumber} — ${lead.company_name}`, newValue: { status: "sent" }, summary: `Proposal ${proposalNumber} marked as sent to ${lead.company_name}` });
       const { data: adminProfile } = await supabase.from("profiles").select("id").eq("role", "admin").limit(1).single();

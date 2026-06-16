@@ -17,6 +17,7 @@ import { logAudit } from "@/lib/audit";
 import { toast as notify } from "@/components/ui/toast";
 import { leadStageUpdate, STAGE_LABELS, PIPELINE_STAGES } from "@/lib/pipeline";
 import { deleteSingleLead } from "@/actions/delete-data";
+import { fireTrigger } from "@/actions/automations";
 import ActivityTimeline from "@/components/ActivityTimeline";
 
 // ─── Types ────────────────────────────────────────────────────
@@ -261,6 +262,7 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
       // 4. Mark lead won
       const { error: wonErr } = await supabase.from("leads").update(leadStageUpdate("won") as any).eq("id", lead.id);
       if (wonErr) { setConfirmError(`Proposal confirmed, but lead stage update failed: ${wonErr.message}`); setConfirmLoading(false); return; }
+      void fireTrigger("lead_won", "lead", lead.id);
 
       // 5. Create or find client
       const { data: existing } = await supabase
