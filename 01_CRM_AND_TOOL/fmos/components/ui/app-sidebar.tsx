@@ -62,6 +62,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
         { label: "Leads",      href: "/sales",            icon: Phone },
         { label: "Outreach",   href: "/admin/outreach",   icon: GitBranch },
         { label: "Direct Report", href: "/admin/direct-report", icon: Megaphone },
+        { label: "DR Tracking",   href: "/admin/direct-report/tracking", icon: BarChart2 },
         { label: "Meetings",   href: "/admin/meetings",   icon: CalendarCheck },
         { label: "Proposals",  href: "/admin/proposals",  icon: FileText },
         { label: "Agreements", href: "/admin/agreements", icon: FileSignature },

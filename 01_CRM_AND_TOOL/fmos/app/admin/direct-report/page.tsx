@@ -27,16 +27,24 @@ export default async function DirectReportPage() {
   return (
     <div className="min-h-full bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 rounded-xl bg-brand-deep text-white shadow-sm">
-            <Megaphone className="h-6 w-6" />
+        <div className="flex items-center justify-between gap-3 mb-8">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-brand-deep text-white shadow-sm">
+              <Megaphone className="h-6 w-6" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">Direct Report</h1>
+              <p className="text-slate-500 text-sm">
+                Send market-intel report (PDF) to a niche + city, by lead type.
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Direct Report</h1>
-            <p className="text-slate-500 text-sm">
-              Send market-intel report (PDF) to a niche + city, by lead type.
-            </p>
-          </div>
+          <a
+            href="/admin/direct-report/tracking"
+            className="text-xs font-semibold text-brand-deep border border-brand-deep rounded-lg px-3 py-1.5 hover:bg-emerald-50 transition-colors shrink-0"
+          >
+            View tracking
+          </a>
         </div>
 
         <DirectReportClient

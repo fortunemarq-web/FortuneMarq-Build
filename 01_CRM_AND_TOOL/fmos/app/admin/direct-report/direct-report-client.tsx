@@ -1,11 +1,10 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { Loader2, Database, Send, Eye, FlaskConical, AlertTriangle } from "lucide-react";
+import { Loader2, Send, Eye, FlaskConical, AlertTriangle, ExternalLink } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
 import { runDirectReport, type BlastResult } from "@/actions/direct-report";
-import { seedReportAssets } from "@/actions/report-assets";
 
 interface Props {
   cities: string[];
@@ -27,7 +26,6 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
   const [testPhone, setTestPhone] = useState("");
   const [result, setResult] = useState<BlastResult | null>(null);
   const [pending, startTransition] = useTransition();
-  const [seedMsg, setSeedMsg] = useState<string | null>(null);
 
   const labelClass = "block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1";
   const inputClass =
@@ -48,23 +46,10 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
       city,
       niche,
       lang: lang as "en" | "kn",
-      leadType: (leadType || undefined) as any,
+      leadType: (leadType || undefined) as "A" | "B" | "C" | "D" | undefined,
       dailyCap: Number(dailyCap) || 50,
       bodyParams: bodyParams(),
     };
-  }
-
-  function handleSeed() {
-    startTransition(async () => {
-      const r = await seedReportAssets();
-      if (r.success || r.registered > 0) {
-        setSeedMsg(`Uploaded ${r.uploaded}, registered ${r.registered} reports (${r.skipped} skipped). Reload to refresh the pickers.`);
-        toast.success("Report library seeded", `${r.registered} registered`);
-      } else {
-        setSeedMsg(`Seed failed: ${r.errors[0] || "unknown error"}`);
-        toast.error("Seed failed", r.errors[0] || "");
-      }
-    });
   }
 
   function handleTest() {
@@ -82,7 +67,7 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
     startTransition(async () => {
       const r = await runDirectReport({ ...baseInput(), dryRun: true });
       setResult(r);
-      if (!r.ok) toast.error("Preview", r.message || "");
+      if (!r.ok) toast.error("Preview failed", r.message || "");
     });
   }
 
@@ -105,16 +90,22 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
 
   return (
     <div className="space-y-5">
+      {/* No library — prompt to generate */}
       {!hasLibrary && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 flex items-start gap-2">
           <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
           <div>
-            The report library is empty. Click <strong>Seed report library</strong> to upload the
-            market-intel PDFs to Storage and register them, then reload.
+            No PDFs in the report library yet.{" "}
+            <a href="/admin/market-insights" className="underline font-semibold">
+              Go to Market Insights
+            </a>{" "}
+            → upload keyword CSVs → click <strong>PDFs</strong> per row to generate. Reports will
+            appear here automatically once generated.
           </div>
         </div>
       )}
 
+      {/* Config */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -126,6 +117,12 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
             <label className={labelClass}>Niche</label>
             <input list="dr-niches" className={inputClass} value={niche} onChange={(e) => setNiche(e.target.value)} placeholder="DentalClinics" />
             <datalist id="dr-niches">{niches.map((n) => <option key={n} value={n} />)}</datalist>
+            {niche && !niches.includes(niche) && (
+              <p className="text-xs text-amber-600 mt-1">
+                No PDFs for this niche yet.{" "}
+                <a href="/admin/market-insights" className="underline">Generate them first.</a>
+              </p>
+            )}
           </div>
         </div>
 
@@ -167,31 +164,54 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
       {/* Test send */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
         <p className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-          <FlaskConical className="h-4 w-4 text-brand-deep" /> Test send (verify the PDF first)
+          <FlaskConical className="h-4 w-4 text-brand-deep" /> Test send (verify PDF before blasting)
         </p>
         <div className="flex gap-2">
-          <input className={inputClass} value={testPhone} onChange={(e) => setTestPhone(e.target.value)} placeholder="Test phone, e.g. 9XXXXXXXXX" />
-          <button onClick={handleTest} disabled={pending} className="shrink-0 rounded-lg border border-brand-deep text-brand-deep px-4 py-2 text-sm font-semibold hover:bg-emerald-50 disabled:opacity-50 flex items-center gap-2">
-            {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Send test
+          <input
+            className={inputClass}
+            value={testPhone}
+            onChange={(e) => setTestPhone(e.target.value)}
+            placeholder="Test phone, e.g. 9XXXXXXXXX"
+          />
+          <button
+            onClick={handleTest}
+            disabled={pending}
+            className="shrink-0 rounded-lg border border-brand-deep text-brand-deep px-4 py-2 text-sm font-semibold hover:bg-emerald-50 disabled:opacity-50 flex items-center gap-2"
+          >
+            {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            Send test
           </button>
         </div>
-        <p className="text-[11px] text-slate-400">No lead is updated; one message goes to this number to confirm the report attaches.</p>
+        <p className="text-[11px] text-slate-400">
+          No lead record is updated. One WhatsApp with the PDF goes to this number to confirm it attaches correctly.
+        </p>
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-2">
-        <button onClick={handlePreview} disabled={pending} className="rounded-lg border border-slate-200 text-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50 flex items-center gap-2">
-          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />} Preview (dry run)
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={handlePreview}
+          disabled={pending}
+          className="rounded-lg border border-slate-200 text-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50 flex items-center gap-2"
+        >
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />}
+          Preview (dry run)
         </button>
-        <button onClick={handleSend} disabled={pending} className="rounded-lg bg-brand-deep text-white px-4 py-2 text-sm font-semibold hover:bg-brand-active disabled:opacity-50 flex items-center gap-2">
-          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Send reports
+        <button
+          onClick={handleSend}
+          disabled={pending || !hasLibrary}
+          className="rounded-lg bg-brand-deep text-white px-4 py-2 text-sm font-semibold hover:bg-brand-active disabled:opacity-50 flex items-center gap-2"
+        >
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          Send reports
         </button>
-        <button onClick={handleSeed} disabled={pending} className="ml-auto rounded-lg border border-slate-200 text-slate-600 px-4 py-2 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50 flex items-center gap-2">
-          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />} Seed report library
-        </button>
+        <a
+          href="/admin/market-insights"
+          className="ml-auto text-xs text-slate-400 hover:text-brand-deep flex items-center gap-1 underline"
+        >
+          <ExternalLink className="h-3 w-3" /> Manage PDFs in Market Insights
+        </a>
       </div>
-
-      {seedMsg && <p className="text-xs text-slate-500">{seedMsg}</p>}
 
       {/* Result */}
       {result && (
@@ -199,16 +219,26 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
           <p className="text-sm font-semibold text-slate-900">
             {result.test ? "Test result" : result.dryRun ? "Preview" : "Send result"}
           </p>
-          {result.message && <p className="text-sm text-slate-600">{result.message}</p>}
+          {result.message && (
+            <p className={`text-sm ${result.ok ? "text-slate-600" : "text-red-600"}`}>
+              {result.message}
+            </p>
+          )}
           {!result.test && (
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
               <Stat label="Matched" value={result.matched} />
               <Stat label="Eligible" value={result.eligible} />
               <Stat label="Opted out" value={result.optedOut} />
-              <Stat label="With report" value={result.withReport} />
-              <Stat label="No report" value={result.noReport} />
+              <Stat label="With PDF" value={result.withReport} />
+              <Stat label="No PDF" value={result.noReport} highlight={result.noReport > 0} />
               <Stat label={result.dryRun ? "Cap left" : "Sent"} value={result.dryRun ? result.capRemaining ?? 0 : result.sent} />
             </div>
+          )}
+          {result.noReport > 0 && !result.test && (
+            <p className="text-xs text-amber-600">
+              {result.noReport} lead(s) skipped — no matching PDF in report_assets.{" "}
+              <a href="/admin/market-insights" className="underline">Generate PDFs first.</a>
+            </p>
           )}
           {result.errors.length > 0 && (
             <div className="text-xs text-red-600 space-y-0.5 max-h-40 overflow-auto">
@@ -221,10 +251,10 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className="rounded-lg bg-slate-50 border border-slate-100 py-2">
-      <p className="text-lg font-bold text-slate-900 tabular-nums">{value}</p>
+    <div className={`rounded-lg border py-2 ${highlight ? "bg-amber-50 border-amber-200" : "bg-slate-50 border-slate-100"}`}>
+      <p className={`text-lg font-bold tabular-nums ${highlight ? "text-amber-700" : "text-slate-900"}`}>{value}</p>
       <p className="text-[10px] text-slate-500 uppercase tracking-wide">{label}</p>
     </div>
   );
