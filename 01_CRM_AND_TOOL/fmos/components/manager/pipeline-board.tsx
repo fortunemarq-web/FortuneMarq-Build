@@ -31,7 +31,7 @@ const STAGES = [
     { id: "touch1_pending", label: "New", color: "slate", icon: Building2 },
     { id: "no_answer", label: "No Answer", color: "amber", icon: AlertCircle },
     { id: "follow_up_due", label: "Follow-up Due", color: "amber", icon: Clock },
-    { id: "curiosity_sent", label: "Curiosity Sent", color: "purple", icon: ArrowRightLeft },
+    { id: "curiosity_sent", label: "Direct Report Sent", color: "purple", icon: ArrowRightLeft },
     { id: "pdf_sent", label: "PDF Sent", color: "purple", icon: FileText },
     { id: "meeting_booked", label: "Meeting Booked", color: "emerald", icon: CheckCircle2 },
     { id: "proposal_sent", label: "Proposal Sent", color: "blue", icon: FileText },

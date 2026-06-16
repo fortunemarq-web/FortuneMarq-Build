@@ -15,7 +15,7 @@ interface PdfLog {
 
 const STAGE_LABELS: Record<string, string> = {
   touch1_pending: "Touch 1 Pending",
-  curiosity_sent: "Curiosity Sent",
+  curiosity_sent: "Direct Report Sent",
   pdf_sent: "PDF Sent",
   follow_up_due: "Follow-up Due",
   meeting_booked: "Meeting Booked",

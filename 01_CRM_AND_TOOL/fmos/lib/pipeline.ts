@@ -26,7 +26,7 @@ export const PIPELINE_STAGES: StageDef[] = [
   { key: "touch1_pending",     label: "Touch 1 Pending",   group: "active", color: "bg-slate-100 border-slate-300",  badge: "bg-slate-200 text-slate-700",    followUpQueue: false },
   { key: "no_answer",          label: "No Answer",         group: "active", color: "bg-gray-50 border-gray-300",     badge: "bg-gray-200 text-gray-600",      followUpQueue: true },
   { key: "follow_back",        label: "Follow Back",       group: "active", color: "bg-yellow-50 border-yellow-200", badge: "bg-yellow-100 text-yellow-700",  followUpQueue: true },
-  { key: "curiosity_sent",     label: "Curiosity Sent",    group: "active", color: "bg-blue-50 border-blue-200",     badge: "bg-blue-100 text-blue-700",      followUpQueue: false },
+  { key: "curiosity_sent",     label: "Direct Report Sent", group: "active", color: "bg-blue-50 border-blue-200",     badge: "bg-blue-100 text-blue-700",      followUpQueue: false },
   { key: "pdf_sent",           label: "PDF Sent",          group: "active", color: "bg-indigo-50 border-indigo-200", badge: "bg-indigo-100 text-indigo-700",  followUpQueue: false },
   { key: "follow_up_due",      label: "Follow-up Due",     group: "active", color: "bg-amber-50 border-amber-200",   badge: "bg-amber-100 text-amber-700",    followUpQueue: true },
   { key: "gatekeeper",         label: "Gatekeeper",        group: "active", color: "bg-orange-50 border-orange-200", badge: "bg-orange-100 text-orange-700",  followUpQueue: true },

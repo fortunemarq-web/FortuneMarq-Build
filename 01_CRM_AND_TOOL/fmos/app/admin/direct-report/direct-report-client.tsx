@@ -4,7 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import { Loader2, Database, Send, Eye, FlaskConical, AlertTriangle } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
-import { runCuriosityBlast, type BlastResult } from "@/actions/curiosity-blast";
+import { runDirectReport, type BlastResult } from "@/actions/direct-report";
 import { seedReportAssets } from "@/actions/report-assets";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 
 const LEAD_TYPES = ["", "A", "B", "C", "D"] as const;
 
-export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLibrary }: Props) {
+export default function DirectReportClient({ cities, nicheByCity, langs, hasLibrary }: Props) {
   const [city, setCity] = useState(cities[0] || "");
   const niches = useMemo(() => nicheByCity[city] || [], [nicheByCity, city]);
   const [niche, setNiche] = useState(niches[0] || "");
@@ -71,7 +71,7 @@ export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLi
     if (!city || !niche) { toast.error("Pick a city and niche", ""); return; }
     if (!testPhone.trim()) { toast.error("Enter a test phone number", ""); return; }
     startTransition(async () => {
-      const r = await runCuriosityBlast({ ...baseInput(), testPhone: testPhone.trim() });
+      const r = await runDirectReport({ ...baseInput(), testPhone: testPhone.trim() });
       setResult(r);
       r.ok ? toast.success("Test sent", r.message || "") : toast.error("Test failed", r.message || "");
     });
@@ -80,7 +80,7 @@ export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLi
   function handlePreview() {
     if (!city || !niche) { toast.error("Pick a city and niche", ""); return; }
     startTransition(async () => {
-      const r = await runCuriosityBlast({ ...baseInput(), dryRun: true });
+      const r = await runDirectReport({ ...baseInput(), dryRun: true });
       setResult(r);
       if (!r.ok) toast.error("Preview", r.message || "");
     });
@@ -89,17 +89,17 @@ export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLi
   async function handleSend() {
     if (!city || !niche) { toast.error("Pick a city and niche", ""); return; }
     const ok = await promptModal({
-      title: "Send curiosity blast?",
+      title: "Send direct reports?",
       description: `This sends the market-intel report to eligible ${niche} leads in ${city} (cap ${dailyCap}/day). Real WhatsApp messages will go out.`,
-      confirmLabel: "Send blast",
+      confirmLabel: "Send reports",
       type: "select",
-      options: [{ value: "confirm", label: "Yes, send the blast" }],
+      options: [{ value: "confirm", label: "Yes, send the reports" }],
     });
     if (!ok) return;
     startTransition(async () => {
-      const r = await runCuriosityBlast(baseInput());
+      const r = await runDirectReport(baseInput());
       setResult(r);
-      r.ok ? toast.success("Blast complete", r.message || "") : toast.error("Blast failed", r.message || "");
+      r.ok ? toast.success("Send complete", r.message || "") : toast.error("Send failed", r.message || "");
     });
   }
 
@@ -119,13 +119,13 @@ export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLi
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelClass}>City</label>
-            <input list="cb-cities" className={inputClass} value={city} onChange={(e) => onCityChange(e.target.value)} placeholder="Hubli" />
-            <datalist id="cb-cities">{cities.map((c) => <option key={c} value={c} />)}</datalist>
+            <input list="dr-cities" className={inputClass} value={city} onChange={(e) => onCityChange(e.target.value)} placeholder="Hubli" />
+            <datalist id="dr-cities">{cities.map((c) => <option key={c} value={c} />)}</datalist>
           </div>
           <div>
             <label className={labelClass}>Niche</label>
-            <input list="cb-niches" className={inputClass} value={niche} onChange={(e) => setNiche(e.target.value)} placeholder="DentalClinics" />
-            <datalist id="cb-niches">{niches.map((n) => <option key={n} value={n} />)}</datalist>
+            <input list="dr-niches" className={inputClass} value={niche} onChange={(e) => setNiche(e.target.value)} placeholder="DentalClinics" />
+            <datalist id="dr-niches">{niches.map((n) => <option key={n} value={n} />)}</datalist>
           </div>
         </div>
 
@@ -184,7 +184,7 @@ export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLi
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />} Preview (dry run)
         </button>
         <button onClick={handleSend} disabled={pending} className="rounded-lg bg-brand-deep text-white px-4 py-2 text-sm font-semibold hover:bg-brand-active disabled:opacity-50 flex items-center gap-2">
-          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Send blast
+          {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Send reports
         </button>
         <button onClick={handleSeed} disabled={pending} className="ml-auto rounded-lg border border-slate-200 text-slate-600 px-4 py-2 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50 flex items-center gap-2">
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />} Seed report library
@@ -197,7 +197,7 @@ export default function CuriosityBlastClient({ cities, nicheByCity, langs, hasLi
       {result && (
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
           <p className="text-sm font-semibold text-slate-900">
-            {result.test ? "Test result" : result.dryRun ? "Preview" : "Blast result"}
+            {result.test ? "Test result" : result.dryRun ? "Preview" : "Send result"}
           </p>
           {result.message && <p className="text-sm text-slate-600">{result.message}</p>}
           {!result.test && (

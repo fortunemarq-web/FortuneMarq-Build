@@ -1,16 +1,16 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { Megaphone } from "lucide-react";
-import CuriosityBlastClient from "./curiosity-blast-client";
+import DirectReportClient from "./direct-report-client";
 
 export const metadata = {
-  title: "Curiosity Blast | FortuneMarq Admin",
-  description: "Stage-3 niche curiosity batch-send — opener template + market-intel PDF.",
+  title: "Direct Report | FortuneMarq Admin",
+  description: "Send market-intel PDF reports to a niche + city, by lead type.",
 };
 
-export default async function CuriosityBlastPage() {
+export default async function DirectReportPage() {
   const supabase = await createServerClientWithCookies();
 
-  // The report library defines which (city, niche, lang) combos can be blasted.
+  // The report library defines which (city, niche, lang) combos can be sent.
   const { data: assets } = await (supabase.from("report_assets" as any) as any)
     .select("city, niche_slug, lang");
   const rows = (assets || []) as { city: string; niche_slug: string; lang: string }[];
@@ -32,14 +32,14 @@ export default async function CuriosityBlastPage() {
             <Megaphone className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Curiosity Blast</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Direct Report</h1>
             <p className="text-slate-500 text-sm">
-              Stage-3 opener send: market-intel report (PDF) to a niche + city, by lead type.
+              Send market-intel report (PDF) to a niche + city, by lead type.
             </p>
           </div>
         </div>
 
-        <CuriosityBlastClient
+        <DirectReportClient
           cities={cities}
           nicheByCity={nicheByCity}
           langs={langs.length ? langs : ["en"]}

@@ -64,7 +64,7 @@ function emptyResult(over: Partial<BlastResult>): BlastResult {
   };
 }
 
-export async function runCuriosityBlast(input: BlastInput): Promise<BlastResult> {
+export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
   const supabase = createAdminClient() as any;
   const lang = input.lang || "en";
   const slug = slugify(input.niche);
