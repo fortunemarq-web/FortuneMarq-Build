@@ -91,6 +91,16 @@ async function handleStatusUpdate(status: any) {
     .eq("wa_message_id", status.id);
 }
 
+/** "STOP"/"UNSUBSCRIBE"/"OPT OUT" (alone) → opt the lead out of WhatsApp. */
+function isStopKeyword(text: string): boolean {
+  return /^\s*(stop|unsubscribe|opt[\s-]?out|stop promotions)\s*\.?\s*$/i.test(text || "");
+}
+
+/** "START"/"SUBSCRIBE"/"OPT IN" (alone) → re-enable WhatsApp for the lead. */
+function isStartKeyword(text: string): boolean {
+  return /^\s*(start|subscribe|opt[\s-]?in)\s*\.?\s*$/i.test(text || "");
+}
+
 function extractText(message: any): string {
   switch (message?.type) {
     case "text":
@@ -228,6 +238,42 @@ async function handleInboundMessage(message: any, value: any) {
     .from("leads")
     .update({ last_activity_at: new Date().toISOString() })
     .eq("id", lead.id);
+
+  // Re-opt-in: "START" (and common variants) → clear the opt-out flag.
+  if (isStartKeyword(text)) {
+    await supabase.from("leads").update({ wa_opt_out: false }).eq("id", lead.id);
+    await supabase.from("activity_events").insert({
+      entity_type: "lead",
+      entity_id: lead.id,
+      event_type: "whatsapp_opt_in",
+      title: "Opted back in to WhatsApp (START)",
+      body: text || null,
+      metadata: { wa_message_id: waMessageId ?? null },
+    });
+    await sendWhatsAppText(from, "You're subscribed again. Welcome back! — FortuneMarq", { leadId: lead.id });
+    return;
+  }
+
+  // Opt-out: "STOP" (and common variants) → suppress all future WhatsApp sends.
+  // isOptedOut() reads leads.wa_opt_out, so this is honored everywhere we send.
+  if (isStopKeyword(text)) {
+    await supabase.from("leads").update({ wa_opt_out: true }).eq("id", lead.id);
+    await supabase.from("activity_events").insert({
+      entity_type: "lead",
+      entity_id: lead.id,
+      event_type: "whatsapp_opt_out",
+      title: "Opted out of WhatsApp (STOP)",
+      body: text || null,
+      metadata: { wa_message_id: waMessageId ?? null },
+    });
+    // Confirmation is allowed — the inbound message just reopened the 24h window.
+    await sendWhatsAppText(
+      from,
+      "You've been unsubscribed and won't receive further messages from FortuneMarq. Reply START anytime to opt back in.",
+      { leadId: lead.id }
+    );
+    return;
+  }
 
   if (buttonReply) {
     await applyButtonAction(buttonReply, lead.id, from, waMessageId, lead);

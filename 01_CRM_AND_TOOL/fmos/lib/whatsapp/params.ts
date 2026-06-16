@@ -75,6 +75,13 @@ export interface WaTemplateConfig {
   headline?: string;
   detail?: string;
   link?: string;
+  /**
+   * Optional document header (e.g. the market-intel PDF on direct_report_* templates).
+   * Provide a public `link` OR a pre-uploaded Meta `mediaId`; `filename` is what the
+   * recipient sees. Tokens ({field}) in link/filename are filled from the snapshot.
+   * The template MUST be approved with a document header for this to send.
+   */
+  headerDocument?: { link?: string; mediaId?: string; filename?: string };
 }
 
 /**
@@ -110,10 +117,24 @@ function fill(tmpl: string, snapshot: any): string {
 }
 
 /**
- * Build the Graph API `components` array (a single body component with text params)
- * from the config + snapshot. Returns [] when the template takes no params.
+ * Build the Graph API `components` array from the config + snapshot:
+ * an optional document header (when cfg.headerDocument is set) followed by a
+ * body component with text params. Returns [] when the template takes neither.
  */
 export function buildComponents(cfg: WaTemplateConfig, snapshot: any): any[] {
+  const components: any[] = [];
+
+  // Document header (e.g. the market-intel PDF) — link OR pre-uploaded mediaId.
+  const hd = cfg.headerDocument;
+  if (hd && (hd.link || hd.mediaId)) {
+    const document: any = {};
+    if (hd.mediaId) document.id = hd.mediaId;
+    else document.link = fill(hd.link || "", snapshot);
+    if (hd.filename) document.filename = fill(hd.filename, snapshot);
+    components.push({ type: "header", parameters: [{ type: "document", document }] });
+  }
+
+  // Body params.
   let values: string[];
   if (cfg.params && cfg.params.length) {
     values = cfg.params.map((p) => fill(p, snapshot));
@@ -123,11 +144,12 @@ export function buildComponents(cfg: WaTemplateConfig, snapshot: any): any[] {
   } else {
     values = [];
   }
-  if (values.length === 0) return [];
-  return [
-    {
+  if (values.length > 0) {
+    components.push({
       type: "body",
       parameters: values.map((text) => ({ type: "text", text: text.slice(0, 1000) })),
-    },
-  ];
+    });
+  }
+
+  return components;
 }
