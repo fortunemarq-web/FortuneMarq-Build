@@ -1,47 +1,35 @@
-# START HERE — New Claude Session Entry Point
-**Last updated:** 2026-06-14
+# START HERE — New Session Entry Point
+**Last updated:** 2026-06-15
 
 ## What is this?
-FMOS = FortuneMarq Marketing Operating System. Full-stack agency CRM.
-Owner: Jabeer (Sayed Jabeer), Hubli-based digital marketing founder.
+FMOS = FortuneMarq Marketing Operating System — a Next.js 16 + Supabase CRM for Jabeer's Hubli marketing agency.
 
 ## Where is the code?
-**Windows 11:** `C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos`
-Stack: Next.js 16 App Router · TypeScript · Tailwind v4 · Supabase (`cnwooodktqwvpzkucskm`)
+- **Windows:** `C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos`
+- **Repo:** `github.com/fortunemarq-web/FortuneMarq-Build` (branch `main`; git root is `FortuneMarq-Build`, app in subdir `01_CRM_AND_TOOL/fmos`)
+- **Supabase:** project `cnwooodktqwvpzkucskm`
 
 ## What phase are we in?
-**Phase 2: New Features** — Phase 1 (all bugs fixed) is COMPLETE as of 2026-06-14.
+**MID-DEPLOY on Vercel.** The build phase is complete, committed, and pushed. We're wiring up hosting.
 
-## What to read first
-1. `CLAUDE.md` — full app map: all routes, all DB tables, all conventions. Read this completely.
-2. `COWORK_HANDOFF.md` — current state, WhatsApp API status, Phase 2 feature priority list, deploy checklist.
-3. `EXTERNAL_SETUP_GUIDE.md` — every account/API key/plan/integration to set up OUTSIDE the code before full-scale use.
-4. `last_session.md` — table of all 17 bugs fixed in the last session + context files changed.
+## Read in this order
+1. `COWORK_HANDOFF.md` — current state + the exact next steps (read §0 first).
+2. `CLAUDE.md` — app map, routes, DB tables, conventions.
+3. `EXTERNAL_SETUP_GUIDE.md` — accounts/keys/integrations.
+4. `FUTURE_FEATURES.md` — backlog (do NOT build these until deploy is done).
 
-## What to do next
-The single highest-priority next task is **`middleware.ts` auth gate** — see `COWORK_HANDOFF.md §4 P0` for the full spec. Every admin route is currently publicly readable. This must be fixed before live testing or deploy.
+## The immediate next task
+Finish the Vercel deploy: **Root Directory = `01_CRM_AND_TOOL/fmos`** + add the **10 env vars** (from `.env.local`) → **Deploy** → then post-deploy config (domain CNAME, Supabase redirect URLs, WhatsApp webhook, GitHub cron secrets). Full checklist in `COWORK_HANDOFF.md §4–5`.
 
-After middleware: outbound WhatsApp send UI → real PDF generation → feature list in `COWORK_HANDOFF.md §4 P3`.
+## Critical reminders
+- **Auth gate lives in `proxy.ts`** (Next 16), NOT `middleware.ts`. It's fail-open — keep it that way.
+- Commits are **scoped to `01_CRM_AND_TOOL/fmos`** (repo root has unrelated files).
+- `npx tsc --noEmit` must be 0 errors before committing.
+- Continuous deployment: once Vercel is connected, `git push` → auto-live.
 
-## How to start the dev server
+## Dev + checks
 ```powershell
 cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
-npm run dev
-```
-Then open http://localhost:3000
-
-## TypeScript check
-```powershell
-cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
-npx tsc --noEmit
-```
-Should be 0 errors. Fix any before writing new code.
-
-## Uncommitted changes
-All Phase 1 bug fixes are NOT yet committed. When Jabeer greenlit, run:
-```powershell
-cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
-git add -A
-git commit -m "Phase 1 complete: all critical bugs fixed, TypeScript 0 errors (2026-06-14)"
-git push origin master
+npm run dev          # localhost:3000
+npx tsc --noEmit     # must be 0 errors
 ```

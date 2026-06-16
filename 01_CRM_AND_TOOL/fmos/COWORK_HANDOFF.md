@@ -1,189 +1,145 @@
-# FMOS — Master Handoff Document
-**Last updated:** 2026-06-14 · **Author:** Jabeer + Claude (Sonnet 4.6)
-**Read this fully before touching any code. This is the single source of truth.**
+# FMOS — Master Handoff
+**Last updated:** 2026-06-15 · **Read this fully before touching anything.**
+**Current phase: MID-DEPLOY on Vercel.** Build phase is complete; we're wiring up hosting.
 
 ---
 
-## 0. Machine & Repo Setup (READ FIRST)
+## 0. WHERE WE ARE RIGHT NOW (the one thing that matters)
 
-**Active dev machine: Windows 11** (`C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos`)
-- `.env.local` IS on this machine — all 10 real API keys present
-- Dev server: `npm run dev` → http://localhost:3000 (already installed, `node_modules` present)
-- Node v24.11.1 · npm 11.4.1
-- Git remote: github.com/sayedjabeer/FortuneMarq-Build · branch: `master`
-- Supabase project: `cnwooodktqwvpzkucskm` (all 38 tables live, RLS hardened)
+We are **partway through deploying FMOS to Vercel.** The user is on the Vercel
+**import → configuration screen** for the repo `FortuneMarq-Build`.
 
-**To start a new dev session:**
-```powershell
-cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
-npm run dev
-```
+**The immediate next actions (finish the deploy):**
+1. Set **Root Directory = `01_CRM_AND_TOOL/fmos`** (the app lives in this subfolder, not the repo root).
+2. Add the **10 environment variables** (see §6) — copy values from local `.env.local`.
+3. Click **Deploy**.
+4. Then do **post-deploy config** (§5).
 
-**To run SQL on Supabase** (no psql on this machine):
-→ supabase.com/dashboard/project/cnwooodktqwvpzkucskm/sql/new → paste → Run
+The user will be sending **screenshots** in Cowork — guide them screen by screen.
 
 ---
 
-## 1. What FMOS Is
+## 1. MACHINE / REPO / ACCOUNTS
 
-FortuneMarq Marketing Operating System — a custom CRM for Jabeer's digital marketing agency.
-Full lifecycle: Lead calling → Outreach → Meeting → Proposal → Agreement → Client → Invoice → Team
+- **OS:** Windows 11. **App path:** `C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos`
+- **Git repo root:** `C:\Users\sayed\FortuneMarq-Build` (branch **main**). App is in subdir `01_CRM_AND_TOOL/fmos`. **Commits are scoped to that subdir** (`git add -A 01_CRM_AND_TOOL/fmos`) — there's other unrelated stuff in the repo root.
+- **GitHub:** `github.com/fortunemarq-web/FortuneMarq-Build` (company account `fortunemarq-web`, email fortunemarq@gmail.com). Repo was transferred off the personal account `sayedjabeer`. Last commit: `169a14e`.
+- **Pushing:** HTTPS with a fine-grained PAT (Contents + **Workflows** read/write — Workflows perm is required because of `.github/workflows/cron.yml`). Windows Credential Manager caches it after first push.
+- **Supabase:** project `cnwooodktqwvpzkucskm`, in org **`fotunemarq-ship-it's Org`**. Company account (login via **GitHub `fortunemarq-web`**) is now **Owner**. (Supabase has NO Google login — always log in via GitHub.) An empty stray org `fortunemarq@gmail.com's Org` exists — ignore it; do NOT point the app at it.
+- **Vercel:** sign in via **GitHub `fortunemarq-web`**. Free (Hobby) tier for the ~3-month trial.
+- **Hosting split:** Hostinger Business = shared hosting (can't run Next SSR). Use it for the **domain DNS** + **client WordPress/static sites**. FMOS runs on **Vercel**; `fmos.fortunemarq.com` points to Vercel via a Hostinger CNAME.
 
-**Stack:** Next.js 16 App Router · TypeScript · Tailwind CSS v4 · Supabase · Recharts · Framer Motion · @react-pdf/renderer
-
-**Supabase client rules (CRITICAL):**
-- Server components / server actions → `createServerClientWithCookies()` from `@/lib/supabase-server`
-- Client components → `createClient()` from `@/lib/supabase`
-- Cron routes → `createAdminClient()` only
-
-**Key conventions:**
-- `outreach_stage` = single source of truth for lead position; ONLY write via `leadStageUpdate()` / `leadStatusUpdate()` in `lib/pipeline.ts`
-- No emoji in UI chrome. No `alert()`/`confirm()`/`prompt()` — use `toast` + `promptModal()` only
-- `brand-deep` (#1E7A4F) for text/buttons; `#42CA80` for accents/fills only
-- Shell is `h-dvh`; `<main>` is the only scroll container. Pages use `min-h-full`
-- Outcome IDs: `INTERESTED_BOOK` | `INTERESTED_FOLLOW_UP` | `INTERESTED_SEND_INFO` | `NOT_INTERESTED` | `FOLLOW_BACK` | `WRONG_NUMBER` | `NO_ANSWER` | `GATEKEEPER`
+**Account consolidation goal:** everything under `fortunemarq@gmail.com` / `fortunemarq-web`. Old identities: `fotunemarq@gmail.com` (typo, original Supabase), `sayedjabir33@gmail.com` (old git author). Don't delete old accounts until the live site is confirmed working.
 
 ---
 
-## 2. Build Phase Status
+## 2. WHAT FMOS IS
 
-| Phase | Status | Summary |
-|---|---|---|
-| Phase 0: Foundation | ✅ DONE | DB schema (38 tables), RLS, audit triggers, types regenerated |
-| Phase A–F: Features | ✅ DONE | All routes built, WhatsApp Cloud API live, inbound pipeline live |
-| Phase 1: Bug Audit | ✅ DONE (2026-06-14) | All 17 critical bugs + 22 confirm() replacements fixed. TypeScript 0 errors. |
-| **Phase 2: New Features** | 🔴 NEXT | Start with middleware.ts auth gate (P0), then outbound WhatsApp UI, proposal PDF |
-| Phase 3: Live Testing | ⏳ PENDING | Runtime smoke test all flows with real API keys |
-| Phase 4: Security Audit | ⏳ PENDING | Auth middleware, RLS verification, OWASP check |
-| Phase 5: Deploy | ⏳ PENDING | Vercel + fmos.fortunemarq.com + WhatsApp webhook |
+FortuneMarq Marketing Operating System — a Next.js 16 + Supabase CRM for Jabeer's Hubli marketing agency. Full lifecycle: lead calling → outreach → meetings → proposals → agreements → clients → finance → team, plus the agency's own marketing engine.
+
+**Stack:** Next.js 16 App Router · TypeScript · Tailwind v4 · Supabase · Recharts · `@react-pdf/renderer`
+
+**Supabase client rules (critical):**
+- Server components/actions → `createServerClientWithCookies()` (`@/lib/supabase-server`)
+- Client components → `createClient()` (`@/lib/supabase`)
+- Cron + webhooks (no user) → `createAdminClient()` (service role)
+
+**Conventions:**
+- Lead stage changes ONLY via `leadStageUpdate()`/`leadStatusUpdate()` in `lib/pipeline.ts` (single source of truth).
+- No emoji as UI chrome (emoji in WhatsApp/script *content* is fine). Use `toast` + `promptModal` (no native alert/confirm).
+- `brand-deep` (#1E7A4F) for green text/buttons; `#42CA80` for accents.
+- **Auth gate lives in `proxy.ts`** (Next 16 renamed middleware → proxy). It's FAIL-OPEN — keep it that way. Edit `proxy.ts`, never create `middleware.ts`.
+- `npx tsc --noEmit` must stay at 0 errors before any commit.
 
 ---
 
-## 3. WhatsApp Cloud API Status (as of 2026-06-14)
+## 3. BUILD STATUS
 
-| Item | Status |
+| Area | Status |
 |---|---|
-| Dedicated number | +91 79759 18980 (NEVER install WhatsApp on this SIM) |
-| PHONE_NUMBER_ID | `1084263481446667` |
-| WABA | FortuneMarq `1499408311884474` |
-| Meta App | FMOS `1713470496330818` |
-| Business Verification | APPROVED ✓ |
-| India payment method | ADDED ✓ (VISA card via Billing Hub → "select existing") |
-| First real message | DELIVERED end-to-end ✓ (`hello_world` to 93530 82656) |
-| Template type_a/b/c | APPROVED/active ✓ |
-| Template type_d | Resubmitted → in review |
-| Display name "FortuneMarq" | Auto-rejected (thin online presence). Appeal with GST+Udyam docs. NOT a blocker. |
-| Webhook URL (inbound) | ⏳ Configure AFTER deploy: Meta App → Configuration → `https://<domain>/api/webhooks/whatsapp` |
-| Stale duplicate WABAs to delete | `1852036272835920` (Test) + `705784465410369` (stray dup) |
+| Phase 1 bug sweep (17 fixes + confirm→promptModal) | ✅ |
+| Marketing honesty pass (9 fake widgets removed) | ✅ |
+| Strategy→outcome loop + Marketing Hub (`/admin/marketing-hub`) | ✅ |
+| Lead scoring in telecaller cockpit (queue sorts hottest-first) | ✅ |
+| Onboarding build-ready intake (GENERAL basics + WEBSITE brief + WA/AI services + readiness) | ✅ |
+| Delivery Load dashboard (`/admin/delivery-load`) | ✅ |
+| GitHub-Actions cron scheduler (`.github/workflows/cron.yml`) | ✅ |
+| Fail-open auth gate (`proxy.ts`) — fixes historic lockout | ✅ |
+| Daily AI WhatsApp report Phase 1 (`lib/reports/dailyReport.ts`) | ✅ built, needs activation |
+| Schema | ✅ in sync, NO pending SQL (verify: `supabase/2026-06-15_verify_schema.sql`) |
+| TypeScript | ✅ 0 errors · committed+pushed `169a14e` |
 
-**`lib/whatsapp/send.ts` exists** — `sendWhatsAppTemplate`, `sendWhatsAppDocument`, `sendWhatsAppButtons`, `uploadWhatsAppMedia` all built. **Zero UI callers exist.** The outbound WhatsApp send UI is a Phase 2 task.
+**New-feature ideas are parked in `FUTURE_FEATURES.md`.** Do NOT build them mid-deploy — finish deploy first.
 
-**Named parameter format** (required for templates — do NOT use positional `{{1}}`):
-```ts
-components: [{ type: 'body', parameters: [
-  { type: 'text', parameter_name: 'business_name', text: '...' },
-  { type: 'text', parameter_name: 'niche', text: '...' },
-  { type: 'text', parameter_name: 'city', text: '...' }
-]}]
+---
+
+## 4. THE DEPLOY (finish this)
+
+**Vercel import config screen:**
+- Root Directory → **`01_CRM_AND_TOOL/fmos`**
+- Framework → Next.js (auto)
+- Environment Variables → add the 10 from §6
+- Deploy
+
+**Continuous deployment (what the user wants):** once connected, every `git push` to `main` auto-builds and goes live. Failed builds keep the last good version up. Branch pushes get preview URLs.
+
+---
+
+## 5. POST-DEPLOY CONFIG (after first successful deploy)
+
+- [ ] **Supabase auth redirect URLs** — add the live domain (Authentication → URL Configuration) or login breaks.
+- [ ] **Domain** — Vercel → add `fmos.fortunemarq.com` → add the CNAME it gives you in Hostinger hPanel → DNS Zone.
+- [ ] **WhatsApp inbound webhook** — Meta App → callback `https://fmos.fortunemarq.com/api/webhooks/whatsapp` + verify token (`WHATSAPP_VERIFY_TOKEN`) + subscribe `messages`.
+- [ ] **GitHub Actions cron** — repo Settings → Secrets and variables → Actions: Variable `FMOS_BASE_URL`=`https://fmos.fortunemarq.com`, Secret `CRON_SECRET`=(same as env). Turns on SLA + follow-up automation.
+- [ ] **Daily AI report** — submit Meta template `daily_report` (named params `report_date` + `summary`) + set env `ADMIN_WHATSAPP_NUMBERS` (2 admin numbers, comma-sep).
+- [ ] **Automation rules** — in `/admin/automations` create rules for `lead_sla_missed` / `lead_followup_due` → notify (gives the cron teeth).
+- [ ] **Smoke test** — dry-run a test lead through the A→H pipeline; confirm login works with the new `proxy.ts` gate.
+- [ ] **Meta Lead Ads / Google lead-form webhooks** — only if running paid ads (see EXTERNAL_SETUP_GUIDE §7–8).
+
+---
+
+## 6. ENV VARS (add all 10 to Vercel; values from `.env.local`)
+
 ```
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+ANTHROPIC_API_KEY
+CRON_SECRET
+INBOUND_WEBHOOK_SECRET
+WHATSAPP_API_TOKEN
+WHATSAPP_PHONE_NUMBER_ID
+WHATSAPP_VERIFY_TOKEN
+META_APP_SECRET
+```
+Optional (add later): `ADMIN_WHATSAPP_NUMBERS`, `DAILY_REPORT_TEMPLATE`, `DAILY_REPORT_TEMPLATE_LANG`, `WHATSAPP_LP_FALLBACK_URL`.
+⚠️ `.env.local` is gitignored — NEVER commit it. Hardening to-dos: rotate `ANTHROPIC_API_KEY` (leaked in chat), get a permanent WhatsApp System User token.
 
 ---
 
-## 4. Phase 2 — New Features (NEXT — priority order)
-
-### P0 — Auth Middleware (REQUIRED before deploy or live testing)
-**File to create:** `middleware.ts` in `fmos/` root.
-- Redirect unauthenticated users → `/login` for all routes except `/login`, `/lp/**`, `/api/inbound/**`, `/api/webhooks/**`
-- Role enforcement: `/admin/**` → role=admin, `/telecaller/**` → role=telecaller|admin, `/manager/**` → role=manager|admin|pm, `/client/**` → role=client
-- Use `createServerClient` from `@supabase/ssr` with `request.cookies` (not the cookie-wrapper)
-- Pattern: check `supabase.auth.getUser()`, if no user → redirect. If user, check `profiles.role` → redirect if wrong role.
-- After building, verify Supabase RLS blocks cross-role reads as defense-in-depth.
-
-### P1 — Outbound WhatsApp Send UI
-- Telecaller cockpit: "Send via WhatsApp" button after logging outcome
-  - Shows template selector (type_a/b/c based on lead type)
-  - Fills named params from lead data (business_name, niche, city)
-  - Calls `sendWhatsAppTemplate` from `lib/whatsapp/send.ts`
-  - Logs to `whatsapp_logs` (already done in send.ts)
-- Admin agreements page: "Send Agreement via WhatsApp" — `sendWhatsAppDocument` with agreement PDF URL
-
-### P2 — Real PDF for Proposals & Agreements
-- Invoices already use `@react-pdf/renderer` (see `components/admin/finance/InvoicePDF.tsx`)
-- Build `components/proposals/ProposalPDF.tsx` + `components/admin/agreements/AgreementPDF.tsx` using the same pattern
-- Server action to generate + upload to Supabase Storage → return URL → `sendWhatsAppDocument`
-
-### P3 — Industry-Grade CRM Features (after P0/P1/P2)
-In rough priority:
-1. **Lead scoring** — auto-score 1–10 based on: source (inbound > cold), engagement (call outcomes), company size signals, days in pipeline
-2. **Pipeline velocity dashboard** — avg days per stage, conversion rates, bottleneck identification
-3. **Client health score** — composite from invoice payment timeliness + task completion + renewal proximity
-4. **Bulk WhatsApp broadcast** — send template to filtered lead segment
-5. **Deal probability %** — on proposals, ML-lite (age + source + stage = probability)
-6. **Automated follow-up reminders** — cron checks `follow_up_date` and creates notifications
-7. **Team leaderboard (live)** — real-time ranking, not just weekly scorecard
-8. **Client portal notifications** — when project milestone completed, send WhatsApp + portal banner
-9. **Inbound lead SLA tracking** — speed-to-lead alerts if not contacted within 30 min
-10. **GSC integration** — organic SEO tab currently shows "not connected" placeholder; integrate Search Console API
-
----
-
-## 5. Key Files Reference
+## 7. KEY DOCS
 
 | File | Purpose |
 |---|---|
-| `CLAUDE.md` | Full app context, all routes, all DB tables, conventions |
-| `COWORK_HANDOFF.md` | **This file** — master state + next steps |
-| `EXTERNAL_SETUP_GUIDE.md` | **All external setup** — accounts, API keys, plans, integrations to do outside the code before go-live |
-| `last_session.md` | Summary of the most recent session |
-| `FMOS_QA_VERIFICATION_2026-06-13.md` | Detailed audit report — P0/P1/P2 gap list |
-| `DEPLOY_VERCEL.md` | Step-by-step Vercel deploy guide |
-| `UI_UX_GUIDELINES.md` | Design system rules |
-| `lib/pipeline.ts` | Single source of truth for lead stage/status writes |
-| `lib/whatsapp/send.ts` | WhatsApp send functions (text/template/buttons/document/media) |
-| `lib/inbound/capture.ts` | Inbound lead pipeline (dedupe → assign → notify) |
-| `components/ui/prompt-modal.tsx` | Modal for all confirmations (replaces browser confirm) |
-| `types/database.types.ts` | Supabase generated types (112 tables) |
-| `supabase/2026-06-12_full_schema_sync.sql` | Master SQL — append new DDL here, run in dashboard |
+| `START_HERE.md` | Entry point — read first |
+| `COWORK_HANDOFF.md` | This file — full state + next steps |
+| `CLAUDE.md` | App map, routes, tables, conventions |
+| `EXTERNAL_SETUP_GUIDE.md` | Every account/API key/integration to set up outside the code |
+| `AGENCY_INFRASTRUCTURE_MAP.md` | Hierarchical map of the whole operation (outside vs inside FMOS) |
+| `FUTURE_FEATURES.md` | Backlog of new features to build AFTER deploy |
+| `MARKETING_AUDIT_2026-06-14.md` | Marketing module deep audit |
+| `supabase/2026-06-15_verify_schema.sql` | Confirms schema is in sync (run Part A) |
 
 ---
 
-## 6. Deploy Checklist (when ready)
-
-- [ ] `middleware.ts` built and tested locally
-- [ ] Runtime smoke test complete (see `FMOS_QA_VERIFICATION_2026-06-13.md` §D)
-- [ ] Commit all changes to `master` branch
-- [ ] Vercel: New Project → import `FortuneMarq-Build` → Root Directory = `01_CRM_AND_TOOL/fmos`
-- [ ] Add 10 env vars to Vercel (copy from `.env.local`)
-- [ ] Custom domain `fmos.fortunemarq.com` → Hostinger CNAME → Supabase auth redirect URLs updated
-- [ ] Post-deploy: configure WhatsApp webhook in Meta App (callback URL + subscribe `messages`)
-- [ ] Test inbound: send real message to +91 79759 18980 → confirm it lands in FMOS cockpit
-
----
-
-## 7. Uncommitted Changes
-
-Everything from the 2026-06-14 bug-fix session is modified but **NOT committed**.
-Run this when Jabeer greenlights the commit:
-```powershell
-cd "C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos"
-git add -A
-git commit -m "Phase 1 complete: all critical bugs fixed, TypeScript 0 errors (2026-06-14)"
-git push origin master
-```
-
----
-
-## 8. Key IDs (no secrets)
+## 8. KEY IDs (no secrets)
 
 | Thing | Value |
 |---|---|
-| Cloud API number | +91 79759 18980 |
-| PHONE_NUMBER_ID | `1084263481446667` |
-| WABA (real) | FortuneMarq `1499408311884474` |
-| Meta App | FMOS `1713470496330818` |
-| Business Manager | `879084085296794` |
-| Supabase project | `cnwooodktqwvpzkucskm` |
-| GitHub repo | github.com/sayedjabeer/FortuneMarq-Build (private, branch: master) |
-| GSTIN | 29ICWPS9816Q1ZS |
+| GitHub repo | github.com/fortunemarq-web/FortuneMarq-Build (branch main) |
+| Supabase project | `cnwooodktqwvpzkucskm` (org: fotunemarq-ship-it's Org) |
+| WhatsApp Cloud number | +91 79759 18980 · PHONE_NUMBER_ID `1084263481446667` |
+| Meta App | FMOS `1713470496330818` · WABA `1499408311884474` |
 | Vercel root dir | `01_CRM_AND_TOOL/fmos` |
-| `.env.local` location | `C:\Users\sayed\FortuneMarq-Build\01_CRM_AND_TOOL\fmos\.env.local` (Windows only, gitignored) |
+| Live domain (target) | fmos.fortunemarq.com |
+| GSTIN | 29ICWPS9816Q1ZS |
