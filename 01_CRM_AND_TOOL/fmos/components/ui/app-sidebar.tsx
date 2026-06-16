@@ -80,12 +80,13 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
     {
       label: "Insights",
       items: [
-        { label: "Finance",       href: "/admin/finance",      icon: DollarSign },
-        { label: "Marketing Hub", href: "/admin/marketing-hub", icon: Megaphone },
-        { label: "Marketing",     href: "/admin/marketing",    icon: BarChart2 },
-        { label: "Growth",        href: "/admin/growth",       icon: TrendingUp },
-        { label: "Strategy",      href: "/admin/strategy",     icon: Target },
-        { label: "Reports",       href: "/admin/reports",      icon: BarChart2 },
+        { label: "Finance",          href: "/admin/finance",          icon: DollarSign },
+        { label: "Market Insights",  href: "/admin/market-insights",  icon: BarChart2 },
+        { label: "Marketing Hub",    href: "/admin/marketing-hub",    icon: Megaphone },
+        { label: "Marketing",        href: "/admin/marketing",        icon: BarChart2 },
+        { label: "Growth",           href: "/admin/growth",           icon: TrendingUp },
+        { label: "Strategy",         href: "/admin/strategy",         icon: Target },
+        { label: "Reports",          href: "/admin/reports",          icon: BarChart2 },
       ],
     },
     {
