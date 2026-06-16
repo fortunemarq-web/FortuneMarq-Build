@@ -1,113 +1,72 @@
-# ▶ CONTINUE HERE — Session Handoff (Mac Mini continuation)
-**Written:** 2026-06-16 · **Machine moved:** Windows PC → Mac Mini · **Branch:** `continue-on-mac`
+# ▶ CONTINUE HERE — Canonical Handoff
+**Updated:** 2026-06-17 · **Branch:** `continue-on-mac` · **This file supersedes all other handoff/continuation docs.**
 
-> **Claude on the Mac: read THIS first, then `WHATSAPP_AUTOMATION_PLAN.md` and
-> `AUDIT_FIX_CONTINUATION.md` (both in this folder). The Windows machine's Claude
-> memory does NOT travel — this doc is the source of truth for where we are.**
+> You are a fresh Claude Code session (new account, same machine + same `FortuneMarq-Build`
+> folder — we switched accounts because the previous one hit its weekly rate limit). The prior
+> session's memory does NOT carry over. **This file is the source of truth for where we are.**
+> Read it fully, then `CLAUDE.md` (auto-loaded) for app structure.
 
-App lives in `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4).
-Live at https://fmos.fortunemarq.com. Repo: github.com/fortunemarq-web/FortuneMarq-Build.
-
----
-
-## 1. WHERE WE ARE (current truth — supersedes the older June-14 master docs)
-
-The app is **deployed and live**. The June-14 `00_MASTER` docs say "not deployed / auth
-missing / cron not scheduled" — that is STALE. Since then: FMOS is deployed, the auth gate
-is done (`proxy.ts`, fail-open), GitHub-Actions cron runs and is verified, lead scoring is
-wired, the DB is fully synced, and the daily WhatsApp report is wired.
-
-**11 commits sit on `continue-on-mac` (and were NOT pushed to `main` — no production
-deploy yet by owner's choice).** `c12f943`→`cb4402b`. `npx tsc --noEmit` = 0, `npm run build` green.
-- 10 audit-fix commits (`c12f943`→`0c7add5`) — see `AUDIT_FIX_CONTINUATION.md`.
-- 1 WhatsApp automation Phase-1 commit (`cb4402b`).
+App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer.
 
 ---
 
-## 2. WHAT THIS SESSION DID
+## 0. Doc trust map (what to read vs ignore)
+**Authoritative / current:**
+- **This file** — current state + next steps.
+- `CLAUDE.md` — app structure, routes, conventions (auto-loaded).
+- `WHATSAPP_TEMPLATES_FINAL.md` + `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` — the 33 submitted WhatsApp templates (SOURCE OF TRUTH).
+- `WHATSAPP_HANDOFF_2026-06-16.md` — the WhatsApp work order (BUILD/CHANGE/REMOVE, 12 surfaces, DoD).
+- `00_MASTER/FMOS_Execution_Roadmap.md`, `FMOS_System_Design_And_Tasks.md`, `CRITICAL_PATH.md`, `PENDING_ACTIONS.md` — owner's strategy/launch-gate (maintained in Cowork).
 
-**Audit fixes (done, committed):** Task 3 WhatsApp env (`ADMIN_WHATSAPP_NUMBERS` set in
-Vercel = `918904192656,919353082656,971502846785`); fixed duplicates-scan throwing filter;
-fixed team_targets daily-goal end-to-end (code-only, existing columns); retired dead
-`outreach_sequences` (9 files). A1 migration-replay deferred (needs Docker/psql). Details in
-`AUDIT_FIX_CONTINUATION.md` §6.
-
-**WhatsApp automation — big initiative (owner wants it full-scale before customer go-live):**
-- **Plan written:** `WHATSAPP_AUTOMATION_PLAN.md` — full lifecycle map divided into **3
-  channels** (1: leads/clients · 2: admin · 3: staff), prerequisites, build phases, decisions.
-- **Phase 1 built + committed (`cb4402b`):** a generic `send_whatsapp` ACTION on the
-  automation engine — `lib/automations/{types,actions}.ts` + helpers `lib/whatsapp/
-  recipients.ts` + `lib/whatsapp/params.ts`. Resolves recipient by audience
-  (lead/client/admin/staff), opt-out guard, template resolution (flat OR A/B/C/D lead-type),
-  Graph-API param building. **Inert until a rule is enabled — nothing sends yet.** Works now
-  with the 4 already-wired triggers (`lead_created`, `lead_followup_due`, `lead_sla_missed`,
-  `task_overdue`).
-
-**Whole-repo alignment audit (chat only — captured in §4 below so it travels):** read the
-`00_MASTER` docs + the app; confirmed the owner's 4-stage operating model aligns strongly
-with the repo's documented "Master Flow."
+**Superseded / historical (do NOT act on):**
+- `WHATSAPP_TEMPLATE_SPEC.md` — superseded by `WHATSAPP_TEMPLATES_FINAL.md` (already banner-marked).
+- `WHATSAPP_AUTOMATION_PLAN.md` — Phases 1–3 already built (see §3); keep for design rationale only.
+- `PHASE_*.md`, `AUDIT_FIX_CONTINUATION.md`, `last_session.md`, `COWORK_HANDOFF.md`, `START_HERE.md`,
+  `00_MASTER_BUILD_PLAN.md` — older session logs; CLAUDE.md + this file override them.
+- `AGENTS.md` — does not exist (a second agent "omp" was trialed and removed; see §6).
 
 ---
 
-## 3. NEXT STEPS (pick up here)
+## 1. Where we are
+- All work sits on **`continue-on-mac`** and is **NOT pushed** (no production deploy yet, by owner's choice). Merging to `main` triggers a live Vercel deploy — **do not push/merge to `main` without explicit owner approval.**
+- `.env.local` is in place (gitignored). `npx tsc --noEmit` = **0**, `npm run build` = **green**.
+- Unpushed WhatsApp-automation commits this stretch: `cb4402b` (Phase 1) → `b84dc79`, `e8cba86`,
+  `d226466`, `f666e4d`, `f2bffe0`, `eec7d00`.
 
-1. **WhatsApp Phase 2 — fire `runTrigger` at every lifecycle event** (the keystone =
-   `lead_outcome_logged` from the cockpit + pitch list; then meeting_booked, proposal_sent,
-   agreement_sent/signed, client_created, invoice events, report_published). Each is additive
-   + inert until a rule exists. This is the next build (was about to start when we moved).
-   Build order + per-event detail: `WHATSAPP_AUTOMATION_PLAN.md` §5 Phase 2.
-2. **Collect prerequisites in PARALLEL (owner, external):** submit the Channel-1 Meta
-   templates (`WHATSAPP_AUTOMATION_PLAN.md` §4a) + the 2 generic internal templates
-   (`admin_alert`, `staff_alert`); collect staff WhatsApp numbers (`profiles.phone`).
-3. **Open design decisions** that shape the build — `WHATSAPP_AUTOMATION_PLAN.md` §6
-   (report delivery mechanic, opt-out policy, quiet hours). Not blocking; sensible defaults
-   are baked in.
-4. **Owner-gated, still pending:** push `continue-on-mac` → merge to `main` (triggers Vercel
-   deploy + activates the admin daily report — safe; no customer messages). A1 migration replay.
+## 2. Conventions (non-negotiable)
+- Lead stage writes only via `lib/pipeline.ts` (`leadStageUpdate`/`leadStatusUpdate`) — never write `outreach_stage`/`status` directly.
+- Auth gate = `proxy.ts` (Next 16), **not** `middleware.ts`; fail-open.
+- No emoji in UI chrome; green = `brand-deep` `#1E7A4F` (raw `#42CA80` = accents only).
+- Commits scoped to `01_CRM_AND_TOOL/fmos`. `tsc=0` + build green before every commit.
+- WhatsApp: cold/outside-24h = Meta-approved template only; free-text only inside the 24h window.
+- Supabase: server → `createServerClientWithCookies()`; client → `createClient()`; service-role (`createAdminClient()`) for cron/public/trusted only.
 
----
+## 3. What's built (WhatsApp automation — all additive + INERT until a rule is enabled / a send is triggered)
+- **Engine + triggers:** `actions/automations.ts` `fireTrigger` (fail-open) wired at `lead_outcome_logged`, `meeting_booked`, `proposal_sent`, `lead_won`.
+- **Send layer:** `lib/whatsapp/send.ts` + `params.ts` — template send with body params **and document header** (PDF via link/mediaId). Token modifiers `{field:date|datetime|time|inr}` (IST/₹).
+- **Config UI:** `/admin/automations` — `send_whatsapp` action builder + condition builder (route by `last_outcome` etc.). `/admin/whatsapp-templates` — "Register 33 Meta Templates" button now reads `templates_final.json` (source of truth; upserts; `direct_report_*`/`daily_report` untouched).
+- **Direct-report bulk send (currently named "Curiosity Blast"):** `actions/curiosity-blast.ts`, `/admin/curiosity-blast`, `lib/whatsapp/report-lookup.ts` — niche×city send of the A/B/C/D `direct_report_*` template with the matching market-intel PDF as the document header; daily cap; sets `curiosity_sent`; opt-out honored; test-send-to-one-number + dry-run.
+- **Opt-out:** `leads.wa_opt_out` + inbound **STOP** (and START) in the WhatsApp webhook.
+- **SQL:** `supabase/2026-06-16_curiosity_blast.sql` (`wa_opt_out` + `report_assets`) — **already run in Supabase** (owner confirmed).
 
-## 4. 4-STAGE OPERATING MODEL — alignment + gaps (captured from this session)
+## 4. Next steps
+**Code (next build — from `WHATSAPP_HANDOFF_2026-06-16.md` §3–5, in order):**
+1. **Rename "Curiosity" → "Direct Report"** across UI/route/nav/files (mechanism already correct — report sent immediately, no teaser). Confirm no teaser-only code path remains. Keep stage value `curiosity_sent` unless a safe migration is proven.
+2. **Delivery/read/click tracking** on the send dashboard (webhook already stamps `whatsapp_logs.delivery_status`), filterable by city / niche×city.
+3. Then: **bot brain** (Anthropic + `00_MASTER/Bot_Knowledge_Base/*` — currently STUB files, owner must fill), **Google Calendar/Meet booking**, **channel adapters** (web/IG/Messenger), lifecycle sends, compliance/inbox.
 
-Owner's 4 stages = the repo's documented Master Flow. Alignment is strong; gaps are build-status.
+**Owner / external (not code):**
+- **Seed PDFs:** owner is fixing the market-intel reports, then will click `/admin/curiosity-blast` → "Seed report library" (local only). Known gap: **SkinClinics missing Type-B (English)** report.
+- Templates: all 33 **submitted to Meta, pending review** (incl. `direct_report_type_d`).
+- Deploy: push → Vercel env vars (`SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `INBOUND_WEBHOOK_SECRET`) → domain DNS → Supabase redirect URLs → set WhatsApp webhook callback URL.
+- Data: only **Hubli** has reports/leads loaded (858 clean leads, 11 niches); other cities pending. Bulk-import remaining leads via `/admin/bulk-import`.
 
-- **Stage 1 — Data → demand → competitor → A/B/C/D typing → reports** (`07_DATA_AND_RESEARCH`):
-  Hubli COMPLETE (7,298 leads, 75 market-intel PDFs, keyword data 9c×14n, competitor data).
-  GAPS: 8 more cities pending; NO structured competitor table in FMOS; report PDFs sent manually.
-- **Stage 2 — LPs/portfolio → strategy → creative → campaigns → tracking → optimise**
-  (`06_PAID_MARKETING`,`05_ONLINE_PRESENCE`,`02_SERVICE_DELIVERY`): FMOS has tracking
-  (attribution, ad-spend import, marketing hub, strategy engine, growth hub, `/lp/[niche]/[city]`).
-  GAPS (LEAST-built stage = the bottleneck): niche landing pages, ad accounts, creative
-  production pipeline, live campaigns, conversion/pixel setup, portfolio showcase — mostly
-  external + pending. No ads → no inbound → Stage-3 curiosity flow has nothing to run on.
-- **Stage 3 — curiosity → priority calls → meetings** (`03_SALES_SYSTEM` + cockpit): cockpit,
-  scripts, outreach board, 9 outcomes, follow-up queue, lead scoring, meetings, approved
-  templates (a/b/c; d in review), inbound webhook + button-tap priority + auto-replies, retry
-  logic — all built. GAPS: outbound WhatsApp SEND is manual (the Phase-1 engine targets this);
-  the "ad-live-2-days → curiosity blast → prioritise engagers → then non-repliers" automation
-  not wired; niche↔live-campaign link missing.
-- **Stage 4 — meetings → proposal → agreement → onboard → deliver → invoice → scale**
-  (`04`/`08`/`09` + FMOS): proposals, agreements, onboarding, clients, projects/tasks, invoices
-  (real PDF), expenses, GST, P&L, scorecards, renewals — built. GAPS: real PDF for
-  proposal/agreement (browser-print today), WhatsApp doc-send, client health score, upsell
-  triggers, invoice payment reminders, some manual handoffs.
+## 5. Verify after picking up
+From `01_CRM_AND_TOOL/fmos`: `npm install` (if needed) → `npx tsc --noEmit` (expect 0) → `npm run dev`.
 
-**Cross-cutting "foolproof" gaps:** (1) outbound WhatsApp automation [in progress], (2) the
-niche+city campaign isn't a first-class object threading all stages, (3) Stage 2 demand engine
-is the bottleneck, (4) real PDFs + doc-send, (5) retention loop (health/upsell/reminders),
-(6) external API connections (GSC, Meta/Google Ads, social — CSV bridge today).
-
-Proposed: capture this as a living `FMOS_OPERATING_MODEL.md` and close gaps stage by stage.
-
----
-
-## 5. KEY FACTS
-- **Branch with all work:** `continue-on-mac` (push it / clone it on the Mac; merge to `main`
-  only when ready to deploy).
-- **Env:** `.env.local` is GITIGNORED — it does NOT travel with git. Recreate it on the Mac
-  (copy the file over, or `vercel env pull`). All values are also set in Vercel.
-- **Verify after setup:** from `01_CRM_AND_TOOL/fmos` → `npm install` → `npx tsc --noEmit`
-  (expect 0) → `npm run dev`.
-- **Conventions (don't break):** auth gate = `proxy.ts` (never `middleware.ts`), fail-open.
-  Lead stage writes only via `lib/pipeline.ts`. Commits scoped to `01_CRM_AND_TOOL/fmos`.
-  Green = `brand-deep` #1E7A4F. No emoji in UI chrome. See `CLAUDE.md`.
+## 6. About "omp" (removed)
+A second coding agent (`omp`/Kimi) was trialed in a git worktree to work in parallel. It's been
+**removed** (worktree + `omp-work` branch deleted); its one useful change (the 33-template
+registry rework) was **cherry-picked into `continue-on-mac` as `eec7d00`**. No omp references
+remain in the repo. The `~/.local/bin/omp` binary + `KIMI_API_KEY`/`MOONSHOT_API_KEY` in `~/.zshrc`
+are harmless leftovers on the machine — ignore or remove at will.

@@ -1,5 +1,9 @@
 # FMOS — Full-Scale WhatsApp Automation Plan
-**Status:** PLAN (not built). **Drafted:** 2026-06-16 · **Owner goal:** make FMOS run on the
+> ⚠️ **PARTIALLY BUILT (2026-06-17).** Phases 1–3 (engine action, lifecycle triggers, config UI,
+> direct-report bulk send, token modifiers, 33-template registry) are DONE on `continue-on-mac`.
+> Current state + remaining work: see `CONTINUE_HERE.md`. This doc is kept for design rationale.
+
+**Status:** PLAN (design rationale). **Drafted:** 2026-06-16 · **Owner goal:** make FMOS run on the
 same WhatsApp automation FortuneMarq sells to clients — automate + track every customer
 touch across the lifecycle, so the agency visibly "eats its own cooking."
 

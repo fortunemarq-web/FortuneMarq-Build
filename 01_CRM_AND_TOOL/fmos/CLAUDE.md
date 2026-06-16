@@ -1,7 +1,11 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-15 (build phase complete, committed+pushed, MID-DEPLOY on Vercel)
-# ➤ CONTINUING WORK? Read COWORK_HANDOFF.md FIRST — full state + next steps.
+# Last updated: 2026-06-17.
+# ➤ CONTINUING WORK? Read CONTINUE_HERE.md FIRST — it is the CANONICAL handoff (current state,
+#   branch continue-on-mac, next steps, and the doc trust map). It supersedes COWORK_HANDOFF.md,
+#   last_session.md, the PHASE_*.md logs, and the dated "LATEST SESSION" block below (kept for history).
+#   Since 2026-06-15: WhatsApp automation Phases 1–3 + direct-report bulk send + token modifiers +
+#   33-template registry were built on continue-on-mac (NOT pushed; no deploy yet).
 #
 # LATEST SESSION (2026-06-15): Build phase DONE + accounts consolidated + deploy started.
 # - Marketing fixed: 9 fake widgets → real data/honest empty states; strategy→outcome loop;

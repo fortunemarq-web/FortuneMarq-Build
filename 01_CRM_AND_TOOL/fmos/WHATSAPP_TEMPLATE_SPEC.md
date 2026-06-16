@@ -1,5 +1,13 @@
-# FMOS — WhatsApp Template Spec Sheet (for Meta approval)
-**Status:** READY TO SUBMIT · **Drafted:** 2026-06-16 · Companion to `WHATSAPP_AUTOMATION_PLAN.md` §4a.
+> # ⚠️ SUPERSEDED — DO NOT USE
+> Outdated (24 templates). Current source of truth: **`WHATSAPP_TEMPLATES_FINAL.md`** (33 templates,
+> reviewed + warmed, all edits applied), with machine-readable defs in
+> `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json`.
+> All 33 were submitted to Meta on 2026-06-16 (PENDING review). Kept for history only.
+
+---
+
+# FMOS — WhatsApp Template Spec Sheet (for Meta approval) — [SUPERSEDED]
+**Status:** SUPERSEDED by `WHATSAPP_TEMPLATES_FINAL.md`.
 
 Copy each template below into **Meta WhatsApp Manager → Message Templates → Create**.
 For each: set **Name**, **Category**, **Language = English**, paste the **Body**, and when Meta
