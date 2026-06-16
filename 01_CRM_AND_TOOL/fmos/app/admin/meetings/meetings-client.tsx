@@ -14,6 +14,7 @@ import {
 import { createClient } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
 import { leadStageUpdate, stageToStatus } from "@/lib/pipeline";
+import { rescheduleMeeting, handleNoShow } from "@/actions/book-meeting";
 
 // ─── Types ────────────────────────────────────────────────────
 interface Meeting {
@@ -192,16 +193,20 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
       return;
     }
     startTransition(async () => {
-      const stageMap = { attended: "proposal_sent", no_show: "follow_up_due", cancelled: "follow_back" };
-      const { error } = await supabase.from("leads").update(leadStageUpdate(stageMap[action], { last_outcome: action }) as any).eq("id", id);
-      if (error) { setActionError(error.message); return; }
-      setMeetings(prev => prev.filter(m => m.id !== id));
       if (action === "no_show") {
+        const result = await handleNoShow({ leadId: id });
+        if (!result.ok) { setActionError(result.error || "No-show action failed"); return; }
+        setMeetings(prev => prev.filter(m => m.id !== id));
         setSuccessToast("Marked as No Show — lead moved to Follow-up Due");
         setTimeout(() => setSuccessToast(null), 4000);
         const m = meetings.find(mt => mt.id === id);
         logAudit({ action: "meeting_outcome", resourceType: "meeting", resourceId: id, resourceLabel: m?.company_name, newValue: { outcome: "no_show" }, summary: `No show — moved to Follow-up Due` });
+        return;
       }
+      const stageMap = { attended: "proposal_sent", no_show: "follow_up_due", cancelled: "follow_back" };
+      const { error } = await supabase.from("leads").update(leadStageUpdate(stageMap[action], { last_outcome: action }) as any).eq("id", id);
+      if (error) { setActionError(error.message); return; }
+      setMeetings(prev => prev.filter(m => m.id !== id));
     });
   }
 
@@ -248,11 +253,11 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
   async function handleReschedule(id: string) {
     if (!rescheduleDate) return;
     startTransition(async () => {
-      const { error } = await supabase.from("leads").update(leadStageUpdate("meeting_booked", { follow_up_date: rescheduleDate }) as any).eq("id", id);
-      if (error) { setActionError(error.message); return; }
+      const result = await rescheduleMeeting({ leadId: id, newStartIso: rescheduleDate });
+      if (!result.ok) { setActionError(result.error || "Reschedule failed"); return; }
       const m = meetings.find(mt => mt.id === id);
       logAudit({ action: "update", resourceType: "meeting", resourceId: id, resourceLabel: m?.company_name, oldValue: { follow_up_date: m?.follow_up_date }, newValue: { follow_up_date: rescheduleDate }, summary: `Meeting rescheduled to ${new Date(rescheduleDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}` });
-      setMeetings(prev => prev.map(mt => mt.id === id ? { ...mt, follow_up_date: rescheduleDate } : mt));
+      setMeetings(prev => prev.map(mt => mt.id === id ? { ...mt, follow_up_date: rescheduleDate, meeting_link: result.meetLink || mt.meeting_link } : mt));
       setRescheduleId(null); setRescheduleDate("");
       const dateLabel = new Date(rescheduleDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
       setSuccessToast(`Meeting rescheduled to ${dateLabel}`);
