@@ -2942,7 +2942,9 @@ export type Database = {
           pdf_sent_at: string | null
           phone: string | null
           phone_normalized: string | null
+          is_low_volume: boolean
           phone_raw: string | null
+          pitch_type: string | null
           proposal_link: string | null
           proposal_sent_at: string | null
           search_volume: number | null
@@ -3005,7 +3007,9 @@ export type Database = {
           pdf_sent_at?: string | null
           phone?: string | null
           phone_normalized?: string | null
+          is_low_volume?: boolean
           phone_raw?: string | null
+          pitch_type?: string | null
           proposal_link?: string | null
           proposal_sent_at?: string | null
           search_volume?: number | null
@@ -3068,7 +3072,9 @@ export type Database = {
           pdf_sent_at?: string | null
           phone?: string | null
           phone_normalized?: string | null
+          is_low_volume?: boolean
           phone_raw?: string | null
+          pitch_type?: string | null
           proposal_link?: string | null
           proposal_sent_at?: string | null
           search_volume?: number | null

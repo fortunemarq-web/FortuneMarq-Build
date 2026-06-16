@@ -90,6 +90,9 @@ export interface WaTemplateConfig {
  *   low-volume → D · serp_ranked → A · has_website (not ranked) → B · else C.
  */
 export function leadScriptType(snapshot: any): "A" | "B" | "C" | "D" {
+  const stored = snapshot?.pitch_type;
+  if (stored === "A" || stored === "B" || stored === "C" || stored === "D") return stored;
+  // fallback: derive from presence fields (pre-migration or un-tagged leads)
   if (snapshot?.is_low_volume === true) return "D";
   if (snapshot?.serp_ranked === true) return "A";
   if (snapshot?.has_website === true) return "B";

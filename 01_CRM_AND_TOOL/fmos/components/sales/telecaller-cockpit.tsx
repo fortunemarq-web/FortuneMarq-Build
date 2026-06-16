@@ -256,11 +256,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
   // Filter
   const getLeadScriptType = (l: Lead): string => {
-    const lt = l.lead_type?.toUpperCase();
-    if (lt === "A" || lt === "B" || lt === "C" || lt === "D") return lt;
+    const pt = (l as any).pitch_type;
+    if (pt === "A" || pt === "B" || pt === "C" || pt === "D") return pt;
+    // fallback for leads not yet tagged by the tagger
+    if ((l as any).is_low_volume) return "D";
     if (l.serp_ranked) return "A";
-    if (!l.serp_ranked && l.has_website) return "B";
-    if (!l.serp_ranked && !l.has_website) return "C";
+    if (l.has_website) return "B";
     return "C";
   };
 
