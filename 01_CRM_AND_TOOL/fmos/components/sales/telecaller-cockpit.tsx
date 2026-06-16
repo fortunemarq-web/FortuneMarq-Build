@@ -30,6 +30,7 @@ import { getFilledScript } from "@/lib/data/scripts/scripts_index";
 import WhatsAppTemplatePicker from "./whatsapp-template-picker";
 import { sendNotification } from "@/lib/notifications";
 import { fireTrigger } from "@/actions/automations";
+import { sendOutcomeWhatsApp } from "@/actions/outcome-wa-send";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
 import { FOLLOW_UP_QUEUE_STAGES, stageToStatus } from "@/lib/pipeline";
@@ -513,6 +514,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       if (leadUpdates.outreach_stage === "meeting_booked") {
         void fireTrigger("meeting_booked", "lead", currentLead.id);
       }
+
+      // 3.2 — Outcome → WhatsApp auto-send (fire-and-forget)
+      void sendOutcomeWhatsApp({
+        leadId: currentLead.id,
+        outcome: selectedOutcome as any,
+        followUpDate: dateTime || leadUpdates.follow_up_date || null,
+      });
 
       if (selectedOutcome === "INTERESTED_BOOK") {
         const { data: adminProfile } = await supabase.from('profiles').select('id').eq('role', 'admin').limit(1).single();
@@ -1543,14 +1551,56 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               </div>
 
               {selectedOutcome === "INTERESTED_BOOK" && (
-                <div>
+                <div className="space-y-2">
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Meeting Date & Time</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["today", "1hour", "tomorrow"] as const).map((preset) => (
+                      <button
+                        key={preset}
+                        onClick={() => {
+                          setFollowUpPreset(preset);
+                          if (preset === "1hour") {
+                            setDateTime(buildFollowUpDateTime("1hour", ""));
+                          } else {
+                            setFollowUpCustomTime("10:00");
+                            setDateTime(buildFollowUpDateTime(preset, "10:00"));
+                          }
+                        }}
+                        className={`py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
+                          followUpPreset === preset
+                            ? "border-emerald-500 bg-emerald-50 text-emerald-800"
+                            : "border-slate-200 bg-white text-slate-600 hover:border-emerald-300"
+                        }`}
+                      >
+                        {preset === "today" ? "Today" : preset === "1hour" ? "In 1 hr" : "Tomorrow"}
+                      </button>
+                    ))}
+                  </div>
+                  {followUpPreset && followUpPreset !== "1hour" && (
+                    <div>
+                      <label className="text-xs text-slate-500">Pick a time:</label>
+                      <input
+                        type="time"
+                        value={followUpCustomTime}
+                        onChange={(e) => {
+                          setFollowUpCustomTime(e.target.value);
+                          setDateTime(buildFollowUpDateTime(followUpPreset!, e.target.value));
+                        }}
+                        className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                      />
+                    </div>
+                  )}
                   <input
                     type="datetime-local"
                     value={dateTime}
-                    onChange={(e) => setDateTime(e.target.value)}
-                    className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                    onChange={(e) => { setDateTime(e.target.value); setFollowUpPreset(null); }}
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
                   />
+                  {dateTime && (
+                    <p className="text-xs text-emerald-700 font-semibold">
+                      Meeting: {new Date(dateTime).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  )}
                 </div>
               )}
 

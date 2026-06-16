@@ -29,6 +29,22 @@ function credentials(): { token: string; phoneNumberId: string } | null {
   return { token, phoneNumberId };
 }
 
+/**
+ * SEND MODE GUARD — WHATSAPP_SEND_MODE=test redirects every outbound message to
+ * WHATSAPP_TEST_RECIPIENTS (comma-separated) instead of the real recipient.
+ * The original phone + template are recorded in the log so nothing is silently lost.
+ * When WHATSAPP_SEND_MODE is absent or "live", sends go to the real number.
+ */
+export function resolveRecipients(realPhone: string): { phones: string[]; testMode: boolean } {
+  const mode = process.env.WHATSAPP_SEND_MODE?.trim().toLowerCase();
+  if (mode === "test") {
+    const raw = process.env.WHATSAPP_TEST_RECIPIENTS || "";
+    const phones = raw.split(",").map((p) => p.trim()).filter(Boolean);
+    if (phones.length > 0) return { phones, testMode: true };
+  }
+  return { phones: [realPhone], testMode: false };
+}
+
 /** Indian default: 10 digits → 91XXXXXXXXXX. Accepts +91/0 prefixed input. */
 export function toWaNumber(phone: string): string | null {
   const digits = (phone || "").replace(/\D/g, "");
@@ -70,6 +86,7 @@ async function logOutbound(opts: {
   messageType: string;
   waMessageId?: string;
   sentBy?: string | null;
+  templateId?: string | null;
 }) {
   try {
     const supabase = createAdminClient() as any;
@@ -81,6 +98,7 @@ async function logOutbound(opts: {
       wa_message_id: opts.waMessageId ?? null,
       phone: opts.phone,
       sent_by: opts.sentBy ?? null,
+      template_id: opts.templateId ?? null,
     });
   } catch (e) {
     console.error("[whatsapp/send] log failed:", e);
@@ -121,29 +139,37 @@ export async function sendWhatsAppTemplate(
   }
 ): Promise<SendResult> {
   const creds = credentials();
-  const to = toWaNumber(phone);
-  if (!to) return { success: false, error: "Invalid phone number" };
+  const rawTo = toWaNumber(phone);
+  if (!rawTo) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
-  const result = await graphPost(`${creds.phoneNumberId}/messages`, {
-    messaging_product: "whatsapp",
-    to,
-    type: "template",
-    template: {
-      name: templateName,
-      language: { code: opts?.language || "en" },
-      ...(opts?.components ? { components: opts.components } : {}),
-    },
-  });
-  if (result.success)
-    await logOutbound({
-      leadId: opts?.leadId,
-      sentBy: opts?.sentBy,
-      phone: to,
-      message: `[template:${templateName}]`,
-      messageType: "template",
-      waMessageId: result.messageId,
+
+  const { phones, testMode } = resolveRecipients(rawTo);
+  const logNote = testMode ? `[TEST→${rawTo}] ` : "";
+  let last: SendResult = { success: false, error: "No recipients" };
+
+  for (const to of phones) {
+    last = await graphPost(`${creds.phoneNumberId}/messages`, {
+      messaging_product: "whatsapp",
+      to,
+      type: "template",
+      template: {
+        name: templateName,
+        language: { code: opts?.language || "en" },
+        ...(opts?.components ? { components: opts.components } : {}),
+      },
     });
-  return result;
+    if (last.success)
+      await logOutbound({
+        leadId: opts?.leadId,
+        sentBy: opts?.sentBy,
+        phone: rawTo,
+        message: `${logNote}[template:${templateName}]`,
+        messageType: "template",
+        waMessageId: last.messageId,
+        templateId: templateName,
+      });
+  }
+  return last;
 }
 
 /** Interactive quick-reply buttons — session message (24h window). Max 3 buttons. */

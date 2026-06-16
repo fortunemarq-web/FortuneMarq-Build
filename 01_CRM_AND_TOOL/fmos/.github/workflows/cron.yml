@@ -51,6 +51,14 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/automations/followups" \
             -H "Authorization: Bearer $SECRET" || echo "followups ping failed (non-fatal)"
+      - name: Scheduled messages (follow-back + meeting reminders)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/scheduled-messages" \
+            -H "Authorization: Bearer $SECRET" || echo "scheduled-messages ping failed (non-fatal)"
 
   daily:
     if: github.event.schedule == '0 3 * * *' || github.event_name == 'workflow_dispatch'
