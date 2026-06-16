@@ -325,3 +325,97 @@ export async function seedWhatsAppTemplates(): Promise<{
     return { success: false, seeded, skipped, error: err.message };
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 3: the 24 Meta-approval WhatsApp templates (companion to
+// WHATSAPP_TEMPLATE_SPEC.md). These are the names the automation engine resolves
+// in a send_whatsapp rule. Registered here as a reference library so the rule
+// builder's template picker can offer them. Body uses Meta {{1}},{{2}}… params;
+// `variables` lists each param's meaning in order. Idempotent (skip by name).
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface MetaTemplate {
+  name: string;
+  channel: "LEAD_CLIENT" | "ADMIN" | "STAFF";
+  meta_category: "UTILITY" | "MARKETING";
+  variables: string[];
+  content: string;
+}
+
+const META_TEMPLATES: MetaTemplate[] = [
+  // CHANNEL 1 — Leads / Clients
+  { name: "lead_ack_inbound", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name"], content: "Hi {{1}}, thanks for reaching out to FortuneMarq! We've received your enquiry and a growth specialist will call you shortly. — Team FortuneMarq" },
+  { name: "meeting_confirmation", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "date/time"], content: "Hi {{1}}, your strategy call with FortuneMarq is confirmed for {{2}}. We'll call you on this number — looking forward to speaking with you!" },
+  { name: "meeting_reminder_1h", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name"], content: "Hi {{1}}, a quick reminder — your FortuneMarq strategy call is in about 1 hour. Talk soon!" },
+  { name: "meeting_reminder_15m", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name"], content: "Hi {{1}}, your FortuneMarq call starts in about 15 minutes. We'll reach you on this number shortly." },
+  { name: "proposal_sent", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "proposal link"], content: "Hi {{1}}, your growth proposal from FortuneMarq is ready. View it here: {{2}} — happy to walk you through any questions." },
+  { name: "agreement_sent", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "agreement link"], content: "Hi {{1}}, your FortuneMarq service agreement is ready to review and sign: {{2}} — let us know if anything needs adjusting." },
+  { name: "agreement_welcome", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name"], content: "Welcome to FortuneMarq, {{1}}! Your agreement is signed and onboarding is starting now. Your account manager will reach out with next steps shortly." },
+  { name: "onboarding_intake", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "intake link"], content: "Hi {{1}}, welcome aboard! To kick off your project, please complete your onboarding intake here: {{2}} — it takes about 10 minutes." },
+  { name: "followup_scheduled", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "follow-up date"], content: "Hi {{1}}, great speaking with you! As agreed, I'll follow up with you on {{2}}. Feel free to reach out anytime before then." },
+  { name: "missed_you", channel: "LEAD_CLIENT", meta_category: "MARKETING", variables: ["contact name", "business name"], content: "Hi {{1}}, this is FortuneMarq — we tried reaching you about growing {{2}} but couldn't connect. When's a good time to call you back?" },
+  { name: "proposal_followup", channel: "LEAD_CLIENT", meta_category: "MARKETING", variables: ["contact name", "business name"], content: "Hi {{1}}, just checking in on the proposal we sent for {{2}}. Any questions I can help with? Happy to jump on a quick call." },
+  { name: "meeting_thanks", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "business name"], content: "Hi {{1}}, thanks for your time today! It was great learning about {{2}}. We'll have your tailored proposal over to you shortly." },
+  { name: "project_update", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "milestone"], content: "Hi {{1}}, an update on your project with FortuneMarq: {{2}} is now live. We'll keep you posted on the next milestone." },
+  { name: "approval_request", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "review link"], content: "Hi {{1}}, a deliverable is ready for your review and approval: {{2}} — please take a look when you can and share your feedback." },
+  { name: "monthly_report_ready", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "report month", "report link"], content: "Hi {{1}}, your {{2}} performance report from FortuneMarq is ready. View it here: {{3}} — let's catch up on the results." },
+  { name: "invoice_sent", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "invoice number", "amount", "invoice link"], content: "Hi {{1}}, invoice {{2}} for {{3}} is ready. You can view and pay it here: {{4}} — thank you!" },
+  { name: "payment_reminder", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "invoice number", "amount", "due date", "invoice link"], content: "Hi {{1}}, a reminder that invoice {{2}} for {{3}} is due on {{4}}. You can pay here: {{5}}. Thank you!" },
+  { name: "payment_overdue", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "invoice number", "amount", "invoice link"], content: "Hi {{1}}, our records show invoice {{2}} for {{3}} is now overdue. Please settle it here at your earliest convenience: {{4}} — reach out if you need anything." },
+  { name: "payment_received", channel: "LEAD_CLIENT", meta_category: "UTILITY", variables: ["contact name", "amount", "invoice number"], content: "Hi {{1}}, we've received your payment of {{2}} for invoice {{3}}. Thank you — your account is all up to date!" },
+  { name: "meeting_noshow", channel: "LEAD_CLIENT", meta_category: "MARKETING", variables: ["contact name"], content: "Hi {{1}}, sorry we missed each other for our scheduled call today. Would you like to reschedule? Just reply with a time that suits you." },
+  { name: "onboarding_reminder", channel: "LEAD_CLIENT", meta_category: "MARKETING", variables: ["contact name", "intake link"], content: "Hi {{1}}, a quick reminder to finish your FortuneMarq onboarding so we can get your project moving: {{2}} — it only takes a few minutes." },
+  { name: "revival_nudge", channel: "LEAD_CLIENT", meta_category: "MARKETING", variables: ["contact name", "city", "business name"], content: "Hi {{1}}, it's been a while! FortuneMarq is helping businesses in {{2}} grow online, and we'd love to help {{3}} too. Interested in a quick chat?" },
+  // CHANNEL 2 — Admin (generic)
+  { name: "admin_alert", channel: "ADMIN", meta_category: "UTILITY", variables: ["headline", "detail"], content: "FortuneMarq OS — {{1}}. {{2}} (automated alert)" },
+  // CHANNEL 3 — Staff (generic)
+  { name: "staff_alert", channel: "STAFF", meta_category: "UTILITY", variables: ["headline", "detail"], content: "FortuneMarq — {{1}}. {{2}} (open FMOS to action)" },
+];
+
+export async function seedMetaTemplates(): Promise<{
+  success: boolean;
+  seeded: number;
+  skipped: number;
+  error?: string;
+}> {
+  const supabase = await createServerClientWithCookies();
+  let seeded = 0;
+  let skipped = 0;
+
+  try {
+    for (const t of META_TEMPLATES) {
+      const { data: existing } = await supabase
+        .from("whatsapp_templates")
+        .select("id")
+        .eq("name", t.name)
+        .maybeSingle();
+
+      if (existing) {
+        skipped++;
+        continue;
+      }
+
+      const { error } = await supabase.from("whatsapp_templates").insert({
+        id: t.name,
+        name: t.name,
+        category: t.channel,
+        lead_type: null,
+        variables: t.variables,
+        content: t.content,
+        requires_meta_approval: true,
+        meta_category: t.meta_category,
+        sent_by: "system",
+      });
+
+      if (error) {
+        console.error(`Failed to seed Meta template ${t.name}:`, error.message);
+      } else {
+        seeded++;
+      }
+    }
+
+    return { success: true, seeded, skipped };
+  } catch (err: any) {
+    return { success: false, seeded, skipped, error: err.message };
+  }
+}

@@ -3,6 +3,7 @@ import TemplateManager from "@/components/admin/template-manager";
 import { MessageSquare, LayoutDashboard, Settings } from "lucide-react";
 import Link from "next/link";
 import SeedTemplatesButton from "./seed-button";
+import SeedMetaTemplatesButton from "./meta-seed-button";
 import AutoGreetingToggle from "@/components/admin/auto-greeting-toggle";
 import { Metadata } from "next";
 
@@ -50,6 +51,7 @@ export default async function WhatsappTemplatesPage() {
 
                     <div className="flex gap-3">
                         <AutoGreetingToggle />
+                        <SeedMetaTemplatesButton />
                         <SeedTemplatesButton />
                         <Link
                             href="/admin"

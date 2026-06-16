@@ -18,13 +18,15 @@ interface AutomationRule {
 
 const TRIGGER_OPTIONS = [
   "lead_stage_change",
+  "lead_outcome_logged",
   "lead_sla_missed",
   "lead_followup_due",
+  "meeting_booked",
   "proposal_sent",
   "proposal_confirmed",
+  "lead_won",
   "invoice_overdue",
   "client_churned",
-  "meeting_booked",
   "task_overdue",
   "daily_digest",
 ];
@@ -34,6 +36,7 @@ const ENTITY_OPTIONS = ["lead", "proposal", "invoice", "client", "task", "system
 const ACTION_TYPES = [
   "notify_owner",
   "notify_admin",
+  "send_whatsapp",
   "mark_stale",
   "set_status",
   "set_next_action_date",
@@ -44,10 +47,34 @@ const ACTION_TYPES = [
 
 type ActionType = (typeof ACTION_TYPES)[number];
 
+// WhatsApp send config (only used when type === "send_whatsapp")
+const WA_AUDIENCES = ["lead", "client", "admin", "staff"] as const;
+type WaAudience = (typeof WA_AUDIENCES)[number];
+
 interface ActionDraft {
   type: ActionType;
   text: string; // message / reason / status / preset / tag / uuid / task title
   num: string; // create_task due_in_days
+  // send_whatsapp config
+  waAudience: WaAudience;
+  waTemplate: string; // flat approved template name
+  waByLeadType: boolean; // pick template by A/B/C/D
+  waTplA: string;
+  waTplB: string;
+  waTplC: string;
+  waTplD: string;
+  waParams: string; // body params, one per line (e.g. {contact_person})
+  waHeadline: string; // admin/staff generic templates → {{1}}
+  waDetail: string; // admin/staff generic templates → {{2}}
+}
+
+function newAction(): ActionDraft {
+  return {
+    type: "notify_owner", text: "", num: "1",
+    waAudience: "lead", waTemplate: "", waByLeadType: false,
+    waTplA: "", waTplB: "", waTplC: "", waTplD: "",
+    waParams: "", waHeadline: "", waDetail: "",
+  };
 }
 
 const DATE_PRESETS = ["now_plus_10min", "today_6pm", "tomorrow_9am"];
@@ -56,6 +83,7 @@ const DATE_PRESETS = ["now_plus_10min", "today_6pm", "tomorrow_9am"];
 const ACTION_HINT: Record<ActionType, string> = {
   notify_owner: "Message shown to the lead owner",
   notify_admin: "Message shown to all admins",
+  send_whatsapp: "",
   mark_stale: "Reason (e.g. SLA breached — no contact)",
   set_status: "New status value (e.g. calling)",
   set_next_action_date: "Pick a preset date",
@@ -64,11 +92,84 @@ const ACTION_HINT: Record<ActionType, string> = {
   create_task: "Task title",
 };
 
+// Condition builder — route a rule by entity fields (e.g. last_outcome)
+const CONDITION_FIELDS = [
+  "last_outcome",
+  "outreach_stage",
+  "status",
+  "lead_type",
+  "city",
+  "industry",
+  "has_website",
+  "serp_ranked",
+  "phone",
+];
+const CONDITION_OPS = ["eq", "neq", "in", "nin", "contains", "is_null", "not_null"];
+// The 9 telecaller outcomes (source: OUTCOMES in telecaller-cockpit.tsx) — suggested
+// values when routing on last_outcome.
+const OUTCOME_VALUES = [
+  "INTERESTED_BOOK",
+  "INTERESTED_FOLLOW_UP",
+  "INTERESTED_SEND_INFO",
+  "NOT_INTERESTED",
+  "FOLLOW_BACK",
+  "WRONG_NUMBER",
+  "NO_ANSWER",
+  "GATEKEEPER",
+  "LANGUAGE_BARRIER",
+];
+
+interface ConditionDraft {
+  field: string;
+  op: string;
+  value: string;
+}
+
+function serializeConditions(conds: ConditionDraft[]): any {
+  const all = conds
+    .filter((c) => c.field && c.op)
+    .map((c) => {
+      const cond: any = { field: c.field, op: c.op };
+      if (c.op === "is_null" || c.op === "not_null") return cond;
+      if (c.op === "in" || c.op === "nin") {
+        cond.value = c.value.split(",").map((s) => s.trim()).filter(Boolean);
+      } else {
+        const v = c.value.trim();
+        cond.value = v === "true" ? true : v === "false" ? false : v;
+      }
+      return cond;
+    });
+  return all.length ? { all } : {};
+}
+
 function serializeAction(a: ActionDraft): { type: string; value: any } {
   switch (a.type) {
     case "notify_owner":
     case "notify_admin":
       return { type: a.type, value: { message: a.text || "Action required" } };
+    case "send_whatsapp": {
+      const audience = a.waAudience || "lead";
+      const cfg: any = { audience, lang: "en" };
+      if (audience === "admin" || audience === "staff") {
+        // Generic internal templates ride on headline + detail (exactly 2 params).
+        cfg.headline = a.waHeadline || "";
+        cfg.detail = a.waDetail || "";
+      } else {
+        if (a.waByLeadType) {
+          const map: any = {};
+          if (a.waTplA) map.A = a.waTplA;
+          if (a.waTplB) map.B = a.waTplB;
+          if (a.waTplC) map.C = a.waTplC;
+          if (a.waTplD) map.D = a.waTplD;
+          cfg.leadTypeTemplates = map;
+        } else {
+          cfg.template = a.waTemplate || "";
+        }
+        const params = (a.waParams || "").split("\n").map((s) => s.trim()).filter(Boolean);
+        if (params.length) cfg.params = params;
+      }
+      return { type: "send_whatsapp", value: cfg };
+    }
     case "mark_stale":
       return { type: a.type, value: { reason: a.text || "Automation Rule" } };
     case "set_next_action_date":
@@ -80,13 +181,14 @@ function serializeAction(a: ActionDraft): { type: string; value: any } {
   }
 }
 
-export default function AutomationsClient({ initialRules }: { initialRules: AutomationRule[] }) {
+export default function AutomationsClient({ initialRules, templates = [] }: { initialRules: AutomationRule[]; templates?: string[] }) {
   const [rules, setRules] = useState(initialRules);
   const [showNew, setShowNew] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", description: "", trigger: "lead_stage_change", entity_type: "lead", priority: "5", throttle: "60" });
   const [actions, setActions] = useState<ActionDraft[]>([]);
+  const [conditions, setConditions] = useState<ConditionDraft[]>([]);
   const supabase = createClient();
   const router = useRouter();
 
@@ -114,14 +216,20 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
     setSaving(null);
   };
 
-  const addAction = () => setActions((prev) => [...prev, { type: "notify_owner", text: "", num: "1" }]);
+  const addAction = () => setActions((prev) => [...prev, newAction()]);
   const removeAction = (i: number) => setActions((prev) => prev.filter((_, idx) => idx !== i));
   const updateAction = (i: number, patch: Partial<ActionDraft>) =>
     setActions((prev) => prev.map((a, idx) => idx === i ? { ...a, ...patch } : a));
 
+  const addCondition = () => setConditions((prev) => [...prev, { field: "last_outcome", op: "eq", value: "" }]);
+  const removeCondition = (i: number) => setConditions((prev) => prev.filter((_, idx) => idx !== i));
+  const updateCondition = (i: number, patch: Partial<ConditionDraft>) =>
+    setConditions((prev) => prev.map((c, idx) => idx === i ? { ...c, ...patch } : c));
+
   const resetForm = () => {
     setForm({ name: "", description: "", trigger: "lead_stage_change", entity_type: "lead", priority: "5", throttle: "60" });
     setActions([]);
+    setConditions([]);
   };
 
   const createRule = async () => {
@@ -138,7 +246,7 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
         throttle_minutes: Number(form.throttle) || 0,
         is_enabled: false,
         actions: actions.map(serializeAction),
-        conditions: {},
+        conditions: serializeConditions(conditions),
       })
       .select().single();
     if (error) { toast.error("Failed to create rule", error.message); }
@@ -259,6 +367,54 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
             </div>
           </div>
 
+          {/* Suggestions for template-name and outcome inputs */}
+          <datalist id="wa-templates">
+            {templates.map((t) => <option key={t} value={t} />)}
+          </datalist>
+          <datalist id="outcome-values">
+            {OUTCOME_VALUES.map((o) => <option key={o} value={o} />)}
+          </datalist>
+
+          <div className="border-t border-slate-100 pt-3">
+            <div className="flex justify-between items-center mb-2">
+              <label className={labelClass + " mb-0"}>Conditions (optional — all must match)</label>
+              <button onClick={addCondition} className="flex items-center gap-1 text-xs font-semibold text-brand-deep hover:text-brand-active">
+                <Plus className="h-3 w-3" /> Add condition
+              </button>
+            </div>
+            {conditions.length === 0 && (
+              <p className="text-xs text-slate-400 italic">No conditions — the rule runs for every {form.entity_type}. Add one to route by a field (e.g. last_outcome = INTERESTED_SEND_INFO).</p>
+            )}
+            <div className="space-y-2">
+              {conditions.map((c, i) => (
+                <div key={i} className="flex items-start gap-2 bg-slate-50 rounded-lg p-2">
+                  <div className="flex-1 grid grid-cols-3 gap-2">
+                    <select className={inputClass} value={c.field} onChange={(e) => updateCondition(i, { field: e.target.value })}>
+                      {CONDITION_FIELDS.map((f) => <option key={f} value={f}>{f}</option>)}
+                    </select>
+                    <select className={inputClass} value={c.op} onChange={(e) => updateCondition(i, { op: e.target.value })}>
+                      {CONDITION_OPS.map((o) => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                    {c.op === "is_null" || c.op === "not_null" ? (
+                      <span className="text-xs text-slate-400 self-center">no value</span>
+                    ) : (
+                      <input
+                        className={inputClass}
+                        list={c.field === "last_outcome" ? "outcome-values" : undefined}
+                        placeholder={c.op === "in" || c.op === "nin" ? "comma,separated" : "value"}
+                        value={c.value}
+                        onChange={(e) => updateCondition(i, { value: e.target.value })}
+                      />
+                    )}
+                  </div>
+                  <button onClick={() => removeCondition(i)} className="p-1.5 text-slate-400 hover:text-red-500" title="Remove condition">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="border-t border-slate-100 pt-3">
             <div className="flex justify-between items-center mb-2">
               <label className={labelClass + " mb-0"}>Actions *</label>
@@ -276,7 +432,43 @@ export default function AutomationsClient({ initialRules }: { initialRules: Auto
                     <select className={inputClass} value={a.type} onChange={(e) => updateAction(i, { type: e.target.value as ActionType })}>
                       {ACTION_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                     </select>
-                    {a.type === "set_next_action_date" ? (
+                    {a.type === "send_whatsapp" ? (
+                      <div className="space-y-2 rounded-lg border border-emerald-100 bg-emerald-50/40 p-2">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">Audience</label>
+                          <select className={inputClass} value={a.waAudience} onChange={(e) => updateAction(i, { waAudience: e.target.value as WaAudience })}>
+                            {WA_AUDIENCES.map((au) => <option key={au} value={au}>{au}</option>)}
+                          </select>
+                        </div>
+                        {a.waAudience === "admin" || a.waAudience === "staff" ? (
+                          <>
+                            <p className="text-[10px] text-slate-500">
+                              Generic template <span className="font-mono">{a.waAudience === "admin" ? "admin_alert" : "staff_alert"}</span> · headline = {`{{1}}`}, detail = {`{{2}}`}. Put any link at the end of detail.
+                            </p>
+                            <input className={inputClass} placeholder="Headline (e.g. New hot lead)" value={a.waHeadline} onChange={(e) => updateAction(i, { waHeadline: e.target.value })} />
+                            <input className={inputClass} placeholder="Detail — supports {company_name}, {city}…" value={a.waDetail} onChange={(e) => updateAction(i, { waDetail: e.target.value })} />
+                          </>
+                        ) : (
+                          <>
+                            <label className="flex items-center gap-2 text-[11px] font-semibold text-slate-600">
+                              <input type="checkbox" checked={a.waByLeadType} onChange={(e) => updateAction(i, { waByLeadType: e.target.checked })} />
+                              Pick template by lead type (A/B/C/D)
+                            </label>
+                            {a.waByLeadType ? (
+                              <div className="grid grid-cols-2 gap-2">
+                                <input list="wa-templates" className={inputClass} placeholder="Type A template" value={a.waTplA} onChange={(e) => updateAction(i, { waTplA: e.target.value })} />
+                                <input list="wa-templates" className={inputClass} placeholder="Type B template" value={a.waTplB} onChange={(e) => updateAction(i, { waTplB: e.target.value })} />
+                                <input list="wa-templates" className={inputClass} placeholder="Type C template" value={a.waTplC} onChange={(e) => updateAction(i, { waTplC: e.target.value })} />
+                                <input list="wa-templates" className={inputClass} placeholder="Type D template" value={a.waTplD} onChange={(e) => updateAction(i, { waTplD: e.target.value })} />
+                              </div>
+                            ) : (
+                              <input list="wa-templates" className={inputClass} placeholder="Approved template name (e.g. proposal_sent)" value={a.waTemplate} onChange={(e) => updateAction(i, { waTemplate: e.target.value })} />
+                            )}
+                            <textarea className={inputClass} rows={2} placeholder={"Body params — one per line, e.g.\n{contact_person}\n{proposal_link}"} value={a.waParams} onChange={(e) => updateAction(i, { waParams: e.target.value })} />
+                          </>
+                        )}
+                      </div>
+                    ) : a.type === "set_next_action_date" ? (
                       <select className={inputClass} value={a.text || "tomorrow_9am"} onChange={(e) => updateAction(i, { text: e.target.value })}>
                         {DATE_PRESETS.map((p) => <option key={p} value={p}>{p}</option>)}
                       </select>

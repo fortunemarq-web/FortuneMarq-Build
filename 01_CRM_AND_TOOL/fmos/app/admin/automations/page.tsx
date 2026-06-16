@@ -9,6 +9,13 @@ export default async function AutomationsPage() {
         .select("id, name, description, trigger, entity_type, priority, is_enabled")
         .order("priority", { ascending: true });
 
+    // Registered template names (for the send_whatsapp action picker)
+    const { data: tpls } = await supabase
+        .from("whatsapp_templates")
+        .select("name")
+        .order("name", { ascending: true });
+    const templateNames = (tpls || []).map((t: any) => t.name).filter(Boolean);
+
     return (
         <div className="min-h-full bg-slate-50 px-4 py-8">
             <div className="mx-auto max-w-4xl">
@@ -24,7 +31,7 @@ export default async function AutomationsPage() {
                     </div>
                 </div>
 
-                <AutomationsClient initialRules={(rules || []) as any} />
+                <AutomationsClient initialRules={(rules || []) as any} templates={templateNames} />
             </div>
         </div>
     );
