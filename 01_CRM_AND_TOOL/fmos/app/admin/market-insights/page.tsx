@@ -1,6 +1,8 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { BarChart2 } from "lucide-react";
 import KeywordIngestClient from "./keyword-ingest-client";
+import SerpScanClient from "./serp-scan-client";
+import type { SerpCompetitorInsight } from "@/actions/serp-scan";
 
 export const metadata = {
   title: "Market Insights | FortuneMarq Admin",
@@ -11,7 +13,7 @@ export default async function MarketInsightsPage() {
   const supabase = await createServerClientWithCookies();
 
   const { data: existing } = await (supabase.from("market_insights") as any)
-    .select("industry, city, search_volume, general_insights")
+    .select("industry, city, search_volume, general_insights, competitor_insights")
     .order("city")
     .order("industry");
 
@@ -20,11 +22,12 @@ export default async function MarketInsightsPage() {
     city: string;
     search_volume: string | null;
     general_insights: { monthlySearchDemand?: number; topKeywords?: unknown[]; updatedAt?: string } | null;
+    competitor_insights: SerpCompetitorInsight | null;
   }[];
 
   return (
     <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-5xl space-y-8">
+      <div className="mx-auto max-w-6xl space-y-8">
 
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -37,6 +40,7 @@ export default async function MarketInsightsPage() {
               Upload Google Keyword Planner CSVs — one per niche × city. Writes{" "}
               <code className="text-xs bg-slate-100 px-1 rounded">market_insights</code> and re-tags{" "}
               <code className="text-xs bg-slate-100 px-1 rounded">leads.pitch_type</code>.
+              Run SERP scan per row to classify competitor landscape.
             </p>
           </div>
         </div>
@@ -49,53 +53,18 @@ export default async function MarketInsightsPage() {
           <KeywordIngestClient />
         </div>
 
-        {/* Existing data table */}
+        {/* Stored insights table */}
         {rows.length > 0 && (
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+            <div className="px-5 py-3 border-b border-slate-100">
               <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
                 Stored insights ({rows.length} niche × city)
               </h2>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Click a row to expand SERP details. "Scan SERP" fetches live Google results and classifies the competitor landscape.
+              </p>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">City</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">Industry</th>
-                    <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Vol / mo</th>
-                    <th className="px-4 py-2 text-center text-xs font-semibold text-slate-500">Type</th>
-                    <th className="px-4 py-2 text-center text-xs font-semibold text-slate-500">Keywords</th>
-                    <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Last updated</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {rows.map(r => {
-                    const vol = r.general_insights?.monthlySearchDemand ?? Number(r.search_volume ?? 0);
-                    const kwCount = r.general_insights?.topKeywords?.length ?? 0;
-                    const isLow = vol > 0 && vol < 1000;
-                    const updatedAt = r.general_insights?.updatedAt;
-                    return (
-                      <tr key={`${r.city}-${r.industry}`} className="hover:bg-slate-50">
-                        <td className="px-4 py-2 font-medium text-slate-800">{r.city}</td>
-                        <td className="px-4 py-2 text-slate-600">{r.industry}</td>
-                        <td className="px-4 py-2 text-right tabular-nums">{vol.toLocaleString()}</td>
-                        <td className="px-4 py-2 text-center">
-                          {isLow
-                            ? <span className="text-xs font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">D</span>
-                            : <span className="text-xs font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">A/B/C</span>
-                          }
-                        </td>
-                        <td className="px-4 py-2 text-center text-slate-500">{kwCount}</td>
-                        <td className="px-4 py-2 text-right text-xs text-slate-400">
-                          {updatedAt ? new Date(updatedAt).toLocaleDateString("en-IN") : "—"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <SerpScanClient rows={rows} />
           </div>
         )}
 
