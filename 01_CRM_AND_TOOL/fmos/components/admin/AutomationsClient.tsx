@@ -464,7 +464,7 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
                             ) : (
                               <input list="wa-templates" className={inputClass} placeholder="Approved template name (e.g. proposal_sent)" value={a.waTemplate} onChange={(e) => updateAction(i, { waTemplate: e.target.value })} />
                             )}
-                            <textarea className={inputClass} rows={2} placeholder={"Body params — one per line, e.g.\n{contact_person}\n{proposal_link}"} value={a.waParams} onChange={(e) => updateAction(i, { waParams: e.target.value })} />
+                            <textarea className={inputClass} rows={3} placeholder={"Body params — one per line. Format with :date :datetime :time :inr\ne.g. {contact_person}\n{follow_up_date:datetime}\n{amount:inr}"} value={a.waParams} onChange={(e) => updateAction(i, { waParams: e.target.value })} />
                           </>
                         )}
                       </div>

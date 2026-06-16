@@ -1,4 +1,45 @@
 import type { WaAudience } from "./recipients";
+import { fmtINR } from "@/lib/reports/dailyReport";
+
+const IST = "Asia/Kolkata";
+
+/**
+ * Format a raw snapshot value per an optional token modifier (the `:mod` in
+ * `{field:mod}`). All dates render in IST. Fail-soft: a null/undefined value →
+ * "", an invalid date / non-numeric amount / UNRECOGNIZED modifier → the raw
+ * value (never empty). No modifier → raw String(value) (backward compatible).
+ */
+function applyModifier(raw: any, mod?: string): string {
+  if (raw === undefined || raw === null) return "";
+  if (!mod) return String(raw);
+  switch (mod) {
+    case "inr": {
+      let n: number;
+      if (typeof raw === "number") {
+        n = raw;
+      } else {
+        const stripped = String(raw).replace(/[^0-9.-]/g, "");
+        n = stripped === "" ? NaN : Number(stripped); // no digits → non-numeric → raw fallback
+      }
+      return Number.isFinite(n) ? fmtINR(n) : String(raw);
+    }
+    case "date":
+    case "datetime":
+    case "time": {
+      const d = new Date(raw);
+      if (isNaN(d.getTime())) return String(raw);
+      if (mod === "date") {
+        return d.toLocaleDateString("en-IN", { timeZone: IST, weekday: "short", day: "numeric", month: "short" });
+      }
+      if (mod === "time") {
+        return d.toLocaleTimeString("en-IN", { timeZone: IST, hour: "numeric", minute: "2-digit", hour12: true });
+      }
+      return d.toLocaleString("en-IN", { timeZone: IST, weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12: true });
+    }
+    default:
+      return String(raw); // unrecognized modifier → raw value
+  }
+}
 
 /**
  * Template resolution + Meta Graph API parameter building for the `send_whatsapp`
@@ -57,12 +98,15 @@ export function resolveTemplate(cfg: WaTemplateConfig, snapshot: any): string | 
   return cfg.template || null;
 }
 
-/** Replace {field} tokens in a string from the snapshot. Unknown tokens → "". */
+/**
+ * Replace {field} / {field:mod} tokens in a string from the snapshot.
+ * Unknown tokens → "". Modifiers (date/datetime/time/inr) format the value;
+ * see applyModifier.
+ */
 function fill(tmpl: string, snapshot: any): string {
-  return String(tmpl || "").replace(/\{([\w.]+)\}/g, (_m, key) => {
-    const v = snapshot?.[key];
-    return v === undefined || v === null ? "" : String(v);
-  });
+  return String(tmpl || "").replace(/\{([\w.]+)(?::(\w+))?\}/g, (_m, key, mod) =>
+    applyModifier(snapshot?.[key], mod)
+  );
 }
 
 /**

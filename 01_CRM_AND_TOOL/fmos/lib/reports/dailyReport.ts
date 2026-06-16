@@ -30,7 +30,7 @@ export interface DailyMetrics {
   inboundYesterday: number;
 }
 
-function fmtINR(n: number): string {
+export function fmtINR(n: number): string {
   return "₹" + Math.round(n).toLocaleString("en-IN");
 }
 

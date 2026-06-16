@@ -324,19 +324,26 @@ FortuneMarq — {{1}}. {{2}} (open FMOS to action)
 
 ---
 
-## 4. Param formatting caveat (know before you wire rules)
+## 4. Param formatting (token modifiers)
 
-The engine sends the **raw row value** for a `{field}` token. Two cases need care:
+A `{field}` token sends the **raw row value**. To format dates and amounts, append a
+**modifier** — `{field:mod}` — handled by `applyModifier` in `lib/whatsapp/params.ts`.
+All dates render in **IST**. Fail-soft: null/undefined → "", and an invalid date /
+non-numeric amount / unrecognized modifier → the raw value (never empty).
 
-- **Dates** (`follow_up_date`): stored as ISO timestamps → would render like
-  `2026-06-17T16:00:00Z`. For customer-facing dates, either (a) pass a **literal** pre-formatted
-  string in the rule's `params`, or (b) add a friendly formatted column, or (c) defer those
-  templates until a formatting helper is added to `params.ts`. The Tier-1 meeting templates that
-  don't print a date (`meeting_reminder_1h/15m`) are safe to wire immediately.
-- **Amounts** (`{amount}`): pass a literal already formatted with the ₹ symbol and separators.
+| Modifier | Example token | Renders |
+|---|---|---|
+| `date` | `{follow_up_date:date}` | Wed, 17 Jun |
+| `datetime` | `{follow_up_date:datetime}` | Wed, 17 Jun, 4:00 pm |
+| `time` | `{follow_up_date:time}` | 4:00 pm |
+| `inr` | `{amount:inr}` | ₹25,000 (reuses `fmtINR`) |
+| _(none)_ | `{contact_person}` | raw value (unchanged) |
 
-This caveat only affects how rules are configured later — it does **not** change what you submit to
-Meta now. Submit all 24; wire the date/amount ones once formatting is sorted.
+So the date/amount templates wire cleanly now — e.g. `meeting_confirmation` param 2 =
+`{follow_up_date:datetime}`, `invoice_sent` param 3 = `{amount:inr}`. Amounts that aren't on the
+lead row can still be passed as a literal (e.g. `₹{amount}`) — the `:inr` modifier is for numeric
+row values. This affects only how rules are configured — it does **not** change what you submit to
+Meta. Submit all 24 as-is.
 
 ---
 
