@@ -1,0 +1,26 @@
+#!/bin/sh
+# "docs never go stale" — pre-commit gate.
+#   • BLOCKS the commit on DEAD documentation references.
+#   • WARNS (non-blocking) when a folder's doc looks stale vs the staged changes.
+# Scope: docs only. The check is read-only; it never edits files.
+# Emergency bypass:  git commit --no-verify
+ROOT=$(git rev-parse --show-toplevel)
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "docs_check: 'node' not on PATH — skipping doc check (install Node to enable)."
+  exit 0
+fi
+
+node "$ROOT/scripts/docs_check.mjs" --mode staged
+status=$?
+
+if [ "$status" -eq 2 ]; then
+  echo ""
+  echo "✗ Commit blocked: dead documentation reference(s) above."
+  echo "  Fix the path, update the doc, or remove the reference."
+  echo "  Bypass (not recommended): git commit --no-verify"
+  exit 1
+fi
+
+# status 0 → clean or stale-only (warnings already printed). Allow the commit.
+exit 0
