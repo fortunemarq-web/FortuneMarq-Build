@@ -1,0 +1,87 @@
+# FMOS — Execution Roadmap
+
+**Created:** 2026-06-16
+**Owner:** Jabeer
+**Companion to:** `FMOS_System_Design_And_Tasks.md` (the full design)
+
+> **Governing rule (decided):** Client acquisition does **NOT** begin until **every feature across all engines is built and QA'd.** No partial go-live. Build the whole machine → QA → then flip everything on together at the Launch Gate.
+
+Build order below is sequenced by **dependency** (foundations first) and **risk** — not by early revenue, since nothing launches until the end.
+
+---
+
+## Phase A — Foundations (data, intelligence, safety, bot)
+*Everything else depends on these.*
+
+- [ ] **1.1** Lead collection feature — Places API + Playwright smart router, keyword queue, merge/dedup, export to `leads`.
+- [ ] **1.2** Port cleaning rules into `lib/normalize.ts` + import pipeline (retire scripts).
+- [x] **1.3** Keyword CSV ingest → `market_insights.general_insights`. **DONE 2026-06-16** (`/admin/market-insights` upload). (Phase 2: Google Ads API.)
+- [x] **1.4** SERP (SearchAPI.io) → 4-bucket split → `competitor_insights`. **DONE 2026-06-16** ("Scan SERP" per row).
+- [x] **1.5** `pitch_type` field + tagger (D→A→B→C); re-tagged on CSV ingest; send path reads stored type. **DONE 2026-06-16.**
+- [ ] **Pipeline** Intake orchestrator (batch status machine on `import_batch_id`) + admin progress view.
+- [x] **1.6** Report templates Type A–D in `@react-pdf/renderer` (EN+KN) + generator → Supabase Storage `market-reports` → `report_assets`. **DONE 2026-06-16** ("PDFs" per row). ⚠️ create the `market-reports` bucket (public).
+- [ ] **6.1** Bot brain — knowledge base + guardrails + escalation rules, wired to all channels.
+- [ ] **6.4** WhatsApp compliance — opt-out/STOP + suppression list, throttling/limits, quality-rating monitoring.
+- [ ] **6.3** Cross-engine lead dedup/merge + double-contact suppression.
+
+## Phase B — Outbound engine
+- [ ] **3.1** Outreach dashboard — niche+city selector + bulk type-matched send.
+- [ ] **3.1** Tracking section, filterable (city / niche×city): sent/delivered/read/clicked/booked.
+- [ ] **3.1** Swap static auto-replies → autonomous bot; "tell me more" → info + book-callback.
+- [ ] **3.2** Cockpit — priority card + type script + objection bank + outcome buttons.
+- [ ] **3.2** Outcome → auto-send mapped templates (`WA_OUTCOME_TEMPLATES`); date pickers; no-answer/gatekeeper retry logic.
+- [ ] **3.3** Day-2 non-replier reminder → bot on re-engagement → else cold queue.
+- [ ] **3.4** Booking — date/time picker → Google Calendar/Meet API + confirmation; 1-day + 1-hr reminders; reschedule link; no-show → tag + follow-up.
+- [ ] **6.2** Unified conversation inbox + per-thread human takeover.
+
+## Phase C — Inbound + site + presence
+- [ ] **5.1 / 2.1** Rebuild fortunemarq.com on Next.js/Vercel (performance + animation), integrated with FMOS; dynamic niche LPs from `market_insights`; SEO-built; EN+KN.
+- [ ] **5.1 / 2.1** Website chatbot (shared bot brain) → FMOS inbound; tracking (Pixel + GA4 + Clarity + in-app); forms/CTAs → leads + Google Meet booking; proof vault + projection showcase (2.2).
+- [ ] **2.3** Campaign object + auto-task decomposition; launch-priority view; packages selectable in proposals.
+- [ ] **2.4** Content pipeline — content-item model + board + Drive links.
+- [ ] **2.5–2.8** Campaign status states; Meta Marketing API pull + performance dashboard + flag rules + scheduled WhatsApp digest; go-live status; optimization log.
+- [ ] **5.2** GMB optimization + capture calls/clicks; review-request flow (client posts from own account).
+- [ ] **5.3** Programmatic city×niche SEO pages; AEO (schema/FAQ); GEO (citable content); GSC → SEO dashboard.
+- [ ] **5.4 / 5.5** IG/Messenger inbound → bot/queue (content strategy via Cowork); LinkedIn manual capture.
+- [ ] **5.6** Unified organic inbound routing → `/api/inbound/[channel]` + source attribution.
+
+## Phase D — Sales → delivery → growth
+- [ ] **4.1** Meeting-booked WhatsApp notify + prep view + outcome logging + triggers; store deck link.
+- [ ] **4.2** One-click proposal auto-send (`PROPOSAL_SENT`).
+- [ ] **4.3** Agreement auto-send + typed "Yes, confirmed" webhook → advance invoice.
+- [ ] **4.4** Onboarding checklist + manual add-item + "download details PDF" button.
+- [ ] **4.5** Bulk task paste → milestones + nested tasks on client card.
+- [ ] **4.6** Client project board; milestone-complete → client WhatsApp nudge; monthly report auto → WhatsApp; results → proof vault.
+- [ ] **4.7** Recurring GST invoices + payment reminders + paid/outstanding; overdue → Afifa's board + payment outcomes.
+- [ ] **4.8** Upsell opportunity flags (manual pitch); auto renewals; auto review/referral requests; referral leads → inbound.
+
+## Phase E — Command center + safety nets
+- [ ] **6.5** Master funnel dashboard (cross-engine: leads → … → MRR) + founder daily WhatsApp digest.
+- [ ] **5.7** Presence dashboard (GA4 + GSC + GMB + social + leads-by-source) + WhatsApp digest.
+- [ ] **6.6** Long-term nurture / reactivation drip.
+- [ ] **6.7** Capacity / WIP guardrail + capacity meter.
+- [ ] **6.8** Automation health monitoring + failure alerts to WhatsApp.
+- [ ] **6.9** Backups + periodic data export + documented restore.
+
+## Phase F — QA & dry run (pre-launch)
+- [x] **WhatsApp templates — DONE 2026-06-16:** all 33 finalized, submitted, and **APPROVED by Meta**. Source: `WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json` (created via `bulk_create_whatsapp_templates.py`).
+- [ ] End-to-end test every flow with test data (outbound, inbound, delivery, billing).
+- [ ] Verify all automations — crons, webhooks, bot — and that monitoring alerts fire.
+- [ ] Load real leads via the intake pipeline; populate `market_insights` for launch niches/cities.
+
+---
+
+## 🚦 LAUNCH GATE — Client acquisition begins
+*Only after every box above is checked.*
+
+- Switch on outbound (report sends + priority calling).
+- Launch Meta campaigns.
+- Activate organic (GMB, SEO, social, website live).
+- Everything goes live together — the machine runs as one.
+
+---
+
+## Notes / parked open items
+- Per-campaign budget — decided live in Cowork planning sessions.
+- Type_d WhatsApp template — finish Meta approval.
+- Google Ads API (keyword volumes) — Phase 2, once the Ads account is spending.

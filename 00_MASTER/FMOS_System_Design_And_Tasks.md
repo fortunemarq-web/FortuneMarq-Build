@@ -1,0 +1,956 @@
+# FMOS — System Design & Tasks (Living Doc)
+
+**Status:** DESIGN PHASE — documenting first, executing later.
+**Started:** 2026-06-16
+**Owner:** Jabeer
+**How we work this doc:** Go stage by stage, workflow by workflow. For each minor workflow we capture: Goal → Current state → Problems / open questions → Decisions → Tasks. Nothing gets executed until the full picture is designed.
+
+---
+
+## Build progress / updates
+
+**2026-06-17 — Messaging safety + inbox DONE (6.2/6.3/6.4):** cross-engine dedup/merge on inbound (match by phone→email→domain, union source tags, `last_inbound_at`); active-thread suppression (proactive sends skip mid-conversation; bot exempt); one send choke-point (`preflight`) with opt-out + daily cap + per-minute rate + `suppressed` reasons; Meta quality-rating/tier tracking (webhook + daily cron) → admin alert on drop; unified inbox (`/admin/inbox`) with status chips, needs-attention sort, merged transcript drawer, inline take-over/un-pause, profile links. Env knobs: `WHATSAPP_DAILY_CAP`/`RATE_PER_MIN`/`ACTIVE_THREAD_HOURS`. Migration: `messaging_safety.sql` (`leads.last_inbound_at`).
+
+**2026-06-17 — Delivery 4.4–4.6 + bot un-pause DONE:** onboarding checklist + custom tasks + "Download details PDF"; plan-deliverables bulk paste → milestone parser → nested tasks on client card (preview before write); delivery board with Drive links; milestone-complete → `project_update` WA; `monthly_report_ready` auto-send (+ fixed report magic-link); "Mark as Case Study" with hard consent gate → writes to `Proof_Vault/`. Bot un-pause toggle on lead profile. **Stage 4 (4.1–4.7) complete.** Migrations to run: `tasks.milestone_id`, `delivery_drive_links`.
+
+**2026-06-17 — 6.1 AI bot DONE:** autonomous bot live in the webhook (free-text inbound → `runBot()`, Anthropic + KB), guardrails (price/guarantee/complaint/human/opt-out all blocked, 45/45 tests), booking-intent → `bookMeeting`, human-takeover via `leads.bot_paused`, static auto-reply as API fallback. Test-mode gated (only replies to test numbers until `live`). KB source of truth stays `00_MASTER/Bot_Knowledge_Base/` → synced into `lib/bot/kb.ts`. OPEN: no un-pause UI yet (build toggle on lead profile / future inbox 6.2).
+
+**2026-06-16 — 3.2, 3.4, 4.1–4.3, 4.7 DONE:** outcome→auto-send templates wired (date pickers + retry logic); Google Calendar/Meet booking (event + link + 1h/15m reminders + reschedule + no-show); meeting-booked admin alert; proposal/agreement auto-send with public `/p /a /inv` views; "Yes, confirmed" → signed → advance invoice; recurring GST invoices + payment reminders cron (overdue → Afifa board). All behind `WHATSAPP_SEND_MODE`. Remaining big pieces: AI bot (6.1), delivery (4.4–4.6), campaigns (Stage 2), presence (Stage 5), safety nets (6.x), command center (6.5).
+
+**2026-06-16 — 3.1 outbound send + tracking DONE:** Direct Report send reads auto-generated PDFs from `report_assets` by stored `pitch_type` (clean skip if missing, never wrong report); tracking funnel at `/admin/direct-report/tracking` (Sent→Delivered→Read→Clicked→Booked, filter by city / niche×city). Remaining on 3.1: swap static auto-replies → AI bot (6.1, KB now filled).
+
+**2026-06-16 — Stage 1 data engine DONE (1.3–1.6):** `/admin/market-insights` now does keyword-CSV ingest → `general_insights`, SERP scan → `competitor_insights` (4-bucket split), `pitch_type` tagging on leads, and 8-PDF generation per niche×city (Type A–D × EN/KN) → Supabase Storage `market-reports` → `report_assets`. ⚠️ Jabeer: create the `market-reports` bucket (public). Deferred: 1.1/1.2 collection automation; pipeline orchestrator.
+
+**2026-06-16 — WhatsApp templates DONE:** all **33 templates** finalized, reviewed + warmed, submitted, and **APPROVED by Meta (live)**.
+- Source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` (copy + categories + "when" for each).
+- Machine-readable: `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json`.
+- Bulk-create script: `01_CRM_AND_TOOL/fmos/scripts/bulk_create_whatsapp_templates.py` (already run).
+- Old `WHATSAPP_TEMPLATE_SPEC.md` + the split draft JSONs are SUPERSEDED.
+- Rules baked in: follow-back reminder only fires if call-back is **24h+ out**; invoice/reminder/overdue carry **bank details**; added **payment_partial_received** + **send_info** (company details).
+- Companion work order for Claude Code: `01_CRM_AND_TOOL/fmos/WHATSAPP_HANDOFF_2026-06-16.md`.
+
+---
+
+## North Star (why this system exists)
+
+Provide marketing services **at scale to local businesses**, by leading with **real data about their own business** — the guidance and insight no other agency gives them. Approach businesses in a way they've never been approached: make them think about their online presence and growth *before* any selling happens.
+
+---
+
+## The Machine (one infrastructure, not 4 separate stages)
+
+- **Stage 1 — Data & Intelligence** fuels everything.
+- **Stage 2 — Inbound engine** (ads / landing pages / GMB) + **Stage 3 — Outbound engine** (calls / WhatsApp) run in parallel and **converge** into the app.
+- **FMOS is the spine** — every lead from both engines lands here and moves: lead → meeting → proposal → agreement.
+- **Stage 4 — Delivery & Growth** turns deals into results, cash, and proof that loops back to make Stages 1–2 stronger.
+
+---
+
+# STAGE 1 — RESEARCH & INTELLIGENCE
+
+Minor workflows: **1.1 Data collection · 1.2 Cleaning · 1.3 Market demand · 1.4 Competitor analysis · 1.5 Leads + lead typing · 1.6 Reports**
+
+### ⚙️ Automated Lead Intake Pipeline (spans 1.1 → 1.5) — KEY DESIGN
+Goal: stop running manual scripts. Finishing a collection run auto-flows the whole batch through FMOS, tracked by `import_batch_id` with a visible status.
+
+`collected → cleaned → serp_matched → typed → ready`
+
+1. **Collect (1.1)** — Places API / Playwright → raw rows.
+2. **Clean (1.2)** — normalize rules ported to `lib/normalize.ts` (phone, website, niche, dedup).
+3. **SERP scrape + match (1.4)** — SearchAPI.io connector pulls GBP + organic per niche×city → tag `SERP Ranked` + `SERP Source`.
+4. **Score + type-tag (1.5)** — lead scorer + assign lead type + tags.
+5. **Land in `leads` table** — batch marked `ready`, appears in the outreach queue.
+
+Tasks:
+- [ ] Build the pipeline orchestrator (batch status machine on `import_batch_id`).
+- [ ] Add SearchAPI.io SERP connector + matching step inside the app.
+- [ ] Admin view: batch progress (which niche×city, which stage, counts, errors).
+
+---
+
+## 1.1 — Data Collection  ⬅️ *currently designing*
+
+**Goal:** Pull every business in each target niche × city from Google (GMB), so we can approach them with data-led insight about their own online presence.
+
+**Current state (the old way — to be replaced)**
+- Business data scraped from GMB manually using a **browser data-scraper extension** + manual scrolling.
+- Raw data then cleaned/filtered with **Python scripts** (`fix_csv.py`, `scrape_phones.py`, `website_phone_scraper.py`, etc.).
+- All done **outside FMOS**; leads enter the app later via `/admin/bulk-import`.
+- Pain: must be physically present for every scrape; breaks past Maps' ~120-result cap; no parallel/batch runs.
+
+**DECISION — automate collection inside FMOS (combine Places API + Playwright)**
+- Move data collection *into* the app. No more manual extension.
+- **Smart router** on every `keyword + city` run:
+  - Expected results **< ~60** → hit **Google Places API** (Option 3): clean structured JSON, no browser, reliable.
+  - Broad keyword, **60+** results → fire **Playwright headless scraper** (Option 2): opens Maps, auto-scrolls + paginates by area to beat the ~120 cap.
+  - Both paths feed **one merge + dedup layer** → no duplicate leads.
+- Places API also fills gaps Playwright misses (cleaner phone formats, category, ratings).
+- **Optional stopgap:** use **Outscraper** (~$3/1000 leads) to unblock collection immediately while the native FMOS scraper is built.
+
+**Considerations / risks (Jabeer to weigh)**
+- Playwright scraping Maps is against Google's ToS and needs upkeep (bot detection). Router should **prefer the Places API** and treat Playwright as fallback only.
+- Places API is pay-per-call (no email field). Confirm budget + get API key.
+
+**Open questions still to resolve**
+- ❓ Lost track of *how* the old data was cleaned & filtered, and whether it's consistent across niches/cities.
+- ❓ Is the already-collected data accurate / complete per niche × city?
+- ❓ Current coverage — which niches × cities are done vs pending?
+
+**Tasks (to execute later)**
+
+*New FMOS collection feature (build):*
+- [ ] 1. Keyword queue manager — batch/queue many keyword+city searches, run unattended.
+- [ ] 2. Smart router — result-count estimator that picks Places API vs Playwright.
+- [ ] 3. Playwright headless scraper module (auto-scroll + area pagination).
+- [ ] 4. Places API connector (+ store API key in env).
+- [ ] 5. Merge + dedup engine (no duplicate leads across paths/runs).
+- [ ] 6. Lead scorer + lead-type tagger.
+- [ ] 7. Export to CSV + write directly into the `leads` table.
+
+*Clean up the past (existing data):*
+- [ ] Reconstruct & document the exact cleaning/filtering logic from the existing Python scripts.
+- [ ] Audit accuracy + coverage of already-collected data across all niches × cities.
+
+---
+
+## 1.2 — Data Cleaning  ⬅️ *currently designing*
+
+**Goal:** Turn raw scraped GMB exports into one clean, deduped, niche-tagged lead list per city — ready to load into the app.
+
+**Current state (reconstructed from the scripts — track recovered)**
+- Two pipelines: **Hubli** = `process_hubli_leads_v2.py` (handles its messy two-folder F1/F2 data); **all other cities** = `process_city_leads.py <City>`. Plus a quick one-off `fix_csv.py`.
+- Cleaning rules applied:
+  - **Phone** — strip non-digits, drop leading `91`/`0`, keep valid 10-digit only, else `MISSING`.
+  - **Website** — `Has Website = Y` only if a real URL; rejects blanks, NIL/N/A, Google Maps links, Google Ad links.
+  - **Niche** — mapped from column value (fallback to filename), variants normalized; multi-niche businesses resolved by priority (specific beats generic; JEE/NEET > Tuition, Modular Kitchen > Interior Designer).
+  - **Dedup/merge** — keyed on normalized business name, keeps richest record (longest name, real phone, real website, maps link).
+  - **SERP match** — cross-checks scraped SERP files → tags `SERP Ranked` + `SERP Source` ("Not Scraped" if no SERP data for that city).
+- **Output:** `<City>_All_Leads_Clean.csv` + per-niche `<City>_Final/<Niche>_Final.csv`. Columns: Business Name, Phone, City, Niche, Has Website, Website Link, Google Maps Link, SERP Ranked, SERP Source — these already map to the app's `leads` fields.
+
+**Problems / risks**
+- Scripts have hardcoded `/Users/.../Desktop/...` paths — not portable.
+- `MISSING` logic may discard valid numbers (extensions, multiple numbers).
+- Accuracy per niche × city is **unverified** — no audit done yet.
+- Cleaning runs **outside FMOS** and is manual. NOTE: app already has `lib/normalize.ts` — cleaning rules should converge there.
+
+**Decisions made**
+- Once collection moves into FMOS (1.1), these cleaning rules get **ported into the app's import/normalize pipeline** so cleaning is automatic, not a manual script run.
+
+**Tasks (to execute later)**
+- [ ] Audit the cleaned outputs — verify row counts + field accuracy per niche × city; list what's clean vs dirty vs missing.
+- [ ] Port the cleaning rules into FMOS (`lib/normalize.ts` + import flow); retire the standalone scripts.
+- [ ] Decide handling for multi-number / extension / `MISSING` phones (don't silently drop).
+- [ ] Make paths portable (no hardcoded Desktop paths) for any interim script runs.
+
+## 1.3 — Market Demand Analysis  ⬅️ *designed*
+
+**Goal:** Quantify demand per niche×city — the "X people search for Y every month" hook.
+
+**Current state**
+- `analyze_keywords.py` reads Google Keyword Planner CSV exports per niche×city → total monthly searches, avg CPC (low/high top-of-page bid), top-20 keywords → master Excel.
+
+**App connection / what happens in app**
+- Feeds `market_insights.general_insights` (`monthlySearchDemand`, `topKeywords`, `localSeoVisibility`, `websiteAuditSnapshot`), keyed by **industry + city**. Read by `/sales/pitch`, `/sales`, lead profile.
+- **GAP:** nothing in-app writes `market_insights` yet — populated manually today.
+
+**Automation (two-phase — decided)**
+- **Phase 1 (now):** keep the manual Keyword Planner CSV export, but the app does the cleaning + computing on upload. Manual step shrinks to *download CSV → drag into app* (~1 min/niche×city). No more Python cleaning.
+- **Phase 2 (once Google Ads account is spending):** connect the **Google Ads API (KeywordPlanIdeaService)** so the app pulls volumes directly — no download. Caveat: exact volumes need an active spending account; free accounts return bucketed ranges.
+
+**End result:** every niche×city has a stored demand profile that all its leads + reports inherit.
+
+**Tasks (to execute later)**
+- [ ] Phase 1: in-app keyword-CSV upload → auto clean + compute (port `analyze_keywords.py`) → write `general_insights`.
+- [ ] Phase 2: Google Ads API (Keyword Planner) connector to auto-pull volumes once Ads account is live.
+
+## 1.4 — Competitor Analysis  ⬅️ *designed*
+
+**Goal:** Show each market's competitive gap and prove the directory-bypass opportunity — **without paid tools (no SEMrush).**
+
+**METHOD — SERP composition + traffic split (decided)**
+- The SERP scrape *is* the competitor analysis. Page 1 has 4 buckets: **GMB top-3 · social directories · real business websites · social/other (social media, blogs, forums).**
+- Don't measure real traffic. Instead split the known total search volume across the 4 buckets using fixed % (CTR benchmarks):
+  - **GMB 35% · Directories 30% · Real websites 20% · Social/other 15%** *(tunable defaults)*.
+- Headline metric = searches/month leaking to **directories** → what a real business could capture. (e.g. Dental 21,100 → ~6,330 to directories.)
+- ~~Paid-ads presence~~ — **REMOVED** (decided): desktop SERPs often suppress ads, so "no one running ads" is unreliable. Do not use it.
+
+**App connection / what happens in app**
+- Writes `market_insights.competitor_insights` per industry+city: bucket composition (named businesses per bucket), the % + absolute traffic split, directory-leakage number. Read by pitch + lead pages + reports.
+- **GAP:** no in-app writer yet — pipeline must add it.
+
+**Automation (pipeline 1.4 step)**
+1. SearchAPI.io scrapes SERP for the niche×city keyword.
+2. Classify each result via a **directory domain list** (JustDial, Sulekha, IndiaMart, Practo, MagicBricks, 99acres, Housing, UrbanPro…).
+3. volume × bucket % → write `competitor_insights`.
+4. Mark each lead `SERP_Ranked = Y` if its own site appears → sets A/B/C/D type.
+
+**End result:** every niche×city has a stored competitor/traffic profile feeding reports + pitch; per-lead `SERP_Ranked` feeds the type. No paid tools.
+
+**Note (shared with 1.3):** `market_insights` is **per niche×city** — all leads inherit it; only `SERP_Ranked` is per-lead.
+
+**Decisions made**
+- ✅ Default split **35 / 30 / 20 / 15** (GMB / directories / real websites / social-other), global default, tunable per niche later.
+
+**Tasks (to execute later)**
+- [ ] Build the directory-domain classification list (seed from existing SERP reports).
+- [ ] SERP → 4-bucket split computation + writer to `market_insights.competitor_insights`.
+- [ ] Make distribution % configurable (global default + optional per-niche override).
+
+## 1.5 — Leads + Lead Typing  ⬅️ *currently designing*
+
+**Goal:** Auto-segregate every lead into a type so each gets the *right* pitch/report/script — never a generic pitch.
+
+**The A/B/C/D pitch types (presence-based, deterministic from cleaned data)**
+| Type | Condition | Report PDF | Script | WhatsApp curiosity |
+|---|---|---|---|---|
+| **A** | `SERP_Ranked = Y` (already ranking) | Type 1 — Visibility | script_type_A | DIRECT_REPORT_TYPE_A |
+| **B** | `Website = Y, Ranked = N` | Type 3 — Website Performance | script_type_B | DIRECT_REPORT_TYPE_B |
+| **C** | `Website = N, Ranked = N` (GMB only) | Type 2 — Market Opportunity | script_type_C | DIRECT_REPORT_TYPE_C |
+| **D** | niche/city volume **< 1,000/mo** (overrides) | Type 4 — Niche Market | script_type_D | DIRECT_REPORT_TYPE_D |
+
+**Assignment logic (pipeline runs this automatically):** `if niche×city volume < 1,000/mo → D · else if SERP_Ranked=Y → A · else if Has_Website=Y → B · else → C`
+*(Threshold set by Jabeer: <1,000/mo = Type D. In Hubli only IVF (350) is Type D; IELTS at 3,200 is not.)*
+
+**Each type chains end-to-end:** curiosity template (DIRECT_REPORT_TYPE_x — A/B/C approved, D in review) → bot auto-reply (BOT_REPLY_TYPE_x) → telecaller script (script_type_x) → report PDF (Type 1–4) → matched proposal angle.
+
+**Three different lenses — do NOT conflate:**
+- **Pitch type (A/B/C/D)** — online-presence axis, set at intake, drives all messaging.
+- **Lead type (outbound/inbound)** — source axis, the app's existing `lead_type` field.
+- **Lead score (Hot/Warm/Cold)** — engagement axis, dynamic (`lib/lead-scoring.ts`).
+
+**Decisions made**
+- ✅ Type D threshold = niche×city monthly search volume **< 1,000**.
+
+**Tasks (to execute later)**
+- [ ] Add a dedicated `pitch_type` (A/B/C/D) field on `leads` — separate from `lead_type` (outbound/inbound).
+- [ ] Implement the deterministic type-tagger in the intake pipeline (order: D → A → B → C).
+- [ ] Wire each type → its curiosity template + bot reply + telecaller script + report PDF.
+
+## 1.6 — Generate Reports (PDFs)  ⬅️ *designed*
+
+**Goal:** Auto-produce the data-led report each lead receives — matched to their type, never generic.
+
+**Key insight — reports are per (niche × city × type), not per lead.** Content is fully determined by the `market_insights` record + the A/B/C/D type. So you generate **4 variants per niche×city** (Type 1–4), and the business name is dropped in at send time.
+
+**What fills a report**
+- From `general_insights`: monthly search volume + top keywords.
+- From `competitor_insights`: the 4-bucket traffic split, directory-leakage headline, named competitors.
+- From `pitch_type`: the angle (A=visibility, B=website performance, C=market opportunity, D=niche market).
+
+**App connection / generation**
+- App pulls `market_insights(niche,city)` + lead `pitch_type` → fills the matching template → renders PDF natively with **`@react-pdf/renderer`** (already installed). English + Kannada.
+- Trigger: pre-generate the 4 variants per niche×city when its `market_insights` is ready; attach the correct one (with business name) when sending via WhatsApp.
+- Replaces the standalone Python `PDF_Generator/`.
+
+**End result:** every lead has the right report ready to send — the artifact that powers the whole outreach (Stage 3).
+
+**Tasks (to execute later)**
+- [ ] Build the 4 report templates (Type 1–4) in `@react-pdf/renderer`, EN + KN.
+- [ ] Generator that fills templates from `market_insights` + `pitch_type`.
+- [ ] Pre-generate per niche×city×type; personalize business name at send.
+- [ ] Retire the Python `PDF_Generator/` once parity is confirmed.
+
+---
+
+# STAGE 2 — CONTENT & CAMPAIGN SETUP
+
+Minor workflows: **2.1 Niche landing pages · 2.2 Portfolio & results showcase · 2.3 Planning & strategy · 2.4 Script, shooting & editing · 2.5 Campaign setup · 2.6 Conversion actions & tracking · 2.7 Publish campaign · 2.8 Optimise**
+
+## 2.1 — Niche Landing Pages  ⬅️ *designed*
+
+**Goal:** Same job as the intelligence report, but inbound — turn an ad click into a booked meeting (or WhatsApp inquiry).
+
+**Page narrative (per niche×city)**
+1. **Aware** — what's happening online in their niche (the data hook).
+2. **FOMO + urgency** — the searches/traffic leaking to directories right now.
+3. **Preview/proof** — sample screenshots: Google Ads, Meta Ads, conversions, results.
+4. **Differentiation** — how FortuneMarq fits in, why different (data-led, systems, directory-bypass).
+5. **CTA** — primary: **Book a meeting**; secondary: **WhatsApp**.
+
+**KEY LINK — one data source, two channels.** The page is served at `/lp/[niche]` (route exists), dynamic per niche×city, pulling the **same `market_insights` record that powers the report PDF**. Gather once in Stage 1 → auto-fills both outbound report + inbound LP. EN + KN.
+
+**App connection / what happens in app**
+- **Book meeting** → creates inbound lead + meeting in FMOS.
+- **WhatsApp click** → opens chat w/ prefilled message → inbound webhook creates/updates lead, tags `source` (niche/city/LP) → hands to the bot.
+- **Visitor tracking** → every action (view, scroll depth, CTA click, time on page) logged → feeds source attribution.
+
+**WhatsApp automation STARTS here**
+- ✅ **Decision: fully autonomous AI bot.** Inbound LP lead → AI agent (Anthropic key) answers questions using their niche data, qualifies, and **books the meeting itself**; escalates to Jabeer only on edge cases. Everything logged in FMOS; human can take over any thread.
+- Free-reply window: lead messages first → bot can reply freely for 24h (no template needed).
+- **Guardrails (must build):** never quote outside defined packages, no performance guarantees, escalate on price negotiation / complaints / anything off-script, always log, instant human-takeover toggle.
+
+**End result:** an ad click becomes a tracked, source-tagged lead that the bot nurtures to a booked meeting — feeding straight into Stage 3/4.
+
+**Decisions made**
+- ✅ Tracking stack: **Meta Pixel + GA4 + Microsoft Clarity** (free heatmaps/session replay) + in-app event log.
+- ✅ Booking: **Google Calendar / Meet API** (free) — auto-creates the Meet link + calendar event; one engine powers both LP and WhatsApp booking (no Calendly). *(Standardized in 3.4.)*
+
+**Tasks (to execute later)**
+- [ ] Dynamic `/lp/[niche]` (+city) template pulling `market_insights`, EN + KN.
+- [ ] Proof section: Google/Meta ads + conversion screenshots library.
+- [ ] Book-meeting CTA → Google Calendar/Meet API → Meet link + calendar event + meeting/lead in FMOS.
+- [ ] WhatsApp-click → prefilled msg → inbound webhook → lead + source tagging.
+- [ ] Install tracking: Meta Pixel + GA4 + Microsoft Clarity + in-app events → source attribution.
+- [ ] Fully-autonomous WhatsApp AI bot (qualify + answer + book) with guardrails + human-takeover.
+
+## 2.2 — Portfolio & Results Showcase  ⬅️ *designed*
+
+**Goal:** Build trust honestly — create interest with projections, prove it with real data on request.
+
+**Two layers (no fabricated screenshots — decided)**
+1. **Projection showcase (public, on the LP)** — "Projected for you": realistic targets computed from the niche×city `market_insights` (e.g. searches → reachable share → CTR → leads at a conservative conversion %). Clearly **labeled as a projection / illustrative**, backed by real market numbers. This creates interest.
+2. **Real proof vault (on request)** — a separate gated/unlisted link with **real** client screenshots (Google Analytics, Google Ads, Meta Ads) for the 1–2 niches with proven results. Shared only when a lead asks for proof. Real data only; anonymize + get client consent.
+
+**App connection / what happens in app**
+- Projection section on `/lp/[niche]` = `market_insights` × a projection config (CTR, conversion assumptions, tunable). Labeled illustrative.
+- Proof vault = gated page/token link in FMOS holding real result screenshots per niche.
+- **Bot flow:** lead asks for proof → bot sends the proof-vault link + logs it; otherwise stays on projections.
+
+**End result:** prospects get a compelling, honest "what's possible" up front and verifiable real proof when they want it — trust without risk.
+
+**Tasks (to execute later)**
+- [ ] Projection calculator + config (CTR/conversion assumptions) → LP "Projected for you" section, labeled illustrative.
+- [ ] Real-proof vault: gated link/page with real client screenshots (GA + Google Ads + Meta), per niche; anonymize + client consent.
+- [ ] Bot/Afifa flow: on proof request → share vault link + log.
+- [ ] Build real case studies for the 1–2 proven niches + collect Google reviews/testimonials.
+
+## 2.3 — Campaign Strategy  ⬅️ *designed*
+
+**Goal:** The go/no-go + "how" for launching a niche×city (strategic, rare, owned by Jabeer). Feeds 2.4 (creative) and 2.5 (setup).
+
+**Channel (decided)**
+- **Meta primary** — video content, larger audience, Google search volumes are comparatively low. **Google Ads runs as support**, not the main focus. No strict rule; Meta-first default.
+
+**Offer / packages — LOCKED (`08_FINANCE/Pricing_Decisions/`)**
+- Entry hook: **GMB Optimization ₹3,500/mo**
+- Meta / Google Ads Mgmt: ₹4,500 setup + ₹2,500/mo + 5% of ad spend over ₹15k/mo *(client pays ad spend directly — mgmt fee only)*
+- WhatsApp Marketing: ₹5,000 + ₹2,500/mo
+- Websites: LP ₹5–8k · Standard ₹8–15k · Premium ₹15–20k (one-time)
+- SEO: Starter ₹7k · Growth ₹10–12k · Dominate ₹15k+/mo
+- ✅ Closes the "no productized packages" gap from the system map.
+
+**App connection / what happens in app**
+- `market_insights` ranks **launch priority** (volume + directory-leakage = hottest niche×city).
+- Campaign strategy record stored in FMOS marketing module (niche, city, channel, budget, offer, objective).
+- Locked packages pulled from finance → proposals + onboarding.
+
+**Planning workflow (AI-assisted loop)**
+1. Pick niche×city (`market_insights` pre-loaded) → 2. discuss goals/objectives with AI → 3. structured Campaign Plan out → 4. enter into FMOS as a **Campaign** → 5. auto-decompose into tasks (2.4 creative, 2.5 setup, 2.6 tracking, 2.7 publish) → 6. execute/track → 7. metrics feed optimize (2.8). Loop closes.
+
+**Two layers (decided)**
+- **Planning + archive layer** = `06_PAID_MARKETING/Campaigns/<City>/<Niche>/` (plan, strategy, brief, results, assets) — attach to Cowork to strategize. ✅ **scaffolded** (`_TEMPLATE/` + README + Hubli/Dental_Clinics, Gyms, Real_Estate + Dharwad).
+- **Execution + tracking layer** = FMOS **Campaign object** = the container for Plan + Tasks + Metrics + Status. One niche×city = one Campaign.
+- Flow: plan in folder → push to FMOS Campaign → tasks/execute → snapshot metrics back to the folder's `04_results_log.md`.
+
+**AI planning location — phased (decided)**
+- **Now:** plan externally in Cowork (zero build) → enter plan into FMOS.
+- **Later:** embed a Strategy chat in FMOS (one-click plan → campaign → tasks) once campaign volume makes copy-paste a real friction.
+
+**End result:** a documented launch plan per niche×city, organized in its folder and mirrored as a FMOS Campaign with auto-generated tasks — ready for creative (2.4) + setup (2.5).
+
+**Decisions made**
+- ✅ Budget decided **per campaign in the Cowork planning session** (no fixed default).
+
+**Tasks (to execute later)**
+- [ ] Build the FMOS **Campaign object** + auto-task decomposition (the core of this workflow).
+- [ ] "Launch priority" view ranking niche×city by volume + directory-leakage.
+- [ ] Make locked packages selectable in proposals/onboarding (pull from finance).
+- [ ] (Later) embed AI Strategy chat in FMOS.
+- [ ] Set default per-campaign budget (needs number).
+
+## 2.4 — Script, Shooting & Editing (+ creative plan)  ⬅️ *designed*
+
+**Goal:** Produce the Meta video creative for a campaign — tracked in the app without ever storing files in it.
+
+**Pipeline stages:** Brief & Script → Shoot → Edit → Review/Approve → Ready.
+- **Brief & Script** — planned and finalized in **Cowork** (like strategy/budget) → saved to the campaign folder (`03_creative_brief.md`). Not in-app.
+- **Shoot** — Jabeer films → raw footage to Google Drive. *(Future: AI avatar reads the finalized script to scale content without Jabeer on camera.)*
+- **Edit** — outsourced freelancers (different each time). **Coordination MANUAL (decided)** — too many rotating freelancers to automate onboarding.
+- **Review/Approve** — Jabeer, via the Drive link.
+- **Ready** — approved cut flows to 2.5.
+
+**Tracking / app fit (decided — no uploads)**
+- Videos live in **Google Drive** (organized City/Niche). The app stores **no files**.
+- FMOS holds a lightweight **content item** per video, child of its Campaign: title, niche×city, status, assignee, and link fields — `raw_footage_url`, `edited_cut_url`, `final_approved_url`.
+- Status board moves Brief → … → Ready; every item traces back to its Campaign.
+
+**WhatsApp:** none here — freelancer coordination is manual; no automation fit.
+
+**End result:** an approved video asset (Drive link) ready for 2.5, fully tracked in FMOS at zero storage cost.
+
+**Tasks (to execute later)**
+- [ ] Content-item model in FMOS (under Campaign): status + assignee + Drive link fields.
+- [ ] Content board view (filter by campaign / niche / city / status).
+- [ ] Google Drive folder structure mirroring City/Niche.
+- [ ] (Future) AI avatar to scale shooting from finalized scripts.
+
+## 2.5 — Campaign Setup  ⬅️ *designed*
+
+**Goal:** Get the approved creative live as a Meta campaign.
+
+- Built **manually in Meta Ads Manager** (audience, placements, budget, destination = WhatsApp click / lead form). **App does NOT track minor setup tasks** (decided).
+- App role: reflect **high-level campaign status only** (Setup → Live).
+
+**WhatsApp:** none here.
+
+**End result:** campaign live; status = Live in FMOS; performance tracking begins (2.6).
+
+**Tasks (to execute later)**
+- [ ] Campaign status state machine (Planned → Creative → Setup → Live → Optimizing → Paused/Ended). No micro-tasks.
+
+## 2.6 — Conversion Actions & Tracking  ⬅️ *designed*
+
+**Goal:** Know how every campaign performs without manual checking; surface problems early; report to WhatsApp.
+
+**Data in (decided):** **Meta Marketing API auto-pull** on a schedule (existing cron) → spend, impressions, clicks, leads, CPL, results. Plus conversion tracking already on the LP (Meta Pixel + GA4 + Clarity, from 2.1) and WhatsApp-click / lead-form conversions logged via the inbound webhook → attributed to the campaign.
+
+**Dashboard:** per-campaign performance view + an all-live roll-up in FMOS.
+
+**Flagging rules (decided):**
+- CPL above target
+- spend accumulating with **zero leads**
+- day-over-day swing **±40%**
+- campaign **paused/rejected** by Meta
+
+**WhatsApp reporting (decided):** a **scheduled digest** summarizing each live campaign's key metrics + any flags (default: daily morning — tunable). Critical real-time alerts = optional future toggle.
+
+**App connection:** metrics attach to the Campaign object; also snapshot into the campaign folder's `04_results_log.md`. Feeds 2.8 (optimize).
+
+**End result:** hands-off performance visibility + early warning, delivered to your WhatsApp each morning.
+
+**Tasks (to execute later)**
+- [ ] Meta Marketing API connector (scheduled pull) → store metrics per campaign.
+- [ ] Conversion attribution: Pixel/GA4/Clarity + WhatsApp/lead-form → tie to campaign.
+- [ ] Performance dashboard (per-campaign + roll-up).
+- [ ] Flag rules engine (CPL / zero-lead spend / ±40% swing / paused-rejected).
+- [ ] Scheduled WhatsApp performance digest (metrics + flags).
+
+## 2.7 — Publish Campaign  ⬅️ *designed*
+
+**Goal:** Go live.
+- Campaign published manually in Meta → FMOS flips status to **Live** → performance tracking (2.6) kicks in automatically.
+- **WhatsApp:** none/minimal (status reflected; first metrics arrive via the digest).
+
+**End result:** campaign live, performance pulling automatically.
+
+**Tasks (to execute later)**
+- [ ] Status → Live triggers the 2.6 metric pull for that campaign.
+
+## 2.8 — Optimise  ⬅️ *designed*
+
+**Goal:** Continuous improvement, logged — not ad-hoc.
+
+**The loop:** 2.6 digest/flags (WhatsApp) → **Cowork planning session** decides the change → executed manually in Meta → FMOS logs *what changed + the result* (campaign + folder `04_results_log.md` optimization log).
+
+**App connection:** optimization entries attach to the Campaign; the before/after sits in the results log so every change is traceable.
+
+**End result:** a documented optimization history per campaign — decisions made in Cowork, outcomes tracked in FMOS.
+
+**Tasks (to execute later)**
+- [ ] Optimization log on the Campaign (change → date → result).
+- [ ] Digest/flags surface optimization candidates for the Cowork session.
+
+# STAGE 3 — OUTREACH & LEAD NURTURING
+
+Minor workflows: **3.1 Send curiosity/direct reports · 3.2 Priority calls (engaged leads) · 3.3 Follow-up (non-repliers) · 3.4 Book meetings**
+
+## 3.1 — Send Curiosity / Direct Reports  ⬅️ *designed*
+
+**Goal:** Get the type-matched report into every lead's WhatsApp and capture engagement — the first touch of outbound. Home = a new **Outreach Dashboard**.
+
+**Already built (Phase F):** DIRECT_REPORT_TYPE_A/B/C/D templates (a/b/c approved, d in review) send the type-matched PDF as a document with Quick Reply buttons (Book a meeting / Tell me more); webhook tags `report_engaged`, bumps the priority queue, fires auto-replies.
+
+**Outreach Dashboard (new)**
+- Select **niche + city** → see lead counts per type (A/B/C/D) → **Send reports** → FMOS auto-sends each lead its type-matched template + PDF.
+- **Tracking section — filterable** by city-only (all niches) or niche×city: Sent · Delivered · Read · Clicked · Booked.
+- Engaged leads → priority list for Afifa (→ 3.2). Non-responders (no read/click) → one reminder queued (→ 3.3).
+
+**Button flows (now bot-driven)**
+- **Book a meeting** → date/time selector → **Google Calendar/Meet API** creates Meet link + calendar event → confirmation message (→ 3.4).
+- **Tell me more** → company details + landing page + service info, plus a **Book a callback** option.
+- **Free-form replies** → **fully autonomous AI bot** (replaces the old static auto-replies), answering within the 24h window, escalating edge cases. First send stays an approved template; the bot free-chats only after the lead engages.
+
+**WhatsApp automation:** this is the core WhatsApp stage — report send, button flows, bot replies, booking confirmations.
+
+**End result:** leads receive their report, engagement is tracked, hot leads are queued and nurtured by the bot toward a booked meeting.
+
+**Tasks (to execute later)**
+- [ ] Outreach dashboard: niche+city selector + bulk type-matched send.
+- [ ] Tracking section with filter (city-only or niche×city): sent/delivered/read/clicked/booked.
+- [ ] Swap static auto-replies → autonomous AI bot (guardrails from 2.1).
+- [ ] "Tell me more" → company/LP/service info + book-callback option.
+- [ ] Finish Meta approval for type_d template.
+
+## 3.2 — Priority Calls (engaged leads)  ⬅️ *designed*
+
+**Goal:** Afifa works the priority queue — reads the script, handles objections, logs an outcome; each outcome auto-fires the right WhatsApp message and is tracked.
+
+**Cockpit shows:** lead card (business, niche, city, **type**, phone, which report was sent) + the **type-matched script** (`script_type_A/B/C/D` steps + objection bank) + outcome buttons.
+
+**Outcomes → auto WhatsApp (the ~9, from the real system)**
+| Outcome | Auto-send | Then |
+|---|---|---|
+| Interested – book now | Meeting confirmation (Meet link + Add-to-calendar) | → 3.4 |
+| Interested – callback | "Call back to book" | priority callback |
+| Interested – send PDF/info | type-matched report PDF | nurture |
+| Interested – follow up later | confirmation + date picker (Today/+1hr/Tomorrow) | scheduled |
+| Follow back | confirmation + date picker | scheduled |
+| Gatekeeper | none | reschedule (early/evening, 3 attempts → flag) |
+| No answer | none | staggered retries (3 → Unreachable) |
+| Not interested | soft-close message | nurture/dead |
+| Wrong number | none | marked dead |
+
+**App connection / what happens in app**
+- Logging an outcome → updates lead status, **auto-sends the mapped approved template** (`outcome_templates.json`, UTILITY), schedules follow-ups/retries, and increments tracking.
+- Auto-send is **template-only** (cold/outside 24h) → configure `WA_OUTCOME_TEMPLATES` + get UTILITY templates approved.
+
+**WhatsApp automation:** every outcome backed by an auto-send (core of this workflow).
+
+**End result:** every priority call ends in a logged outcome + the correct automated WhatsApp + the lead correctly routed (booked / scheduled / retry / dead).
+
+**Tasks (to execute later)**
+- [ ] Cockpit: priority lead card + type-matched script + objection bank + outcome buttons.
+- [ ] Outcome → auto-send mapped approved template (configure `WA_OUTCOME_TEMPLATES`; approve UTILITY templates).
+- [ ] Date pickers for Follow-back + Follow-up-later (Today / +1hr / Tomorrow).
+- [ ] Retry logic: No-answer (3 staggered → Unreachable), Gatekeeper (early/evening, 3 → flag).
+- [ ] Outcome tracking + counts surfaced on the outreach dashboard.
+
+## 3.3 — Follow-up (non-repliers)  ⬅️ *designed*
+
+**Goal:** Re-engage leads who got the report but went quiet — one well-timed automated nudge, minimal effort.
+
+**Flow (decided)**
+- **Trigger:** 2 days after the report was sent with no read/tap.
+- **Action:** **one reminder** message (approved template — outside the 24h window).
+- **If they reply/tap** → the **AI bot** takes over (low-attention lane) inside the 24h window → answers, routes to book/info.
+- **If still silent** → drop into the standard cold call queue (Afifa) — no further auto-nudges.
+
+**Division of labor (decided):** AI bot handles **low-attention** threads (reminders, simple replies, FAQs, booking); Afifa handles **priority calls + objections + escalations**.
+
+**App connection:** a cron checks for day-2 non-repliers → sends the reminder template → logs it → routes to bot on engagement, or to cold queue on silence.
+
+**WhatsApp automation:** the day-2 reminder (template) + bot handling of any re-engagement.
+
+**End result:** every non-replier gets exactly one automated second chance; engagement is bot-handled; the rest flow to the standard queue with zero manual effort.
+
+**Tasks (to execute later)**
+- [ ] Day-2 non-replier detector (no read/tap) → send one reminder (needs an approved template).
+- [ ] On re-engagement → hand to AI bot (low-attention lane).
+- [ ] After reminder + silence → route to standard cold queue.
+- [ ] Encode bot-vs-Afifa lanes (bot = low-attention; Afifa = priority/objections).
+
+## 3.4 — Book Meetings  ⬅️ *designed*
+
+**Goal:** Book the meeting, remind, and recover no-shows — fully automated.
+
+**Booking:** date/time picker → **Google Calendar/Meet API** creates Meet link + calendar event → confirmation message (`OUTCOME_BOOK_MEETING`, with Add-to-calendar button). Fires from both the WhatsApp "Book a meeting" button and Afifa's "book now" outcome. One booking engine for LP + WhatsApp.
+
+**Reminders (decided):** automated WhatsApp reminders **1 day before + 1 hour before**, each carrying a **reschedule link**.
+
+**Reschedule / no-show (decided):** reschedule link reopens the date/time picker → updates the calendar event. If they no-show and don't reschedule → auto-message + **drop back to follow-up with a `no_show` tag**.
+
+**App connection:** meeting record tied to the lead; cron schedules the two reminders off the meeting time; reschedule updates the Google event; no-show → tag + requeue into follow-up.
+
+**WhatsApp automation:** confirmation + 2 reminders + no-show message — all automated (reminders are outside the 24h window → need approved UTILITY templates).
+
+**End result:** booked meetings with Meet link + calendar entry, automated reminders, and no-shows recovered into follow-up instead of lost.
+
+**Tasks (to execute later)**
+- [ ] Date/time picker → Google Calendar/Meet API (Meet link + event) → confirmation. Powers LP + WhatsApp.
+- [ ] Reminder scheduler: 1 day + 1 hour before, each with a reschedule link (approved templates).
+- [ ] Reschedule link → reopens picker → updates calendar event.
+- [ ] No-show → auto-message + `no_show` tag + drop back to follow-up.
+
+# STAGE 4 — SALES, DELIVERY & GROWTH
+
+Minor workflows: **4.1 Attend meeting · 4.2 Send proposal · 4.3 Agreement · 4.4 Close & onboard · 4.5 Plan deliverables · 4.6 Execute & results · 4.7 Invoice & collect · 4.8 Scale & improve**
+
+## 4.1 — Attend Meeting  ⬅️ *designed*
+
+**Goal:** Support Jabeer's closing call — notify, prep, log outcome, trigger next step. (The call itself is fully Jabeer.)
+
+**Flow**
+1. **Meeting booked → WhatsApp notification to Jabeer** with the lead's business context (name, niche, city, type, report sent, market-data summary, phone, source).
+2. Jabeer **analyzes the business + prepares a detailed presentation** for the meeting.
+3. Run the meeting (Google Meet).
+4. **Log outcome:** Interested · Want to think about it · Not interested · Not attended · Reschedule.
+5. **Triggers:**
+   - Interested / asked for proposal → **one-click proposal send** (→ 4.2)
+   - Want to think about it → follow-up scheduled (nurture)
+   - Not interested → soft close / nurture
+   - Not attended → no-show recovery (ties to 3.4 `no_show`)
+   - Reschedule → rebook (date/time picker → new Meet link)
+
+**App connection:** meeting record on the lead; booking fires the WhatsApp alert to Jabeer; outcome logging updates the deal stage and fires the trigger.
+
+**WhatsApp automation:** meeting-booked notification to Jabeer (internal) + post-meeting triggers (proposal send, reschedule confirmation).
+
+**Decision made**
+- ✅ Presentation built in **Cowork** using the lead's data (market_insights + report) + Jabeer's insights — not in-app auto-draft. FMOS exports the business-context for the Cowork session; final deck link stored on the meeting record.
+
+**End result:** Jabeer walks in prepped, logs the outcome in one tap, and the right next action fires automatically.
+
+**Tasks (to execute later)**
+- [ ] On meeting booked → WhatsApp notification to Jabeer with business context.
+- [ ] Meeting prep view: lead context + market_insights + report-sent on one screen, exportable for the Cowork deck build.
+- [ ] Outcome logging (Interested / Thinking / Not interested / Not attended / Reschedule).
+- [ ] Outcome triggers (one-click proposal / follow-up / no-show recovery / rebook).
+- [ ] Store the meeting deck link on the meeting record.
+
+## 4.2 — Send Proposal  ⬅️ *designed*
+
+**Goal:** Get the proposal to the lead with one click.
+
+- **Proposal generation = unchanged** (current FMOS generator from packages/pricing — Jabeer is happy with it).
+- **Only gap = auto-send:** the "asked for proposal" meeting outcome (4.1) → one click → generated proposal PDF sent via **WhatsApp document** + `PROPOSAL_SENT` message. `sendWhatsAppDocument` already exists in `lib/whatsapp/send.ts`.
+- Outside the 24h window → needs the approved `PROPOSAL_SENT` template.
+
+**App connection:** proposal record on the deal; sent/seen status tracked; advances deal stage to "Proposal sent."
+
+**End result:** proposal out in one tap, tracked, no manual file handling.
+
+**Tasks (to execute later)**
+- [ ] Wire one-click auto-send: generated proposal PDF → WhatsApp document + `PROPOSAL_SENT`.
+- [ ] Approve the `PROPOSAL_SENT` template.
+- [ ] Track proposal sent/seen on the deal.
+
+## 4.3 — Agreement  ⬅️ *designed*
+
+**Goal:** Lock the deal — agreement confirmed, then advance invoice out.
+
+**Flow**
+1. Agreement generated → **auto-sent via WhatsApp** document (`AGREEMENT_REQUEST` template).
+2. Webhook listens for the lead's typed **"Yes, confirmed"** reply → marks agreement **signed** + notifies Jabeer. *(Unchanged — Jabeer happy with typed confirmation.)*
+3. **On signed → auto-send the advance-payment invoice** (amount discussed on the call, entered per-deal by Jabeer) via WhatsApp (`INVOICE_SENT`).
+
+**App connection:** agreement record on the deal; webhook confirmation advances stage to "Agreement signed"; signing triggers advance invoice generation. Full invoicing detailed in 4.7.
+
+**WhatsApp automation:** agreement send + typed-confirmation capture + advance invoice send.
+
+**End result:** signed agreement captured automatically, advance invoice in the lead's hands immediately — deal moves to onboarding.
+
+**Tasks (to execute later)**
+- [ ] Agreement generate → auto-send (`AGREEMENT_REQUEST`).
+- [ ] Webhook: capture typed "Yes, confirmed" → mark signed + notify Jabeer.
+- [ ] On signed → auto-generate + send advance invoice (Jabeer enters advance amount).
+- [ ] Approve `AGREEMENT_REQUEST` + invoice templates.
+
+## 4.4 — Close & Onboard  ⬅️ *designed*
+
+**Goal:** Simple onboarding — collect info + assets, produce a details PDF that feeds planning.
+
+**Flow**
+- Onboarding = **collect client info + assets** (logins, brand assets, access). **No mandatory kickoff** (optional per client).
+- Onboarding tasks = a light checklist + **manual add-item** option.
+- On completion → a **"Download details PDF" button on the lead/client profile** exports everything collected → Jabeer takes it into Cowork to plan deliverables (→ 4.5).
+
+**App connection:** onboarding checklist on the client record; manual task add; PDF export from the profile card.
+
+**WhatsApp:** none here (internal). Client nudges begin in 4.6 (milestones).
+
+**End result:** a complete client profile + a downloadable details PDF ready for Cowork planning.
+
+**Tasks (to execute later)**
+- [ ] Onboarding checklist (collect info + assets); kickoff optional.
+- [ ] Manual add-item to onboarding tasks.
+- [ ] "Download details PDF" button on the lead/client profile (exports all details).
+
+## 4.5 — Plan Deliverables  ⬅️ *designed*
+
+**Goal:** A bespoke per-client delivery plan — no forced template.
+
+**Flow**
+1. Onboarding details PDF (4.4) → **Cowork** → plan + strategize the project & service deliverables + Jabeer's insights.
+2. Output a **milestone → tasks** plan → **paste back into the app** → FMOS parses it into milestones with nested tasks on the client card → tracking begins.
+
+**Structure (decided): milestones with tasks nested under each.**
+- Milestone = the client-facing checkpoint that triggers the WhatsApp nudge (4.6).
+- Tasks = the granular internal work (Jabeer / freelancers) under each milestone.
+- A milestone completes when its tasks are done.
+- Paste format carries milestone + tasks + due dates, e.g. `Milestone: Website live (due Jul 10)` → `- task` → `- task`.
+
+**App connection:** bulk paste/import on the client project → creates milestones + tasks, synced to the client/business card; assignees + due dates.
+
+**WhatsApp:** none here (planning). Milestone nudges = 4.6.
+
+**End result:** each client has a custom, tracked delivery plan structured into client-facing milestones.
+
+**Tasks (to execute later)**
+- [ ] Bulk task paste/import on the client project (parses milestone → nested tasks + due dates).
+- [ ] Milestone model (milestone completes when its tasks complete) → nudge trigger.
+- [ ] Sync milestones/tasks to the client/business card.
+
+## 4.6 — Execute & Results  ⬅️ *designed*
+
+**Goal:** Deliver the work, keep the client informed at each milestone, report results monthly — automated.
+
+**Execution**
+- Tasks under each milestone worked on the client board; assets in Google Drive (same as 2.4).
+- **Delivery capacity = Jabeer + outsourced freelancers** (web/video). No in-house builders for ~3 months → keep delivery automation-heavy, watch WIP.
+
+**Client communication (automated)**
+- **Milestone completion → auto WhatsApp nudge** to the client ("✅ Your website is live").
+- **Monthly performance report** auto-generated (reports module) → **auto-sent via WhatsApp**.
+
+**Results loop:** delivery results (rankings, leads, calls, ad performance) captured on the client → feed the monthly report *and* the proof vault / case studies (loop back to 2.2, strengthening Stages 1–2).
+
+**App connection:** client project board; milestone trigger; monthly report generation + WhatsApp send; results stored on the client.
+
+**WhatsApp automation:** milestone nudges + monthly report delivery (approved templates, outside 24h).
+
+**End result:** delivery tracked, client auto-updated at milestones and monthly, results captured for proof.
+
+**Tasks (to execute later)**
+- [ ] Client project board (milestones + tasks + assignees [Jabeer / freelancers] + Drive links).
+- [ ] Milestone completion → client WhatsApp nudge (approved template).
+- [ ] Monthly report auto-generate → auto-send via WhatsApp (approved template).
+- [ ] Results feed proof vault / case studies (loop to 2.2).
+
+## 4.7 — Invoice & Collect  ⬅️ *designed*
+
+**Goal:** Bill and collect — automated invoicing + reminders, with human follow-up on overdue.
+
+**Flow**
+- Advance invoice at agreement (4.3).
+- **Recurring monthly retainer invoices** auto-generated with **GST** → auto-sent via WhatsApp (`INVOICE_SENT`).
+- **Automated payment reminders** (WhatsApp) on/after due date.
+- **Paid / outstanding tracking** in the finance module; mark paid.
+- **Overdue → client added to Afifa's board** for follow-up; she logs **payment outcomes** (promised-to-pay date / paid / dispute) — same cockpit pattern as call outcomes.
+
+**App connection:** finance module (GST settings + invoice generation); overdue feeds Afifa's cockpit as a collections queue; payment outcomes logged on the client.
+
+**WhatsApp automation:** invoice send + payment reminders.
+
+**End result:** invoices auto-billed and chased; overdue actively followed up and logged; clean accounts receivable.
+
+**Tasks (to execute later)**
+- [ ] Recurring monthly invoice auto-generation (GST) → WhatsApp send.
+- [ ] Automated payment reminders (WhatsApp).
+- [ ] Paid/outstanding tracking + mark-paid.
+- [ ] Overdue → add to Afifa's board + payment-outcome logging.
+
+## 4.8 — Scale & Improve  ⬅️ *designed*
+
+**Goal:** Grow accounts and compound proof — automated where it fits, manual where it doesn't.
+
+- **Upsells = MANUAL (decided)** — automated upsells don't work for local businesses. The app only **surfaces the opportunity** (client seeing results + next service in their upsell path) as a flag; Jabeer pitches it himself.
+- **Renewals = automated** reminders (to Jabeer + client) before the retainer renews.
+- **Reviews + referrals = automated** requests after good results / a milestone → Google review + referral ask → feeds the **proof vault + case studies (loop to 2.2)** and strengthens GMB.
+
+**Feedback loop (closes the machine):** delivery results → reviews / referrals / case studies → new leads + fresh proof → makes Stages 1–2 cheaper and stronger. Referral leads enter the pipeline as inbound (`source=referral`).
+
+**WhatsApp automation:** renewal reminders + review/referral requests (templates).
+
+**End result:** accounts grow, results compound into proof and referrals, and the system feeds itself.
+
+**Tasks (to execute later)**
+- [ ] Upsell opportunity flags (manual pitch) from results + upsell path.
+- [ ] Automated renewal reminders (Jabeer + client).
+- [ ] Automated review + referral requests after good results → log + feed proof vault (2.2).
+- [ ] Referral leads enter pipeline as inbound (`source=referral`).
+
+---
+
+# STAGE 5 — FORTUNEMARQ'S OWN PRESENCE & ORGANIC MARKETING
+
+> FortuneMarq's *own* brand presence — the long game. Builds authority that makes outbound easier and generates inbound leads over time. Every organic lead pushes into FMOS (inbound, `source=organic/instagram/linkedin/seo/website`). Each element: plan → strategize → execute → track → optimize, with bots/automations + FMOS connection.
+
+Elements: **5.1 Company website · 5.2 GMB & Local SEO · 5.3 SEO (organic) · 5.4 Instagram/Facebook · 5.5 LinkedIn · 5.6 Organic lead capture → FMOS · 5.7 Tracking & optimize**
+
+## 5.1 — Company Website (fortunemarq.com)  ⬅️ *designed*
+
+**Goal:** The site *is* the proof. Its design, speed, and animation convert visitors into website-development clients (most agencies' own sites look bad — ours is the demo). Plus credibility/trust, and built to **rank on Google** (the main site + all landing pages).
+
+**Decisions**
+- ✅ **Rebuild on Next.js/Vercel, integrated with FMOS** (not the static Hostinger site). One codebase: marketing site + dynamic niche LPs (`/lp/[niche]` from `market_insights`) + native lead-push + tracking + chatbot.
+- Website **chatbot = same AI brain as the WhatsApp bot** (one bot, two surfaces) → captures inquiry → FMOS inbound lead → continues on WhatsApp.
+
+**Design principles:** high performance (fast load, strong Core Web Vitals), polished animation as the conversion proof; **SEO-first** build for site + LPs.
+
+**App connection:** site + LPs on the FMOS stack; all leads (chatbot, forms) → inbound, source-tagged → pipeline; booking via Google Meet API; tracking = Meta Pixel + GA4 + Clarity + in-app events → attribution.
+
+**WhatsApp automation:** chatbot → WhatsApp handoff; web lead → bot follow-up.
+
+**End result:** a fast, beautiful, SEO-ranking site that sells design on sight and funnels every inquiry into FMOS.
+
+**Tasks (to execute later)**
+- [ ] Rebuild fortunemarq.com on Next.js/Vercel (performance + animation), integrated with FMOS.
+- [ ] Serve niche LPs dynamically from `market_insights`; SEO-built (site + LPs).
+- [ ] Website chatbot (shared bot brain) → FMOS inbound lead → WhatsApp handoff.
+- [ ] Tracking: Pixel + GA4 + Clarity + in-app events → attribution.
+- [ ] Forms/CTAs → inbound leads (source-tagged) + Google Meet booking.
+
+## 5.2 — GMB & Local SEO (own)  ⬅️ *designed*
+
+**Goal:** Rank for "digital marketing agency in Hubli" + get leads → pushed into FMOS.
+
+**Optimization:** complete profile, correct categories + services, photos, regular GMB posts, Q&A, service areas, consistent NAP.
+
+**Leads → FMOS:** GMB drives mostly **calls + website clicks** (Google has no clean lead-push API; Business Messages is deprecated). So capture them via: the website (5.1) catching GMB-referred visits, and call logging into FMOS (`source=gmb`). Track calls/clicks/direction requests from GMB Insights.
+
+**Reviews — honest method (decided, revised):**
+- ❌ Do NOT post reviews yourself from clients' accounts on one system — against Google policy, high risk of removal or **profile suspension** (kills the ranking goal).
+- ✅ Send each client their **review link via WhatsApp**, posted from **their own phone/account**. **Kannada reviews are fine** (more authentic locally) — draft a line they approve + paste themselves if needed. Spread over time.
+- Ties into the 4.8 automated review-request flow.
+
+**WhatsApp automation:** review-link requests to clients.
+
+**End result:** an optimized, genuinely-reviewed GMB profile that ranks and feeds calls/clicks into FMOS — durable, not at suspension risk.
+
+**Tasks (to execute later)**
+- [ ] Full GMB optimization (profile, categories, services, photos, posts, Q&A).
+- [ ] Capture GMB calls/website clicks → FMOS inbound (`source=gmb`).
+- [ ] Review-request flow: WhatsApp review link → client posts from own account (Kannada ok).
+
+## 5.3 — SEO + AEO + GEO (organic search)  ⬅️ *designed*
+
+**Goal:** Industry-level organic ranking for fortunemarq.com + all LPs. Hubli first, then **expand to every nearby city** — scalable, not one-city.
+
+**The leverage:** Stage 1 `market_insights` (9 cities × 12 niches) is the fuel for **programmatic SEO** — auto-generate city×niche pages that rank across all cities without hand-building each.
+
+**Program**
+- **SEO** — technical (fast Next.js from 5.1, sitemaps, internal linking, structured URLs) + programmatic city×niche pages from `market_insights` + content/blog for topical authority.
+- **AEO** — FAQ + schema markup + concise answer blocks → featured snippets + voice.
+- **GEO** — structured, citable content → surface in AI answers (Google AI Overviews, ChatGPT, Perplexity).
+
+**Plan/strategize:** Cowork (keyword clusters, content briefs, page architecture). **Content** created in Cowork like other content.
+
+**Track in FMOS:** Google Search Console (free) integration → positions, clicks, impressions per page/keyword in an SEO dashboard; indexed-pages + ranking trend; drop alerts.
+
+**App connection:** SEO content tasks on the content board; GSC metrics in the dashboard; organic leads → inbound (`source=seo`).
+
+**End result:** a scalable organic engine ranking across cities×niches, optimized for search + answer + generative engines, tracked in FMOS.
+
+**Tasks (to execute later)**
+- [ ] Programmatic city×niche SEO pages from `market_insights` (scale beyond Hubli).
+- [ ] Content/blog plan (Cowork) targeting niche+city searches.
+- [ ] AEO: schema/FAQ + answer blocks for snippets/voice.
+- [ ] GEO: citable structured content for AI answer engines.
+- [ ] Technical SEO: sitemaps, internal linking, performance.
+- [ ] Google Search Console → FMOS SEO dashboard (positions/clicks/impressions + drop alerts).
+- [ ] Organic leads → inbound (`source=seo`).
+
+## 5.4 — Instagram / Facebook  ⬅️ *designed*
+
+**Goal:** Build a brand + authority in the digital-marketing space via **informational/educational content for small business owners + freelancers**; grow following; generate inbound over time.
+
+**Content:** educational/informational, data-led. **Detailed content strategy = Cowork session (later).** Production follows the same Cowork pattern (scripts/captions) + Drive for assets.
+
+**Inbound → FMOS:** all social inbound — **DMs, comments, link/bio clicks** — pushed into the app as inbound leads (`source=instagram`/`facebook`). IG + Messenger messaging APIs → `/api/inbound/[channel]` → the **same AI bot** can handle DMs (extends the bot to IG/Messenger) or route to queue.
+
+**Track in FMOS:** follower growth, engagement, inbound leads by channel.
+
+**WhatsApp/bot automation:** bot extends to IG/Messenger DMs; inbound social leads enter the pipeline.
+
+**End result:** a growing branded presence that compounds authority and funnels social inbound into FMOS.
+
+**Tasks (to execute later)**
+- [ ] Cowork session: detailed IG/FB content strategy (educational, SMB + freelancer audience).
+- [ ] IG/Messenger inbound (DM/comment/click) → `/api/inbound` → lead (`source=instagram/facebook`).
+- [ ] Extend AI bot to IG/Messenger DMs (or route to queue).
+- [ ] Track follower growth + engagement + inbound in FMOS.
+
+## 5.5 — LinkedIn  ⬅️ *designed*
+
+**Goal:** Same as 5.4 — brand authority + inbound from business owners researching agencies. **B2B tone**, content repurposed (posted as the FortuneMarq brand + Jabeer personally). Strategy in Cowork.
+
+**Inbound → FMOS:** connection requests, DMs, post engagement → leads (`source=linkedin`). **Honest constraint:** LinkedIn has **no open messaging API** → capture is **manual quick-add** (cockpit source picker), not an auto-webhook like Meta/WhatsApp.
+
+**Track in FMOS:** connections/followers, engagement, manually-logged inbound.
+
+**End result:** B2B credibility + LinkedIn leads in the pipeline (manually captured).
+
+**Tasks (to execute later)**
+- [ ] Cowork: LinkedIn content strategy (B2B repurpose; brand + Jabeer personal).
+- [ ] LinkedIn inbound → FMOS manual quick-add (`source=linkedin`).
+- [ ] Track connections/engagement/inbound.
+
+## 5.6 — Organic Lead Capture → FMOS  ⬅️ *designed*
+
+**Goal:** Every organic lead — any channel — lands in FMOS as a source-tagged inbound lead and enters the same bot-nurtured pipeline (Stage 3).
+
+**Channels → capture**
+- Website chatbot/forms → `/api/inbound` (`source=website`) — auto
+- GMB → calls/clicks via site + call log (`source=gmb`) — semi-auto
+- Instagram/Facebook → DM/comment/click via Meta API (`source=instagram`/`facebook`) — auto
+- LinkedIn → manual quick-add (`source=linkedin`)
+- SEO/organic search → site forms/chatbot (`source=seo`) — auto
+
+**Treatment:** organic inbound = **warm** → autonomous bot handles + **priority** (like ad inbound). Phase F inbound engine already round-robins + notifies.
+
+**App connection:** all via `/api/inbound/[channel]`; unified source attribution → closes the attribution gap from the system map (organic vs paid vs outbound, all visible).
+
+**End result:** one inbound funnel for all organic, fully attributed, bot-nurtured.
+
+**Tasks (to execute later)**
+- [ ] Unified inbound routing for all organic channels → `/api/inbound/[channel]`, source-tagged.
+- [ ] Organic inbound = warm → autonomous bot + priority handling.
+- [ ] Source/channel attribution (organic vs paid vs outbound).
+
+## 5.7 — Tracking & Optimize  ⬅️ *designed*
+
+**Goal:** One unified view of FortuneMarq's own presence + a continuous optimize loop.
+
+**"Presence" dashboard (FMOS):** website traffic (GA4) · SEO positions/clicks/impressions (GSC) · GMB insights (calls/clicks/views) · social follower + engagement growth (IG/FB/LinkedIn) · **leads-by-source** (organic attribution from 5.6).
+
+**WhatsApp digest:** scheduled presence digest (like the campaign digest) — key metrics + flags (ranking drops, traffic dips, engagement changes).
+
+**Optimize loop:** digest/metrics → **Cowork session** → decide changes → execute → log results. Same loop as campaigns (2.8).
+
+**End result:** one place to see the whole organic engine, an automated digest, and Cowork-driven optimization.
+
+**Tasks (to execute later)**
+- [ ] Unified "Presence" dashboard: GA4 + GSC + GMB + social growth + leads-by-source.
+- [ ] Scheduled WhatsApp presence digest (metrics + flags).
+- [ ] Optimize loop via Cowork (decide → execute → log).
+
+---
+
+# STAGE 6 — CROSS-CUTTING / SYSTEM-WIDE
+
+> The pieces every engine assumes but none owns. Build these so the five engines run safely as one machine.
+
+## 6.1 — Bot Brain & Guardrails
+**Goal:** Define what the autonomous bot (web + WhatsApp + IG + Messenger) knows and its rules — one brain, all surfaces.
+**Design:** single knowledge base (services, locked pricing, FAQs, objection answers, niche data hooks from `market_insights`, tone); hard rules (no guarantees, never price outside packages); escalation triggers (price negotiation, complaints, off-script, high-value) → human; always log; instant human-takeover.
+**Tasks:** build KB; define guardrails + escalation; wire to all channels; auto-update KB from packages/market_insights.
+
+## 6.2 — Unified Conversation Inbox
+**Goal:** One place to watch, jump into, and take over every thread (bot or human) across all channels.
+**Design:** FMOS inbox — all conversations (WhatsApp/web/IG/Messenger), bot-vs-human flag, status, lead link, takeover button, escalation surfacing.
+**Tasks:** build inbox; per-thread takeover; route escalations here.
+
+## 6.3 — Cross-Engine Lead Dedup / Merge
+**Goal:** One business = one lead, even arriving via multiple engines (scraped + ad + DM).
+**Design:** match on phone/name/domain; merge keeping richest data + all source tags; **suppress outbound if the lead is already in an active inbound conversation** (no double-contact).
+**Tasks:** real-time dedup/merge on inbound; double-contact suppression; merged source history.
+
+## 6.4 — WhatsApp Compliance & Number Protection
+**Goal:** Keep the WhatsApp number healthy and compliant — protect the whole outbound engine.
+**Design:** opt-out ("STOP") handling + suppression list; send throttling / daily limits; quality-rating + messaging-tier monitoring with alerts; respect 24h window + template rules.
+**Tasks:** STOP/opt-out + suppression list; throttle/limit sends; monitor quality rating → alert; honor DND.
+
+## 6.5 — Master Funnel Dashboard (Command Center)
+**Goal:** One screen to run the business across all five engines.
+**Design:** full funnel — leads → contacted → engaged → meetings → proposals → closed → MRR — segmented by source/engine; revenue + delivery load; daily WhatsApp founder summary.
+**Tasks:** cross-engine funnel dashboard; MRR + revenue roll-up; founder daily digest.
+
+## 6.6 — Long-Term Nurture / Reactivation
+**Goal:** Recapture "not now" / cold leads over months (where most revenue hides).
+**Design:** automated low-frequency drip (value content, fresh niche data, case studies) via WhatsApp/email; re-engagement → back to bot/priority; respects opt-out.
+**Tasks:** nurture drip engine; re-engagement → pipeline; segment by status/type.
+
+## 6.7 — Capacity / WIP Guardrail
+**Goal:** Don't oversell past delivery capacity (you + freelancers).
+**Design:** WIP limit on active delivery projects; at cap → flag/slow new closes or queue onboarding; visible capacity meter.
+**Tasks:** WIP limit + capacity meter; alert near cap.
+
+## 6.8 — Automation Health Monitoring
+**Goal:** Know immediately when an automation breaks.
+**Design:** health checks on crons (Meta pull, digests, follow-ups), webhooks (WhatsApp/inbound), bot; failure → WhatsApp alert to Jabeer; simple status view.
+**Tasks:** health checks/heartbeat; failure alerts to WhatsApp; status view.
+
+## 6.9 — Backups / Data Export
+**Goal:** Business continuity — the whole company lives in FMOS + the lead DB.
+**Design:** scheduled Supabase backups + periodic lead/data export; documented restore.
+**Tasks:** automated DB backup; periodic export; documented restore procedure.
