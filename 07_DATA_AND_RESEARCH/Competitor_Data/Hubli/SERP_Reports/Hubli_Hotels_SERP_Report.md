@@ -2,7 +2,7 @@
 **Keyword Searched:** hotels in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 34,80,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -24,7 +24,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Hotels in Hubli Book from 40 hotels | goibibo.com | National Platform | 32.0K | Some of the hotels under this category are Hotel Naveen Hubli, Clarks Inn Hubli, President Hotel Hubli , Kyriad Prestige Hubli, an |
 | 2 | Hotels in Hubli Book with 𝗙𝗥𝗘𝗘 𝗖𝗮𝗻𝗰𝗲𝗹𝗹𝗮𝘁𝗶𝗼𝗻 | makemytrip.com | National Platform | 4.09K | Hotels in Hubli are well established and located in the most prominent economic regions of the city. Phlox Hotel, The Fern Residen |

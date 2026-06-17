@@ -6,7 +6,7 @@
 
 > This is Level 0 of the Content & Data Build Hierarchy.
 > Nothing else is written — not a single script, template, or proposal — until this sheet is finalised.
-> Every number here comes from real keyword research data and SEMrush competitor analysis.
+> Every number here comes from real keyword-research data (monthly search volume) and SERP 4-bucket competitor analysis (GMB / directories / real business sites / social-other).
 
 ---
 
@@ -31,20 +31,20 @@
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | Xtreme Fitness | xtremefitness.co.in | 12 | 2,435 | 223 | Best performing, but Auth 12 is still weak — no paid ads, vulnerable to competition |
+| 1 | Xtreme Fitness | xtremefitness.co.in | 12 | 2,435 | 223 | Best performing, but domain strength 12 is still weak — no paid ads, vulnerable to competition |
 | 2 | Hubli Gymkhana Club | hubligymkhanaclub.com | 6 | 123 | 9 | Legacy brand, 188K backlinks (directories) but only 9 keywords — completely ignoring SEO content |
 | 3 | Sanal Ladies Gym | sanaladiesgymandfitness.in | <1 | 86 | 12 | Zero backlinks, no SEO investment, invisible online |
 
 ### Competitor Weakness Summary
-Most gym websites have no paid ads running. Even the market leader (Xtreme Fitness) has an authority score of only 12. Two out of three competitors have under 200 monthly visits despite 30,000 monthly searches in the city.
+Most gym websites have no paid ads running. Even the market leader (Xtreme Fitness) has a domain strength of only 12. Two out of three competitors have under 200 monthly visits despite 30,000 monthly searches in the city.
 
 ### Scripts & Messaging
 
 | Field | Content |
 |---|---|
-| **Data Hook (Telecaller Script)** | *"30,000 people search for gyms in Hubli every month — but only 3 gym websites are actually getting that traffic. The top one has a domain authority score of 12 out of 100, which means this market is still wide open."* |
+| **Data Hook (Telecaller Script)** | *"30,000 people search for gyms in Hubli every month — but only 3 gym websites are actually getting that traffic. The top one has an estimated domain strength of 12 out of 100, which means this market is still wide open."* |
 | **WhatsApp Hook** | *"30,000 gym searches in Hubli every month. Only 3 websites showing up. Yours could be one of them — I have the data to prove it."* |
 
 ### PDF Reference
@@ -75,10 +75,10 @@ Most gym websites have no paid ads running. Even the market leader (Xtreme Fitne
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
 | 1 | Jeevannavar Skin Care | jeevannavarskincare.com | 9 | 173 | 48 | Best in niche but only 173 visits from 7,500 searches — no ads, thin content |
-| 2 | G-Square Skin & Aesthetics | gsquareskinandaesthetics.in | <1 | 12 | 16 | Zero backlinks, authority score not registering — essentially invisible |
+| 2 | G-Square Skin & Aesthetics | gsquareskinandaesthetics.in | <1 | 12 | 16 | Zero backlinks, domain strength not registering — essentially invisible |
 | 3 | Dr. Kirti Pawar | drkirtipawar.com | 2 | 0 | 3 | Zero organic traffic, only 3 indexed keywords — website exists but no one finds it |
 
 ### Competitor Weakness Summary
@@ -119,14 +119,14 @@ Zero paid ads across all three competitors. The strongest clinic website (Jeevan
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
 | 1 | LCC Groups | lccgroups.com | 10 | 589 | 20 | Best in market but only 589 visits from 7,500 searches — weak keyword coverage (20 keywords only) |
-| 2 | KR Computers | krcomputers.co.in | 2 | ~0 | Minimal | Authority 2, only 26 backlinks — not indexed meaningfully |
-| 3 | Savita Soft | savitasoft.co.in | 0 | 0 | Minimal | Zero authority, 11 backlinks — website exists but completely invisible to Google |
+| 2 | KR Computers | krcomputers.co.in | 2 | ~0 | Minimal | Domain strength 2, only 26 backlinks — not indexed meaningfully |
+| 3 | Savita Soft | savitasoft.co.in | 0 | 0 | Minimal | Zero domain strength, 11 backlinks — website exists but completely invisible to Google |
 
 ### Competitor Weakness Summary
-LCC Groups is the clear winner but with only 20 keywords ranking and 589 monthly visitors from 7,500 searches, the top player is leaving 92% of market on the table. The other two institutes have authority scores of 0 and 2 — they have essentially no digital presence. Zero paid ads across all three.
+LCC Groups is the clear winner but with only 20 keywords ranking and 589 monthly visitors from 7,500 searches, the top player is leaving 92% of market on the table. The other two institutes have domain-strength scores of 0 and 2 — they have essentially no digital presence. Zero paid ads across all three.
 
 ### Scripts & Messaging
 
@@ -163,7 +163,7 @@ LCC Groups is the clear winner but with only 20 keywords ranking and 589 monthly
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
 | 1 | Vishwavande Dental | vishwavandedental.com | 9 | 1,095 | 169 | Strongest competitor — 1,949 backlinks — but still no paid ads and only captures 28% of search volume |
 | 2 | Jayade Dental World | jayadedentalworld.com | 7 | 22 | 5 | Decent authority but only 5 keywords ranked — no content investment, nearly invisible |
@@ -207,7 +207,7 @@ Vishwavande Dental is the strongest local dental website in Hubli with 1,095 mon
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
 | 1 | Excellent NEET Academy | excellentneetacademy.com | 18 | 261 | 60 | Strongest local competitor but captures only 261 visits from 2,550 searches — no paid ads |
 | 2 | (No website found) | — | — | 0 | 0 | Local institutes without any web presence — calls go unanswered from search |
@@ -251,14 +251,14 @@ Excellent NEET Academy is the only local JEE/NEET institute in Hubli with a mean
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
 | 1 | Raahiz Travels | raahiztravels.com | 20 | 2,085 | 163 | Strongest competitor — 3,290 backlinks, good SEO — but runs zero paid ads |
 | 2 | Queens Car Rental | queenscarrental.in | 10 | 1,495 | 29 | Good traffic but only 29 keywords — very thin content base despite decent authority |
-| 3 | Swadeshi Car Rentals Hubli | swadeshicarrentalshubli.com | 10 | 31 | 20 | Same authority as Queens but only 31 visits — no SEO content, not showing up for key searches |
+| 3 | Swadeshi Car Rentals Hubli | swadeshicarrentalshubli.com | 10 | 31 | 20 | Same domain strength as Queens but only 31 visits — no SEO content, not showing up for key searches |
 
 ### Competitor Weakness Summary
-This niche has two relatively strong competitors (Raahiz and Queens) but neither runs paid ads. Raahiz dominates organically but has only 163 keywords — a well-run Google Ads campaign could outrank their organic positions immediately. Swadeshi has wasted authority score with near-zero traffic. No one in this niche is running Meta Ads targeting outstation or wedding travel.
+This niche has two relatively strong competitors (Raahiz and Queens) but neither runs paid ads. Raahiz dominates organically but has only 163 keywords — a well-run Google Ads campaign could outrank their organic positions immediately. Swadeshi has wasted domain strength with near-zero traffic. No one in this niche is running Meta Ads targeting outstation or wedding travel.
 
 ### Scripts & Messaging
 
@@ -330,7 +330,7 @@ This niche has two relatively strong competitors (Raahiz and Queens) but neither
 | Source | File / Location |
 |---|---|
 | Keyword Volume Data | `07_DATA_AND_RESEARCH/Keyword_Data/Hubli_Keywords/*.csv` |
-| Competitor Authority & Traffic | `07_DATA_AND_RESEARCH/Competitor_Data/Hubli/[Niche]/*.html` (SEMrush reports) |
+| Competitor Authority & Traffic | `07_DATA_AND_RESEARCH/Competitor_Data/Hubli/[Niche]/*.html` (SERP 4-bucket analysis) |
 | Niche Priority Order | `00_MASTER/MASTER_CONTEXT.md` — Section 9 |
 | Field Definitions | `00_MASTER/FortuneMarq_Content_Hierarchy.docx` — Level 0 |
 

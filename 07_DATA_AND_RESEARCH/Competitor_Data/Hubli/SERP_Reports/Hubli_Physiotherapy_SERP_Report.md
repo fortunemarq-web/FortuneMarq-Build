@@ -2,7 +2,7 @@
 **Keyword Searched:** physiotherapy clinic in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 1,91,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Best Physiotherapy Centres Near me in Hubli | justdial.com | Directory | 13.3K | Balaji Physiotherapy · VCARE Institute of Physiotherapy · ONE CARE PHYSIOTHERAPY CENTRE ... The cost of physiotherapy sessions in  |
 | 2 | List of Best Physiotherapy Clinics Near Me in Hubli | practo.com | Directory | 2.86K | 1 Physiotherapy Clinics in Hubli · Physiofit Physiotherapy Centre · Physiotherapy Clinics in Hubli . Average Rating. 5.0. (11 Revi |
@@ -55,7 +55,7 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | physiofitcentre.com | https://physiofitcentre.com/ | 3 | 23.2M | Weak online authority — easily displaced by a focused campaign |
 | hcghospitals.in | https://www.hcghospitals.in/centre-of-excellence/physio | 4 | 370K | Established site with significant traffic — strong competitor |

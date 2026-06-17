@@ -99,7 +99,7 @@
 
 ## Top Local Competitors — FortuneMarq Outreach Prospect List
 
-| Domain | Niche(s) Appearing In | SEMrush Rank | URL | Priority |
+| Domain | Niche(s) Appearing In | Domain Rank (est.) | URL | Priority |
 |---|---|---|---|---|
 | centers.aakash.ac.in | JEE NEET Coaching, JEE NEET Coaching, JEE NEET Coaching | 36.3K | https://centers.aakash.ac.in/aakash-institute-hubli-coa | HIGH |
 | indiraivf.com | IVF Clinic, IVF Clinic | 48.8K | https://www.indiraivf.com/karnataka/best-ivf-center-in- | HIGH |
@@ -148,18 +148,18 @@
 
 These sites have meaningful web authority and would require sustained effort to outrank organically:
 
-- **centers.aakash.ac.in** — SEMrush Rank: 36.3K | Niches: JEE NEET Coaching, JEE NEET Coaching, JEE NEET Coaching
-- **indiraivf.com** — SEMrush Rank: 48.8K | Niches: IVF Clinic, IVF Clinic
-- **novaivffertility.com** — SEMrush Rank: 62.4K | Niches: IVF Clinic, IVF Clinic
-- **gynoveda.com** — SEMrush Rank: 494K | Niches: IVF Clinic, IVF Clinic
-- **realestateindia.com** — SEMrush Rank: 837K | Niches: Real Estate Agent, Real Estate Agent
-- **N/A** — SEMrush Rank: 2.76K | Niches: JEE NEET Coaching
-- **apollo247.com** — SEMrush Rank: 11.1K | Niches: Skin Clinics
-- **pw.live** — SEMrush Rank: 26.2K | Niches: JEE NEET Coaching
-- **planetspark.in** — SEMrush Rank: 49.0K | Niches: IELTS Coaching
-- **superprof.co.in** — SEMrush Rank: 129K | Niches: Tuition Centre
-- **houzz.in** — SEMrush Rank: 176K | Niches: Interior Designer
-- **squareyards.com** — SEMrush Rank: 314K | Niches: Real Estate Agent
+- **centers.aakash.ac.in** — Domain Rank (est.): 36.3K | Niches: JEE NEET Coaching, JEE NEET Coaching, JEE NEET Coaching
+- **indiraivf.com** — Domain Rank (est.): 48.8K | Niches: IVF Clinic, IVF Clinic
+- **novaivffertility.com** — Domain Rank (est.): 62.4K | Niches: IVF Clinic, IVF Clinic
+- **gynoveda.com** — Domain Rank (est.): 494K | Niches: IVF Clinic, IVF Clinic
+- **realestateindia.com** — Domain Rank (est.): 837K | Niches: Real Estate Agent, Real Estate Agent
+- **N/A** — Domain Rank (est.): 2.76K | Niches: JEE NEET Coaching
+- **apollo247.com** — Domain Rank (est.): 11.1K | Niches: Skin Clinics
+- **pw.live** — Domain Rank (est.): 26.2K | Niches: JEE NEET Coaching
+- **planetspark.in** — Domain Rank (est.): 49.0K | Niches: IELTS Coaching
+- **superprof.co.in** — Domain Rank (est.): 129K | Niches: Tuition Centre
+- **houzz.in** — Domain Rank (est.): 176K | Niches: Interior Designer
+- **squareyards.com** — Domain Rank (est.): 314K | Niches: Real Estate Agent
 
 ---
 
@@ -173,7 +173,7 @@ We analysed all 14 high-intent local search categories in Hubli using live Googl
 
 **The local pack exists but is weak.** 13 of 14 niches show a Google 3-Pack, but in the majority of cases, the lowest-ranked GBP listing has fewer than 200–300 reviews. This is easily challengeable. Hotels is the one niche with no local pack at all — a blank canvas. A business that combines GBP optimisation with active review generation can realistically enter or improve its local pack standing within 60–90 days.
 
-**The Hubli digital market is underdeveloped but accelerating.** Most local websites that do rank have SEMrush authorities above 3–5M, meaning they receive minimal organic traffic. There is no dominant local digital player in any of these 14 niches. The business that moves first — with a professional website, Google Ads, and GBP optimisation — will establish a position that becomes progressively harder for followers to challenge.
+**The Hubli digital market is underdeveloped but accelerating.** Most local websites that do rank have domain-rank estimates above 3–5M, meaning they receive minimal organic traffic. There is no dominant local digital player in any of these 14 niches. The business that moves first — with a professional website, Google Ads, and GBP optimisation — will establish a position that becomes progressively harder for followers to challenge.
 
 **FortuneMarq's opportunity:** Any client acquiring even two of these three pillars (Ads + GBP or Ads + Website or GBP + Website) will immediately outperform 90% of businesses in their category across Hubli. The cost of delay is measurable — every week without ads is a week of transactional traffic captured by directories or left uncaptured entirely.
 

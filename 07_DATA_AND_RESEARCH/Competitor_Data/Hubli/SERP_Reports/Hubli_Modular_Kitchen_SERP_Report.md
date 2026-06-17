@@ -2,7 +2,7 @@
 **Keyword Searched:** modular kitchen in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 7,58,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Top Modular Kitchen Dealers in Hubli | justdial.com | Directory | 13.3K | Modular Kitchen Dealers in Hubli with Verified Dealer Listings · Sapna Plywoods · Modern Interiors · Om Sai Enterprises · Shree In |
 | 2 | Best Modular Interior Design Factory in Hubli - Elements ... | elements4kitchens.com | Local Website | 12.2M | Our Elements Kitchen interior design factory is located in Hubli . #SPL 9, Ground Floor, Mahadev Udyog Industrial Estate Gokul Roa |
@@ -55,11 +55,11 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | elements4kitchens.com | https://www.elements4kitchens.com/factory.php | 2 | 12.2M | Weak online authority — easily displaced by a focused campaign |
 | interiordesk.in | https://www.interiordesk.in/aluminium-interior-hubli.ph | 5 | 4.93M | Weak online authority — easily displaced by a focused campaign |
-| infinitymodularkitchens.com | https://www.infinitymodularkitchens.com/ | 8 | N/A | No SEMrush data — likely new or low-traffic site |
+| infinitymodularkitchens.com | https://www.infinitymodularkitchens.com/ | 8 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 

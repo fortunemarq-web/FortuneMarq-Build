@@ -2,7 +2,7 @@
 **Keyword Searched:** ivf clinic in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 5,50,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | IVF Center in Hubli - Nova IVF Fertility | novaivffertility.com | Local Website | 62.4K | Nova IVF Fertility is one of the best fertility care providers in Hubli with an aim to deliver effective treatment to the patients |
 | 2 | Best IVF Center in Hubli - Infertility Treatment | indiraivf.com | Local Website | 48.8K | Indira IVF Hubli is the best IVF clinic & fertility center providing infertility treatment, test tube baby care & world-class IVF  |
@@ -56,15 +56,15 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | novaivffertility.com | https://www.novaivffertility.com/ivf-centre/hubli/ferti | 1 | 62.4K | Established site with significant traffic — strong competitor |
 | indiraivf.com | https://www.indiraivf.com/karnataka/best-ivf-center-in- | 2 | 48.8K | Established site with significant traffic — strong competitor |
 | gynoveda.com | https://gynoveda.com/compare-ivf-vs-ayurveda/ivf-center | 4 | 494K | Established site with significant traffic — strong competitor |
-| drvinutaivf.com | https://drvinutaivf.com/ | 6 | N/A | No SEMrush data — likely new or low-traffic site |
+| drvinutaivf.com | https://drvinutaivf.com/ | 6 | N/A | No domain-rank data — likely new or low-traffic site |
 | gynoveda.com | https://gynoveda.com/compare-ivf-vs-ayurveda/ivf-cost/h | 7 | 494K | Established site with significant traffic — strong competitor |
 | indiraivf.com | https://www.indiraivf.com/fertility-doctors/dr-asha-pat | 8 | 48.8K | Established site with significant traffic — strong competitor |
-| vinsfertility.com | https://www.vinsfertility.com/ivf-centres/top-5-best-iv | 9 | N/A | No SEMrush data — likely new or low-traffic site |
+| vinsfertility.com | https://www.vinsfertility.com/ivf-centres/top-5-best-iv | 9 | N/A | No domain-rank data — likely new or low-traffic site |
 | novaivffertility.com | https://www.novaivffertility.com/ivf-doctor/hubli | 10 | 62.4K | Established site with significant traffic — strong competitor |
 
 ---

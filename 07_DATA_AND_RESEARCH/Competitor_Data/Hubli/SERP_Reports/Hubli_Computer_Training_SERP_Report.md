@@ -2,7 +2,7 @@
 **Keyword Searched:** computer training institute in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 7,84,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Best Computer Training Institutes - Hubli | justdial.com | Directory | 13.3K | Computer Training Institutes 97 Computer Training Institutes in Vidyanagar Hubli, Hubli. Logic ... <a href="https://www.justdial.c |
 | 2 | Best Computer Education Training Institute in Hubli - emaxindia | emaxindia.in | Local Website | 5.02M | RTVYS COMPUTER ; Grow Found Computer Center ; SHRI DURGA Computer Institute ; Galaxy Computer Institute ; Tech Hubli Computer Educ |
@@ -54,12 +54,12 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | emaxindia.in | https://www.emaxindia.in/best-computer-education-traini | 2 | 5.02M | Weak online authority — easily displaced by a focused campaign |
 | sarvaindia.com | https://sarvaindia.com/best-computer-course-institute-i | 4 | 4.78M | Weak online authority — easily displaced by a focused campaign |
 | kleit.ac.in | https://kleit.ac.in/ | 6 | 4.69M | Weak online authority — easily displaced by a focused campaign |
-| weareat.online | https://weareat.online/smart_computer_academy/ | 7 | N/A | No SEMrush data — likely new or low-traffic site |
+| weareat.online | https://weareat.online/smart_computer_academy/ | 7 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 

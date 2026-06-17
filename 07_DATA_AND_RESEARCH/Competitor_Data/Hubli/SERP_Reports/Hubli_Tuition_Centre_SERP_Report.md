@@ -2,7 +2,7 @@
 **Keyword Searched:** tuition centre in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 2,06,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Top Home Tutors in Hubli - Best Private Tuition Teachers | justdial.com | Directory | 13.3K | Popular Home Tutors in Hubli · Anand Academy · Aakash Institute · Sampoorna HOME Tuition · Chetan Dance Academy · J K Shah Classes |
 | 2 | Home Tuition Near me in Hubli - Fees From ₹499/hr - Superprof | superprof.co.in | Local Website | 129K | Top-rated Home tutors near me for classes 1-12 in Hubli from 505 tutors , with fees from ₹467/hr on Superprof. Open Now! 5.0 (43)  |
@@ -55,10 +55,10 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | superprof.co.in | https://www.superprof.co.in/lessons/all-tutors/hubli/ | 2 | 129K | Established site with significant traffic — strong competitor |
-| tutorhunt.co.in | https://www.tutorhunt.co.in/locations/hubli/ | 6 | N/A | No SEMrush data — likely new or low-traffic site |
+| tutorhunt.co.in | https://www.tutorhunt.co.in/locations/hubli/ | 6 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 

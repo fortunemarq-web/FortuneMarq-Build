@@ -22,7 +22,7 @@
 
 ## Core Insight — Applies to All 12 Niches
 
-When search volume is high but local business websites are getting a fraction of it, the bulk of the traffic is being absorbed by social listing directories — JustDial, Sulekha, IndiaMart, and similar platforms. The businesses that do rank on Google are there because of how long they have been listed, not because of strong SEO. Their authority scores are weak, their content is thin, and their keyword coverage is narrow. This makes them straightforward to outrank with a proper digital presence built from the ground up.
+When search volume is high but local business websites are getting a fraction of it, the bulk of the traffic is being absorbed by social listing directories — JustDial, Sulekha, IndiaMart, and similar platforms. The businesses that do rank on Google are there because of how long they have been listed, not because of strong SEO. Their domain-strength scores are weak, their content is thin, and their keyword coverage is narrow. This makes them straightforward to outrank with a proper digital presence built from the ground up.
 
 This is the insight that drives every data hook, every script, and every proposal.
 
@@ -58,21 +58,21 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | Vishwavande Dental | vishwavandedental.com | 9 | 1,095 | 169 | Strongest competitor — 1,949 backlinks — but authority score is only 9 out of 100, thin content relative to search volume |
-| 2 | Jayade Dental World | jayadedentalworld.com | 7 | 22 | 5 | Authority 7, only 5 keywords ranked — ranking purely due to age of domain, no content investment |
-| 3 | Shri Sai Dental Care | shrisaidentalcare.com | 2 | 0 | 3 | Authority 2, 84 backlinks — website exists but completely invisible in search |
+| 1 | Vishwavande Dental | vishwavandedental.com | 9 | 1,095 | 169 | Strongest competitor — 1,949 backlinks — but domain strength is only 9 out of 100, thin content relative to search volume |
+| 2 | Jayade Dental World | jayadedentalworld.com | 7 | 22 | 5 | Domain strength 7, only 5 keywords ranked — ranking purely due to age of domain, no content investment |
+| 3 | Shri Sai Dental Care | shrisaidentalcare.com | 2 | 0 | 3 | Domain strength 2, 84 backlinks — website exists but completely invisible in search |
 
 ### Competitor Weakness Summary
-21,100 searches per month but the combined organic traffic of the top 3 dental websites is under 1,200. The rest of that traffic is going to JustDial, Sulekha, and other directories. The strongest website — Vishwavande Dental — has an authority score of only 9 out of 100 and 169 keywords. It is ranking because it has been on Google the longest, not because of strong SEO. The other two websites have authority scores of 7 and 2 with almost no keyword coverage. The content gap across this entire niche is enormous.
+21,100 searches per month but the combined organic traffic of the top 3 dental websites is under 1,200. The rest of that traffic is going to JustDial, Sulekha, and other directories. The strongest website — Vishwavande Dental — has a domain strength of only 9 out of 100 and 169 keywords. It is ranking because it has been on Google the longest, not because of strong SEO. The other two websites have domain-strength scores of 7 and 2 with almost no keyword coverage. The content gap across this entire niche is enormous.
 
 ### Scripts & Messaging
 
 | Field | Content |
 |---|---|
-| **Data Hook (Telecaller Script)** | *"21,100 people search for dentists and dental clinics in Hubli every month. When you divide that across everything showing up on Google — most of it is going to JustDial, Sulekha, directories. The actual dental clinic websites that rank have authority scores under 10 out of 100. They are showing up because they have been listed on Google for a long time — not because they have strong digital marketing. That is the gap I want to show you."* |
-| **WhatsApp Hook** | *"21,100 dental searches in Hubli every month. Most goes to directories. The clinic websites that do rank have authority scores under 10 — they are easy to outrank. I have the full data breakdown — want me to send it?"* |
+| **Data Hook (Telecaller Script)** | *"21,100 people search for dentists and dental clinics in Hubli every month. When you divide that across everything showing up on Google — most of it is going to JustDial, Sulekha, directories. The actual dental clinic websites that rank have domain-strength scores under 10 out of 100. They are showing up because they have been listed on Google for a long time — not because they have strong digital marketing. That is the gap I want to show you."* |
+| **WhatsApp Hook** | *"21,100 dental searches in Hubli every month. Most goes to directories. The clinic websites that do rank have domain-strength scores under 10 — they are easy to outrank. I have the full data breakdown — want me to send it?"* |
 
 ### PDF Reference
 
@@ -102,20 +102,20 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | Jeevannavar Skin Care | jeevannavarskincare.com | 9 | 173 | 48 | Best in niche — authority 9, 48 keywords — but ranking only because of domain age, thin content |
-| 2 | G-Square Skin & Aesthetics | gsquareskinandaesthetics.in | <1 | 12 | 16 | Authority score not registering — zero backlinks, essentially invisible |
-| 3 | Dr. Kirti Pawar | drkirtipawar.com | 2 | 0 | 3 | Authority 2 — website exists but generates zero organic traffic |
+| 1 | Jeevannavar Skin Care | jeevannavarskincare.com | 9 | 173 | 48 | Best in niche — domain strength 9, 48 keywords — but ranking only because of domain age, thin content |
+| 2 | G-Square Skin & Aesthetics | gsquareskinandaesthetics.in | <1 | 12 | 16 | Domain strength not registering — zero backlinks, essentially invisible |
+| 3 | Dr. Kirti Pawar | drkirtipawar.com | 2 | 0 | 3 | Domain strength 2 — website exists but generates zero organic traffic |
 
 ### Competitor Weakness Summary
-41,850 searches per month and the top clinic website gets 173 visits — that is a 99% gap. Nearly the entire search volume is being captured by directories. The businesses that are ranking have authority scores of 9, under 1, and 2 respectively. They are on the first page because they were added to Google Maps and indexed years ago. Their keyword coverage is thin and their content has almost no depth. This niche is wide open for a business that builds a proper digital presence.
+41,850 searches per month and the top clinic website gets 173 visits — that is a 99% gap. Nearly the entire search volume is being captured by directories. The businesses that are ranking have domain-strength scores of 9, under 1, and 2 respectively. They are on the first page because they were added to Google Maps and indexed years ago. Their keyword coverage is thin and their content has almost no depth. This niche is wide open for a business that builds a proper digital presence.
 
 ### Scripts & Messaging
 
 | Field | Content |
 |---|---|
-| **Data Hook (Telecaller Script)** | *"41,850 people search for skin clinics and dermatologists in Hubli every month. The top clinic website in Hubli is getting 173 visits from all of that — the rest is going to JustDial, Sulekha, and directories. The websites that are ranking have authority scores under 10 out of 100. They are there because of how long they have been listed on Google, not because of strong digital marketing. That gap is what we work with."* |
+| **Data Hook (Telecaller Script)** | *"41,850 people search for skin clinics and dermatologists in Hubli every month. The top clinic website in Hubli is getting 173 visits from all of that — the rest is going to JustDial, Sulekha, and directories. The websites that are ranking have domain-strength scores under 10 out of 100. They are there because of how long they have been listed on Google, not because of strong digital marketing. That gap is what we work with."* |
 | **WhatsApp Hook** | *"41,850 skin clinic searches in Hubli monthly. Top local clinic website gets 173 visits. The rest goes to directories. I have the full data breakdown — want me to send it?"* |
 
 ### PDF Reference
@@ -183,20 +183,20 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | Raahiz Travels | raahiztravels.com | 20 | 2,085 | 163 | Strongest competitor — Auth 20 — but only 163 keywords, thin content for the volume available |
-| 2 | Queens Car Rental | queenscarrental.in | 10 | 1,495 | 29 | Good traffic but only 29 keywords — very thin content, authority built on directories not content |
-| 3 | Swadeshi Car Rentals Hubli | swadeshicarrentalshubli.com | 10 | 31 | 20 | Same authority as Queens but only 31 visits — not showing up for key searches, no content investment |
+| 1 | Raahiz Travels | raahiztravels.com | 20 | 2,085 | 163 | Strongest competitor — domain strength 20 — but only 163 keywords, thin content for the volume available |
+| 2 | Queens Car Rental | queenscarrental.in | 10 | 1,495 | 29 | Good traffic but only 29 keywords — very thin content, online presence built on directories not content |
+| 3 | Swadeshi Car Rentals Hubli | swadeshicarrentalshubli.com | 10 | 31 | 20 | Same domain strength as Queens but only 31 visits — not showing up for key searches, no content investment |
 
 ### Competitor Weakness Summary
-16,450 searches per month. The two active competitor websites — Raahiz and Queens — together capture just over 3,500 visits. The remaining traffic is going to OTA platforms and directories. Even the market leader, Raahiz, has only 163 keywords ranking and an authority score of 20 — high for this local market but still weak in absolute terms. Both businesses are ranking primarily because of how long they have been on Google and their directory backlinks. Swadeshi Rentals has the same authority as Queens but gets almost zero traffic — a direct example of how longevity without content produces no results.
+16,450 searches per month. The two active competitor websites — Raahiz and Queens — together capture just over 3,500 visits. The remaining traffic is going to OTA platforms and directories. Even the market leader, Raahiz, has only 163 keywords ranking and a domain strength of 20 — high for this local market but still weak in absolute terms. Both businesses are ranking primarily because of how long they have been on Google and their directory backlinks. Swadeshi Rentals has the same domain strength as Queens but gets almost zero traffic — a direct example of how longevity without content produces no results.
 
 ### Scripts & Messaging
 
 | Field | Content |
 |---|---|
-| **Data Hook (Telecaller Script)** | *"16,450 people search for car rentals and cabs in Hubli every month. The two strongest rental companies — Raahiz Travels and Queens Car Rental — together get about 3,500 of those visits. The rest is going to OTA platforms and directories. Raahiz has the best website in this niche and they only have 163 keywords ranking on Google. Their authority score is 20 out of 100. Swadeshi Rentals — same size business — has the same authority score but gets only 31 visits a month. Same market, completely different results based on digital presence."* |
+| **Data Hook (Telecaller Script)** | *"16,450 people search for car rentals and cabs in Hubli every month. The two strongest rental companies — Raahiz Travels and Queens Car Rental — together get about 3,500 of those visits. The rest is going to OTA platforms and directories. Raahiz has the best website in this niche and they only have 163 keywords ranking on Google. Their domain strength is 20 out of 100. Swadeshi Rentals — same size business — has the same domain strength but gets only 31 visits a month. Same market, completely different results based on digital presence."* |
 | **WhatsApp Hook** | *"16,450 car rental searches in Hubli monthly. Top two companies together get 3,500 visits — the rest goes to directories and OTAs. The gap is significant. I have the full breakdown if you are interested."* |
 
 ### PDF Reference
@@ -227,21 +227,21 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | Xtreme Fitness | xtremefitness.co.in | 12 | 2,435 | 223 | Best performing — Auth 12 — ranking due to age and directory backlinks, not strong content |
+| 1 | Xtreme Fitness | xtremefitness.co.in | 12 | 2,435 | 223 | Best performing — domain strength 12 — ranking due to age and directory backlinks, not strong content |
 | 2 | Hubli Gymkhana Club | hubligymkhanaclub.com | 6 | 123 | 9 | Legacy brand, 188K directory backlinks but only 9 keywords — completely ignoring SEO content |
-| 3 | Sanal Ladies Gym | sanaladiesgymandfitness.in | <1 | 86 | 12 | Zero authority, no SEO investment, invisible online |
+| 3 | Sanal Ladies Gym | sanaladiesgymandfitness.in | <1 | 86 | 12 | Zero domain strength, no SEO investment, invisible online |
 
 ### Competitor Weakness Summary
-63,950 searches per month — the highest volume niche in Hubli. Even the market leader, Xtreme Fitness, gets only 2,435 visits from all of that. The other gym websites are getting under 200. The overwhelming majority of this search volume is going to JustDial, Sulekha, and directory listings. Xtreme Fitness has an authority score of 12 out of 100 and ranks because it has been on Google the longest — not because of strong SEO. Hubli Gymkhana Club has 188,000 directory backlinks and only 9 keywords ranking. The content gap across this niche is the largest of all 12 niches.
+63,950 searches per month — the highest volume niche in Hubli. Even the market leader, Xtreme Fitness, gets only 2,435 visits from all of that. The other gym websites are getting under 200. The overwhelming majority of this search volume is going to JustDial, Sulekha, and directory listings. Xtreme Fitness has a domain strength of 12 out of 100 and ranks because it has been on Google the longest — not because of strong SEO. Hubli Gymkhana Club has 188,000 directory backlinks and only 9 keywords ranking. The content gap across this niche is the largest of all 12 niches.
 
 ### Scripts & Messaging
 
 | Field | Content |
 |---|---|
-| **Data Hook (Telecaller Script)** | *"63,950 people search for gyms in Hubli every month. The top gym website in Hubli — Xtreme Fitness — is getting about 2,400 of those visits. The rest is going to JustDial, Sulekha, and directories. Xtreme Fitness has been on Google for years and their authority score is still only 12 out of 100. The other gym websites are barely visible. 63,950 searches and almost none of it is reaching actual gym websites — that is the gap."* |
-| **WhatsApp Hook** | *"63,950 gym searches in Hubli every month. Top gym website gets 2,400 visits. The rest goes to directories. Authority score of the market leader is 12 out of 100 — I have the full data if you want to see it."* |
+| **Data Hook (Telecaller Script)** | *"63,950 people search for gyms in Hubli every month. The top gym website in Hubli — Xtreme Fitness — is getting about 2,400 of those visits. The rest is going to JustDial, Sulekha, and directories. Xtreme Fitness has been on Google for years and their domain strength is still only 12 out of 100. The other gym websites are barely visible. 63,950 searches and almost none of it is reaching actual gym websites — that is the gap."* |
+| **WhatsApp Hook** | *"63,950 gym searches in Hubli every month. Top gym website gets 2,400 visits. The rest goes to directories. Domain strength of the market leader is 12 out of 100 — I have the full data if you want to see it."* |
 
 ### PDF Reference
 
@@ -271,21 +271,21 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | LCC Groups | lccgroups.com | 10 | 589 | 20 | Best in market — Auth 10, only 20 keywords ranking — ranking due to domain age, not content |
-| 2 | KR Computers | krcomputers.co.in | 2 | ~0 | Minimal | Authority 2, 26 backlinks — not indexed meaningfully in Google |
-| 3 | Savita Soft | savitasoft.co.in | 0 | 0 | Minimal | Zero authority, 11 backlinks — website exists but completely invisible |
+| 1 | LCC Groups | lccgroups.com | 10 | 589 | 20 | Best in market — domain strength 10, only 20 keywords ranking — ranking due to domain age, not content |
+| 2 | KR Computers | krcomputers.co.in | 2 | ~0 | Minimal | Domain strength 2, 26 backlinks — not indexed meaningfully in Google |
+| 3 | Savita Soft | savitasoft.co.in | 0 | 0 | Minimal | Zero domain strength, 11 backlinks — website exists but completely invisible |
 
 ### Competitor Weakness Summary
-24,350 searches per month. The market leader has an authority score of 10 and only 20 keywords ranking. The other two institutes have authority scores of 2 and 0. All three are ranking — where they rank at all — because of how long they have been on Google, not because of any real SEO work. The bulk of this search volume is going to directory listings and online education platforms. Any institute that builds a proper content-backed digital presence in this niche will dominate it quickly.
+24,350 searches per month. The market leader has a domain strength of 10 and only 20 keywords ranking. The other two institutes have domain-strength scores of 2 and 0. All three are ranking — where they rank at all — because of how long they have been on Google, not because of any real SEO work. The bulk of this search volume is going to directory listings and online education platforms. Any institute that builds a proper content-backed digital presence in this niche will dominate it quickly.
 
 ### Scripts & Messaging
 
 | Field | Content |
 |---|---|
-| **Data Hook (Telecaller Script)** | *"24,350 people search for computer training institutes in Hubli every month. The market leader here — LCC Groups — gets a few hundred visits from that. The rest is going to directories and online course platforms. LCC Groups has been on Google for years and they still only have 20 keywords ranking and an authority score of 10 out of 100. The other institutes are essentially invisible online. That is the gap — and it is a big one."* |
-| **WhatsApp Hook** | *"24,350 computer course searches in Hubli monthly. Market leader gets a few hundred visits — the rest goes to directories and online platforms. Authority score of the top website is 10 out of 100. I have the full breakdown — interested?"* |
+| **Data Hook (Telecaller Script)** | *"24,350 people search for computer training institutes in Hubli every month. The market leader here — LCC Groups — gets a few hundred visits from that. The rest is going to directories and online course platforms. LCC Groups has been on Google for years and they still only have 20 keywords ranking and a domain strength of 10 out of 100. The other institutes are essentially invisible online. That is the gap — and it is a big one."* |
+| **WhatsApp Hook** | *"24,350 computer course searches in Hubli monthly. Market leader gets a few hundred visits — the rest goes to directories and online platforms. Domain strength of the top website is 10 out of 100. I have the full breakdown — interested?"* |
 
 ### PDF Reference
 
@@ -389,9 +389,9 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ### Top 3 Competitors
 
-| # | Business | Domain | Auth Score | Monthly Traffic | Keywords | Weakness |
+| # | Business | Domain | Domain Strength (est.) | Monthly Traffic | Keywords | Weakness |
 |---|---|---|---|---|---|---|
-| 1 | Excellent NEET Academy | excellentneetacademy.com | 18 | 261 | 60 | Strongest local competitor — Auth 18 — but captures only 261 visits, thin content relative to volume |
+| 1 | Excellent NEET Academy | excellentneetacademy.com | 18 | 261 | 60 | Strongest local competitor — domain strength 18 — but captures only 261 visits, thin content relative to volume |
 | 2 | (No website found) | — | — | 0 | 0 | Local institutes with no web presence — completely reliant on word-of-mouth and referrals |
 | 3 | (No website found) | — | — | 0 | 0 | Local institutes with no web presence — not appearing in any search result |
 
@@ -535,7 +535,7 @@ This is the insight that drives every data hook, every script, and every proposa
 
 ## Quick Reference Summary Table
 
-| # | Niche | Monthly Volume (Hubli) | #1 Competitor Domain | Auth Score | Competitor Research |
+| # | Niche | Monthly Volume (Hubli) | #1 Competitor Domain | Domain Strength (est.) | Competitor Research |
 |---|---|---|---|---|---|
 | 1 | Dental Clinics | 21,100 | vishwavandedental.com | 9 | Complete |
 | 2 | Skin Clinics | 41,850 | jeevannavarskincare.com | 9 | Complete |
@@ -550,7 +550,7 @@ This is the insight that drives every data hook, every script, and every proposa
 | 11 | Modular Kitchens | 6,450 | — | — | Pending |
 | 12 | IELTS Coaching | 3,200 | — | — | Pending |
 
-**Core observation across all 12 niches:** Search volumes are large but the traffic is being absorbed by social listing directories and national aggregator platforms. The local businesses that do rank are there because of domain age and directory backlinks — not strong SEO or content. Authority scores are consistently low, keyword coverage is thin, and content gaps are significant. These are the conditions that make this market easy to enter and dominate with a properly built digital presence.
+**Core observation across all 12 niches:** Search volumes are large but the traffic is being absorbed by social listing directories and national aggregator platforms. The local businesses that do rank are there because of domain age and directory backlinks — not strong SEO or content. Domain strengths are consistently low, keyword coverage is thin, and content gaps are significant. These are the conditions that make this market easy to enter and dominate with a properly built digital presence.
 
 ---
 
@@ -598,7 +598,7 @@ This is the insight that drives every data hook, every script, and every proposa
 |---|---|
 | Keyword Volume Data | `07_DATA_AND_RESEARCH/Keyword_Data/Hubli_Keywords/*.csv` |
 | Dharwad Volume Data | `07_DATA_AND_RESEARCH/Keyword_Data/Dharwad_Keywords/*.csv` |
-| Competitor Authority & Traffic | `07_DATA_AND_RESEARCH/Competitor_Data/Hubli/[Niche]/*.html` (SEMrush reports — 6 niches complete) |
+| Competitor Authority & Traffic | `07_DATA_AND_RESEARCH/Competitor_Data/Hubli/[Niche]/*.html` (SERP 4-bucket analysis — 6 niches complete) |
 | Pending Competitor Research | SERP screenshots to be taken for 6 remaining niches |
 | Niche Priority Order | `00_MASTER/MASTER_CONTEXT.md` — Section 9 |
 
@@ -609,7 +609,7 @@ This is the insight that drives every data hook, every script, and every proposa
 | Date | Summary |
 |---|---|
 | 2026-03-19 | All niche volumes updated from FortuneMarq_Master_Keyword_Research.xlsx. Replaced estimated numbers with real Google Keyword Planner data. |
-| 2026-04-15 | Full rewrite — Version 2.0. Expanded from 6 to 12 niches. New attack order: Healthcare first (Dental, Skin, IVF) → Car Rentals → remaining by search volume. All paid ads references removed — no paid ads research has been conducted. Core narrative updated across all niches: traffic going to directories, businesses ranking due to longevity not strong SEO, low authority scores and content gaps make this market easy to enter. Competitor organic traffic under 1,000 removed from scripts. 6 new niches added with keyword data and SERP research pending. JEE and NEET combined into single entry. Interior Designers added. |
+| 2026-04-15 | Full rewrite — Version 2.0. Expanded from 6 to 12 niches. New attack order: Healthcare first (Dental, Skin, IVF) → Car Rentals → remaining by search volume. All paid ads references removed — no paid ads research has been conducted. Core narrative updated across all niches: traffic going to directories, businesses ranking due to longevity not strong SEO, low domain-strength scores and content gaps make this market easy to enter. Competitor organic traffic under 1,000 removed from scripts. 6 new niches added with keyword data and SERP research pending. JEE and NEET combined into single entry. Interior Designers added. |
 
 ---
 

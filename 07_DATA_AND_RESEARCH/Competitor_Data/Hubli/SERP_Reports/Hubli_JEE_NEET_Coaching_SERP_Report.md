@@ -2,7 +2,7 @@
 **Keyword Searched:** jee neet coaching in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 1,11,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | NEET Coaching Centers in Hubli - Hubballi | justdial.com | Directory | 13.3K | NEET Coaching Centers in Hubli · Time Institute · Alora Institute · Unacademy Centre · Vidya Science Academy · Urise Uma Ram Insti |
 | 2 | Aakash Institute, Hubli | centers.aakash.ac.in | Local Website | 36.3K | It is a coaching centre for students from 8th to 12th curriculum of CBSE and coaching for NEET and IIT JEE . Budappa Angadi. Poste |
@@ -58,16 +58,16 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | centers.aakash.ac.in | https://centers.aakash.ac.in/aakash-institute-hubli-coa | 2 | 36.3K | Established site with significant traffic — strong competitor |
 | narayanacoachingcenters.in | https://www.narayanacoachingcenters.in/landingpage.php? | 3 | 2.92M | Weak online authority — easily displaced by a focused campaign |
 | centers.aakash.ac.in | https://centers.aakash.ac.in/aakash-institute-hubli-coa | 6 | 36.3K | Established site with significant traffic — strong competitor |
 | N/A | N/A | 7 | 2.76K | Established site with significant traffic — strong competitor |
 | pw.live | https://www.pw.live/offline-centres/batches/vidyapeeth/ | 9 | 26.2K | Established site with significant traffic — strong competitor |
-| toppersacademy.app | https://toppersacademy.app/top-neet-coaching-in-hubli-a | 10 | N/A | No SEMrush data — likely new or low-traffic site |
+| toppersacademy.app | https://toppersacademy.app/top-neet-coaching-in-hubli-a | 10 | N/A | No domain-rank data — likely new or low-traffic site |
 | centers.aakash.ac.in | https://centers.aakash.ac.in/aakash-institute-hubli-coa | 11 | 36.3K | Established site with significant traffic — strong competitor |
-| mystudycart.com | https://mystudycart.com/iit-coaching-hubli-dharwad | 12 | N/A | No SEMrush data — likely new or low-traffic site |
+| mystudycart.com | https://mystudycart.com/iit-coaching-hubli-dharwad | 12 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 

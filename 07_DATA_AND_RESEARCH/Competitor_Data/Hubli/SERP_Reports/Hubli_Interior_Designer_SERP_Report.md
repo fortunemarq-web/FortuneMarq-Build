@@ -2,7 +2,7 @@
 **Keyword Searched:** interior designer in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 24,10,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Best &amp; Budget Interior Designers in Hubli | interiordesk.in | Local Website | 4.93M | We are one of the best home interior designers in Hubli doing up lots of color schemes, remodeling, renovation and styling as and  |
 | 2 | Interior Designers &amp; Interior Decorators in Hubli. - Houzz | houzz.in | Local Website | 176K | Interior Designers & Interior Decorators in Hubli . · DESIGN CREATION I · Carve Design Studio · Interior Design House by Revankar  |
@@ -54,11 +54,11 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | interiordesk.in | https://www.interiordesk.in/interior-designers-hubli.ph | 1 | 4.93M | Weak online authority — easily displaced by a focused campaign |
 | houzz.in | https://www.houzz.in/professionals/interior-designers-a | 2 | 176K | Established site with significant traffic — strong competitor |
-| carvedesignstudio.in | https://carvedesignstudio.in/ | 3 | n/a | No SEMrush data — likely new or low-traffic site |
+| carvedesignstudio.in | https://carvedesignstudio.in/ | 3 | n/a | No domain-rank data — likely new or low-traffic site |
 | decorpot.com | https://www.decorpot.com/interior-designers-in-hubli | 5 | 619K | Moderate online presence — beatable with targeted SEO/Ads |
 | panchaminteriors.com | https://www.panchaminteriors.com/interior-designers-hub | 8 | 8.52M | Weak online authority — easily displaced by a focused campaign |
 

@@ -2,7 +2,7 @@
 **Keyword Searched:** ielts coaching in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 60,400 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | List of Top IELTS Tutorials in Hubli - Best IELTS Coaching | justdial.com | Directory | 13.3K | IELTS tutorials in Hubli offer personalised training to meet the needs of students at different skill levels, ranging from novices |
 | 2 | Best IELTS in Hubli 2026 | eecglobal.com | Local Website | 10.8M | 4 days ago — EEC is the #1 IELTS institute in Hubli , Karnataka. Best IELTS coaching fees from ₹7,500 (online). Rated 4.7/5 on Goo |
@@ -56,14 +56,14 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | eecglobal.com | https://eecglobal.com/ielts-coaching/best-ielts-coachin | 2 | 10.8M | Weak online authority — easily displaced by a focused campaign |
 | alfaielts.com | https://alfaielts.com/blog/how-to-improve-ielts-band-sc | 4 | 9.14M | Weak online authority — easily displaced by a focused campaign |
-| thesetinstitute.com | https://thesetinstitute.com/ | 5 | n/a | No SEMrush data — likely new or low-traffic site |
+| thesetinstitute.com | https://thesetinstitute.com/ | 5 | n/a | No domain-rank data — likely new or low-traffic site |
 | planetspark.in | https://www.planetspark.in/spoken_english_classes_in_an | 6 | 49.0K | Established site with significant traffic — strong competitor |
 | eecglobal.com | https://eecglobal.com/ielts-life-skills/best-ielts-life | 9 | 10.8M | Weak online authority — easily displaced by a focused campaign |
-| wellnessexclusive.com | https://www.wellnessexclusive.com/hubli/ielts.php | 10 | N/A | No SEMrush data — likely new or low-traffic site |
+| wellnessexclusive.com | https://www.wellnessexclusive.com/hubli/ielts.php | 10 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 

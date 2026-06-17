@@ -2,7 +2,7 @@
 **Keyword Searched:** real estate agent in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 15,10,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1155 | + Real Estate Agents in Hubli | squareyards.com | Local Website | 314K | Property Dealers in Hubli : Find 174+ Reliable real estate agents and Brokers in Hubli . Contact residential and Commercial proper |
 | 2 | Trusted Real Estate Agents / Property Dealers in Hubballi | realestateindia.com | Local Website | 837K | Find 155+ trusted real estate agents and property dealers in Hubballi for buying, selling, or renting residential and commercial p |
@@ -55,11 +55,11 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | squareyards.com | https://www.squareyards.com/real-estate-agents-in-hubli | 1155 | 314K | Established site with significant traffic — strong competitor |
 | realestateindia.com | https://www.realestateindia.com/agents-brokers-in-hubli | 2 | 837K | Moderate online presence — beatable with targeted SEO/Ads |
-| threebestrated.in | https://threebestrated.in/real-estate-agents-in-hubball | 63 | N/A | No SEMrush data — likely new or low-traffic site |
+| threebestrated.in | https://threebestrated.in/real-estate-agents-in-hubball | 63 | N/A | No domain-rank data — likely new or low-traffic site |
 | realestateindia.com | https://www.realestateindia.com/agents-brokers-in-gokul | 8 | 837K | Moderate online presence — beatable with targeted SEO/Ads |
 
 ---

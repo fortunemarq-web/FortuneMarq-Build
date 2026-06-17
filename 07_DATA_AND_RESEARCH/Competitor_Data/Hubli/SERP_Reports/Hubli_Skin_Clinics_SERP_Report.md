@@ -2,7 +2,7 @@
 **Keyword Searched:** skin clinics in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 11,70,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | List of nearest Skin Care Clinics in Hubli | justdial.com | Directory | 13.3K | Best Skin Care Clinics in Hubli - Book Appointment Online · Dr Girishkumar M Dermatologist · Supreme Hair & Skin Care · Sanjeevini |
 | 2 | Best Skin Care Doctors In Hubli | practo.com | Directory | 2.86K | Dermatologist 30 years experience. 100% Practo 1Patient Story. Hubli City • Dr Bhagwat Skin Clinic . ~ ₹800 Consultation Fees. Pro |
@@ -54,10 +54,10 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | apollo247.com | https://www.apollo247.com/doctors/dermatologists-in-hub | 6 | 11.1K | Established site with significant traffic — strong competitor |
-| hubli.idbf.in | https://hubli.idbf.in/skin-doctor | 7 | N/A | No SEMrush data — likely new or low-traffic site |
+| hubli.idbf.in | https://hubli.idbf.in/skin-doctor | 7 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 

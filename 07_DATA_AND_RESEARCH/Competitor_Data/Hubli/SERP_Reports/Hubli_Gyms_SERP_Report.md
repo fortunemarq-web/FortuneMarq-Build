@@ -2,7 +2,7 @@
 **Keyword Searched:** gyms in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 11,70,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Biggest Gym in Hubli - Xtreme Fitness Premium Unisex Gym | xtremefitness.co.in | Local Website | 22.7M | Xtreme Fitness Center is the professional and Best & Biggest Gym in Hubli . We offer multiple fitness training like Cardio, Aerobi |
 | 2 | Best Gym in Hubli - Top Fitness Centers &amp; Clubs near me | justdial.com | Directory | 13.3K | Popular Gyms in Hubli · Xtreme Fitness · Shivgiri Social Club · Body Tone Fitness · Akhada- The Lifestyle Gym · The Dream Fitness  |
@@ -54,7 +54,7 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | xtremefitness.co.in | https://xtremefitness.co.in/ | 1 | 22.7M | Weak online authority — easily displaced by a focused campaign |
 

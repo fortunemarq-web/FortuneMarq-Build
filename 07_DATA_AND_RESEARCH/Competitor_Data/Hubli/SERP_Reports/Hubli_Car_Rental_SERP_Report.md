@@ -2,7 +2,7 @@
 **Keyword Searched:** car rental in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 19,00,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Car Rental in Hubli with Driver - Rent Cab | raahiztravels.com | Local Website | 4.88M | Car Rental in Hubli with vehicles like Swift Desire Tour S - Ertiga Tour M - Etios - Innova - Crysta - Cruiser, and Tempo Traveler |
 | 2 | selfdrivecarsinhubli | selfdrivecarsinhubliawesomecars.netlify. | Local Website | 11.5M | Welcome to Awesome Cars , your trusted partner for car rentals in Hubli where you drive the car yourself – no drivers, no delays,  |
@@ -55,7 +55,7 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | raahiztravels.com | https://raahiztravels.com/ | 1 | 4.88M | Weak online authority — easily displaced by a focused campaign |
 | selfdrivecarsinhubliawesomecars.netlif | https://selfdrivecarsinhubliawesomecars.netlify.app/ | 2 | 11.5M | Weak online authority — easily displaced by a focused campaign |

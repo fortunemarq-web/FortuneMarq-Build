@@ -2,7 +2,7 @@
 **Keyword Searched:** dental clinic in hubli
 **Date Captured:** Approx. 14 Feb 2026 (based on page metadata)
 **Total Results Shown by Google:** About 7,11,000 results
-**Keyword Difficulty:** SEOquake metrics available per result (see table below)
+**Keyword Difficulty:** estimated per result from SERP analysis (see table below)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## Organic Results — Page 1
 
-| # | Title | Domain | Type | SEMrush Rank | Snippet |
+| # | Title | Domain | Type | Domain Rank (est.) | Snippet |
 |---|---|---|---|---|---|
 | 1 | Best Dentists Near Me in Hubli | practo.com | Directory | 2.86K | Best Dentists In Hubli · Dhotrad's Sunny Dental Clinic · Dr. Basavaraj Kallapur · Dr. Keshava Abbayya · Dr. Savita Keshava Abbayya |
 | 2 | Preferred dental clinic in Hubli for toothcare | orthosquare.com | Local Website | 2.53M | Redefine oral health with the proven best dental clinic in Hubli at Orthosquare · Expert team of dental practitioners · Progressiv |
@@ -54,12 +54,12 @@
 ## Key Competitors Identified
 *Local business websites only (excludes directories and national platforms)*
 
-| Domain | URL | Position | SEMrush Rank | Observation |
+| Domain | URL | Position | Domain Rank (est.) | Observation |
 |---|---|---|---|---|
 | orthosquare.com | https://www.orthosquare.com/dental-clinic-in-hubli | 2 | 2.53M | Weak online authority — easily displaced by a focused campaign |
-| vishwavandedental.com | https://www.vishwavandedental.com/ | 3 | N/A | No SEMrush data — likely new or low-traffic site |
-| jayadedentalworld.com | https://jayadedentalworld.com/ | 5 | N/A | No SEMrush data — likely new or low-traffic site |
-| vishwavandedental.com | https://www.vishwavandedental.com/video-testimonial.php | 6 | N/A | No SEMrush data — likely new or low-traffic site |
+| vishwavandedental.com | https://www.vishwavandedental.com/ | 3 | N/A | No domain-rank data — likely new or low-traffic site |
+| jayadedentalworld.com | https://jayadedentalworld.com/ | 5 | N/A | No domain-rank data — likely new or low-traffic site |
+| vishwavandedental.com | https://www.vishwavandedental.com/video-testimonial.php | 6 | N/A | No domain-rank data — likely new or low-traffic site |
 
 ---
 
