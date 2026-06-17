@@ -21,7 +21,7 @@
  * Staleness is a WARNING only (never changes the exit code).
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname, join, extname, basename } from "node:path";
 
 const SOURCE_OF_TRUTH = "00_MASTER/FMOS_System_Design_And_Tasks.md";
@@ -78,6 +78,24 @@ const STALE_IGNORE = [
   /(^|\/)\.env/, /(^|\/)\.gitignore$/, /(^|\/)\.DS_Store$/, /(^|\/)\.git/,
 ];
 const ignoredForStale = (f) => STALE_IGNORE.some((re) => re.test(f));
+
+// Freshness = the most recent of (working-tree mtime, last git commit time).
+// A doc counts as "reconciled" for a code change if it was updated at/after that change.
+// This is what stops the false-positive loop where a doc committed SEPARATELY from its
+// (still-uncommitted) code keeps getting re-flagged: the committed doc is newer than the code.
+const _freshCache = new Map();
+function freshness(relPath) {
+  if (_freshCache.has(relPath)) return _freshCache.get(relPath);
+  const abs = resolve(REPO, relPath);
+  let mt = 0, ct = 0;
+  try { mt = statSync(abs).mtimeMs / 1000; } catch { /* missing */ }
+  try { ct = parseInt(gr(["log", "-1", "--format=%ct", "--", relPath]).trim() || "0", 10) || 0; } catch { /* untracked */ }
+  const v = Math.max(mt, ct);
+  _freshCache.set(relPath, v);
+  return v;
+}
+const FRESH_EPS = 2; // seconds — treat near-simultaneous updates as "together"
+const docKeepsUp = (owner, codeFile) => freshness(owner) >= freshness(codeFile) - FRESH_EPS;
 
 // Nearest ancestor folder that owns a CONTEXT.md / README.md.
 function owningDoc(file) {
@@ -170,7 +188,8 @@ const staleMap = new Map();
 for (const f of changed) {
   if (isDoc(f) || ignoredForStale(f)) continue;
   const owner = owningDoc(f);
-  if (!owner || changedSet.has(owner)) continue;
+  if (!owner || changedSet.has(owner)) continue; // doc changed alongside → fresh
+  if (docKeepsUp(owner, f)) continue; // doc already updated at/after this change → reconciled
   if (!staleMap.has(owner)) staleMap.set(owner, new Set());
   staleMap.get(owner).add(dirname(f));
 }
