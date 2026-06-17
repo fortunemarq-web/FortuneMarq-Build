@@ -4,8 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle, Clock, AlertTriangle, XCircle, Box,
-  ChevronDown, ChevronUp, Upload, Loader2, Wand2,
-  PlayCircle, Ban
+  ChevronDown, ChevronUp, Loader2, Wand2, Plus, Printer,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { generateClientOnboarding, SERVICE_TASKS, SERVICE_ASSETS } from "@/lib/onboarding/generateClientOnboarding";
@@ -75,6 +74,11 @@ const ASSET_STATUS_FLOW: Record<string, AssetRecord["status"]> = {
   STORED: "STORED",
 };
 
+const ALL_SERVICE_IDS = [
+  "GENERAL", "WEBSITE", "GMB", "SEO",
+  "GOOGLE_ADS", "META_ADS", "WHATSAPP_MARKETING", "AI_AUTOMATIONS", "CUSTOM",
+];
+
 export default function OnboardingTab({ clientId, initialTasks, initialAssets, isAdmin }: OnboardingTabProps) {
   const [tasks, setTasks] = useState<OnboardingTask[]>(initialTasks);
   const [assets, setAssets] = useState<AssetRecord[]>(initialAssets);
@@ -83,6 +87,9 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   const [generating, setGenerating] = useState(false);
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
   const [showGeneratePanel, setShowGeneratePanel] = useState(false);
+  const [showAddTask, setShowAddTask] = useState(false);
+  const [addTaskForm, setAddTaskForm] = useState({ service_id: "CUSTOM", task: "", owner: "Jabeer", due_by: "" });
+  const [addingTask, setAddingTask] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -149,6 +156,31 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
     router.refresh();
   }
 
+  async function addCustomTask() {
+    if (!addTaskForm.task.trim()) return;
+    setAddingTask(true);
+    const taskId = `CUSTOM_${Date.now()}`;
+    const row = {
+      client_id: clientId,
+      service_id: addTaskForm.service_id,
+      task_id: taskId,
+      task: addTaskForm.task.trim(),
+      owner: addTaskForm.owner || "Jabeer",
+      due_by: addTaskForm.due_by || null,
+      notes: null,
+      status: "PENDING" as const,
+      completed_at: null,
+      completed_by: null,
+    };
+    const { data, error } = await (supabase as any).from("client_onboarding_tasks").insert(row).select().single();
+    if (!error && data) {
+      setTasks(prev => [...prev, data as OnboardingTask]);
+      setAddTaskForm({ service_id: "CUSTOM", task: "", owner: "Jabeer", due_by: "" });
+      setShowAddTask(false);
+    }
+    setAddingTask(false);
+  }
+
   function toggleService(serviceId: string) {
     setCollapsedServices(prev => {
       const next = new Set(prev);
@@ -163,6 +195,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
       GENERAL: "Client Basics", WEBSITE: "Website Building", GMB: "GMB Optimization", SEO: "SEO",
       GOOGLE_ADS: "Google Ads", META_ADS: "Meta Ads",
       WHATSAPP_MARKETING: "WhatsApp Marketing", AI_AUTOMATIONS: "AI Automations",
+      CUSTOM: "Custom",
     };
     return map[id] || id;
   }
@@ -229,12 +262,32 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
             <p className="text-sm font-bold text-slate-900">Onboarding Progress</p>
             <p className="text-xs text-slate-500 mt-0.5">{doneTasks}/{totalTasks} tasks complete</p>
           </div>
-          {missingRequiredAssets > 0 && (
-            <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-lg px-3 py-1.5">
-              <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
-              <span className="text-xs font-semibold text-red-600">{missingRequiredAssets} required asset{missingRequiredAssets > 1 ? "s" : ""} outstanding</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {missingRequiredAssets > 0 && (
+              <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-lg px-3 py-1.5">
+                <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
+                <span className="text-xs font-semibold text-red-600">{missingRequiredAssets} required asset{missingRequiredAssets > 1 ? "s" : ""} outstanding</span>
+              </div>
+            )}
+            <a
+              href={`/admin/clients/${clientId}/onboarding/print`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors"
+            >
+              <Printer className="h-3.5 w-3.5" />
+              Download PDF
+            </a>
+            {isAdmin && (
+              <button
+                onClick={() => setShowAddTask(v => !v)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-lg px-3 py-1.5 transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add Task
+              </button>
+            )}
+          </div>
         </div>
         <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
           <div
@@ -242,6 +295,73 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
             style={{ width: totalTasks > 0 ? `${(doneTasks / totalTasks) * 100}%` : "0%" }}
           />
         </div>
+
+        {/* Add task inline form */}
+        {showAddTask && (
+          <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+            <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Add Custom Task</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-semibold text-slate-500 uppercase">Task</label>
+                <input
+                  type="text"
+                  value={addTaskForm.task}
+                  onChange={e => setAddTaskForm(f => ({ ...f, task: e.target.value }))}
+                  placeholder="e.g. Share brand logo assets"
+                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold text-slate-500 uppercase">Section</label>
+                <select
+                  value={addTaskForm.service_id}
+                  onChange={e => setAddTaskForm(f => ({ ...f, service_id: e.target.value }))}
+                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                >
+                  {ALL_SERVICE_IDS.map(id => (
+                    <option key={id} value={id}>{serviceLabel(id)}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold text-slate-500 uppercase">Owner</label>
+                <input
+                  type="text"
+                  value={addTaskForm.owner}
+                  onChange={e => setAddTaskForm(f => ({ ...f, owner: e.target.value }))}
+                  placeholder="Jabeer"
+                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold text-slate-500 uppercase">Due</label>
+                <input
+                  type="text"
+                  value={addTaskForm.due_by}
+                  onChange={e => setAddTaskForm(f => ({ ...f, due_by: e.target.value }))}
+                  placeholder="Day 3"
+                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 justify-end">
+              <button
+                onClick={() => setShowAddTask(false)}
+                className="text-xs text-slate-500 hover:text-slate-700 px-3 py-1.5"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addCustomTask}
+                disabled={!addTaskForm.task.trim() || addingTask}
+                className="flex items-center gap-1.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white px-4 py-1.5 rounded-lg transition-colors"
+              >
+                {addingTask ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
+                Add
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Complete banner */}
         {isComplete && (

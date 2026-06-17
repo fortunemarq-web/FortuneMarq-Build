@@ -635,6 +635,24 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                   </div>
                 ))}
 
+                {/* Bot paused toggle */}
+                {currentLead.bot_paused !== undefined && (
+                  <div className="flex items-center gap-2 py-1.5 px-1">
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide w-20 shrink-0">Bot</span>
+                    <button
+                      onClick={() => isAdmin && toggleBoolean("bot_paused")}
+                      className={`text-xs font-bold px-2.5 py-0.5 rounded-full transition-colors ${
+                        currentLead.bot_paused
+                          ? "bg-amber-100 text-amber-700 " + (isAdmin ? "hover:bg-amber-200" : "")
+                          : "bg-emerald-100 text-emerald-700 " + (isAdmin ? "hover:bg-emerald-200" : "")
+                      } ${isAdmin ? "cursor-pointer" : "cursor-default"}`}
+                      title={currentLead.bot_paused ? "Bot paused — click to resume" : "Bot active — click to pause"}
+                    >
+                      {currentLead.bot_paused ? "Paused" : "Active"}
+                    </button>
+                  </div>
+                )}
+
                 <div className="border-t border-slate-100 my-2" />
 
                 {/* Script Type dropdown */}
