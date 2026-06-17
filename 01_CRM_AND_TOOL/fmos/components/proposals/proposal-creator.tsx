@@ -16,6 +16,7 @@ import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 import { leadStageUpdate } from "@/lib/pipeline";
 import { fireTrigger } from "@/actions/automations";
+import { sendProposalWA } from "@/actions/send-proposal-wa";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Lead {
@@ -333,6 +334,8 @@ export default function ProposalCreator({ lead, proposalNumber, userId, existing
   const [savedProposalId, setSavedProposalId] = useState<string | null>(existingProposal?.id ?? null);
   const [copied, setCopied] = useState(false);
   const [draftSaved, setDraftSaved] = useState(false);
+  const [waSent, setWaSent] = useState(false);
+  const [waSending, setWaSending] = useState(false);
   const supabase = createClient();
 
   const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
@@ -1003,27 +1006,51 @@ FortuneMarq
               <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="h-8 w-8 rounded-xl bg-green-500 flex items-center justify-center"><MessageSquare className="h-4 w-4 text-white" /></div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">Send via WhatsApp</p>
-                  <p className="text-xs text-slate-400">Copy the message below, then attach the proposal PDF</p>
+                  <p className="text-sm font-bold text-slate-900">Send Proposal via WhatsApp</p>
+                  <p className="text-xs text-slate-400">Sends the approved template + schedules a 48h follow-up automatically</p>
                 </div>
               </div>
-              <div className="p-6">
-                <div className="bg-[#075E54] rounded-2xl p-4 text-sm text-white font-mono leading-relaxed whitespace-pre-wrap">{waMessage}</div>
-                <div className="flex gap-3 mt-4">
-                  <button onClick={copyMessage} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all ${copied ? "bg-emerald-100 text-emerald-700 border border-emerald-200" : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200"}`}>
-                    {copied ? <><CheckCheck className="h-4 w-4" />Copied!</> : <><Copy className="h-4 w-4" />Copy Message</>}
+              <div className="p-6 space-y-4">
+                {waSent ? (
+                  <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+                    <CheckCheck className="h-4 w-4 shrink-0" />
+                    Proposal sent via WhatsApp. 48h follow-up scheduled.
+                  </div>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      if (!savedProposalId) return;
+                      setWaSending(true);
+                      const result = await sendProposalWA(savedProposalId);
+                      setWaSending(false);
+                      if (result.ok) {
+                        setWaSent(true);
+                        toast.success("Proposal sent", `WhatsApp sent to ${lead.company_name}`);
+                        logAudit({ action: "proposal_sent", resourceType: "proposal", resourceId: savedProposalId, resourceLabel: `${proposalNumber} — ${lead.company_name}`, newValue: { status: "sent", channel: "whatsapp" }, summary: `Proposal ${proposalNumber} sent via WhatsApp to ${lead.company_name}` });
+                      } else {
+                        toast.error("WhatsApp send failed", result.error || "Unknown error");
+                      }
+                    }}
+                    disabled={waSending}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white transition-colors"
+                  >
+                    {waSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageSquare className="h-4 w-4" />}
+                    Send via FMOS WhatsApp
                   </button>
-                  <a href={`https://wa.me/91${lead.phone || ""}?text=${encodeURIComponent(waMessage)}`} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm bg-green-500 hover:bg-green-600 text-white transition-colors">
-                    Open WhatsApp <ExternalLink className="h-3.5 w-3.5" />
+                )}
+                <p className="text-xs text-slate-400 text-center">
+                  or{" "}
+                  <a href={`https://wa.me/91${lead.phone || ""}?text=${encodeURIComponent(waMessage)}`} target="_blank" rel="noreferrer" className="underline">
+                    open WhatsApp manually
                   </a>
-                </div>
+                </p>
               </div>
             </div>
 
             <div className="flex gap-3">
-              <button onClick={sendProposal} disabled={isPending} className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl transition-colors flex items-center justify-center gap-2">
+              <button onClick={sendProposal} disabled={isPending || waSent} className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl transition-colors flex items-center justify-center gap-2">
                 {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                Mark as Sent → Move Stage
+                {waSent ? "Stage Updated" : "Mark Sent (no WA)"}
               </button>
               <button onClick={() => router.push("/admin/proposals")} className="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-semibold px-6 py-3.5 rounded-2xl transition-colors">
                 Done

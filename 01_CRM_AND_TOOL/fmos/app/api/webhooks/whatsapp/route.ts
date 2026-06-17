@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { processInboundLead, normalizePhone } from "@/lib/inbound/capture";
-import { sendWhatsAppText, sendWhatsAppButtons } from "@/lib/whatsapp/send";
+import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppTemplate } from "@/lib/whatsapp/send";
+import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
 
 /**
@@ -293,15 +294,59 @@ async function handleInboundMessage(message: any, value: any) {
     });
   }
 
-  // Agreement confirmation catch ("Yes, confirmed" — see PENDING_ACTIONS Button Flow)
+  // Agreement confirmation — "Yes, confirmed"
   if (/yes,?\s*confirmed/i.test(text)) {
+    // Find the most recent sent/pending agreement for this lead
+    const { data: agreement } = await (supabase as any)
+      .from("agreements")
+      .select("id, lead_id, status")
+      .eq("lead_id", lead.id)
+      .in("status", ["sent", "pending"])
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (agreement) {
+      // Mark agreement signed
+      await (supabase as any)
+        .from("agreements")
+        .update({ status: "signed", confirmed_at: new Date().toISOString() })
+        .eq("id", agreement.id);
+
+      // Move lead to won
+      await (supabase as any)
+        .from("leads")
+        .update({ outreach_stage: "won", status: "active", last_activity_at: new Date().toISOString() })
+        .eq("id", lead.id);
+
+      // Send agreement_welcome to the lead
+      const contactName = lead.contact_person || lead.company_name || "there";
+      await sendWhatsAppTemplate(from, "agreement_welcome", {
+        language: "en",
+        components: [
+          {
+            type: "body",
+            parameters: [{ type: "text", text: contactName }],
+          },
+        ],
+        leadId: lead.id,
+      }).catch(() => null);
+
+      // Admin alert
+      await sendAdminAlert(
+        "Agreement Signed",
+        `${lead.company_name}${lead.city ? ` · ${lead.city}` : ""} confirmed via WhatsApp. Deal won — issue advance invoice now.`
+      ).catch(() => null);
+    }
+
+    // Notify all admins in-app
     const { data: admins } = await supabase.from("profiles").select("id").eq("role", "admin");
     for (const admin of admins ?? []) {
       await supabase.from("notifications").insert({
         user_id: admin.id,
         type: "deal_closed",
         title: "Agreement confirmed on WhatsApp",
-        body: `${lead.company_name} replied "${text.slice(0, 100)}"`,
+        body: `${lead.company_name} replied "${text.slice(0, 100)}"${agreement ? " — marked Won" : ""}`,
         link: `/admin/leads/${lead.id}`,
         entity_type: "lead",
         entity_id: lead.id,

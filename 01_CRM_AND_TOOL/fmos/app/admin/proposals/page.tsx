@@ -158,6 +158,7 @@ export default async function ProposalsListPage() {
                             status={p.status}
                             leadId={p.lead?.id || null}
                             companyName={p.lead?.company_name || null}
+                            totalAmount={p.total_setup ?? p.onetime_value ?? 0}
                           />
                         </div>
                       </td>

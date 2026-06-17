@@ -5,6 +5,7 @@ import { createMeetingEvent, rescheduleMeetingEvent, cancelMeetingEvent } from "
 import { sendOutcomeWhatsApp } from "@/actions/outcome-wa-send";
 import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
 import { buildComponents } from "@/lib/whatsapp/params";
+import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 
 const IST = "Asia/Kolkata";
 function fmtDate(iso: string) {
@@ -63,7 +64,12 @@ export async function bookMeeting(opts: {
     })
     .eq("id", opts.leadId);
 
-  // 3. Send meeting_confirmation WhatsApp
+  // 3. Admin alert to Jabeer
+  const pitchType = lead.pitch_type || "?";
+  const alertDetail = `${company} · ${lead.city || ""} · ${lead.industry || ""} · Type ${pitchType} · ${lead.phone || ""}${meetLink ? " · " + meetLink : ""}`;
+  await sendAdminAlert("Meeting Booked", alertDetail).catch(() => null);
+
+  // 4. Send meeting_confirmation WhatsApp
   await sendOutcomeWhatsApp({
     leadId: opts.leadId,
     outcome: "INTERESTED_BOOK",

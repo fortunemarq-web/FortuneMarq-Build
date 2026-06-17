@@ -97,3 +97,11 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/session-timeout" \
             -H "Authorization: Bearer $SECRET" || echo "session-timeout ping failed (non-fatal)"
+      - name: Invoice payment reminders + overdue flags
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/invoice-reminders" \
+            -H "Authorization: Bearer $SECRET" || echo "invoice-reminders ping failed (non-fatal)"
