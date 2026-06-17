@@ -16,6 +16,7 @@ import Link from "next/link";
 import { sendNotification } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
+import { notifyReportReady } from "@/actions/notify-report-ready";
 
 // Public report magic links expire this many days after creation.
 const REPORT_LINK_TTL_DAYS = 30;
@@ -98,6 +99,19 @@ export default function AdminNewReportPage() {
                 resourceLabel: `${publish ? 'Published' : 'Created'} ${reportType} report for ${client?.business_name}`,
                 newValue: { report_month: reportMonth, report_type: reportType, is_published: publish }
             });
+
+            // monthly_report_ready WA — only on publish, only for monthly reports.
+            // Sets the magic-link token + sends the public report link to the client.
+            if (publish && reportType === "monthly") {
+                const notify = await notifyReportReady(data.id);
+                if (notify.ok) {
+                    toast.success("Report published — client notified on WhatsApp.");
+                } else if (notify.skipped === "no_phone") {
+                    toast.info("Report published. No client phone on file — WhatsApp skipped.");
+                } else if (notify.error) {
+                    toast.error(`Report published, but WhatsApp failed: ${notify.error}`);
+                }
+            }
 
             router.push(`/admin/clients/${clientId}`);
         } catch (err) {

@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { Calendar, User, FolderKanban, Plus, Flag, CalendarDays, UserRound } from "lucide-react";
+import { Calendar, User, FolderKanban, Plus } from "lucide-react";
 import PlanDeliverablesModal from "@/components/admin/clients/PlanDeliverablesModal";
+import CaseStudyModal from "@/components/admin/clients/CaseStudyModal";
+import DeliveryBoard, { type BoardMilestone, type BoardTask } from "@/components/admin/clients/DeliveryBoard";
 
 interface Project {
   id: string;
@@ -13,49 +15,18 @@ interface Project {
   assigned_profile?: { full_name: string | null } | null;
 }
 
-interface Milestone {
-  id: string;
-  name: string;
-  due_date: string | null;
-  status: string | null;
-  order_index: number | null;
-  project_id: string;
-}
-
-interface DeliveryTask {
-  id: string;
-  title: string;
-  status: string | null;
-  due_date: string | null;
-  milestone_id: string | null;
-  description: string | null;
-  assigned_profile?: { full_name: string | null } | null;
-}
-
-const MS_STATUS: Record<string, { label: string; cls: string }> = {
-  not_started: { label: "Not started", cls: "bg-slate-100 text-slate-600" },
-  in_progress: { label: "In progress", cls: "bg-blue-50 text-blue-600" },
-  ready_for_approval: { label: "Ready for approval", cls: "bg-amber-50 text-amber-600" },
-  approved: { label: "Approved", cls: "bg-emerald-50 text-emerald-700" },
-};
-
-const TASK_DONE = new Set(["completed"]);
-
-function fmtDate(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso + "T00:00:00Z").toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
-}
-
 export default function ProjectsTab({
   projects,
   clientId,
+  clientName = "Client",
   milestones = [],
   deliveryTasks = [],
 }: {
   projects: Project[];
   clientId: string;
-  milestones?: Milestone[];
-  deliveryTasks?: DeliveryTask[];
+  clientName?: string;
+  milestones?: BoardMilestone[];
+  deliveryTasks?: BoardTask[];
 }) {
   const stageLabel = (stage: string) => {
     const map: Record<string, string> = {
@@ -89,6 +60,7 @@ export default function ProjectsTab({
           client
         </p>
         <div className="flex items-center gap-2">
+          <CaseStudyModal clientId={clientId} clientName={clientName} />
           <PlanDeliverablesModal clientId={clientId} />
           <Link
             href={`/projects?client=${clientId}`}
@@ -201,75 +173,8 @@ export default function ProjectsTab({
         </div>
       )}
 
-      {/* Delivery plan — milestones with nested tasks (4.5) */}
-      {milestones.length > 0 && (
-        <div className="mt-6">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
-            Delivery Plan
-          </p>
-          <div className="space-y-3">
-            {milestones.map((m) => {
-              const tasks = deliveryTasks.filter((t) => t.milestone_id === m.id);
-              const done = tasks.filter((t) => t.status && TASK_DONE.has(t.status)).length;
-              const st = MS_STATUS[m.status ?? "not_started"] ?? MS_STATUS.not_started;
-              return (
-                <div key={m.id} className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-200">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Flag className="h-3.5 w-3.5 text-[#1E7A4F] shrink-0" />
-                      <span className="text-sm font-bold text-slate-800 truncate">{m.name}</span>
-                      <span className={`text-[9px] font-bold uppercase tracking-wide rounded-full px-2 py-0.5 shrink-0 ${st.cls}`}>
-                        {st.label}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0 ml-3">
-                      <span className="text-[10px] font-bold text-slate-400">
-                        {done}/{tasks.length} done
-                      </span>
-                      {m.due_date && (
-                        <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
-                          <CalendarDays className="h-3 w-3" />
-                          {fmtDate(m.due_date)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="divide-y divide-slate-50">
-                    {tasks.length === 0 ? (
-                      <p className="px-4 py-2.5 text-xs text-slate-400 italic">No tasks</p>
-                    ) : (
-                      tasks.map((t) => {
-                        const owner = (t.assigned_profile as { full_name: string } | null)?.full_name
-                          ?? (t.description?.startsWith("Owner: ") ? t.description.slice(7) : null);
-                        const isDone = t.status ? TASK_DONE.has(t.status) : false;
-                        return (
-                          <div key={t.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50/60">
-                            <span className={`text-sm ${isDone ? "line-through text-slate-400" : "text-slate-700"}`}>
-                              {t.title}
-                            </span>
-                            <div className="flex items-center gap-3 shrink-0 ml-3">
-                              {owner && (
-                                <span className="flex items-center gap-1 text-[11px] text-indigo-600 font-medium">
-                                  <UserRound className="h-3 w-3" />{owner}
-                                </span>
-                              )}
-                              {t.due_date && (
-                                <span className="flex items-center gap-1 text-[11px] text-slate-500">
-                                  <CalendarDays className="h-3 w-3" />{fmtDate(t.due_date)}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {/* Delivery plan — milestones + nested tasks, Drive links, completion (4.5/4.6) */}
+      <DeliveryBoard clientId={clientId} milestones={milestones} tasks={deliveryTasks} />
     </div>
   );
 }

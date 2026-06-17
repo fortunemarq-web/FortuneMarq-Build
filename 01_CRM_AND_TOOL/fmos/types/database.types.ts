@@ -3976,6 +3976,7 @@ export type Database = {
       project_milestones: {
         Row: {
           approval_date: string | null
+          client_notified_at: string | null
           created_at: string
           due_date: string | null
           id: string
@@ -3986,6 +3987,7 @@ export type Database = {
         }
         Insert: {
           approval_date?: string | null
+          client_notified_at?: string | null
           created_at?: string
           due_date?: string | null
           id?: string
@@ -3996,6 +3998,7 @@ export type Database = {
         }
         Update: {
           approval_date?: string | null
+          client_notified_at?: string | null
           created_at?: string
           due_date?: string | null
           id?: string
@@ -4854,6 +4857,9 @@ export type Database = {
           completion_date: string | null
           created_at: string
           description: string | null
+          drive_edited_url: string | null
+          drive_final_url: string | null
+          drive_raw_url: string | null
           due_date: string | null
           estimated_hours: number | null
           estimated_minutes: number | null
@@ -4879,6 +4885,9 @@ export type Database = {
           completion_date?: string | null
           created_at?: string
           description?: string | null
+          drive_edited_url?: string | null
+          drive_final_url?: string | null
+          drive_raw_url?: string | null
           due_date?: string | null
           estimated_hours?: number | null
           estimated_minutes?: number | null
@@ -4904,6 +4913,9 @@ export type Database = {
           completion_date?: string | null
           created_at?: string
           description?: string | null
+          drive_edited_url?: string | null
+          drive_final_url?: string | null
+          drive_raw_url?: string | null
           due_date?: string | null
           estimated_hours?: number | null
           estimated_minutes?: number | null

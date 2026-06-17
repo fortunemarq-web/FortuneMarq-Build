@@ -80,7 +80,7 @@ export default async function ClientProfilePage({
         .order("order_index", { ascending: true }),
       supabaseAny
         .from("tasks")
-        .select("id, title, status, due_date, milestone_id, assigned_to, description, assigned_profile:profiles!tasks_assigned_to_fkey(full_name)")
+        .select("id, title, status, due_date, milestone_id, assigned_to, description, drive_raw_url, drive_edited_url, drive_final_url, assigned_profile:profiles!tasks_assigned_to_fkey(full_name)")
         .in("project_id", projectIds)
         .not("milestone_id", "is", null),
     ]);
@@ -275,7 +275,7 @@ export default async function ClientProfilePage({
               <AssetVaultTab assets={assets} clientId={id} />
             ),
             projects: (
-              <ProjectsTab projects={projects} clientId={id} milestones={milestones} deliveryTasks={deliveryTasks} />
+              <ProjectsTab projects={projects} clientId={id} clientName={client.business_name} milestones={milestones} deliveryTasks={deliveryTasks} />
             ),
             finance: <FinanceTab clientId={id} invoices={invoices} />,
             strategy: (
