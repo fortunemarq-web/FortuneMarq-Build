@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { WhatsAppCta } from "@/components/site/site-whatsapp";
 
 // Static markup ported 1:1 from public_html/index.html chrome (preloader,
 // header, mobile menu, scroll indicator, lightbox). Behaviour is driven by
@@ -45,6 +46,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+        <WhatsAppCta source="header" className="header-wa" />
         <Link href="/site/contact" className="header-cta">
           Let&apos;s Talk
         </Link>

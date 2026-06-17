@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ShinyText from "@/components/site/shiny-text";
+import { WhatsAppCta } from "@/components/site/site-whatsapp";
 
 // Premium footer — shared across every /site page (extracted verbatim from the
 // home page so all routes get the same polished footer: CTA, 3 columns, giant
@@ -52,6 +53,9 @@ export default function SiteFooter() {
               <span className="fm-footer-col-title">Contact</span>
               <a href="mailto:contact@fortunemarq.com">contact@fortunemarq.com</a>
               <a href="tel:+919353082656">+91 93530 82656</a>
+              <WhatsAppCta source="footer" className="fm-footer-wa">
+                WhatsApp us
+              </WhatsAppCta>
               <p>Galaxy Mall, 1st Floor, Shop 43, J.C Nagar, Hubli — 580020</p>
             </div>
           </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SiteFooter from "@/components/site/site-footer";
 import SiteContactPageForm from "@/components/site/site-contact-page-form";
 import ShinyText from "@/components/site/shiny-text";
+import { WhatsAppCta } from "@/components/site/site-whatsapp";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -151,6 +152,10 @@ export default function SiteContact() {
                 <strong>Average Response Time:</strong> Under 4 hours
               </div>
             </div>
+
+            <WhatsAppCta source="contact" className="ct-wa-btn">
+              Chat with us on WhatsApp
+            </WhatsAppCta>
 
             <div className="ct-socials">
               <span className="ct-socials-label">Connect With Us</span>

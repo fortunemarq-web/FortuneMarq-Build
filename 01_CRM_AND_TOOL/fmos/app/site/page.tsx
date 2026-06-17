@@ -6,6 +6,7 @@ import SiteContactForm from "@/components/site/site-contact-form";
 import SiteFooter from "@/components/site/site-footer";
 import ShinyText from "@/components/site/shiny-text";
 import RotatingText from "@/components/site/rotating-text";
+import { WhatsAppCta } from "@/components/site/site-whatsapp";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -222,6 +223,9 @@ export default function SiteHome() {
                   <span className="sub-text">See How We Win</span>
                   <span className="sub-line" />
                 </a>
+                <WhatsAppCta source="hero" className="vh-btn-wa">
+                  WhatsApp us
+                </WhatsAppCta>
               </div>
               <div className="vh-trust">
                 <span className="trust-label">TRUSTED BY LEADERS IN:</span>

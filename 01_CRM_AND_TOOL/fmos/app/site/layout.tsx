@@ -8,6 +8,7 @@ import {
   SiteScrollIndicator,
 } from "@/components/site/site-chrome";
 import SiteMotion from "@/components/site/site-motion";
+import { FloatingWhatsApp } from "@/components/site/site-whatsapp";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -36,6 +37,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       {children}
       <SiteLightbox />
       <SiteScrollIndicator />
+      <FloatingWhatsApp />
       <SiteMotion />
     </>
   );
