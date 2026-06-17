@@ -20,7 +20,7 @@ A from-scratch re-platform of the existing static `fortunemarq.com` into this Ne
 | `app/site/page.tsx` | HOME page — all sections + premium footer, `next/image`, mp4 videos + posters, SEO metadata + Organization JSON-LD. |
 | `components/site/site-chrome.tsx` | Static chrome: **minimal preloader**, header, mobile menu, lightbox, scroll indicator. Exports `SITE_NAV`. |
 | `components/site/site-motion.tsx` | **Client GSAP engine** (one `useEffect` + `gsap.context` + full cleanup). Lenis is **desktop-only** (`min-width:992 + hover:hover + pointer:fine`); touch = native momentum scroll. `prefers-reduced-motion` fully respected. `ScrollTrigger.config({ ignoreMobileResize:true })`. |
-| `components/site/site-contact-form.tsx` | Home contact form (no-op submit — **TODO: wire → FMOS inbound** `source=website` via `lib/automations/inbound-leads.ts`, same as the LP). |
+| `components/site/site-contact-form.tsx` | Home contact form — **wired → FMOS inbound** (`source=website`) via `captureWebsiteLead`. Added required **phone** field (email optional, message → lead note); client + server validation, success/error states. (Conversion layer Task 1.) |
 | `public/site/images/*` | All 27 webp (logos, partner/cert badges, service + result + journal images). |
 | `public/site/videos/*` | Project clips: optimized **`.mp4`** (H.264, ~74% smaller than the webm) + `.webm` fallback + `posters/*.jpg`. |
 | `app/site/fonts/*` + `public/site/fonts/*` | Alliance No1/No2 (otf) + JetBrains Mono (woff2). |
