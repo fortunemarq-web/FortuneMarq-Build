@@ -106,12 +106,12 @@ Store and organise all data assets that power the FortuneMarq sales and marketin
 2. **Dharwad pipeline** — all SERP assets ready; run process_hubli_leads_v2.py equivalent for Dharwad
 3. **Belgaum, Mangalore, Davangere, Ballari** — SERP assets partially ready; run pipeline
 4. **Mysuru, Kalaburgi, Vijayapura** — need SERP HTML collection first, then run pipeline
-5. **FMOS upload** — upload Hubli_Final/ CSVs once FMOS is deployed (currently the active priority)
+5. **FMOS upload** — ✅ done for Hubli (858 leads live in FMOS); load remaining cities via `/admin/bulk-import`
 
-## What's Blocked
-- FMOS upload blocked on FMOS deployment (Phase C–E completion)
-- Kannada PDF regeneration: needs pdf_generator_kn.py misspelling fixes first
-- Other city pipelines: not urgent until after Hubli outreach is underway
+## What's Still Open (FMOS is live)
+- Load remaining cities' leads/reports (only Hubli is loaded) via `/admin/bulk-import`.
+- Kannada PDF regeneration: needs pdf_generator_kn.py misspelling fixes first.
+- Other city pipelines: not urgent until after Hubli outreach is underway.
 
 ## Connections to Other Folders
 - **Feeds INTO:** `03_SALES_SYSTEM` (scripts/templates reference real search volumes), `06_PAID_MARKETING` (ad copy uses competitor gaps), `01_CRM_AND_TOOL` (leads uploaded via CSV), `05_FORTUNEMARQ_ONLINE_PRESENCE` (content hooks from niche data)
