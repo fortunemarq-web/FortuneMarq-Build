@@ -26,6 +26,9 @@ A from-scratch re-platform of the existing static `fortunemarq.com` into this Ne
 | `app/site/fonts/*` + `public/site/fonts/*` | Alliance No1/No2 (otf) + JetBrains Mono (woff2). |
 | `next.config.ts` | Added `allowedDevOrigins` (Tailscale IP + LAN) so the dev server renders on a phone. |
 
+## Content honesty (2026-06-18)
+Home **testimonials were fabricated** in the source port (fake names/quotes) → **replaced with honest "principle" cards** (Market Exclusivity, Strategy Over Budget, Radical Transparency, Education, Data-First, Built to Convert) in the same marquee. Swap in real testimonials later via the `PRINCIPLES_LEFT/RIGHT` arrays in `app/site/page.tsx`. **Results dashboards are REAL (owner-confirmed) — left untouched.** The about-section stat band (50+/4×/₹12M+/97%) was NOT changed — confirm those numbers before go-live.
+
 ## DONE — Home page
 Cinematic minimal preloader → hero (animated CSS globe + mouse parallax) → mission **word-by-word scroll-scrub** (grey→white, accent→green; all devices, smooth) → "Strategy / Exclusivity" + stat count-up → **Core Offerings** (desktop horizontal **pin-scrub**, mobile stacked) → Featured Projects (lazy mp4 videos, play-in-view) → **"Simplified Growth" Results** (sticky + auto horizontal scroll **on all devices**) → Creative Journal (auto-loop, paused offscreen) → Testimonials marquees → Contact → **premium footer** (CTA, 3 columns, giant ghost wordmark). Certificate cards do a 3D "deal-in" reveal.
 
