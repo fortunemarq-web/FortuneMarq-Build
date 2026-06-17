@@ -3,6 +3,7 @@ import SiteFooter from "@/components/site/site-footer";
 import SiteContactPageForm from "@/components/site/site-contact-page-form";
 import ShinyText from "@/components/site/shiny-text";
 import { WhatsAppCta } from "@/components/site/site-whatsapp";
+import SiteBookCta from "@/components/site/site-book-cta";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -180,6 +181,11 @@ export default function SiteContact() {
             <SiteContactPageForm />
           </div>
         </div>
+      </section>
+
+      {/* BOOK A MEETING */}
+      <section className="sbk-section">
+        <SiteBookCta />
       </section>
 
       {/* FAQ */}

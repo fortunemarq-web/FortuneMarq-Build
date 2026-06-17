@@ -211,14 +211,14 @@ export default function SiteHome() {
                 </p>
               </div>
               <div className="vh-actions">
-                <a href="#contact" className="vh-btn-main">
+                <Link href="/site/contact#book" className="vh-btn-main">
                   <span className="btn-bg" />
                   <span className="btn-content">
-                    <span className="btn-text">Start Your Growth Investment</span>
+                    <span className="btn-text">Book a Strategy Call</span>
                     <span className="btn-icon">→</span>
                   </span>
                   <span className="btn-shine" />
-                </a>
+                </Link>
                 <a href="#featured-projects" className="vh-btn-sub">
                   <span className="sub-text">See How We Win</span>
                   <span className="sub-line" />
