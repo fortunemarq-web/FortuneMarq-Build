@@ -1,7 +1,7 @@
 > **Current status (2026-06-17):** FMOS is **deployed \& live**. WhatsApp Cloud API is live with **33 Meta-approved templates** (source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json`). The **"curiosity" teaser flow is removed** — the type-matched PDF is now sent immediately as the **Direct Report**. Booking = Google Calendar/Meet (not Zoom/Calendly). Any obsolete notes below are kept for history.
 
 # 03 — WhatsApp Templates
-**Last Updated:** 2026-06-14 | **Status:** Content COMPLETE (17 templates in FMOS_Template_Data/). **Meta approval LIVE:** the DIRECT_REPORT family (curiosity_templates.json) is what was submitted — `direct_report_type_a/b/c` are **APPROVED/active**, `direct_report_type_d` resubmitted (de-duplicated named vars) → **in review**.
+**Last Updated:** 2026-06-17 | **Status:** COMPLETE & LIVE. The canonical definitions live in **`FMOS_Template_Data/templates_final.json`** — **33 templates, all Meta-approved** (incl. `direct_report_type_a/b/c/d` + `daily_report`). They are created in Meta via `01_CRM_AND_TOOL/fmos/scripts/bulk_create_whatsapp_templates.py` (reads `templates_final.json`; skips already-approved; safe to re-run) and registered into FMOS at `/admin/whatsapp-templates`. The older split JSON drafts (`curiosity_templates.json`, `bot_reply_templates.json`, etc.) are **superseded** — see the historical inventory below.
 
 > **2026-06-14 Meta submission rules (for any new template):**
 > - Category **MARKETING**, **Document** header, 2 Quick Reply buttons ("Book a meeting 📅", "Tell me more").
@@ -15,7 +15,15 @@ All WhatsApp message templates used throughout the sales flow. Templates are pre
 
 ## What Exists (Complete)
 
-### FMOS_Template_Data/ — All Template Files
+### FMOS_Template_Data/ — Canonical
+| File | Templates | Notes |
+|---|---|---|
+| **`templates_final.json`** | **33 (all Meta-approved)** | **Source of truth.** Meta create-payload format; positional `{{n}}` params; marketing templates carry a STOP footer. Mirrors `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md`. Created via `01_CRM_AND_TOOL/fmos/scripts/bulk_create_whatsapp_templates.py`. |
+| `whatsapp.types.ts` | — | TypeScript interfaces |
+
+### Historical split drafts (SUPERSEDED by `templates_final.json`)
+The "curiosity" teaser flow no longer exists (replaced by the immediate **Direct Report**); the files below are kept for history only.
+
 | File | Templates | Sent By | Trigger |
 |---|---|---|---|
 | `curiosity_templates.json` | 4 templates (Type A/B/C/D) | Jabeer — manual batch send | Before calls begin, per lead type |
@@ -26,7 +34,7 @@ All WhatsApp message templates used throughout the sales flow. Templates are pre
 | `whatsapp.types.ts` | — | — | TypeScript interfaces: WhatsAppTemplate, TemplateFile, TemplatePlaceholders, LeadType |
 | `index.ts` | — | — | Loader utility: getCuriosityTemplate(leadType), getBotReplyTemplate(type), getOutcomeTemplate(outcome), fillTemplate(msg, placeholders) |
 
-**Total: 17 templates**
+**Live total: 33 Meta-approved templates** in `templates_final.json` (the "17 across 5 files" below is the superseded draft architecture).
 
 ### Template Category Details
 
@@ -61,16 +69,9 @@ All WhatsApp message templates used throughout the sales flow. Templates are pre
 - Agreement Request: "Ready to confirm? Reply Yes to confirm the agreement"
 - Invoice Sent: "Invoice attached — setup fee clears the start date"
 
-## What's Pending
-- Meta WhatsApp Business API: must be purchased, connected to FMOS — this is the critical blocker
-- WhatsApp template seeding: FMOS Phase D will seed these templates from JSON files into Supabase `whatsapp_templates` table
-- Niche landing pages: must be live on fortunemarq.com before bot replies can be sent
-- Templates need Meta approval for HSM (highly structured messages) — Jabeer submits via Meta Business Manager
-
-## What's Blocked
-- Execution blocked on FMOS deployment
-- Bot reply templates additionally blocked on niche landing pages being live
-- All Meta-approval templates blocked on Meta WhatsApp Business API activation
+## What's Still Open (FMOS is live; Cloud API live; all 33 approved)
+- Niche landing pages on fortunemarq.com (still pending redesign + deploy) — portfolio/landing links that point there wait on that.
+- Loading non-Hubli cities' template-driven sends as those leads are imported.
 
 ## Connections to Other Folders
 - **JSON files copied to:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/` — for Antigravity Phase D seeding
@@ -79,7 +80,7 @@ All WhatsApp message templates used throughout the sales flow. Templates are pre
 - **Landing pages for bot replies:** `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — HTML files for each niche
 
 ## Key Decisions Made (Locked)
-- 17 templates total (not 28 — old count from before architecture was finalised)
+- **33 Meta-approved templates** in `templates_final.json` (supersedes the older 17/28 counts)
 - Bot reply sends landing page link, NOT another PDF
 - Tone: friendly, conversational, no pressure throughout
 - FortuneMarq branded as "FortuneMarq" only in message body
@@ -92,3 +93,4 @@ All WhatsApp message templates used throughout the sales flow. Templates are pre
 | March 2026 | Folder created. Old template plan had 28 variants. |
 | April 2026 | Architecture redesigned. 17 templates across 5 files created. TypeScript loader written. Bot reply changed to send landing page link instead of PDF. |
 | 2026-04-28 | CONTEXT.md fully rewritten to reflect actual file inventory and template architecture. |
+| 2026-06-17 | Reconciled to current state: `templates_final.json` (33 Meta-approved templates) is now the canonical file + source of truth; added the `bulk_create_whatsapp_templates.py` creator; split JSON drafts marked superseded; removed "blocked on FMOS deployment / Meta API" (all live). |

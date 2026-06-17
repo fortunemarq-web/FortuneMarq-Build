@@ -24,11 +24,17 @@ keys, `ANTHROPIC_API_KEY`, `CRON_SECRET`, WhatsApp/Meta keys, …) before runnin
 ## Where to look first
 
 - **`CLAUDE.md`** — app map, routes, tables, and the conventions to follow when editing.
-- **`COWORK_HANDOFF.md`** — current project state and next steps.
+- **`CONTINUE_HERE.md`** — the canonical handoff: current project state + next steps (supersedes the older `COWORK_HANDOFF.md`).
 - **`APPLICATION_DOCUMENTATION.md`** — full technical reference (schema, routes, components).
 - **`lib/pipeline.ts`** — the single source of truth for lead stages; never write
   `outreach_stage`/`status` directly, always go through `leadStageUpdate()` /
   `leadStatusUpdate()`.
+
+## Operational scripts
+
+- **`scripts/bulk_create_whatsapp_templates.py`** — bulk-creates the Meta WhatsApp Business templates from the canonical `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` (already-approved templates are skipped; safe to re-run).
+
+The telecaller cockpit (`components/sales/telecaller-cockpit.tsx`) logs call outcomes and, on **"Interested — Book Meeting Now"**, creates a Google Calendar/Meet booking (`bookMeeting`); other outcomes auto-send the mapped WhatsApp template (3.2 / 3.4).
 
 The auth gate lives in `proxy.ts` (Next 16's renamed middleware) and is intentionally
 **fail-open** — read the notes in that file before touching it.
