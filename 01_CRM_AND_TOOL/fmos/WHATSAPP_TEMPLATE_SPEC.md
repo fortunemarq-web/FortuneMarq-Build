@@ -2,7 +2,7 @@
 > Outdated (24 templates). Current source of truth: **`WHATSAPP_TEMPLATES_FINAL.md`** (33 templates,
 > reviewed + warmed, all edits applied), with machine-readable defs in
 > `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json`.
-> All 33 were submitted to Meta on 2026-06-16 (PENDING review). Kept for history only.
+> All 33 were submitted to Meta on 2026-06-16 and are now **APPROVED and live**. Kept for history only.
 
 ---
 

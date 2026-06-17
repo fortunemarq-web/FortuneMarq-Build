@@ -1,3 +1,6 @@
+> # ⚠️ HISTORICAL / SUPERSEDED — not the current state
+> Old build-spec methodology (specs handed to the "Antigravity" tool). FMOS no longer uses spec files ("build directly" — see fmos/CLAUDE.md). Kept for history only; **proposed for deletion**. Live state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md`.
+
 # FMOS — Phase B: Role Views (Admin Dashboard, Telecaller View, Staff View)
 **Give this file to Antigravity. Execute after Phase A is complete.**
 

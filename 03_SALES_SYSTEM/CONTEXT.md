@@ -1,21 +1,23 @@
 # 03 — Sales System
-**Last Updated:** 2026-06-14 | **Status:** COMPLETE through L4b. Scripts live in FMOS with real search volumes. Waiting on FMOS deployment (Vercel, gated on QA) + bulk lead import to execute outreach. **2026-06-14: WhatsApp Cloud API is LIVE** on dedicated number **+91 79759 18980** (93530 82656 stays in the WA Business app) — BV approved, payment added, real message delivered; templates a/b/c approved, type_d in review. Inbound leads auto-arrive in the cockpit (round-robin + notified) via the Phase F inbound engine; cockpit quick-add has a source picker; WhatsApp **inbound** webhook callback URL is set post-deploy (Phase F Stage 1) — see `01_CRM_AND_TOOL/fmos/PHASE_F_INBOUND_MARKETING.md` + `01_CRM_AND_TOOL/fmos/COWORK_HANDOFF.md`.
+**Last Updated:** 2026-06-17 | **Status:** Content COMPLETE and LIVE in FMOS. FMOS is deployed; outbound is running. **WhatsApp Cloud API is LIVE** on dedicated number **+91 79759 18980** (93530 82656 stays in the WhatsApp Business app). **All 33 WhatsApp templates are submitted AND APPROVED by Meta** (source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json`). Outbound Stage 3 (Direct Report send + tracking, outcome auto-sends, Google Calendar/Meet booking) and the AI bot (6.1) are built and live. Inbound leads auto-arrive in the cockpit (round-robin + notified) via the Phase F inbound engine; cockpit quick-add has a source picker.
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`. NOTE: the "curiosity message" teaser step has been **removed** — the type-matched PDF report is now sent **immediately** as the "Direct Report" (with action buttons), not after a teaser.
 
 ## Folder Purpose
 Plan and create everything related to acquiring clients — telecaller scripts, WhatsApp templates, proposals, agreements, and the outreach sequence. This folder is the content layer for the sales function. The execution happens in FMOS (01_CRM_AND_TOOL). The content lives here.
 
 ## The Sales Flow
-Curiosity WhatsApp mass send → Paid campaign runs simultaneously → Replied leads tagged as priority → Inbound leads from ads → Cold call queue (Afifa works through FMOS) → 3-touch outreach → Meeting booked with our founder (Jabeer) → Founder closes → Proposal sent (FMOS-generated PDF) → Agreement confirmation (WhatsApp/email reply) → Invoice → Work starts
+Direct Report WhatsApp send (type-matched PDF + buttons, immediate) → Replied leads tagged as priority → Inbound leads from ads/bot → Cold call queue (Afifa works through FMOS) → outreach → Meeting booked with our founder (Jabeer) via Google Calendar/Meet → Founder closes → Proposal sent (FMOS-generated PDF) → Agreement confirmation (WhatsApp/email reply) → Invoice → Work starts
 
 ## Lead Priority in FMOS Queue
-1. Replied to WhatsApp curiosity message (highest priority)
+1. Replied to the Direct Report / engaged with the bot (highest priority)
 2. Inbound from paid ads (landing page form fills)
 3. Cold leads from CSV (standard queue)
 
-## The 3-Touch Sequence
-- Touch 1: WhatsApp curiosity message (mass send before calls begin, per lead type A/B/C/D)
-- Touch 2: PDF report delivered (type-matched to lead's online presence situation)
-- Touch 3: Follow-up call — goal is booking a 15–20 min Zoom call with our founder (Jabeer)
+## The Outreach Sequence
+- Step 1: **Direct Report** — the type-matched market-intel PDF (A/B/C/D) sent over WhatsApp immediately with action buttons. (The old "curiosity teaser" step is removed.)
+- Step 2: Replies handled by the AI bot (6.1) or a telecaller; follow-up call.
+- Step 3: Goal is booking a 15–20 min **Google Meet** call with our founder (Jabeer) — booked via the Google Calendar/Meet integration, not Calendly/Zoom.
 
 ## Script Architecture — Type-Based (Not Niche-Based)
 FMOS auto-detects lead type from CSV columns and loads the matching script.
@@ -34,7 +36,7 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 | L0 | Niche Data Reference Sheet | COMPLETE | `07_DATA_AND_RESEARCH/Niche_Data_Reference_Sheet.md` |
 | L1 | Lead CSV Files + PDF Index | COMPLETE | `07_DATA_AND_RESEARCH/Lead_Database/Hubli_Final/` |
 | L2 | Telecaller Scripts | COMPLETE | `Telecaller_Scripts/FMOS_Script_Data/` (4 JSON files) |
-| L3 | WhatsApp Templates | COMPLETE | `WhatsApp_Templates/FMOS_Template_Data/` (17 templates, 5 files) |
+| L3 | WhatsApp Templates | COMPLETE — 33 approved | `WhatsApp_Templates/FMOS_Template_Data/templates_final.json` (33 templates, the source of truth). The older split JSONs (curiosity/bot_reply/outcome/etc.) are **superseded**. |
 | L4a | Proposal Template | COMPLETE | `Proposals/FMOS_Proposal_Data/` (schema, services data, types) |
 | L4b | Agreement Document | COMPLETE | `09_LEGAL_AND_OPERATIONS/Agreement_Templates/` |
 | L5 | SOPs + Onboarding | COMPLETE | `04_CLIENT_MANAGEMENT/Onboarding/FMOS_Onboarding_Data/` |
@@ -55,13 +57,9 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 - `FortuneMarq_Telecaller_Call_Flow.docx` — Complete call flow reference
 
 ### WhatsApp_Templates/ folder
-- `FMOS_Template_Data/curiosity_templates.json` — 4 curiosity templates (one per lead type A/B/C/D)
-- `FMOS_Template_Data/bot_reply_templates.json` — 4 bot reply templates (auto-sent when lead replies)
-- `FMOS_Template_Data/outcome_templates.json` — 6 outcome-triggered templates
-- `FMOS_Template_Data/followback_reminder_templates.json` — 1 follow-back reminder template
-- `FMOS_Template_Data/post_meeting_templates.json` — 4 post-meeting templates (proposal/follow-up/agreement/invoice)
+- `FMOS_Template_Data/templates_final.json` — **SOURCE OF TRUTH**: all 33 Meta-approved templates (registered into FMOS via `/admin/whatsapp-templates` → "Register 33 Meta Templates"). Mirrors `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md`.
 - `FMOS_Template_Data/whatsapp.types.ts` — TypeScript interfaces
-- `FMOS_Template_Data/index.ts` — Template loader with getCuriosityTemplate(), fillTemplate() helpers
+- **Superseded (kept for history only):** the split draft JSONs — `curiosity_templates.json`, `bot_reply_templates.json`, `outcome_templates.json`, `followback_reminder_templates.json`, `post_meeting_templates.json`. The "curiosity" teaser flow no longer exists; use `templates_final.json`.
 
 ### Proposals/ folder
 - `FMOS_Proposal_Data/proposal_schema.json` — Full 5–6 page proposal PDF schema
@@ -77,16 +75,16 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 
 ## What's Pending
 - FMOS deployment — once live, all content gets loaded into the live CRM
-- WhatsApp template seeding: Phases D spec will seed templates from JSON files into Supabase `whatsapp_templates` table
-- Script loading: ✅ DONE — scripts wired to TelecallerCockpit in FMOS. Real search volumes from `market_insights` table auto-populate `[Search Volume]` token per lead via `searchVolumeMap`.
-- Meta WhatsApp Business API: must be purchased and connected to FMOS before templates go live
-- Niche landing pages: must be live before bot reply templates can be sent (bot replies send landing page link)
-- Per-niche scripts in `Hubli/` folder are legacy — the type-based FMOS_Script_Data/ files are the ones that matter
+- ✅ DONE — templates registered into FMOS from `templates_final.json` (`/admin/whatsapp-templates`).
+- ✅ DONE — scripts wired to TelecallerCockpit; real search volumes from `market_insights` auto-populate `[Search Volume]` per lead via `searchVolumeMap`.
+- ✅ DONE — WhatsApp Cloud API live; all 33 templates approved by Meta.
+- Niche landing pages: still pending redesign + deploy on fortunemarq.com (see `05_FORTUNEMARQ_ONLINE_PRESENCE`). Bot/portfolio links that point to these pages wait on that.
+- Remaining cities' leads: only Hubli is loaded (858 leads, 11 niches); bulk-import the rest via `/admin/bulk-import`.
+- Per-niche scripts in `Hubli/` folder are legacy — the type-based `FMOS_Script_Data/` files are the live ones.
 
-## What's Blocked
-- All execution blocked on FMOS deployment
-- WhatsApp templates blocked on Meta Business API activation
-- Bot reply templates blocked on niche landing pages being live on fortunemarq.com
+## What's Still Open (not blockers)
+- Niche landing pages on fortunemarq.com (redesign + deploy).
+- Loading non-Hubli city leads + reports.
 
 ## Connections to Other Folders
 - **Content data goes INTO:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/` — all JSON files duplicated there for Antigravity use
@@ -95,9 +93,9 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 - **Execution IN:** `01_CRM_AND_TOOL/fmos` — all content displayed and used through FMOS
 
 ## Key Decisions Made (Locked)
-- Scripts are type-based (A/B/C/D), not per-niche — FMOS auto-detects type from CSV columns
-- Bot reply sends landing page link (not PDF) — avoids duplicate PDF send, drives to portfolio
-- 17 WhatsApp templates total (not 28 — old count from before architecture was finalised)
+- Scripts are type-based (A/B/C/D) for the call flow. Note `pitch_type` (A/B/C/D, the stored report/pitch field on `leads`) is distinct from `lead_type` (outbound/inbound, the lead source).
+- The Direct Report sends the type-matched PDF immediately (no curiosity teaser).
+- **33 WhatsApp templates total, all Meta-approved** (supersedes the older 17/24/28 counts).
 - Meta WhatsApp Business API required — not regular WhatsApp
 - Tone: friendly, conversational, no pressure
 - FortuneMarq branded as "FortuneMarq" only in messages (not full legal name — too long)
@@ -109,4 +107,5 @@ FMOS auto-detects lead type from CSV columns and loads the matching script.
 | March 2026 | Context file created. Sales flow defined. Content hierarchy planned. |
 | April 2026 | L2 Scripts complete — new type-based architecture (4 JSON files). L3 WhatsApp Templates complete — 17 templates across 5 files. L4a Proposal complete — schema + services data + TypeScript. L4b Agreement complete (in 09_LEGAL_AND_OPERATIONS). |
 | 2026-04-28 | CONTEXT.md fully rewritten. All file inventory confirmed. Content hierarchy updated to reflect L6 and L7 also complete (in 04_CLIENT_MANAGEMENT subfolders). |
-| 2026-04-29 | Scripts (A/B/C/D JSON files in fmos/lib/data/scripts/) updated: all "Jabeer" references → "our founder"; meeting ask rewritten as 15–20 min Zoom call; objection responses updated (pricing, past-agency, busy, not-interested); 9 outcomes total; 2 new WhatsApp templates added (follow_back_report_sent, send_portfolio). Real search volumes now auto-fill in scripts via searchVolumeMap from market_insights table. |
+| 2026-04-29 | Scripts (A/B/C/D JSON files in fmos/lib/data/scripts/) updated: all "Jabeer" references → "our founder"; objection responses updated; 9 outcomes total; real search volumes auto-fill via searchVolumeMap. |
+| 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; removed "blocked on deployment". WhatsApp Cloud API live (+91 79759 18980); 33 templates approved (was "17, type_d in review"). Curiosity teaser flow removed → Direct Report (immediate PDF + buttons). Booking = Google Calendar/Meet (was "Zoom"). Clarified pitch_type vs lead_type. Split template JSONs marked superseded by templates_final.json. |

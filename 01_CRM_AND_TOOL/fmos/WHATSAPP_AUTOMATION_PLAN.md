@@ -1,3 +1,6 @@
+> # ⚠️ HISTORICAL / SUPERSEDED — not the current state
+> Dated plan/audit/handoff log, kept for history. **Live build state:** `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md` (canonical handoff). As of **2026-06-17**: FMOS is **deployed \& live**; Stages 1/3/4 + the AI bot (6.1) + messaging safety/inbox (6.2–6.4) are built; WhatsApp Cloud API live with **33 Meta-approved templates**; the "curiosity" teaser was replaced by the **Direct Report**; team = **Jabeer + Afifa** (delivery via freelancers).
+
 # FMOS — Full-Scale WhatsApp Automation Plan
 > ⚠️ **PARTIALLY BUILT (2026-06-17).** Phases 1–3 (engine action, lifecycle triggers, config UI,
 > direct-report bulk send, token modifiers, 33-template registry) are DONE on `continue-on-mac`.

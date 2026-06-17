@@ -1,5 +1,9 @@
 # 07 — Data & Research
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Hubli pipeline complete. Other cities pipeline ready to run. PDF Index created. L1–L7 content hierarchy fully complete.
+**Last Updated:** 2026-06-17 | **Status:** Hubli data pipeline complete (858 leads, 11 niches; keyword + SERP data; market-intel PDFs). The FMOS **Stage 1 data engine is built & live** (`/admin/market-insights`): keyword-CSV ingest → `general_insights`, SERP scan → `competitor_insights` (4-bucket traffic split: GMB / directories / real sites / social-other — **no SEMrush**), `pitch_type` tagging on leads, and 8-PDF-per-niche×city generation (Type A–D × EN/KN) → Supabase Storage. Other cities' data still to be loaded. Collection automation (1.1/1.2) + the pipeline orchestrator are **not** built.
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
+> NOTE: this folder has two older overlapping status docs — `DATA_RESEARCH_CONTEXT.md` (2026-03-19) and `DATA_RESEARCH_STATUS_REPORT.md` (2026-03-18). **This CONTEXT.md is the current one;** the other two are historical (flagged for consolidation/removal).
+> `pitch_type` (A/B/C/D report/pitch tier, stored on `leads`) is distinct from `lead_type` (outbound/inbound source).
 
 ## Folder Purpose
 Store and organise all data assets that power the FortuneMarq sales and marketing machine — keyword research, competitor analysis, lead database, market intelligence PDFs, and the PDF generator pipeline. This is the foundation of the content hierarchy. Nothing in the sales system, marketing, or CRM is accurate without this data.

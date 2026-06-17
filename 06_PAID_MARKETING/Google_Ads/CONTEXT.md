@@ -1,3 +1,5 @@
+> **Current status (2026-06-17):** FMOS is **deployed \& live**; this folder is planning/reference content. Any "blocked on / pending FMOS deployment" notes below are **obsolete**. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
+
 # 06 — Google Ads (FortuneMarq's Own)
 **Last Updated:** 2026-04-28 | **Status:** Not started — Phase 2+ after Meta Ads results
 

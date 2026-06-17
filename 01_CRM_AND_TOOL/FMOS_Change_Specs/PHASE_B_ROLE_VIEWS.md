@@ -1,3 +1,6 @@
+> # ⚠️ HISTORICAL / SUPERSEDED — not the current state
+> Old build-spec methodology (specs handed to the "Antigravity" tool). FMOS no longer uses spec files ("build directly" — see fmos/CLAUDE.md). Kept for history only; **proposed for deletion**. Live state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md`.
+
 # FMOS Phase B — Role Views: Admin Dashboard, Telecaller View, Cousin View
 **Execute after Phase A.**
 **Reference:** `FORTUNEMARQ_APP_CONTEXT.md` + data files: `script_type_A.json`, `script_type_B.json`, `script_type_C.json`, `script_type_D.json`, `script.types.ts`, `scripts_index.ts`

@@ -1,3 +1,6 @@
+> # ⚠️ SUPERSEDED / DUPLICATE — not the current state
+> This is an older duplicated context snapshot. The canonical master context is `00_MASTER/MASTER_CONTEXT.md`; live build state is `00_MASTER/FMOS_System_Design_And_Tasks.md` + `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md`. As of 2026-06-17 FMOS is deployed \& live; team = Jabeer + Afifa. **Proposed for deletion.**
+
 # FortuneMarq — Master Context File
 **Last Updated:** March 2026
 **Version:** 1.0

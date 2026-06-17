@@ -1,5 +1,5 @@
 # 10 — Personal Growth
-**Last Updated:** 2026-04-28 | **Status:** Active — ongoing parallel to agency build
+**Last Updated:** 2026-06-17 | **Status:** Active — ongoing, parallel to the agency build. Evergreen planning folder (no build/deployment dependency).
 
 ## Folder Purpose
 Jabeer's personal development — communication skills, AI knowledge, and digital marketing expertise. This is what makes the founder better, which makes the agency better. Separate from all agency operations but feeds into everything.

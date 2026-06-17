@@ -18,8 +18,8 @@ FortuneMarq Media & Marketing is a systems-driven digital marketing agency in Hu
 ## The Team
 - Jabeer: Founder — strategy, sales, closing, all tech
 - Afifa: Telecaller — 11am–5pm, hired not started
-- Zaid: Website builder — remote, in training
-- Sufiyan: Website builder — remote, in training
+- an outsourced freelancer: Website builder — remote, in training
+- an outsourced freelancer: Website builder — remote, in training
 
 ## The Business Model
 Volume-first. Low accessible prices. Every one-time client becomes a retainer client. AI automation behind every service so volume doesn't overwhelm the team. Build portfolio first, raise prices later. Target: ₹50K MRR by end April/May 2026.
@@ -38,7 +38,7 @@ Volume-first. Low accessible prices. Every one-time client becomes a retainer cl
 - 10_PERSONAL_GROWTH: Jabeer's communication, AI, digital marketing learning
 
 ## The Master Flow
-Data → Paid Campaign → Lead in FMOS → 3-Touch Outreach (Afifa) → Meeting (Jabeer) → Proposal → Agreement → Invoice → Onboarding → Delivery (cousins) → Monthly Report → Health Score → Upsell → Renewal
+Data → Paid Campaign → Lead in FMOS → 3-Touch Outreach (Afifa) → Meeting (Jabeer) → Proposal → Agreement → Invoice → Onboarding → Delivery (freelancers) → Monthly Report → Health Score → Upsell → Renewal
 
 ## Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet: COMPLETE
@@ -95,7 +95,7 @@ Sales Intelligence Cockpit, Niche Pipeline Kanban (7-stage), Client Profile (7 t
 ## What Needs to Change
 - Admin Dashboard: morning view — meetings today, overdue proposals, overdue invoices, project deadlines, telecaller activity, MRR
 - Telecaller View: simplified — call queue, follow-ups, meetings booked, daily stats only
-- Cousin View: tasks only — assigned tasks with PRD/prompts, stage, revision notes
+- Staff/Freelancer View: tasks only — assigned tasks with PRD/prompts, stage, revision notes
 - Finance: separate MRR vs one-time revenue clearly
 
 ## What to Remove/Hide
@@ -135,7 +135,7 @@ Plan the three automation systems that power FortuneMarq's service delivery at s
 ## The Three Systems
 
 ### Tool 1 — Website Brief App
-Brief intake form → Claude API generates PRD + prompt package + QA checklist → Cousins build in Antigravity → Jabeer reviews → GitHub Actions auto-deploys to Hostinger → live in 60 seconds.
+Brief intake form → Claude API generates PRD + prompt package + QA checklist → a freelancer builds the site → Jabeer reviews → GitHub Actions auto-deploys to Hostinger → live in 60 seconds.
 Status: Not started. Waiting on L5c (Website Brief Intake Form fields finalised).
 
 ### Tool 2 — SEO Automation Engine
@@ -496,7 +496,7 @@ You are working inside the FortuneMarq Build System, specifically the Personal G
 Help Jabeer develop across three areas: communication and sales skills, AI tools mastery, and digital marketing expertise. This is personal development — not agency operations. But every skill built here directly improves some part of the agency system.
 
 ## Who Jabeer Is
-Founder of FortuneMarq Media & Marketing, Hubli. 3+ years Google Ads freelancing experience. Technically strong — built a full CRM from scratch (Next.js + Supabase). Currently building a systems-driven agency with telecaller (Afifa) and two website-building cousins (Zaid, Sufiyan). Long-term vision: agency + SaaS products.
+Founder of FortuneMarq Media & Marketing, Hubli. 3+ years Google Ads freelancing experience. Technically strong — built a full CRM from scratch (Next.js + Supabase). Currently building a systems-driven agency with telecaller (Afifa) and two website-building freelancers (an outsourced freelancer, an outsourced freelancer). Long-term vision: agency + SaaS products.
 
 ## Three Growth Areas
 

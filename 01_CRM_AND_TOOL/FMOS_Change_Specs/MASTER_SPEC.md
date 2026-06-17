@@ -1,3 +1,6 @@
+> # ⚠️ HISTORICAL / SUPERSEDED — not the current state
+> Old build-spec methodology (specs handed to the "Antigravity" tool). FMOS no longer uses spec files ("build directly" — see fmos/CLAUDE.md). Kept for history only; **proposed for deletion**. Live state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md`.
+
 # FMOS — Master Change Specification
 **Version:** 1.0 | **Created:** April 2026
 **Purpose:** Complete blueprint for all FMOS changes before go-live at fmos.fortunemarq.com

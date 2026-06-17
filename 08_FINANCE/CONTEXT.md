@@ -1,5 +1,7 @@
 # 08 — Finance
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Finance module exists in FMOS but not yet activated. No revenue yet. All pricing locked.
+**Last Updated:** 2026-06-17 | **Status:** Finance module is live in FMOS (deployed) — invoicing, partial payments, recurring GST invoices + payment-reminder cron are built. Still pending: Jabeer entering GSTIN + bank details in `/admin/finance` settings to fully activate GST invoicing, and the MRR-vs-one-time forecast view. No company MRR yet. All pricing locked (below).
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
 Plan and manage all financial operations — invoicing, GST compliance, expense tracking, revenue reporting, and progress toward ₹50K MRR goal. The finance module exists in FMOS (`/admin/finance`) but needs GST settings activated and the MRR/one-time split built (Phase E).
@@ -99,9 +101,10 @@ No revenue target for June. Entire month focused on:
   - Test invoice PDF generation before first client
 - First invoice to be raised: will be for the first signed company client
 
-## What's Blocked
-- All finance operations blocked on FMOS deployment
-- No clients yet = no invoices
+## What's Still Open (FMOS is live)
+- Activate GST: enter GSTIN + bank details in `/admin/finance` settings, test invoice PDF.
+- Build the MRR-vs-one-time forecast view (Phase E).
+- No company clients yet = no invoices raised yet.
 
 ## Connections to Other Folders
 - **Receives FROM:** `02_SERVICE_DELIVERY_AUTOMATION` (delivery complete → invoice trigger), `04_CLIENT_MANAGEMENT` (renewals → invoice)
@@ -120,3 +123,4 @@ No revenue target for June. Entire month focused on:
 | March 2026 | Context file created. Finance module noted as existing in FMOS but needing activation. Pricing locked. |
 | 2026-04-28 | CONTEXT.md fully rewritten. GSTIN confirmed. Current revenue confirmed zero. Phase E requirements documented. |
 | 2026-06-08 | Revenue targets reset. June = build month, no revenue target. Q3 (Jul–Sep) = ₹1L total revenue. 20% MoM growth after Q3. GST activation steps documented with bank details from BUSINESS_MASTER_INFO.md. |
+| 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; "blocked on deployment" removed. Recorded finance module as built (invoicing, partial payments, recurring GST invoices + reminder cron). Remaining: GST settings activation + MRR/one-time forecast view. |

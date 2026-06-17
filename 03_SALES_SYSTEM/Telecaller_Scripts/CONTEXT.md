@@ -1,3 +1,5 @@
+> **Current status (2026-06-17):** FMOS is **deployed \& live**. WhatsApp Cloud API is live with **33 Meta-approved templates** (source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json`). The **"curiosity" teaser flow is removed** — the type-matched PDF is now sent immediately as the **Direct Report**. Booking = Google Calendar/Meet (not Zoom/Calendly). Any obsolete notes below are kept for history.
+
 # 03 — Telecaller Scripts
 **Last Updated:** 2026-04-29 | **Status:** COMPLETE — 4 type-based JSON scripts live in FMOS. Real search volumes wired. All content reflects April 2026 review. Ready for Afifa to use once FMOS is deployed.
 

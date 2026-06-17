@@ -23,7 +23,7 @@ Legend: 🟢 no schema change (safe anytime) · 🔵 needs SQL (fine now — `pr
 
 ## C. Onboarding (Phase 2 deferred halves)
 - 🔵 **Structured intake form** — typed fields the client fills directly (vs collected as assets).
-- 🔵 **Owner → real-user wiring** — onboarding tasks land in Zaid/Sufiyan's `/tasks` + feed scorecards (today owners are text labels).
+- 🔵 **Owner → real-user wiring** — onboarding tasks land in outsourced freelancers's `/tasks` + feed scorecards (today owners are text labels).
 
 ## D. Sales / delivery polish
 - 🟢 **Lead scoring refinement** — add the `noContactIn7Days` factor once `last_activity_at` is in the cockpit query.

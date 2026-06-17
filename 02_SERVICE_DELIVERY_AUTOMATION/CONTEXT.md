@@ -1,5 +1,7 @@
 # 02 — Service Delivery Automation
-**Last Updated:** 2026-04-28 | **Status:** Planning phase — nothing built yet. Blocked on FMOS deployment first.
+**Last Updated:** 2026-06-17 | **Status:** NOT BUILT — still the planning layer. The CRM (01) is deployed & live, but the three standalone automation systems below are future work. Delivery today runs through FMOS Stage 4 (the delivery board at `/admin/clients/[id]` — milestones, tasks, Drive links, milestone-complete WhatsApp, proof vault), executed manually by **Jabeer + outsourced freelancers**.
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
 Plan and build the three automation systems that power FortuneMarq's service delivery at scale. These systems allow the agency to serve 30–50 clients without proportionally increasing manual work. Every service has an automation layer. Clients are served through FMOS-triggered workflows, not manual coordination.
@@ -7,10 +9,10 @@ Plan and build the three automation systems that power FortuneMarq's service del
 ## The Three Systems
 
 ### 1. Website Design & Brief App
-Brief intake → AI generates PRD + build prompts → Zaid/Sufiyan build in Antigravity → Jabeer reviews → Go-live
+Brief intake → AI generates PRD + build prompts → outsourced freelancer builds → Jabeer reviews → Go-live
 - Client fills brief form (in FMOS client portal or standalone form)
-- AI generates structured PRD + Antigravity prompts from brief
-- Cousins execute build tasks assigned in FMOS
+- AI generates structured PRD + build prompts from brief
+- An outsourced freelancer executes build tasks assigned in FMOS
 - Jabeer does final review before anything goes live
 - GitHub Actions deploys to Hostinger automatically on approval
 
@@ -50,10 +52,10 @@ Google Ads MCC + Meta Business Manager → AI campaign generation → Human appr
 - Full automation + unified reporting: Phase 4 (Months 7–8)
 - SOPs (L5 in content hierarchy) must be written first — they are the blueprint for what gets automated
 
-## What's Blocked
-- All three systems blocked on FMOS deployment (currently the active priority)
-- Website Brief App additionally blocked on Zaid and Sufiyan completing basic training
-- SEO and Ads Automation blocked on having at least 5 paying clients to justify API costs
+## What's Gating Build
+- FMOS is deployed, so these are no longer blocked on the app — they're simply **not yet started** (delivery is run manually for now).
+- SEO and Ads Automation are best justified once there are enough paying clients to cover the API costs.
+- Website Brief App build capacity = Jabeer + an outsourced freelancer (no in-house dev team).
 
 ## Connections to Other Folders
 - **Feeds FROM:** `01_CRM_AND_TOOL` (client data, task assignments trigger delivery), `04_CLIENT_MANAGEMENT` (onboarding completion triggers delivery start)
@@ -72,3 +74,4 @@ Google Ads MCC + Meta Business Manager → AI campaign generation → Human appr
 |---|---|
 | March 2026 | Context file created. Master plan document reviewed. Build phases confirmed. |
 | 2026-04-28 | CONTEXT.md rewritten. Confirmed no build files exist yet. All three systems are pre-build. Blocked on FMOS deployment. |
+| 2026-06-17 | Doc-accuracy sweep. FMOS now deployed & live, so "blocked on deployment" removed. Zaid/Sufiyan references replaced with "outsourced freelancer" (team = Jabeer + Afifa only). Clarified delivery currently runs through FMOS Stage 4 board, not these automation tools (still unbuilt). |

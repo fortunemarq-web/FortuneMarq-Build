@@ -1,10 +1,12 @@
 # FortuneMarq — Pending Actions
-**Last Updated:** 2026-06-12
+**Last Updated:** 2026-06-17
 **Owner:** Jabeer  
 
 > This is the master checklist of everything that still needs to be done, organised by priority.
 > Update this file at the start and end of every session.
 > When an action is complete, move it to the "Completed" section at the bottom with a date.
+
+> ⚠️ **2026-06-17 status note:** Much of the list below predates the deploy and is now done. As of today: **FMOS is deployed & live**, **WhatsApp Cloud API is live with all 33 templates approved**, and Stages 1/3/4 + the AI bot (6.1) + messaging safety/inbox (6.2–6.4) are built. Treat items about "deploy", "QA gate", "WhatsApp send UI", "templates pending" as **complete**. The live open items are: niche landing pages (redesign + deploy), GMB/SEO/social presence, campaign launch (Stage 2), GST settings activation, and the unbuilt safety nets (6.5/6.6/6.8/6.9), collection automation (1.1/1.2), pipeline orchestrator. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
 
 ---
 
@@ -79,8 +81,8 @@ These folders/topics have not been opened in the current build phase. Each needs
 ### 06_PAID_MARKETING
 - [ ] Build 13–14 niche+city landing pages (Hubli — needed before ads launch)
   - Each page: niche keyword data + competitor gap + FortuneMarq offer
-  - Zaid/Sufiyan to build once Antigravity team access is sorted
-- [ ] Decide Antigravity team plan — Zaid/Sufiyan need access to build
+  - outsourced freelancers to build once Antigravity team access is sorted
+- [ ] Decide Antigravity team plan — outsourced freelancers need access to build
 
 ### 08_FINANCE + 09_LEGAL_AND_OPERATIONS
 - [ ] **GST invoice activation post-deployment** — enter GSTIN 29ICWPS9816Q1ZS + bank details (Karnataka Bank, A/C 0332202500001101, IFSC KARB0000332) in FMOS `/admin/finance` settings. Enable 18% GST on all invoices. Test invoice PDF before first client.

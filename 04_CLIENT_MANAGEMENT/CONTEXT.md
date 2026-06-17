@@ -1,5 +1,7 @@
 # 04 — Client Management
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** L5, L6, L7 all COMPLETE. Execution pending FMOS deployment.
+**Last Updated:** 2026-06-17 | **Status:** Content (L5 onboarding / L6 reports + health score / L7 upsell) COMPLETE and wired into FMOS, which is **deployed & live**. FMOS Stage 4 (delivery) is built: onboarding checklist + "Download details PDF", plan-deliverables → milestones/tasks, delivery board with Drive links, milestone-complete WhatsApp, `monthly_report_ready` auto-send, and "Mark as Case Study" → `05_.../Proof_Vault/` (hard consent gate). Renewals/upsell queue automation is the main piece not yet built. Delivery is executed by **Jabeer + outsourced freelancers**.
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
 Define and document how FortuneMarq manages clients after they sign — onboarding, delivery oversight, health monitoring, monthly reports, renewals, and upsells. This folder contains the processes, schemas, and SOPs. The execution happens in FMOS (01_CRM_AND_TOOL).
@@ -57,8 +59,9 @@ Agreement Signed → Invoice Raised → Onboarding Checklist Triggered → Asset
 - Health score auto-calculation in FMOS: calculate from real data each month
 - Renewals alert: FMOS to alert Jabeer 30 days before renewal date
 
-## What's Blocked
-- All execution blocked on FMOS deployment
+## What's Still Open (not blockers — FMOS is live)
+- Upsell queue automation + 30-day renewal alert (not yet built).
+- Monthly report PDF generation from the schema is built; health-score auto-calc from real data is partially wired.
 
 ## Connections to Other Folders
 - **Feeds FROM:** `03_SALES_SYSTEM` (new client signed), `02_SERVICE_DELIVERY_AUTOMATION` (delivery complete)
@@ -80,3 +83,4 @@ Agreement Signed → Invoice Raised → Onboarding Checklist Triggered → Asset
 | 2026-04-02 | L5 complete: onboarding_checklists.json + onboarding.types.ts + index.ts + onboarding_sop.md created. |
 | 2026-04-26 | L6 complete: monthly_report_schema.json + client_health_score.json + report_index.ts created. L7 complete: upsell_rules.json + upsell_scripts.json created. |
 | 2026-04-28 | CONTEXT.md fully rewritten. All files inventoried. L5, L6, L7 all confirmed complete. |
+| 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; removed "execution pending deployment". Recorded Stage 4 delivery as built (onboarding PDF, milestones/tasks, delivery board, milestone WhatsApp, monthly_report_ready, case-study → Proof_Vault). Renewals/upsell automation noted as the remaining build. |

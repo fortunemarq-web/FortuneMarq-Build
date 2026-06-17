@@ -9,7 +9,7 @@ Improve Jabeer's communication in sales meetings, client conversations, objectio
 2. Objection handling — practice and refinement from real calls
 3. Proposal presentation (walking a client through the investment page)
 4. Client expectation setting (delivery timelines, results timelines)
-5. Team briefing and task feedback (Afifa, Zaid, Sufiyan)
+5. Team briefing and task feedback (Afifa, an outsourced freelancer, an outsourced freelancer)
 6. Written communication — proposals, WhatsApp, client check-in messages
 
 ## How to Use This Folder

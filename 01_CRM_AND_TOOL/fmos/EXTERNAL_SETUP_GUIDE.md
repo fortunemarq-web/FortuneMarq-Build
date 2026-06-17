@@ -218,7 +218,7 @@ added to **Vercel** at deploy time. Values live in `.env.local` only — never c
 These aren't API keys — they're the real-world content that makes FMOS usable day one:
 
 - [ ] **Admin login** — confirm your own admin account works on the live domain.
-- [ ] **Team accounts** — create logins for Afifa (telecaller), Zaid & Sufiyan (website builders) with correct roles. Roles control what each person sees: admin / telecaller / strategist / pm / staff.
+- [ ] **Team accounts** — create logins for Afifa (telecaller), outsourced freelancers (website builders) with correct roles. Roles control what each person sees: admin / telecaller / strategist / pm / staff.
 - [ ] **Import real leads** — use the CSV upload on the leads page (format in `CSV_UPLOAD_FORMAT.md`). Without leads, the telecaller cockpit is empty.
 - [ ] **Services & pricing** — confirm `lib/data/services_data.json` reflects your real packages and prices (used in the proposal builder).
 - [ ] **WhatsApp templates** — make sure the approved templates' wording matches what you actually want to send.

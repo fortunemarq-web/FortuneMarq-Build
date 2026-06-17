@@ -1,5 +1,7 @@
 # 09 — Legal & Operations
-**Last Updated:** 2026-04-28 | **Status:** GST registered, Udyam registered. Agreement template and policies complete. Minor items pending.
+**Last Updated:** 2026-06-17 | **Status:** GST + Udyam registered. Agreement template, service terms, and payment/cancellation policy complete and wired into FMOS (deployed & live; agreements confirm by WhatsApp/email reply). Minor items still open (privacy policy, website-ownership-transfer doc, GST settings activation in FMOS).
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
 Create and store all legal documents, business policies, and compliance materials. These documents protect FortuneMarq and set clear expectations with clients. Agreement template is L4b in the content hierarchy.
@@ -56,9 +58,9 @@ Create and store all legal documents, business policies, and compliance material
 - [ ] GST invoice compliance checklist for FMOS activation
 - [ ] FMOS activation: enter GSTIN and bank details in `/admin/finance` settings
 
-## What's Blocked
+## What's Still Open (FMOS is live)
 - Privacy Policy: not urgent until website gets significant traffic
-- FMOS GST activation: blocked on FMOS deployment
+- FMOS GST activation: enter GSTIN + bank details in `/admin/finance` settings (no longer blocked — app is deployed)
 
 ## Connections to Other Folders
 - **Feeds INTO:** `03_SALES_SYSTEM/Proposals` — proposals reference agreement terms
@@ -79,3 +81,4 @@ Create and store all legal documents, business policies, and compliance material
 | March 2026 | Context file created. GST status and existing assets documented. |
 | 2026-04-02 | L4b complete: agreement_template.md created. service_terms.json created (7 services + universal + exit). payment_and_cancellation_policy.md created. |
 | 2026-04-28 | CONTEXT.md fully rewritten. BUSINESS_MASTER_INFO.md and fortunemarq udyam.pdf noted. |
+| 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; "blocked on deployment" framing removed. Agreement/terms/policy confirmed wired into the live app. |

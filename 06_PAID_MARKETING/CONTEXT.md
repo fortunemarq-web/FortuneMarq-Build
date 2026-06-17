@@ -1,15 +1,16 @@
 # 06 — Paid Marketing (FortuneMarq's Own)
-**Last Updated:** 2026-06-12 | **Status:** PLANNED + TRACKING INFRA BUILT. Full plan lives in `01_CRM_AND_TOOL/fmos/PHASE_F_INBOUND_MARKETING.md` (inbound capture + Meta/Google/WhatsApp-ads tracking, plan→execute→optimize→scale loop). FMOS Stage 0 shipped 2026-06-12: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, full lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. Campaign LAUNCH still waits for FMOS deploy + LPs live (critical rule below unchanged).
+**Last Updated:** 2026-06-17 | **Status:** PLANNED + INBOUND TRACKING INFRA BUILT IN FMOS (which is deployed & live). Built: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. The agency's own **campaign LAUNCH** has not happened yet — it waits on the niche landing pages going live (critical rule below). Note this is FortuneMarq's *own* ad spend; the broader campaign-management Stage 2 (in `00_MASTER/FMOS_System_Design_And_Tasks.md`) is not yet built. Plan: `01_CRM_AND_TOOL/fmos/PHASE_F_INBOUND_MARKETING.md`.
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
 Plan and execute FortuneMarq's own paid ad campaigns (Meta Ads + Google Ads) to generate inbound leads. Niche-specific, city-specific campaigns targeting local business owners in Hubli-Dharwad. This folder covers FortuneMarq's own marketing spend — not client campaigns (those are in 02_SERVICE_DELIVERY_AUTOMATION/Ads_Automation).
 
 ## Critical Rule
-**Paid campaigns are the LAST step.** They launch only after:
-- FMOS is deployed and working
-- Telecaller system is operational (Afifa is live)
-- Landing pages are live on fortunemarq.com
-- Delivery systems can handle incoming leads
+**Paid campaigns are the LAST step.** FMOS is now deployed and working, so the remaining gates are:
+- Landing pages live on fortunemarq.com (still pending redesign + deploy)
+- Telecaller system operational (Afifa working leads in FMOS)
+- Delivery can handle incoming leads (Stage 4 board is live)
 
 Do not run ads into a broken system.
 
@@ -52,9 +53,10 @@ Already created in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — 11 HTML files. N
 6. Launch campaigns — Healthcare (Dental + Skin) first, then Real Estate → Car Rental → Gyms → Education
 7. Week 2: analyze data, cut underperformers, double down on winner
 
-## What's Blocked
-- ALL campaigns blocked on FMOS deployment
-- Landing page deployment blocked on Hostinger access
+## What's Still Open (FMOS is live; these gate campaign launch)
+- Landing pages: redesign + deploy to fortunemarq.com
+- Jabeer records the per-niche video ads + creatives
+- Meta Business Manager ad account setup
 
 ## Connections to Other Folders
 - **Inbound leads to:** `01_CRM_AND_TOOL/fmos` — leads auto-tagged with niche+city+source=meta_ads or google_ads
@@ -73,3 +75,4 @@ Already created in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — 11 HTML files. N
 |---|---|
 | March 2026 | Context file created. Campaign plan defined. Critical rule established. |
 | 2026-04-28 | CONTEXT.md fully rewritten. Niche landing pages confirmed created (in 05_FORTUNEMARQ_ONLINE_PRESENCE/niches/). Still pre-launch. |
+| 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; "blocked on deployment" removed. Remaining launch gates = LPs live + creatives + ad account. Clarified this is FortuneMarq's own spend vs the unbuilt Stage 2 campaign engine. |

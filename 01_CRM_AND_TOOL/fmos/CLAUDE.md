@@ -4,8 +4,12 @@
 # ➤ CONTINUING WORK? Read CONTINUE_HERE.md FIRST — it is the CANONICAL handoff (current state,
 #   branch continue-on-mac, next steps, and the doc trust map). It supersedes COWORK_HANDOFF.md,
 #   last_session.md, the PHASE_*.md logs, and the dated "LATEST SESSION" block below (kept for history).
-#   Since 2026-06-15: WhatsApp automation Phases 1–3 + direct-report bulk send + token modifiers +
-#   33-template registry were built on continue-on-mac (NOT pushed; no deploy yet).
+#   CURRENT STATE (2026-06-17): FMOS is DEPLOYED & LIVE (Vercel, fmos.fortunemarq.com). WhatsApp
+#   Cloud API live; all 33 templates Meta-approved. Built & live: Stage 1 data engine (1.3–1.6),
+#   Stage 3 outbound (3.1–3.4, incl. Direct Report — replaced the old "curiosity" teaser), Stage 4
+#   delivery (4.1–4.7), AI bot (6.1), messaging safety + unified inbox (6.2/6.3/6.4). Latest build on
+#   continue-on-mac. Not yet built: Stage 2 campaigns, Stage 5 presence, 6.5/6.6/6.8/6.9, collection
+#   automation (1.1/1.2), pipeline orchestrator. Team = Jabeer + Afifa only (delivery = freelancers).
 #
 # LATEST SESSION (2026-06-15): Build phase DONE + accounts consolidated + deploy started.
 # - Marketing fixed: 9 fake widgets → real data/honest empty states; strategy→outcome loop;
@@ -22,9 +26,10 @@
 #   github.com/fortunemarq-web/FortuneMarq-Build (branch main). Committed+pushed: 169a14e. TypeScript: 0 errors.
 # - HOSTING: Hostinger Business = shared (can't run Next SSR) → use for domain DNS + client sites.
 #   FMOS deploys on Vercel free + Hostinger CNAME for fmos.fortunemarq.com.
-# NEXT: finish Vercel deploy (Root Directory=01_CRM_AND_TOOL/fmos + 10 env vars → Deploy), then
-#   post-deploy config (domain CNAME, Supabase redirect URLs, WhatsApp webhook, GitHub cron secrets).
-#   New-feature ideas are parked in FUTURE_FEATURES.md (do NOT build mid-deploy). Details: COWORK_HANDOFF.md.
+# NEXT (deploy is DONE): niche landing pages (redesign + deploy) → presence (GMB/SEO/social) →
+#   Stage 2 campaigns → remaining safety nets. Full next-steps list + doc trust map in CONTINUE_HERE.md.
+#   New-feature ideas parked in FUTURE_FEATURES.md. (Note: the "CURRENT BUILD STATUS — 2026-06-07"
+#   section far below is a historical route snapshot; CONTINUE_HERE.md is the live source of truth.)
 #
 # KEY CONVENTIONS ADDED 2026-06-11 (evening — UI/UX session):
 # - Design system lives in app/globals.css (@theme): green text/buttons use

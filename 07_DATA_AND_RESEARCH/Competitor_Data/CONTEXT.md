@@ -1,8 +1,8 @@
 # 07 — Competitor Data
-**Last Updated:** 2026-04-28 | **Status:** Hubli complete for 6 priority niches. Other cities partially collected.
+**Last Updated:** 2026-06-17 | **Status:** Hubli complete for the priority niches. Other cities partially collected.
 
 ## Folder Purpose
-Store SEMrush/SERP competitor analysis data for all niches across all cities. Used to build the intimidation and opportunity angle in sales pitches — showing prospects exactly who their online competitors are and how weak they are. Foundation of the "Traffic Reality Framework."
+Store **SERP-based** competitor analysis data for all niches across all cities. Method = the **4-bucket SERP traffic split** (GMB / directories / real business sites / social-other) — **no SEMrush or other paid tools**. Used to build the opportunity angle in sales pitches — showing prospects who actually owns the local search results and where the gap is. Foundation of the "Traffic Reality Framework." (This is the same 4-bucket method the FMOS Stage 1 SERP scan automates into `competitor_insights`.)
 
 ## What Exists (Complete)
 

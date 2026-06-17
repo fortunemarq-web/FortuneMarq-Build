@@ -1,3 +1,5 @@
+> **Current status (2026-06-17):** FMOS is **deployed \& live**; this folder is planning/reference content. Any "blocked on / pending FMOS deployment" notes below are **obsolete**. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
+
 # 04 — Monthly Reports
 **Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — monthly_report_schema.json + client_health_score.json + report_index.ts created
 

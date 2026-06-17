@@ -1,3 +1,6 @@
+> # ⚠️ SUPERSEDED / DUPLICATE — not the current state
+> Older duplicated CRM context snapshot (references files that no longer exist, e.g. HANDOFF_CONTINUE_ON_WINDOWS.md). Canonical: `01_CRM_AND_TOOL/CONTEXT.md` + `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md` + `01_CRM_AND_TOOL/fmos/APPLICATION_DOCUMENTATION.md`. As of 2026-06-17 FMOS is deployed \& live. **Proposed for deletion.**
+
 # FortuneMarq Agency OS — Full App Context
 *Last updated: March 12, 2026 — Post Phase 6 Completion*
 

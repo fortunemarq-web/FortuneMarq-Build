@@ -1,16 +1,18 @@
 # FortuneMarq — Critical Path
-**Last Updated:** 2026-06-14
+**Last Updated:** 2026-06-17
 **Owner:** Jabeer
-**Current Phase:** June 2026 — QA → Deploy → Presence → Campaigns
+**Current Phase:** Deployed & live → Presence + Campaigns next
 
-> **2026-06-14 reality check (supersedes the dated June 9–15 timeline below — treat those as a checklist, not dates):**
-> ✅ **WhatsApp Cloud API is LIVE** — dedicated number **+91 79759 18980** (NOT 93530 82656; that stays in the WA Business app). BV approved, payment added, real message delivered. Templates a/b/c approved, type_d in review. (Open WABA-number question is now CLOSED — Option A, dedicated number.)
+> **2026-06-17 reality check (supersedes the dated June timeline below — treat those as a checklist, not dates):**
+> ✅ **FMOS is DEPLOYED and live** (Vercel, `fmos.fortunemarq.com`). The P0 auth/RBAC concern is resolved — the auth gate lives in `proxy.ts` (Next 16), fail-open.
+> ✅ **WhatsApp Cloud API is LIVE** — dedicated number **+91 79759 18980** (NOT 93530 82656; that stays in the WA Business app). **All 33 templates approved by Meta.**
+> ✅ **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, Direct Report), Stage 4 delivery (4.1–4.7), AI bot (6.1), messaging safety + inbox (6.2/6.3/6.4).
 > 🔜 **CURRENT CRITICAL PATH:**
-> 1. **FMOS QA → fix P0 auth/RBAC** (no middleware.ts) — see `fmos/FMOS_QA_VERIFICATION_2026-06-13.md`. Deploy is GATED on this per Jabeer.
-> 2. **Deploy to Vercel** (NOT Hostinger) — guide ready: `fmos/DEPLOY_VERCEL.md`. Env now uses ANTHROPIC_API_KEY (not OpenRouter), plus CRON_SECRET + INBOUND_WEBHOOK_SECRET.
-> 3. **Phase F Stage 1 webhooks** after deploy — WhatsApp callback URL + Meta leadgen.
-> 4. **LPs / presence**, then **campaigns** (Meta + Google).
-> ⚠️ The "disconnect 93530 82656" step below is OBSOLETE — a new SIM is used instead.
+> 1. **Niche landing pages** — redesign + deploy on fortunemarq.com (gates campaigns + portfolio links).
+> 2. **Presence** — GMB optimization, social content, SEO.
+> 3. **Campaigns** (Meta + Google) — Stage 2 campaign engine + own ad launch.
+> 4. **Remaining builds** — collection automation (1.1/1.2), pipeline orchestrator, command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9).
+> ⚠️ The dated June 9–15 timeline + "disconnect 93530 82656" steps below are OBSOLETE/historical — kept for record only. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
 
 > This file tracks the exact sequence of what needs to happen and when.
 > June = build month. No revenue target. Everything here feeds Q3 (Jul–Sep) ₹1L revenue goal.
@@ -71,7 +73,7 @@
 - [ ] Activate GST invoice settings — GSTIN: 29ICWPS9816Q1ZS, Karnataka Bank A/C 0332202500001101, IFSC KARB0000332
 - [ ] Run smoke test across all modules post-deployment
 - [ ] Run /admin/bulk-import — loads ~6,300 leads from other city folders
-- [ ] Create user accounts: Afifa (telecaller), Zaid (staff), Sufiyan (staff)
+- [ ] Create user accounts: Afifa (telecaller), an outsourced freelancer (staff), an outsourced freelancer (staff)
 - [ ] Enter real client data: Austin Dental Spa, OM SAI TRAVELS (test clients)
 
 ### Afifa Onboarding + Training

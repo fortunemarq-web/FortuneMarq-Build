@@ -158,7 +158,7 @@ Three sources feed the same `leads` table:
 - 🖥️ **IN:** Work organised as **Projects** (`/projects`) + **Tasks** (`/tasks`).
 - 🖥️ **IN:** PM dashboard (`/manager` / pm role) creates projects, assigns deliverables.
 - 🖥️ **IN:** Deliverable manager tracks each output (paste URL for files today).
-- 🌐 **OUT:** The actual work — websites built (Zaid/Sufiyan), ads run, content created, SEO done.
+- 🌐 **OUT:** The actual work — websites built (outsourced freelancers), ads run, content created, SEO done.
 - 🔗 **FLOW:** Tasks link to projects + clients; completion feeds team scorecards + client health.
 - 🖥️ **IN:** Strategy Engine can generate the delivery task plan (Phase K) for a client.
 
@@ -197,7 +197,7 @@ Three sources feed the same `leads` table:
 - 🖥️ **IN:** **Attendance** — staff clock-in/out (`/attendance`); admin view `/admin/attendance`; APIs `/api/attendance/*`.
 - 🖥️ **IN:** **Work hours / sessions** `/admin/work-hours`, `/admin/sessions` — time tracking; CSV export.
 - 🖥️ **IN:** **SOPs** `/admin/team/sops` — standard operating procedures library.
-- 🌐 **OUT:** Actual management, training (Afifa-telecaller, Zaid & Sufiyan-builders), payroll.
+- 🌐 **OUT:** Actual management, training (Afifa-telecaller, outsourced freelancers-builders), payroll.
 - 🔗 **FLOW:** `session-timeout` cron auto-closes stale sessions; attendance feeds work-hours reports.
 
 ---
@@ -295,7 +295,7 @@ Three sources feed the same `leads` table:
 | **Telecaller (Afifa)** | `/sales`, `/telecaller/my-stats` | calls, logs outcomes, books meetings |
 | **Strategist** | `/strategist` | pipeline, proposals |
 | **PM** | `/projects` | delivery, projects, tasks |
-| **Staff (Zaid, Sufiyan)** | `/tasks`, `/attendance` | assigned work, clock in/out |
+| **Staff (an outsourced freelancer, an outsourced freelancer)** | `/tasks`, `/attendance` | assigned work, clock in/out |
 | **Client** | `/client/dashboard` | view own project + reports |
 
 ---

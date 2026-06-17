@@ -28,10 +28,10 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 ---
 
 ## 1. Where we are
-- All work sits on **`continue-on-mac`** and is **NOT pushed** (no production deploy yet, by owner's choice). Merging to `main` triggers a live Vercel deploy — **do not push/merge to `main` without explicit owner approval.**
+- **FMOS is DEPLOYED and live** (Vercel, `fmos.fortunemarq.com`). WhatsApp Cloud API is live and **all 33 templates are Meta-approved**.
+- Latest build work sits on **`continue-on-mac`**. Merging to `main` triggers a live Vercel deploy — **do not push/merge to `main` without explicit owner approval.**
 - `.env.local` is in place (gitignored). `npx tsc --noEmit` = **0**, `npm run build` = **green**.
-- Unpushed WhatsApp-automation commits this stretch: `cb4402b` (Phase 1) → `b84dc79`, `e8cba86`,
-  `d226466`, `f666e4d`, `f2bffe0`, `eec7d00`.
+- **Built since the last handoff (all live):** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. the **Direct Report** — immediate type-matched PDF send that replaced the old "curiosity" teaser), Stage 4 delivery (4.1–4.7), the **AI bot (6.1)** (KB filled, guardrails, booking-intent, human-takeover via `leads.bot_paused`), and **messaging safety + unified inbox (6.2/6.3/6.4)**.
 
 ## 2. Conventions (non-negotiable)
 - Lead stage writes only via `lib/pipeline.ts` (`leadStageUpdate`/`leadStatusUpdate`) — never write `outreach_stage`/`status` directly.
@@ -50,15 +50,19 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 - **SQL:** `supabase/2026-06-16_curiosity_blast.sql` (`wa_opt_out` + `report_assets`) — **already run in Supabase** (owner confirmed).
 
 ## 4. Next steps
-**Code (next build — from `WHATSAPP_HANDOFF_2026-06-16.md` §3–5, in order):**
-1. **Rename "Curiosity" → "Direct Report"** across UI/route/nav/files (mechanism already correct — report sent immediately, no teaser). Confirm no teaser-only code path remains. Keep stage value `curiosity_sent` unless a safe migration is proven.
-2. **Delivery/read/click tracking** on the send dashboard (webhook already stamps `whatsapp_logs.delivery_status`), filterable by city / niche×city.
-3. Then: **bot brain** (Anthropic + `00_MASTER/Bot_Knowledge_Base/*` — currently STUB files, owner must fill), **Google Calendar/Meet booking**, **channel adapters** (web/IG/Messenger), lifecycle sends, compliance/inbox.
+**Already done (these were the old "next" items — all built & live):** Curiosity→Direct Report rename; delivery/read/click tracking (`/admin/direct-report/tracking`); the bot brain (6.1, KB filled); Google Calendar/Meet booking; messaging safety + unified inbox (6.2/6.3/6.4).
+
+**Code (remaining, not yet built):**
+1. **Stage 2 — campaigns** (campaign object + status machine + metric pull + WhatsApp digest).
+2. **Stage 5 — site/presence**, **6.5 command center**, **6.6 nurture**, **6.8 monitoring**, **6.9 backups**.
+3. **Collection automation (1.1/1.2)** + the **pipeline orchestrator** (batch status on `import_batch_id`).
+4. **Channel adapters** (web/IG/Messenger) beyond WhatsApp.
 
 **Owner / external (not code):**
-- **Seed PDFs:** owner is fixing the market-intel reports, then will click `/admin/curiosity-blast` → "Seed report library" (local only). Known gap: **SkinClinics missing Type-B (English)** report.
-- Templates: all 33 **submitted to Meta, pending review** (incl. `direct_report_type_d`).
-- Deploy: push → Vercel env vars (`SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `INBOUND_WEBHOOK_SECRET`) → domain DNS → Supabase redirect URLs → set WhatsApp webhook callback URL.
+- **Seed PDFs:** keep the market-intel report library current. Known gap to confirm: **SkinClinics Type-B (English)** report.
+- Templates: all 33 are **Meta-approved and live** (incl. `direct_report_type_d`).
+- Deploy is done (Vercel, live). Post-deploy config in place (env vars, domain DNS, Supabase redirect URLs, WhatsApp webhook callback). Any new build → merge to `main` only with owner approval.
+- **Niche landing pages:** still pending redesign + deploy on fortunemarq.com (gates campaigns + portfolio links).
 - Data: only **Hubli** has reports/leads loaded (858 clean leads, 11 niches); other cities pending. Bulk-import remaining leads via `/admin/bulk-import`.
 
 ## 5. Verify after picking up

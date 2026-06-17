@@ -93,7 +93,7 @@ Use WhatsApp template: **ONBOARD_WELCOME**
 
 - Review the completed Brief Form in FMOS
 - Create a website build task in FMOS
-- Assign to Zaid or Sufiyan based on availability
+- Assign to an outsourced freelance builder based on availability
 - Include: Brief Form link, Antigravity access details, client photos folder link
 - Set deadline: Stage 1 preview in 4–5 days
 
@@ -109,13 +109,13 @@ Use WhatsApp template: **ONBOARD_WELCOME**
 - If a task is overdue by 1 day — follow up via WhatsApp
 - If assets are delayed by client — send a gentle reminder:
   *"Hi [Name], just following up on the [asset]. Once I have it we can move forward quickly — do let me know if you need any help getting it together."*
-- If cousins miss a deadline — WhatsApp them directly, log the delay in FMOS
+- If a freelancer misses a deadline — message them directly, log the delay in FMOS
 
 ---
 
 ### STEP 8 — Final Review Before Go-Live (Website Only)
 **Who:** Jabeer
-**When:** After cousins submit for final review
+**When:** After the freelancer submits for final review
 
 Check:
 - All pages present and correct
@@ -186,8 +186,8 @@ If approved → send preview link to client for confirmation.
 **Domain login is wrong**
 → Do a screen share call with the client and sort it together. Log that this was resolved in FMOS.
 
-**Cousins build doesn't match brief**
-→ Don't show it to client. Reject internally in FMOS with specific feedback. Ask cousin to redo.
+**Freelancer build doesn't match brief**
+→ Don't show it to client. Reject internally in FMOS with specific feedback. Ask the freelancer to redo.
 
 **WhatsApp API approval delayed**
 → Normal — can take 3–5 days sometimes. Keep client informed. Meanwhile, proceed with template writing and contact list collection.

@@ -1,11 +1,13 @@
 # 01 — CRM & Tool (FMOS)
-**Last Updated:** 2026-06-15 | **Status:** ✅ v4.9 — DATABASE FULLY SYNCED (all ~19 pending migrations executed 2026-06-12; 38 tables created — attendance, notifications, automations, marketing, duplicates, sessions). Notifications + daily-digest cron live, team management (invite/role/password/deactivate/remove), invoice partial payments, real telecaller analytics. **PHASE F inbound engine Stage 0 built**: universal inbound pipeline + webhook (`/api/inbound/[channel]`), LP UTM attribution, round-robin auto-assignment, "Inbound & Funnel" marketing tab with funnel/CPL/UTM-builder/spend-CSV-import. Deploy target is now **Vercel** (vercel.json crons ready; env needs SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, INBOUND_WEBHOOK_SECRET). Latest detail: `fmos/COWORK_HANDOFF.md` + `fmos/00_MASTER_BUILD_PLAN.md`. Next: deploy → Phase F Stage 1 (WhatsApp Cloud API + Meta leadgen webhooks).
+**Last Updated:** 2026-06-17 | **Status:** ✅ **DEPLOYED & LIVE** on Vercel (`fmos.fortunemarq.com`). Database fully synced. **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. the Direct Report — immediate type-matched PDF send that replaced the old "curiosity" teaser), Stage 4 delivery (4.1–4.7), the AI bot (6.1), and messaging safety + unified inbox (6.2/6.3/6.4). WhatsApp Cloud API live; 33 templates Meta-approved. Inbound engine (universal `/api/inbound/[channel]` webhook, UTM attribution, round-robin assign, funnel/CPL marketing tab) live. **Not yet built:** Stage 2 campaigns, Stage 5 presence, command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9), collection automation (1.1/1.2), pipeline orchestrator.
+
+> Canonical app handoff: `fmos/CONTINUE_HERE.md`. Live build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`. (Older pointers to `COWORK_HANDOFF.md` / `00_MASTER_BUILD_PLAN.md` are now bannered historical.)
 
 ## Folder Purpose
 Plan, design, and execute all changes to the FortuneMarq Operating System (FMOS). This is the central nervous system of the entire agency. Every other folder either feeds data into FMOS or is managed through it. Decisions here affect every team member and every workflow.
 
 ## What FMOS Is
-A full agency operating system built on Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Supabase. Currently on localhost:3000. Target deployment: **Vercel** (Hostinger is shared hosting and can't run Next SSR — it is used only for the domain DNS + client sites). The app is reached at `fmos.fortunemarq.com` via a Hostinger CNAME pointing at Vercel.
+A full agency operating system built on Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Supabase. **Deployed & live on Vercel**, reached at `fmos.fortunemarq.com` via a Hostinger CNAME pointing at Vercel (Hostinger is shared hosting and can't run Next SSR — it is used only for the domain DNS + client sites). Local dev still runs on localhost:3000.
 
 ---
 
@@ -24,7 +26,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `ADD_BUILD_TYPE_COLUMN.sql` — SQL migration for build_type column
 - `.env.local` — Supabase URL, anon key, `ANTHROPIC_API_KEY` (Claude; the app uses Anthropic directly, not OpenRouter)
 - `PHASE_A_CLEANUP.md` — Phase A spec: remove leaderboards, cleanup bugs (COMPLETE)
-- `PHASE_B_ROLE_VIEWS.md` — Phase B spec: telecaller view, cousin view, admin cleanup (COMPLETE)
+- `PHASE_B_ROLE_VIEWS.md` — Phase B spec: telecaller view, staff view, admin cleanup (COMPLETE)
 - `PHASE_C_OUTREACH_LEADS.md` — Phase C spec: Outreach Board + Lead Profile + PDF Log (✅ COMPLETE)
 - `PHASE_D_PROPOSAL_ONBOARDING.md` — Phase D spec: Proposal Generator, Agreement, Onboarding Tab, WhatsApp seeding (✅ COMPLETE)
 - `PHASE_E_FINANCE_FORECAST.md` — Phase E spec: Finance split MRR/one-time, Revenue Forecast, Retainer Package (✅ COMPLETE)
@@ -66,7 +68,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `/admin/data-management` — Data management tools
 - `/admin/duplicates` — Duplicate scanner + merge (undo supported)
 - `/admin/whatsapp-templates` — WhatsApp template library + seed button
-- `/admin/users` — User management (create Afifa, Zaid, Sufiyan accounts here)
+- `/admin/users` — User management (create Afifa + freelancer staff accounts here)
 - `/admin/audit-log` — Full audit trail
 - `/admin/briefing` — Daily briefing page
 - `/admin/automations` — Automation rules engine
@@ -163,7 +165,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 ### Deployment Checklist (after all phases)
 - [ ] Add `ANTHROPIC_API_KEY` to Vercel env vars
 - [ ] Create Afifa's telecaller account in /admin/users
-- [ ] Create Zaid and Sufiyan accounts
+- [ ] Create freelancer staff accounts as needed
 - [ ] Point fmos.fortunemarq.com subdomain to Vercel (CNAME added in Hostinger DNS)
 - [x] Upload 11 Hubli_Final CSVs (~858 leads) — DONE via manual upload before 2026-04-29
 - [ ] Run `/admin/bulk-import` to load remaining ~6,300 leads from other cities
@@ -181,8 +183,8 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 
 ## Connections to Other Folders
 - **Feeds FROM:** `07_DATA_AND_RESEARCH` (lead CSVs uploaded via `/admin/upload`), `03_SALES_SYSTEM` (scripts/templates displayed in UI, JSON data files in FMOS_Change_Specs/data/), `06_PAID_MARKETING` (inbound leads auto-tagged)
-- **Feeds INTO:** `02_SERVICE_DELIVERY_AUTOMATION` (tasks created, assigned to Zaid/Sufiyan), `04_CLIENT_MANAGEMENT` (all client profiles live here), `08_FINANCE` (all invoices raised and tracked here)
-- **Used BY:** Afifa (Sales Cockpit `/sales`), Zaid + Sufiyan (Staff view `/staff`), Jabeer (Admin view `/admin`)
+- **Feeds INTO:** `02_SERVICE_DELIVERY_AUTOMATION` (tasks created, assigned to outsourced freelancers), `04_CLIENT_MANAGEMENT` (all client profiles live here), `08_FINANCE` (all invoices raised and tracked here)
+- **Used BY:** Afifa (Sales Cockpit `/sales`), outsourced freelancers (Staff view `/staff`), Jabeer (Admin view `/admin`)
 
 ---
 

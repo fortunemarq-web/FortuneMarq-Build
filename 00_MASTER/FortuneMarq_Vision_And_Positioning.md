@@ -1,7 +1,7 @@
 # FortuneMarq — Vision & Positioning
 
 **Document type:** Authoritative single-reference  
-**Last updated:** 2026-06-08  
+**Last updated:** 2026-06-17  
 **Owner:** Sayed Jabeer  
 
 ---
@@ -46,9 +46,9 @@ One-time projects (website builds, PDF market reports) serve as portfolio builde
 
 The core insight driving all outreach: 70% of local search traffic in Hubli goes to directories — JustDial, Sulekha, Practo. Local businesses are not getting direct calls from Google. They are either invisible online or buried in a directory listing they don't control.
 
-FortuneMarq's offer is to bypass directories entirely — build a direct path from Google searches to the client's phone. The proof is in the data: zero paid ads running across 6 priority niches in Hubli, thousands of monthly searches with almost no local competition. First mover wins.
+FortuneMarq's offer is to bypass directories entirely — build a direct path from Google searches to the client's phone. The proof is in the data: thousands of monthly searches in the priority Hubli niches, and a search landscape dominated by directories/aggregators rather than the businesses themselves (the 4-bucket SERP traffic split shows exactly who owns each market). First mover on a direct presence wins.
 
-This angle drives the 3-touch outreach sequence: curiosity hook on WhatsApp → market intelligence PDF (real niche data for their city) → follow-up call → Zoom meeting with Jabeer.
+This angle drives the outreach sequence: **Direct Report** on WhatsApp (the type-matched market-intelligence PDF for their city, sent immediately with action buttons) → reply handled by the AI bot or a telecaller → follow-up call → **Google Meet** with Jabeer (booked via the Google Calendar/Meet integration).
 
 ---
 
@@ -130,7 +130,7 @@ These items are unresolved and will be decided at the trigger point listed.
 | WhatsApp API vs. Business Account (Meta Business API vs. simpler Business Account) | Before Afifa starts outreach |
 | Social Media Management as a service offering | After 3 months, once core services are stable |
 | Price increases for new clients (entry-level pricing will rise once portfolio is proven) | After 3 months + strong case studies |
-| Antigravity team plan upgrade (Zaid/Sufiyan need upgraded plan to begin website builds) | Before website builds begin |
+| Antigravity team plan upgrade (outsourced freelancers need upgraded plan to begin website builds) | Before website builds begin |
 | LinkedIn strategy | Month 2 |
 
 **Personal and company brand (resolved — scheduled):** Both will be built through content creation. This is a Phase 2 activity — starts after FMOS is live, niche landing pages are deployed, and all performance marketing is set up. Not undecided — sequenced.

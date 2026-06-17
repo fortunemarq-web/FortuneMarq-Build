@@ -1,3 +1,5 @@
+> **Current status (2026-06-17):** FMOS is **deployed \& live**; this folder is planning/reference content. Any "blocked on / pending FMOS deployment" notes below are **obsolete**. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
+
 # 04 — Client Onboarding
 **Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — onboarding_checklists.json + onboarding.types.ts + index.ts + onboarding_sop.md all created
 
@@ -16,7 +18,7 @@ Define the exact onboarding process — what happens the moment a client signs, 
 ### Root Files
 | File | Description |
 |---|---|
-| `onboarding_sop.md` | Full 10-step onboarding SOP for Jabeer: welcome message, kickoff call, brief form, asset collection, project setup in FMOS, task assignment to cousins, timeline by service, asset vault guide, common problems + solutions |
+| `onboarding_sop.md` | Full 10-step onboarding SOP for Jabeer: welcome message, kickoff call, brief form, asset collection, project setup in FMOS, task assignment to freelancers, timeline by service, asset vault guide, common problems + solutions |
 | `CONTEXT.md` | This file |
 
 ## Onboarding Process (10 Steps)
@@ -27,7 +29,7 @@ Define the exact onboarding process — what happens the moment a client signs, 
 5. Assets collected (logo, photos, domain, hosting, GMB access etc.)
 6. Assets stored in FMOS Asset Vault per service
 7. Project set up in FMOS — tasks created from onboarding_checklists.json
-8. Tasks assigned: website tasks to Zaid/Sufiyan, strategy tasks to Jabeer
+8. Tasks assigned: website tasks to outsourced freelancers, strategy tasks to Jabeer
 9. Work begins — delivery within stated timeline per service
 10. Day 7 check-in with client (WhatsApp)
 

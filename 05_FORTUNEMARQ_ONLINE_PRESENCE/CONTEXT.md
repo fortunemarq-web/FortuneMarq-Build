@@ -1,5 +1,7 @@
 # 05 — FortuneMarq Online Presence
-**Last Updated:** 2026-06-08 | **Status:** Website live but needs redesign. GMB created, optimization starts June 15. Social accounts created, content strategy pending. Niche landing pages exist but need redesign before deployment. Ad accounts pending.
+**Last Updated:** 2026-06-17 | **Status:** Own-presence work is largely **still pending** (Stage 5 — site/presence — is future work). Real-world state: fortunemarq.com live but needs redesign; GMB created (optimization pending); social accounts created, content strategy pending; 11 niche landing pages exist but need redesign before deploy; ad accounts pending. The FMOS app itself is deployed & live — separate from this folder. This folder now also hosts `Proof_Vault/` (case studies written by FMOS's "Mark as Case Study" flow, behind a consent gate).
+
+> Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
 Build and manage FortuneMarq's own digital presence — website SEO, GMB, Instagram, Facebook, and LinkedIn. This is the long-game inbound lead channel. While the sales system does outbound, online presence builds brand authority that makes every outbound call easier and generates inbound leads over time.
@@ -110,4 +112,5 @@ These landing pages are referenced by WhatsApp templates as `{{landingPageLink}}
 |---|---|
 | March 2026 | Context file created. Website live. GMB created. Content strategy outlined. |
 | 2026-04-28 | CONTEXT.md fully rewritten. Niche landing pages (11 HTML files in niches/) and assets confirmed present. |
-| 2026-06-08 | Full section review. Website and niche pages flagged for redesign. GMB + SEO start date set: June 15. Social accounts confirmed created with few posts — content strategy pending. Ad accounts (Google + Meta) added as pending. bot_reply_templates reference updated to reflect deprecated flow. |
+| 2026-06-08 | Full section review. Website and niche pages flagged for redesign. Social accounts confirmed created with few posts — content strategy pending. Ad accounts (Google + Meta) added as pending. bot_reply_templates reference updated to reflect deprecated flow. |
+| 2026-06-17 | Doc-accuracy sweep. Clarified FMOS app is deployed & live (separate from this folder's own-presence work, which remains pending). Noted `Proof_Vault/` now lives here (FMOS case-study consent flow). Past "June 15" optimization date treated as a checklist item, not a deadline. |
