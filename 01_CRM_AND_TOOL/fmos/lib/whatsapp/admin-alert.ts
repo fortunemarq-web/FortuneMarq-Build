@@ -18,6 +18,10 @@ export async function sendAdminAlert(headline: string, detail: string): Promise<
     for (const phone of phones) {
       await sendWhatsAppTemplate(phone, "admin_alert", {
         language: "en",
+        // Admin alerts are operational, not lead-facing — never opt-out-suppressed,
+        // never throttled (so the cap-reached alert itself can always send).
+        bypassOptOut: true,
+        bypassThrottle: true,
         components: [
           {
             type: "body",

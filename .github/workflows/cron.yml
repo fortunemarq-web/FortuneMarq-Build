@@ -89,3 +89,11 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/session-timeout" \
             -H "Authorization: Bearer $SECRET" || echo "session-timeout ping failed (non-fatal)"
+      - name: WhatsApp quality + tier check
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/whatsapp-quality" \
+            -H "Authorization: Bearer $SECRET" || echo "whatsapp-quality ping failed (non-fatal)"

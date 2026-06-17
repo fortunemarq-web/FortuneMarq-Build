@@ -149,7 +149,7 @@ export async function handleOutcomeWaSend(opts: {
         };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
-          language: lang, components: components.length ? components : undefined, leadId,
+          language: lang, components: components.length ? components : undefined, leadId, proactive: true,
         });
         return { sent: r.success, skipped: false, template, error: r.error };
       }
@@ -166,7 +166,7 @@ export async function handleOutcomeWaSend(opts: {
         };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
-          language: lang, components: components.length ? components : undefined, leadId,
+          language: lang, components: components.length ? components : undefined, leadId, proactive: true,
         });
         return { sent: r.success, skipped: false, template, error: r.error };
       }
@@ -177,7 +177,7 @@ export async function handleOutcomeWaSend(opts: {
         const cfg: WaTemplateConfig = { audience: "lead", template, lang, params: [company] };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
-          language: lang, components: components.length ? components : undefined, leadId,
+          language: lang, components: components.length ? components : undefined, leadId, proactive: true,
         });
         return { sent: r.success, skipped: false, template, error: r.error };
       }
@@ -188,7 +188,7 @@ export async function handleOutcomeWaSend(opts: {
         const cfg: WaTemplateConfig = { audience: "lead", template, lang, params: [company] };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
-          language: lang, components: components.length ? components : undefined, leadId,
+          language: lang, components: components.length ? components : undefined, leadId, proactive: true,
         });
         return { sent: r.success, skipped: false, template, error: r.error };
       }
@@ -203,7 +203,7 @@ export async function handleOutcomeWaSend(opts: {
         };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
-          language: lang, components: components.length ? components : undefined, leadId,
+          language: lang, components: components.length ? components : undefined, leadId, proactive: true,
         });
 
         // Schedule followback_reminder_busy only if >= 24h out

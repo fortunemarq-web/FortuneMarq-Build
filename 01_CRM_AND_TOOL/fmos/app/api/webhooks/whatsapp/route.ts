@@ -5,6 +5,7 @@ import { processInboundLead, normalizePhone } from "@/lib/inbound/capture";
 import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppTemplate } from "@/lib/whatsapp/send";
 import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { runBot } from "@/lib/bot/engine";
+import { handleQualityWebhook } from "@/lib/whatsapp/quality";
 import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
 
 /**
@@ -66,6 +67,17 @@ export async function POST(req: NextRequest) {
   try {
     for (const entry of body?.entry ?? []) {
       for (const change of entry?.changes ?? []) {
+        // 6.4 — quality/limit downgrades arrive on their own change fields.
+        if (
+          change?.field === "phone_number_quality_update" ||
+          change?.field === "messaging_limit_update" ||
+          change?.field === "account_update"
+        ) {
+          await handleQualityWebhook(change.value ?? {}).catch((e) =>
+            console.error("[webhooks/whatsapp] quality handler:", e)
+          );
+          continue;
+        }
         if (change?.field !== "messages") continue;
         const value = change.value ?? {};
         for (const message of value.messages ?? []) {
@@ -236,9 +248,11 @@ async function handleInboundMessage(message: any, value: any) {
     metadata: { wa_message_id: waMessageId, type: message?.type, referral: referral ?? null },
   });
 
+  // last_inbound_at powers 6.3 active-inbound-thread suppression (no proactive
+  // outbound while the customer is mid-conversation with us).
   await supabase
     .from("leads")
-    .update({ last_activity_at: new Date().toISOString() })
+    .update({ last_activity_at: new Date().toISOString(), last_inbound_at: new Date().toISOString() })
     .eq("id", lead.id);
 
   // Re-opt-in: "START" (and common variants) → clear the opt-out flag.

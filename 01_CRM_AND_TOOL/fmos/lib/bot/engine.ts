@@ -208,7 +208,9 @@ export async function runBot(opts: BotRunOpts): Promise<BotRunResult> {
   const escalation = checkUserEscalation(userText);
   if (escalation?.trigger === "opt_out") {
     await optOutLead(leadId);
-    await sendWhatsAppText(phone, OPT_OUT_REPLY, { leadId });
+    // bypassOptOut: this is the courtesy confirmation OF the opt-out — the central
+    // guard would otherwise suppress it since we just flagged the lead.
+    await sendWhatsAppText(phone, OPT_OUT_REPLY, { leadId, bypassOptOut: true });
     await logTurn({ leadId, channel, role: "assistant", content: OPT_OUT_REPLY, escalated: true });
     return { handled: true, reply: OPT_OUT_REPLY, skipped: "opt_out" };
   }

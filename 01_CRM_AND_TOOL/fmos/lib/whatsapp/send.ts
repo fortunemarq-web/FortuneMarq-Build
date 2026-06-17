@@ -1,4 +1,6 @@
 import { createAdminClient } from "@/lib/supabase-admin";
+import { getLeadGuardState } from "@/lib/whatsapp/suppression";
+import { checkThrottle, alertDailyCapOnce } from "@/lib/whatsapp/throttle";
 
 /**
  * PHASE F STAGE 1 — WhatsApp Cloud API sending library.
@@ -11,6 +13,11 @@ import { createAdminClient } from "@/lib/supabase-admin";
  *  - sendWhatsAppDocument    — PDF/document by link or uploaded media id
  *  - uploadWhatsAppMedia     — upload a file buffer to Meta, returns media id
  *
+ * 6.4 — every send funnels through preflight(): opt-out suppression (lead-keyed),
+ * active-inbound-thread suppression (proactive sends only), and the system-wide
+ * throttle (daily cap + per-minute rate). This is the ONE choke point — all five
+ * send functions call it before touching the Graph API.
+ *
  * Every successful send is logged to whatsapp_logs (direction='outbound').
  */
 
@@ -20,6 +27,54 @@ export interface SendResult {
   success: boolean;
   messageId?: string;
   error?: string;
+  /** Set when a send was deliberately blocked rather than attempted. */
+  suppressed?: "opted_out" | "active_inbound" | "daily_cap" | "rate_limit";
+}
+
+/** Shared guard flags accepted by every public send function. */
+export interface GuardOpts {
+  /** Proactive automated send (direct report, outcome blast) — subject to
+   *  active-inbound-thread suppression. Reactive replies omit this. */
+  proactive?: boolean;
+  /** Skip the opt-out check (admin/staff alerts; opt-out confirmation message). */
+  bypassOptOut?: boolean;
+  /** Skip the throttle (critical admin alerts, incl. the cap-reached alert itself). */
+  bypassThrottle?: boolean;
+}
+
+/**
+ * THE CHOKE POINT. Returns a SendResult to short-circuit with when a send must be
+ * blocked, or null when it's clear to proceed.
+ */
+async function preflight(opts: {
+  leadId?: string | null;
+  proactive?: boolean;
+  bypassOptOut?: boolean;
+  bypassThrottle?: boolean;
+}): Promise<SendResult | null> {
+  // 1. Opt-out + active-inbound suppression (only when we know the lead).
+  if (opts.leadId && !opts.bypassOptOut) {
+    const guard = await getLeadGuardState(opts.leadId);
+    if (guard.optedOut) {
+      return { success: false, suppressed: "opted_out", error: "Lead has opted out of WhatsApp" };
+    }
+    if (opts.proactive && guard.activeInbound) {
+      return { success: false, suppressed: "active_inbound", error: "Lead is in an active inbound thread" };
+    }
+  }
+
+  // 2. System-wide throttle (daily cap then per-minute rate).
+  if (!opts.bypassThrottle) {
+    const verdict = await checkThrottle();
+    if (!verdict.allowed) {
+      if (verdict.reason === "daily_cap") {
+        await alertDailyCapOnce(verdict.count ?? 0, verdict.limit ?? 0);
+      }
+      return { success: false, suppressed: verdict.reason, error: `Throttled: ${verdict.reason}` };
+    }
+  }
+
+  return null;
 }
 
 function credentials(): { token: string; phoneNumberId: string } | null {
@@ -109,12 +164,14 @@ async function logOutbound(opts: {
 export async function sendWhatsAppText(
   phone: string,
   body: string,
-  opts?: { leadId?: string | null; sentBy?: string | null }
+  opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
   const to = toWaNumber(phone);
   if (!to) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
+  const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
+  if (blocked) return blocked;
   const result = await graphPost(`${creds.phoneNumberId}/messages`, {
     messaging_product: "whatsapp",
     recipient_type: "individual",
@@ -136,12 +193,15 @@ export async function sendWhatsAppTemplate(
     components?: unknown[];
     leadId?: string | null;
     sentBy?: string | null;
-  }
+  } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
   const rawTo = toWaNumber(phone);
   if (!rawTo) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
+
+  const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
+  if (blocked) return blocked;
 
   const { phones, testMode } = resolveRecipients(rawTo);
   const logNote = testMode ? `[TEST→${rawTo}] ` : "";
@@ -177,12 +237,14 @@ export async function sendWhatsAppButtons(
   phone: string,
   body: string,
   buttons: { id: string; title: string }[],
-  opts?: { leadId?: string | null; sentBy?: string | null }
+  opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
   const to = toWaNumber(phone);
   if (!to) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
+  const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
+  if (blocked) return blocked;
   const result = await graphPost(`${creds.phoneNumberId}/messages`, {
     messaging_product: "whatsapp",
     to,
@@ -207,13 +269,15 @@ export async function sendWhatsAppButtons(
 export async function sendWhatsAppDocument(
   phone: string,
   doc: { link?: string; mediaId?: string; filename: string; caption?: string },
-  opts?: { leadId?: string | null; sentBy?: string | null }
+  opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
   const to = toWaNumber(phone);
   if (!to) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
   if (!doc.link && !doc.mediaId) return { success: false, error: "Document needs a link or mediaId" };
+  const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
+  if (blocked) return blocked;
   const result = await graphPost(`${creds.phoneNumberId}/messages`, {
     messaging_product: "whatsapp",
     to,

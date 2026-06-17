@@ -194,6 +194,7 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
       language: lang,
       components: components.length ? components : undefined,
       leadId: lead.id,
+      proactive: true, // 6.3 — suppress if the lead is mid inbound conversation
     });
     if (r.success) {
       sent++;
@@ -202,6 +203,13 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
         .update(leadStageUpdate("curiosity_sent"))
         .eq("id", lead.id);
       if (stageErr) errors.push(`${lead.company_name || lead.id}: stage ${stageErr.message}`);
+    } else if (r.suppressed === "active_inbound" || r.suppressed === "opted_out") {
+      // Not a failure — deliberately skipped. Don't advance stage, don't burn cap intent.
+      errors.push(`${lead.company_name || lead.id}: skipped (${r.suppressed})`);
+    } else if (r.suppressed === "daily_cap" || r.suppressed === "rate_limit") {
+      // System throttle hit — stop the run, the rest will go on the next pass.
+      errors.push(`Run halted by ${r.suppressed} after ${sent} sent.`);
+      break;
     } else {
       failed++;
       errors.push(`${lead.company_name || lead.id}: ${r.error}`);

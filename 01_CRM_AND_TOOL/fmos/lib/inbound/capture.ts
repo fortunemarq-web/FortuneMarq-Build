@@ -68,6 +68,17 @@ export function normalizePhone(phone: string): string | null {
   return digits.slice(-10);
 }
 
+/** Bare registrable host from a URL (drops scheme, www, path). null if not a URL. */
+export function extractDomain(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`);
+    return u.hostname.replace(/^www\./i, "").toLowerCase() || null;
+  } catch {
+    return null;
+  }
+}
+
 const PLATFORM_BY_CHANNEL: Record<string, string> = {
   meta_lead_ad: "meta",
   ctwa: "meta",
@@ -112,29 +123,81 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
       (input.contact_person || "").trim().slice(0, 200) ||
       `Unknown (${channelLabel})`;
 
-    // 3. Dedupe by phone (suffix match handles +91/0 format drift)
-    const { data: existing } = await supabase
-      .from("leads")
-      .select("id, company_name, assigned_sales_exec, outreach_stage")
-      .like("phone", `%${phone10}`)
-      .limit(1)
-      .maybeSingle();
+    // 3. Cross-engine dedup — match an existing lead by phone, then (fallback)
+    //    by normalized email or website domain so the same business captured
+    //    across channels collapses onto one record.
+    const emailNorm = (input.email || "").trim().toLowerCase() || null;
+    const domain = extractDomain(input.referrer_url) || extractDomain(input.landing_page);
+
+    let existing: any = null;
+    {
+      const byPhone = await supabase
+        .from("leads")
+        .select("*")
+        .like("phone", `%${phone10}`)
+        .limit(1)
+        .maybeSingle();
+      existing = byPhone.data;
+    }
+    if (!existing && emailNorm) {
+      const byEmail = await supabase
+        .from("leads")
+        .select("*")
+        .or(`email_normalized.eq.${emailNorm},email.ilike.${emailNorm}`)
+        .limit(1)
+        .maybeSingle();
+      existing = byEmail.data;
+    }
+    if (!existing && domain) {
+      const byDomain = await supabase
+        .from("leads")
+        .select("*")
+        .or(`website_domain.eq.${domain},website_link.ilike.%${domain}%`)
+        .limit(1)
+        .maybeSingle();
+      existing = byDomain.data;
+    }
 
     if (existing) {
-      // Re-enquiry: don't create a duplicate — surface it on the existing lead
+      // Re-enquiry: don't create a duplicate — MERGE keeping the richest data and
+      // accumulating every source tag, then surface it on the existing lead.
+      const nowIso = new Date().toISOString();
+
+      // Fill only-empty fields from the incoming capture (never overwrite real data).
+      const enrich: Record<string, any> = {};
+      const fillIfEmpty = (col: string, val: any) => {
+        if (val && (existing[col] == null || existing[col] === "")) enrich[col] = val;
+      };
+      fillIfEmpty("contact_person", (input.contact_person || "").trim().slice(0, 200) || null);
+      fillIfEmpty("email", emailNorm);
+      fillIfEmpty("industry", (input.industry || "").trim().slice(0, 200) || null);
+      fillIfEmpty("city", (input.city || "").trim().slice(0, 200) || null);
+      // Replace a placeholder "Unknown (...)" company name with a real one.
+      if (input.company_name && /^Unknown\b/i.test(existing.company_name || "")) {
+        enrich.company_name = input.company_name.trim().slice(0, 200);
+      }
+
+      // Accumulate source tags — union of existing tags + this channel.
+      const srcTag = `src:${channel}`;
+      const existingTags: string[] = Array.isArray(existing.tags) ? existing.tags : [];
+      const mergedTags = existingTags.includes(srcTag) ? existingTags : [...existingTags, srcTag];
+
       await supabase.from("activity_events").insert({
         entity_type: "lead",
         entity_id: existing.id,
         event_type: "inbound_reenquiry",
         title: `Re-enquired via ${channelLabel}`,
         body: input.message || null,
-        metadata: { channel, utm: input.utm ?? null },
+        metadata: { channel, utm: input.utm ?? null, enriched: Object.keys(enrich) },
       });
       await supabase
         .from("leads")
         .update({
-          last_activity_at: new Date().toISOString(),
-          follow_up_date: new Date().toISOString(),
+          ...enrich,
+          tags: mergedTags,
+          last_activity_at: nowIso,
+          last_inbound_at: nowIso,
+          follow_up_date: nowIso,
         })
         .eq("id", existing.id);
       if (existing.assigned_sales_exec) {
@@ -149,7 +212,7 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
         });
       }
       await finishEvent("duplicate", existing.id);
-      return { success: true, status: "duplicate", leadId: existing.id, message: "Matched existing lead — logged as re-enquiry." };
+      return { success: true, status: "duplicate", leadId: existing.id, message: "Matched existing lead — merged + logged as re-enquiry." };
     }
 
     // 4. Resolve / auto-create the ad campaign for attribution
@@ -197,7 +260,9 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
         lead_type: "inbound",
         source: channel,
         lead_source: channelLabel,
+        tags: [`src:${channel}`],
         captured_at: new Date().toISOString(),
+        last_inbound_at: new Date().toISOString(),
         notes: noteParts.join("\n"),
       })
       .select("id")
