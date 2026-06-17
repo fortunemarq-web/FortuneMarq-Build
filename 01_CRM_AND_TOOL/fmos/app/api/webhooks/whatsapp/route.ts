@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase-admin";
 import { processInboundLead, normalizePhone } from "@/lib/inbound/capture";
 import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppTemplate } from "@/lib/whatsapp/send";
 import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
+import { runBot } from "@/lib/bot/engine";
 import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
 
 /**
@@ -281,12 +282,30 @@ async function handleInboundMessage(message: any, value: any) {
     return;
   }
 
-  // Plain message from a known lead → notify the assigned exec
+  // ── Bot — primary free-text handler ─────────────────────────────────────
+  // runBot() respects WHATSAPP_SEND_MODE (test-number gate), bot_paused
+  // (human takeover), and all guardrails. It logs both turns to bot_threads.
+  // If it can't handle (bot paused / test-mode blocked) we fall through to
+  // the static exec notification below so no message is ever silently lost.
+  const botResult = await runBot({
+    leadId: lead.id,
+    phone: from,
+    userText: text,
+    channel: "whatsapp",
+    waMessageId,
+  }).catch((e) => {
+    console.error("[webhook] runBot error:", e);
+    return { handled: false };
+  });
+
+  // Notify assigned exec regardless — they can see every inbound message
+  // whether the bot handled it or not.
   if (lead.assigned_sales_exec) {
+    const botTag = botResult.handled ? " [bot replied]" : "";
     await supabase.from("notifications").insert({
       user_id: lead.assigned_sales_exec,
       type: "lead_status_changed",
-      title: "WhatsApp reply",
+      title: `WhatsApp reply${botTag}`,
       body: `${lead.company_name}: "${text.slice(0, 140)}"`,
       link: `/admin/leads/${lead.id}`,
       entity_type: "lead",

@@ -62,6 +62,7 @@ const INBOUND_PATTERNS: InboundPattern[] = [
       /speak\s+to\s+(a\s+)?(human|person|someone|agent|founder|jabeer|owner)/i,
       /talk\s+to\s+(a\s+)?(human|person|real|someone|jabeer)/i,
       /connect\s+me\s+(with|to)\s+(jabeer|founder|owner|someone|a\s+person)/i,
+      /connect\s+(\w+\s+)?(with|to)\s+(the\s+)?(jabeer|founder|owner)/i,
       /real\s+person|actual\s+person|not\s+(a\s+)?bot|not\s+automated/i,
       /call\s+me\s+(now|please|back)|please\s+call/i,
     ],
@@ -134,9 +135,14 @@ const FORBIDDEN_DRAFT_PATTERNS: { pattern: RegExp; trigger: string; summary: str
     summary: "Bot draft contained a results guarantee",
   },
   {
-    pattern: /100\s*%\s*(guarantee|sure|certain|result)/i,
+    pattern: /100\s*%\s*(guarantee|sure|certain|result|success|ranking)/i,
     trigger: "guarantee_claim",
     summary: "Bot draft contained a 100% guarantee claim",
+  },
+  {
+    pattern: /\d+\s*%\s*guarantee/i,
+    trigger: "guarantee_claim",
+    summary: "Bot draft contained a percentage guarantee claim",
   },
   {
     pattern: /\bother\s+client['s]?\s+data\b|\bconfidential\s+client\b/i,

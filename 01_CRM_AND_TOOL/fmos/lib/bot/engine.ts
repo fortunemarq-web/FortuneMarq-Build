@@ -43,6 +43,31 @@ const ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
 const MAX_HISTORY_TURNS = 20; // user+assistant pairs kept in context
 const MAX_REPLY_TOKENS = 300;
 
+/**
+ * SEND_MODE guard for the bot.
+ *
+ * When WHATSAPP_SEND_MODE=test the bot may only respond to inbound messages
+ * that came from a WHATSAPP_TEST_RECIPIENTS number. This prevents the bot from
+ * accidentally replying to real leads while QA is in progress.
+ *
+ * In live mode (or when the env var is absent) all senders are allowed.
+ */
+function isSenderAllowedInTestMode(senderPhone: string): boolean {
+  const mode = process.env.WHATSAPP_SEND_MODE?.trim().toLowerCase();
+  if (mode !== "test") return true; // live — allow all
+
+  const raw = process.env.WHATSAPP_TEST_RECIPIENTS || "";
+  const testNumbers = raw
+    .split(",")
+    .map((n) => n.trim().replace(/^\+/, "")) // strip leading +
+    .filter(Boolean);
+
+  const normalized = senderPhone.replace(/^\+/, "");
+  return testNumbers.some(
+    (t) => normalized === t || normalized.endsWith(t) || t.endsWith(normalized)
+  );
+}
+
 export interface BotRunOpts {
   leadId: string;
   phone: string;         // E.164 sender phone (used to send reply)
@@ -166,7 +191,12 @@ function staticFallback(): string {
 export async function runBot(opts: BotRunOpts): Promise<BotRunResult> {
   const { leadId, phone, userText, channel = "whatsapp" } = opts;
 
-  // 1. Human takeover check
+  // 1. SEND_MODE guard — in test mode only respond to test numbers
+  if (!isSenderAllowedInTestMode(phone)) {
+    return { handled: false, skipped: "bot_paused" }; // silent skip, real lead unaffected
+  }
+
+  // 2. Human takeover check
   if (await isBotPaused(leadId)) {
     return { handled: false, skipped: "bot_paused" };
   }
