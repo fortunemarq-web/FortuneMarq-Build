@@ -35,6 +35,7 @@ const PUBLIC_PREFIXES = [
   '/forgot-password',
   '/reset-password',
   '/lp/',
+  '/site/',
   '/p/',
   '/a/',
   '/inv/',

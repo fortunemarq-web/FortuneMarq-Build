@@ -32,6 +32,7 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 - Latest build work sits on **`continue-on-mac`**. Merging to `main` triggers a live Vercel deploy — **do not push/merge to `main` without explicit owner approval.**
 - `.env.local` is in place (gitignored). `npx tsc --noEmit` = **0**, `npm run build` = **green**.
 - **Built since the last handoff (all live):** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. the **Direct Report** — immediate type-matched PDF send that replaced the old "curiosity" teaser), Stage 4 delivery (4.1–4.7), the **AI bot (6.1)** (KB filled, guardrails, booking-intent, human-takeover via `leads.bot_paused`), and **messaging safety + unified inbox (6.2/6.3/6.4)**.
+- **🚧 IN PROGRESS — marketing site rebuild (5.1) at `/site`:** re-platform of `fortunemarq.com` into this app. **HOME page DONE + verified** (premium, fast, smooth). Other pages (About/Services/Work/Contact/legal) + advanced animations are the next task. **Read `app/site/README.md` — it is the full, self-contained handoff** (architecture, files, perf invariants, how to wire per-page motion, source HTML in `05_FORTUNEMARQ_ONLINE_PRESENCE/public_html/`). Niche LPs also rebuilt at `/lp/[niche]/[city]` (Dental Hubli enabled).
 
 ## 2. Conventions (non-negotiable)
 - Lead stage writes only via `lib/pipeline.ts` (`leadStageUpdate`/`leadStatusUpdate`) — never write `outreach_stage`/`status` directly.

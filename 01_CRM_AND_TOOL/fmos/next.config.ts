@@ -3,6 +3,16 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Build output dir override — lets sandboxed/CI builds avoid a locked .next
   distDir: process.env.NEXT_DIST_DIR || ".next",
+  // Hosts allowed to load dev-server assets (/_next/*) from a non-localhost
+  // origin — needed for phone testing over Wi-Fi or Tailscale. Without this,
+  // Next 16 can block the page's CSS/JS and it renders blank on a device.
+  // The Tailscale IP is stable per device; the 192.168.* range covers home LAN.
+  allowedDevOrigins: [
+    "100.114.160.47", // this Mac mini on Tailscale (stable)
+    "192.168.1.3",
+    "192.168.1.*",
+    "192.168.0.*",
+  ],
   turbopack: {
     root: __dirname,
   },

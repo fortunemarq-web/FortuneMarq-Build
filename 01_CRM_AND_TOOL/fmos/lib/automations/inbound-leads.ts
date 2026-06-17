@@ -63,3 +63,62 @@ export async function captureInboundLead(formData: {
     }
     return { success: true };
 }
+
+// Public marketing-site contact form → inbound pipeline (source=website).
+// Mirrors captureInboundLead but carries the contact form's richer fields
+// (company, budget, services, message) into the lead note. Same strict,
+// service-role-only validation: this is an unauthenticated write path.
+export async function captureWebsiteLead(formData: {
+    name: string;
+    email: string;
+    phone: string;
+    company?: string;
+    budget?: string;
+    services?: string[];
+    message?: string;
+    landing_page?: string;
+    referrer_url?: string;
+}) {
+    const name = (formData.name || "").trim().slice(0, MAX_FIELD_LENGTH);
+    const phone = (formData.phone || "").trim();
+    const email = (formData.email || "").trim().slice(0, MAX_FIELD_LENGTH);
+    const company = (formData.company || "").trim().slice(0, MAX_FIELD_LENGTH);
+
+    if (!name) {
+        return { success: false, message: "Please enter your name." };
+    }
+    if (!PHONE_REGEX.test(phone)) {
+        return { success: false, message: "Please enter a valid phone number." };
+    }
+    if (email && !EMAIL_REGEX.test(email)) {
+        return { success: false, message: "Please enter a valid email address." };
+    }
+
+    // Fold the extra contact-form context into the lead note (the pipeline
+    // stores `message` on the lead's notes for the telecaller to read).
+    const services = (formData.services || []).filter(Boolean);
+    const detailParts: string[] = [];
+    if (formData.budget) detailParts.push(`Budget: ${formData.budget}`);
+    if (services.length) detailParts.push(`Interested in: ${services.join(", ")}`);
+    if (formData.message) detailParts.push(`Details: ${formData.message.trim().slice(0, 800)}`);
+    const message = detailParts.join("\n") || undefined;
+
+    const result = await processInboundLead({
+        channel: "website",
+        company_name: company || name,
+        contact_person: name,
+        email,
+        phone,
+        message,
+        landing_page: formData.landing_page,
+        referrer_url: formData.referrer_url,
+    });
+
+    if (result.status === "duplicate") {
+        return { success: true, message: "We already have your details — our team will reach out shortly." };
+    }
+    if (!result.success) {
+        return { success: false, message: result.message || "Could not send your message. Please try again." };
+    }
+    return { success: true };
+}

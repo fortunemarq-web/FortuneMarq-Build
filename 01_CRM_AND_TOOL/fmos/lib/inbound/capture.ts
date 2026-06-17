@@ -12,6 +12,7 @@ import { runTrigger } from "@/lib/automations/engine";
 
 export const CHANNEL_LABELS: Record<string, string> = {
   lp: "Landing Page",
+  website: "Website",
   meta_lead_ad: "Meta Lead Ad",
   ctwa: "Click-to-WhatsApp Ad",
   whatsapp: "WhatsApp Inbound",

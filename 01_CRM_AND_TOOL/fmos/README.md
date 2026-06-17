@@ -36,5 +36,14 @@ keys, `ANTHROPIC_API_KEY`, `CRON_SECRET`, WhatsApp/Meta keys, …) before runnin
 
 The telecaller cockpit (`components/sales/telecaller-cockpit.tsx`) logs call outcomes and, on **"Interested — Book Meeting Now"**, creates a Google Calendar/Meet booking (`bookMeeting`); other outcomes auto-send the mapped WhatsApp template (3.2 / 3.4).
 
+## Public site & niche landing pages (Stage 2.1)
+
+**Current status (2026-06-17):** the first data-driven niche landing page is built and verified — **Dental Clinics · Hubli** at `/lp/dental-clinics/hubli` (EN + Kannada via `?lang=kn`). Per the launch gate, only this niche is enabled; the other niches and the fortunemarq.com marketing homepage (5.1) are not built yet. Tracking (Meta Pixel + GA4 + Microsoft Clarity) is wired but env-gated and inert until the IDs are set.
+
+- **Data layer** — `lib/lp/niches.ts` (per-niche registry + `enabled` gate, EN/KN copy, competitors, upsell path), `lib/lp/data.ts` (merges the registry with the live `market_insights` row — the same record that powers the report PDFs — and computes the labelled projection), `lib/lp/copy.ts` (EN/KN section copy).
+- **Page + UI** — `app/lp/[niche]/[city]/page.tsx` (server-rendered, SEO + JSON-LD) and `components/lp/` (`book-cta` lead form + Google Meet slot picker, `lang-toggle`, `reveal` scroll animations, `lp-analytics`).
+- **Lead capture** — `actions/lp-book.ts` runs the public inbound pipeline (`processInboundLead`) and, on a chosen slot, calls `bookMeeting`; **Book a meeting** is the primary CTA, **WhatsApp** (→ bot WABA number, source-tagged) the secondary. No fabricated results — proof is shown on request only.
+- **Seed** — `supabase/2026-06-17_lp_market_insights_hubli_dental.sql` seeds the Dental Clinics · Hubli `market_insights` row (idempotent).
+
 The auth gate lives in `proxy.ts` (Next 16's renamed middleware) and is intentionally
-**fail-open** — read the notes in that file before touching it.
+**fail-open** — read the notes in that file before touching it. Public LP routes (`/lp/*`) bypass the gate by design.

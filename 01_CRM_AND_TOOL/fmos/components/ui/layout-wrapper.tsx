@@ -13,6 +13,7 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/reset-password",
   "/lp",
+  "/site",
   "/client/report",
 ];
 
