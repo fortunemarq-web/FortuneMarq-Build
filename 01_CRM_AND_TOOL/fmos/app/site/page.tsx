@@ -105,13 +105,18 @@ const JOURNAL = [
   { src: "laptop.webp", w: 736, h: 736 },
 ];
 
-const TESTI_LEFT = [
-  { q: "FortuneMarq didn't just run ads; they restructured our entire revenue model. The ROI speaks for itself.", a: "RK", name: "Rajesh Kumar", role: "CEO, FinTech Solutions", ind: "FinTech" },
-  { q: "Finally, an agency that speaks plain English. No jargon, just results. Our organic traffic tripled.", a: "PS", name: "Priya Sharma", role: "Founder, StyleCart", ind: "E-Commerce" },
+// Honest "principle" cards (replacing fabricated testimonials). These are the
+// agency's own stated commitments — no invented people or client quotes. Swap
+// in real testimonials here once they exist (keep the same card shape).
+const PRINCIPLES_LEFT = [
+  { num: "01", title: "Market Exclusivity", statement: "We never work with your direct competitors. Take your niche in your city and it's yours alone.", tag: "Our commitment" },
+  { num: "02", title: "Strategy Over Budget", statement: "We win with positioning and precision — not by outspending. Smart beats big.", tag: "How we operate" },
+  { num: "03", title: "Radical Transparency", statement: "Simple, jargon-free reporting. You'll always know exactly where every rupee goes.", tag: "Always" },
 ];
-const TESTI_RIGHT = [
-  { q: "The level of transparency is unheard of. I know exactly where every rupee goes. Highly recommended.", a: "AK", name: "Amit Khanna", role: "Director, MegaMart Retail", ind: "Retail" },
-  { q: "We were drowning in bad leads. FortuneMarq fixed our CRM, automated follow-ups, and scaled our sales.", a: "NM", name: "Neha Mehta", role: "VP Sales, CloudTech Solutions", ind: "SaaS" },
+const PRINCIPLES_RIGHT = [
+  { num: "04", title: "Education, Not Dependency", statement: "We explain what we're doing and why — so you understand and own your growth.", tag: "Our promise" },
+  { num: "05", title: "Data Before Opinions", statement: "Every plan starts with real search data for your market, not guesswork.", tag: "How we start" },
+  { num: "06", title: "Built To Convert", statement: "Fast, beautiful, measurable — engineered to book customers, not chase vanity metrics.", tag: "What we build" },
 ];
 
 function ServiceCardInner({ s, mobile }: { s: (typeof SERVICES)[number]; mobile?: boolean }) {
@@ -488,29 +493,27 @@ export default function SiteHome() {
           <div className="testi-grid" />
           <div className="testi-container">
             <div className="testi-content">
-              <span className="testi-label">06 // CLIENT FEEDBACK</span>
+              <span className="testi-label">06 // WHY FORTUNEMARQ</span>
               <h2 className="testi-title" data-reveal="lines">
-                Trusted by the <br />
-                <span className="italic-accent">Ambitious.</span>
+                Why founders <br />
+                <span className="italic-accent">choose us.</span>
               </h2>
               <p className="testi-desc">
-                We don&apos;t just sign clients; we build partnerships. Here is what happens when you choose to compete with
-                giants.
+                No borrowed logos or invented quotes — just the commitments we hold to on every account we take on.
               </p>
             </div>
             <div className="testi-visual">
               <div className="testi-marquee-row">
                 <div className="testi-track track-left">
                   {[0, 1].flatMap((dup) =>
-                    TESTI_LEFT.map((t, i) => (
+                    PRINCIPLES_LEFT.map((p, i) => (
                       <div className="testi-card" key={`${dup}-${i}`}>
-                        <p className="testi-quote">&quot;{t.q}&quot;</p>
+                        <p className="testi-quote">{p.statement}</p>
                         <div className="testi-user">
-                          <div className="testi-avatar">{t.a}</div>
+                          <div className="testi-avatar">{p.num}</div>
                           <div className="testi-meta">
-                            <h4>{t.name}</h4>
-                            <span>{t.role}</span>
-                            <span className="testi-industry">{t.ind}</span>
+                            <h4>{p.title}</h4>
+                            <span>{p.tag}</span>
                           </div>
                         </div>
                       </div>
@@ -521,15 +524,14 @@ export default function SiteHome() {
               <div className="testi-marquee-row">
                 <div className="testi-track track-right">
                   {[0, 1].flatMap((dup) =>
-                    TESTI_RIGHT.map((t, i) => (
+                    PRINCIPLES_RIGHT.map((p, i) => (
                       <div className="testi-card" key={`${dup}-${i}`}>
-                        <p className="testi-quote">&quot;{t.q}&quot;</p>
+                        <p className="testi-quote">{p.statement}</p>
                         <div className="testi-user">
-                          <div className="testi-avatar">{t.a}</div>
+                          <div className="testi-avatar">{p.num}</div>
                           <div className="testi-meta">
-                            <h4>{t.name}</h4>
-                            <span>{t.role}</span>
-                            <span className="testi-industry">{t.ind}</span>
+                            <h4>{p.title}</h4>
+                            <span>{p.tag}</span>
                           </div>
                         </div>
                       </div>
