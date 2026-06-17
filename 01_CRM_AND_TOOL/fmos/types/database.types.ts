@@ -4858,6 +4858,7 @@ export type Database = {
           estimated_hours: number | null
           estimated_minutes: number | null
           id: string
+          milestone_id: string | null
           priority: string | null
           project_id: string | null
           revision_count: number | null
@@ -4882,6 +4883,7 @@ export type Database = {
           estimated_hours?: number | null
           estimated_minutes?: number | null
           id?: string
+          milestone_id?: string | null
           priority?: string | null
           project_id?: string | null
           revision_count?: number | null
@@ -4906,6 +4908,7 @@ export type Database = {
           estimated_hours?: number | null
           estimated_minutes?: number | null
           id?: string
+          milestone_id?: string | null
           priority?: string | null
           project_id?: string | null
           revision_count?: number | null

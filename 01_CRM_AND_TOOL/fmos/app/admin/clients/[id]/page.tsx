@@ -66,6 +66,28 @@ export default async function ClientProfilePage({
 
   if (!client) notFound();
 
+  // Delivery plan: milestones + nested tasks across this client's projects (4.5)
+  const projectIds = (projects as any[]).map((p) => p.id);
+  let milestones: any[] = [];
+  let deliveryTasks: any[] = [];
+  if (projectIds.length > 0) {
+    const supabaseAny: any = supabase;
+    const [{ data: ms }, { data: tk }] = await Promise.all([
+      supabaseAny
+        .from("project_milestones")
+        .select("*")
+        .in("project_id", projectIds)
+        .order("order_index", { ascending: true }),
+      supabaseAny
+        .from("tasks")
+        .select("id, title, status, due_date, milestone_id, assigned_to, description, assigned_profile:profiles!tasks_assigned_to_fkey(full_name)")
+        .in("project_id", projectIds)
+        .not("milestone_id", "is", null),
+    ]);
+    milestones = ms ?? [];
+    deliveryTasks = tk ?? [];
+  }
+
   // Fetch strategy data for Strategy tab
   const { fetchStrategyTeam, fetchClientStrategyRuns } = await import("@/app/admin/strategy/actions");
   const [team, clientStrategyRuns] = await Promise.all([
@@ -253,7 +275,7 @@ export default async function ClientProfilePage({
               <AssetVaultTab assets={assets} clientId={id} />
             ),
             projects: (
-              <ProjectsTab projects={projects} clientId={id} />
+              <ProjectsTab projects={projects} clientId={id} milestones={milestones} deliveryTasks={deliveryTasks} />
             ),
             finance: <FinanceTab clientId={id} invoices={invoices} />,
             strategy: (
