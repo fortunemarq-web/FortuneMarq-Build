@@ -70,6 +70,8 @@ in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails
 - **Hero green-glow** — added a green spotlight glow + vignette + eyebrow accent line behind the hero text on
   **every non-home hero** (About, Services, Contact, Work, Privacy/Terms, 404). They read flat otherwise, esp.
   on mobile where the perf overrides dim the auroras. (Lives in each hero's `-bg` layer so it can't cover text.)
+  All five non-home heroes share one `.X-hero-bg::after` rule — including Services, which originally relied on
+  `.sp-aurora` (perf-dimmed on mobile) and so looked flat on phones until it was moved onto the shared rule.
 - **Mobile off-canvas menu redesigned** — minimal/premium: stripped the grid + noise + corner-bracket + decor
   lines, kept a single green glow, refined the numbered links + close button (subtle blur), and switched the
   entrance from a horizontal slide to a smooth staggered **vertical rise** (`site-motion`). Active page is
