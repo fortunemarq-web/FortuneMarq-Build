@@ -22,15 +22,17 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       {/* Fonts. Custom faces self-hosted via @font-face in site.css (preloaded
-          below); Inter + JetBrains Mono from Google with display=swap (no FOUT). */}
+          below): Alliance No1/No2 + JetBrains Mono (woff2). Only Inter comes from
+          Google now (display=swap, no FOUT) — JetBrains Mono is no longer double-loaded. */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
       />
       <link rel="preload" href="/site/fonts/degarism-alliance-no1-light.otf" as="font" type="font/otf" crossOrigin="anonymous" />
       <link rel="preload" href="/site/fonts/degarism-alliance-no2-light.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+      <link rel="preload" href="/site/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
 
       {/* Tracking stack (GA4 + Meta Pixel + Clarity) — fully inert until the
           NEXT_PUBLIC_* IDs are set, so it makes zero network calls otherwise. */}

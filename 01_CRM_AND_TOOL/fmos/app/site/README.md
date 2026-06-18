@@ -43,9 +43,15 @@ The `UX_AUDIT.md` P0 cluster is resolved (host-split itself shipped in `f08d639`
   yet, so it's fully inert until analytics is switched on (matches `SiteAnalytics`). Visual look is untested
   in dev (no tracker ID set); logic verified inert.
 
-Still open (P1/P2 in `UX_AUDIT.md`): fonts via `next/font` (perf — deferred; needs care to avoid a font
-flash), visible breadcrumbs (note: BreadcrumbList JSON-LD already ships on every deep page, so visible crumbs
-are a taste call on an immersive hero design — flagged for owner).
+- **Font dedupe** → JetBrains Mono was double-loaded: a dead self-hosted `@font-face` named `JetBrainsMono`
+  (never matched `--font-mono`) plus a render-blocking Google copy that actually served it. Renamed the
+  self-hosted face to `'JetBrains Mono'` so the woff2 is the single source, dropped JetBrains Mono from the
+  Google request (Inter only now), and preloaded the woff2. (Weight 500 mono labels now synthesise from the
+  Regular woff2 — imperceptible at label sizes.)
+
+P1 status — **owner-closed**: the full `next/font` migration was **declined** (only the safe JetBrains dedupe
+above was done), and **visible breadcrumbs were skipped** (BreadcrumbList JSON-LD already ships on every deep
+page; visible crumbs would clash with the immersive heroes). What's left in `UX_AUDIT.md` is P2 polish.
 
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.
