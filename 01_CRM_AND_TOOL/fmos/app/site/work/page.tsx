@@ -43,8 +43,8 @@ const PROJECTS_HERO = [
   { cat: "Restaurant", date: "08/08/24", name: "Restaurant", tag: "Web design & development", video: "ronin.webm" },
 ];
 const PROJECTS_3 = [
-  { cat: "Agriculture", date: "06/20/24", name: "Real Estate", tag: "Website design", video: "screen-capture-1.webm" },
-  { cat: "Food", date: "07/13/24", name: "Interior Fitout", tag: "Web design & development", video: "fitout.webm" },
+  { cat: "Real Estate", date: "06/20/24", name: "Real Estate", tag: "Website design", video: "screen-capture-1.webm" },
+  { cat: "Interior Design", date: "07/13/24", name: "Interior Fitout", tag: "Web design & development", video: "fitout.webm" },
   { cat: "Hospitality", date: "09/01/24", name: "Event Planner", tag: "Web design & development", video: "eraaya.webm" },
 ];
 
@@ -60,12 +60,12 @@ function ProjectCard({ p, hero }: { p: { cat: string; date: string; name: string
       </div>
       <h3 className="fp-name">{p.name}</h3>
       <p className="fp-tag">{p.tag}</p>
-      <a className="fp-media" href="#">
+      <div className="fp-media">
         <video className="fp-video" preload="metadata" poster={`${VID}/posters/${base}.jpg`} playsInline muted loop>
           <source src={`${VID}/${base}.mp4`} type="video/mp4" />
           <source src={`${VID}/${base}.webm`} type="video/webm" />
         </video>
-      </a>
+      </div>
     </article>
   );
 }

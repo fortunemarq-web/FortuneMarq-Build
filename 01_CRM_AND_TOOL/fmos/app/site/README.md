@@ -3,7 +3,34 @@
 **Status (2026-06-18):** ALL PAGES DONE + verified (desktop + mobile, `tsc` 0, clean console).
 Home, About, Services, Work, Contact, Privacy, Terms are built; robots.txt + sitemap.xml added;
 Contact form wired → FMOS inbound (`source=website`); site-wide advanced-motion pass applied.
+Host-split shipped (`f08d639`) **and the P0 UX-audit cluster is now fixed** (booking honesty, 404,
+legal/DPDP, accessibility, content) — see "P0 UX-audit fixes" below.
 This is the canonical handoff for the public marketing-site rebuild. Read it fully before continuing.
+
+## P0 UX-audit fixes (2026-06-18, after host-split)
+The `UX_AUDIT.md` P0 cluster is resolved (host-split itself shipped in `f08d639`):
+- **Booking truthfulness** — `components/site/site-book-cta.tsx`: the success screen now branches on a real
+  `meetLink`. When Google Meet creation fails, `actions/site-book.ts` degrades to a lead capture and the UI
+  says "Request received — we'll confirm on WhatsApp" instead of a false "Meet confirmed". Added client-side
+  name/phone validation + a submit-time past-slot guard; `meeting_booked` fires only when a Meet exists
+  (otherwise `lead_submitted`).
+- **404 page** — `app/site/not-found.tsx` (branded, full chrome via the site layout, `noindex`). This is also
+  what the host-split serves when the app surface is sealed off (any non-marketing path → `/site/<path>` → here).
+- **Legal** (`privacy-policy/page.tsx`, `terms-of-service/page.tsx`) — entity name set to
+  **"FortuneMarq Media & Marketing"** (brand stays "FortuneMarq" elsewhere); Last Updated → **June 2026**; new
+  **Grievance Officer** section (Sayed Jabeer · sayedjabeer@fortunemarq.com) per India's DPDP Act 2023. Footer ©
+  was already correct.
+- **Accessibility** (`site.css`, `site-motion.tsx`, `site-chrome.tsx`, `site-chat.tsx`, `page.tsx`) — one global
+  `:focus-visible` ring + lighter `--muted` + readable `::placeholder`; mobile menu gets `aria-expanded`,
+  Esc-to-close, and focus move (id `mobile-menu`); chat dialog gets Esc + focus-on-open; the animated stat
+  numbers changed from `<h4>` to `<div>` so the heading outline is clean.
+- **Content** (`page.tsx`, `work/page.tsx`) — project-card category fixes (Agriculture → **Real Estate**,
+  Food → **Interior Design**) on home + Work; dead `href="#"` card links removed (cards are now non-clickable
+  `.fp-media` divs). Owner-confirmed REAL and kept: partner/cert badges, portfolio, result numbers.
+
+Still open (tracked as P1/P2 in `UX_AUDIT.md`): CTA-label unify, 1200×630 OG share image, fonts via `next/font`,
+analytics consent gate, active-nav state, visible breadcrumbs. Changes above are committed-pending (uncommitted
+on `continue-on-mac` at time of writing).
 
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.

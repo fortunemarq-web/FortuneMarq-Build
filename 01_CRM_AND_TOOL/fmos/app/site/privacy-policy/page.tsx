@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | FortuneMarq",
-  description: "How FortuneMarq Media collects, uses, and protects your personal information.",
+  description: "How FortuneMarq Media & Marketing collects, uses, and protects your personal information.",
   robots: "index, follow",
   alternates: { canonical: `${SITE_URL}/privacy-policy` },
 };
@@ -20,14 +20,14 @@ const CONTENT: LegalContent = {
     </>
   ),
   sub: "Transparency in how we collect, use, and protect your information.",
-  updated: "January 2025",
+  updated: "June 2026",
   sections: [
     {
       kicker: "01 // INTRODUCTION",
       title: "Our Commitment to Privacy.",
       blocks: [
         {
-          p: 'At FortuneMarq Media ("we," "our," or "us"), we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.',
+          p: 'At FortuneMarq Media & Marketing ("we," "our," or "us"), we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.',
         },
       ],
     },
@@ -143,7 +143,25 @@ const CONTENT: LegalContent = {
       ],
     },
     {
-      kicker: "11 // CONTACT US",
+      kicker: "11 // GRIEVANCE OFFICER",
+      title: "Data Grievance Officer.",
+      blocks: [
+        {
+          p: "In accordance with India's Digital Personal Data Protection Act, 2023, you may raise any concern or complaint about how we handle your personal data with our Grievance Officer:",
+        },
+        {
+          contact: [
+            { label: "Name", value: "Sayed Jabeer" },
+            { label: "Email", value: "sayedjabeer@fortunemarq.com", href: "mailto:sayedjabeer@fortunemarq.com" },
+          ],
+        },
+        {
+          p: "We will acknowledge and address grievances within the timelines prescribed under applicable law.",
+        },
+      ],
+    },
+    {
+      kicker: "12 // CONTACT US",
       title: "Questions? Get in Touch.",
       blocks: [
         { p: "If you have questions about this Privacy Policy or our data practices, please contact us:" },

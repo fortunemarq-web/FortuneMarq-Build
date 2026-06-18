@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
 export const metadata: Metadata = {
   title: "Terms of Service | FortuneMarq",
-  description: "The legal framework that governs the working relationship between you and FortuneMarq Media.",
+  description: "The legal framework that governs the working relationship between you and FortuneMarq Media & Marketing.",
   robots: "index, follow",
   alternates: { canonical: `${SITE_URL}/terms-of-service` },
 };
@@ -20,14 +20,14 @@ const CONTENT: LegalContent = {
     </>
   ),
   sub: "The legal framework that governs our working relationship.",
-  updated: "January 2025",
+  updated: "June 2026",
   sections: [
     {
       kicker: "01 // AGREEMENT TO TERMS",
       title: "Acceptance of Terms.",
       blocks: [
         {
-          p: 'By accessing or using FortuneMarq Media\'s ("we," "our," or "us") website and services, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our services.',
+          p: 'By accessing or using FortuneMarq Media & Marketing\'s ("we," "our," or "us") website and services, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our services.',
         },
         {
           p: "We reserve the right to modify these Terms at any time. Your continued use of our services after changes constitutes acceptance of the updated Terms.",
@@ -39,7 +39,7 @@ const CONTENT: LegalContent = {
       title: "What We Provide.",
       blocks: [
         {
-          p: "FortuneMarq Media provides digital marketing, web development, SEO, CRM implementation, and related consulting services. We reserve the right to modify, suspend, or discontinue any service at any time without prior notice.",
+          p: "FortuneMarq Media & Marketing provides digital marketing, web development, SEO, CRM implementation, and related consulting services. We reserve the right to modify, suspend, or discontinue any service at any time without prior notice.",
         },
         {
           p: 'All services are provided on an "as-is" and "as-available" basis. We do not guarantee specific results, outcomes, or performance metrics.',
@@ -135,7 +135,7 @@ const CONTENT: LegalContent = {
       title: "Liability Limitations.",
       blocks: [
         {
-          p: "To the maximum extent permitted by law, FortuneMarq Media's total liability for any claims arising from our services shall not exceed the total fees paid by you in the 12 months preceding the claim.",
+          p: "To the maximum extent permitted by law, FortuneMarq Media & Marketing's total liability for any claims arising from our services shall not exceed the total fees paid by you in the 12 months preceding the claim.",
         },
         {
           p: "We are not liable for indirect, incidental, consequential, or punitive damages, including lost profits, lost revenue, or business interruption.",
@@ -186,7 +186,7 @@ const CONTENT: LegalContent = {
       title: "Complete Agreement.",
       blocks: [
         {
-          p: "These Terms, together with your specific service agreement, constitute the entire agreement between you and FortuneMarq Media regarding the subject matter herein.",
+          p: "These Terms, together with your specific service agreement, constitute the entire agreement between you and FortuneMarq Media & Marketing regarding the subject matter herein.",
         },
       ],
     },

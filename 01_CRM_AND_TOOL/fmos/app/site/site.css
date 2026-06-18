@@ -21,7 +21,7 @@
     --bg: #030303;
     --card-bg: #050505;
     --ink: #EAEAEA;
-    --muted: #888888;
+    --muted: #9e9e9e;
     --accent: #42CA80;
     --accent-dim: rgba(66, 202, 128, 0.15);
     --border: rgba(255, 255, 255, 0.08);
@@ -5976,3 +5976,22 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
   .sc-panel { left: 12px; bottom: 150px; width: calc(100vw - 24px); height: min(70vh, calc(100vh - 170px)); }
   .sc-fab { left: 16px; }
 }
+
+/* ── Accessibility: visible keyboard focus (WCAG 2.4.7) ──────────────────
+   One global rule so keyboard users always get a clear focus ring — even on
+   inputs that clear the default outline. :focus-visible stays invisible for
+   mouse/touch, so the visual design is unchanged for pointer users. */
+*:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+/* Lift placeholder contrast toward AA (was too faint to read). */
+::placeholder { color: rgba(255, 255, 255, 0.5); opacity: 1; }
+
+/* ── 404 / not-found page ────────────────────────────────────────────── */
+.nf-hero { text-align: center; }
+.nf-hero .lg-sub { margin-left: auto; margin-right: auto; }
+.nf-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+.nf-btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+.nf-btn-ghost:hover { background: rgba(255, 255, 255, 0.05); }

@@ -78,17 +78,42 @@ export default function SiteBookCta() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setBusy(true);
     setError(null);
+
+    // Client-side validation — the form is noValidate, so guard here for instant
+    // feedback (the server validates again).
+    if (!form.contact_person.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (!/^[+\d][\d\s\-()]{6,19}$/.test(form.phone.trim())) {
+      setError("Please enter a valid phone number.");
+      return;
+    }
+    // Past-slot guard: slots are generated once at mount, so a chosen slot can
+    // lapse if the page sits open. Never let a past time be booked.
+    if (slot && new Date(slot).getTime() < Date.now()) {
+      setSlot(null);
+      setError("That time has just passed — please pick another slot.");
+      return;
+    }
+
+    setBusy(true);
     try {
       if (slot) {
         const res = await bookSiteMeeting(payload(), slot);
         if (!res.success) {
           setError(res.message || "Something went wrong.");
-        } else {
+        } else if (res.meetLink) {
+          // A real Google Meet exists — only now is it truly "booked".
           trackEvent("meeting_booked", { source: "site-book" });
           setMeetLink(res.meetLink);
           setState("booked");
+        } else {
+          // Lead saved but no Meet was created — tell the truth, don't fire
+          // meeting_booked.
+          trackEvent("lead_submitted", { source: "site-book" });
+          setState("requested");
         }
       } else {
         const res = await requestSiteCall(payload());
@@ -121,7 +146,7 @@ export default function SiteBookCta() {
           <p>
             {booked
               ? "Your Google Meet is confirmed — we've sent the details and a reminder. See you then."
-              : "Thanks — our team will reach out shortly to lock in a time that works for you."}
+              : "Thanks — our team will confirm your time on WhatsApp shortly."}
           </p>
           {booked && meetLink && (
             <a className="sbk-meetlink" href={meetLink} target="_blank" rel="noopener noreferrer">

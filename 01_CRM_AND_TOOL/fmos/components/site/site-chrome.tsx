@@ -50,7 +50,7 @@ export function SiteHeader() {
         <Link href="/contact#book" className="header-cta">
           Book a Meeting
         </Link>
-        <button className="header-toggle" aria-label="Menu">
+        <button className="header-toggle" aria-label="Menu" aria-expanded={false} aria-controls="mobile-menu">
           <span />
           <span />
         </button>
@@ -61,7 +61,7 @@ export function SiteHeader() {
 
 export function SiteMobileMenu() {
   return (
-    <div className="mobile-menu">
+    <div className="mobile-menu" id="mobile-menu">
       <div className="mm-bg">
         <div className="mm-aurora" />
         <div className="mm-grid" />

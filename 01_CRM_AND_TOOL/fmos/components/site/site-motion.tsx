@@ -228,25 +228,45 @@ function initMobileMenu(cleanups: Array<() => void>) {
   if (!toggle || !menu) return;
 
   gsap.set(menuLinks, { x: -30, opacity: 0 });
+  const setExpanded = (v: boolean) => toggle.setAttribute("aria-expanded", v ? "true" : "false");
+  setExpanded(false);
+
+  const openMenu = () => {
+    document.body.classList.add("menu-open");
+    menu.classList.add("is-active");
+    document.body.style.overflow = "hidden";
+    setExpanded(true);
+    gsap.to(menuLinks, { x: 0, opacity: 1, duration: 0.3, stagger: 0.04, ease: "power2.out" });
+    menuLinks[0]?.focus();
+  };
+  const closeMenu = (returnFocus = false) => {
+    document.body.classList.remove("menu-open");
+    menu.classList.remove("is-active");
+    document.body.style.overflow = "";
+    setExpanded(false);
+    gsap.to(menuLinks, { x: -20, opacity: 0, duration: 0.15, ease: "power2.in" });
+    if (returnFocus) toggle.focus();
+  };
   const onToggle = () => {
-    document.body.classList.toggle("menu-open");
-    menu.classList.toggle("is-active");
-    if (menu.classList.contains("is-active")) {
-      document.body.style.overflow = "hidden";
-      gsap.to(menuLinks, { x: 0, opacity: 1, duration: 0.3, stagger: 0.04, ease: "power2.out" });
-    } else {
-      document.body.style.overflow = "";
-      gsap.to(menuLinks, { x: -20, opacity: 0, duration: 0.15, ease: "power2.in" });
-    }
+    if (menu.classList.contains("is-active")) closeMenu(true);
+    else openMenu();
   };
   toggle.addEventListener("click", onToggle);
   cleanups.push(() => toggle.removeEventListener("click", onToggle));
+
+  // Escape closes the menu and returns focus to the toggle (keyboard a11y).
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === "Escape" && menu.classList.contains("is-active")) closeMenu(true);
+  };
+  document.addEventListener("keydown", onKey);
+  cleanups.push(() => document.removeEventListener("keydown", onKey));
 
   const linkEls = Array.from(menu.querySelectorAll<HTMLAnchorElement>("a"));
   const onLink = () => {
     document.body.classList.remove("menu-open");
     menu.classList.remove("is-active");
     document.body.style.overflow = "";
+    setExpanded(false);
     gsap.set(menuLinks, { x: -30, opacity: 0 });
   };
   linkEls.forEach((l) => l.addEventListener("click", onLink));

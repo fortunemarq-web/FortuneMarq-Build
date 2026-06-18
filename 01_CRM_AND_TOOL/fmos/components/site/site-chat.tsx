@@ -28,10 +28,16 @@ export default function SiteChat() {
   const [leadState, setLeadState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [leadMsg, setLeadMsg] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, open, showHandoff, showLeadForm, leadState]);
+
+  // Move focus into the panel when it opens (keyboard users land inside the dialog).
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
 
   function toggle() {
     setOpen((o) => {
@@ -126,7 +132,15 @@ export default function SiteChat() {
       </button>
 
       {open && (
-        <div className="sc-panel" role="dialog" aria-label="FortuneMarq chat">
+        <div
+          className="sc-panel"
+          role="dialog"
+          aria-modal="false"
+          aria-label="FortuneMarq chat"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setOpen(false);
+          }}
+        >
           <div className="sc-head">
             <div className="sc-head-id">
               <span className="sc-dot" />
@@ -191,6 +205,7 @@ export default function SiteChat() {
 
           <form className="sc-input-row" onSubmit={send}>
             <input
+              ref={inputRef}
               className="sc-input"
               placeholder="Type your message…"
               value={input}
