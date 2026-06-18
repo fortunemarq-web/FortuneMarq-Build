@@ -28,9 +28,14 @@ The `UX_AUDIT.md` P0 cluster is resolved (host-split itself shipped in `f08d639`
   Food → **Interior Design**) on home + Work; dead `href="#"` card links removed (cards are now non-clickable
   `.fp-media` divs). Owner-confirmed REAL and kept: partner/cert badges, portfolio, result numbers.
 
-Still open (tracked as P1/P2 in `UX_AUDIT.md`): CTA-label unify, 1200×630 OG share image, fonts via `next/font`,
-analytics consent gate, active-nav state, visible breadcrumbs. Changes above are committed-pending (uncommitted
-on `continue-on-mac` at time of writing).
+## P1 progress (2026-06-18)
+- **CTA label unified** → **"Book a Strategy Call"** on every primary button (header, mobile menu, chat, Work,
+  Services bottom CTA); Work/Services CTAs now deep-link to `/contact#book`. Hero/footer/about already matched.
+- **Active-nav state** → header + mobile links get `.active` + `aria-current="page"` via `usePathname`
+  (the `/site` host-split prefix is normalised; `site-chrome.tsx` is now a client component).
+
+Still open (P1/P2 in `UX_AUDIT.md`): 1200×630 OG share image, fonts via `next/font`, analytics consent gate,
+visible breadcrumbs.
 
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.
