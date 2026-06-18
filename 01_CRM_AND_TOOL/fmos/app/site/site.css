@@ -6089,3 +6089,29 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
   content: ""; display: block; width: 40px; height: 2px; margin: 16px auto 0;
   background: linear-gradient(90deg, var(--accent), transparent);
 }
+
+/* ── Green spotlight glow + vignette on the remaining heroes (Contact / Work /
+   Legal / 404), matching the About + Services treatment. Lives inside the -bg
+   layer so it can never cover the hero content. ─────────────────────────── */
+.ct-hero-bg::after, .wk-hero-bg::after, .lg-hero-bg::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(60% 48% at 50% 38%, rgba(66, 202, 128, 0.16), transparent 70%),
+    radial-gradient(125% 95% at 50% 42%, transparent 48%, rgba(0, 0, 0, 0.5));
+}
+
+/* ── Minimal / premium mobile off-canvas menu ─────────────────────────── */
+.mm-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(58% 42% at 50% 36%, rgba(66, 202, 128, 0.13), transparent 70%);
+}
+.mm-aurora { filter: blur(90px); opacity: 0.8; }
+.mobile-nav { gap: 4px; }
+/* override the old translateX(-60px) base — the entrance is now a y-rise (site-motion) */
+.m-link { letter-spacing: -0.01em; transform: none; }
+.m-link-num { font-size: 11px; opacity: 0.45; }
+.mm-footer { border-top-color: rgba(255, 255, 255, 0.06); padding-top: 32px; }
+.mm-close {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}

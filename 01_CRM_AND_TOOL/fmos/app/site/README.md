@@ -67,8 +67,13 @@ battlefield" → "crowded digital market", "we bring you into the war room" → 
 in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails) — left as-is.
 
 ## Design polish (2026-06-18)
-- **About + Services heroes** lifted (they read flat, esp. on mobile where perf overrides dim the auroras):
-  added a green spotlight glow + vignette behind the hero text and a small accent line under the eyebrow label.
+- **Hero green-glow** — added a green spotlight glow + vignette + eyebrow accent line behind the hero text on
+  **every non-home hero** (About, Services, Contact, Work, Privacy/Terms, 404). They read flat otherwise, esp.
+  on mobile where the perf overrides dim the auroras. (Lives in each hero's `-bg` layer so it can't cover text.)
+- **Mobile off-canvas menu redesigned** — minimal/premium: stripped the grid + noise + corner-bracket + decor
+  lines, kept a single green glow, refined the numbered links + close button (subtle blur), and switched the
+  entrance from a horizontal slide to a smooth staggered **vertical rise** (`site-motion`). Active page is
+  highlighted green + underlined.
 - **About "Our Approach" dead space** fixed — the 2-col grid now `align-items: center`, so the shorter left
   column centres against the taller process steps instead of leaving ~360px blank below it.
 - Two leftover combat words softened: "Three Pillars of Dominance" → "…of Difference"; "market dominance" →

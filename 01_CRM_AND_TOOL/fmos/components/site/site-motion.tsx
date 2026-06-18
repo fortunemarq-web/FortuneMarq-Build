@@ -227,7 +227,7 @@ function initMobileMenu(cleanups: Array<() => void>) {
   const menuLinks = document.querySelectorAll<HTMLElement>(".m-link");
   if (!toggle || !menu) return;
 
-  gsap.set(menuLinks, { x: -30, opacity: 0 });
+  gsap.set(menuLinks, { y: 44, opacity: 0 });
   const setExpanded = (v: boolean) => toggle.setAttribute("aria-expanded", v ? "true" : "false");
   setExpanded(false);
 
@@ -236,7 +236,7 @@ function initMobileMenu(cleanups: Array<() => void>) {
     menu.classList.add("is-active");
     document.body.style.overflow = "hidden";
     setExpanded(true);
-    gsap.to(menuLinks, { x: 0, opacity: 1, duration: 0.3, stagger: 0.04, ease: "power2.out" });
+    gsap.to(menuLinks, { y: 0, opacity: 1, duration: 0.6, stagger: 0.07, ease: "power3.out" });
     menuLinks[0]?.focus();
   };
   const closeMenu = (returnFocus = false) => {
@@ -244,7 +244,7 @@ function initMobileMenu(cleanups: Array<() => void>) {
     menu.classList.remove("is-active");
     document.body.style.overflow = "";
     setExpanded(false);
-    gsap.to(menuLinks, { x: -20, opacity: 0, duration: 0.15, ease: "power2.in" });
+    gsap.to(menuLinks, { y: 24, opacity: 0, duration: 0.2, stagger: 0.03, ease: "power2.in" });
     if (returnFocus) toggle.focus();
   };
   const onToggle = () => {
@@ -275,7 +275,7 @@ function initMobileMenu(cleanups: Array<() => void>) {
     menu.classList.remove("is-active");
     document.body.style.overflow = "";
     setExpanded(false);
-    gsap.set(menuLinks, { x: -30, opacity: 0 });
+    gsap.set(menuLinks, { y: 44, opacity: 0 });
   };
   linkEls.forEach((l) => l.addEventListener("click", onLink));
   cleanups.push(() => linkEls.forEach((l) => l.removeEventListener("click", onLink)));

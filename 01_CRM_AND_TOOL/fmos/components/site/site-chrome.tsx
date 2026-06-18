@@ -80,8 +80,7 @@ export function SiteMobileMenu() {
     <div className="mobile-menu" id="mobile-menu">
       <div className="mm-bg">
         <div className="mm-aurora" />
-        <div className="mm-grid" />
-        <div className="mm-noise" />
+        <div className="mm-glow" />
       </div>
       <button className="mm-close" aria-label="Close menu">✕</button>
       <div className="mm-content">
@@ -106,12 +105,6 @@ export function SiteMobileMenu() {
             <Link href="/contact#book" className="mm-cta-btn">Book a Strategy Call →</Link>
           </div>
         </div>
-      </div>
-      <div className="mm-decor">
-        <div className="mm-line mm-line-1" />
-        <div className="mm-line mm-line-2" />
-        <div className="mm-corner mm-corner-tl" />
-        <div className="mm-corner mm-corner-br" />
       </div>
     </div>
   );
