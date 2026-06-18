@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { captureWebsiteLead } from "@/lib/automations/inbound-leads";
+import { trackEvent } from "@/components/site/site-analytics";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -48,6 +49,7 @@ export default function SiteContactForm() {
     });
 
     if (res.success) {
+      trackEvent("lead_submitted", { source: "home-contact" });
       setStatus("sent");
       form.reset();
       setTimeout(() => setStatus("idle"), 4000);

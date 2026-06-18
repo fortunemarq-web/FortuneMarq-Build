@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { captureWebsiteLead } from "@/lib/automations/inbound-leads";
+import { trackEvent } from "@/components/site/site-analytics";
 
 const SERVICES = [
   { value: "web", label: "Website" },
@@ -60,6 +61,7 @@ export default function SiteContactPageForm() {
     });
 
     if (res.success) {
+      trackEvent("lead_submitted", { source: "contact-page" });
       setStatus("sent");
       form.reset();
       // Return the button to its resting state after a beat.

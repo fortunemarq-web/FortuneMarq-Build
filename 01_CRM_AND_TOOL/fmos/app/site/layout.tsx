@@ -9,6 +9,7 @@ import {
 } from "@/components/site/site-chrome";
 import SiteMotion from "@/components/site/site-motion";
 import { FloatingWhatsApp } from "@/components/site/site-whatsapp";
+import SiteAnalytics from "@/components/site/site-analytics";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -30,6 +31,9 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <link rel="preload" href="/site/fonts/degarism-alliance-no1-light.otf" as="font" type="font/otf" crossOrigin="anonymous" />
       <link rel="preload" href="/site/fonts/degarism-alliance-no2-light.otf" as="font" type="font/otf" crossOrigin="anonymous" />
 
+      {/* Tracking stack (GA4 + Meta Pixel + Clarity) — fully inert until the
+          NEXT_PUBLIC_* IDs are set, so it makes zero network calls otherwise. */}
+      <SiteAnalytics />
       <SitePreloader />
       <div className="global-noise" />
       <SiteHeader />
