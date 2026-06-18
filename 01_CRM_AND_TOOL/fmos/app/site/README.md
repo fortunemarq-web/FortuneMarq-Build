@@ -7,6 +7,17 @@ Host-split shipped (`f08d639`) **and the P0 UX-audit cluster is now fixed** (boo
 legal/DPDP, accessibility, content) — see "P0 UX-audit fixes" below.
 This is the canonical handoff for the public marketing-site rebuild. Read it fully before continuing.
 
+## Blog + legacy redirects (2026-06-18)
+- **Markdown blog** — posts are plain `.md` files in `content/blog/` (frontmatter + body). `/blog` index +
+  `/blog/[slug]` (SSG via `generateStaticParams`), parsed by `lib/blog.ts`, rendered with `react-markdown`
+  (no new deps). Add a `.md` file → it auto-appears on the index + sitemap + gets per-post SEO (canonical, OG,
+  Article JSON-LD). Files starting with `_` stay drafts. "Blog" is in the header + footer nav and in
+  `layout-wrapper` `PUBLIC_ROUTES`. **Owner publishing guide: `app/site/BLOG_HOW_TO.md`.** Verified: `npm run
+  build` prerenders `/site/blog` (static) + `/site/blog/[slug]` (SSG).
+- **Legacy `.html` → clean 301s** (`proxy.ts` `LEGACY_HTML_REDIRECTS`) — the old Hostinger site's
+  `/about.html`, `/services.html`, etc. 301-redirect to the clean paths (marketing host only) so Google
+  forwards the existing ranking through the domain migration. **Critical for not losing SEO at cutover.**
+
 ## P0 UX-audit fixes (2026-06-18, after host-split)
 The `UX_AUDIT.md` P0 cluster is resolved (host-split itself shipped in `f08d639`):
 - **Booking truthfulness** — `components/site/site-book-cta.tsx`: the success screen now branches on a real

@@ -60,6 +60,18 @@ function isInfraPath(pathname: string): boolean {
   )
 }
 
+/** Old Hostinger .html URLs → clean paths. 301 so Google forwards the existing
+ *  ranking/indexing to the new pages through the domain migration. */
+const LEGACY_HTML_REDIRECTS: Record<string, string> = {
+  "/index.html": "/",
+  "/about.html": "/about",
+  "/services.html": "/services",
+  "/work.html": "/work",
+  "/contact.html": "/contact",
+  "/privacy-policy.html": "/privacy-policy",
+  "/terms-of-service.html": "/terms-of-service",
+}
+
 const ROLE_ROUTES: Record<string, string> = {
   admin: '/admin',
   telecaller: '/sales',
@@ -108,6 +120,14 @@ export async function proxy(request: NextRequest) {
 
   // ── Host-split: marketing host serves the /site/* pages at clean root paths ──
   if (isMarketingHost(request)) {
+    // Legacy .html URLs from the old Hostinger site → 301 to the clean path (must
+    // run BEFORE isInfraPath, which would otherwise treat .html as a passthrough).
+    const legacyTarget = LEGACY_HTML_REDIRECTS[pathname]
+    if (legacyTarget) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = legacyTarget
+      return NextResponse.redirect(redirectUrl, 301)
+    }
     if (isInfraPath(pathname)) return NextResponse.next()
     // Already an internal /site path (or someone hit it directly) — serve as-is.
     if (pathname === "/site" || pathname.startsWith("/site/")) return NextResponse.next()
