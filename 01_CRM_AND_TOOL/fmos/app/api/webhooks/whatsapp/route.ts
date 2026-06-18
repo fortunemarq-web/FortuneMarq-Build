@@ -7,6 +7,14 @@ import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { runBot } from "@/lib/bot/engine";
 import { handleQualityWebhook } from "@/lib/whatsapp/quality";
 import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
+import {
+  handleMenuTap,
+  isMenuReplyId,
+  isMenuTrigger,
+  sendLanguagePicker,
+  sendMainMenu,
+  getLeadLang,
+} from "@/lib/bot/menu";
 
 /**
  * PHASE F STAGE 1 — WhatsApp Cloud API webhook.
@@ -172,10 +180,18 @@ async function handleInboundMessage(message: any, value: any) {
         ? { id: message.button?.payload, title: message.button?.text }
         : null;
 
+  // Interactive reply id (button OR list row) — used to route guided-menu taps.
+  const interactiveId: string | null =
+    message?.type === "interactive"
+      ? (message.interactive?.button_reply?.id ?? message.interactive?.list_reply?.id ?? null)
+      : message?.type === "button"
+        ? (message.button?.payload ?? null)
+        : null;
+
   // Find an existing lead by phone suffix
   const { data: lead } = await supabase
     .from("leads")
-    .select("id, company_name, contact_person, phone, city, assigned_sales_exec, tags, follow_up_date")
+    .select("id, company_name, contact_person, phone, city, assigned_sales_exec, tags, follow_up_date, wa_lang")
     .like("phone", `%${phone10}`)
     .limit(1)
     .maybeSingle();
@@ -196,7 +212,9 @@ async function handleInboundMessage(message: any, value: any) {
       raw: { message, contacts: value?.contacts, metadata: value?.metadata },
     });
 
-    // Auto-greeting (session message — lead just messaged us, window is open)
+    // Auto-greeting (session message — lead just messaged us, window is open).
+    // The greeting IS the language picker: pick English/Kannada/Hindi by tapping,
+    // then the guided menu opens in that language.
     if (result.status === "created" && result.leadId) {
       const { data: setting } = await supabase
         .from("app_settings")
@@ -204,10 +222,8 @@ async function handleInboundMessage(message: any, value: any) {
         .eq("key", "whatsapp_auto_greeting")
         .maybeSingle();
       const enabled = setting?.value?.enabled !== false; // default ON
-      const greeting: string =
-        setting?.value?.message || "Got your enquiry — we'll call you shortly. 😊\n— FortuneMarq";
       if (enabled) {
-        await sendWhatsAppText(from, greeting, { leadId: result.leadId });
+        await sendLanguagePicker(from, result.leadId);
       }
     }
 
@@ -255,6 +271,13 @@ async function handleInboundMessage(message: any, value: any) {
     .update({ last_activity_at: new Date().toISOString(), last_inbound_at: new Date().toISOString() })
     .eq("id", lead.id);
 
+  // ── Guided menu tap (m:* button/list ids) → route to the multilingual menu ──
+  // Language pick, service detail, slot booking, talk-to-a-person all live here.
+  if (isMenuReplyId(interactiveId)) {
+    await handleMenuTap({ leadId: lead.id, phone: from, id: interactiveId as string });
+    return;
+  }
+
   // Re-opt-in: "START" (and common variants) → clear the opt-out flag.
   if (isStartKeyword(text)) {
     await supabase.from("leads").update({ wa_opt_out: false }).eq("id", lead.id);
@@ -296,17 +319,28 @@ async function handleInboundMessage(message: any, value: any) {
     return;
   }
 
+  // ── Plain greeting / "menu" → surface the guided menu (pick language first) ──
+  // Lets a customer re-open the tap menu any time by sending "hi"/"menu".
+  if (isMenuTrigger(text)) {
+    const lang = await getLeadLang(lead.id);
+    if (lang) await sendMainMenu(from, lead.id, lang);
+    else await sendLanguagePicker(from, lead.id);
+    return;
+  }
+
   // ── Bot — primary free-text handler ─────────────────────────────────────
   // runBot() respects WHATSAPP_SEND_MODE (test-number gate), bot_paused
   // (human takeover), and all guardrails. It logs both turns to bot_threads.
-  // If it can't handle (bot paused / test-mode blocked) we fall through to
-  // the static exec notification below so no message is ever silently lost.
+  // It replies in the lead's chosen language (wa_lang). If it can't handle
+  // (bot paused / test-mode blocked) we fall through to the static exec
+  // notification below so no message is ever silently lost.
   const botResult = await runBot({
     leadId: lead.id,
     phone: from,
     userText: text,
     channel: "whatsapp",
     waMessageId,
+    lang: lead.wa_lang || undefined,
   }).catch((e) => {
     console.error("[webhook] runBot error:", e);
     return { handled: false };

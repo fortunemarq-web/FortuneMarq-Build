@@ -75,6 +75,7 @@ export interface BotRunOpts {
   userText: string;      // raw inbound message text
   channel?: string;      // "whatsapp" | "web" | "instagram" — default "whatsapp"
   waMessageId?: string;
+  lang?: BotLang;        // conversation language (leads.wa_lang) — reply is written in it
 }
 
 export interface BotRunResult {
@@ -148,9 +149,20 @@ async function logTurn(opts: {
 
 // ─── Anthropic call ───────────────────────────────────────────────────────────
 
+export type BotLang = "en" | "kn" | "hi";
+const LANG_NAMES: Record<BotLang, string> = { en: "English", kn: "Kannada (ಕನ್ನಡ)", hi: "Hindi (हिन्दी)" };
+
+function languageInstruction(lang?: BotLang): string {
+  if (lang && lang !== "en") {
+    return `\n\nLANGUAGE: Reply ONLY in ${LANG_NAMES[lang]} using its native script. Keep it simple, warm and natural for a local small-business owner.`;
+  }
+  return `\n\nLANGUAGE: Reply in the SAME language the customer writes in — English, Kannada or Hindi (including Roman/"Kanglish" script). Mirror their language and keep it simple.`;
+}
+
 async function callAnthropic(
   history: ThreadMessage[],
-  userText: string
+  userText: string,
+  lang?: BotLang
 ): Promise<string | null> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return null;
@@ -165,7 +177,12 @@ async function callAnthropic(
     const response = await client.messages.create({
       model: ANTHROPIC_MODEL,
       max_tokens: MAX_REPLY_TOKENS,
-      system: KB_SYSTEM_PROMPT,
+      // The static KB is cached (prompt caching) so it isn't re-processed/re-billed
+      // on every message; the per-conversation language note follows it, uncached.
+      system: [
+        { type: "text", text: KB_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+        { type: "text", text: languageInstruction(lang) },
+      ],
       messages,
     });
 
@@ -193,6 +210,8 @@ export interface GenerateReplyInput {
   userText: string;
   history: ThreadMessage[];
   channel: string;
+  /** conversation language (from leads.wa_lang); the reply is written in it. */
+  lang?: BotLang;
   /** present once a lead exists (WhatsApp always; web after capture). When
    *  absent (anonymous web visitor) the DB-mutating side effects AND the admin
    *  escalation alert are skipped. */
@@ -264,7 +283,7 @@ export async function generateBotReply(input: GenerateReplyInput): Promise<Gener
   }
 
   // 4. Anthropic call
-  const draft = await callAnthropic(history, userText);
+  const draft = await callAnthropic(history, userText, input.lang);
   if (!draft) {
     // API error — static fallback
     return { reply: staticFallback(), kind: "reply", escalate: false, bookingIntent: booking.hasIntent };
@@ -309,7 +328,7 @@ export async function runBot(opts: BotRunOpts): Promise<BotRunResult> {
 
   // 4. Shared brain — identical guardrails/escalation/booking for every channel
   const history = await loadHistory(leadId, channel);
-  const r = await generateBotReply({ userText, history, channel, leadId });
+  const r = await generateBotReply({ userText, history, channel, leadId, lang: opts.lang });
 
   // 5. Send + log (WhatsApp-specific). The opt-out confirmation must bypass the
   //    central opt-out send guard since we just flagged the lead.

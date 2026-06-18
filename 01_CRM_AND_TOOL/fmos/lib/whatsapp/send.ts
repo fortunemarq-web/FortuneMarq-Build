@@ -299,6 +299,57 @@ export async function sendWhatsAppButtons(
   return last;
 }
 
+/** Interactive list menu — session message (24h window). Up to 10 rows total
+ *  across sections. Tapping a row sends back its `id` as an interactive
+ *  list_reply (handled in the webhook). Used by the guided multilingual menu. */
+export async function sendWhatsAppList(
+  phone: string,
+  menu: {
+    body: string;
+    button: string;
+    header?: string;
+    footer?: string;
+    sections: { title?: string; rows: { id: string; title: string; description?: string }[] }[];
+  },
+  opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
+): Promise<SendResult> {
+  const creds = credentials();
+  const rawTo = toWaNumber(phone);
+  if (!rawTo) return { success: false, error: "Invalid phone number" };
+  if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
+  const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
+  if (blocked) return blocked;
+  // SEND-MODE GUARD — in test mode every recipient is redirected to WHATSAPP_TEST_RECIPIENTS.
+  const { phones, testMode } = resolveRecipients(rawTo);
+  const logNote = testMode ? `[TEST→${rawTo}] ` : "";
+  const sections = menu.sections.map((s) => ({
+    ...(s.title ? { title: s.title.slice(0, 24) } : {}),
+    rows: s.rows.slice(0, 10).map((r) => ({
+      id: r.id.slice(0, 200),
+      title: r.title.slice(0, 24),
+      ...(r.description ? { description: r.description.slice(0, 72) } : {}),
+    })),
+  }));
+  let last: SendResult = { success: false, error: "No recipients" };
+  for (const to of phones) {
+    last = await graphPost(`${creds.phoneNumberId}/messages`, {
+      messaging_product: "whatsapp",
+      to,
+      type: "interactive",
+      interactive: {
+        type: "list",
+        ...(menu.header ? { header: { type: "text", text: menu.header.slice(0, 60) } } : {}),
+        body: { text: menu.body.slice(0, 1024) },
+        ...(menu.footer ? { footer: { text: menu.footer.slice(0, 60) } } : {}),
+        action: { button: menu.button.slice(0, 20), sections },
+      },
+    });
+    if (last.success)
+      await logOutbound({ ...opts, phone: rawTo, message: `${logNote}${menu.body}`, messageType: "interactive", waMessageId: last.messageId });
+  }
+  return last;
+}
+
 /** Document (PDF etc.) by public link OR previously-uploaded media id. */
 export async function sendWhatsAppDocument(
   phone: string,
