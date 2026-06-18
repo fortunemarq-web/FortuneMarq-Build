@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/work`,
     title: "Our Work | FortuneMarq - Digital Marketing Agency",
     description: "Premium websites and growth campaigns engineered for measurable revenue.",
-    images: [`${SITE_URL}/site/images/FORTUNEMARQ-LOGO.webp`],
+    images: [`${SITE_URL}/site/images/og-default.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "Our Work | FortuneMarq",
     description: "Premium websites and growth campaigns engineered for measurable revenue.",
-    images: [`${SITE_URL}/site/images/FORTUNEMARQ-LOGO.webp`],
+    images: [`${SITE_URL}/site/images/og-default.png`],
   },
 };
 

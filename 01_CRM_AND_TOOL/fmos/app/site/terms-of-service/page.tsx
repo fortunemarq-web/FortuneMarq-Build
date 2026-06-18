@@ -10,6 +10,18 @@ export const metadata: Metadata = {
   description: "The legal framework that governs the working relationship between you and FortuneMarq Media & Marketing.",
   robots: "index, follow",
   alternates: { canonical: `${SITE_URL}/terms-of-service` },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/terms-of-service`,
+    title: "Terms of Service | FortuneMarq",
+    description: "The legal framework that governs the working relationship between you and FortuneMarq Media & Marketing.",
+    images: [`${SITE_URL}/site/images/og-default.png`],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms of Service | FortuneMarq",
+    images: [`${SITE_URL}/site/images/og-default.png`],
+  },
 };
 
 const CONTENT: LegalContent = {

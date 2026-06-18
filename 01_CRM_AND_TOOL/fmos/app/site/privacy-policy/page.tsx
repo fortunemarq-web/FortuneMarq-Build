@@ -10,6 +10,18 @@ export const metadata: Metadata = {
   description: "How FortuneMarq Media & Marketing collects, uses, and protects your personal information.",
   robots: "index, follow",
   alternates: { canonical: `${SITE_URL}/privacy-policy` },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/privacy-policy`,
+    title: "Privacy Policy | FortuneMarq",
+    description: "How FortuneMarq Media & Marketing collects, uses, and protects your personal information.",
+    images: [`${SITE_URL}/site/images/og-default.png`],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | FortuneMarq",
+    images: [`${SITE_URL}/site/images/og-default.png`],
+  },
 };
 
 const CONTENT: LegalContent = {

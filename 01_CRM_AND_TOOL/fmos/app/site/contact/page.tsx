@@ -22,13 +22,13 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/contact`,
     title: "Contact Us | FortuneMarq - Digital Marketing Agency",
     description: "We help businesses grow through Web Design, SEO, Google Ads, Meta Ads, and CRM solutions.",
-    images: [`${SITE_URL}/site/images/FORTUNEMARQ-LOGO.webp`],
+    images: [`${SITE_URL}/site/images/og-default.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact Us | FortuneMarq - Digital Marketing Agency",
     description: "Web Design, SEO, Google Ads, Meta Ads, and CRM solutions in Hubli.",
-    images: [`${SITE_URL}/site/images/FORTUNEMARQ-LOGO.webp`],
+    images: [`${SITE_URL}/site/images/og-default.png`],
   },
 };
 
