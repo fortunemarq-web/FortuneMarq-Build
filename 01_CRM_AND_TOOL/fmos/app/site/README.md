@@ -87,6 +87,11 @@ in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails
   to confirm bundle composition/numbers before go-live.
 
 ## Mobile QA fixes (2026-06-18, from a real-device pass)
+- **Chat panel + on-screen keyboard** — the panel was sized to the full layout viewport, so opening the keypad
+  pushed it off the top. Now: `viewport.interactiveWidget = "resizes-content"` (the keyboard shrinks the
+  viewport), the panel is sized in **dvh** (`height: min(56dvh, 440px); max-height: calc(100dvh - 96px)`) and
+  anchored just above the single FAB (`bottom: 84px`), so it shrinks to stay above the keypad with the input
+  visible. Base panel also dropped from `bottom: 152px` → `88px` now that the WhatsApp FAB is gone.
 - **The FMOS app shell was wrapping the marketing pages under clean URLs** (light theme + CRM sidebar +
   command palette bleeding around the site). The root `LayoutWrapper` (`components/ui/layout-wrapper.tsx`)
   decides app chrome from `usePathname()`, which under the host-split returns the **clean** `/contact` (not

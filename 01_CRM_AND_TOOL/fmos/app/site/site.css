@@ -5930,8 +5930,8 @@ body.menu-open .wa-fab { opacity: 0; pointer-events: none; }
 body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
 
 .sc-panel {
-  position: fixed; left: 20px; bottom: 152px; z-index: 92;
-  width: min(370px, calc(100vw - 40px)); height: min(540px, calc(100vh - 180px));
+  position: fixed; left: 20px; bottom: 88px; z-index: 92;
+  width: min(370px, calc(100vw - 40px)); height: min(520px, calc(100dvh - 120px));
   display: flex; flex-direction: column;
   background: #0a0f0d; color: #eaf2ee;
   border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden;
@@ -5976,7 +5976,12 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
   .sc-panel { animation: none; }
 }
 @media (max-width: 560px) {
-  .sc-panel { left: 12px; bottom: 150px; width: calc(100vw - 24px); height: min(70vh, calc(100vh - 170px)); }
+  .sc-panel {
+    left: 12px; right: 12px; width: auto;
+    bottom: 84px;
+    height: min(56dvh, 440px);
+    max-height: calc(100dvh - 96px);
+  }
   .sc-fab { left: 16px; }
 }
 

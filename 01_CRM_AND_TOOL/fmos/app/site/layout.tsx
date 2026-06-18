@@ -20,6 +20,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#030303",
+  // Let the on-screen keyboard shrink the viewport so the chat panel (sized in
+  // dvh) stays above the keypad instead of being pushed off the top.
+  interactiveWidget: "resizes-content",
 };
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
