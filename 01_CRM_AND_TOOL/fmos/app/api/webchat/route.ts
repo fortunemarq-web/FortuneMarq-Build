@@ -49,8 +49,9 @@ export async function POST(req: NextRequest) {
       userText: message,
       history: sanitizeHistory(body.history),
       channel: "web",
-      // no leadId — anonymous visitor; capture happens via the widget lead form
-      leadLabel: "Website chat visitor",
+      // no leadId — anonymous visitor; capture happens via the widget lead form.
+      // generateBotReply therefore skips all DB writes AND the admin escalation
+      // alert (it only returns escalate:true so the widget shows the handoff).
     });
     return NextResponse.json({
       reply: r.reply,

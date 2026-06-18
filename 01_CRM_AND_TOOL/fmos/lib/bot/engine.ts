@@ -38,6 +38,7 @@ import {
   ASK_FOR_TIME_PROMPT,
 } from "@/lib/bot/booking-intent";
 import { AUTO_REPLIES } from "@/lib/whatsapp/auto-replies";
+import { shouldSendEscalationAlert } from "@/lib/bot/escalation-dedup";
 
 const ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
 const MAX_HISTORY_TURNS = 20; // user+assistant pairs kept in context
@@ -193,10 +194,9 @@ export interface GenerateReplyInput {
   history: ThreadMessage[];
   channel: string;
   /** present once a lead exists (WhatsApp always; web after capture). When
-   *  absent (anonymous web visitor) the DB-mutating side effects are skipped. */
+   *  absent (anonymous web visitor) the DB-mutating side effects AND the admin
+   *  escalation alert are skipped. */
   leadId?: string;
-  /** label used in admin alerts when there is no leadId yet. */
-  leadLabel?: string;
 }
 
 export interface GenerateReplyResult {
@@ -224,7 +224,6 @@ export interface GenerateReplyResult {
  */
 export async function generateBotReply(input: GenerateReplyInput): Promise<GenerateReplyResult> {
   const { userText, history, leadId } = input;
-  const leadLabel = input.leadLabel || "Website visitor";
 
   // 1. Opt-out — check before anything else
   const escalation = checkUserEscalation(userText);
@@ -233,10 +232,16 @@ export async function generateBotReply(input: GenerateReplyInput): Promise<Gener
     return { reply: OPT_OUT_REPLY, kind: "opt_out", escalate: true, escalationTrigger: "opt_out", bookingIntent: false, bypassOptOut: true };
   }
 
-  // 2. Other escalation triggers — alert Jabeer + (if known lead) pause the bot
+  // 2. Other escalation triggers — alert Jabeer + (if known lead) pause the bot.
+  //    The alert is IDEMPOTENT (one per lead+trigger per window) and is skipped
+  //    entirely for anonymous visitors (no leadId) — shouldSendEscalationAlert
+  //    returns false — so a website-chat visitor only gets escalate:true (the
+  //    widget shows the WhatsApp handoff); we page a human once a real lead exists.
   if (escalation) {
-    const label = leadId ? (await fetchLeadName(leadId)).lead : leadLabel;
-    await sendAdminAlert(`Escalation: ${escalation.trigger.replace(/_/g, " ")}`, `${label} — ${escalation.summary}`);
+    if (shouldSendEscalationAlert(leadId, escalation.trigger)) {
+      const label = (await fetchLeadName(leadId!)).lead;
+      await sendAdminAlert(`Escalation: ${escalation.trigger.replace(/_/g, " ")}`, `${label} — ${escalation.summary}`);
+    }
     if (escalation.pauseBot && leadId) await pauseBot(leadId);
     return { reply: ESCALATION_HANDOFF_REPLY, kind: "escalated", escalate: true, escalationTrigger: escalation.trigger, bookingIntent: false };
   }
@@ -270,8 +275,11 @@ export async function generateBotReply(input: GenerateReplyInput): Promise<Gener
   if (!draftCheck.safe) {
     console.warn("[bot/engine] Draft rejected:", draftCheck.reason);
     if (draftCheck.escalation) {
-      const label = leadId ? (await fetchLeadName(leadId)).lead : leadLabel;
-      await sendAdminAlert(`Bot draft rejected: ${draftCheck.escalation.trigger}`, `${label} — ${draftCheck.escalation.summary}`);
+      // Same idempotent, identified-lead-only gate as the user-escalation path.
+      if (shouldSendEscalationAlert(leadId, draftCheck.escalation.trigger)) {
+        const label = (await fetchLeadName(leadId!)).lead;
+        await sendAdminAlert(`Bot draft rejected: ${draftCheck.escalation.trigger}`, `${label} — ${draftCheck.escalation.summary}`);
+      }
       if (draftCheck.escalation.pauseBot && leadId) await pauseBot(leadId);
     }
     return { reply: GUARDRAIL_FALLBACK_REPLY, kind: "guardrail_fallback", escalate: !!draftCheck.escalation, escalationTrigger: draftCheck.escalation?.trigger, bookingIntent: booking.hasIntent };

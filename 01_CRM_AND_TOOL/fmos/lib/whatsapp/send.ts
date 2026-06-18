@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase-admin";
 import { getLeadGuardState } from "@/lib/whatsapp/suppression";
 import { checkThrottle, alertDailyCapOnce } from "@/lib/whatsapp/throttle";
+import { filterAllowlist } from "@/lib/whatsapp/guards";
 
 /**
  * PHASE F STAGE 1 — WhatsApp Cloud API sending library.
@@ -92,12 +93,33 @@ function credentials(): { token: string; phoneNumberId: string } | null {
  */
 export function resolveRecipients(realPhone: string): { phones: string[]; testMode: boolean } {
   const mode = process.env.WHATSAPP_SEND_MODE?.trim().toLowerCase();
+  let phones: string[];
+  let testMode = false;
   if (mode === "test") {
     const raw = process.env.WHATSAPP_TEST_RECIPIENTS || "";
-    const phones = raw.split(",").map((p) => p.trim()).filter(Boolean);
-    if (phones.length > 0) return { phones, testMode: true };
+    const tp = raw.split(",").map((p) => p.trim()).filter(Boolean);
+    if (tp.length > 0) {
+      phones = tp;
+      testMode = true;
+    } else {
+      phones = [realPhone];
+    }
+  } else {
+    phones = [realPhone];
   }
-  return { phones: [realPhone], testMode: false };
+
+  // HARD ALLOWLIST (belt-and-suspenders) — the final recipient guard. Runs in
+  // BOTH test and live mode and drops anything not on WHATSAPP_ALLOWLIST until
+  // WHATSAPP_LAUNCH=1. Guarantees no stray number is messaged pre-launch even if
+  // SEND_MODE / TEST_RECIPIENTS are misconfigured. Every drop is logged.
+  const { allowed, dropped } = filterAllowlist(phones);
+  for (const d of dropped) {
+    console.warn(
+      `[whatsapp/send] BLOCKED off-allowlist recipient ${d} (intended for ${realPhone}). ` +
+        `Set WHATSAPP_ALLOWLIST or WHATSAPP_LAUNCH=1 to permit.`
+    );
+  }
+  return { phones: allowed, testMode };
 }
 
 /** Indian default: 10 digits → 91XXXXXXXXXX. Accepts +91/0 prefixed input. */
@@ -167,21 +189,27 @@ export async function sendWhatsAppText(
   opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
-  const to = toWaNumber(phone);
-  if (!to) return { success: false, error: "Invalid phone number" };
+  const rawTo = toWaNumber(phone);
+  if (!rawTo) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
   const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
   if (blocked) return blocked;
-  const result = await graphPost(`${creds.phoneNumberId}/messages`, {
-    messaging_product: "whatsapp",
-    recipient_type: "individual",
-    to,
-    type: "text",
-    text: { preview_url: true, body },
-  });
-  if (result.success)
-    await logOutbound({ ...opts, phone: to, message: body, messageType: "text", waMessageId: result.messageId });
-  return result;
+  // SEND-MODE GUARD — in test mode every recipient is redirected to WHATSAPP_TEST_RECIPIENTS.
+  const { phones, testMode } = resolveRecipients(rawTo);
+  const logNote = testMode ? `[TEST→${rawTo}] ` : "";
+  let last: SendResult = { success: false, error: "No recipients" };
+  for (const to of phones) {
+    last = await graphPost(`${creds.phoneNumberId}/messages`, {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to,
+      type: "text",
+      text: { preview_url: true, body },
+    });
+    if (last.success)
+      await logOutbound({ ...opts, phone: rawTo, message: `${logNote}${body}`, messageType: "text", waMessageId: last.messageId });
+  }
+  return last;
 }
 
 /** Approved template send (business-initiated). components per Graph API spec. */
@@ -240,29 +268,35 @@ export async function sendWhatsAppButtons(
   opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
-  const to = toWaNumber(phone);
-  if (!to) return { success: false, error: "Invalid phone number" };
+  const rawTo = toWaNumber(phone);
+  if (!rawTo) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
   const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
   if (blocked) return blocked;
-  const result = await graphPost(`${creds.phoneNumberId}/messages`, {
-    messaging_product: "whatsapp",
-    to,
-    type: "interactive",
-    interactive: {
-      type: "button",
-      body: { text: body },
-      action: {
-        buttons: buttons.slice(0, 3).map((b) => ({
-          type: "reply",
-          reply: { id: b.id, title: b.title.slice(0, 20) },
-        })),
+  // SEND-MODE GUARD — in test mode every recipient is redirected to WHATSAPP_TEST_RECIPIENTS.
+  const { phones, testMode } = resolveRecipients(rawTo);
+  const logNote = testMode ? `[TEST→${rawTo}] ` : "";
+  let last: SendResult = { success: false, error: "No recipients" };
+  for (const to of phones) {
+    last = await graphPost(`${creds.phoneNumberId}/messages`, {
+      messaging_product: "whatsapp",
+      to,
+      type: "interactive",
+      interactive: {
+        type: "button",
+        body: { text: body },
+        action: {
+          buttons: buttons.slice(0, 3).map((b) => ({
+            type: "reply",
+            reply: { id: b.id, title: b.title.slice(0, 20) },
+          })),
+        },
       },
-    },
-  });
-  if (result.success)
-    await logOutbound({ ...opts, phone: to, message: body, messageType: "interactive", waMessageId: result.messageId });
-  return result;
+    });
+    if (last.success)
+      await logOutbound({ ...opts, phone: rawTo, message: `${logNote}${body}`, messageType: "interactive", waMessageId: last.messageId });
+  }
+  return last;
 }
 
 /** Document (PDF etc.) by public link OR previously-uploaded media id. */
@@ -272,31 +306,38 @@ export async function sendWhatsAppDocument(
   opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
 ): Promise<SendResult> {
   const creds = credentials();
-  const to = toWaNumber(phone);
-  if (!to) return { success: false, error: "Invalid phone number" };
+  const rawTo = toWaNumber(phone);
+  if (!rawTo) return { success: false, error: "Invalid phone number" };
   if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
   if (!doc.link && !doc.mediaId) return { success: false, error: "Document needs a link or mediaId" };
   const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
   if (blocked) return blocked;
-  const result = await graphPost(`${creds.phoneNumberId}/messages`, {
-    messaging_product: "whatsapp",
-    to,
-    type: "document",
-    document: {
-      ...(doc.mediaId ? { id: doc.mediaId } : { link: doc.link }),
-      filename: doc.filename,
-      ...(doc.caption ? { caption: doc.caption } : {}),
-    },
-  });
-  if (result.success)
-    await logOutbound({
-      ...opts,
-      phone: to,
-      message: doc.caption ? `[document:${doc.filename}] ${doc.caption}` : `[document:${doc.filename}]`,
-      messageType: "document",
-      waMessageId: result.messageId,
+  // SEND-MODE GUARD — in test mode every recipient is redirected to WHATSAPP_TEST_RECIPIENTS.
+  const { phones, testMode } = resolveRecipients(rawTo);
+  const logNote = testMode ? `[TEST→${rawTo}] ` : "";
+  const baseMsg = doc.caption ? `[document:${doc.filename}] ${doc.caption}` : `[document:${doc.filename}]`;
+  let last: SendResult = { success: false, error: "No recipients" };
+  for (const to of phones) {
+    last = await graphPost(`${creds.phoneNumberId}/messages`, {
+      messaging_product: "whatsapp",
+      to,
+      type: "document",
+      document: {
+        ...(doc.mediaId ? { id: doc.mediaId } : { link: doc.link }),
+        filename: doc.filename,
+        ...(doc.caption ? { caption: doc.caption } : {}),
+      },
     });
-  return result;
+    if (last.success)
+      await logOutbound({
+        ...opts,
+        phone: rawTo,
+        message: `${logNote}${baseMsg}`,
+        messageType: "document",
+        waMessageId: last.messageId,
+      });
+  }
+  return last;
 }
 
 /** Upload a file to Meta's media endpoint → media id (use for PDF report sends). */
