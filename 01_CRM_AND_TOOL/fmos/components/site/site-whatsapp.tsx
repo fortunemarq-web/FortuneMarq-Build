@@ -49,7 +49,8 @@ export function WhatsAppCta({ source, message, children, className, showIcon = t
   );
 }
 
-/** Floating WhatsApp button (bottom-left; the chat launcher stacks above it). */
+/** Floating WhatsApp button (bottom-left). The website chat launcher (SiteChat,
+ *  `.sc-fab`) stacks directly above it on the same edge. */
 export function FloatingWhatsApp({ source = "floating" }: { source?: string }) {
   return (
     <a

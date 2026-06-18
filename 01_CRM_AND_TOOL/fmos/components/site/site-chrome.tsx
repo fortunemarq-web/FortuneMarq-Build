@@ -47,8 +47,8 @@ export function SiteHeader() {
           ))}
         </nav>
         <WhatsAppCta source="header" className="header-wa" />
-        <Link href="/site/contact" className="header-cta">
-          Let&apos;s Talk
+        <Link href="/site/contact#book" className="header-cta">
+          Book a Meeting
         </Link>
         <button className="header-toggle" aria-label="Menu">
           <span />
@@ -80,11 +80,10 @@ export function SiteMobileMenu() {
           <div className="mm-socials">
             <a href="https://www.linkedin.com/company/fortunemarq/" className="mm-social" target="_blank" rel="noopener noreferrer">Li</a>
             <a href="https://www.instagram.com/fortunemarq" className="mm-social" target="_blank" rel="noopener noreferrer">Ig</a>
-            <a href="#" className="mm-social">Tw</a>
           </div>
           <div className="mm-cta">
             <span className="mm-cta-label">Ready to grow?</span>
-            <Link href="/site/contact" className="mm-cta-btn">Let&apos;s Talk →</Link>
+            <Link href="/site/contact#book" className="mm-cta-btn">Book a Meeting →</Link>
           </div>
         </div>
       </div>

@@ -69,7 +69,6 @@ const INFO = [
 const SOCIALS = [
   { name: "LinkedIn", href: "https://www.linkedin.com/company/fortunemarq/", ext: true },
   { name: "Instagram", href: "https://www.instagram.com/fortunemarq", ext: true },
-  { name: "Twitter", href: "#", ext: false },
 ];
 
 const FAQ = [
