@@ -261,6 +261,14 @@ function initMobileMenu(cleanups: Array<() => void>) {
   document.addEventListener("keydown", onKey);
   cleanups.push(() => document.removeEventListener("keydown", onKey));
 
+  // Explicit close (cancel) button inside the off-canvas panel.
+  const closeBtn = menu.querySelector<HTMLElement>(".mm-close");
+  if (closeBtn) {
+    const onClose = () => closeMenu(true);
+    closeBtn.addEventListener("click", onClose);
+    cleanups.push(() => closeBtn.removeEventListener("click", onClose));
+  }
+
   const linkEls = Array.from(menu.querySelectorAll<HTMLAnchorElement>("a"));
   const onLink = () => {
     document.body.classList.remove("menu-open");

@@ -83,6 +83,7 @@ export function SiteMobileMenu() {
         <div className="mm-grid" />
         <div className="mm-noise" />
       </div>
+      <button className="mm-close" aria-label="Close menu">✕</button>
       <div className="mm-content">
         <nav className="mobile-nav" aria-label="Mobile">
           {SITE_NAV.map((n, i) => {

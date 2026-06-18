@@ -8,9 +8,9 @@ import {
   SiteScrollIndicator,
 } from "@/components/site/site-chrome";
 import SiteMotion from "@/components/site/site-motion";
-import { FloatingWhatsApp } from "@/components/site/site-whatsapp";
 import SiteAnalytics from "@/components/site/site-analytics";
 import SiteChat from "@/components/site/site-chat";
+import SiteHardNav from "@/components/site/site-hardnav";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -41,6 +41,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       {/* Tracking stack (GA4 + Meta Pixel + Clarity) — fully inert until the
           NEXT_PUBLIC_* IDs are set, so it makes zero network calls otherwise. */}
       <SiteAnalytics />
+      <SiteHardNav />
       <SitePreloader />
       <div className="global-noise" />
       <a href="#site-main" className="skip-link">Skip to content</a>
@@ -49,7 +50,6 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <div id="site-main" tabIndex={-1}>{children}</div>
       <SiteLightbox />
       <SiteScrollIndicator />
-      <FloatingWhatsApp />
       <SiteChat />
       <SiteMotion />
     </>

@@ -66,6 +66,21 @@ frame).
 battlefield" → "crowded digital market", "we bring you into the war room" → "we bring you in". What's left
 in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails) — left as-is.
 
+## Mobile QA fixes (2026-06-18, from a real-device pass)
+- **Client-side navigation was broken under the host-split** — the most important one. Next App Router *soft*
+  navigation can't follow the `proxy.ts` rewrite: the RSC tree comes back rooted at `/site/*` while the URL is
+  `/*`, so a `<Link>` click landed on a **blank page** (external `<a>` links were fine, which is why WhatsApp
+  worked but nav didn't). Fix: `components/site/site-hardnav.tsx` — a capture-phase click interceptor mounted in
+  `app/site/layout.tsx` that forces a full-page navigation for internal links, which goes through the rewrite
+  server-side. **⚠ If the host-split is ever reworked to native clean-path routing, remove `SiteHardNav`** (it
+  trades SPA soft-nav for reliable full loads; fine for a brochure site that re-inits GSAP per page anyway).
+- Footer ghost wordmark no longer clips ("…marq" cut off) on small screens (responsive `font-size: 12vw`).
+- Mobile off-canvas menu gained an explicit ✕ **close button** (`.mm-close`, wired in `site-motion`).
+- Removed the floating WhatsApp FAB; added a **"Call us"** (`tel:`) button beside the hero "WhatsApp us";
+  lowered the chat FAB to the bottom corner now that nothing stacks below it.
+- The WhatsApp **bot auto-reply** is unrelated to the site code: it's locked to the two QA numbers until launch
+  (`WHATSAPP_LAUNCH=1`) and runs on the production webhook, so a non-test number gets no reply **by design**.
+
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.
 

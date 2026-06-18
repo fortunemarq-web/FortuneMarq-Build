@@ -206,6 +206,10 @@ export default function SiteHome() {
                   <span className="sub-text">See How We Win</span>
                   <span className="sub-line" />
                 </a>
+                <a href="tel:+919353082656" className="vh-btn-sub">
+                  <span className="sub-text">Call us</span>
+                  <span className="sub-line" />
+                </a>
                 <WhatsAppCta source="hero" className="vh-btn-wa">
                   WhatsApp us
                 </WhatsAppCta>
