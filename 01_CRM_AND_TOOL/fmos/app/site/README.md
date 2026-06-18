@@ -59,7 +59,12 @@ Objective wins only (copy/taste items skipped): **skip-to-content** link → `#s
 marquees / scroll-pill / badge-blink; **≥44px tap targets** on the smallest controls (chat close, footer +
 mobile social icons); **`aria-hidden`** on the duplicated ticker + testimonial-marquee copy (screen readers
 read each once now); and **project videos no longer autoplay under reduced-motion** (they hold the poster
-frame). Remaining P2 is **copy/tone only** (e.g. "war/dominance" brand language) — owner's voice, left as-is.
+frame).
+
+**Copy/tone pass done** (owner direction: "confident and plain") — softened the combat metaphors:
+"Ready to Dominate?" → "Ready to talk?", "military precision" → "with precision", "crowded digital
+battlefield" → "crowded digital market", "we bring you into the war room" → "we bring you in". What's left
+in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails) — left as-is.
 
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.

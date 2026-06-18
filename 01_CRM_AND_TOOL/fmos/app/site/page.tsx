@@ -539,7 +539,7 @@ export default function SiteHome() {
             <div className="contact-info">
               <span className="contact-label">07 // GET IN TOUCH</span>
               <h2 className="contact-title">
-                Ready to <span className="italic-accent">Dominate?</span>
+                Ready to <span className="italic-accent">talk?</span>
               </h2>
               <p className="contact-desc">
                 Let&apos;s discuss how we can build your revenue engine. <br />

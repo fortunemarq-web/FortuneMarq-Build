@@ -74,7 +74,7 @@ const METRICS = [
 const STEPS = [
   { num: "01", title: "Discovery", desc: "Deep dive into your business, audience, and competition." },
   { num: "02", title: "Strategy", desc: "Custom roadmap built around your specific goals and budget." },
-  { num: "03", title: "Execution", desc: "Launch, monitor, and optimize with military precision." },
+  { num: "03", title: "Execution", desc: "Launch, monitor, and optimize with precision." },
   { num: "04", title: "Scale", desc: "Double down on what works. Eliminate what doesn't." },
 ];
 
@@ -97,7 +97,7 @@ export default function SiteAbout() {
             We&apos;re Not Another <br />
             <span className="abt-accent">Agency.</span>
           </h1>
-          <p className="abt-hero-sub">We&apos;re your unfair advantage in a crowded digital battlefield.</p>
+          <p className="abt-hero-sub">We&apos;re your unfair advantage in a crowded digital market.</p>
         </div>
         <div className="abt-scroll-indicator">
           <span>Scroll to discover</span>
@@ -205,7 +205,7 @@ export default function SiteAbout() {
             <span className="abt-accent">Educate.</span>
           </h2>
           <p className="abt-approach-text">
-            Most agencies keep you in the dark. We bring you into the war room. Understand your growth. Own your strategy.
+            Most agencies keep you in the dark. We bring you in. Understand your growth. Own your strategy.
             We&apos;re building partners, not dependencies.
           </p>
           <Link href="/contact" className="abt-approach-cta" data-magnetic>
