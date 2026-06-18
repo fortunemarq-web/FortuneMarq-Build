@@ -15,19 +15,12 @@ folder) is **built, QA'd, and committed** on branch `continue-on-mac`. We are pa
   + CRM are **one Vercel app**.
 - Build verified green (`npm run build`), `npx tsc --noEmit` = 0.
 
-## ⏭ THE IMMEDIATE NEXT ACTION (was waiting on the owner's "go")
-**Merge `continue-on-mac` → `main` and push → triggers the Vercel PRODUCTION deploy.** I had asked the
-owner for the go-ahead and was waiting when the context window filled. Confirm they still want to deploy,
-then run (it is a fast-forward — `main` is an ancestor of the rewritten `continue-on-mac`):
-```
-git checkout main
-git merge --ff-only continue-on-mac
-git push origin main
-git checkout continue-on-mac
-```
-⚠️ This refreshes the **live CRM** too, not just the marketing site. The changes are marketing-additive +
-the WhatsApp escalation fix (already tested) + `proxy.ts`/`layout-wrapper` edits that only affect the
-marketing host — the app host is unaffected. The marketing site stays **dormant until DNS cutover**.
+## ✅ PRODUCTION DEPLOY — TRIGGERED (2026-06-18)
+`origin/main` was fast-forwarded to `continue-on-mac`'s tip via `git push origin continue-on-mac:main` (no
+local checkout — keeps the working tree's pre-existing changes untouched). **Vercel is deploying `main` →
+production.** This refreshed the live CRM (`fmos.fortunemarq.com`) too — verify it still loads + login works.
+Build was green locally (`npm run build`, `tsc` 0). The marketing site stays **dormant until DNS cutover** —
+`fortunemarq.com` still points at Hostinger until step 1/2 below.
 
 ## Then — the owner's dashboard steps (guide them, you can't access these)
 1. **Vercel** → project → Settings → **Domains** → add `fortunemarq.com` + `www` → it shows DNS records.
