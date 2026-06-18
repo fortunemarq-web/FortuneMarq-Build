@@ -88,7 +88,7 @@ export default function SiteMotion() {
       // Featured-projects grid + lazy play-in-view videos — shared by the home
       // and Work pages (both mount a #featured-projects section).
       if (document.getElementById("featured-projects")) {
-        initFeaturedProjects(cleanups);
+        initFeaturedProjects(cleanups, reduceMotion);
       }
 
       // ABOUT page
@@ -535,7 +535,7 @@ function initResultsLightbox(cleanups: Array<() => void>) {
 }
 
 /* ───────────────────────── FEATURED PROJECTS ───────────────────────── */
-function initFeaturedProjects(cleanups: Array<() => void>) {
+function initFeaturedProjects(cleanups: Array<() => void>, reduceMotion: boolean) {
   const root = document.getElementById("featured-projects");
   if (!root) return;
 
@@ -569,6 +569,8 @@ function initFeaturedProjects(cleanups: Array<() => void>) {
     v.playsInline = true;
     v.loop = true;
   });
+  // Reduced-motion: leave videos on their poster frame (no autoplaying loop).
+  if (reduceMotion) return;
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {

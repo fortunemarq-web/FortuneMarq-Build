@@ -212,7 +212,7 @@ export default function SiteHome() {
               </div>
               <div className="vh-trust">
                 <span className="trust-label">TRUSTED BY LEADERS IN:</span>
-                <div className="trust-ticker-mask">
+                <div className="trust-ticker-mask" aria-hidden="true">
                   <div className="trust-ticker-wrapper">
                     <div className="trust-ticker-track">
                       {[0, 1].map((dup) =>
@@ -494,7 +494,7 @@ export default function SiteHome() {
                 <div className="testi-track track-left">
                   {[0, 1].flatMap((dup) =>
                     PRINCIPLES_LEFT.map((p, i) => (
-                      <div className="testi-card" key={`${dup}-${i}`}>
+                      <div className="testi-card" key={`${dup}-${i}`} aria-hidden={dup === 1 || undefined}>
                         <p className="testi-quote">{p.statement}</p>
                         <div className="testi-user">
                           <div className="testi-avatar">{p.num}</div>
@@ -512,7 +512,7 @@ export default function SiteHome() {
                 <div className="testi-track track-right">
                   {[0, 1].flatMap((dup) =>
                     PRINCIPLES_RIGHT.map((p, i) => (
-                      <div className="testi-card" key={`${dup}-${i}`}>
+                      <div className="testi-card" key={`${dup}-${i}`} aria-hidden={dup === 1 || undefined}>
                         <p className="testi-quote">{p.statement}</p>
                         <div className="testi-user">
                           <div className="testi-avatar">{p.num}</div>

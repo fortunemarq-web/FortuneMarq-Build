@@ -57,8 +57,9 @@ page; visible crumbs would clash with the immersive heroes).
 Objective wins only (copy/taste items skipped): **skip-to-content** link → `#site-main`; **`theme-color`** meta
 (`#030303`); **`aria-label`** on the primary + mobile `<nav>` landmarks; **reduced-motion** now also stops the
 marquees / scroll-pill / badge-blink; **≥44px tap targets** on the smallest controls (chat close, footer +
-mobile social icons). Still open in P2: copy/tone calls (e.g. "war/dominance" language), `aria-hidden` on the
-duplicated marquee copy, and pausing project-video autoplay under reduced-motion.
+mobile social icons); **`aria-hidden`** on the duplicated ticker + testimonial-marquee copy (screen readers
+read each once now); and **project videos no longer autoplay under reduced-motion** (they hold the poster
+frame). Remaining P2 is **copy/tone only** (e.g. "war/dominance" brand language) — owner's voice, left as-is.
 
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.
