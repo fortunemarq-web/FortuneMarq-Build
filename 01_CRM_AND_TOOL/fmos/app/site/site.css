@@ -5999,3 +5999,24 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
 /* ── Active nav state (mobile menu; header .active is already styled above) ── */
 .m-link.active .m-link-text { color: var(--accent); }
 .m-link.active .m-link-text::after { width: 100%; }
+
+/* ── Analytics consent banner (bottom-right; clears the bottom-left FABs) ──── */
+.sconsent {
+  position: fixed; z-index: 1000;
+  right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  width: min(360px, calc(100vw - 40px));
+  background: rgba(8, 8, 8, 0.96); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 18px;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55);
+}
+.sconsent-text { font-size: 13px; line-height: 1.55; color: var(--muted); margin: 0 0 12px; }
+.sconsent-text a { color: var(--accent); text-decoration: underline; }
+.sconsent-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.sconsent-btn { font-size: 13px; padding: 8px 16px; border-radius: 50px; cursor: pointer; border: 1px solid var(--border); transition: background 0.2s, border-color 0.2s; }
+.sconsent-decline { background: transparent; color: var(--ink); }
+.sconsent-decline:hover { background: rgba(255, 255, 255, 0.05); }
+.sconsent-accept { background: var(--accent); color: #04140c; border-color: var(--accent); font-weight: 600; }
+@media (max-width: 560px) {
+  .sconsent { right: 12px; left: 12px; width: auto; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+}
