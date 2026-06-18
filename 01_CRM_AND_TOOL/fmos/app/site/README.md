@@ -67,6 +67,13 @@ battlefield" → "crowded digital market", "we bring you into the war room" → 
 in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails) — left as-is.
 
 ## Mobile QA fixes (2026-06-18, from a real-device pass)
+- **The FMOS app shell was wrapping the marketing pages under clean URLs** (light theme + CRM sidebar +
+  command palette bleeding around the site). The root `LayoutWrapper` (`components/ui/layout-wrapper.tsx`)
+  decides app chrome from `usePathname()`, which under the host-split returns the **clean** `/contact` (not
+  `/site/contact`), so it didn't match the `/site` public route → rendered the app shell. Fix: the clean
+  marketing paths (`/about`, `/services`, `/work`, `/contact`, `/privacy-policy`, `/terms-of-service`) are now
+  in `PUBLIC_ROUTES`. (`site.css` already restyles the body to `#030303`, so the dark theme returns once the
+  shell is gone.)
 - **Client-side navigation was broken under the host-split** — the most important one. Next App Router *soft*
   navigation can't follow the `proxy.ts` rewrite: the RSC tree comes back rooted at `/site/*` while the URL is
   `/*`, so a `<Link>` click landed on a **blank page** (external `<a>` links were fine, which is why WhatsApp

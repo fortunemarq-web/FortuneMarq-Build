@@ -15,6 +15,16 @@ const PUBLIC_ROUTES = [
   "/lp",
   "/site",
   "/client/report",
+  // Marketing site served at clean root paths via the host-split (proxy.ts).
+  // Under that rewrite usePathname() returns the CLEAN url (e.g. "/contact", not
+  // "/site/contact"), so these must be listed too — otherwise the FMOS app shell
+  // (sidebar + light theme) wraps the marketing pages.
+  "/about",
+  "/services",
+  "/work",
+  "/contact",
+  "/privacy-policy",
+  "/terms-of-service",
 ];
 
 interface LayoutWrapperProps {
