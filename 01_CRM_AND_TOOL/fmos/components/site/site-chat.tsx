@@ -182,7 +182,7 @@ export default function SiteChat() {
                 >
                   Continue on WhatsApp
                 </a>
-                <a className="sc-action" href="/site/contact#book" onClick={() => setOpen(false)}>
+                <a className="sc-action" href="/contact#book" onClick={() => setOpen(false)}>
                   Book a meeting
                 </a>
               </div>

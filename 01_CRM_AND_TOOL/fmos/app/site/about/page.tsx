@@ -208,7 +208,7 @@ export default function SiteAbout() {
             Most agencies keep you in the dark. We bring you into the war room. Understand your growth. Own your strategy.
             We&apos;re building partners, not dependencies.
           </p>
-          <Link href="/site/contact" className="abt-approach-cta" data-magnetic>
+          <Link href="/contact" className="abt-approach-cta" data-magnetic>
             <span>Start the conversation</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
@@ -238,7 +238,7 @@ export default function SiteAbout() {
             Ready to Stop <span className="abt-accent">Guessing?</span>
           </h2>
           <p className="abt-cta-text">Let&apos;s build a growth system that actually works.</p>
-          <Link href="/site/contact" className="abt-cta-btn" data-magnetic>
+          <Link href="/contact" className="abt-cta-btn" data-magnetic>
             <span className="btn-text">Book a Strategy Call</span>
             <span className="btn-icon">→</span>
           </Link>

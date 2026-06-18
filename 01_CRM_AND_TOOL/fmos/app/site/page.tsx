@@ -194,7 +194,7 @@ export default function SiteHome() {
                 </p>
               </div>
               <div className="vh-actions">
-                <Link href="/site/contact#book" className="vh-btn-main">
+                <Link href="/contact#book" className="vh-btn-main">
                   <span className="btn-bg" />
                   <span className="btn-content">
                     <span className="btn-text">Book a Strategy Call</span>
@@ -388,7 +388,7 @@ export default function SiteHome() {
             ))}
           </div>
           <div className="fp-cta-row">
-            <Link href="/site/work" className="fp-cta">
+            <Link href="/work" className="fp-cta">
               View all projects →
             </Link>
           </div>

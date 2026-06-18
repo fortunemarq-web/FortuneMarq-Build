@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
       allowedOrigins: [
         "localhost:3000",
         "fmos.fortunemarq.com",
+        // Marketing host — so the site's forms/booking server actions work when
+        // invoked from the clean-URL pages (see host-split in proxy.ts).
+        "fortunemarq.com",
+        "www.fortunemarq.com",
         "*.vercel.app",
       ],
     },

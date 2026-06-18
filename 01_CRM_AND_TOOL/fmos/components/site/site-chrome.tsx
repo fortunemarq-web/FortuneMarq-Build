@@ -8,11 +8,11 @@ import { WhatsAppCta } from "@/components/site/site-whatsapp";
 // rebuild; in-page anchors keep their original hashes.
 
 export const SITE_NAV = [
-  { label: "Home", href: "/site" },
-  { label: "About", href: "/site/about" },
-  { label: "Services", href: "/site/services" },
-  { label: "Work", href: "/site#featured-projects" },
-  { label: "Contact", href: "/site/contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function SitePreloader() {
@@ -35,7 +35,7 @@ export function SitePreloader() {
 export function SiteHeader() {
   return (
     <header className="fmq-header">
-      <Link href="/site" className="header-logo">
+      <Link href="/" className="header-logo">
         <Image src="/site/images/FORTUNEMARQ-LOGO.webp" alt="FortuneMarq" className="logo-img" width={500} height={500} priority />
       </Link>
       <div className="header-menu-chip">
@@ -47,7 +47,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <WhatsAppCta source="header" className="header-wa" />
-        <Link href="/site/contact#book" className="header-cta">
+        <Link href="/contact#book" className="header-cta">
           Book a Meeting
         </Link>
         <button className="header-toggle" aria-label="Menu">
@@ -83,7 +83,7 @@ export function SiteMobileMenu() {
           </div>
           <div className="mm-cta">
             <span className="mm-cta-label">Ready to grow?</span>
-            <Link href="/site/contact#book" className="mm-cta-btn">Book a Meeting →</Link>
+            <Link href="/contact#book" className="mm-cta-btn">Book a Meeting →</Link>
           </div>
         </div>
       </div>

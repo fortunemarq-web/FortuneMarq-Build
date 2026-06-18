@@ -24,6 +24,7 @@ export default function robots(): MetadataRoute.Robots {
           "/projects",
           "/lp",
           "/login",
+          "/site", // internal path behind the host-split; clean URLs are canonical
         ],
       },
     ],

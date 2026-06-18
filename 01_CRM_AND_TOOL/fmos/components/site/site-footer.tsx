@@ -8,11 +8,18 @@ import { WhatsAppCta } from "@/components/site/site-whatsapp";
 // site-motion (gated by .fm-footer presence).
 
 const FOOTER_NAV = [
-  { label: "Home", href: "/site" },
-  { label: "About", href: "/site/about" },
-  { label: "Services", href: "/site/services" },
-  { label: "Work", href: "/site/work" },
-  { label: "Contact", href: "/site/contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "Contact", href: "/contact" },
+];
+
+const FOOTER_SERVICES = [
+  { label: "Web & Development", href: "/services#svc-1" },
+  { label: "Performance Marketing", href: "/services#svc-2" },
+  { label: "SEO & Content", href: "/services#svc-3" },
+  { label: "CRM & Automations", href: "/services#svc-4" },
 ];
 
 export default function SiteFooter() {
@@ -29,8 +36,8 @@ export default function SiteFooter() {
             <h2 className="fm-footer-cta">
               Ready to <span className="italic-accent">grow?</span>
             </h2>
-            <Link href="/site/contact" className="fm-footer-cta-btn">
-              Start a conversation <span>→</span>
+            <Link href="/contact#book" className="fm-footer-cta-btn">
+              Book a Strategy Call <span>→</span>
             </Link>
           </div>
           <div className="fm-footer-cols">
@@ -44,10 +51,9 @@ export default function SiteFooter() {
             </div>
             <div className="fm-footer-col">
               <span className="fm-footer-col-title">Services</span>
-              <Link href="/site/services" className="footer-min-link">Web &amp; Development</Link>
-              <Link href="/site/services" className="footer-min-link">Performance Marketing</Link>
-              <Link href="/site/services" className="footer-min-link">SEO &amp; Content</Link>
-              <Link href="/site/services" className="footer-min-link">CRM &amp; Automations</Link>
+              {FOOTER_SERVICES.map((s) => (
+                <Link key={s.href} href={s.href} className="footer-min-link">{s.label}</Link>
+              ))}
             </div>
             <div className="fm-footer-col">
               <span className="fm-footer-col-title">Contact</span>
@@ -64,7 +70,7 @@ export default function SiteFooter() {
         <div className="fm-footer-wordmark" aria-hidden="true">FortuneMarq</div>
 
         <div className="fm-footer-bottom">
-          <span className="fm-footer-copy">© 2026 FortuneMarq Media. All rights reserved.</span>
+          <span className="fm-footer-copy">© 2026 FortuneMarq Media &amp; Marketing. All rights reserved.</span>
           <div className="fm-footer-socials">
             <a href="https://www.linkedin.com/company/fortunemarq/" className="fm-footer-social footer-min-social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
@@ -78,17 +84,11 @@ export default function SiteFooter() {
               </svg>
               <span className="sr-only">Instagram</span>
             </a>
-            <a href="#" className="fm-footer-social footer-min-social-link" aria-label="Twitter">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1a10.66 10.66 0 01-9-4.53s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" fill="currentColor" />
-              </svg>
-              <span className="sr-only">Twitter</span>
-            </a>
           </div>
           <div className="fm-footer-legal">
-            <Link href="/site/privacy-policy">Privacy Policy</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
             <span>/</span>
-            <Link href="/site/terms-of-service">Terms of Service</Link>
+            <Link href="/terms-of-service">Terms of Service</Link>
           </div>
         </div>
       </div>

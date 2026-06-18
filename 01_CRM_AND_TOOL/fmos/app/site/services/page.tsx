@@ -324,7 +324,7 @@ export default function SiteServices() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/site/contact" className="pricing-cta">
+                <Link href="/contact" className="pricing-cta">
                   {p.cta}
                 </Link>
               </div>
@@ -343,7 +343,7 @@ export default function SiteServices() {
           <h2 className="sp-cta-title">
             Ready to <span className="txt-stroke">Scale?</span>
           </h2>
-          <Link href="/site/contact" className="sp-cta-btn" data-magnetic>
+          <Link href="/contact" className="sp-cta-btn" data-magnetic>
             <span>Start Your Project</span>
             <div className="sp-btn-arrow">→</div>
           </Link>

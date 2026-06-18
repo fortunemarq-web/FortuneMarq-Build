@@ -16,6 +16,50 @@ import type { NextRequest } from 'next/server'
  * broke that read took down the whole gate. It no longer can.
  */
 
+/**
+ * HOST-SPLIT (marketing site ⟷ FMOS app).
+ *
+ * The marketing site lives under app/site/* but must serve at CLEAN root paths
+ * on the marketing domain (fortunemarq.com/, /about, /services, /work, /contact,
+ * /privacy-policy, /terms-of-service). The FMOS app stays on its own host
+ * (fmos.fortunemarq.com) and everywhere else.
+ *
+ * On a marketing host we rewrite every clean path → the internal /site/* page,
+ * and seal off the app (any non-marketing path → /site/<path> → site 404). Infra
+ * routes (_next, api, robots/sitemap/favicon, static files) pass through.
+ *
+ * Local/mobile preview: set MARKETING_PREVIEW_LOCAL=1 so localhost is treated as
+ * the marketing host (lets you see the clean URLs in a browser). Off by default,
+ * so normal local FMOS dev is unaffected.
+ */
+const MARKETING_HOSTS = new Set(
+  (process.env.MARKETING_HOSTS || "fortunemarq.com,www.fortunemarq.com")
+    .split(",")
+    .map((h) => h.trim().toLowerCase())
+    .filter(Boolean)
+)
+
+function hostnameOf(request: NextRequest): string {
+  return (request.headers.get("host") || "").split(":")[0].toLowerCase()
+}
+
+function isMarketingHost(request: NextRequest): boolean {
+  if (process.env.MARKETING_PREVIEW_LOCAL === "1") return true
+  return MARKETING_HOSTS.has(hostnameOf(request))
+}
+
+/** Infra paths that must never be host-rewritten. */
+function isInfraPath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname === "/favicon.ico" ||
+    /\.[a-zA-Z0-9]+$/.test(pathname) // any file with an extension (assets)
+  )
+}
+
 const ROLE_ROUTES: Record<string, string> = {
   admin: '/admin',
   telecaller: '/sales',
@@ -61,6 +105,16 @@ function isPublic(pathname: string): boolean {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // ── Host-split: marketing host serves the /site/* pages at clean root paths ──
+  if (isMarketingHost(request)) {
+    if (isInfraPath(pathname)) return NextResponse.next()
+    // Already an internal /site path (or someone hit it directly) — serve as-is.
+    if (pathname === "/site" || pathname.startsWith("/site/")) return NextResponse.next()
+    const url = request.nextUrl.clone()
+    url.pathname = pathname === "/" ? "/site" : `/site${pathname}`
+    return NextResponse.rewrite(url)
+  }
 
   if (isPublic(pathname)) {
     return NextResponse.next()
