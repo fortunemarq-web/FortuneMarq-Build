@@ -350,6 +350,53 @@ export async function sendWhatsAppList(
   return last;
 }
 
+/** Interactive Flow message — opens a multi-screen form (e.g. the multi-select
+ *  services checklist). The flow must already be published; its completion comes
+ *  back to the webhook as an `nfm_reply`. Session message (24h window). */
+export async function sendWhatsAppFlow(
+  phone: string,
+  flow: { flowId: string; cta: string; body: string; screen?: string; flowToken?: string; header?: string; footer?: string },
+  opts?: { leadId?: string | null; sentBy?: string | null } & GuardOpts
+): Promise<SendResult> {
+  const creds = credentials();
+  const rawTo = toWaNumber(phone);
+  if (!rawTo) return { success: false, error: "Invalid phone number" };
+  if (!creds) return { success: false, error: "WhatsApp API credentials not configured" };
+  const blocked = await preflight({ leadId: opts?.leadId, proactive: opts?.proactive, bypassOptOut: opts?.bypassOptOut, bypassThrottle: opts?.bypassThrottle });
+  if (blocked) return blocked;
+  // SEND-MODE GUARD — in test mode every recipient is redirected to WHATSAPP_TEST_RECIPIENTS.
+  const { phones, testMode } = resolveRecipients(rawTo);
+  const logNote = testMode ? `[TEST→${rawTo}] ` : "";
+  let last: SendResult = { success: false, error: "No recipients" };
+  for (const to of phones) {
+    last = await graphPost(`${creds.phoneNumberId}/messages`, {
+      messaging_product: "whatsapp",
+      to,
+      type: "interactive",
+      interactive: {
+        type: "flow",
+        ...(flow.header ? { header: { type: "text", text: flow.header.slice(0, 60) } } : {}),
+        body: { text: flow.body.slice(0, 1024) },
+        ...(flow.footer ? { footer: { text: flow.footer.slice(0, 60) } } : {}),
+        action: {
+          name: "flow",
+          parameters: {
+            flow_message_version: "3",
+            flow_token: flow.flowToken || "svc",
+            flow_id: flow.flowId,
+            flow_cta: flow.cta.slice(0, 30),
+            flow_action: "navigate",
+            flow_action_payload: { screen: flow.screen || "SERVICES" },
+          },
+        },
+      },
+    });
+    if (last.success)
+      await logOutbound({ ...opts, phone: rawTo, message: `${logNote}${flow.body}`, messageType: "interactive", waMessageId: last.messageId });
+  }
+  return last;
+}
+
 /** Document (PDF etc.) by public link OR previously-uploaded media id. */
 export async function sendWhatsAppDocument(
   phone: string,

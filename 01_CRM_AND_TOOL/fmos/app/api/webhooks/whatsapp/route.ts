@@ -12,7 +12,8 @@ import {
   isMenuReplyId,
   isMenuTrigger,
   sendLanguagePicker,
-  sendMainMenu,
+  sendServicesFlow,
+  handleServicesFlowResponse,
   getLeadLang,
 } from "@/lib/bot/menu";
 
@@ -188,6 +189,12 @@ async function handleInboundMessage(message: any, value: any) {
         ? (message.button?.payload ?? null)
         : null;
 
+  // Completed Flow (multi-select services checklist) → arrives as an nfm_reply.
+  const flowReply =
+    message?.type === "interactive" && message?.interactive?.type === "nfm_reply"
+      ? message.interactive.nfm_reply
+      : null;
+
   // Find an existing lead by phone suffix
   const { data: lead } = await supabase
     .from("leads")
@@ -278,6 +285,20 @@ async function handleInboundMessage(message: any, value: any) {
     return;
   }
 
+  // ── Completed services Flow (checkbox multi-select) → tag + next step ──
+  if (flowReply?.response_json) {
+    let services: string[] = [];
+    try {
+      const parsed = JSON.parse(flowReply.response_json);
+      const raw = parsed?.services;
+      services = Array.isArray(raw) ? raw : typeof raw === "string" ? JSON.parse(raw) : [];
+    } catch (e) {
+      console.error("[webhook] flow response parse:", e);
+    }
+    await handleServicesFlowResponse({ leadId: lead.id, phone: from, serviceIds: services });
+    return;
+  }
+
   // Re-opt-in: "START" (and common variants) → clear the opt-out flag.
   if (isStartKeyword(text)) {
     await supabase.from("leads").update({ wa_opt_out: false }).eq("id", lead.id);
@@ -323,7 +344,7 @@ async function handleInboundMessage(message: any, value: any) {
   // Lets a customer re-open the tap menu any time by sending "hi"/"menu".
   if (isMenuTrigger(text)) {
     const lang = await getLeadLang(lead.id);
-    if (lang) await sendMainMenu(from, lead.id, lang);
+    if (lang) await sendServicesFlow(from, lead.id, lang);
     else await sendLanguagePicker(from, lead.id);
     return;
   }

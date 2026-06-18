@@ -18,7 +18,7 @@
  */
 
 import { createAdminClient } from "@/lib/supabase-admin";
-import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppList } from "@/lib/whatsapp/send";
+import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppList, sendWhatsAppFlow } from "@/lib/whatsapp/send";
 import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { bookMeeting } from "@/actions/book-meeting";
 
@@ -104,6 +104,10 @@ interface Copy {
   booked: (label: string, link?: string) => string;
   bookFail: string;
   human: string;
+  flowBody: string;
+  flowCta: string;
+  flowPicked: (names: string) => string;
+  flowNothing: string;
 }
 
 // Shown BEFORE a language is chosen — all three scripts so anyone can read it.
@@ -150,6 +154,10 @@ const T: Record<Lang, Copy> = {
       `\n\nHe'll see you then. Anything else I can help with?`,
     bookFail: "I couldn't lock that slot just now — Jabeer will message you shortly to confirm a time. 🙏",
     human: "Sure! 🙏 Jabeer or someone from our team will message you here shortly. Meanwhile, is there anything I can help you with?",
+    flowBody: "Welcome to FortuneMarq! 👋\n\nTap below to tell us which services you're interested in — you can pick more than one. (Or just type your question anytime.)",
+    flowCta: "Choose services",
+    flowPicked: (names) => `Great — you're interested in: ${names}. 🙌\n\nThe best next step is a free 15-minute call with Jabeer, where he shows you the real numbers for your business 👇`,
+    flowNothing: "No problem! When you're ready, a quick free call with Jabeer is the fastest way to find the right fit for your business. 👇",
   },
 
   // ─────────────────────────── KANNADA ───────────────────────────
@@ -188,6 +196,10 @@ const T: Record<Lang, Copy> = {
       `\n\nಆ ಸಮಯಕ್ಕೆ ಭೇಟಿಯಾಗೋಣ. ಬೇರೆ ಏನಾದರೂ ಸಹಾಯ ಬೇಕೇ?`,
     bookFail: "ಆ ಸ್ಲಾಟ್ ಅನ್ನು ಈಗ ಲಾಕ್ ಮಾಡಲಾಗಲಿಲ್ಲ — ಜಬೀರ್ ಶೀಘ್ರದಲ್ಲೇ ಸಮಯ ಖಚಿತಪಡಿಸಲು ನಿಮಗೆ ಸಂದೇಶ ಕಳುಹಿಸುತ್ತಾರೆ. 🙏",
     human: "ಖಂಡಿತ! 🙏 ಜಬೀರ್ ಅಥವಾ ನಮ್ಮ ತಂಡದವರು ಶೀಘ್ರದಲ್ಲೇ ಇಲ್ಲಿ ನಿಮಗೆ ಸಂದೇಶ ಕಳುಹಿಸುತ್ತಾರೆ. ಅಷ್ಟರಲ್ಲಿ ನಾನು ಏನಾದರೂ ಸಹಾಯ ಮಾಡಬಹುದೇ?",
+    flowBody: "FortuneMarq ಗೆ ಸ್ವಾಗತ! 👋\n\nನಿಮಗೆ ಯಾವ ಸೇವೆಗಳು ಆಸಕ್ತಿ ಎಂದು ತಿಳಿಸಲು ಕೆಳಗೆ ಒತ್ತಿ — ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಆಯ್ಕೆಮಾಡಬಹುದು. (ಅಥವಾ ಯಾವಾಗ ಬೇಕಾದರೂ ನಿಮ್ಮ ಪ್ರಶ್ನೆ ಟೈಪ್ ಮಾಡಿ.)",
+    flowCta: "ಸೇವೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    flowPicked: (names) => `ಒಳ್ಳೆಯದು — ನಿಮಗೆ ಆಸಕ್ತಿ ಇರುವುದು: ${names}. 🙌\n\nಮುಂದಿನ ಉತ್ತಮ ಹೆಜ್ಜೆ — ಜಬೀರ್ ಜೊತೆ ಉಚಿತ 15 ನಿಮಿಷದ ಕರೆ; ಅವರು ನಿಮ್ಮ ವ್ಯಾಪಾರದ ನೈಜ ಅಂಕಿಅಂಶಗಳನ್ನು ತೋರಿಸುತ್ತಾರೆ 👇`,
+    flowNothing: "ಪರವಾಗಿಲ್ಲ! ನೀವು ಸಿದ್ಧರಾದಾಗ, ಜಬೀರ್ ಜೊತೆ ಒಂದು ಸಣ್ಣ ಉಚಿತ ಕರೆ ನಿಮ್ಮ ವ್ಯಾಪಾರಕ್ಕೆ ಸರಿಯಾದ ಸೇವೆ ಕಂಡುಹಿಡಿಯಲು ಅತ್ಯಂತ ವೇಗದ ದಾರಿ. 👇",
   },
 
   // ─────────────────────────── HINDI ───────────────────────────
@@ -226,6 +238,10 @@ const T: Record<Lang, Copy> = {
       `\n\nवे उस समय मिलेंगे। और कोई मदद चाहिए?`,
     bookFail: "मैं वह स्लॉट अभी लॉक नहीं कर सका — जबीर जल्द ही समय कन्फर्म करने के लिए आपको मैसेज करेंगे। 🙏",
     human: "ज़रूर! 🙏 जबीर या हमारी टीम का कोई व्यक्ति जल्द ही यहाँ आपको मैसेज करेगा। तब तक, क्या मैं किसी चीज़ में आपकी मदद कर सकता हूँ?",
+    flowBody: "FortuneMarq में आपका स्वागत है! 👋\n\nनीचे टैप करके बताएँ कि आपको कौन-सी सेवाएँ चाहिए — आप एक से ज़्यादा चुन सकते हैं। (या कभी भी अपना सवाल टाइप करें।)",
+    flowCta: "सेवाएँ चुनें",
+    flowPicked: (names) => `बढ़िया — आपकी रुचि है: ${names}. 🙌\n\nअगला सबसे अच्छा कदम — जबीर के साथ फ्री 15-मिनट कॉल, जिसमें वे आपके व्यापार के असली आँकड़े दिखाते हैं 👇`,
+    flowNothing: "कोई बात नहीं! जब आप तैयार हों, जबीर के साथ एक छोटी फ्री कॉल आपके व्यापार के लिए सही सेवा चुनने का सबसे तेज़ तरीका है। 👇",
   },
 };
 
@@ -258,6 +274,66 @@ export async function sendMainMenu(phone: string, leadId: string, lang: Lang): P
     { body: t.menuBody, button: t.menuButton, sections: [{ rows }] },
     { leadId }
   );
+}
+
+function flowIdFor(lang: Lang): string | undefined {
+  return process.env[`WHATSAPP_FLOW_ID_${lang.toUpperCase()}`] || undefined;
+}
+
+/** Multi-select services experience: the published WhatsApp Flow (checkboxes)
+ *  when configured (WHATSAPP_FLOW_ID_<LANG>), else a graceful fallback to the
+ *  single-select list menu so the bot keeps working until the flows are set. */
+export async function sendServicesFlow(phone: string, leadId: string, lang: Lang): Promise<void> {
+  const flowId = flowIdFor(lang);
+  if (!flowId) {
+    await sendMainMenu(phone, leadId, lang);
+    return;
+  }
+  const t = T[lang];
+  await sendWhatsAppFlow(
+    phone,
+    { flowId, cta: t.flowCta, body: t.flowBody, screen: "SERVICES", flowToken: `svc:${leadId}` },
+    { leadId }
+  );
+}
+
+/** Handle a completed services Flow (nfm_reply): tag the chosen services on the
+ *  lead (visible to the team) and reply (in-language) with the next step. */
+export async function handleServicesFlowResponse(opts: { leadId: string; phone: string; serviceIds: string[] }): Promise<void> {
+  const { leadId, phone, serviceIds } = opts;
+  const lang = (await getLeadLang(leadId)) ?? "en";
+  const t = T[lang];
+  const valid = serviceIds.filter((s): s is Svc => SVC_ORDER.includes(s as Svc));
+
+  if (valid.length) {
+    const supabase = createAdminClient() as any;
+    const { data: lead } = await supabase.from("leads").select("tags").eq("id", leadId).maybeSingle();
+    const existing: string[] = Array.isArray(lead?.tags) ? lead.tags : [];
+    const tags = Array.from(new Set([...existing, "wa_services_selected", ...valid.map((s) => `wants_${s}`)]));
+    await supabase.from("leads").update({ tags }).eq("id", leadId);
+    await supabase.from("activity_events").insert({
+      entity_type: "lead",
+      entity_id: leadId,
+      event_type: "whatsapp_services_selected",
+      title: "Selected services on WhatsApp",
+      body: valid.map((s) => T.en.rowTitle[s]).join(", "),
+      metadata: { services: valid },
+    });
+  }
+
+  if (!valid.length) {
+    await sendWhatsAppButtons(phone, t.flowNothing, [
+      { id: "m:book", title: t.btnBook },
+      { id: "m:human", title: t.rowTitle.human },
+    ], { leadId });
+    return;
+  }
+  const names = valid.map((s) => t.rowTitle[s]).join(", ");
+  await sendWhatsAppButtons(phone, t.flowPicked(names), [
+    { id: "m:book", title: t.btnBook },
+    { id: "m:human", title: t.rowTitle.human },
+    { id: "m:main", title: t.btnMain },
+  ], { leadId });
 }
 
 async function sendServiceDetail(phone: string, leadId: string, lang: Lang, svc: Svc): Promise<void> {
@@ -353,14 +429,14 @@ export async function handleMenuTap(opts: { leadId: string; phone: string; id: s
   if (id.startsWith("m:lang:")) {
     const lang = asLang(id.slice("m:lang:".length));
     await setLeadLang(leadId, lang);
-    await sendMainMenu(phone, leadId, lang);
+    await sendServicesFlow(phone, leadId, lang);
     return true;
   }
 
   const lang = (await getLeadLang(leadId)) ?? "en";
 
   if (id === "m:main") {
-    await sendMainMenu(phone, leadId, lang);
+    await sendServicesFlow(phone, leadId, lang);
     return true;
   }
   if (id.startsWith("m:svc:")) {
