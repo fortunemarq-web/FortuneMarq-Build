@@ -91,7 +91,7 @@ async function scheduleFollowBackReminder(
       lead_id: leadId,
       phone,
       template_name: templateName,
-      params: JSON.stringify(params),
+      params, // jsonb array — NOT JSON.stringify (the cron reads it as an array)
       lang,
       fire_at: fireAt.toISOString(),
       status: "pending",

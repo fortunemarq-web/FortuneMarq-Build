@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       reminded++;
     } else if (isOverdue) {
       // payment_overdue: {{1}}=contact, {{2}}=invoice_number, {{3}}=amount, {{4}}=url
-      await sendWhatsAppTemplate(client.phone, "payment_overdue", {
+      const r = await sendWhatsAppTemplate(client.phone, "payment_overdue", {
         language: "en",
         components: [
           {
@@ -94,13 +94,15 @@ export async function POST(req: NextRequest) {
         ],
       }).catch(() => null);
 
-      // Mark as overdue in DB for Afifa's collections board
-      await supabase
-        .from("invoices")
-        .update({ status: "overdue" })
-        .eq("id", inv.id);
-
-      overdue++;
+      // Only flag overdue (which removes it from future runs) when the reminder
+      // actually sent — otherwise a throttled/failed first send silences it forever.
+      if (r?.success) {
+        await supabase
+          .from("invoices")
+          .update({ status: "overdue" })
+          .eq("id", inv.id);
+        overdue++;
+      }
     }
   }
 

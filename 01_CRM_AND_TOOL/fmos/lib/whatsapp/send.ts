@@ -102,7 +102,12 @@ export function resolveRecipients(realPhone: string): { phones: string[]; testMo
       phones = tp;
       testMode = true;
     } else {
-      phones = [realPhone];
+      // Test mode but NO test recipients configured → fail closed (drop), never
+      // silently fall through to the real number. The allowlist would also catch
+      // this, but defence in depth.
+      console.warn("[whatsapp/send] WHATSAPP_SEND_MODE=test but WHATSAPP_TEST_RECIPIENTS is empty — dropping send.");
+      phones = [];
+      testMode = true;
     }
   } else {
     phones = [realPhone];

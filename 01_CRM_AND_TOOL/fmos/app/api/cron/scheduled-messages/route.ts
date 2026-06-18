@@ -41,41 +41,58 @@ export async function POST(req: NextRequest) {
   const errors: string[] = [];
 
   for (const row of rows) {
-    const to = toWaNumber(row.phone);
-    if (!to) {
+    // One bad row must NEVER abort the whole batch (which would silently stop
+    // ALL meeting/proposal/follow-up reminders forever).
+    try {
+      const to = toWaNumber(row.phone);
+      if (!to) {
+        await supabase
+          .from("scheduled_messages")
+          .update({ status: "failed", error: "invalid_phone", sent_at: now })
+          .eq("id", row.id);
+        failed++;
+        continue;
+      }
+
+      // params should be a jsonb array; tolerate legacy rows stored as a JSON string.
+      const raw: unknown = (row as { params?: unknown }).params;
+      const params: string[] = Array.isArray(raw)
+        ? (raw as string[])
+        : typeof raw === "string"
+          ? (() => { try { const p = JSON.parse(raw); return Array.isArray(p) ? p : []; } catch { return []; } })()
+          : [];
+
+      const components = params.length > 0
+        ? [{ type: "body", parameters: params.map((p) => ({ type: "text", text: String(p) })) }]
+        : undefined;
+
+      const r = await sendWhatsAppTemplate(row.phone, row.template_name, {
+        language: row.lang,
+        components,
+        leadId: row.lead_id,
+      });
+
       await supabase
         .from("scheduled_messages")
-        .update({ status: "failed", error: "invalid_phone", sent_at: now })
+        .update({
+          status: r.success ? "sent" : "failed",
+          sent_at: new Date().toISOString(),
+          error: r.error ?? null,
+        })
         .eq("id", row.id);
+
+      if (r.success) sent++;
+      else { failed++; errors.push(`${row.id}: ${r.error}`); }
+    } catch (e: unknown) {
       failed++;
-      continue;
+      const msg = e instanceof Error ? e.message : "row error";
+      errors.push(`${row.id}: ${msg}`);
+      await supabase
+        .from("scheduled_messages")
+        .update({ status: "failed", error: msg.slice(0, 300), sent_at: new Date().toISOString() })
+        .eq("id", row.id)
+        .then(() => {}, () => {});
     }
-
-    // Build components from stored params
-    const components = row.params && row.params.length > 0
-      ? [{
-          type: "body",
-          parameters: row.params.map((p: string) => ({ type: "text", text: p })),
-        }]
-      : undefined;
-
-    const r = await sendWhatsAppTemplate(row.phone, row.template_name, {
-      language: row.lang,
-      components,
-      leadId: row.lead_id,
-    });
-
-    await supabase
-      .from("scheduled_messages")
-      .update({
-        status: r.success ? "sent" : "failed",
-        sent_at: new Date().toISOString(),
-        error: r.error ?? null,
-      })
-      .eq("id", row.id);
-
-    if (r.success) sent++;
-    else { failed++; errors.push(`${row.id}: ${r.error}`); }
   }
 
   return NextResponse.json({ ok: true, processed: rows.length, sent, failed, errors });

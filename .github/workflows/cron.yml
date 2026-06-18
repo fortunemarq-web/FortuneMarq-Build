@@ -51,6 +51,22 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/automations/followups" \
             -H "Authorization: Bearer $SECRET" || echo "followups ping failed (non-fatal)"
+      - name: Scheduled messages (meeting / follow-back reminders)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/scheduled-messages" \
+            -H "Authorization: Bearer $SECRET" || echo "scheduled-messages ping failed (non-fatal)"
+      - name: WhatsApp quality + tier check (frequent — early warning during sends)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/whatsapp-quality" \
+            -H "Authorization: Bearer $SECRET" || echo "whatsapp-quality ping failed (non-fatal)"
 
   daily:
     if: github.event.schedule == '0 3 * * *' || github.event_name == 'workflow_dispatch'
@@ -89,11 +105,11 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/session-timeout" \
             -H "Authorization: Bearer $SECRET" || echo "session-timeout ping failed (non-fatal)"
-      - name: WhatsApp quality + tier check
+      - name: Invoice payment reminders + overdue flags
         env:
           BASE_URL: ${{ vars.FMOS_BASE_URL }}
           SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           [ -z "$BASE_URL" ] && exit 0
-          curl -fsS -X POST "$BASE_URL/api/cron/whatsapp-quality" \
-            -H "Authorization: Bearer $SECRET" || echo "whatsapp-quality ping failed (non-fatal)"
+          curl -fsS -X POST "$BASE_URL/api/cron/invoice-reminders" \
+            -H "Authorization: Bearer $SECRET" || echo "invoice-reminders ping failed (non-fatal)"
