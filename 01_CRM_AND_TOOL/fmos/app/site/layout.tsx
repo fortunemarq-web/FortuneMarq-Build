@@ -10,6 +10,7 @@ import {
 import SiteMotion from "@/components/site/site-motion";
 import { FloatingWhatsApp } from "@/components/site/site-whatsapp";
 import SiteAnalytics from "@/components/site/site-analytics";
+import SiteChat from "@/components/site/site-chat";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -42,6 +43,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <SiteLightbox />
       <SiteScrollIndicator />
       <FloatingWhatsApp />
+      <SiteChat />
       <SiteMotion />
     </>
   );

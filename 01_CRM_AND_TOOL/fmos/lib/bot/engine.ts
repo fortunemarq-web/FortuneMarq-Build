@@ -186,7 +186,102 @@ function staticFallback(): string {
     .replace("{{businessName}}", "your business");
 }
 
-// ─── Main entry point ─────────────────────────────────────────────────────────
+// ─── Shared reply generator (channel-agnostic brain) ───────────────────────────
+
+export interface GenerateReplyInput {
+  userText: string;
+  history: ThreadMessage[];
+  channel: string;
+  /** present once a lead exists (WhatsApp always; web after capture). When
+   *  absent (anonymous web visitor) the DB-mutating side effects are skipped. */
+  leadId?: string;
+  /** label used in admin alerts when there is no leadId yet. */
+  leadLabel?: string;
+}
+
+export interface GenerateReplyResult {
+  reply: string;
+  kind: "opt_out" | "escalated" | "needs_time" | "booking_confirmed" | "reply" | "guardrail_fallback";
+  /** true when the visitor should be handed to a human (opt-out/escalation/rejected draft). */
+  escalate: boolean;
+  escalationTrigger?: string;
+  /** the visitor expressed booking/contact intent — callers can surface a lead form. */
+  bookingIntent: boolean;
+  meetLink?: string;
+  /** the opt-out confirmation must bypass the central opt-out send guard. */
+  bypassOptOut?: boolean;
+}
+
+/**
+ * The shared bot brain used by BOTH WhatsApp (runBot) and the website chat
+ * (/api/webchat). It runs the identical guardrail + escalation + booking + KB
+ * pipeline and returns the SAFE reply text plus classification flags. It does
+ * NOT send any message and does NOT log turns — each caller does that for its
+ * own channel (WhatsApp send vs. JSON to the browser). Cross-channel side
+ * effects that must happen regardless of channel — admin escalation alerts,
+ * pausing the bot, flagging opt-out, booking a meeting — run here, but every
+ * DB mutation is guarded on `leadId` so an anonymous web visitor is safe.
+ */
+export async function generateBotReply(input: GenerateReplyInput): Promise<GenerateReplyResult> {
+  const { userText, history, leadId } = input;
+  const leadLabel = input.leadLabel || "Website visitor";
+
+  // 1. Opt-out — check before anything else
+  const escalation = checkUserEscalation(userText);
+  if (escalation?.trigger === "opt_out") {
+    if (leadId) await optOutLead(leadId);
+    return { reply: OPT_OUT_REPLY, kind: "opt_out", escalate: true, escalationTrigger: "opt_out", bookingIntent: false, bypassOptOut: true };
+  }
+
+  // 2. Other escalation triggers — alert Jabeer + (if known lead) pause the bot
+  if (escalation) {
+    const label = leadId ? (await fetchLeadName(leadId)).lead : leadLabel;
+    await sendAdminAlert(`Escalation: ${escalation.trigger.replace(/_/g, " ")}`, `${label} — ${escalation.summary}`);
+    if (escalation.pauseBot && leadId) await pauseBot(leadId);
+    return { reply: ESCALATION_HANDOFF_REPLY, kind: "escalated", escalate: true, escalationTrigger: escalation.trigger, bookingIntent: false };
+  }
+
+  // 3. Booking intent
+  const booking = detectBookingIntent(userText);
+  if (booking.hasIntent && booking.needsTime) {
+    return { reply: ASK_FOR_TIME_PROMPT, kind: "needs_time", escalate: false, bookingIntent: true };
+  }
+  if (booking.hasIntent && booking.isoStart) {
+    if (leadId) {
+      const result = await bookMeeting({ leadId, startIso: booking.isoStart });
+      const confirmMsg = result.ok
+        ? `Done! Your meeting with Jabeer is set. ${result.meetLink ? `Join here: ${result.meetLink}` : "You'll receive the details shortly."} See you then!`
+        : `I'll have Jabeer reach out to confirm a time — he'll WhatsApp you shortly!`;
+      return { reply: confirmMsg, kind: "booking_confirmed", escalate: false, bookingIntent: true, meetLink: result.meetLink };
+    }
+    // Anonymous web visitor — we need their details before we can book.
+    return { reply: ASK_FOR_TIME_PROMPT, kind: "needs_time", escalate: false, bookingIntent: true };
+  }
+
+  // 4. Anthropic call
+  const draft = await callAnthropic(history, userText);
+  if (!draft) {
+    // API error — static fallback
+    return { reply: staticFallback(), kind: "reply", escalate: false, bookingIntent: booking.hasIntent };
+  }
+
+  // 5. Draft guardrail check
+  const draftCheck = checkBotDraft(draft);
+  if (!draftCheck.safe) {
+    console.warn("[bot/engine] Draft rejected:", draftCheck.reason);
+    if (draftCheck.escalation) {
+      const label = leadId ? (await fetchLeadName(leadId)).lead : leadLabel;
+      await sendAdminAlert(`Bot draft rejected: ${draftCheck.escalation.trigger}`, `${label} — ${draftCheck.escalation.summary}`);
+      if (draftCheck.escalation.pauseBot && leadId) await pauseBot(leadId);
+    }
+    return { reply: GUARDRAIL_FALLBACK_REPLY, kind: "guardrail_fallback", escalate: !!draftCheck.escalation, escalationTrigger: draftCheck.escalation?.trigger, bookingIntent: booking.hasIntent };
+  }
+
+  // 6. Approved draft
+  return { reply: draft, kind: "reply", escalate: false, bookingIntent: booking.hasIntent };
+}
+
+// ─── Main entry point (WhatsApp) ───────────────────────────────────────────────
 
 export async function runBot(opts: BotRunOpts): Promise<BotRunResult> {
   const { leadId, phone, userText, channel = "whatsapp" } = opts;
@@ -201,90 +296,25 @@ export async function runBot(opts: BotRunOpts): Promise<BotRunResult> {
     return { handled: false, skipped: "bot_paused" };
   }
 
-  // 2. Log inbound user turn first (always, even if we don't reply)
+  // 3. Log inbound user turn first (always, even if we don't reply)
   await logTurn({ leadId, channel, role: "user", content: userText });
 
-  // 3. Opt-out — check before anything else
-  const escalation = checkUserEscalation(userText);
-  if (escalation?.trigger === "opt_out") {
-    await optOutLead(leadId);
-    // bypassOptOut: this is the courtesy confirmation OF the opt-out — the central
-    // guard would otherwise suppress it since we just flagged the lead.
-    await sendWhatsAppText(phone, OPT_OUT_REPLY, { leadId, bypassOptOut: true });
-    await logTurn({ leadId, channel, role: "assistant", content: OPT_OUT_REPLY, escalated: true });
-    return { handled: true, reply: OPT_OUT_REPLY, skipped: "opt_out" };
-  }
-
-  // 4. Other escalation triggers
-  if (escalation) {
-    const { lead } = await fetchLeadName(leadId);
-    const detail = `${lead} — ${escalation.summary}`;
-    await sendAdminAlert(`Escalation: ${escalation.trigger.replace(/_/g, " ")}`, detail);
-    if (escalation.pauseBot) await pauseBot(leadId);
-    await sendWhatsAppText(phone, ESCALATION_HANDOFF_REPLY, { leadId });
-    await logTurn({ leadId, channel, role: "assistant", content: ESCALATION_HANDOFF_REPLY, escalated: true });
-    return { handled: true, reply: ESCALATION_HANDOFF_REPLY, skipped: "escalated", escalationTrigger: escalation.trigger };
-  }
-
-  // 5. Booking intent
-  const booking = detectBookingIntent(userText);
-
-  if (booking.hasIntent && booking.needsTime) {
-    // Ask for time — no Anthropic call needed
-    await sendWhatsAppText(phone, ASK_FOR_TIME_PROMPT, { leadId });
-    await logTurn({ leadId, channel, role: "assistant", content: ASK_FOR_TIME_PROMPT });
-    return { handled: true, reply: ASK_FOR_TIME_PROMPT, skipped: "needs_time" };
-  }
-
-  if (booking.hasIntent && booking.isoStart) {
-    // Book directly
-    const result = await bookMeeting({ leadId, startIso: booking.isoStart });
-    const confirmMsg = result.ok
-      ? `Done! Your meeting with Jabeer is set. ${result.meetLink ? `Join here: ${result.meetLink}` : "You'll receive the details shortly."} See you then!`
-      : `I'll have Jabeer reach out to confirm a time — he'll WhatsApp you shortly!`;
-    await sendWhatsAppText(phone, confirmMsg, { leadId });
-    await logTurn({ leadId, channel, role: "assistant", content: confirmMsg });
-    return { handled: true, reply: confirmMsg, skipped: "booking_confirmed" };
-  }
-
-  // 6. Anthropic call
+  // 4. Shared brain — identical guardrails/escalation/booking for every channel
   const history = await loadHistory(leadId, channel);
-  const draft = await callAnthropic(history, userText);
+  const r = await generateBotReply({ userText, history, channel, leadId });
 
-  if (!draft) {
-    // API error — static fallback
-    const fallback = staticFallback();
-    await sendWhatsAppText(phone, fallback, { leadId });
-    await logTurn({ leadId, channel, role: "assistant", content: fallback });
-    return { handled: true, reply: fallback };
-  }
+  // 5. Send + log (WhatsApp-specific). The opt-out confirmation must bypass the
+  //    central opt-out send guard since we just flagged the lead.
+  await sendWhatsAppText(phone, r.reply, { leadId, bypassOptOut: r.bypassOptOut });
+  await logTurn({ leadId, channel, role: "assistant", content: r.reply, escalated: r.escalate });
 
-  // 7. Draft guardrail check
-  const draftCheck = checkBotDraft(draft);
-
-  if (!draftCheck.safe) {
-    console.warn("[bot/engine] Draft rejected:", draftCheck.reason);
-
-    // Log escalation if it warrants one
-    if (draftCheck.escalation) {
-      const { lead } = await fetchLeadName(leadId);
-      await sendAdminAlert(
-        `Bot draft rejected: ${draftCheck.escalation.trigger}`,
-        `${lead} — ${draftCheck.escalation.summary}`
-      );
-      if (draftCheck.escalation.pauseBot) await pauseBot(leadId);
-    }
-
-    // Send the safe fallback instead
-    await sendWhatsAppText(phone, GUARDRAIL_FALLBACK_REPLY, { leadId });
-    await logTurn({ leadId, channel, role: "assistant", content: GUARDRAIL_FALLBACK_REPLY, escalated: !!draftCheck.escalation });
-    return { handled: true, reply: GUARDRAIL_FALLBACK_REPLY, escalationTrigger: draftCheck.escalation?.trigger };
-  }
-
-  // 8. Send approved draft
-  await sendWhatsAppText(phone, draft, { leadId });
-  await logTurn({ leadId, channel, role: "assistant", content: draft });
-  return { handled: true, reply: draft };
+  const skipped =
+    r.kind === "opt_out" ? "opt_out" :
+    r.kind === "escalated" ? "escalated" :
+    r.kind === "needs_time" ? "needs_time" :
+    r.kind === "booking_confirmed" ? "booking_confirmed" :
+    undefined;
+  return { handled: true, reply: r.reply, skipped, escalationTrigger: r.escalationTrigger };
 }
 
 // ─── Util ─────────────────────────────────────────────────────────────────────
