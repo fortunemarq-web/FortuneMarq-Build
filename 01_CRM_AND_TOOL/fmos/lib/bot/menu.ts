@@ -94,10 +94,12 @@ function isLikelyQuestion(text: string): boolean {
   const t = (text || "").trim();
   if (!t) return true;
   if (t.includes("?")) return true;
-  if (t.length > 60) return true;
-  if (/\b(how|what|why|when|where|which|price|cost|charge|rate|kitna|kitne|kaise|kya|book|call|meeting|free|detail|details|help|service|services)\b/i.test(t)) return true;
-  if (/ಎಷ್ಟು|ಹೇಗೆ|ಏನು|ಬೆಲೆ|ಎಲ್ಲಿ|ಯಾವ|ಸೇವೆ/.test(t)) return true;
-  if (/कितना|कैसे|क्या|कीमत|कहाँ|कौन|सेवा/.test(t)) return true;
+  if (t.length > 90) return true; // very long → a question/statement, not a name/about
+  // Clear question / price / booking signals only (kept tight so a genuine
+  // business description like "we help people buy homes" is NOT misread).
+  if (/\b(how much|how do|how can|what is|what are|why|when|which|price|cost|charges?|rate|kitna|kitne|kaise|book a|booking|meeting|appointment)\b/i.test(t)) return true;
+  if (/ಎಷ್ಟು|ಹೇಗೆ|ಬೆಲೆ|ಯಾವಾಗ/.test(t)) return true;
+  if (/कितना|कैसे|कीमत|कब बुक/.test(t)) return true;
   return false;
 }
 
