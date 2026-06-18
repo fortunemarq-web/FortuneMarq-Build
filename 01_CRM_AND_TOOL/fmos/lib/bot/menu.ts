@@ -21,6 +21,7 @@ import { createAdminClient } from "@/lib/supabase-admin";
 import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppList, sendWhatsAppFlow } from "@/lib/whatsapp/send";
 import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { bookMeeting } from "@/actions/book-meeting";
+import { generateServicesExplainer } from "@/lib/bot/engine";
 
 export type Lang = "en" | "kn" | "hi";
 const LANGS: Lang[] = ["en", "kn", "hi"];
@@ -85,6 +86,66 @@ async function setLeadLang(leadId: string, lang: Lang): Promise<void> {
   await supabase.from("leads").update({ wa_lang: lang }).eq("id", leadId);
 }
 
+// ─── Discovery (business name + what they do) ──────────────────────────────────
+
+/** Heuristic: is this message a question / a sign the lead is ignoring the
+ *  discovery prompt (so we abandon discovery and just help them generally)? */
+function isLikelyQuestion(text: string): boolean {
+  const t = (text || "").trim();
+  if (!t) return true;
+  if (t.includes("?")) return true;
+  if (t.length > 60) return true;
+  if (/\b(how|what|why|when|where|which|price|cost|charge|rate|kitna|kitne|kaise|kya|book|call|meeting|free|detail|details|help|service|services)\b/i.test(t)) return true;
+  if (/ಎಷ್ಟು|ಹೇಗೆ|ಏನು|ಬೆಲೆ|ಎಲ್ಲಿ|ಯಾವ|ಸೇವೆ/.test(t)) return true;
+  if (/कितना|कैसे|क्या|कीमत|कहाँ|कौन|सेवा/.test(t)) return true;
+  return false;
+}
+
+async function setStage(leadId: string, stage: string): Promise<void> {
+  const supabase = createAdminClient() as any;
+  await supabase.from("leads").update({ wa_stage: stage }).eq("id", leadId);
+}
+
+/** Start the post-language discovery: ask for the business name. */
+export async function startDiscovery(phone: string, leadId: string, lang: Lang): Promise<void> {
+  await setStage(leadId, "await_name");
+  await sendWhatsAppText(phone, T[lang].askName, { leadId });
+}
+
+/**
+ * If the lead is mid-discovery, treat this text as their answer. Returns true
+ * when consumed. If they ignore the question (ask something instead), we abandon
+ * discovery (stage -> done) and return false so the caller continues generally.
+ */
+export async function handleDiscoveryReply(opts: { leadId: string; phone: string; text: string; lang?: Lang | null }): Promise<boolean> {
+  const { leadId, phone, text } = opts;
+  const supabase = createAdminClient() as any;
+  const { data: lead } = await supabase.from("leads").select("wa_stage, company_name").eq("id", leadId).maybeSingle();
+  const stage = lead?.wa_stage;
+  if (stage !== "await_name" && stage !== "await_about") return false;
+
+  const lang = opts.lang ?? (await getLeadLang(leadId)) ?? "en";
+
+  // Ignored the question (asked something instead) → continue generally.
+  if (isLikelyQuestion(text)) {
+    await setStage(leadId, "done");
+    return false;
+  }
+
+  if (stage === "await_name") {
+    await supabase.from("leads").update({ company_name: text.trim().slice(0, 80), wa_stage: "await_about" }).eq("id", leadId);
+    await sendWhatsAppText(phone, T[lang].askAbout, { leadId });
+    return true;
+  }
+
+  // stage === "await_about" → save, greet by name, open the services flow.
+  await supabase.from("leads").update({ wa_about: text.trim().slice(0, 300), wa_stage: "done" }).eq("id", leadId);
+  const name = (lead?.company_name as string) || "there";
+  await sendWhatsAppText(phone, T[lang].discoveryHook(name), { leadId });
+  await sendServicesFlow(phone, leadId, lang);
+  return true;
+}
+
 // ─── Service keys ──────────────────────────────────────────────────────────────
 
 type Svc = "grow" | "gmb" | "web" | "ads" | "seo" | "wa" | "proof";
@@ -108,6 +169,9 @@ interface Copy {
   flowCta: string;
   flowPicked: (names: string) => string;
   flowNothing: string;
+  askName: string;
+  askAbout: string;
+  discoveryHook: (name: string) => string;
 }
 
 // Shown BEFORE a language is chosen — all three scripts so anyone can read it.
@@ -158,6 +222,9 @@ const T: Record<Lang, Copy> = {
     flowCta: "Choose services",
     flowPicked: (names) => `Great — you're interested in: ${names}. 🙌\n\nThe best next step is a free 15-minute call with Jabeer, where he shows you the real numbers for your business 👇`,
     flowNothing: "No problem! When you're ready, a quick free call with Jabeer is the fastest way to find the right fit for your business. 👇",
+    askName: "Before we start — what's your business called? 🙂",
+    askAbout: "Got it! And what does your business do? (e.g. dental clinic, gym, real estate)",
+    discoveryHook: (name) => `Thanks, ${name}! 🙌 Let's get you more customers. What would you like help with? Tick anything below — or just ask me anything 👇`,
   },
 
   // ─────────────────────────── KANNADA ───────────────────────────
@@ -200,6 +267,9 @@ const T: Record<Lang, Copy> = {
     flowCta: "ಸೇವೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     flowPicked: (names) => `ಒಳ್ಳೆಯದು — ನಿಮಗೆ ಆಸಕ್ತಿ ಇರುವುದು: ${names}. 🙌\n\nಮುಂದಿನ ಉತ್ತಮ ಹೆಜ್ಜೆ — ಜಬೀರ್ ಜೊತೆ ಉಚಿತ 15 ನಿಮಿಷದ ಕರೆ; ಅವರು ನಿಮ್ಮ ವ್ಯಾಪಾರದ ನೈಜ ಅಂಕಿಅಂಶಗಳನ್ನು ತೋರಿಸುತ್ತಾರೆ 👇`,
     flowNothing: "ಪರವಾಗಿಲ್ಲ! ನೀವು ಸಿದ್ಧರಾದಾಗ, ಜಬೀರ್ ಜೊತೆ ಒಂದು ಸಣ್ಣ ಉಚಿತ ಕರೆ ನಿಮ್ಮ ವ್ಯಾಪಾರಕ್ಕೆ ಸರಿಯಾದ ಸೇವೆ ಕಂಡುಹಿಡಿಯಲು ಅತ್ಯಂತ ವೇಗದ ದಾರಿ. 👇",
+    askName: "ಪ್ರಾರಂಭಿಸುವ ಮೊದಲು — ನಿಮ್ಮ ವ್ಯಾಪಾರದ ಹೆಸರೇನು? 🙂",
+    askAbout: "ಸರಿ! ನಿಮ್ಮ ವ್ಯಾಪಾರ ಏನು ಮಾಡುತ್ತದೆ? (ಉದಾ. ಡೆಂಟಲ್ ಕ್ಲಿನಿಕ್, ಜಿಮ್, ರಿಯಲ್ ಎಸ್ಟೇಟ್)",
+    discoveryHook: (name) => `ಧನ್ಯವಾದ, ${name}! 🙌 ನಿಮಗೆ ಹೆಚ್ಚು ಗ್ರಾಹಕರನ್ನು ತರೋಣ. ನಿಮಗೆ ಯಾವುದರಲ್ಲಿ ಸಹಾಯ ಬೇಕು? ಕೆಳಗೆ ಯಾವುದನ್ನಾದರೂ ಆಯ್ಕೆಮಾಡಿ — ಅಥವಾ ನನಗೆ ಏನು ಬೇಕಾದರೂ ಕೇಳಿ 👇`,
   },
 
   // ─────────────────────────── HINDI ───────────────────────────
@@ -242,6 +312,9 @@ const T: Record<Lang, Copy> = {
     flowCta: "सेवाएँ चुनें",
     flowPicked: (names) => `बढ़िया — आपकी रुचि है: ${names}. 🙌\n\nअगला सबसे अच्छा कदम — जबीर के साथ फ्री 15-मिनट कॉल, जिसमें वे आपके व्यापार के असली आँकड़े दिखाते हैं 👇`,
     flowNothing: "कोई बात नहीं! जब आप तैयार हों, जबीर के साथ एक छोटी फ्री कॉल आपके व्यापार के लिए सही सेवा चुनने का सबसे तेज़ तरीका है। 👇",
+    askName: "शुरू करने से पहले — आपके व्यापार का नाम क्या है? 🙂",
+    askAbout: "समझ गया! आपका व्यापार क्या करता है? (जैसे डेंटल क्लिनिक, जिम, रियल एस्टेट)",
+    discoveryHook: (name) => `धन्यवाद, ${name}! 🙌 चलिए आपको ज़्यादा ग्राहक दिलाते हैं। आपको किसमें मदद चाहिए? नीचे कुछ भी चुनें — या मुझसे कुछ भी पूछें 👇`,
   },
 };
 
@@ -304,36 +377,42 @@ export async function handleServicesFlowResponse(opts: { leadId: string; phone: 
   const lang = (await getLeadLang(leadId)) ?? "en";
   const t = T[lang];
   const valid = serviceIds.filter((s): s is Svc => SVC_ORDER.includes(s as Svc));
-
-  if (valid.length) {
-    const supabase = createAdminClient() as any;
-    const { data: lead } = await supabase.from("leads").select("tags").eq("id", leadId).maybeSingle();
-    const existing: string[] = Array.isArray(lead?.tags) ? lead.tags : [];
-    const tags = Array.from(new Set([...existing, "wa_services_selected", ...valid.map((s) => `wants_${s}`)]));
-    await supabase.from("leads").update({ tags }).eq("id", leadId);
-    await supabase.from("activity_events").insert({
-      entity_type: "lead",
-      entity_id: leadId,
-      event_type: "whatsapp_services_selected",
-      title: "Selected services on WhatsApp",
-      body: valid.map((s) => T.en.rowTitle[s]).join(", "),
-      metadata: { services: valid },
-    });
-  }
+  const supabase = createAdminClient() as any;
+  const { data: lead } = await supabase
+    .from("leads")
+    .select("tags, company_name, wa_about, city")
+    .eq("id", leadId)
+    .maybeSingle();
 
   if (!valid.length) {
-    await sendWhatsAppButtons(phone, t.flowNothing, [
-      { id: "m:book", title: t.btnBook },
-      { id: "m:human", title: t.rowTitle.human },
-    ], { leadId });
+    // Nothing ticked — stay warm and open, no dead-end.
+    await sendWhatsAppText(phone, t.flowNothing, { leadId });
     return;
   }
-  const names = valid.map((s) => t.rowTitle[s]).join(", ");
-  await sendWhatsAppButtons(phone, t.flowPicked(names), [
-    { id: "m:book", title: t.btnBook },
-    { id: "m:human", title: t.rowTitle.human },
-    { id: "m:main", title: t.btnMain },
-  ], { leadId });
+
+  // Tag the chosen services on the lead (visible to the team in the cockpit).
+  const existing: string[] = Array.isArray(lead?.tags) ? lead.tags : [];
+  const tags = Array.from(new Set([...existing, "wa_services_selected", ...valid.map((s) => `wants_${s}`)]));
+  await supabase.from("leads").update({ tags }).eq("id", leadId);
+  await supabase.from("activity_events").insert({
+    entity_type: "lead",
+    entity_id: leadId,
+    event_type: "whatsapp_services_selected",
+    title: "Selected services on WhatsApp",
+    body: valid.map((s) => T.en.rowTitle[s]).join(", "),
+    metadata: { services: valid },
+  });
+
+  // Personalized, in-language explanation of EACH chosen service — the details
+  // they came for. Engage, don't push a call. Falls back to the static blurbs
+  // if the AI is unavailable. (Booking/human still reachable by typing.)
+  const business = { name: lead?.company_name, about: lead?.wa_about, city: lead?.city };
+  const explainer = await generateServicesExplainer({
+    serviceLabels: valid.map((s) => T.en.rowTitle[s]),
+    lang,
+    business,
+  });
+  await sendWhatsAppText(phone, explainer || valid.map((s) => t.svc[s]).join("\n\n"), { leadId });
 }
 
 async function sendServiceDetail(phone: string, leadId: string, lang: Lang, svc: Svc): Promise<void> {
@@ -429,7 +508,7 @@ export async function handleMenuTap(opts: { leadId: string; phone: string; id: s
   if (id.startsWith("m:lang:")) {
     const lang = asLang(id.slice("m:lang:".length));
     await setLeadLang(leadId, lang);
-    await sendServicesFlow(phone, leadId, lang);
+    await startDiscovery(phone, leadId, lang);
     return true;
   }
 

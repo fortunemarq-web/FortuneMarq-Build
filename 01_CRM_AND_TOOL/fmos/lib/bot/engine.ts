@@ -76,6 +76,7 @@ export interface BotRunOpts {
   channel?: string;      // "whatsapp" | "web" | "instagram" — default "whatsapp"
   waMessageId?: string;
   lang?: BotLang;        // conversation language (leads.wa_lang) — reply is written in it
+  business?: BotBusiness; // the lead's business (discovery) — personalizes the reply
 }
 
 export interface BotRunResult {
@@ -159,10 +160,34 @@ function languageInstruction(lang?: BotLang): string {
   return `\n\nLANGUAGE: Reply in the SAME language the customer writes in — English, Kannada or Hindi (including Roman/"Kanglish" script). Mirror their language and keep it simple.`;
 }
 
+/** The lead's business (from the discovery step) — drives personalization. */
+export interface BotBusiness {
+  name?: string | null;
+  about?: string | null;
+  city?: string | null;
+}
+
+/** Engage-first + personalize instruction (appended uncached after the KB). */
+function engagementInstruction(business?: BotBusiness): string {
+  let s =
+    `\n\nSTYLE: Keep the lead engaged — educate them, answer fully, and end with a short follow-up question so the conversation keeps going. Do NOT push booking in every message; only invite a free call with Jabeer once the lead shows clear interest (asks price for their case, "how do I start", timelines) OR after you've delivered real value. Keep messages short and skimmable for WhatsApp.`;
+  const name = business?.name?.trim();
+  const about = business?.about?.trim();
+  if (name || about) {
+    s +=
+      `\n\nPERSONALIZE every answer to THIS specific business` +
+      (name ? ` ("${name}")` : "") +
+      (about ? ` — ${about}` : "") +
+      `, in ${business?.city?.trim() || "Hubli"}. Talk about its real customers and how people search for it on Google, and the directories (JustDial/Practo/Sulekha) taking that traffic. Never give a generic pitch.`;
+  }
+  return s;
+}
+
 async function callAnthropic(
   history: ThreadMessage[],
   userText: string,
-  lang?: BotLang
+  lang?: BotLang,
+  business?: BotBusiness
 ): Promise<string | null> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return null;
@@ -178,10 +203,11 @@ async function callAnthropic(
       model: ANTHROPIC_MODEL,
       max_tokens: MAX_REPLY_TOKENS,
       // The static KB is cached (prompt caching) so it isn't re-processed/re-billed
-      // on every message; the per-conversation language note follows it, uncached.
+      // on every message; the per-conversation notes follow it, uncached.
       system: [
         { type: "text", text: KB_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
         { type: "text", text: languageInstruction(lang) },
+        { type: "text", text: engagementInstruction(business) },
       ],
       messages,
     });
@@ -193,6 +219,22 @@ async function callAnthropic(
     console.error("[bot/engine] Anthropic error:", e);
     return null;
   }
+}
+
+/** One-shot: a personalized explanation of the services a lead selected (used
+ *  after the services Flow). Tailors each to their business + price, in-language,
+ *  and invites more questions instead of pushing a call. */
+export async function generateServicesExplainer(opts: {
+  serviceLabels: string[];
+  lang?: BotLang;
+  business?: BotBusiness;
+}): Promise<string | null> {
+  const { serviceLabels, lang, business } = opts;
+  const prompt =
+    `The customer just selected these services they're interested in: ${serviceLabels.join(", ")}. ` +
+    `Write ONE warm WhatsApp message that, for EACH selected service, explains in a line or two how it specifically helps THEIR business and includes our real price for it. ` +
+    `Keep it short and skimmable (emoji ok). End by inviting them to ask me anything — do NOT push a call yet.`;
+  return callAnthropic([], prompt, lang, business);
 }
 
 // ─── Static fallback ──────────────────────────────────────────────────────────
@@ -212,6 +254,8 @@ export interface GenerateReplyInput {
   channel: string;
   /** conversation language (from leads.wa_lang); the reply is written in it. */
   lang?: BotLang;
+  /** the lead's business (from discovery) — personalizes the reply. */
+  business?: BotBusiness;
   /** present once a lead exists (WhatsApp always; web after capture). When
    *  absent (anonymous web visitor) the DB-mutating side effects AND the admin
    *  escalation alert are skipped. */
@@ -283,7 +327,7 @@ export async function generateBotReply(input: GenerateReplyInput): Promise<Gener
   }
 
   // 4. Anthropic call
-  const draft = await callAnthropic(history, userText, input.lang);
+  const draft = await callAnthropic(history, userText, input.lang, input.business);
   if (!draft) {
     // API error — static fallback
     return { reply: staticFallback(), kind: "reply", escalate: false, bookingIntent: booking.hasIntent };
@@ -328,7 +372,7 @@ export async function runBot(opts: BotRunOpts): Promise<BotRunResult> {
 
   // 4. Shared brain — identical guardrails/escalation/booking for every channel
   const history = await loadHistory(leadId, channel);
-  const r = await generateBotReply({ userText, history, channel, leadId, lang: opts.lang });
+  const r = await generateBotReply({ userText, history, channel, leadId, lang: opts.lang, business: opts.business });
 
   // 5. Send + log (WhatsApp-specific). The opt-out confirmation must bypass the
   //    central opt-out send guard since we just flagged the lead.

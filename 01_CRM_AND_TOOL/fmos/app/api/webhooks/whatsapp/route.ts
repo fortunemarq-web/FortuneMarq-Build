@@ -14,6 +14,7 @@ import {
   sendLanguagePicker,
   sendServicesFlow,
   handleServicesFlowResponse,
+  handleDiscoveryReply,
   getLeadLang,
 } from "@/lib/bot/menu";
 
@@ -198,7 +199,7 @@ async function handleInboundMessage(message: any, value: any) {
   // Find an existing lead by phone suffix
   const { data: lead } = await supabase
     .from("leads")
-    .select("id, company_name, contact_person, phone, city, assigned_sales_exec, tags, follow_up_date, wa_lang")
+    .select("id, company_name, contact_person, phone, city, assigned_sales_exec, tags, follow_up_date, wa_lang, wa_stage, wa_about")
     .like("phone", `%${phone10}`)
     .limit(1)
     .maybeSingle();
@@ -340,6 +341,14 @@ async function handleInboundMessage(message: any, value: any) {
     return;
   }
 
+  // ── Mid-discovery? Treat this message as the business name / "about" answer ──
+  // (If they ignore the question and ask something, handleDiscoveryReply returns
+  // false and we fall through to the menu / AI — "continue generally".)
+  if (lead.wa_stage === "await_name" || lead.wa_stage === "await_about") {
+    const consumed = await handleDiscoveryReply({ leadId: lead.id, phone: from, text, lang: lead.wa_lang });
+    if (consumed) return;
+  }
+
   // ── Plain greeting / "menu" → surface the guided menu (pick language first) ──
   // Lets a customer re-open the tap menu any time by sending "hi"/"menu".
   if (isMenuTrigger(text)) {
@@ -362,6 +371,7 @@ async function handleInboundMessage(message: any, value: any) {
     channel: "whatsapp",
     waMessageId,
     lang: lead.wa_lang || undefined,
+    business: { name: lead.company_name, about: lead.wa_about, city: lead.city },
   }).catch((e) => {
     console.error("[webhook] runBot error:", e);
     return { handled: false };
