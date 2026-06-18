@@ -108,38 +108,52 @@ const ACCORDION = [
   },
 ];
 
+// Packages bundle the individual services (priced per lib/bot/kb.ts) along the
+// three service layers. Monthly figures are the sum of the bundled retainers;
+// websites are a one-time add. "from" because SEO/website scale with scope.
 const PRICING = [
   {
-    tier: "Starter",
-    amount: "₹20000",
+    tier: "Foundation",
+    amount: "₹3,500",
     period: "/mo",
-    desc: "Perfect for small businesses ready to establish a professional digital presence.",
-    features: ["Custom Website Design", "Basic SEO Setup", "Google Ads Management", "Monthly Reporting"],
+    desc: "Get online and start showing up when locals search for your business.",
+    features: [
+      "Professional website (5–7 pages) — from ₹8,000 one-time",
+      "Google Business Profile fully optimized (4 posts/mo)",
+      "On-page SEO + Analytics + Search Console",
+      "Monthly performance report",
+    ],
     cta: "Get Started",
     featured: false,
   },
   {
     tier: "Growth",
-    amount: "₹35000",
+    amount: "from ₹16,000",
     period: "/mo",
-    desc: "For ambitious brands looking to scale revenue aggressively through multiple channels.",
+    desc: "Rank on Google and bring in qualified leads now — search plus ads.",
     features: [
-      "Advanced Web Development",
-      "Full SEO & Content Strategy",
-      "Multi-Channel Ads (Google + Meta)",
-      "CRM Automation Setup",
-      "Bi-Weekly Strategy Calls",
+      "Everything in Foundation",
+      "SEO — Growth (10 target keywords)",
+      "Google or Meta Ads management (₹4,500 setup)",
+      "Conversion tracking",
+      "Bi-weekly strategy calls",
     ],
     cta: "Scale Now",
     featured: true,
   },
   {
-    tier: "Enterprise",
-    amount: "Custom",
-    period: "",
-    desc: "Full-service partnership for large organizations requiring bespoke solutions.",
-    features: ["Enterprise Web Applications", "International SEO", "Advanced Data Analytics", "Dedicated Account Manager", "24/7 Support Priority"],
-    cta: "Contact Us",
+    tier: "Scale",
+    amount: "from ₹26,000",
+    period: "/mo",
+    desc: "The full growth engine — search, both ad channels, and automation, fully managed.",
+    features: [
+      "Everything in Growth",
+      "SEO — Advanced (15+ keywords)",
+      "Google + Meta Ads (both channels)",
+      "WhatsApp marketing + automated follow-ups",
+      "AI automations + dedicated account manager",
+    ],
+    cta: "Book a Call",
     featured: false,
   },
 ];
@@ -331,7 +345,10 @@ export default function SiteServices() {
             ))}
           </div>
           <div className="sp-pricing-note">
-            <p>* All plans include our market exclusivity guarantee.</p>
+            <p>
+              * Ad spend is your own budget, paid directly to Google/Meta — we charge management only. Every
+              plan includes our market exclusivity guarantee.
+            </p>
           </div>
         </div>
       </section>

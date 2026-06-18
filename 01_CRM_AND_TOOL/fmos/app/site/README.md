@@ -73,8 +73,11 @@ in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails
   column centres against the taller process steps instead of leaving ~360px blank below it.
 - Two leftover combat words softened: "Three Pillars of Dominance" → "…of Difference"; "market dominance" →
   "market leadership".
-- Still TODO: **Services pricing** needs the owner's real tiers/amounts (current Starter ₹20k / Growth ₹35k /
-  Enterprise placeholders don't match reality).
+- **Services pricing rebuilt** as 3 packages bundled along the Foundation / Visibility / Engagement service
+  layers — **Foundation ₹3,500/mo · Growth from ₹16,000/mo · Scale from ₹26,000/mo** — priced by summing the
+  real per-service retainers in `lib/bot/kb.ts` (the bot's locked price set: GMB ₹3.5k, SEO ₹7–15k, Google/Meta
+  Ads ₹4.5k setup + ₹2.5k/mo, WhatsApp ₹5k + ₹2.5k, websites ₹8–20k one-time). Ad-spend disclaimer added. Owner
+  to confirm bundle composition/numbers before go-live.
 
 ## Mobile QA fixes (2026-06-18, from a real-device pass)
 - **The FMOS app shell was wrapping the marketing pages under clean URLs** (light theme + CRM sidebar +
