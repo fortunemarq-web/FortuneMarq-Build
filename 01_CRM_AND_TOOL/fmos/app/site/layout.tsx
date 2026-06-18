@@ -1,5 +1,5 @@
 import "./site.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   SitePreloader,
   SiteHeader,
@@ -16,6 +16,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+};
+
+export const viewport: Viewport = {
+  themeColor: "#030303",
 };
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -39,9 +43,10 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <SiteAnalytics />
       <SitePreloader />
       <div className="global-noise" />
+      <a href="#site-main" className="skip-link">Skip to content</a>
       <SiteHeader />
       <SiteMobileMenu />
-      {children}
+      <div id="site-main" tabIndex={-1}>{children}</div>
       <SiteLightbox />
       <SiteScrollIndicator />
       <FloatingWhatsApp />

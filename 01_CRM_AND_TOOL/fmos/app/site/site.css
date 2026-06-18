@@ -6022,3 +6022,23 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
 @media (max-width: 560px) {
   .sconsent { right: 12px; left: 12px; width: auto; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* ── P2 a11y: skip link + reduced-motion stops + tap targets ──────────── */
+.skip-link {
+  position: fixed; top: 8px; left: 8px; z-index: 2000;
+  background: var(--accent); color: #04140c; font-weight: 600;
+  padding: 10px 16px; border-radius: 8px; text-decoration: none;
+  transform: translateY(-150%); transition: transform 0.2s;
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* Stop the looping decorative animations the JS engine doesn't cover. */
+@media (prefers-reduced-motion: reduce) {
+  .trust-ticker-track, .testi-track, .track-left, .track-right,
+  .scroll-pill, .badge-icon { animation: none !important; }
+}
+
+/* Min 44px tap targets (WCAG 2.5.5) on the smallest controls. */
+.sc-close { min-width: 44px; min-height: 44px; }
+.fm-footer-social { width: 44px; height: 44px; }
+.mm-social { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }

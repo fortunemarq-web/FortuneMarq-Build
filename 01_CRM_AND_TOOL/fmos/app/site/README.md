@@ -51,7 +51,14 @@ The `UX_AUDIT.md` P0 cluster is resolved (host-split itself shipped in `f08d639`
 
 P1 status — **owner-closed**: the full `next/font` migration was **declined** (only the safe JetBrains dedupe
 above was done), and **visible breadcrumbs were skipped** (BreadcrumbList JSON-LD already ships on every deep
-page; visible crumbs would clash with the immersive heroes). What's left in `UX_AUDIT.md` is P2 polish.
+page; visible crumbs would clash with the immersive heroes).
+
+## P2 a11y / SEO pass (2026-06-18)
+Objective wins only (copy/taste items skipped): **skip-to-content** link → `#site-main`; **`theme-color`** meta
+(`#030303`); **`aria-label`** on the primary + mobile `<nav>` landmarks; **reduced-motion** now also stops the
+marquees / scroll-pill / badge-blink; **≥44px tap targets** on the smallest controls (chat close, footer +
+mobile social icons). Still open in P2: copy/tone calls (e.g. "war/dominance" language), `aria-hidden` on the
+duplicated marquee copy, and pausing project-video autoplay under reduced-motion.
 
 ## What this is
 A from-scratch re-platform of the existing static `fortunemarq.com` into this Next.js app — **same design, faster, smoother, SEO-first**, with a premium scroll feel. It is a **parallel rebuild**: the live Hostinger site is untouched.

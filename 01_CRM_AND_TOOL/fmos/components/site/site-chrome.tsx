@@ -51,7 +51,7 @@ export function SiteHeader() {
         <Image src="/site/images/FORTUNEMARQ-LOGO.webp" alt="FortuneMarq" className="logo-img" width={500} height={500} priority />
       </Link>
       <div className="header-menu-chip">
-        <nav className="header-nav">
+        <nav className="header-nav" aria-label="Primary">
           {SITE_NAV.map((n) => {
             const active = isActive(pathname, n.href);
             return (
@@ -84,7 +84,7 @@ export function SiteMobileMenu() {
         <div className="mm-noise" />
       </div>
       <div className="mm-content">
-        <nav className="mobile-nav">
+        <nav className="mobile-nav" aria-label="Mobile">
           {SITE_NAV.map((n, i) => {
             const active = isActive(pathname, n.href);
             return (
