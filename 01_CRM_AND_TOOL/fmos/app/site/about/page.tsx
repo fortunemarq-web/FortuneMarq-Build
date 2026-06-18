@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/site/site-footer";
 import ShinyText from "@/components/site/shiny-text";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbLd } from "@/lib/site/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 const IMG = "/site/images";
@@ -79,6 +81,7 @@ const STEPS = [
 export default function SiteAbout() {
   return (
     <main>
+      <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "About", path: "/about" }])} />
       {/* ABOUT HERO */}
       <section className="abt-hero">
         <div className="abt-hero-bg">

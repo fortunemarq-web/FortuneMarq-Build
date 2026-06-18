@@ -4,6 +4,8 @@ import SiteContactPageForm from "@/components/site/site-contact-page-form";
 import ShinyText from "@/components/site/shiny-text";
 import { WhatsAppCta } from "@/components/site/site-whatsapp";
 import SiteBookCta from "@/components/site/site-book-cta";
+import JsonLd from "@/components/site/json-ld";
+import { localBusinessLd, faqLd, breadcrumbLd } from "@/lib/site/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -80,6 +82,16 @@ const FAQ = [
 export default function SiteContact() {
   return (
     <main>
+      <JsonLd
+        data={[
+          localBusinessLd(),
+          faqLd(FAQ.map((f) => ({ q: f.q, a: f.a }))),
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Contact", path: "/contact" },
+          ]),
+        ]}
+      />
       {/* CONTACT HERO */}
       <section className="ct-hero">
         <div className="ct-hero-bg">

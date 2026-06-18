@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "@/components/site/site-footer";
 import ShinyText from "@/components/site/shiny-text";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbLd } from "@/lib/site/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 const VID = "/site/videos";
@@ -71,6 +73,7 @@ function ProjectCard({ p, hero }: { p: { cat: string; date: string; name: string
 export default function SiteWork() {
   return (
     <main>
+      <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "Work", path: "/work" }])} />
       {/* WORK HERO */}
       <section className="wk-hero">
         <div className="wk-hero-bg">

@@ -7,6 +7,8 @@ import SiteFooter from "@/components/site/site-footer";
 import ShinyText from "@/components/site/shiny-text";
 import RotatingText from "@/components/site/rotating-text";
 import { WhatsAppCta } from "@/components/site/site-whatsapp";
+import JsonLd from "@/components/site/json-ld";
+import { localBusinessLd } from "@/lib/site/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -33,25 +35,6 @@ export const metadata: Metadata = {
     description: "Web Design, SEO, Google Ads, Meta Ads, and CRM solutions in Hubli.",
     images: [`${SITE_URL}/site/images/FORTUNEMARQ-LOGO.webp`],
   },
-};
-
-const ORG_JSONLD = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "FortuneMarq",
-  url: "https://fortunemarq.com",
-  logo: "https://fortunemarq.com/site/images/FORTUNEMARQ-LOGO.webp",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Galaxy Mall First Floor Shop No. 43, J.C Nagar",
-    addressLocality: "Hubli",
-    postalCode: "580020",
-    addressCountry: "IN",
-  },
-  contactPoint: [
-    { "@type": "ContactPoint", telephone: "+91-9353082656", contactType: "customer service", email: "contact@fortunemarq.com" },
-  ],
-  sameAs: ["https://www.linkedin.com/company/fortunemarq/", "https://www.instagram.com/fortunemarq"],
 };
 
 const IMG = "/site/images";
@@ -173,7 +156,7 @@ function ProjectCard({ p, hero }: { p: { cat: string; date: string; name: string
 export default function SiteHome() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSONLD) }} />
+      <JsonLd data={localBusinessLd()} />
       <main>
         {/* HERO / VISION */}
         <section id="fmq-home-vision">

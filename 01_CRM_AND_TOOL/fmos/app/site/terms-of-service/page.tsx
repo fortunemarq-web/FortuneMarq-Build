@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import SiteLegal, { type LegalContent } from "@/components/site/site-legal";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbLd } from "@/lib/site/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 
@@ -206,5 +208,10 @@ const CONTENT: LegalContent = {
 };
 
 export default function TermsOfService() {
-  return <SiteLegal content={CONTENT} />;
+  return (
+    <>
+      <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "Terms of Service", path: "/terms-of-service" }])} />
+      <SiteLegal content={CONTENT} />
+    </>
+  );
 }

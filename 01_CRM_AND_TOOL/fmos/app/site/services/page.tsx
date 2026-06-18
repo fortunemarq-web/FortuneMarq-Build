@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/site/site-footer";
 import ShinyText from "@/components/site/shiny-text";
+import JsonLd from "@/components/site/json-ld";
+import { servicesLd, faqLd, breadcrumbLd } from "@/lib/site/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fortunemarq.com";
 const IMG = "/site/images";
@@ -145,6 +147,16 @@ const PRICING = [
 export default function SiteServices() {
   return (
     <main>
+      <JsonLd
+        data={[
+          ...servicesLd(SHOWCASE.map((s) => ({ name: s.title.join("").trim(), description: s.desc }))),
+          faqLd(ACCORDION.map((a) => ({ q: a.title, a: a.body }))),
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/services" },
+          ]),
+        ]}
+      />
       {/* SERVICES HERO */}
       <section className="sp-hero">
         <div className="sp-hero-bg">
