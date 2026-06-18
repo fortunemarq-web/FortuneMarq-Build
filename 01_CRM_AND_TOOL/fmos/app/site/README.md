@@ -91,7 +91,9 @@ in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails
   pushed it off the top. Now: `viewport.interactiveWidget = "resizes-content"` (the keyboard shrinks the
   viewport), the panel is sized in **dvh** (`height: min(56dvh, 440px); max-height: calc(100dvh - 96px)`) and
   anchored just above the single FAB (`bottom: 84px`), so it shrinks to stay above the keypad with the input
-  visible. Base panel also dropped from `bottom: 152px` → `88px` now that the WhatsApp FAB is gone.
+  visible. Base panel also dropped from `bottom: 152px` → `88px` now that the WhatsApp FAB is gone. Opening the
+  chat focuses the **dialog panel**, not the text input, so the keypad does NOT pop up automatically — the
+  visitor reads the greeting first, then taps the field to type.
 - **The FMOS app shell was wrapping the marketing pages under clean URLs** (light theme + CRM sidebar +
   command palette bleeding around the site). The root `LayoutWrapper` (`components/ui/layout-wrapper.tsx`)
   decides app chrome from `usePathname()`, which under the host-split returns the **clean** `/contact` (not

@@ -28,15 +28,17 @@ export default function SiteChat() {
   const [leadState, setLeadState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [leadMsg, setLeadMsg] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, open, showHandoff, showLeadForm, leadState]);
 
-  // Move focus into the panel when it opens (keyboard users land inside the dialog).
+  // On open, move focus to the dialog (keyboard/SR users land inside it) — but
+  // NOT the text input, so the on-screen keyboard doesn't pop up. The visitor
+  // reads the greeting first, then taps the field to start typing.
   useEffect(() => {
-    if (open) inputRef.current?.focus();
+    if (open) panelRef.current?.focus();
   }, [open]);
 
   function toggle() {
@@ -133,6 +135,8 @@ export default function SiteChat() {
 
       {open && (
         <div
+          ref={panelRef}
+          tabIndex={-1}
           className="sc-panel"
           role="dialog"
           aria-modal="false"
@@ -205,7 +209,6 @@ export default function SiteChat() {
 
           <form className="sc-input-row" onSubmit={send}>
             <input
-              ref={inputRef}
               className="sc-input"
               placeholder="Type your message…"
               value={input}
