@@ -66,6 +66,16 @@ frame).
 battlefield" → "crowded digital market", "we bring you into the war room" → "we bring you in". What's left
 in P2 is minor stylistic only (HUD-style `// SECTION` labels, dual public emails) — left as-is.
 
+## Design polish (2026-06-18)
+- **About + Services heroes** lifted (they read flat, esp. on mobile where perf overrides dim the auroras):
+  added a green spotlight glow + vignette behind the hero text and a small accent line under the eyebrow label.
+- **About "Our Approach" dead space** fixed — the 2-col grid now `align-items: center`, so the shorter left
+  column centres against the taller process steps instead of leaving ~360px blank below it.
+- Two leftover combat words softened: "Three Pillars of Dominance" → "…of Difference"; "market dominance" →
+  "market leadership".
+- Still TODO: **Services pricing** needs the owner's real tiers/amounts (current Starter ₹20k / Growth ₹35k /
+  Enterprise placeholders don't match reality).
+
 ## Mobile QA fixes (2026-06-18, from a real-device pass)
 - **The FMOS app shell was wrapping the marketing pages under clean URLs** (light theme + CRM sidebar +
   command palette bleeding around the site). The root `LayoutWrapper` (`components/ui/layout-wrapper.tsx`)

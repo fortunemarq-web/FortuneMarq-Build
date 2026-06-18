@@ -245,7 +245,7 @@ export default function SiteServices() {
             <h2>
               The <span className="italic-accent">Blueprint.</span>
             </h2>
-            <p>How we take you from concept to market dominance.</p>
+            <p>How we take you from concept to market leadership.</p>
           </div>
           <div className="sp-process-grid">
             {PROCESS.map((p) => (

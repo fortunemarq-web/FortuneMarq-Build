@@ -3485,9 +3485,10 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     border-top: 1px solid var(--border);
+    align-items: center; /* centre the shorter left column against the taller steps — no dead space */
 }
 .abt-approach-left {
-    padding-top: 40px;
+    padding-top: 0;
 }
 .abt-approach-title {
     font-family: var(--font-head);
@@ -6058,3 +6059,33 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
   transition: background 0.2s, border-color 0.2s;
 }
 .mm-close:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent); }
+
+/* ── About hero visual lift: spotlight glow + vignette + brighter bg ───── */
+.abt-hero::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(60% 48% at 50% 40%, rgba(66, 202, 128, 0.16), transparent 70%);
+}
+.abt-hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(125% 95% at 50% 42%, transparent 48%, rgba(0, 0, 0, 0.62));
+}
+.abt-aurora-1 { background: radial-gradient(circle, rgba(66, 202, 128, 0.17) 0%, transparent 60%); }
+.abt-grid { opacity: 0.7; }
+/* small green dot + line accent under the eyebrow tag */
+.abt-hero-tag { position: relative; }
+.abt-hero-tag::after {
+  content: ""; display: block; width: 40px; height: 2px; margin: 16px auto 0;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+/* ── Services hero visual lift: vignette + brighter glow + label accent ── */
+.sp-hero:not(.ct-hero)::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(125% 95% at 50% 38%, transparent 46%, rgba(0, 0, 0, 0.6));
+}
+.sp-aurora { background: radial-gradient(circle, rgba(66, 202, 128, 0.2) 0%, rgba(66, 202, 128, 0.06) 40%, transparent 70%); }
+.sp-label { position: relative; }
+.sp-label::after {
+  content: ""; display: block; width: 40px; height: 2px; margin: 16px auto 0;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}

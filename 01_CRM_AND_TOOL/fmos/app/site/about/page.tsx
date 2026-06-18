@@ -152,7 +152,7 @@ export default function SiteAbout() {
         <div className="abt-philosophy-header">
           <span className="abt-section-tag">02 // OUR PHILOSOPHY</span>
           <h2 className="abt-phil-title">
-            Three Pillars of <span className="abt-accent">Dominance.</span>
+            Three Pillars of <span className="abt-accent">Difference.</span>
           </h2>
         </div>
         <div className="abt-pillars">
