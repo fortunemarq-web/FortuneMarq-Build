@@ -6078,11 +6078,9 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
   background: linear-gradient(90deg, var(--accent), transparent);
 }
 
-/* ── Services hero visual lift: vignette + brighter glow + label accent ── */
-.sp-hero:not(.ct-hero)::after {
-  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(125% 95% at 50% 38%, transparent 46%, rgba(0, 0, 0, 0.6));
-}
+/* ── Services hero visual lift: brighter glow + label accent (the spotlight +
+   vignette itself comes from the shared .sp-hero-bg::after rule below, so it
+   renders on mobile too — the .sp-aurora element gets dimmed by perf overrides). */
 .sp-aurora { background: radial-gradient(circle, rgba(66, 202, 128, 0.2) 0%, rgba(66, 202, 128, 0.06) 40%, transparent 70%); }
 .sp-label { position: relative; }
 .sp-label::after {
@@ -6093,7 +6091,7 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
 /* ── Green spotlight glow + vignette on the remaining heroes (Contact / Work /
    Legal / 404), matching the About + Services treatment. Lives inside the -bg
    layer so it can never cover the hero content. ─────────────────────────── */
-.ct-hero-bg::after, .wk-hero-bg::after, .lg-hero-bg::after {
+.sp-hero-bg::after, .ct-hero-bg::after, .wk-hero-bg::after, .lg-hero-bg::after {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
     radial-gradient(60% 48% at 50% 38%, rgba(66, 202, 128, 0.16), transparent 70%),
