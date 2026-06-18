@@ -124,22 +124,34 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
       (input.contact_person || "").trim().slice(0, 200) ||
       `Unknown (${channelLabel})`;
 
-    // 3. Cross-engine dedup — match an existing lead by phone, then (fallback)
-    //    by normalized email or website domain so the same business captured
-    //    across channels collapses onto one record.
+    // 3. Cross-channel dedup — auto-merge ONLY on reliable same-contact keys:
+    //    phone (last 10 digits), then an exact email address. Both uniquely
+    //    identify the same business contact across channels.
+    //
+    //    We deliberately do NOT auto-merge on website/referrer domain here. For a
+    //    public web form `referrer_url`/`landing_page` are the VISITOR's context
+    //    (our own marketing site, or `localhost` in dev) — never the lead's own
+    //    business domain — so an unanchored `website_link ilike %domain%` match
+    //    collapsed unrelated leads onto one record (the 2026-06-18 false-merge
+    //    bug flagged in app/site/README.md). Fuzzy company/website matching is
+    //    intentionally left to the human-reviewed, reversible
+    //    /admin/leads/duplicates tool instead of running silently on capture.
     const emailNorm = (input.email || "").trim().toLowerCase() || null;
-    const domain = extractDomain(input.referrer_url) || extractDomain(input.landing_page);
 
     let existing: any = null;
+    // (a) phone — the reliable key. phone10 is exactly 10 digits (blank/short
+    //     phones already bailed out above), so this never matches on empty.
     {
       const byPhone = await supabase
         .from("leads")
         .select("*")
-        .like("phone", `%${phone10}`)
+        .or(`phone_normalized.eq.${phone10},phone.like.%${phone10}`)
         .limit(1)
         .maybeSingle();
       existing = byPhone.data;
     }
+    // (b) exact email — same person re-enquiring. Skipped entirely when blank so
+    //     a missing email can never widen the match.
     if (!existing && emailNorm) {
       const byEmail = await supabase
         .from("leads")
@@ -148,15 +160,6 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
         .limit(1)
         .maybeSingle();
       existing = byEmail.data;
-    }
-    if (!existing && domain) {
-      const byDomain = await supabase
-        .from("leads")
-        .select("*")
-        .or(`website_domain.eq.${domain},website_link.ilike.%${domain}%`)
-        .limit(1)
-        .maybeSingle();
-      existing = byDomain.data;
     }
 
     if (existing) {
@@ -254,7 +257,11 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
         company_name,
         contact_person: (input.contact_person || "").trim().slice(0, 200) || null,
         email: (input.email || "").trim().slice(0, 200) || null,
+        // Normalized keys, so future cross-channel dedup + the duplicates tool
+        // match exactly instead of relying on broad LIKE fallbacks.
+        email_normalized: emailNorm,
         phone: input.phone.trim(),
+        phone_normalized: phone10,
         industry: (input.industry || "").trim().slice(0, 200) || null,
         city: (input.city || "").trim().slice(0, 200) || null,
         status: "new",
