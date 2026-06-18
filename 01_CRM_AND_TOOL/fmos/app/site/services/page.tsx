@@ -343,8 +343,8 @@ export default function SiteServices() {
           <h2 className="sp-cta-title">
             Ready to <span className="txt-stroke">Scale?</span>
           </h2>
-          <Link href="/contact" className="sp-cta-btn" data-magnetic>
-            <span>Start Your Project</span>
+          <Link href="/contact#book" className="sp-cta-btn" data-magnetic>
+            <span>Book a Strategy Call</span>
             <div className="sp-btn-arrow">→</div>
           </Link>
         </div>

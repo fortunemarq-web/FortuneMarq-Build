@@ -130,8 +130,8 @@ export default function SiteWork() {
           ))}
         </div>
         <div className="fp-cta-row">
-          <Link href="/contact" className="fp-cta">
-            Start your project →
+          <Link href="/contact#book" className="fp-cta">
+            Book a Strategy Call →
           </Link>
         </div>
       </section>

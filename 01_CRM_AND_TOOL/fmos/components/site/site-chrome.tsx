@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { WhatsAppCta } from "@/components/site/site-whatsapp";
 
 // Static markup ported 1:1 from public_html/index.html chrome (preloader,
@@ -14,6 +17,14 @@ export const SITE_NAV = [
   { label: "Work", href: "/work" },
   { label: "Contact", href: "/contact" },
 ];
+
+// Active-nav match. Normalises the internal "/site" prefix so it works both when
+// served at clean root paths (host-split) and when hit directly at /site/*.
+function isActive(pathname: string | null, href: string): boolean {
+  const path = (pathname || "/").replace(/^\/site/, "") || "/";
+  if (href === "/") return path === "/";
+  return path === href || path.startsWith(href + "/");
+}
 
 export function SitePreloader() {
   // Minimal, premium preloader: logo + letter-spaced wordmark + a thin progress
@@ -33,6 +44,7 @@ export function SitePreloader() {
 }
 
 export function SiteHeader() {
+  const pathname = usePathname();
   return (
     <header className="fmq-header">
       <Link href="/" className="header-logo">
@@ -40,15 +52,18 @@ export function SiteHeader() {
       </Link>
       <div className="header-menu-chip">
         <nav className="header-nav">
-          {SITE_NAV.map((n) => (
-            <Link key={n.href} href={n.href}>
-              {n.label}
-            </Link>
-          ))}
+          {SITE_NAV.map((n) => {
+            const active = isActive(pathname, n.href);
+            return (
+              <Link key={n.href} href={n.href} className={active ? "active" : undefined} aria-current={active ? "page" : undefined}>
+                {n.label}
+              </Link>
+            );
+          })}
         </nav>
         <WhatsAppCta source="header" className="header-wa" />
         <Link href="/contact#book" className="header-cta">
-          Book a Meeting
+          Book a Strategy Call
         </Link>
         <button className="header-toggle" aria-label="Menu" aria-expanded={false} aria-controls="mobile-menu">
           <span />
@@ -60,6 +75,7 @@ export function SiteHeader() {
 }
 
 export function SiteMobileMenu() {
+  const pathname = usePathname();
   return (
     <div className="mobile-menu" id="mobile-menu">
       <div className="mm-bg">
@@ -69,12 +85,15 @@ export function SiteMobileMenu() {
       </div>
       <div className="mm-content">
         <nav className="mobile-nav">
-          {SITE_NAV.map((n, i) => (
-            <Link href={n.href} className="m-link" key={n.href}>
-              <span className="m-link-num">{String(i + 1).padStart(2, "0")}</span>
-              <span className="m-link-text">{n.label}</span>
-            </Link>
-          ))}
+          {SITE_NAV.map((n, i) => {
+            const active = isActive(pathname, n.href);
+            return (
+              <Link href={n.href} className={active ? "m-link active" : "m-link"} aria-current={active ? "page" : undefined} key={n.href}>
+                <span className="m-link-num">{String(i + 1).padStart(2, "0")}</span>
+                <span className="m-link-text">{n.label}</span>
+              </Link>
+            );
+          })}
         </nav>
         <div className="mm-footer">
           <div className="mm-socials">
@@ -83,7 +102,7 @@ export function SiteMobileMenu() {
           </div>
           <div className="mm-cta">
             <span className="mm-cta-label">Ready to grow?</span>
-            <Link href="/contact#book" className="mm-cta-btn">Book a Meeting →</Link>
+            <Link href="/contact#book" className="mm-cta-btn">Book a Strategy Call →</Link>
           </div>
         </div>
       </div>

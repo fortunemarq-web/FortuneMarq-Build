@@ -5995,3 +5995,7 @@ body.menu-open .sc-fab { opacity: 0; pointer-events: none; }
 .nf-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
 .nf-btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--border); }
 .nf-btn-ghost:hover { background: rgba(255, 255, 255, 0.05); }
+
+/* ── Active nav state (mobile menu; header .active is already styled above) ── */
+.m-link.active .m-link-text { color: var(--accent); }
+.m-link.active .m-link-text::after { width: 100%; }
