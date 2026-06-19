@@ -56,12 +56,8 @@ export async function upsertContentPiece(data: Partial<ContentPiece>) {
     engagement_rate = parseFloat(((interactions / reach) * 100).toFixed(2));
   }
   
-  // Strip fields that don't exist on content_pieces (notes/caption_draft/image_prompt/
-  // cta_type/cta_url) — including them makes the upsert fail with an unknown-column error.
-  const { notes, caption_draft, image_prompt, cta_type, cta_url, ...dbData } = data;
-  void notes; void caption_draft; void image_prompt; void cta_type; void cta_url;
   const payload = {
-    ...dbData,
+    ...data,
     engagement_rate,
     updated_at: new Date().toISOString()
   };

@@ -9,6 +9,9 @@ import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 
 const IST = "Asia/Kolkata";
 const SITE_URL = "https://fortunemarq.com";
+const APP_URL = () => (process.env.NEXT_PUBLIC_APP_URL || "https://fmos.fortunemarq.com").replace(/\/$/, "");
+/** Public self-serve reschedule link sent in reminder + no-show templates. */
+const rescheduleLink = (leadId: string) => `${APP_URL()}/r/${leadId}`;
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-IN", { timeZone: IST, weekday: "short", day: "numeric", month: "short" });
 }
@@ -60,13 +63,13 @@ export async function bookMeeting(opts: {
   const startIso = calResult.startIso || opts.startIso;
   const endIso = calResult.endIso || "";
 
-  // 2. Write meetLink + cal event id back to the lead
+  // 2. Write meetLink + cal event id back to the lead.
+  //    gcal_event_id is a dedicated column — do NOT overwrite meeting_notes (human notes).
   await (supabase.from("leads") as any)
     .update({
       meeting_link: meetLink,
       follow_up_date: startIso,
-      // store cal event id for reschedule/cancel — reuse meeting_notes prefix if no dedicated col
-      meeting_notes: calEventId ? `[gcal:${calEventId}]` : undefined,
+      gcal_event_id: calEventId || undefined,
     })
     .eq("id", opts.leadId);
 
@@ -89,7 +92,7 @@ export async function bookMeeting(opts: {
     leadId: opts.leadId,
     phone: lead.phone,
     templateName: "meeting_reminder_1h",
-    params: [contactName, meetLink || SITE_URL],
+    params: [contactName, rescheduleLink(opts.leadId)],
     lang,
     meetingStart: startIso,
     offsetMinutes: -60,
@@ -135,7 +138,7 @@ export async function rescheduleMeeting(opts: {
 }): Promise<RescheduleMeetingResult> {
   const supabase = createAdminClient();
   const { data: lead } = await (supabase.from("leads") as any)
-    .select("id, company_name, contact_person, phone, meeting_notes, wa_opt_out, pitch_type")
+    .select("id, company_name, contact_person, phone, gcal_event_id, wa_opt_out, pitch_type")
     .eq("id", opts.leadId)
     .single();
 
@@ -144,9 +147,7 @@ export async function rescheduleMeeting(opts: {
   const lang = opts.lang || "en";
   const contactName = lead.contact_person || lead.company_name || "there";
 
-  // Extract stored cal event id from meeting_notes prefix
-  const calEventIdMatch = String(lead.meeting_notes || "").match(/\[gcal:([^\]]+)\]/);
-  const calEventId = calEventIdMatch?.[1];
+  const calEventId = lead.gcal_event_id || undefined;
 
   let meetLink = "";
 
@@ -171,7 +172,7 @@ export async function rescheduleMeeting(opts: {
     leadId: opts.leadId,
     phone: lead.phone,
     templateName: "meeting_reminder_1h",
-    params: [contactName, meetLink || SITE_URL],
+    params: [contactName, rescheduleLink(opts.leadId)],
     lang,
     meetingStart: opts.newStartIso,
     offsetMinutes: -60,
@@ -220,7 +221,7 @@ export async function handleNoShow(opts: {
 }): Promise<NoShowResult> {
   const supabase = createAdminClient();
   const { data: lead } = await (supabase.from("leads") as any)
-    .select("id, company_name, contact_person, phone, meeting_notes, wa_opt_out, outreach_stage, tags")
+    .select("id, company_name, contact_person, phone, gcal_event_id, wa_opt_out, outreach_stage, tags")
     .eq("id", opts.leadId)
     .single();
 
@@ -230,8 +231,7 @@ export async function handleNoShow(opts: {
   const contactName = lead.contact_person || lead.company_name || "there";
 
   // Cancel calendar event
-  const calEventIdMatch = String(lead.meeting_notes || "").match(/\[gcal:([^\]]+)\]/);
-  const calEventId = calEventIdMatch?.[1];
+  const calEventId = lead.gcal_event_id || undefined;
   if (calEventId) {
     await cancelMeetingEvent(calEventId).catch(() => null);
   }
@@ -260,7 +260,7 @@ export async function handleNoShow(opts: {
       audience: "lead" as const,
       template: "meeting_noshow",
       lang,
-      params: [contactName, SITE_URL],
+      params: [contactName, rescheduleLink(opts.leadId)],
     };
     const components = buildComponents(cfg, lead);
     await sendWhatsAppTemplate(phone, "meeting_noshow", {

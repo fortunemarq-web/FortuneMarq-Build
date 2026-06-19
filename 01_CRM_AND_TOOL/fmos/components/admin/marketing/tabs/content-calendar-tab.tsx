@@ -68,14 +68,14 @@ export default function ContentCalendarTab() {
             const supabase = createClient()
             const { error: insertError } = await supabase
                 .from('content_pieces' as any)
-                // content_pieces has no target_keyword/notes columns — omit them so the
-                // insert succeeds. (Add columns + re-include if those fields are needed.)
                 .insert({
                     title: formData.title,
                     content_type: formData.type,
                     platform: formData.platform,
+                    target_keyword: formData.keyword || null,
                     scheduled_date: formData.date || null,
                     status: formData.status,
+                    notes: formData.notes || null,
                     author_id: currentUserId,
                 })
 
