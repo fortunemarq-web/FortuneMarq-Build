@@ -19,11 +19,20 @@ const INS_TYPES = [
 export default async function InstagramTrackerPage() {
   const pieces = await fetchContentPieces("instagram");
 
-  // Manual metrics (would normally come from DB)
+  // Real metrics derived from content_pieces. Follower count needs an Instagram API
+  // integration we don't have yet, so it stays an honest "—".
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const publishedThisMonth = (pieces as any[]).filter(
+    (p) => p.status === "published" && p.published_date && new Date(p.published_date) >= monthStart
+  );
+  const withEng = publishedThisMonth.filter((p) => p.engagement_rate != null);
+  const avgEng = withEng.length
+    ? withEng.reduce((s, p) => s + Number(p.engagement_rate || 0), 0) / withEng.length
+    : null;
   const stats = [
-    { label: "Followers", value: "1,245" },
-    { label: "Posts This Month", value: "8" },
-    { label: "Engagement Rate", value: "4.2%" },
+    { label: "Followers", value: "—" },
+    { label: "Posts This Month", value: String(publishedThisMonth.length) },
+    { label: "Engagement Rate", value: avgEng != null ? `${avgEng.toFixed(1)}%` : "—" },
   ];
 
   return (

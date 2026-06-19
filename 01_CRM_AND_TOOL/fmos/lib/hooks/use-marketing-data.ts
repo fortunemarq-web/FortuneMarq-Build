@@ -221,15 +221,27 @@ export function useMarketingOverviewStats() {
                 const prevSessions = (prevMonthTraffic as any[])?.reduce((sum, s) => sum + s.organic_sessions, 0) || 0
                 const sessionsDelta = prevSessions > 0 ? ((currentSessions - prevSessions) / prevSessions) * 100 : 0
 
-                // 2. Ad Campaigns
+                // 2. Ad Campaigns. Budget comes from manual ad_campaigns; actual spend +
+                //    ad-sourced leads come from ad_insights_daily (the CSV import target) when
+                //    present, falling back to the manual ad_campaigns.spend_mtd otherwise.
                 const { data: activeCampaigns } = await supabase
                     .from('ad_campaigns' as any)
                     .select('spend_mtd, monthly_budget, leads_generated, cpl')
                     .eq('status', 'active')
 
-                const totalSpend = (activeCampaigns as any[])?.reduce((sum, c) => sum + c.spend_mtd, 0) || 0
+                const { data: insightsMtd } = await supabase
+                    .from('ad_insights_daily')
+                    .select('spend, leads')
+                    .gte('date', currentMonthStart)
+
                 const totalBudget = (activeCampaigns as any[])?.reduce((sum, c) => sum + c.monthly_budget, 0) || 0
-                const totalLeadsFromAds = (activeCampaigns as any[])?.reduce((sum, c) => sum + (c.leads_generated || 0), 0) || 0
+                const manualSpend = (activeCampaigns as any[])?.reduce((sum, c) => sum + (c.spend_mtd || 0), 0) || 0
+                const manualLeads = (activeCampaigns as any[])?.reduce((sum, c) => sum + (c.leads_generated || 0), 0) || 0
+                const insightSpend = (insightsMtd as any[])?.reduce((sum, x) => sum + Number(x.spend || 0), 0) || 0
+                const insightLeads = (insightsMtd as any[])?.reduce((sum, x) => sum + Number(x.leads || 0), 0) || 0
+
+                const totalSpend = insightSpend > 0 ? insightSpend : manualSpend
+                const totalLeadsFromAds = insightLeads > 0 ? insightLeads : manualLeads
                 const avgCpl = totalLeadsFromAds > 0 ? totalSpend / totalLeadsFromAds : 0
 
                 // 3. Content Pieces

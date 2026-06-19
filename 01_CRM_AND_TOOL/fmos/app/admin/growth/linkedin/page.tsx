@@ -19,10 +19,15 @@ const LNK_TYPES = [
 export default async function LinkedInTrackerPage() {
   const pieces = await fetchContentPieces("linkedin");
 
+  // Real Posts from content_pieces; Followers/Profile Visits need a LinkedIn API we don't have.
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const publishedThisMonth = (pieces as any[]).filter(
+    (p) => p.status === "published" && p.published_date && new Date(p.published_date) >= monthStart
+  );
   const stats = [
-    { label: "Followers", value: "3,892" },
-    { label: "Posts This Month", value: "12" },
-    { label: "Profile Visits", value: "481" },
+    { label: "Followers", value: "—" },
+    { label: "Posts This Month", value: String(publishedThisMonth.length) },
+    { label: "Profile Visits", value: "—" },
   ];
 
   return (

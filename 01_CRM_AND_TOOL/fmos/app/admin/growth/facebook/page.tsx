@@ -19,10 +19,19 @@ const FB_TYPES = [
 export default async function FacebookTrackerPage() {
   const pieces = await fetchContentPieces("facebook");
 
+  // Real metrics from content_pieces; follower count needs a Facebook API we don't have.
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const publishedThisMonth = (pieces as any[]).filter(
+    (p) => p.status === "published" && p.published_date && new Date(p.published_date) >= monthStart
+  );
+  const withEng = publishedThisMonth.filter((p) => p.engagement_rate != null);
+  const avgEng = withEng.length
+    ? withEng.reduce((s, p) => s + Number(p.engagement_rate || 0), 0) / withEng.length
+    : null;
   const stats = [
-    { label: "Followers", value: "854" },
-    { label: "Posts This Month", value: "4" },
-    { label: "Page Engagement", value: "3.2%" },
+    { label: "Followers", value: "—" },
+    { label: "Posts This Month", value: String(publishedThisMonth.length) },
+    { label: "Page Engagement", value: avgEng != null ? `${avgEng.toFixed(1)}%` : "—" },
   ];
 
   return (

@@ -108,12 +108,15 @@ function calculateStats(role: string, userId: string, data: any) {
             const userProjects = data.projects?.filter((p: any) => p.assigned_to === userId) || [];
             const userTasks = data.tasks?.filter((t: any) => t.assigned_to === userId) || [];
             const completedMilestones = userTasks.filter((t: any) => t.status === 'completed' && t.priority === 'high').length;
+            const doneTasks = userTasks.filter((t: any) => t.status === 'completed').length;
+            const openTasks = userTasks.length - doneTasks;
+            const efficiency = userTasks.length > 0 ? Math.round((doneTasks / userTasks.length) * 100) : 0;
 
             return [
                 { label: 'Projects', value: userProjects.length, type: 'neutral' },
-                { label: 'Health Score', value: '4.2', type: 'positive' }, // Mocking for now
+                { label: 'Open Tasks', value: openTasks, type: 'neutral' },
                 { label: 'Milestones', value: completedMilestones, type: 'success' },
-                { label: 'Efficiency', value: '88%', type: 'positive' }
+                { label: 'Task Completion', value: `${efficiency}%`, type: 'positive' }
             ];
         }
         case 'strategist': {
