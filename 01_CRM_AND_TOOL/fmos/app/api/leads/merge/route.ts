@@ -1,6 +1,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import { logAudit } from "@/lib/audit";
+import { LEAD_CHILD_TABLES, ACTIVITY_EVENTS_TABLE, type MovedChildren } from "@/lib/leads/merge-relations";
 
 export async function POST(req: NextRequest) {
     const supabase = await createServerClientWithCookies();
@@ -24,48 +25,50 @@ export async function POST(req: NextRequest) {
         const survivorLead = leads.find((l: any) => l.id === survivor_id);
         const mergedLead = leads.find((l: any) => l.id === merged_id);
 
-        // 2. Update Survivor with chosen fields
-        // chosen_fields should be { field_name: value, ... }
-        const updates = { ...chosen_fields };
-        delete updates.id; // protection
+        // 2. Update Survivor with chosen fields. Whitelist to real lead columns
+        //    (survivorLead was fetched with select *), so an unexpected key can't 400 the update.
+        const allowedKeys = new Set(Object.keys(survivorLead as any));
+        const updates: Record<string, any> = {};
+        for (const [k, v] of Object.entries((chosen_fields || {}) as Record<string, unknown>)) {
+            if (allowedKeys.has(k) && k !== "id") updates[k] = v;
+        }
 
-        // Perform update
-        const { error: updateError } = await supabase.from("leads")
-            .update(updates as any)
-            .eq("id", survivor_id);
+        if (Object.keys(updates).length > 0) {
+            const { error: updateError } = await supabase.from("leads")
+                .update(updates as any)
+                .eq("id", survivor_id);
+            if (updateError) throw updateError;
+        }
 
-        if (updateError) throw updateError;
-
-        // 3. Re-point related entities
-        // A) Lead Outcomes
-        await supabase.from("lead_outcomes")
-            .update({ lead_id: survivor_id } as any)
-            .eq("lead_id", merged_id);
-
-        // B) Deals (if needed, assume table 'deals')
-        // await supabase.from("deals").update({ lead_id: survivor_id }).eq("lead_id", merged_id);
-
-        // C) Tasks (if needed)
-        // await supabase.from("tasks").update({ project_id: ... wait, tasks linked to project usually, or lead? linked to entity? assume 'tasks' has lead_id? check schema later. For now skip/comment.)
-
-        // D) Activity Events 
-        // We update entity_id to survivor so timeline shows history of BOTH
-        // AND we add metadata to indicate origin
-        // Note: This modifies history. Enterprise often prefers KEEPING original entity_id but linking in UI.
-        // Requirement says "Merge must preserve history". Retargeting ID is one way.
-        // Let's retarget.
-        await supabase.from("activity_events")
-            .update({ entity_id: survivor_id, metadata: { ...{ merged_from: merged_id } } } as any) // appending metadata logic in SQL is hard, this simple update overwrites metadata if not careful. 
-            // Safer: simple ID swap for V1.
-            .eq("entity_type", "lead")
-            .eq("entity_id", merged_id);
+        // 3. Re-point child history rows from merged -> survivor, recording exactly which
+        //    rows moved so an undo can reverse precisely these (and nothing created later).
+        const movedChildren: MovedChildren = {};
+        const db = supabase as any;
+        for (const table of LEAD_CHILD_TABLES) {
+            const { data: rows } = await db.from(table).select("id").eq("lead_id", merged_id);
+            const ids = (rows || []).map((r: any) => r.id);
+            if (ids.length === 0) continue;
+            const { error: moveErr } = await db.from(table).update({ lead_id: survivor_id }).in("id", ids);
+            if (!moveErr) movedChildren[table] = ids;
+            else console.error(`[merge] re-point ${table} failed:`, moveErr.message);
+        }
+        // activity_events is keyed by entity_type/entity_id.
+        const { data: aeRows } = await supabase.from(ACTIVITY_EVENTS_TABLE)
+            .select("id").eq("entity_type", "lead").eq("entity_id", merged_id);
+        const aeIds = (aeRows || []).map((r: any) => r.id);
+        if (aeIds.length > 0) {
+            const { error: aeErr } = await supabase.from(ACTIVITY_EVENTS_TABLE)
+                .update({ entity_id: survivor_id } as any).in("id", aeIds);
+            if (!aeErr) movedChildren[ACTIVITY_EVENTS_TABLE] = aeIds;
+            else console.error("[merge] re-point activity_events failed:", aeErr.message);
+        }
 
         // 4. Mark Duplicate Candidates as merged
         await supabase.from("duplicate_candidates")
             .update({ status: "merged" })
             .or(`primary_id.eq.${merged_id},duplicate_id.eq.${merged_id}`);
 
-        // 5. Create Merge Record
+        // 5. Create Merge Record (with the moved-children manifest for a precise undo)
         const { data: { user } } = await supabase.auth.getUser();
         await supabase.from("merges").insert({
             entity_type: "lead",
@@ -73,6 +76,7 @@ export async function POST(req: NextRequest) {
             merged_id,
             merged_by: user?.id,
             merge_strategy,
+            moved_children: movedChildren,
             undo_until: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
         });
 

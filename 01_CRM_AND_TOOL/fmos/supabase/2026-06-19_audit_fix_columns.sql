@@ -18,3 +18,9 @@ alter table public.seo_keywords
 --    bookMeeting no longer overwrites the human-written leads.meeting_notes.
 alter table public.leads
   add column if not exists gcal_event_id text;
+
+-- 3) merges.moved_children — records exactly which child rows were re-pointed from
+--    the merged lead to the survivor, so an undo can reverse precisely those rows
+--    (without disturbing rows created on the survivor after the merge).
+alter table public.merges
+  add column if not exists moved_children jsonb;

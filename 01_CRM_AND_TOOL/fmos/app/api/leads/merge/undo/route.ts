@@ -1,6 +1,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import { logAudit } from "@/lib/audit";
+import { ACTIVITY_EVENTS_TABLE, type MovedChildren } from "@/lib/leads/merge-relations";
 
 export async function POST(req: NextRequest) {
     const supabase = await createServerClientWithCookies();
@@ -32,23 +33,28 @@ export async function POST(req: NextRequest) {
             .delete()
             .eq("merged_id", merged_id);
 
-        // 4. Revert Related Entities (Reverse Logic)
-        // A) Lead Outcomes
-        // Only those that were moved? 
-        // If we simply moved ALL outcomes from Merged->Survivor, we can move them back?
-        // WARNING: If NEW outcomes were created on Survivor since merge, we shouldn't move those.
-        // Ideally we tracked which IDs moved.
-        // For V1 complexity catch: We will assume outcomes created BEFORE merge time should likely move back?
-        // Or simpler: We rely on the fact that we changed them blindly.
-        // Without storing specific IDs, exact undo is hard.
-        // Compromise: We won't auto-revert related entities in V1 undo safely without data loss risk of moving valid survivor items.
-        // Correction: Prompt says "Reverse lead_outcomes etc... if too heavy store IDs... or clearly note in comments".
-        // I will skip automatic child record reversion for safety in this V1 script unless I fetch logs.
-        // Actually, I can support it if I assume Lead Outcomes created_at < merge_created_at AND lead_id = survivor_id COULD be candidates.
-        // But safely? No. 
-        // Let's implement Restore of the Lead itself + Redirect removal. User has to manually move items if critical.
-        // Or: Just move back outcomes that match 'actor_id' if that helps? Limit scope.
-        // Decision: Only explicit Undo of Lead state and Redirect.
+        // 4. Revert exactly the child rows recorded at merge time (merges.moved_children).
+        //    Because we stored the precise row IDs, undo only moves back rows that the merge
+        //    moved — rows created on the survivor after the merge are left untouched.
+        const moved = (data.moved_children || {}) as MovedChildren;
+        const db = supabase as any;
+        for (const [table, ids] of Object.entries(moved)) {
+            if (!Array.isArray(ids) || ids.length === 0) continue;
+            if (table === ACTIVITY_EVENTS_TABLE) {
+                const { error } = await db.from(table).update({ entity_id: merged_id }).in("id", ids);
+                if (error) console.error(`[undo] revert ${table} failed:`, error.message);
+            } else {
+                const { error } = await db.from(table).update({ lead_id: merged_id }).in("id", ids);
+                if (error) console.error(`[undo] revert ${table} failed:`, error.message);
+            }
+        }
+
+        // Restore any duplicate_candidates that were marked merged for this pair
+        // back to their original 'open' state (the column default).
+        await supabase.from("duplicate_candidates")
+            .update({ status: "open" })
+            .eq("status", "merged")
+            .or(`primary_id.eq.${merged_id},duplicate_id.eq.${merged_id}`);
 
         // 5. Mark Merge Undone
         await supabase.from("merges")
