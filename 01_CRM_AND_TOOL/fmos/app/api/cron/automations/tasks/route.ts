@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         const { data: tasks, error } = await supabase
             .from("tasks")
             .select("*")
-            .neq("status", "done") // assuming 'done' is completed status
+            .neq("status", "completed") // task_status enum terminal value is 'completed' (no 'done')
             .lt("due_date", now.toISOString())
             .limit(50);
 

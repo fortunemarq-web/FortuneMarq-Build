@@ -24,11 +24,13 @@ export default async function SalesPage() {
         .order("follow_up_date", { ascending: true, nullsFirst: true })
         .limit(2000),
 
-      // Calls logged today
+      // Calls logged today — the cockpit logs call outcomes to outreach_logs
+      // (touch_type 'call'), not lead_outcomes.
       supabase
-        .from("lead_outcomes")
+        .from("outreach_logs")
         .select("id", { count: "exact", head: true })
         .eq("actor_id", user?.id || "")
+        .eq("touch_type", "call")
         .gte("created_at", todayStart),
 
       // PDFs sent today
@@ -39,12 +41,12 @@ export default async function SalesPage() {
         .eq("touch_type", "pdf_sent")
         .gte("created_at", todayStart),
 
-      // Meetings booked today
+      // Meetings booked today — logOutcome stamps meeting_booked_at, not last_contacted_at.
       supabase
         .from("leads")
         .select("id", { count: "exact", head: true })
         .eq("outreach_stage", "meeting_booked")
-        .gte("last_contacted_at", todayStart),
+        .gte("meeting_booked_at", todayStart),
 
       // All distinct niches across entire leads table (for filter dropdown)
       supabase

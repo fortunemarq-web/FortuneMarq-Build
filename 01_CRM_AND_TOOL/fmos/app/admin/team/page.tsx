@@ -62,10 +62,12 @@ export default async function TeamOverviewPage() {
     .select("*");
 
   // 4. Real "actuals" for the targets table:
-  //    calls = today's lead_outcomes per actor; tasks = completed today
+  //    calls = today's call outreach_logs per actor; tasks = completed today.
+  //    (The cockpit logs call outcomes to outreach_logs, not lead_outcomes.)
   const { data: outcomesToday } = await supabase
-    .from("lead_outcomes")
+    .from("outreach_logs")
     .select("actor_id")
+    .eq("touch_type", "call")
     .gte("created_at", today + "T00:00:00");
 
   const actuals: Record<string, { calls: number; tasks: number }> = {};

@@ -39,7 +39,9 @@ export default async function SalesPage() {
   // Fetch data in parallel
   const [leadsResult, callsResult, profilesResult] = await Promise.all([
     supabase.from("leads").select("id, status, assigned_sales_exec"),
-    supabase.from("lead_outcomes").select("id, actor_id, lead_id, outcome, created_at"),
+    // The cockpit logs call outcomes to outreach_logs (outcome = uppercase IDs like
+    // INTERESTED_BOOK), not lead_outcomes.
+    supabase.from("outreach_logs").select("id, actor_id, lead_id, outcome, created_at, touch_type"),
     supabase.from("profiles").select("id, full_name, email"),
   ]);
 
@@ -92,15 +94,15 @@ export default async function SalesPage() {
     }))
     .filter((item) => item.value > 0);
 
-  // Call Outcomes Funnel
+  // Call Outcomes Funnel — outreach_logs.outcome holds uppercase cockpit IDs.
   const connectedCalls = calls.filter((c) =>
-    c.outcome && !["no_answer", "not_reachable", "busy"].includes(c.outcome)
+    c.outcome && !["NO_ANSWER", "WRONG_NUMBER", "GATEKEEPER", "LANGUAGE_BARRIER"].includes(c.outcome)
   ).length;
   const interestedCalls = calls.filter((c) =>
-    c.outcome && ["interested", "qualified", "strategy_booked"].includes(c.outcome)
+    c.outcome && ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO"].includes(c.outcome)
   ).length;
   const sessionsBooked = calls.filter((c) =>
-    c.outcome === "strategy_booked"
+    c.outcome === "INTERESTED_BOOK"
   ).length;
 
   const funnelData = [
@@ -120,7 +122,7 @@ export default async function SalesPage() {
       telecallerStats.set(userId, { calls: 0, converted: 0, sessions: 0 });
     }
     telecallerStats.get(userId)!.calls += 1;
-    if (call.outcome === "strategy_booked") {
+    if (call.outcome === "INTERESTED_BOOK") {
       telecallerStats.get(userId)!.sessions += 1;
     }
   });

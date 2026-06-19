@@ -54,11 +54,11 @@ export function applyFilters(query: any, filters: FilterConfig) {
         }
     }
 
-    // Boolean flags
+    // Boolean flags — leads.has_website is a real boolean column.
     if (filters.has_website === true) {
-        query = query.not("email", "is", null); // Assuming email is proxy for website/contactability
+        query = query.eq("has_website", true);
     } else if (filters.has_website === false) {
-        query = query.is("email", null);
+        query = query.or("has_website.eq.false,has_website.is.null");
     }
 
     // Assigned To
