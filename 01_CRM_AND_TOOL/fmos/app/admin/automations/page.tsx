@@ -1,6 +1,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { Zap } from "lucide-react";
 import AutomationsClient from "@/components/admin/AutomationsClient";
+import { APPROVED_WA_TEMPLATES } from "@/lib/whatsapp/approved-templates";
 
 export default async function AutomationsPage() {
     const supabase = await createServerClientWithCookies();
@@ -9,12 +10,10 @@ export default async function AutomationsPage() {
         .select("id, name, description, trigger, entity_type, priority, is_enabled")
         .order("priority", { ascending: true });
 
-    // Registered template names (for the send_whatsapp action picker)
-    const { data: tpls } = await supabase
-        .from("whatsapp_templates")
-        .select("name")
-        .order("name", { ascending: true });
-    const templateNames = (tpls || []).map((t: any) => t.name).filter(Boolean);
+    // The send_whatsapp action picker MUST offer the approved Meta template HANDLES
+    // (e.g. "meeting_confirmation"). whatsapp_templates.name holds display names
+    // ("Meeting Confirmation") which Meta rejects — so source from the approved list.
+    const templateNames = [...APPROVED_WA_TEMPLATES];
 
     return (
         <div className="min-h-full bg-slate-50 px-4 py-8">

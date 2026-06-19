@@ -18,7 +18,12 @@ export async function executeAction(action: Action, entityType: string, entityId
     try {
         switch (action.type) {
             case 'assign_owner':
-                await handleAssign(supabase, entityType, entityId, action.value);
+                // Only entities with an owner column can be assigned: leads
+                // (assigned_sales_exec, remapped in updateEntity), projects/tasks (assigned_to).
+                // clients/invoices/deals have no such column — skip rather than error.
+                if (entityType === 'lead' || entityType === 'project' || entityType === 'task') {
+                    await handleAssign(supabase, entityType, entityId, action.value);
+                }
                 break;
             case 'set_status':
                 // Leads keep outreach_stage in lockstep with status
@@ -28,8 +33,11 @@ export async function executeAction(action: Action, entityType: string, entityId
                 );
                 break;
             case 'set_next_action_date':
-                const date = calculateDate(action.value);
-                await updateEntity(supabase, entityType, entityId, { next_action_date: date });
+                // next_action_date exists only on leads — skip for other entities.
+                if (entityType === 'lead') {
+                    const date = calculateDate(action.value);
+                    await updateEntity(supabase, entityType, entityId, { next_action_date: date });
+                }
                 break;
             case 'add_tag':
                 // Assuming tags are in an array column or unrelated table?
@@ -154,13 +162,22 @@ function calculateDate(config: any): string | null {
 }
 
 async function appendTag(supabase: any, type: string, id: string, tag: string, snapshot: any) {
-    // Using notes hack if tags column missing, else use real column
-    // For now, assume notes hack to be safe without schema inspection
-    const currentNotes = snapshot.notes || "";
-    if (!currentNotes.includes(`#${tag}`)) {
-        const newNotes = currentNotes + `\n#${tag}`;
-        await updateEntity(supabase, type, id, { notes: newNotes });
+    // leads has a real tags text[] column — append there.
+    if (type === 'lead') {
+        const existing: string[] = Array.isArray(snapshot.tags) ? snapshot.tags : [];
+        if (existing.includes(tag)) return;
+        const { error } = await supabase.from('leads').update({ tags: [...new Set([...existing, tag])] }).eq('id', id);
+        if (error) console.error('[automation] add_tag (leads) failed:', error.message);
+        return;
     }
+    // clients has a notes column — append a #tag marker there.
+    if (type === 'client') {
+        const currentNotes = snapshot.notes || "";
+        if (currentNotes.includes(`#${tag}`)) return;
+        await updateEntity(supabase, type, id, { notes: `${currentNotes}\n#${tag}` });
+        return;
+    }
+    // Other entities (project/task/deal/invoice) have no tags/notes column — skip safely.
 }
 
 async function createNotification(supabase: any, userId: string, title: string, body: string, type: string, id: string) {
