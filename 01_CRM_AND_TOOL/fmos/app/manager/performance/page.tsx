@@ -14,7 +14,6 @@ import {
     MapPin,
     Building2,
     Calendar,
-    ChevronRight,
     Search,
     Filter
 } from "lucide-react";
@@ -304,7 +303,6 @@ export default function ManagerPerformance() {
                                 <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Interested</th>
                                 <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Conv. Rate</th>
                                 <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Streak</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -356,11 +354,6 @@ export default function ManagerPerformance() {
                                                 <Flame className={clsx("h-4 w-4", entry.streak > 0 && "fill-current")} />
                                                 <span className="text-sm">{entry.streak}</span>
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <button className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-all text-slate-400 hover:text-slate-900">
-                                                <ChevronRight className="h-5 w-5" />
-                                            </button>
                                         </td>
                                     </motion.tr>
                                 ))}

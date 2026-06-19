@@ -238,35 +238,6 @@ export default function MyStatsPage() {
                     </div>
                 </div>
 
-                {/* Incentives / Next Rank */}
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 text-white relative overflow-hidden shadow-xl">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[40px] rounded-full" />
-
-                    <div className="relative z-10 space-y-6">
-                        <div className="flex items-center gap-3">
-                            <Award className="h-6 w-6 text-blue-300" />
-                            <h2 className="text-xl font-bold">Next Milestone</h2>
-                        </div>
-
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-xs font-bold text-blue-200">
-                                <span>SILVER CALLER</span>
-                                <span>75% DONE</span>
-                            </div>
-                            <div className="h-2 bg-black/20 rounded-full overflow-hidden">
-                                <div className="h-full bg-white rounded-full w-[75%]" />
-                            </div>
-                        </div>
-
-                        <p className="text-blue-100 text-sm leading-relaxed">
-                            Complete <span className="font-bold text-white">58 more interested calls</span> to unlock the "Silver Elite" badge and earn a bonus multiplier.
-                        </p>
-
-                        <button className="w-full bg-white text-blue-600 py-3 rounded-2xl font-black text-sm hover:bg-blue-50 transition-colors shadow-lg shadow-black/20">
-                            VIEW INCENTIVES
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     );

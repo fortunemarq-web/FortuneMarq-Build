@@ -1,5 +1,5 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
-import { BookOpen, Plus, Search, Filter, FileText, Clock } from "lucide-react";
+import { BookOpen, Plus, Search, FileText, Clock } from "lucide-react";
 import Link from "next/link";
 import SopCard from "@/components/team/sop-card";
 import clsx from "clsx";
@@ -104,10 +104,6 @@ export default async function SopLibraryPage({
                     />
                     {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
                 </form>
-                <button className="flex items-center gap-2 px-4 py-4 rounded-2xl bg-white border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
-                    <Filter className="h-4 w-4" />
-                    Filters
-                </button>
             </div>
 
             {error ? (

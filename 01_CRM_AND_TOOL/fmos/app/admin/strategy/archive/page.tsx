@@ -81,7 +81,7 @@ export default async function StrategyArchivePage() {
                           <p className="text-[10px] text-slate-400 truncate">By {run.profiles?.full_name}</p>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="text-sm font-semibold text-indigo-700 cursor-pointer hover:underline" title="View Document (Coming Soon)">
+                          <span className="text-sm font-semibold text-slate-800">
                             {run.title}
                           </span>
                         </td>

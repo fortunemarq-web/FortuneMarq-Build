@@ -85,10 +85,5 @@ export async function bulkUpdateEntity(
     return { successCount, failedIds };
 }
 
-export async function bulkExport(
-    entityType: string,
-    filterQuery: any // In real implementation, pass filter config and reconstruct query
-) {
-    // This is better handled via a Route Handler (GET request) to stream the CSV download
-    // See app/api/export/route.ts
-}
+// NOTE: CSV export is handled by the route handler app/api/export/route.ts (POST),
+// which streams the download. There is intentionally no bulkExport() server action.
