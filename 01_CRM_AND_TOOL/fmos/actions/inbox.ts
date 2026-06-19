@@ -35,7 +35,7 @@ export async function getTranscript(
   const [logsRes, threadsRes] = await Promise.all([
     supabase
       .from("whatsapp_logs")
-      .select("id, message_sent, direction, sent_at, message_type, template_name")
+      .select("id, message_sent, direction, sent_at, message_type")
       .eq("lead_id", leadId)
       .order("sent_at", { ascending: true })
       .limit(500),
@@ -61,7 +61,7 @@ export async function getTranscript(
       dir,
       text: l.message_sent || `[${l.message_type || "message"}]`,
       source: "log",
-      meta: l.template_name || undefined,
+      meta: (l.message_sent || "").match(/\[template:([^\]]+)\]/)?.[1] || undefined,
     });
   }
 
