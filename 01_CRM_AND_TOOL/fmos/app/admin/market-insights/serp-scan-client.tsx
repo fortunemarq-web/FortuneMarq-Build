@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Fragment, useState, useTransition } from "react";
 import { Search, Loader2, CheckCircle2, AlertTriangle, ChevronDown, ChevronRight, FileText } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { runSerpScan, type SerpCompetitorInsight } from "@/actions/serp-scan";
@@ -18,12 +18,24 @@ interface Props {
   rows: Row[];
 }
 
+// A competitor_insights value is only a usable SERP scan if it carries the
+// bucket breakdown. Legacy/seed rows store a different shape
+// ({ top_competitors, competition_level, ... }) with no `buckets`/`topResults`;
+// treat those as "not scanned" instead of trusting the shape and crashing.
+function asScannedInsight(ci: unknown): SerpCompetitorInsight | null {
+  if (ci && typeof ci === "object" && (ci as { buckets?: unknown }).buckets) {
+    return ci as SerpCompetitorInsight;
+  }
+  return null;
+}
+
 function BucketBar({ buckets }: { buckets: SerpCompetitorInsight["buckets"] }) {
+  const b = buckets ?? { gmb: 0, directories: 0, realSites: 0, socialOther: 0 };
   const segments = [
-    { label: "GMB", pct: buckets.gmb, color: "bg-blue-500" },
-    { label: "Dirs", pct: buckets.directories, color: "bg-amber-400" },
-    { label: "Sites", pct: buckets.realSites, color: "bg-brand-deep" },
-    { label: "Other", pct: buckets.socialOther, color: "bg-slate-300" },
+    { label: "GMB", pct: b.gmb ?? 0, color: "bg-blue-500" },
+    { label: "Dirs", pct: b.directories ?? 0, color: "bg-amber-400" },
+    { label: "Sites", pct: b.realSites ?? 0, color: "bg-brand-deep" },
+    { label: "Other", pct: b.socialOther ?? 0, color: "bg-slate-300" },
   ];
   return (
     <div className="space-y-1">
@@ -109,15 +121,14 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
             const kwCount = r.general_insights?.topKeywords?.length ?? 0;
             const isLow = vol > 0 && vol < 1000;
             const updatedAt = r.general_insights?.updatedAt;
-            const ci = r.competitor_insights;
+            const ci = asScannedInsight(r.competitor_insights);
             const k = key(r);
             const isScanning = scanning === k;
             const isExpanded = expanded === k;
 
             return (
-              <>
+              <Fragment key={k}>
                 <tr
-                  key={k}
                   className={`hover:bg-slate-50 cursor-pointer ${isExpanded ? "bg-slate-50" : ""}`}
                   onClick={() => setExpanded(isExpanded ? null : k)}
                 >
@@ -187,7 +198,7 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
                           {" · "}{ci.totalResults} results
                         </p>
                         <div className="grid grid-cols-2 gap-2 max-w-2xl">
-                          {ci.topResults.map((tr, i) => (
+                          {(ci.topResults ?? []).map((tr, i) => (
                             <div
                               key={i}
                               className="flex items-start gap-2 text-xs bg-white rounded-lg border border-slate-200 px-3 py-2"
@@ -209,7 +220,7 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </tbody>
