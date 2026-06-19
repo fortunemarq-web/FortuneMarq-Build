@@ -628,12 +628,14 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
     if (!userId) return;
     let cancelled = false;
     (async () => {
+      // team_targets has no daily_target column — the value is target_value, and the
+      // canonical row uses target_type='daily_calls' (matches /telecaller/my-stats).
       const { data } = await (supabase.from("team_targets") as any)
-        .select("daily_target, target_value")
+        .select("target_value")
         .eq("user_id", userId)
-        .eq("target_type", "calls")
+        .eq("target_type", "daily_calls")
         .maybeSingle();
-      if (!cancelled && data) setCallTarget(data.daily_target ?? data.target_value ?? null);
+      if (!cancelled && data) setCallTarget(Number(data.target_value) || null);
     })();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

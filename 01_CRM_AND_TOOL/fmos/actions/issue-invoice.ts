@@ -94,11 +94,11 @@ export async function issueInvoice(input: IssueInvoiceInput): Promise<IssueInvoi
     if (input.clientId) {
       const { data: client } = await (supabase as any)
         .from("clients")
-        .select("business_name, phone, primary_contact")
+        .select("business_name, phone, owner_name")
         .eq("id", input.clientId)
         .maybeSingle();
       phone = client?.phone ?? null;
-      contactName = client?.primary_contact || client?.business_name || "there";
+      contactName = client?.owner_name || client?.business_name || "there";
     } else if (input.leadId) {
       const { data: lead } = await (supabase.from("leads") as any)
         .select("company_name, contact_person, phone")
@@ -178,11 +178,11 @@ export async function recordPayment(input: RecordPaymentInput): Promise<RecordPa
   if (invoice.client_id) {
     const { data: client } = await (supabase as any)
       .from("clients")
-      .select("business_name, phone, primary_contact")
+      .select("business_name, phone, owner_name")
       .eq("id", invoice.client_id)
       .maybeSingle();
     phone = client?.phone ?? null;
-    contactName = client?.primary_contact || client?.business_name || "there";
+    contactName = client?.owner_name || client?.business_name || "there";
   }
 
   if (phone && toWaNumber(phone)) {

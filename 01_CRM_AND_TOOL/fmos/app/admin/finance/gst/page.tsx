@@ -36,14 +36,16 @@ export default async function GSTReportPage() {
 
   // Fetch all paid invoices (output GST)
   const { data: invoices } = await (supabase.from("invoices") as any)
-    .select("id, invoice_number, amount, subtotal, gst_amount, total_amount, revenue_type, status, paid_at, issue_date, clients(business_name)")
+    // invoices has no `amount` column — use subtotal / total_amount.
+    .select("id, invoice_number, subtotal, gst_amount, total_amount, revenue_type, status, paid_at, issue_date, clients(business_name)")
     .in("status", ["paid", "unpaid", "overdue"])
     .order("issue_date", { ascending: false });
 
-  // Fetch all expenses (input GST credits if tracked)
+  // Fetch all expenses. NOTE: expenses has no gst_amount column (input-GST not tracked
+  // yet — see empty-state below), and its date column is `expense_date`.
   const { data: expenses } = await (supabase.from("expenses") as any)
-    .select("id, description, amount, gst_amount, date, category")
-    .order("date", { ascending: false });
+    .select("id, description, amount, expense_date, category")
+    .order("expense_date", { ascending: false });
 
   const allInvoices = invoices || [];
   const allExpenses = expenses || [];
@@ -68,7 +70,7 @@ export default async function GSTReportPage() {
     const invoiceCount = paidInvoices.length;
 
     const monthExpenses = allExpenses.filter((exp: any) => {
-      const d = (exp.date || "").slice(0, 10);
+      const d = (exp.expense_date || "").slice(0, 10);
       return d >= start && d <= end;
     });
     const inputGST = monthExpenses.reduce((s: number, exp: any) => s + (Number(exp.gst_amount) || 0), 0);

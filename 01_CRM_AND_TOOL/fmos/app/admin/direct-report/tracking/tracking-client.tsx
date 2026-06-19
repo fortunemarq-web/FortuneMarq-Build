@@ -7,6 +7,7 @@ interface LogRow {
   lead_id: string | null;
   phone: string | null;
   template_id: string | null;
+  template: string | null;
   delivery_status: string | null;
   sent_at: string | null;
   outcome: string | null;
@@ -214,7 +215,7 @@ export default function TrackingClient({ logs }: Props) {
                         {log.city || "—"} · {log.industry || "—"}
                       </td>
                       <td className="px-4 py-2 text-xs text-slate-500 font-mono">
-                        {log.template_id || "—"}
+                        {log.template || log.template_id || "—"}
                       </td>
                       <td className="px-4 py-2 text-center">
                         <StatusBadge status={log.delivery_status} />

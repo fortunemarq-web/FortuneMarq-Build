@@ -27,8 +27,9 @@ export default async function TeamOverviewPage() {
 
   const { data: allTasks } = await supabase
     .from("tasks")
-    .select("status, assigned_to, updated_at")
-    .or(`status.neq.completed,updated_at.gte.${startOfWeekStr}`);
+    // tasks has no updated_at — completion timestamp is completion_date.
+    .select("status, assigned_to, completion_date")
+    .or(`status.neq.completed,completion_date.gte.${startOfWeekStr}`);
 
   const taskStats: Record<string, any> = {};
   profiles?.forEach((p: any) => {
@@ -45,7 +46,7 @@ export default async function TeamOverviewPage() {
     if (task.status !== 'completed') {
       taskStats[task.assigned_to].active++;
     } else {
-      const taskDate = task.updated_at.split('T')[0];
+      const taskDate = (task.completion_date || "").split('T')[0];
       if (taskDate === today) {
         taskStats[task.assigned_to].completedToday++;
       }

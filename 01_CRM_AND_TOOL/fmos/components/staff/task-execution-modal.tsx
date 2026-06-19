@@ -127,7 +127,8 @@ export default function TaskExecutionModal({
       }
 
       if (newStatus === "completed") {
-        updateData.completed_at = new Date().toISOString();
+        // tasks has no completed_at — the completion timestamp column is completion_date.
+        updateData.completion_date = new Date().toISOString();
       }
 
       const { error } = await supabase

@@ -35,7 +35,8 @@ export default async function AgencyGrowthHub({
   const { data: pendingTasks } = await supabase
     .from("tasks")
     .select("id, title, status, due_date")
-    .eq("tag", "agency_growth")
+    // tasks.tags is a text[] — match membership, not a scalar `tag` column.
+    .contains("tags", ["agency_growth"])
     .neq("status", "completed")
     .order("due_date", { ascending: true })
     .limit(10);

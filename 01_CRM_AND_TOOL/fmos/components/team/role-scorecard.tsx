@@ -79,9 +79,9 @@ function calculateStats(role: string, userId: string, data: any) {
         case 'telecaller': {
             const userCalls = data.calls?.filter((c: any) => c.actor_id === userId) || [];
             const interested = userCalls.filter((c: any) =>
-              c.outcome_id === 'INTERESTED_BOOK' || c.outcome_id === 'INTERESTED_FOLLOW_UP' || c.outcome_id === 'INTERESTED_SEND_INFO'
+              c.outcome === 'INTERESTED_BOOK' || c.outcome === 'INTERESTED_FOLLOW_UP' || c.outcome === 'INTERESTED_SEND_INFO'
             ).length;
-            const booked = userCalls.filter((c: any) => c.outcome_id === 'INTERESTED_BOOK').length;
+            const booked = userCalls.filter((c: any) => c.outcome === 'INTERESTED_BOOK').length;
             const rate = userCalls.length > 0 ? Math.round((interested / userCalls.length) * 100) : 0;
 
             return [

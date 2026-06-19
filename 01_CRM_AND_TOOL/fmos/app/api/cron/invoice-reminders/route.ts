@@ -49,13 +49,13 @@ export async function POST(req: NextRequest) {
 
     const { data: client } = await supabase
       .from("clients")
-      .select("business_name, phone, primary_contact")
+      .select("business_name, phone, owner_name")
       .eq("id", inv.client_id)
       .maybeSingle();
 
     if (!client?.phone || !toWaNumber(client.phone)) continue;
 
-    const contactName = client.primary_contact || client.business_name || "there";
+    const contactName = client.owner_name || client.business_name || "there";
     const invoiceUrl = `${APP_URL()}/inv/${inv.id}`;
     const total = fmtINR(Number(inv.total_amount));
 

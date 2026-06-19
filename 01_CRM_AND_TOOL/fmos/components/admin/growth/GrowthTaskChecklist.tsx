@@ -19,7 +19,7 @@ export default function GrowthTaskChecklist({ initialTasks }: { initialTasks: Ta
     setTasks((prev) => prev.filter((t) => t.id !== id));
     const { error } = await supabase
       .from("tasks")
-      .update({ status: "completed", completed_at: new Date().toISOString() } as any)
+      .update({ status: "completed", completion_date: new Date().toISOString() } as any)
       .eq("id", id);
     if (error) {
       toast.error("Failed to update task", error.message);

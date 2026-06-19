@@ -30,34 +30,34 @@ export default async function FinanceDashboard() {
     expensesResult,
     allPaidInvoicesGST,
   ] = await Promise.all([
-    // MRR this month (paid)
-    supabase.from("invoices").select("amount").eq("revenue_type", "mrr").eq("status", "paid")
+    // MRR this month (paid). invoices has no `amount` column — alias total_amount.
+    supabase.from("invoices").select("amount:total_amount").eq("revenue_type", "mrr").eq("status", "paid")
       .gte("created_at", monthStart).lte("created_at", monthEnd),
 
     // Setup fees this month (paid)
-    supabase.from("invoices").select("amount").eq("revenue_type", "setup_fee").eq("status", "paid")
+    supabase.from("invoices").select("amount:total_amount").eq("revenue_type", "setup_fee").eq("status", "paid")
       .gte("created_at", monthStart).lte("created_at", monthEnd),
 
     // One-time revenue this month (paid)
-    supabase.from("invoices").select("amount").eq("revenue_type", "one_time").eq("status", "paid")
+    supabase.from("invoices").select("amount:total_amount").eq("revenue_type", "one_time").eq("status", "paid")
       .gte("created_at", monthStart).lte("created_at", monthEnd),
 
     // Outstanding (unpaid + overdue)
-    supabase.from("invoices").select("id, amount").in("status", ["unpaid", "overdue"]),
+    supabase.from("invoices").select("id, amount:total_amount").in("status", ["unpaid", "overdue"]),
 
     // Recent invoices
-    supabase.from("invoices").select("id, invoice_number, amount, revenue_type, status, created_at, clients(business_name)")
+    supabase.from("invoices").select("id, invoice_number, amount:total_amount, revenue_type, status, created_at, clients(business_name)")
       .order("created_at", { ascending: false }).limit(7),
 
     // Overdue invoices
-    supabase.from("invoices").select("id, invoice_number, amount, due_date, clients(business_name)")
+    supabase.from("invoices").select("id, invoice_number, amount:total_amount, due_date, clients(business_name)")
       .eq("status", "overdue").order("due_date", { ascending: true }).limit(5),
 
     // Chart data
     getRevenueVsExpensesChartData(),
 
-    // Expenses MTD
-    supabase.from("expenses").select("amount").gte("date", monthStart).lte("date", monthEnd),
+    // Expenses MTD (expenses uses expense_date, not date)
+    supabase.from("expenses").select("amount").gte("expense_date", monthStart).lte("expense_date", monthEnd),
     // GST from paid invoices this quarter
     supabase.from("invoices").select("gst_amount, issue_date").eq("status", "paid"),
   ]);

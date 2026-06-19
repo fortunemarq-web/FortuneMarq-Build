@@ -97,13 +97,13 @@ export default function OrganicSeoTab() {
             const supabase = createClient();
             const { error: insertError } = await supabase
                 .from('seo_keywords' as any)
+                // seo_keywords has no notes column — omit it so the insert succeeds.
                 .insert({
                     keyword: formData.keyword,
                     current_position: formData.current_position ? parseInt(formData.current_position) : null,
                     search_volume: formData.search_volume ? parseInt(formData.search_volume) : 0,
                     difficulty: formData.difficulty,
                     target_url: formData.target_url || null,
-                    notes: formData.notes || null,
                     is_tracking: true,
                 });
 

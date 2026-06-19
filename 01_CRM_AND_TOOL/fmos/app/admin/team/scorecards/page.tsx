@@ -43,16 +43,18 @@ export default async function ScorecardsPage({
   // Telecaller Data (Calls from outreach_logs)
   const { data: calls } = await supabase
     .from("outreach_logs")
-    .select("actor_id, created_at, outcome_id, lead_id")
+    // outreach_logs has `outcome`, not `outcome_id`.
+    .select("actor_id, created_at, outcome, lead_id")
     .eq("touch_type", "call")
     .gte("created_at", startStr)
     .lte("created_at", endStr);
 
-  // Staff/Dev Data (Tasks) — tasks due this week OR completed this week
+  // Staff/Dev Data (Tasks) — tasks due this week OR completed this week.
+  // tasks has no updated_at — completion timestamp is completion_date.
   const { data: tasks } = await supabase
     .from("tasks")
     .select("*")
-    .or(`due_date.gte.${startStr.split('T')[0]},and(status.eq.completed,updated_at.gte.${startStr})`);
+    .or(`due_date.gte.${startStr.split('T')[0]},and(status.eq.completed,completion_date.gte.${startStr})`);
 
   // PM Data (Projects/Milestones)
   const { data: projects } = await supabase

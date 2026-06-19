@@ -15,7 +15,9 @@ export default async function DirectReportTrackingPage() {
     .from("whatsapp_logs")
     .select("id, lead_id, phone, template_id, delivery_status, sent_at, outcome, message_sent")
     .eq("direction", "outbound")
-    .like("template_id", "direct_report%")
+    // template_id is a uuid FK (always null from template sends); the template name
+    // is logged in message_sent as "[template:direct_report_*]". Match on that.
+    .like("message_sent", "%[template:direct_report%")
     .order("sent_at", { ascending: false })
     .limit(2000);
 
@@ -45,6 +47,8 @@ export default async function DirectReportTrackingPage() {
 
   const enriched = logs.map((log) => ({
     ...log,
+    // Parse the approved template name out of message_sent ("[template:<name>]").
+    template: log.message_sent?.match(/\[template:([^\]]+)\]/)?.[1] ?? log.template_id ?? null,
     city: (log.lead_id && leadMap[log.lead_id]?.city) || null,
     industry: (log.lead_id && leadMap[log.lead_id]?.industry) || null,
     company_name: (log.lead_id && leadMap[log.lead_id]?.company_name) || null,
