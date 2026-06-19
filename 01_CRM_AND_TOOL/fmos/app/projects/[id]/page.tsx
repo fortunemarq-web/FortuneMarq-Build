@@ -2,6 +2,7 @@ import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
 import ProjectDashboard from "@/components/projects/project-dashboard";
 import FileManager from "@/components/ui/file-manager";
+import ClientDeliverablePublisher from "@/components/projects/client-deliverable-publisher";
 
 interface ProjectDetailPageProps {
   params: Promise<{
@@ -69,6 +70,13 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     .eq("project_id", id)
     .order("created_at", { ascending: false });
 
+  // Client-facing deliverables (published to the client portal for approval)
+  const { data: clientDeliverables } = await supabase
+    .from("client_deliverables")
+    .select("id, title, deliverable_type, status, file_url, client_feedback")
+    .eq("project_id", id)
+    .order("created_at", { ascending: false });
+
   // Merge client data
   const projectWithClient = project
     ? {
@@ -97,21 +105,31 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   }
 
   return (
-    <ProjectDashboard
-      project={projectWithClient}
-      tasks={tasks || []}
-      milestones={milestones || []}
-      deliverables={deliverables || []}
-      changeRequests={changeRequests || []}
-      tasksError={tasksError}
-      // Pass the FileManager as a component to be rendered inside the dashboard
-      fileManager={
-        <FileManager 
-          bucket="project-assets" 
-          projectId={id} 
-          isClientVisible={false} 
-        />
-      }
-    />
+    <>
+      <ProjectDashboard
+        project={projectWithClient}
+        tasks={tasks || []}
+        milestones={milestones || []}
+        deliverables={deliverables || []}
+        changeRequests={changeRequests || []}
+        tasksError={tasksError}
+        // Pass the FileManager as a component to be rendered inside the dashboard
+        fileManager={
+          <FileManager
+            bucket="project-assets"
+            projectId={id}
+            isClientVisible={false}
+          />
+        }
+      />
+      {clientData && (
+        <div className="mx-auto max-w-7xl px-4 md:px-8 pb-10">
+          <ClientDeliverablePublisher
+            projectId={id}
+            initialDeliverables={clientDeliverables || []}
+          />
+        </div>
+      )}
+    </>
   );
 }
