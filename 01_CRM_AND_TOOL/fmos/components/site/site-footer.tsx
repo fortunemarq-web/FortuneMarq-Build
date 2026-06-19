@@ -70,6 +70,22 @@ export default function SiteFooter() {
 
         <div className="fm-footer-wordmark" aria-hidden="true">FortuneMarq</div>
 
+        <p
+          className="fm-footer-legal-identity"
+          style={{
+            margin: "0 auto 18px",
+            maxWidth: "780px",
+            fontSize: "12px",
+            lineHeight: 1.6,
+            opacity: 0.6,
+            textAlign: "center",
+          }}
+        >
+          <strong>FortuneMarq Media &amp; Marketing</strong> is the registered trade name of
+          Sayed&nbsp;Jabeer (Proprietor). GSTIN&nbsp;29ICWPS9816Q1ZS · Galaxy&nbsp;Mall,
+          1st&nbsp;Floor, Shop&nbsp;43, J.C&nbsp;Nagar, Hubballi, Karnataka&nbsp;580020, India.
+        </p>
+
         <div className="fm-footer-bottom">
           <span className="fm-footer-copy">© 2026 FortuneMarq Media &amp; Marketing. All rights reserved.</span>
           <div className="fm-footer-socials">
