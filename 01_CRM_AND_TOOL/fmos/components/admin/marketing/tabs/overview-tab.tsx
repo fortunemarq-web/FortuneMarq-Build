@@ -29,11 +29,28 @@ import {
     Cell
 } from "recharts"
 import { useMarketingOverviewStats, useLatestWeeklyBrief, useLeadsByDay, useLeadSourceBreakdown } from "@/lib/hooks/use-marketing-data"
+import { generateWeeklyBrief } from "@/actions/generate-brief"
+import { toast } from "@/components/ui/toast"
 import Link from "next/link"
 
 export default function OverviewTab() {
     const { data: stats, loading: statsLoading, error: statsError, refetch: refetchStats } = useMarketingOverviewStats()
     const { data: brief, loading: briefLoading, error: briefError, refetch: refetchBrief } = useLatestWeeklyBrief()
+    const [generatingBrief, setGeneratingBrief] = React.useState(false)
+
+    const handleGenerateBrief = async () => {
+        setGeneratingBrief(true)
+        try {
+            const r = await generateWeeklyBrief()
+            if (!r.ok) { toast.error("Could not generate brief", r.error || "Please try again."); return }
+            toast.success("Weekly brief generated")
+            refetchBrief()
+        } catch {
+            toast.error("Could not generate brief", "Unexpected error — please try again.")
+        } finally {
+            setGeneratingBrief(false)
+        }
+    }
     const { data: performanceData } = useLeadsByDay(7)
     const { data: sourceData } = useLeadSourceBreakdown()
 
@@ -309,11 +326,12 @@ export default function OverviewTab() {
                             </div>
                         </div>
                         <button
-                            onClick={() => refetchBrief()}
-                            className="bg-[#111] border border-[#333] text-white text-xs font-bold px-4 py-2 rounded-xl hover:border-[#42CA80]/30 hover:bg-[#222] transition-all flex items-center gap-2 font-sans active:scale-95 shadow-lg group/btn"
+                            onClick={handleGenerateBrief}
+                            disabled={generatingBrief}
+                            className="bg-[#111] border border-[#333] text-white text-xs font-bold px-4 py-2 rounded-xl hover:border-[#42CA80]/30 hover:bg-[#222] transition-all flex items-center gap-2 font-sans active:scale-95 shadow-lg group/btn disabled:opacity-60"
                         >
-                            <RefreshCw className="h-3 w-3 text-[#42CA80] group-hover/btn:rotate-180 transition-transform duration-500" />
-                            Generate New Brief
+                            <RefreshCw className={`h-3 w-3 text-[#42CA80] transition-transform duration-500 ${generatingBrief ? "animate-spin" : "group-hover/btn:rotate-180"}`} />
+                            {generatingBrief ? "Generating…" : "Generate New Brief"}
                         </button>
                     </div>
 
@@ -364,8 +382,8 @@ export default function OverviewTab() {
                         <h4 className="text-[#666] font-medium font-sans">No weekly brief available</h4>
                         <p className="text-[#555] text-xs mt-1 font-sans">Generate your first AI marketing brief to get insights.</p>
                     </div>
-                    <button onClick={() => refetchBrief()} className="bg-[#42CA80] text-black text-xs font-bold px-6 py-2.5 rounded-xl hover:bg-[#3ab872] transition-all active:scale-95 shadow-lg shadow-[#42CA80]/10 font-sans">
-                        Generate First Brief
+                    <button onClick={handleGenerateBrief} disabled={generatingBrief} className="bg-[#42CA80] text-black text-xs font-bold px-6 py-2.5 rounded-xl hover:bg-[#3ab872] transition-all active:scale-95 shadow-lg shadow-[#42CA80]/10 font-sans disabled:opacity-60">
+                        {generatingBrief ? "Generating…" : "Generate First Brief"}
                     </button>
                 </div>
             )}

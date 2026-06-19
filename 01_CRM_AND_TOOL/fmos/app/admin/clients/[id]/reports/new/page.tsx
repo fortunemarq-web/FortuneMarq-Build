@@ -17,6 +17,7 @@ import { sendNotification } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 import { notifyReportReady } from "@/actions/notify-report-ready";
+import { synthesizeReportSummary } from "@/actions/synthesize-report";
 
 // Public report magic links expire this many days after creation.
 const REPORT_LINK_TTL_DAYS = 30;
@@ -27,6 +28,7 @@ export default function AdminNewReportPage() {
     const [client, setClient] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isSynthesizing, setIsSynthesizing] = useState(false);
 
     // Form State
     const [reportMonth, setReportMonth] = useState("");
@@ -45,6 +47,27 @@ export default function AdminNewReportPage() {
         }
         if (clientId) fetchClient();
     }, [clientId]);
+
+    const handleSynthesize = async () => {
+        if (!reportMonth) {
+            toast.error("Pick a report month first", "The AI summary uses the selected month.");
+            return;
+        }
+        setIsSynthesizing(true);
+        try {
+            const r = await synthesizeReportSummary(clientId as string, reportMonth, reportType);
+            if (!r.ok || !r.summary) {
+                toast.error("Could not draft summary", r.error || "Please try again.");
+                return;
+            }
+            setAiSummary(r.summary);
+            toast.success("Summary drafted", "Review and edit before publishing.");
+        } catch {
+            toast.error("Could not draft summary", "Unexpected error — please try again.");
+        } finally {
+            setIsSynthesizing(false);
+        }
+    };
 
     const handleSave = async (publish: boolean = false) => {
         setIsSaving(true);
@@ -182,9 +205,14 @@ export default function AdminNewReportPage() {
                         <div>
                             <div className="flex justify-between items-center mb-2 px-1">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">AI Performance Summary</label>
-                                <button className="flex items-center gap-1 text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-500 transition-colors">
-                                    <Sparkles className="h-3 w-3" />
-                                    Synthesize
+                                <button
+                                    type="button"
+                                    onClick={handleSynthesize}
+                                    disabled={isSynthesizing}
+                                    className="flex items-center gap-1 text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-500 transition-colors disabled:opacity-50"
+                                >
+                                    {isSynthesizing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                                    {isSynthesizing ? "Synthesizing…" : "Synthesize"}
                                 </button>
                             </div>
                             <textarea

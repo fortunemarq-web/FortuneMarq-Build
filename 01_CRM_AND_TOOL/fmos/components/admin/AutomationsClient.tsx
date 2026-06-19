@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Zap, Plus, X, Loader2, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/toast";
+import { promptModal } from "@/components/ui/prompt-modal";
 import { useRouter } from "next/navigation";
 
 interface AutomationRule {
@@ -216,6 +217,27 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
     setSaving(null);
   };
 
+  const deleteRule = async (rule: AutomationRule) => {
+    const ok = await promptModal({
+      title: `Delete "${rule.name}"?`,
+      description: "This automation rule and its run history will be permanently removed.",
+      confirmLabel: "Delete",
+      destructive: true,
+      type: "select",
+      options: [{ value: "confirm", label: "Yes, delete it" }],
+    });
+    if (!ok) return;
+    setSaving(rule.id);
+    // automation_runs has a RESTRICT FK to the rule — remove its history first.
+    await supabase.from("automation_runs").delete().eq("rule_id", rule.id);
+    const { error } = await supabase.from("automation_rules").delete().eq("id", rule.id);
+    setSaving(null);
+    if (error) { toast.error("Failed to delete", error.message); return; }
+    setRules((prev) => prev.filter((r) => r.id !== rule.id));
+    if (editId === rule.id) setEditId(null);
+    toast.success("Rule deleted", rule.name);
+  };
+
   const addAction = () => setActions((prev) => [...prev, newAction()]);
   const removeAction = (i: number) => setActions((prev) => prev.filter((_, idx) => idx !== i));
   const updateAction = (i: number, patch: Partial<ActionDraft>) =>
@@ -315,6 +337,14 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
                 </button>
                 <button onClick={() => setEditId(rule.id)} className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">
                   Edit
+                </button>
+                <button
+                  onClick={() => deleteRule(rule)}
+                  disabled={saving === rule.id}
+                  title="Delete rule"
+                  className="px-2 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-50"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
