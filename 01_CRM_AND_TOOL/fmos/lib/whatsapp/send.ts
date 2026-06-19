@@ -256,10 +256,12 @@ export async function sendWhatsAppTemplate(
         leadId: opts?.leadId,
         sentBy: opts?.sentBy,
         phone: rawTo,
+        // The template NAME lives in message_sent ([template:<name>]); template_id
+        // is a uuid FK, so we must NOT put the name there or the log insert throws
+        // (silently dropping the row — and undercounting the throttle).
         message: `${logNote}[template:${templateName}]`,
         messageType: "template",
         waMessageId: last.messageId,
-        templateId: templateName,
       });
   }
   return last;
