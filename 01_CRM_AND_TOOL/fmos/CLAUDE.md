@@ -45,6 +45,11 @@
 #   (+ meeting_booked_at when stage → meeting_booked).
 # - leads has NO updated_at / assigned_to columns. Use last_activity_at,
 #   assigned_sales_exec, meeting_booked_at.
+# - leads.gcal_event_id (added 2026-06-19) stores the Google Calendar event id for
+#   booked meetings — bookMeeting writes it here; do NOT stuff it into meeting_notes.
+#   Other 2026-06-19 additions: content_pieces.{target_keyword,notes,caption_draft,
+#   image_prompt,cta_type,cta_url}, seo_keywords.notes, merges.moved_children (jsonb,
+#   the merge/undo manifest). DDL: supabase/2026-06-19_audit_fix_columns.sql.
 #
 # KEY CONVENTIONS ADDED 2026-06-11 (morning — hardening session):
 # - lib/pipeline.ts is the SINGLE source of truth for lead stages.
