@@ -232,7 +232,7 @@ export default async function WebsiteSEOTrackerPage() {
         </div>
 
         {/* Section 5: Strategy Panel placeholder */}
-        <StrategyInputPanel />
+        <StrategyInputPanel destination="agency_growth.seo" />
 
       </div>
     </div>

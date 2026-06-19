@@ -131,7 +131,7 @@ export default async function InstagramTrackerPage() {
         </section>
 
         {/* Section 4: Strategy Input Panel */}
-        <StrategyInputPanel />
+        <StrategyInputPanel destination="agency_growth.instagram" />
         
       </div>
     </div>

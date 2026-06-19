@@ -108,7 +108,7 @@ export default async function CityAcquisitionPage({ params }: { params: Promise<
         </section>
 
         {/* Section 2: Strategy Input */}
-        <StrategyInputPanel />
+        <StrategyInputPanel destination="agency_growth.acquisition" />
 
       </div>
     </div>

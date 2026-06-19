@@ -65,7 +65,7 @@ export default async function LinkedInTrackerPage() {
 
         {/* ... Performance log omitted for brevity but keeping StrategyInputPanel ... */}
 
-        <StrategyInputPanel />
+        <StrategyInputPanel destination="agency_growth.linkedin" />
       </div>
     </div>
   );

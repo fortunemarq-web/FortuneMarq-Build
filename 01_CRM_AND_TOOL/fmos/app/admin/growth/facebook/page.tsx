@@ -63,7 +63,7 @@ export default async function FacebookTrackerPage() {
           <ContentKanbanBoard channel="facebook" initialPieces={pieces} availableTypes={FB_TYPES} />
         </section>
 
-        <StrategyInputPanel />
+        <StrategyInputPanel destination="agency_growth.facebook" />
       </div>
     </div>
   );
