@@ -109,10 +109,15 @@ export async function POST(req: NextRequest) {
 async function handleStatusUpdate(status: any) {
   if (!status?.id || !status?.status) return;
   const supabase = createAdminClient() as any;
-  await supabase
-    .from("whatsapp_logs")
-    .update({ delivery_status: status.status })
-    .eq("wa_message_id", status.id);
+  const update: Record<string, unknown> = { delivery_status: status.status };
+  // On a delivery failure, record WHY (Meta error code + reason) so failures are
+  // diagnosable instead of a bare "failed".
+  if (status.status === "failed" && Array.isArray(status.errors) && status.errors.length) {
+    const e = status.errors[0];
+    update.delivery_error = `${e?.code}: ${e?.title ?? ""}${e?.error_data?.details ? ` — ${e.error_data.details}` : ""}`.slice(0, 400);
+    console.error("[whatsapp/status] delivery failed", status.id, update.delivery_error);
+  }
+  await supabase.from("whatsapp_logs").update(update).eq("wa_message_id", status.id);
 }
 
 /** "STOP"/"UNSUBSCRIBE"/"OPT OUT" (alone) → opt the lead out of WhatsApp. */
