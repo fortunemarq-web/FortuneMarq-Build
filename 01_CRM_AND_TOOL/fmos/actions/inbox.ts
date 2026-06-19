@@ -1,7 +1,54 @@
 "use server";
 
 import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { sendWhatsAppText } from "@/lib/whatsapp/send";
 import { revalidatePath } from "next/cache";
+
+/**
+ * Human agent reply from the WhatsApp Inbox. Pauses the bot (take over), then
+ * sends a free-typed message via the WhatsApp API. Only valid inside the 24h
+ * window after the customer's last message; outside it WhatsApp requires a
+ * template, so we surface a clear error.
+ */
+export async function sendInboxReply(
+  leadId: string,
+  text: string
+): Promise<{ ok: boolean; error?: string; at?: string }> {
+  const body = (text || "").trim();
+  if (!body) return { ok: false, error: "Type a message first." };
+  if (body.length > 4000) return { ok: false, error: "Message too long." };
+
+  const supabase = (await createServerClientWithCookies()) as any;
+  const { data: auth } = await supabase.auth.getUser();
+  const { data: lead } = await supabase
+    .from("leads")
+    .select("phone")
+    .eq("id", leadId)
+    .maybeSingle();
+  if (!lead?.phone) return { ok: false, error: "This lead has no phone number." };
+
+  // Taking over: pause the bot so it doesn't also reply to this thread.
+  await supabase.from("leads").update({ bot_paused: true }).eq("id", leadId);
+
+  // Human reply: not subject to the bulk daily cap. Opt-out is still respected.
+  const r = await sendWhatsAppText(lead.phone, body, {
+    leadId,
+    sentBy: auth?.user?.id ?? null,
+    bypassThrottle: true,
+  });
+
+  if (!r.success) {
+    let error = r.error || "Send failed.";
+    if (r.suppressed === "opted_out") error = "This lead has opted out of WhatsApp.";
+    else if (r.suppressed) error = `Blocked (${r.suppressed}).`;
+    else if (/131047|re-?engagement|24[\s-]?hour|outside.*window/i.test(error))
+      error = "Outside the 24-hour window — the customer must message again, or send an approved template.";
+    return { ok: false, error };
+  }
+
+  revalidatePath("/admin/inbox");
+  return { ok: true, at: new Date().toISOString() };
+}
 
 export interface TranscriptEntry {
   id: string;

@@ -5,9 +5,9 @@ import Link from "next/link";
 import {
   MessageSquare, Search, Bot, User, AlertTriangle, PauseCircle,
   BellOff, CircleDot, ArrowDownLeft, ArrowUpRight, Play, Pause,
-  ExternalLink, X, ChevronRight, Loader2,
+  ExternalLink, X, ChevronRight, Loader2, Send,
 } from "lucide-react";
-import { toggleBotPaused, getTranscript, type TranscriptEntry } from "@/actions/inbox";
+import { toggleBotPaused, getTranscript, sendInboxReply, type TranscriptEntry } from "@/actions/inbox";
 
 export interface Conversation {
   leadId: string;
@@ -117,17 +117,20 @@ function TranscriptDrawer({
   conv,
   botPaused,
   onClose,
-  onTogglePaused,
+  setPaused,
 }: {
   conv: Conversation;
   botPaused: boolean;
   onClose: () => void;
-  onTogglePaused: () => void;
+  setPaused: (paused: boolean) => void;
 }) {
   const [entries, setEntries] = useState<TranscriptEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [toggling, startToggle] = useTransition();
+  const [reply, setReply] = useState("");
+  const [sending, setSending] = useState(false);
+  const [replyError, setReplyError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -147,8 +150,27 @@ function TranscriptDrawer({
   function handleToggle() {
     startToggle(async () => {
       await toggleBotPaused(conv.leadId, botPaused);
-      onTogglePaused();
+      setPaused(!botPaused);
     });
+  }
+
+  async function handleSend() {
+    const body = reply.trim();
+    if (!body || sending) return;
+    setSending(true);
+    setReplyError(null);
+    const res = await sendInboxReply(conv.leadId, body);
+    setSending(false);
+    if (res.ok) {
+      setEntries((e) => [
+        ...e,
+        { id: `local-${e.length}-${res.at}`, at: res.at || new Date().toISOString(), dir: "out", text: body, source: "log" },
+      ]);
+      setReply("");
+      setPaused(true); // replying = taking over
+    } else {
+      setReplyError(res.error || "Failed to send.");
+    }
   }
 
   return (
@@ -237,6 +259,38 @@ function TranscriptDrawer({
               <div ref={bottomRef} />
             </>
           )}
+        </div>
+
+        {/* Composer — type a reply (takes over the chat, pauses the bot) */}
+        <div className="border-t border-slate-100 p-3 bg-white">
+          {replyError && <p className="text-xs text-red-500 mb-2">{replyError}</p>}
+          <div className="flex items-end gap-2">
+            <textarea
+              value={reply}
+              onChange={(e) => setReply(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              rows={1}
+              placeholder={conv.optedOut ? "This lead opted out of WhatsApp" : "Type a reply…  (sends as your team, pauses the bot)"}
+              disabled={sending || conv.optedOut}
+              className="flex-1 resize-none text-sm border border-slate-200 rounded-lg px-3 py-2 max-h-32 focus:outline-none focus:ring-1 focus:ring-[#42CA80] disabled:bg-slate-50 disabled:text-slate-400"
+            />
+            <button
+              onClick={handleSend}
+              disabled={sending || !reply.trim() || conv.optedOut}
+              title="Send reply"
+              className="shrink-0 rounded-lg bg-[#1E7A4F] text-white px-3 py-2.5 hover:bg-[#176b44] disabled:opacity-40 flex items-center"
+            >
+              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </button>
+          </div>
+          <p className="text-[10px] text-slate-400 mt-1.5">
+            Free-typed replies work within 24h of the customer’s last message; older chats need an approved template.
+          </p>
         </div>
       </div>
     </div>
@@ -456,10 +510,7 @@ export default function InboxClient({ conversations }: { conversations: Conversa
           conv={selected}
           botPaused={selectedPaused}
           onClose={() => setSelected(null)}
-          onTogglePaused={() => {
-            const current = selectedPaused;
-            setPausedOverrides((m) => new Map(m).set(selected.leadId, !current));
-          }}
+          setPaused={(p) => setPausedOverrides((m) => new Map(m).set(selected.leadId, p))}
         />
       )}
     </>
