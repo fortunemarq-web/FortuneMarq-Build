@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { Clock, Coffee, Play, Square, AlertCircle } from "lucide-react";
 import clsx from "clsx";
 import { promptModal } from "@/components/ui/prompt-modal";
+import { toast } from "@/components/ui/toast";
 
 interface AttendanceBreak {
     break_end_at: string | null;
@@ -87,21 +88,35 @@ export default function MyAttendancePage() {
         return () => clearInterval(interval);
     }, [fetchState]);
 
+    const postAttendance = async (url: string, failTitle: string) => {
+        try {
+            const res = await fetch(url, { method: 'POST' });
+            if (!res.ok) {
+                const body = await res.json().catch(() => ({}));
+                toast.error(failTitle, body?.error || `Request failed (${res.status})`);
+                return false;
+            }
+            return true;
+        } catch {
+            toast.error(failTitle, "Network error — please try again.");
+            return false;
+        } finally {
+            fetchState();
+        }
+    };
+
     const handleClockIn = async () => {
-        await fetch('/api/attendance/clock-in', { method: 'POST' });
-        fetchState();
+        await postAttendance('/api/attendance/clock-in', "Could not clock in");
     };
 
     const handleClockOut = async () => {
         const ok = await promptModal({ title: "Clock out?", description: "Confirm you're ending your work session.", confirmLabel: "Clock Out", type: "select", options: [{ value: "confirm", label: "Yes, clock out now" }] });
         if (!ok) return;
-        await fetch('/api/attendance/clock-out', { method: 'POST' });
-        fetchState();
+        await postAttendance('/api/attendance/clock-out', "Could not clock out");
     };
 
     const handleBreak = async (action: 'start' | 'end') => {
-        await fetch(`/api/attendance/break?action=${action}`, { method: 'POST' });
-        fetchState();
+        await postAttendance(`/api/attendance/break?action=${action}`, "Could not update break");
     };
 
     // Calculate current live duration if clocked in

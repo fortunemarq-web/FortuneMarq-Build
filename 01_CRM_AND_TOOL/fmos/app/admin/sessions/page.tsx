@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "@/components/ui/toast";
 
 export default function AdminSessionsPage() {
     const [sessions, setSessions] = useState<any[]>([]);
@@ -24,7 +25,11 @@ export default function AdminSessionsPage() {
             query = query.is('logout_at', null).gt('last_seen_at', twoMinsAgo);
         }
 
-        const { data } = await query;
+        const { data, error } = await query;
+        if (error) {
+            toast.error("Could not load sessions", error.message);
+            return;
+        }
         setSessions(data || []);
     };
 
@@ -72,7 +77,7 @@ export default function AdminSessionsPage() {
                                 const online = isOnline(s.last_seen_at, s.logout_at);
                                 return (
                                     <tr key={s.id} className="hover:bg-slate-100">
-                                        <td className="px-6 py-4 font-mono text-slate-600">{s.user_id.slice(0, 8)}...</td>
+                                        <td className="px-6 py-4 font-mono text-slate-600">{s.user_id ? `${s.user_id.slice(0, 8)}...` : "—"}</td>
                                         <td className="px-6 py-4 text-xs text-slate-600">
                                             <div className="text-slate-700">{s.ip_address}</div>
                                             <div className="truncate max-w-[200px]">{s.user_agent}</div>

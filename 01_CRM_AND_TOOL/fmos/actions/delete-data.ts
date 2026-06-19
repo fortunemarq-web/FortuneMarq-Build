@@ -56,16 +56,18 @@ export async function deleteLeadsByIndustry(industry: string) {
             const batch = leadIds.slice(i, i + BATCH_SIZE);
 
             // Delete outcomes first
-            await supabase
+            const { error: outErr } = await supabase
                 .from("lead_outcomes")
                 .delete()
                 .in("lead_id", batch);
+            if (outErr) throw new Error(outErr.message);
 
             // Delete leads by ID (safest method to ensure we delete exactly what we found)
-            await supabase
+            const { error: leadErr } = await supabase
                 .from("leads")
                 .delete()
                 .in("id", batch);
+            if (leadErr) throw new Error(leadErr.message);
         }
 
         // 4. Clean up market insights (Only if specific industry is selected, not mixed uncategorized/blank)

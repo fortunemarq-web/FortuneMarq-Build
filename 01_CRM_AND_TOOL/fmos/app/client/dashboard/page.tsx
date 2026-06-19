@@ -187,7 +187,7 @@ export default function ClientDashboardPage() {
           type: (action === 'approved' ? 'deliverable_approved' : 'deliverable_revision') as NotificationType,
           title: action === 'approved' ? 'Artifact Approved' : 'Revision Requested',
           body: `${client?.business_name} has ${action.replace('_', ' ')}: ${deliverables.find(d => d.id === id)?.title}`,
-          link: `/admin/projects/${project?.id}`
+          link: `/projects/${project?.id}`
         });
       }
 

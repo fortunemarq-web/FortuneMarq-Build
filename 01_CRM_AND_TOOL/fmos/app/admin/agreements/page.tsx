@@ -42,6 +42,16 @@ export default async function AgreementsPage() {
     );
   }
 
+  // Resolve clients by business_name so "Client ↗" can deep-link to the right client.
+  const { data: clientRows } = await supabase.from("clients").select("id, business_name");
+  const clientByName = new Map(
+    (clientRows || []).map((c: any) => [String(c.business_name || "").trim().toLowerCase(), c.id])
+  );
+  const clientHref = (companyName: string | null | undefined) => {
+    const id = clientByName.get(String(companyName || "").trim().toLowerCase());
+    return id ? `/admin/clients/${id}` : "/admin/clients";
+  };
+
   const formatINR = (n: number | null) => (n ? `₹${n.toLocaleString("en-IN")}` : "—");
   const formatDate = (d: string | null) =>
     d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—";
@@ -183,7 +193,7 @@ export default async function AgreementsPage() {
                             </Link>
                             {a.status === "confirmed" && a.lead && (
                               <Link
-                                href={`/admin/clients`}
+                                href={clientHref(a.lead?.company_name)}
                                 className="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 hover:underline whitespace-nowrap"
                               >
                                 Client ↗

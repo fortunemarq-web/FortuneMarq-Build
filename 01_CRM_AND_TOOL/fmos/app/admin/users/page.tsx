@@ -10,6 +10,7 @@ import {
     ShieldAlert,
     Loader2,
     CheckCircle2,
+    XCircle,
     Mail,
     Calendar,
     ArrowRight
@@ -199,9 +200,15 @@ export default function UserManagementPage() {
                                         </div>
                                         <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                                             <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Status</p>
-                                            <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
-                                                <CheckCircle2 className="h-3 w-3" /> Active
-                                            </div>
+                                            {profile.is_active === false ? (
+                                                <div className="flex items-center gap-1.5 text-xs font-bold text-red-500">
+                                                    <XCircle className="h-3 w-3" /> Inactive
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
+                                                    <CheckCircle2 className="h-3 w-3" /> Active
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

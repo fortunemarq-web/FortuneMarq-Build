@@ -210,7 +210,7 @@ export default function TaskManager({
               type: 'task_assigned',
               title: 'Task Assigned',
               body: `You have a new task: ${taskData.title}`,
-              link: `/admin/projects/${projectId}`
+              link: `/projects/${projectId}`
             });
           }
         }
@@ -280,7 +280,7 @@ export default function TaskManager({
             type: 'task_assigned',
             title: 'Task Assigned',
             body: `You have been assigned: ${task?.title}`,
-            link: `/admin/projects/${projectId}`
+            link: `/projects/${projectId}`
           });
         }
       }
