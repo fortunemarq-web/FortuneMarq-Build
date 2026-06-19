@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Zap, Plus, X, Loader2, Trash2 } from "lucide-react";
+import { Zap, Plus, X, Loader2, Trash2, SlidersHorizontal } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
@@ -182,10 +182,66 @@ function serializeAction(a: ActionDraft): { type: string; value: any } {
   }
 }
 
+// Reverse of serializeConditions — load a stored { all: [...] } back into drafts.
+function deserializeConditions(json: any): ConditionDraft[] {
+  const all = json?.all;
+  if (!Array.isArray(all)) return [];
+  return all.map((c: any) => ({
+    field: c.field || "last_outcome",
+    op: c.op || "eq",
+    value: Array.isArray(c.value)
+      ? c.value.join(", ")
+      : c.value === true ? "true" : c.value === false ? "false" : (c.value ?? "").toString(),
+  }));
+}
+
+// Reverse of serializeAction — load a stored { type, value } back into an ActionDraft.
+function deserializeAction(a: any): ActionDraft {
+  const base = newAction();
+  const type = (ACTION_TYPES as readonly string[]).includes(a?.type) ? (a.type as ActionType) : "notify_owner";
+  base.type = type;
+  const v = a?.value;
+  switch (type) {
+    case "notify_owner":
+    case "notify_admin":
+      base.text = v?.message || "";
+      break;
+    case "send_whatsapp":
+      base.waAudience = (v?.audience || "lead") as WaAudience;
+      if (v?.headline || v?.detail) { base.waHeadline = v.headline || ""; base.waDetail = v.detail || ""; }
+      if (v?.leadTypeTemplates) {
+        base.waByLeadType = true;
+        base.waTplA = v.leadTypeTemplates.A || "";
+        base.waTplB = v.leadTypeTemplates.B || "";
+        base.waTplC = v.leadTypeTemplates.C || "";
+        base.waTplD = v.leadTypeTemplates.D || "";
+      } else {
+        base.waTemplate = v?.template || "";
+      }
+      if (Array.isArray(v?.params)) base.waParams = v.params.join("\n");
+      break;
+    case "mark_stale":
+      base.text = v?.reason || "";
+      break;
+    case "set_next_action_date":
+      base.text = v?.preset || "tomorrow_9am";
+      break;
+    case "create_task":
+      base.text = v?.title || "";
+      base.num = String(v?.due_in_days ?? 1);
+      break;
+    default:
+      base.text = typeof v === "string" ? v : (v?.toString?.() || "");
+      break;
+  }
+  return base;
+}
+
 export default function AutomationsClient({ initialRules, templates = [] }: { initialRules: AutomationRule[]; templates?: string[] }) {
   const [rules, setRules] = useState(initialRules);
   const [showNew, setShowNew] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [editFullId, setEditFullId] = useState<string | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", description: "", trigger: "lead_stage_change", entity_type: "lead", priority: "5", throttle: "60" });
   const [actions, setActions] = useState<ActionDraft[]>([]);
@@ -215,6 +271,55 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
     if (error) { toast.error("Failed to save", error.message); }
     else { toast.success("Rule updated", rule.name); setEditId(null); }
     setSaving(null);
+  };
+
+  // Load a rule's full config (trigger/entity/conditions/actions/throttle) into the
+  // form for editing. The rule-list query only has summary fields, so fetch the rest.
+  const openConfigure = async (rule: AutomationRule) => {
+    setSaving(rule.id);
+    const { data, error } = await supabase.from("automation_rules").select("*").eq("id", rule.id).single();
+    setSaving(null);
+    if (error || !data) { toast.error("Could not load rule", error?.message || ""); return; }
+    const r: any = data;
+    setForm({
+      name: r.name || "",
+      description: r.description || "",
+      trigger: r.trigger || "lead_stage_change",
+      entity_type: r.entity_type || "lead",
+      priority: String(r.priority ?? 5),
+      throttle: String(r.throttle_minutes ?? 0),
+    });
+    setConditions(deserializeConditions(r.conditions));
+    setActions(Array.isArray(r.actions) ? r.actions.map(deserializeAction) : []);
+    setShowNew(false);
+    setEditId(null);
+    setEditFullId(rule.id);
+  };
+
+  const saveFullEdit = async () => {
+    if (!editFullId) return;
+    if (!form.name.trim()) { toast.error("Name required", ""); return; }
+    if (actions.length === 0) { toast.error("Add at least one action", "A rule with no actions does nothing."); return; }
+    setSaving("edit");
+    const { data, error } = await supabase.from("automation_rules")
+      .update({
+        name: form.name,
+        description: form.description || null,
+        trigger: form.trigger,
+        entity_type: form.entity_type,
+        priority: Number(form.priority) || 5,
+        throttle_minutes: Number(form.throttle) || 0,
+        actions: actions.map(serializeAction),
+        conditions: serializeConditions(conditions),
+      })
+      .eq("id", editFullId)
+      .select().single();
+    setSaving(null);
+    if (error) { toast.error("Failed to save rule", error.message); return; }
+    setRules((prev) => prev.map((r) => r.id === editFullId ? { ...r, ...(data as any) } : r));
+    setEditFullId(null);
+    resetForm();
+    toast.success("Rule updated", form.name);
   };
 
   const deleteRule = async (rule: AutomationRule) => {
@@ -339,6 +444,14 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
                   Edit
                 </button>
                 <button
+                  onClick={() => openConfigure(rule)}
+                  disabled={saving === rule.id}
+                  title="Configure conditions & actions"
+                  className="px-2 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+                >
+                  {saving === rule.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <SlidersHorizontal className="h-3.5 w-3.5" />}
+                </button>
+                <button
                   onClick={() => deleteRule(rule)}
                   disabled={saving === rule.id}
                   title="Delete rule"
@@ -358,11 +471,11 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
         </div>
       )}
 
-      {showNew ? (
+      {(showNew || editFullId) ? (
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
           <div className="flex justify-between items-center mb-1">
-            <p className="font-semibold text-slate-900 text-sm">New Automation Rule</p>
-            <button onClick={() => { setShowNew(false); resetForm(); }}><X className="h-4 w-4 text-slate-400" /></button>
+            <p className="font-semibold text-slate-900 text-sm">{editFullId ? "Edit Automation Rule" : "New Automation Rule"}</p>
+            <button onClick={() => { setShowNew(false); setEditFullId(null); resetForm(); }}><X className="h-4 w-4 text-slate-400" /></button>
           </div>
           <div>
             <label className={labelClass}>Name *</label>
@@ -518,10 +631,10 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
           </div>
 
           <div className="flex gap-2 pt-1">
-            <button onClick={() => { setShowNew(false); resetForm(); }} className="flex-1 rounded-lg border border-slate-200 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
-            <button onClick={createRule} disabled={saving === "new"} className="flex-1 rounded-lg bg-brand-deep text-white py-2 text-sm font-semibold hover:bg-brand-active disabled:opacity-50 flex items-center justify-center gap-2">
-              {saving === "new" && <Loader2 className="h-4 w-4 animate-spin" />}
-              Create Rule
+            <button onClick={() => { setShowNew(false); setEditFullId(null); resetForm(); }} className="flex-1 rounded-lg border border-slate-200 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
+            <button onClick={editFullId ? saveFullEdit : createRule} disabled={saving === "new" || saving === "edit"} className="flex-1 rounded-lg bg-brand-deep text-white py-2 text-sm font-semibold hover:bg-brand-active disabled:opacity-50 flex items-center justify-center gap-2">
+              {(saving === "new" || saving === "edit") && <Loader2 className="h-4 w-4 animate-spin" />}
+              {editFullId ? "Save Changes" : "Create Rule"}
             </button>
           </div>
         </div>
