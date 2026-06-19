@@ -2,7 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase-admin";
 import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
-import { buildComponents, leadScriptType, type WaTemplateConfig } from "@/lib/whatsapp/params";
+import { leadScriptType } from "@/lib/whatsapp/params";
 import { slugify, chooseReport, type LeadType, type ReportAssetRow } from "@/lib/whatsapp/report-lookup";
 import { isOptedOut } from "@/lib/whatsapp/recipients";
 import { leadStageUpdate } from "@/lib/pipeline";
@@ -59,6 +59,31 @@ function templateFor(leadType: string): string {
   return t === "c" ? "direct_report_type_c_" : `direct_report_type_${t}`;
 }
 
+/** "CarRentals" -> "Car Rentals" for the customer-facing message body. */
+function prettyNiche(niche: string): string {
+  return String(niche || "").replace(/([a-z])([A-Z])/g, "$1 $2").trim();
+}
+
+/**
+ * Components for the direct_report_* templates: the PDF document header + the
+ * three NAMED body params these templates declare ({{business_name}}, {{niche}},
+ * {{city}}). Named (not positional) params are required or Meta rejects with
+ * #132000 "Number of parameters does not match".
+ */
+function reportComponents(asset: ReportAssetRow, businessName: string, niche: string, city: string): any[] {
+  return [
+    { type: "header", parameters: [{ type: "document", document: { link: asset.public_url, filename: asset.filename } }] },
+    {
+      type: "body",
+      parameters: [
+        { type: "text", parameter_name: "business_name", text: (businessName || "there").slice(0, 60) },
+        { type: "text", parameter_name: "niche", text: prettyNiche(niche).slice(0, 60) },
+        { type: "text", parameter_name: "city", text: (city || "").slice(0, 60) },
+      ],
+    },
+  ];
+}
+
 function emptyResult(over: Partial<BlastResult>): BlastResult {
   return {
     ok: false, dryRun: false, test: false, matched: 0, eligible: 0, optedOut: 0,
@@ -99,15 +124,10 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
     const to = toWaNumber(input.testPhone);
     if (!to) return emptyResult({ test: true, message: "Invalid test phone number." });
     const chosen = chooseReport(assets, input.leadType || "A") || assets[0];
-    const cfg: WaTemplateConfig = {
-      audience: "lead",
-      headerDocument: { link: chosen.public_url, filename: chosen.filename },
-      params: input.bodyParams,
-    };
-    const components = buildComponents(cfg, {});
+    const components = reportComponents(chosen, "there", input.niche, input.city);
     const r = await sendWhatsAppTemplate(to, templateFor(chosen.lead_type), {
       language: lang,
-      components: components.length ? components : undefined,
+      components,
     });
     return emptyResult({
       test: true,
@@ -187,15 +207,10 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
   // 5. Send, respecting the cap.
   for (const { lead, asset } of sendable) {
     if (sent >= capRemaining) break;
-    const cfg: WaTemplateConfig = {
-      audience: "lead",
-      headerDocument: { link: asset.public_url, filename: asset.filename },
-      params: input.bodyParams,
-    };
-    const components = buildComponents(cfg, lead);
+    const components = reportComponents(asset, lead.company_name, input.niche, input.city);
     const r = await sendWhatsAppTemplate(lead.phone, templateFor(asset.lead_type), {
       language: lang,
-      components: components.length ? components : undefined,
+      components,
       leadId: lead.id,
       proactive: true, // 6.3 — suppress if the lead is mid inbound conversation
     });
