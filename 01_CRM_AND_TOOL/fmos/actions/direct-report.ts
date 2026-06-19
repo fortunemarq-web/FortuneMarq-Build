@@ -53,7 +53,10 @@ export interface BlastResult {
 }
 
 function templateFor(leadType: string): string {
-  return `direct_report_type_${String(leadType).toLowerCase()}`;
+  const t = String(leadType).toLowerCase();
+  // The approved type-C template is registered on Meta as `direct_report_type_c_`
+  // (trailing underscore) — match it exactly or the send fails "template not found".
+  return t === "c" ? "direct_report_type_c_" : `direct_report_type_${t}`;
 }
 
 function emptyResult(over: Partial<BlastResult>): BlastResult {
