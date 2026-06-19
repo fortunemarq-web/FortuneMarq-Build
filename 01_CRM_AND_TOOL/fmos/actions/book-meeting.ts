@@ -8,11 +8,16 @@ import { buildComponents } from "@/lib/whatsapp/params";
 import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 
 const IST = "Asia/Kolkata";
+const SITE_URL = "https://fortunemarq.com";
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-IN", { timeZone: IST, weekday: "short", day: "numeric", month: "short" });
 }
 function fmtTime(iso: string) {
   return new Date(iso).toLocaleTimeString("en-IN", { timeZone: IST, hour: "numeric", minute: "2-digit", hour12: true });
+}
+/** Combined "Tue 17 Jun, 4:00 PM" — matches the meeting_confirmation {{2}} example. */
+function fmtDatetime(iso: string) {
+  return `${fmtDate(iso)}, ${fmtTime(iso)}`;
 }
 
 // ─── Book ────────────────────────────────────────────────────────────────────
@@ -39,6 +44,7 @@ export async function bookMeeting(opts: {
   if (!lead) return { ok: false, error: "Lead not found" };
 
   const company = lead.company_name || "Client";
+  const contactName = lead.contact_person || lead.company_name || "there";
   const lang = opts.lang || "en";
 
   // 1. Create Google Calendar event + Meet link
@@ -78,23 +84,23 @@ export async function bookMeeting(opts: {
     lang,
   });
 
-  // 4. Schedule 1h reminder
+  // 4. Schedule 1h reminder — meeting_reminder_1h has 2 vars: {{1}}=name, {{2}}=link.
   await scheduleReminder({
     leadId: opts.leadId,
     phone: lead.phone,
     templateName: "meeting_reminder_1h",
-    params: [company, fmtDate(startIso), fmtTime(startIso), meetLink],
+    params: [contactName, meetLink || SITE_URL],
     lang,
     meetingStart: startIso,
     offsetMinutes: -60,
   });
 
-  // 5. Schedule 15m reminder
+  // 5. Schedule 15m reminder — meeting_reminder_15m has 1 var: {{1}}=name.
   await scheduleReminder({
     leadId: opts.leadId,
     phone: lead.phone,
     templateName: "meeting_reminder_15m",
-    params: [company, fmtTime(startIso), meetLink],
+    params: [contactName],
     lang,
     meetingStart: startIso,
     offsetMinutes: -15,
@@ -129,14 +135,14 @@ export async function rescheduleMeeting(opts: {
 }): Promise<RescheduleMeetingResult> {
   const supabase = createAdminClient();
   const { data: lead } = await (supabase.from("leads") as any)
-    .select("id, company_name, phone, meeting_notes, wa_opt_out, pitch_type")
+    .select("id, company_name, contact_person, phone, meeting_notes, wa_opt_out, pitch_type")
     .eq("id", opts.leadId)
     .single();
 
   if (!lead) return { ok: false, error: "Lead not found" };
 
   const lang = opts.lang || "en";
-  const company = lead.company_name || "Client";
+  const contactName = lead.contact_person || lead.company_name || "there";
 
   // Extract stored cal event id from meeting_notes prefix
   const calEventIdMatch = String(lead.meeting_notes || "").match(/\[gcal:([^\]]+)\]/);
@@ -165,7 +171,7 @@ export async function rescheduleMeeting(opts: {
     leadId: opts.leadId,
     phone: lead.phone,
     templateName: "meeting_reminder_1h",
-    params: [company, fmtDate(opts.newStartIso), fmtTime(opts.newStartIso), meetLink],
+    params: [contactName, meetLink || SITE_URL],
     lang,
     meetingStart: opts.newStartIso,
     offsetMinutes: -60,
@@ -175,20 +181,20 @@ export async function rescheduleMeeting(opts: {
     leadId: opts.leadId,
     phone: lead.phone,
     templateName: "meeting_reminder_15m",
-    params: [company, fmtTime(opts.newStartIso), meetLink],
+    params: [contactName],
     lang,
     meetingStart: opts.newStartIso,
     offsetMinutes: -15,
   });
 
-  // Send rescheduled confirmation
+  // Send rescheduled confirmation — meeting_confirmation has 3 vars: name, date+time, link.
   const phone = lead.phone;
   if (phone && toWaNumber(phone)) {
     const cfg = {
       audience: "lead" as const,
       template: "meeting_confirmation",
       lang,
-      params: [company, fmtDate(opts.newStartIso), fmtTime(opts.newStartIso), meetLink],
+      params: [contactName, fmtDatetime(opts.newStartIso), meetLink || SITE_URL],
     };
     const components = buildComponents(cfg, lead);
     await sendWhatsAppTemplate(phone, "meeting_confirmation", {
@@ -214,14 +220,14 @@ export async function handleNoShow(opts: {
 }): Promise<NoShowResult> {
   const supabase = createAdminClient();
   const { data: lead } = await (supabase.from("leads") as any)
-    .select("id, company_name, phone, meeting_notes, wa_opt_out, outreach_stage, tags")
+    .select("id, company_name, contact_person, phone, meeting_notes, wa_opt_out, outreach_stage, tags")
     .eq("id", opts.leadId)
     .single();
 
   if (!lead) return { ok: false, error: "Lead not found" };
 
   const lang = opts.lang || "en";
-  const company = lead.company_name || "Client";
+  const contactName = lead.contact_person || lead.company_name || "there";
 
   // Cancel calendar event
   const calEventIdMatch = String(lead.meeting_notes || "").match(/\[gcal:([^\]]+)\]/);
@@ -249,11 +255,12 @@ export async function handleNoShow(opts: {
   // Send meeting_noshow template
   const phone = lead.phone;
   if (phone && toWaNumber(phone)) {
+    // meeting_noshow has 2 vars: {{1}}=name, {{2}}=rebook link.
     const cfg = {
       audience: "lead" as const,
       template: "meeting_noshow",
       lang,
-      params: [company],
+      params: [contactName, SITE_URL],
     };
     const components = buildComponents(cfg, lead);
     await sendWhatsAppTemplate(phone, "meeting_noshow", {

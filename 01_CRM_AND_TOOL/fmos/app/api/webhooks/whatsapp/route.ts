@@ -410,10 +410,10 @@ async function handleInboundMessage(message: any, value: any) {
       .maybeSingle();
 
     if (agreement) {
-      // Mark agreement signed
+      // Mark agreement confirmed (status CHECK allows only pending/confirmed/cancelled).
       await (supabase as any)
         .from("agreements")
-        .update({ status: "signed", confirmed_at: new Date().toISOString() })
+        .update({ status: "confirmed", confirmed_at: new Date().toISOString() })
         .eq("id", agreement.id);
 
       // Move lead to won

@@ -28,17 +28,18 @@ export default function AgreementRowActions({ agreementId, agreementNumber, stat
   const st = status || "pending";
 
   async function handleVoid() {
-    const ok = await promptModal({ title: `Void ${agreementNumber || "this agreement"}?`, description: "It stays listed as rejected for your records.", confirmLabel: "Void", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, void it" }] });
+    const ok = await promptModal({ title: `Void ${agreementNumber || "this agreement"}?`, description: "It stays listed as cancelled for your records.", confirmLabel: "Void", destructive: true, type: "select", options: [{ value: "confirm", label: "Yes, void it" }] });
     if (!ok) return;
     setBusy(true);
-    const { error } = await supabase.from("agreements").update({ status: "rejected" }).eq("id", agreementId);
+    // agreements.status CHECK allows only pending/confirmed/cancelled.
+    const { error } = await supabase.from("agreements").update({ status: "cancelled" }).eq("id", agreementId);
     setBusy(false);
     if (error) {
       toast.error("Could not void agreement", error.message);
       return;
     }
     toast.success("Agreement voided", agreementNumber || "");
-    logAudit({ action: "update", resourceType: "agreement", resourceId: agreementId, resourceLabel: `${agreementNumber} — ${companyName}`, newValue: { status: "rejected" }, summary: `Agreement ${agreementNumber} voided` });
+    logAudit({ action: "update", resourceType: "agreement", resourceId: agreementId, resourceLabel: `${agreementNumber} — ${companyName}`, newValue: { status: "cancelled" }, summary: `Agreement ${agreementNumber} voided` });
     router.refresh();
   }
 

@@ -8,9 +8,10 @@
 //   DAILY_REPORT_TEMPLATE       approved Meta template name (default "daily_report")
 //   DAILY_REPORT_TEMPLATE_LANG  template language code (default "en")
 //
-// Meta template to submit (named params report_date + summary):
-//   Body:  "FortuneMarq Daily — {{report_date}}\n\n{{summary}}\n\nOpen FMOS for full detail."
-//   (Static newlines in the template body are fine; the {{summary}} VALUE must stay single-line,
+// Approved Meta template "daily_report" — NUMBERED params (2): {{1}}=date, {{2}}=summary.
+//   Body:  "FortuneMarq Daily — {{1}}\n\n{{2}}\n\nOpen FMOS for full detail."
+//   The send below passes 2 positional body params in this order — keep them aligned.
+//   (Static newlines in the template body are fine; the {{2}} summary VALUE must stay single-line,
 //    which buildDailySummary() guarantees.)
 
 import { sendWhatsAppTemplate } from "@/lib/whatsapp/send";

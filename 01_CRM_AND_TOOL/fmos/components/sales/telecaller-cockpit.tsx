@@ -31,6 +31,7 @@ import WhatsAppTemplatePicker from "./whatsapp-template-picker";
 import { sendNotification } from "@/lib/notifications";
 import { fireTrigger } from "@/actions/automations";
 import { sendOutcomeWhatsApp } from "@/actions/outcome-wa-send";
+import { bookMeeting } from "@/actions/book-meeting";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
 import { FOLLOW_UP_QUEUE_STAGES, stageToStatus } from "@/lib/pipeline";
@@ -515,12 +516,19 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
         void fireTrigger("meeting_booked", "lead", currentLead.id);
       }
 
-      // 3.2 — Outcome → WhatsApp auto-send (fire-and-forget)
-      void sendOutcomeWhatsApp({
-        leadId: currentLead.id,
-        outcome: selectedOutcome as any,
-        followUpDate: dateTime || leadUpdates.follow_up_date || null,
-      });
+      // 3.2 / 3.4 — Outcome → WhatsApp auto-send + Google Calendar (fire-and-forget)
+      if (selectedOutcome === "INTERESTED_BOOK" && (dateTime || leadUpdates.follow_up_date)) {
+        void bookMeeting({
+          leadId: currentLead.id,
+          startIso: dateTime || leadUpdates.follow_up_date,
+        });
+      } else {
+        void sendOutcomeWhatsApp({
+          leadId: currentLead.id,
+          outcome: selectedOutcome as any,
+          followUpDate: dateTime || leadUpdates.follow_up_date || null,
+        });
+      }
 
       if (selectedOutcome === "INTERESTED_BOOK") {
         const { data: adminProfile } = await supabase.from('profiles').select('id').eq('role', 'admin').limit(1).single();

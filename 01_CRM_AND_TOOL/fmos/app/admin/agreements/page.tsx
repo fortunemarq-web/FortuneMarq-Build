@@ -1,16 +1,16 @@
 import type { ElementType } from "react";
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
-import { FileSignature, CheckCircle, Clock, XCircle, AlertCircle } from "lucide-react";
+import { FileSignature, CheckCircle, Clock, XCircle } from "lucide-react";
 import AgreementRowActions from "@/components/proposals/agreement-row-actions";
 
 export const revalidate = 60;
 
 const STATUS_CONFIG: Record<string, { label: string; classes: string; icon: ElementType }> = {
+  // agreements.status CHECK allows only pending / confirmed / cancelled.
   pending:   { label: "Pending",   classes: "bg-amber-100 text-amber-700",   icon: Clock },
   confirmed: { label: "Confirmed", classes: "bg-emerald-100 text-emerald-700", icon: CheckCircle },
-  rejected:  { label: "Rejected",  classes: "bg-red-100 text-red-600",       icon: XCircle },
-  expired:   { label: "Expired",   classes: "bg-slate-100 text-slate-500",   icon: AlertCircle },
+  cancelled: { label: "Cancelled", classes: "bg-red-100 text-red-600",       icon: XCircle },
 };
 
 export default async function AgreementsPage() {

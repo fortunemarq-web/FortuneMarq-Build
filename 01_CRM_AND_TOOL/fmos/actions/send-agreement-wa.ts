@@ -64,7 +64,9 @@ export async function sendAgreementWA(proposalId: string): Promise<SendAgreement
         total_setup: proposal.total_setup,
         total_monthly: proposal.total_monthly,
         start_date: proposal.start_date,
-        status: "sent",
+        // agreements.status CHECK allows only pending/confirmed/cancelled.
+        // A freshly-sent agreement is "pending" (awaiting the client's "Yes, confirmed").
+        status: "pending",
       } as any)
       .select("id")
       .single();

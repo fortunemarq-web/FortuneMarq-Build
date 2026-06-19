@@ -27,7 +27,7 @@ export default async function PublicAgreementPage({ params }: { params: Promise<
   const fmt = (n: number) =>
     new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
 
-  const confirmed = agreement.status === "signed" || !!agreement.confirmed_at;
+  const confirmed = agreement.status === "confirmed" || !!agreement.confirmed_at;
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">

@@ -47,12 +47,6 @@ export interface OutcomeSendResult {
 // ─── IST datetime formatting (same logic as params.ts) ───────────────────────
 const IST = "Asia/Kolkata";
 
-function fmtDate(iso: string): string {
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-IN", { timeZone: IST, weekday: "short", day: "numeric", month: "short" });
-}
-
 function fmtDatetime(iso: string): string {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return iso;
@@ -113,8 +107,16 @@ export async function handleOutcomeWaSend(opts: {
 
   const phone = String(lead.phone || "");
   const to = toWaNumber(phone);
-  const company = String(lead.company_name || "");
   const leadId = String(lead.id || "");
+
+  // Body-param fillers. Templates greet a person, so prefer contact_person.
+  // Every param MUST be a non-empty string (Meta rejects blank params with #132000),
+  // and the array length MUST equal the template's numbered-var count.
+  const SITE_URL = "https://fortunemarq.com";
+  const contactName = String(lead.contact_person || lead.company_name || "there");
+  const city = String(lead.city || "your area");
+  const niche = String(lead.industry || "your business");
+  const workLink = SITE_URL;
 
   // Guard: opt-out
   if (isOptedOut(lead)) {
@@ -137,15 +139,13 @@ export async function handleOutcomeWaSend(opts: {
       // ── INTERESTED_BOOK → meeting_confirmation ───────────────────────────
       case "INTERESTED_BOOK": {
         const template = "meeting_confirmation";
-        // Params: {{1}}=company, {{2}}=date, {{3}}=time, {{4}}=meetLink (or blank)
-        const dateStr = followUpDate ? fmtDate(followUpDate) : "TBD";
-        const timeStr = followUpDate ? fmtTime(followUpDate) : "TBD";
-        const link = meetLink || "";
+        // meeting_confirmation has 3 numbered vars: {{1}}=name, {{2}}=date+time, {{3}}=join link.
+        const whenStr = followUpDate ? fmtDatetime(followUpDate) : "your scheduled time";
         const cfg: WaTemplateConfig = {
           audience: "lead",
           template,
           lang,
-          params: [company, dateStr, timeStr, link],
+          params: [contactName, whenStr, meetLink || SITE_URL],
         };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
@@ -157,12 +157,13 @@ export async function handleOutcomeWaSend(opts: {
       // ── INTERESTED_FOLLOW_UP → followup_scheduled ────────────────────────
       case "INTERESTED_FOLLOW_UP": {
         const template = "followup_scheduled";
+        // 3 vars: {{1}}=name, {{2}}=follow-up date/time, {{3}}=what-we-do link.
         const dateStr = followUpDate ? fmtDatetime(followUpDate) : "soon";
         const cfg: WaTemplateConfig = {
           audience: "lead",
           template,
           lang,
-          params: [company, dateStr],
+          params: [contactName, dateStr, workLink],
         };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
@@ -174,7 +175,8 @@ export async function handleOutcomeWaSend(opts: {
       // ── INTERESTED_SEND_INFO → send_info ─────────────────────────────────
       case "INTERESTED_SEND_INFO": {
         const template = "send_info";
-        const cfg: WaTemplateConfig = { audience: "lead", template, lang, params: [company] };
+        // 3 vars: {{1}}=name, {{2}}=city, {{3}}=see-our-work link.
+        const cfg: WaTemplateConfig = { audience: "lead", template, lang, params: [contactName, city, workLink] };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
           language: lang, components: components.length ? components : undefined, leadId, proactive: true,
@@ -185,7 +187,8 @@ export async function handleOutcomeWaSend(opts: {
       // ── NOT_INTERESTED → not_interested ──────────────────────────────────
       case "NOT_INTERESTED": {
         const template = "not_interested";
-        const cfg: WaTemplateConfig = { audience: "lead", template, lang, params: [company] };
+        // 2 vars: {{1}}=name, {{2}}=what-we-do link.
+        const cfg: WaTemplateConfig = { audience: "lead", template, lang, params: [contactName, workLink] };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
           language: lang, components: components.length ? components : undefined, leadId, proactive: true,
@@ -196,10 +199,11 @@ export async function handleOutcomeWaSend(opts: {
       // ── FOLLOW_BACK → follow_back + optional reminder ────────────────────
       case "FOLLOW_BACK": {
         const template = "follow_back";
+        // 2 vars: {{1}}=name, {{2}}=callback date/time.
         const dateStr = followUpDate ? fmtDatetime(followUpDate) : "soon";
         const cfg: WaTemplateConfig = {
           audience: "lead", template, lang,
-          params: [company, dateStr],
+          params: [contactName, dateStr],
         };
         const components = buildComponents(cfg, lead);
         const r = await sendWhatsAppTemplate(phone, template, {
@@ -209,12 +213,14 @@ export async function handleOutcomeWaSend(opts: {
         // Schedule followback_reminder_busy only if >= 24h out
         let reminderScheduled = false;
         if (followUpDate && hoursUntil(followUpDate) >= 24) {
-          // Fire reminder 1h before the scheduled callback
+          // Fire reminder 1h before the scheduled callback.
+          // followback_reminder_busy has 5 vars: {{1}}=name, {{2}}=callback time,
+          // {{3}}=niche, {{4}}=city, {{5}}=market-research/work link.
           const fireAt = new Date(new Date(followUpDate).getTime() - 60 * 60 * 1000);
           await scheduleFollowBackReminder(
             leadId, phone,
             "followback_reminder_busy",
-            [company, dateStr],
+            [contactName, fmtTime(followUpDate), niche, city, workLink],
             fireAt, lang,
           ).catch(() => null); // fail silently — main send already succeeded
           reminderScheduled = true;
