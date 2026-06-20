@@ -1,12 +1,13 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { StatCard } from "@/components/ui/stat-card";
+import { Users, TrendingUp, Target, ListTodo, Clock } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface KpiCard {
   label: string;
   value: string | number;
   subtext?: string;
-  borderColor: string;
-  textColor: string;
-  comingSoon?: boolean;
+  icon: LucideIcon;
 }
 
 async function fetchKpiData() {
@@ -49,7 +50,7 @@ async function fetchKpiData() {
     .from("invoices")
     .select("total_amount")
     .in("status", ["unpaid", "overdue"]);
-  
+
   const outstandingInvoices = (unpaidInvoices ?? []).reduce(
     (sum: number, inv: any) => sum + (parseFloat(inv.total_amount) || 0),
     0
@@ -60,7 +61,7 @@ async function fetchKpiData() {
     mrr,
     openLeads: openLeads ?? 0,
     tasksDueToday: tasksDueToday ?? 0,
-    outstandingInvoices
+    outstandingInvoices,
   };
 }
 
@@ -74,7 +75,7 @@ export default async function KpiBar() {
       ? `₹${(kpis.mrr / 1000).toFixed(1)}K`
       : `₹${kpis.mrr.toFixed(0)}`;
 
-  const outstandingFormatted = 
+  const outstandingFormatted =
     kpis.outstandingInvoices >= 100000
       ? `₹${(kpis.outstandingInvoices / 100000).toFixed(1)}L`
       : kpis.outstandingInvoices >= 1000
@@ -82,69 +83,23 @@ export default async function KpiBar() {
       : `₹${kpis.outstandingInvoices.toFixed(0)}`;
 
   const cards: KpiCard[] = [
-    {
-      label: "Active Clients",
-      value: kpis.activeClients,
-      subtext: "currently engaged",
-      borderColor: "#42CA80",
-      textColor: "text-[#42CA80]",
-    },
-    {
-      label: "Monthly Revenue",
-      value: mrrFormatted,
-      subtext: "MRR from active clients",
-      borderColor: "#3b82f6",
-      textColor: "text-blue-600",
-    },
-    {
-      label: "Open Leads",
-      value: kpis.openLeads,
-      subtext: "in active pipeline",
-      borderColor: "#f59e0b",
-      textColor: "text-amber-600",
-    },
-    {
-      label: "Tasks Due Today",
-      value: kpis.tasksDueToday,
-      subtext: "need completion",
-      borderColor: "#ef4444",
-      textColor: "text-red-500",
-    },
-    {
-      label: "Outstanding Invoices",
-      value: outstandingFormatted,
-      subtext: "awaiting payment",
-      borderColor: "#f97316",
-      textColor: "text-orange-500",
-    },
+    { label: "Active Clients", value: kpis.activeClients, subtext: "Currently engaged", icon: Users },
+    { label: "Monthly Revenue", value: mrrFormatted, subtext: "MRR from active clients", icon: TrendingUp },
+    { label: "Open Leads", value: kpis.openLeads, subtext: "In active pipeline", icon: Target },
+    { label: "Tasks Due Today", value: kpis.tasksDueToday, subtext: "Need completion", icon: ListTodo },
+    { label: "Outstanding Invoices", value: outstandingFormatted, subtext: "Awaiting payment", icon: Clock },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+    <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {cards.map((card) => (
-        <div
+        <StatCard
           key={card.label}
-          className="bg-white rounded-xl border border-slate-200 shadow-sm p-5"
-          style={{ borderTop: `3px solid ${card.borderColor}` }}
-        >
-          <p className="text-xs font-semibold text-slate-500 tracking-wide">
-            {card.label}
-          </p>
-          <p
-            className={`text-2xl font-black font-mono tabular-nums mt-1.5 ${
-              card.comingSoon ? "text-slate-300" : card.textColor
-            }`}
-          >
-            {card.value}
-          </p>
-          {card.comingSoon ? (
-            <p className="text-[10px] text-slate-400 mt-1 leading-tight">
-              {card.subtext}
-            </p>
-          ) : (
-            <p className="text-xs text-slate-400 mt-1">{card.subtext}</p>
-          )}
-        </div>
+          label={card.label}
+          value={card.value}
+          icon={card.icon}
+          hint={card.subtext}
+        />
       ))}
     </div>
   );

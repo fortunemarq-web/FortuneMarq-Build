@@ -25,6 +25,12 @@ import { Suspense } from "react";
 import KpiBar from "@/components/admin/dashboard/KpiBar";
 import RevenueForecastWidget from "@/components/admin/revenue-forecast-widget";
 import { PIPELINE_STAGES } from "@/lib/pipeline";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // Phase B1: Admin Morning Dashboard — pure operational intelligence
 
@@ -245,54 +251,51 @@ export default async function AdminCommandHub() {
     Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-7xl space-y-8">
 
         {/* ── HEADER ─────────────────────────────────────── */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-              {timeGreeting}, {userName}
-            </h1>
-            <p className="text-slate-500 mt-1 text-sm">
+        <PageHeader
+          title={`${timeGreeting}, ${userName}`}
+          subtitle={
+            <>
               {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}
               {totalActionItems > 0 ? (
                 <>
                   {" · "}
-                  <a href="#action-list" className="font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 hover:text-brand-deep hover:decoration-brand transition-colors">
+                  <a href="#action-list" className="font-medium text-slate-700 underline decoration-line-strong underline-offset-2 transition-colors hover:text-brand-deep hover:decoration-brand">
                     {attentionBreakdown}
                   </a>
                 </>
               ) : (
                 " · All clear — nothing urgent"
               )}
-            </p>
-          </div>
-          <Link
-            href="/admin/briefing"
-            className="flex items-center gap-2 bg-brand-deep hover:bg-brand-active text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-          >
-            <CalendarDays className="h-4 w-4" /> Daily Briefing
-          </Link>
-        </div>
+            </>
+          }
+          actions={
+            <Link href="/admin/briefing" className={buttonVariants({ variant: "primary" })}>
+              <CalendarDays className="h-4 w-4" /> Daily Briefing
+            </Link>
+          }
+        />
 
         {/* E4: Monthly Invoice Reminder (1st-5th of month) */}
         {new Date().getDate() <= 5 && activeClients > 0 && (
-          <div className="mb-6 flex items-center justify-between border border-amber-200 bg-amber-50 px-5 py-3 rounded-xl">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-warn-line bg-warn-soft px-5 py-3">
             <div className="flex items-center gap-3">
-              <ClipboardList className="h-5 w-5 text-amber-600" />
-              <p className="text-sm font-medium text-amber-900">
+              <ClipboardList className="h-5 w-5 shrink-0 text-warn" />
+              <p className="text-sm font-medium text-warn">
                 Monthly invoices due — <span className="font-semibold">{activeClients}</span> active clients need invoices raised.
               </p>
             </div>
-            <Link href="/admin/finance/invoices" className="text-xs font-semibold text-amber-900 border border-amber-300 bg-white px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors">
+            <Link href="/admin/finance/invoices" className={buttonVariants({ variant: "secondary", size: "sm" })}>
               Go to Finance
             </Link>
           </div>
         )}
 
         {/* ── 5 KPI CARDS ───────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
             {
               label: "MRR This Month",
@@ -329,57 +332,52 @@ export default async function AdminCommandHub() {
               icon: CalendarDays,
               alert: false,
             },
-          ].map((kpi) => {
-            const Icon = kpi.icon;
-            return (
-              <div key={kpi.label} className="rounded-xl bg-white border border-slate-200 shadow-sm p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-slate-500">{kpi.label}</p>
-                  <Icon className={`h-4 w-4 ${kpi.alert ? "text-red-500" : "text-slate-300"}`} />
-                </div>
-                <p className={`mt-2 text-2xl font-semibold tracking-tight tabular-nums ${kpi.alert ? "text-red-600" : "text-slate-900"}`}>
-                  {kpi.value}
-                </p>
-                <p className="text-xs text-slate-400 mt-1">{kpi.sub}</p>
-              </div>
-            );
-          })}
+          ].map((kpi) => (
+            <StatCard
+              key={kpi.label}
+              label={kpi.label}
+              value={kpi.value}
+              icon={kpi.icon}
+              hint={kpi.sub}
+              delta={kpi.alert ? { value: "Action needed", direction: "down" } : undefined}
+            />
+          ))}
         </div>
 
         {/* MRR Progress Bar */}
-        <div className="mb-8 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+        <Card className="p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
               <TrendingUp className="h-3.5 w-3.5" /> MRR vs Target
             </span>
-            <span className="text-sm font-bold font-mono text-slate-400">
+            <span className="text-sm font-semibold tabular-nums text-slate-400">
               {formatINR(mrr)} — build month
             </span>
           </div>
-          <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+          <div className="h-2 overflow-hidden rounded-full bg-slate-100">
             <div
               className={`h-full rounded-full transition-all ${mrrBarColor}`}
               style={{ width: `${mrrPct}%` }}
             />
           </div>
-        </div>
+        </Card>
 
         {/* ── MAIN GRID: Left Action List + Right Column ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* LEFT: Today's Action List */}
           <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="flex items-center gap-2 font-display text-base font-semibold text-slate-900">
               <ClipboardList className="h-5 w-5 text-slate-500" />
               Today&apos;s Action List
             </h2>
 
             {totalActionItems === 0 && (
-              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/50 py-16 text-center">
-                <CheckCircle className="h-10 w-10 text-emerald-500 mb-3" />
-                <p className="text-lg font-semibold text-emerald-700">Nothing urgent today.</p>
-                <p className="text-sm text-emerald-600 mt-1">{timeGreeting}, {userName}.</p>
-              </div>
+              <EmptyState
+                icon={CheckCircle}
+                title="Nothing urgent today."
+                description={`${timeGreeting}, ${userName}.`}
+              />
             )}
 
             {/* Anchor for the "needs your attention" header link */}
@@ -391,19 +389,19 @@ export default async function AdminCommandHub() {
                 {overdueMeetings?.map((lead: any) => (
                   <ActionCard key={lead.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{lead.company_name}</p>
                       <p className="text-xs text-slate-500">{lead.industry} · {lead.city}</p>
-                      <p className="text-xs text-red-600 mt-0.5 font-medium">
+                      <p className="mt-0.5 text-xs font-medium text-danger">
                         Was scheduled {new Date(lead.follow_up_date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} — mark attended, no-show, or reschedule
                       </p>
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex shrink-0 gap-2">
                       {lead.phone && (
-                        <a href={`tel:${lead.phone}`} className="text-xs px-2 py-1 bg-brand-soft text-brand-deep rounded font-medium">
+                        <a href={`tel:${lead.phone}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                           Call
                         </a>
                       )}
-                      <Link href="/admin/meetings" className="action-btn border border-red-200 bg-red-50 text-red-700 hover:bg-red-100">
+                      <Link href="/admin/meetings" className={buttonVariants({ variant: "danger-soft", size: "sm" })}>
                         Resolve
                       </Link>
                     </div>
@@ -418,19 +416,19 @@ export default async function AdminCommandHub() {
                 {missedFollowUps?.map((lead: any) => (
                   <ActionCard key={lead.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{lead.company_name}</p>
                       <p className="text-xs text-slate-500">{lead.industry} · {lead.city}</p>
-                      <p className="text-xs text-amber-600 mt-0.5 font-medium">
+                      <p className="mt-0.5 text-xs font-medium text-warn">
                         Due {new Date(lead.follow_up_date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} — never actioned
                       </p>
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex shrink-0 gap-2">
                       {lead.phone && (
-                        <a href={`tel:${lead.phone}`} className="text-xs px-2 py-1 bg-brand-soft text-brand-deep rounded font-medium">
+                        <a href={`tel:${lead.phone}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                           Call
                         </a>
                       )}
-                      <Link href={`/admin/leads/${lead.id}`} className="text-xs px-2 py-1 bg-slate-100 rounded font-medium">
+                      <Link href={`/admin/leads/${lead.id}`} className={buttonVariants({ variant: "subtle", size: "sm" })}>
                         Profile
                       </Link>
                     </div>
@@ -445,15 +443,15 @@ export default async function AdminCommandHub() {
               {meetingsToday.map((lead: any) => (
                   <ActionCard key={lead.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{lead.company_name}</p>
                       <p className="text-xs text-slate-500">{lead.industry} · {lead.city}</p>
                       {lead.follow_up_date && (
-                        <p className="text-xs text-green-600 mt-0.5 font-medium">
+                        <p className="mt-0.5 text-xs font-medium text-brand-deep">
                           {new Date(lead.follow_up_date).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
                         </p>
                       )}
                     </div>
-                    <Link href={`/admin/leads/${lead.id}`} className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
+                    <Link href={`/admin/leads/${lead.id}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                       Open Lead
                     </Link>
                   </ActionCard>
@@ -467,14 +465,14 @@ export default async function AdminCommandHub() {
               {followUpsDue?.map((lead: any) => (
                   <ActionCard key={lead.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{lead.company_name}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{lead.company_name}</p>
                       <p className="text-xs text-slate-500">{lead.city} · {lead.industry}</p>
                     </div>
-                    <div className="flex gap-2 shrink-0">
-                      <a href={`tel:${lead.phone}`} className="text-xs px-2 py-1 bg-brand-soft text-brand-deep rounded font-medium">
+                    <div className="flex shrink-0 gap-2">
+                      <a href={`tel:${lead.phone}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                         Call
                       </a>
-                      <Link href={`/admin/leads/${lead.id}`} className="text-xs px-2 py-1 bg-slate-100 rounded font-medium">
+                      <Link href={`/admin/leads/${lead.id}`} className={buttonVariants({ variant: "subtle", size: "sm" })}>
                         Profile
                       </Link>
                     </div>
@@ -492,16 +490,16 @@ export default async function AdminCommandHub() {
                     <ActionCard key={inv.id}>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-semibold text-slate-900 text-sm truncate">{(inv.client as any)?.business_name || "Unknown"}</p>
+                          <p className="truncate text-sm font-semibold text-slate-900">{(inv.client as any)?.business_name || "Unknown"}</p>
                           {days >= 7 && (
-                            <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white uppercase">
-                              <Flame className="h-2.5 w-2.5" /> PAUSE ADS
-                            </span>
+                            <Badge tone="danger" size="sm" className="shrink-0 uppercase">
+                              <Flame className="h-2.5 w-2.5" /> Pause ads
+                            </Badge>
                           )}
                         </div>
                         <p className="text-xs text-slate-500">{formatINR(inv.total_amount)} · {days}d overdue</p>
                       </div>
-                      <Link href="/admin/finance/invoices" className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
+                      <Link href="/admin/finance/invoices" className={buttonVariants({ variant: "secondary", size: "sm" })}>
                         View Invoice
                       </Link>
                     </ActionCard>
@@ -516,23 +514,23 @@ export default async function AdminCommandHub() {
                 {staleProposals.map((p: any) => (
                   <ActionCard key={p.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{(p.lead as any)?.company_name || "Unknown"}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{(p.lead as any)?.company_name || "Unknown"}</p>
                       <p className="text-xs text-slate-500">
                         {(p.total_monthly ?? p.monthly_value) ? formatINR(p.total_monthly ?? p.monthly_value) : "—"} · Sent {daysSince(p.sent_at)}d ago
                       </p>
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex shrink-0 gap-2">
                       {(p.lead as any)?.phone && (
                         <a
                           href={`https://wa.me/91${String((p.lead as any).phone).replace(/\D/g, "").slice(-10)}?text=${encodeURIComponent(`Hi! Jabeer here from FortuneMarq. Just checking in on the growth proposal I sent over for ${(p.lead as any).company_name} — did you get a chance to go through it? Happy to jump on a quick call if anything needs clarifying.`)}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="action-btn border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                          className={buttonVariants({ variant: "primary", size: "sm" })}
                         >
                           Follow up
                         </a>
                       )}
-                      <Link href={`/admin/leads/${(p.lead as any)?.id}`} className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
+                      <Link href={`/admin/leads/${(p.lead as any)?.id}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                         Open
                       </Link>
                     </div>
@@ -547,12 +545,12 @@ export default async function AdminCommandHub() {
                 {tasksDueToday.slice(0, 5).map((task: any) => (
                   <ActionCard key={task.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{task.title}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{task.title}</p>
                       <p className="text-xs text-slate-500">
                         {(task.projects as any)?.name || "No project"} · {(task.assignee as any)?.full_name || "Unassigned"}
                       </p>
                     </div>
-                    <Link href="/tasks" className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
+                    <Link href="/tasks" className={buttonVariants({ variant: "secondary", size: "sm" })}>
                       Open Task
                     </Link>
                   </ActionCard>
@@ -566,10 +564,10 @@ export default async function AdminCommandHub() {
               {onboardingClients.map((client: any) => (
                   <ActionCard key={client.id}>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{client.business_name}</p>
+                      <p className="truncate text-sm font-semibold text-slate-900">{client.business_name}</p>
                       <p className="text-xs text-slate-500">Onboarding checklist incomplete</p>
                     </div>
-                    <Link href={`/admin/clients/${client.id}`} className="action-btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
+                    <Link href={`/admin/clients/${client.id}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                       Open Client
                     </Link>
                   </ActionCard>
@@ -580,12 +578,12 @@ export default async function AdminCommandHub() {
 
           {/* RIGHT: Pipeline + Telecaller Activity */}
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="flex items-center gap-2 font-display text-base font-semibold text-slate-900">
               <Target className="h-5 w-5 text-slate-500" />
               Pipeline Snapshot
             </h2>
 
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5 space-y-2">
+            <Card className="space-y-2 p-5">
               {pipelineStages.map((stage) => {
                 const count = stageCounts[stage.key] || 0;
                 const maxCount = Math.max(...pipelineStages.map((s) => stageCounts[s.key] || 0), 1);
@@ -593,84 +591,84 @@ export default async function AdminCommandHub() {
                   <Link
                     key={stage.key}
                     href={`/sales?stage=${stage.key}`}
-                    className="flex items-center gap-3 group py-1.5 hover:bg-slate-50 rounded-lg transition-colors px-2 -mx-2"
+                    className="group -mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-50"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-700 truncate group-hover:text-brand-deep transition-colors">
+                      <p className="truncate text-xs font-medium text-slate-700 transition-colors group-hover:text-brand-deep">
                         {stage.label}
                       </p>
-                      <div className="mt-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-100">
                         <div
                           className="h-full rounded-full bg-brand transition-all"
                           style={{ width: `${(count / maxCount) * 100}%` }}
                         />
                       </div>
                     </div>
-                    <span className="text-sm font-bold font-mono tabular-nums text-slate-900 shrink-0 w-8 text-right">
+                    <span className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900">
                       {count}
                     </span>
-                    <ArrowRight className="h-3 w-3 text-slate-300 group-hover:text-brand-deep transition-colors shrink-0" />
+                    <ArrowRight className="h-3 w-3 shrink-0 text-slate-300 transition-colors group-hover:text-brand-deep" />
                   </Link>
                 );
               })}
               {pipelineLeads.length === 0 && (
-                <p className="text-xs text-slate-400 text-center py-4 italic">No active leads</p>
+                <p className="py-4 text-center text-xs italic text-slate-400">No active leads</p>
               )}
-            </div>
+            </Card>
 
             {/* E2: Revenue Forecast Widget */}
-            <Suspense fallback={<div className="h-48 bg-white border border-slate-200 rounded-2xl shadow-sm animate-pulse" />}>
+            <Suspense fallback={<div className="h-48 animate-pulse rounded-xl border border-line bg-surface" />}>
               <RevenueForecastWidget />
             </Suspense>
 
             {/* Telecaller Activity Today */}
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+            <Card className="p-5">
+              <h3 className="mb-4 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 <Phone className="h-3.5 w-3.5" /> Telecaller Activity Today
               </h3>
               <div className="space-y-3">
                 {[
-                  { label: "Calls Made", value: callsToday, icon: Phone, color: "text-blue-600" },
-                  { label: "Meetings Booked", value: meetingsBookedToday, icon: CalendarDays, color: "text-green-600" },
-                  { label: "PDFs Sent", value: pdfsSentToday, icon: FileText, color: "text-purple-600" },
+                  { label: "Calls Made", value: callsToday, icon: Phone },
+                  { label: "Meetings Booked", value: meetingsBookedToday, icon: CalendarDays },
+                  { label: "PDFs Sent", value: pdfsSentToday, icon: FileText },
                 ].map((stat) => {
                   const Icon = stat.icon;
                   return (
                     <div key={stat.label} className="flex items-center justify-between">
                       <span className="flex items-center gap-2 text-xs text-slate-600">
-                        <Icon className={`h-3.5 w-3.5 ${stat.color}`} />
+                        <Icon className="h-3.5 w-3.5 text-slate-400" />
                         {stat.label}
                       </span>
-                      <span className="text-sm font-bold font-mono tabular-nums text-slate-900">
+                      <span className="text-sm font-semibold tabular-nums text-slate-900">
                         {stat.value}
                       </span>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </Card>
 
             {/* Quick Actions */}
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Quick Actions</h3>
+            <Card className="p-5">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Quick Actions</h3>
               <div className="space-y-2">
-                <Link href="/admin/users" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
+                <Link href="/admin/users" className="flex items-center gap-2 rounded-lg bg-slate-50 p-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100">
                   <Users className="h-4 w-4 text-slate-400" /> Manage Users
                 </Link>
-                <Link href="/admin/finance" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
+                <Link href="/admin/finance" className="flex items-center gap-2 rounded-lg bg-slate-50 p-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100">
                   <DollarSign className="h-4 w-4 text-slate-400" /> Finance Dashboard
                 </Link>
-                <Link href="/tasks" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
+                <Link href="/tasks" className="flex items-center gap-2 rounded-lg bg-slate-50 p-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100">
                   <CheckSquare className="h-4 w-4 text-slate-400" /> All Tasks
                 </Link>
-                <Link href="/admin/team" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
+                <Link href="/admin/team" className="flex items-center gap-2 rounded-lg bg-slate-50 p-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100">
                   <Clock className="h-4 w-4 text-slate-400" /> Team SOPs
                 </Link>
-                <Link href="/admin/audit-log" className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors">
+                <Link href="/admin/audit-log" className="flex items-center gap-2 rounded-lg bg-slate-50 p-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100">
                   <History className="h-4 w-4 text-slate-400" /> Audit Log
                 </Link>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
 
@@ -690,29 +688,29 @@ function ActionSection({
   tone?: "neutral" | "danger" | "warning";
   children: React.ReactNode;
 }) {
-  const badge =
-    tone === "danger" && count > 0
-      ? "bg-red-50 text-red-700"
-      : tone === "warning" && count > 0
-        ? "bg-amber-50 text-amber-700"
-        : "bg-slate-100 text-slate-600";
+  // Map the section tone to one of the five system tones for the count badge.
+  const badgeTone: Tone = count > 0 && tone === "danger"
+    ? "danger"
+    : count > 0 && tone === "warning"
+      ? "warning"
+      : "neutral";
   return (
-    <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100">
+    <Card className="overflow-hidden">
+      <div className="flex items-center gap-2 border-b border-line px-4 py-3">
         <Icon className="h-4 w-4 text-slate-400" />
-        <span className="text-sm font-semibold text-slate-800">{title}</span>
-        <span className={`ml-auto text-xs font-semibold px-2 py-0.5 rounded-full tabular-nums ${badge}`}>
+        <span className="font-display text-sm font-semibold text-slate-800">{title}</span>
+        <Badge tone={badgeTone} size="sm" className="ml-auto tabular-nums">
           {count}
-        </span>
+        </Badge>
       </div>
-      <div className="divide-y divide-slate-50">{children}</div>
-    </div>
+      <div className="divide-y divide-line">{children}</div>
+    </Card>
   );
 }
 
 function ActionCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors">
+    <div className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50">
       {children}
     </div>
   );
