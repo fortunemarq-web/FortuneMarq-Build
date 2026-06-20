@@ -24,6 +24,20 @@ import { sendNotification, NotificationType } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 import { leadStageUpdate } from "@/lib/pipeline";
 import { toast } from "@/components/ui/toast";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+
+// Stage accent → one of the five tones (icon-box chrome only).
+const STAGE_TONE: Record<string, string> = {
+    emerald: "bg-brand-soft text-brand-deep",
+    green: "bg-brand-soft text-brand-deep",
+    blue: "bg-info-soft text-info",
+    amber: "bg-warn-soft text-warn",
+    purple: "bg-info-soft text-info",
+    rose: "bg-danger-soft text-danger",
+    slate: "bg-slate-100 text-slate-600",
+};
 
 // Columns map 1:1 to outreach_stage — the single source of truth for
 // pipeline position (see lib/pipeline.ts). Never invent parallel stages.
@@ -183,44 +197,44 @@ export default function PipelineBoard() {
         }
     };
 
-    if (isLoading) return <div className="p-8">Loading pipeline...</div>;
+    if (isLoading) return <div className="p-8 text-sm text-slate-500">Loading pipeline...</div>;
 
     const niches = Array.from(new Set(leads.map(l => l.industry).filter(Boolean)));
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
+        <div className="flex h-full flex-col overflow-hidden bg-canvas">
             {/* Toolbar */}
-            <div className="bg-white border-b border-slate-200 px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 shadow-sm relative z-20">
-                <div className="flex items-center gap-4">
-                    <div className="bg-slate-900 p-2 rounded-xl text-white">
+            <div className="relative z-20 flex shrink-0 flex-col items-center justify-between gap-4 border-b border-line bg-surface px-8 py-4 md:flex-row">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand-deep">
                         <ArrowRightLeft className="h-5 w-5" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-slate-900">Niche Pipeline</h1>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Sales Funnel Management</p>
+                        <h1 className="font-display text-lg font-semibold text-slate-900">Niche Pipeline</h1>
+                        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Sales Funnel Management</p>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="relative">
+                    <div className="relative w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                        <input
+                        <Input
                             type="text"
                             placeholder="Search leads..."
-                            className="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-xl text-sm w-64 focus:ring-2 focus:ring-slate-900/5 transition-all font-medium"
+                            className="pl-9"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 
-                    <select
+                    <Select
                         value={nicheFilter}
                         onChange={(e) => setNicheFilter(e.target.value)}
-                        className="px-4 py-2 bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-600 focus:ring-2 focus:ring-slate-900/5 transition-all"
+                        className="w-44"
                     >
                         <option value="all">All Niches</option>
                         {niches.map(n => <option key={n} value={n}>{n}</option>)}
-                    </select>
+                    </Select>
                 </div>
             </div>
 
@@ -233,26 +247,21 @@ export default function PipelineBoard() {
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, stage.id)}
                             className={clsx(
-                                "flex flex-col w-80 rounded-3xl bg-slate-200/40 border border-transparent transition-all",
-                                draggingId && "border-slate-300 ring-2 ring-slate-400/10"
+                                "flex w-80 flex-col rounded-xl border border-transparent bg-slate-100/70 transition-all",
+                                draggingId && "border-line-strong ring-2 ring-brand-ring/40"
                             )}
                         >
                             {/* Column Header */}
-                            <div className="p-4 flex items-center justify-between shrink-0">
+                            <div className="flex shrink-0 items-center justify-between p-4">
                                 <div className="flex items-center gap-2">
                                     <div className={clsx(
-                                        "p-1.5 rounded-lg",
-                                        stage.color === 'emerald' ? 'bg-emerald-100 text-emerald-600' :
-                                            stage.color === 'blue' ? 'bg-blue-100 text-blue-600' :
-                                                stage.color === 'amber' ? 'bg-amber-100 text-amber-600' :
-                                                    stage.color === 'purple' ? 'bg-purple-100 text-purple-600' :
-                                                        stage.color === 'green' ? 'bg-green-100 text-green-600' :
-                                                            stage.color === 'rose' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-600'
+                                        "rounded-lg p-1.5",
+                                        STAGE_TONE[stage.color] || "bg-slate-100 text-slate-600"
                                     )}>
                                         <stage.icon className="h-4 w-4" />
                                     </div>
-                                    <h3 className="font-bold text-slate-900">{stage.label}</h3>
-                                    <span className="text-xs font-bold text-slate-400 ml-1">
+                                    <h3 className="font-display font-semibold text-slate-900">{stage.label}</h3>
+                                    <span className="ml-1 text-xs font-semibold tabular-nums text-slate-400">
                                         {groupedLeads[stage.id]?.length || 0}
                                     </span>
                                 </div>
@@ -260,7 +269,7 @@ export default function PipelineBoard() {
                             </div>
 
                             {/* Cards Container */}
-                            <div className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+                            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto p-3">
                                 <AnimatePresence mode="popLayout">
                                     {groupedLeads[stage.id]?.map((lead) => (
                                         <motion.div
@@ -272,53 +281,50 @@ export default function PipelineBoard() {
                                             draggable
                                             onDragStart={(e) => handleDragStart(e as any, lead.id)}
                                             className={clsx(
-                                                "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing hover:shadow-md hover:border-slate-300 transition-all group relative",
-                                                draggingId === lead.id && "opacity-40 grayscale scale-95"
+                                                "group relative cursor-grab rounded-xl border border-line bg-surface p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05)] transition-all hover:border-line-strong hover:shadow-md active:cursor-grabbing",
+                                                draggingId === lead.id && "scale-95 opacity-40 grayscale"
                                             )}
                                         >
                                             <div className="space-y-3">
-                                                <div className="flex justify-between items-start">
-                                                    <span className={clsx(
-                                                        "px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest",
-                                                        "bg-indigo-50 text-indigo-600 border border-indigo-100"
-                                                    )}>
+                                                <div className="flex items-start justify-between">
+                                                    <Badge tone="neutral" variant="soft" size="sm" className="uppercase tracking-wide">
                                                         {lead.industry}
-                                                    </span>
+                                                    </Badge>
                                                     {lead.lead_quality_score && (
-                                                        <div className={clsx(
-                                                            "flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-bold",
-                                                            lead.lead_quality_score >= 8 ? "bg-emerald-50 text-emerald-600" :
-                                                                lead.lead_quality_score >= 5 ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"
-                                                        )}>
-                                                            <div className={clsx("h-1.5 w-1.5 rounded-full", lead.lead_quality_score >= 8 ? "bg-emerald-500" : lead.lead_quality_score >= 5 ? "bg-amber-500" : "bg-rose-500")} />
+                                                        <Badge
+                                                            tone={lead.lead_quality_score >= 8 ? "brand" : lead.lead_quality_score >= 5 ? "warning" : "danger"}
+                                                            variant="soft"
+                                                            size="sm"
+                                                            dot
+                                                        >
                                                             {lead.lead_quality_score}/10
-                                                        </div>
+                                                        </Badge>
                                                     )}
                                                 </div>
 
-                                                <h4 className="font-bold text-slate-900 leading-tight group-hover:text-slate-900 transition-colors">
+                                                <h4 className="font-semibold leading-tight text-slate-900">
                                                     {lead.company_name || "Prospect"}
                                                 </h4>
 
-                                                <div className="flex items-center justify-between pt-2 border-t border-slate-50">
-                                                    <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
+                                                <div className="flex items-center justify-between border-t border-line pt-2">
+                                                    <div className="flex items-center gap-2 text-[11px] font-medium text-slate-400">
                                                         <Clock className="h-3 w-3" />
-                                                        <span>{Math.floor((new Date().getTime() - new Date(lead.last_activity_at ?? lead.created_at).getTime()) / (1000 * 60 * 60 * 24))}d ago</span>
+                                                        <span className="tabular-nums">{Math.floor((new Date().getTime() - new Date(lead.last_activity_at ?? lead.created_at).getTime()) / (1000 * 60 * 60 * 24))}d ago</span>
                                                     </div>
 
                                                     <div className="flex items-center -space-x-1.5">
                                                         {lead.telecaller ? (
-                                                            <div className="h-6 w-6 rounded-full border-2 border-white bg-slate-200 overflow-hidden" title={lead.telecaller.full_name}>
+                                                            <div className="h-6 w-6 overflow-hidden rounded-full border-2 border-white bg-slate-200" title={lead.telecaller.full_name}>
                                                                 {lead.telecaller.avatar_url ? (
                                                                     <img src={lead.telecaller.avatar_url} alt="" className="h-full w-full object-cover" />
                                                                 ) : (
-                                                                    <div className="h-full w-full flex items-center justify-center text-[8px] font-black text-slate-500 uppercase">
+                                                                    <div className="flex h-full w-full items-center justify-center text-[11px] font-semibold uppercase text-slate-500">
                                                                         {lead.telecaller.full_name.charAt(0)}
                                                                     </div>
                                                                 )}
                                                             </div>
                                                         ) : (
-                                                            <div className="h-6 w-6 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center">
+                                                            <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-slate-100">
                                                                 <User className="h-3 w-3 text-slate-400" />
                                                             </div>
                                                         )}
@@ -330,9 +336,9 @@ export default function PipelineBoard() {
                                 </AnimatePresence>
 
                                 {(!groupedLeads[stage.id] || groupedLeads[stage.id].length === 0) && (
-                                    <div className="flex flex-col items-center justify-center py-8 text-slate-400 border-2 border-dashed border-slate-300/50 rounded-2xl">
-                                        <Plus className="h-5 w-5 mb-1 opacity-20" />
-                                        <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Empty Stage</span>
+                                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line py-8 text-slate-400">
+                                        <Plus className="mb-1 h-5 w-5 opacity-30" />
+                                        <span className="text-[11px] font-medium uppercase tracking-wide opacity-50">Empty Stage</span>
                                     </div>
                                 )}
                             </div>
@@ -342,19 +348,19 @@ export default function PipelineBoard() {
             </div>
 
             {/* Funnel insight strip — real numbers only */}
-            <div className="bg-white border-t border-slate-200 px-8 py-3 flex items-center justify-between shrink-0 relative z-30">
+            <div className="relative z-30 flex shrink-0 items-center justify-between border-t border-line bg-surface px-8 py-3">
                 <div className="flex items-center gap-8">
                     <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-blue-500" />
-                        <span className="text-xs font-bold text-slate-500">Leads on board: <span className="text-slate-900 text-sm">{filteredLeads.length}</span></span>
+                        <Users className="h-4 w-4 text-slate-400" />
+                        <span className="text-xs font-medium text-slate-500">Leads on board: <span className="text-sm font-semibold tabular-nums text-slate-900">{filteredLeads.length}</span></span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs font-bold text-slate-500">Meetings booked: <span className="text-slate-900 text-sm">{groupedLeads["meeting_booked"]?.length || 0}</span></span>
+                        <TrendingUp className="h-4 w-4 text-brand-deep" />
+                        <span className="text-xs font-medium text-slate-500">Meetings booked: <span className="text-sm font-semibold tabular-nums text-slate-900">{groupedLeads["meeting_booked"]?.length || 0}</span></span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-emerald-600" />
-                        <span className="text-xs font-bold text-slate-500">Won: <span className="text-slate-900 text-sm">{groupedLeads["won"]?.length || 0}</span></span>
+                        <Award className="h-4 w-4 text-brand-deep" />
+                        <span className="text-xs font-medium text-slate-500">Won: <span className="text-sm font-semibold tabular-nums text-slate-900">{groupedLeads["won"]?.length || 0}</span></span>
                     </div>
                 </div>
             </div>

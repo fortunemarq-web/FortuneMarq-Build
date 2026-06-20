@@ -3,8 +3,9 @@
 import { useState, useTransition } from "react";
 import { updateModuleStatus } from "@/app/admin/build-tracker/actions";
 import type { ModuleStatus } from "@/app/admin/build-tracker/actions";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2, Check } from "lucide-react";
 
+// Each status collapses to one of the five tones — no per-status colours.
 const STATUS_CONFIG: Record<
   ModuleStatus,
   { label: string; bg: string; text: string; dot: string }
@@ -12,26 +13,26 @@ const STATUS_CONFIG: Record<
   not_started: {
     label: "Not Started",
     bg: "bg-slate-100",
-    text: "text-slate-600",
+    text: "text-slate-700",
     dot: "bg-slate-400",
   },
   in_progress: {
     label: "In Progress",
-    bg: "bg-amber-100",
-    text: "text-amber-700",
-    dot: "bg-amber-500",
+    bg: "bg-warn-soft",
+    text: "text-warn",
+    dot: "bg-warn",
   },
   done: {
     label: "Done",
-    bg: "bg-emerald-100",
-    text: "text-emerald-700",
-    dot: "bg-emerald-500",
+    bg: "bg-brand-soft",
+    text: "text-brand-deep",
+    dot: "bg-brand",
   },
   blocked: {
     label: "Blocked",
-    bg: "bg-red-100",
-    text: "text-red-700",
-    dot: "bg-red-500",
+    bg: "bg-danger-soft",
+    text: "text-danger",
+    dot: "bg-danger",
   },
 };
 
@@ -101,21 +102,21 @@ export default function StatusBadge({
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute left-0 top-full z-20 mt-1 w-36 rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-200/60">
+          <div className="absolute left-0 top-full z-20 mt-1 w-36 rounded-lg border border-line bg-surface shadow-md">
             {ALL_STATUSES.map((s) => {
               const cfg = STATUS_CONFIG[s];
               return (
                 <button
                   key={s}
                   onClick={() => handleSelect(s)}
-                  className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-medium transition-colors first:rounded-t-xl last:rounded-b-xl hover:bg-slate-50 ${
+                  className={`flex w-full items-center gap-2 px-3 py-2 text-xs font-medium transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-slate-50 ${
                     s === status ? "bg-slate-50" : ""
                   }`}
                 >
                   <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
                   <span className="text-slate-700">{cfg.label}</span>
                   {s === status && (
-                    <span className="ml-auto text-[#42CA80]">✓</span>
+                    <Check className="ml-auto h-3 w-3 text-brand-deep" />
                   )}
                 </button>
               );

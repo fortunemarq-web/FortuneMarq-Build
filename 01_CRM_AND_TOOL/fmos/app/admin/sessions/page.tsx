@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "@/components/ui/toast";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 export default function AdminSessionsPage() {
     const [sessions, setSessions] = useState<any[]>([]);
@@ -47,61 +52,63 @@ export default function AdminSessionsPage() {
     };
 
     return (
-        <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-900">
-            <div className="mx-auto max-w-7xl">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-2xl font-bold">Active Sessions</h1>
-                    <div className="flex gap-4 items-center">
-                        <button onClick={() => window.open('/api/reports/sessions/export.csv', '_blank')} className="text-sm font-medium text-indigo-400 hover:text-slate-900 transition-colors">Export CSV</button>
-                        <div className="flex bg-white rounded-lg p-1 border border-slate-300">
-                            <button onClick={() => setFilter('all')} className={`px-4 py-1.5 rounded-md text-sm ${filter === 'all' ? 'bg-slate-200 text-slate-900' : 'text-slate-500'}`}>All History</button>
-                            <button onClick={() => setFilter('online')} className={`px-4 py-1.5 rounded-md text-sm ${filter === 'online' ? 'bg-slate-200 text-slate-900' : 'text-slate-500'}`}>Online Now</button>
-                        </div>
-                    </div>
-                </div>
+        <div className="min-h-full bg-canvas px-6 py-8 text-slate-900">
+            <div className="mx-auto max-w-7xl space-y-6">
+                <PageHeader
+                    title="Active Sessions"
+                    actions={
+                        <>
+                            <Button onClick={() => window.open('/api/reports/sessions/export.csv', '_blank')} variant="ghost" size="sm">Export CSV</Button>
+                            <div className="flex rounded-lg border border-line bg-surface p-1">
+                                <button onClick={() => setFilter('all')} className={`rounded-md px-4 py-1.5 text-sm transition-colors ${filter === 'all' ? 'bg-slate-100 text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}>All History</button>
+                                <button onClick={() => setFilter('online')} className={`rounded-md px-4 py-1.5 text-sm transition-colors ${filter === 'online' ? 'bg-slate-100 text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}>Online Now</button>
+                            </div>
+                        </>
+                    }
+                />
 
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-slate-100 text-slate-500 font-medium uppercase tracking-wider">
-                            <tr>
-                                <th className="px-6 py-4">User</th>
-                                <th className="px-6 py-4">IP / Device</th>
-                                <th className="px-6 py-4">Login Time</th>
-                                <th className="px-6 py-4">Last Seen</th>
-                                <th className="px-6 py-4">Duration</th>
-                                <th className="px-6 py-4">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200">
-                            {sessions.map(s => {
-                                const online = isOnline(s.last_seen_at, s.logout_at);
-                                return (
-                                    <tr key={s.id} className="hover:bg-slate-100">
-                                        <td className="px-6 py-4 font-mono text-slate-600">{s.user_id ? `${s.user_id.slice(0, 8)}...` : "—"}</td>
-                                        <td className="px-6 py-4 text-xs text-slate-600">
-                                            <div className="text-slate-700">{s.ip_address}</div>
-                                            <div className="truncate max-w-[200px]">{s.user_agent}</div>
-                                        </td>
-                                        <td className="px-6 py-4">{new Date(s.login_at).toLocaleString()}</td>
-                                        <td className="px-6 py-4">{formatDistanceToNow(new Date(s.last_seen_at))} ago</td>
-                                        <td className="px-6 py-4">{formatDuration(s.duration_hours_clamped)}</td>
-                                        <td className="px-6 py-4">
-                                            {online ? (
-                                                <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs font-medium">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Online
-                                                </span>
-                                            ) : s.logout_at ? (
-                                                <span className="text-slate-500 text-xs">Logged Out ({s.ended_reason})</span>
-                                            ) : (
-                                                <span className="text-amber-500 text-xs">Inactive</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                <Card className="overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <THead>
+                                <TR className="hover:bg-transparent">
+                                    <TH>User</TH>
+                                    <TH>IP / Device</TH>
+                                    <TH>Login Time</TH>
+                                    <TH>Last Seen</TH>
+                                    <TH>Duration</TH>
+                                    <TH>Status</TH>
+                                </TR>
+                            </THead>
+                            <TBody>
+                                {sessions.map(s => {
+                                    const online = isOnline(s.last_seen_at, s.logout_at);
+                                    return (
+                                        <TR key={s.id}>
+                                            <TD className="tabular-nums text-slate-600">{s.user_id ? `${s.user_id.slice(0, 8)}...` : "—"}</TD>
+                                            <TD className="text-xs text-slate-600">
+                                                <div className="text-slate-700">{s.ip_address}</div>
+                                                <div className="max-w-[200px] truncate">{s.user_agent}</div>
+                                            </TD>
+                                            <TD>{new Date(s.login_at).toLocaleString()}</TD>
+                                            <TD>{formatDistanceToNow(new Date(s.last_seen_at))} ago</TD>
+                                            <TD className="tabular-nums">{formatDuration(s.duration_hours_clamped)}</TD>
+                                            <TD>
+                                                {online ? (
+                                                    <Badge tone="brand" size="sm" dot>Online</Badge>
+                                                ) : s.logout_at ? (
+                                                    <span className="text-xs text-slate-500">Logged Out ({s.ended_reason})</span>
+                                                ) : (
+                                                    <span className="text-xs text-warn">Inactive</span>
+                                                )}
+                                            </TD>
+                                        </TR>
+                                    );
+                                })}
+                            </TBody>
+                        </Table>
+                    </div>
+                </Card>
             </div>
         </div>
     );

@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, Sparkles, Bot, XCircle } from "lucide-react";
 import { extractStrategyTasks } from "@/app/admin/strategy/actions";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { buttonVariants } from "@/components/ui/button";
 
 interface ClientData {
   id: string;
@@ -92,15 +96,15 @@ export default function StrategyGeneratorModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-2xl rounded-2xl bg-white shadow-xl flex flex-col max-h-[90vh]">
-        <div className="flex items-center justify-between border-b border-slate-100 p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
+      <div className="w-full max-w-2xl rounded-2xl bg-surface shadow-lg flex flex-col max-h-[90vh]">
+        <div className="flex items-center justify-between border-b border-line p-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand-deep">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Generate Client Strategy</h2>
+              <h2 className="font-display text-lg font-semibold text-slate-900">Generate Client Strategy</h2>
               <p className="text-sm text-slate-500">Creating tasks for {client.business_name}</p>
             </div>
           </div>
@@ -114,7 +118,7 @@ export default function StrategyGeneratorModal({
 
         <div className="p-6 overflow-y-auto flex-1">
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
+            <div className="mb-6 bg-danger-soft border border-danger-line text-danger px-4 py-3 rounded-lg text-sm flex items-start gap-2">
               <XCircle className="h-5 w-5 shrink-0" />
               <p>{error}</p>
             </div>
@@ -122,8 +126,8 @@ export default function StrategyGeneratorModal({
 
           {isProcessing ? (
             <div className="py-12 text-center">
-              <Bot className="h-16 w-16 text-indigo-500 mx-auto mb-6 animate-bounce" />
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Reading strategy for {client.business_name}...</h3>
+              <Bot className="h-16 w-16 text-brand-deep mx-auto mb-6 animate-bounce" />
+              <h3 className="font-display text-xl font-semibold text-slate-900 mb-2">Reading strategy for {client.business_name}...</h3>
               <p className="text-sm text-slate-500 max-w-sm mx-auto">
                 Claude is analyzing the document against {strategyLabel} best practices and assigning tasks.
               </p>
@@ -133,51 +137,49 @@ export default function StrategyGeneratorModal({
               {/* Context pre-fills */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Client</label>
-                  <input type="text" disabled value={client.business_name} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 font-medium" />
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Client</label>
+                  <Input type="text" disabled value={client.business_name} />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Strategy Type</label>
-                  <input type="text" disabled value={strategyLabel} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 font-medium" />
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Strategy Type</label>
+                  <Input type="text" disabled value={strategyLabel} />
                 </div>
               </div>
 
               {/* Engine Config */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Timeframe</label>
-                  <select
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Timeframe</label>
+                  <Select
                     value={timeframe}
                     onChange={(e) => setTimeframe(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
                   >
                     <option value="30_days">30 Days</option>
                     <option value="60_days">60 Days</option>
                     <option value="90_days">90 Days</option>
-                  </select>
+                  </Select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Default Assignee</label>
-                  <select
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Default Assignee</label>
+                  <Select
                     value={assignee}
                     onChange={(e) => setAssignee(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
                   >
                     {team.map((m: any) => (
                       <option key={m.id} value={m.id}>{m.full_name}</option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               </div>
 
               {/* Document Textarea */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Strategy Document</label>
-                <textarea
+                <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Strategy Document</label>
+                <Textarea
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Paste strategy markdown from Claude here..."
-                  className="w-full h-48 bg-slate-50/50 border border-slate-200 rounded-lg text-sm p-4 font-mono focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-400 resize-none transition-colors"
+                  className="h-48 p-4 font-mono resize-none"
                 />
               </div>
 
@@ -185,17 +187,17 @@ export default function StrategyGeneratorModal({
           )}
         </div>
 
-        <div className="border-t border-slate-100 p-6 flex items-center justify-end gap-3 bg-slate-50/50 rounded-b-2xl">
+        <div className="border-t border-line p-6 flex items-center justify-end gap-3 bg-slate-50 rounded-b-2xl">
           <button
             onClick={onClose}
-            className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+            className={buttonVariants({ variant: "ghost" })}
           >
             Cancel
           </button>
           <button
             onClick={handleGenerate}
             disabled={isProcessing || !text || text.length < 10}
-            className="flex items-center gap-2 rounded-lg bg-[#42CA80] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#38b571] disabled:opacity-50 transition-colors"
+            className={buttonVariants({ variant: "primary" })}
           >
             {isProcessing ? "Generating..." : "Generate Tasks →"}
           </button>

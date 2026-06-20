@@ -445,27 +445,27 @@ FortuneMarq
   const activeFunnelStages = FUNNEL_STAGES.filter(fs => fs.services.some(sid => selectedIds.includes(sid)));
 
   return (
-    <div className="min-h-full bg-slate-50">
+    <div className="min-h-full bg-canvas">
       {/* Topbar */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-10 print:hidden">
+      <div className="bg-surface border-b border-line px-6 py-4 sticky top-0 z-10 print:hidden">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold text-slate-900">New Proposal</h1>
+            <h1 className="font-display text-lg font-semibold text-slate-900">New Proposal</h1>
             <p className="text-xs text-slate-400 mt-0.5">
               {lead.company_name}{lead.city && ` · ${lead.city}`}{lead.industry && ` · ${lead.industry}`}
-              <span className="ml-2 font-mono">{proposalNumber}</span>
+              <span className="ml-2 tabular-nums">{proposalNumber}</span>
             </p>
           </div>
           <div className="hidden sm:flex items-center gap-2">
             {STEPS.map((s, i) => (
               <div key={s.key} className="flex items-center gap-2">
                 <div className={`flex items-center gap-1.5 ${i <= stepIndex ? "opacity-100" : "opacity-40"}`}>
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold ${stepIndex > i ? "bg-emerald-500 text-white" : stepIndex === i ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-500"}`}>
+                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-[11px] font-semibold ${stepIndex > i ? "bg-brand text-white" : stepIndex === i ? "bg-brand-deep text-white" : "bg-slate-100 text-slate-500"}`}>
                     {stepIndex > i ? <Check className="h-3 w-3" /> : i + 1}
                   </div>
                   <span className={`text-xs font-medium ${stepIndex === i ? "text-slate-900" : "text-slate-400"}`}>{s.label}</span>
                 </div>
-                {i < STEPS.length - 1 && <div className={`w-8 h-px ${stepIndex > i ? "bg-emerald-300" : "bg-slate-200"}`} />}
+                {i < STEPS.length - 1 && <div className={`w-8 h-px ${stepIndex > i ? "bg-brand-line" : "bg-line"}`} />}
               </div>
             ))}
           </div>
@@ -483,15 +483,13 @@ FortuneMarq
               {servicesByLayer.map(({ layer, services }) => {
                 const meta = LAYER_META[layer];
                 const Icon = meta.icon;
-                const colorMap: Record<string, string> = { blue: "text-blue-600 bg-blue-50 border-blue-100", purple: "text-purple-600 bg-purple-50 border-purple-100", orange: "text-orange-600 bg-orange-50 border-orange-100" };
-                const hdrColor: Record<string, string> = { blue: "text-blue-700", purple: "text-purple-700", orange: "text-orange-700" };
                 return (
                   <div key={layer}>
                     <div className="flex items-center gap-2 mb-2">
-                      <div className={`h-6 w-6 rounded-md flex items-center justify-center border ${colorMap[meta.color]}`}><Icon className="h-3.5 w-3.5" /></div>
+                      <div className="h-6 w-6 rounded-md flex items-center justify-center border border-brand-line bg-brand-soft text-brand-deep"><Icon className="h-3.5 w-3.5" /></div>
                       <div>
-                        <p className={`text-xs font-bold uppercase tracking-widest ${hdrColor[meta.color]}`}>{layer}</p>
-                        <p className="text-[10px] text-slate-400">{meta.desc}</p>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">{layer}</p>
+                        <p className="text-[11px] text-slate-400">{meta.desc}</p>
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -500,9 +498,9 @@ FortuneMarq
                         const selected = selectedServices.find(s => s.id === svc.id);
                         const isExpanded = expandedService === svc.id;
                         return (
-                          <div key={svc.id} className={`rounded-2xl border transition-all overflow-hidden ${isSelected ? "border-[#42CA80] shadow-sm shadow-emerald-100" : "border-slate-200 bg-white"}`}>
-                            <div className={`flex items-start gap-3 p-4 ${isSelected ? "bg-emerald-50/50" : "bg-white"}`}>
-                              <button onClick={() => toggleService(svc)} className={`mt-0.5 h-5 w-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${isSelected ? "bg-[#42CA80] border-[#42CA80]" : "border-slate-300 bg-white hover:border-slate-400"}`}>
+                          <div key={svc.id} className={`rounded-xl border transition-colors overflow-hidden ${isSelected ? "border-brand-line shadow-sm" : "border-line bg-surface"}`}>
+                            <div className={`flex items-start gap-3 p-4 ${isSelected ? "bg-brand-soft/50" : "bg-surface"}`}>
+                              <button onClick={() => toggleService(svc)} className={`mt-0.5 h-5 w-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${isSelected ? "bg-brand border-brand" : "border-slate-300 bg-surface hover:border-slate-400"}`}>
                                 {isSelected && <Check className="h-3 w-3 text-white" />}
                               </button>
                               <div className="flex-1 min-w-0">
@@ -516,40 +514,40 @@ FortuneMarq
                                   </button>
                                 </div>
                                 {isExpanded && (
-                                  <div className="mt-3 space-y-3 border-t border-slate-100 pt-3">
+                                  <div className="mt-3 space-y-3 border-t border-line pt-3">
                                     {SERVICE_DEEP[svc.id] && (
                                       <p className="text-xs text-slate-600 leading-relaxed">{SERVICE_DEEP[svc.id].problem}</p>
                                     )}
                                     {svc.deliverables && (
                                       <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1.5">What's included</p>
+                                        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">What's included</p>
                                         <ul className="space-y-1">
                                           {svc.deliverables.map((d, i) => (
                                             <li key={i} className="flex items-start gap-2 text-xs text-slate-600">
-                                              <Check className="h-3 w-3 text-emerald-500 shrink-0 mt-0.5" />{d}
+                                              <Check className="h-3 w-3 text-brand-deep shrink-0 mt-0.5" />{d}
                                             </li>
                                           ))}
                                         </ul>
                                       </div>
                                     )}
                                     {svc.timeline && <div className="flex items-center gap-2 text-xs text-slate-500"><Clock className="h-3.5 w-3.5 text-slate-400" />{svc.timeline}</div>}
-                                    {svc.importantNote && <p className="text-[10px] text-amber-600 bg-amber-50 rounded-lg px-3 py-2">⚠️ {svc.importantNote}</p>}
+                                    {svc.importantNote && <p className="text-[11px] text-warn bg-warn-soft border border-warn-line rounded-lg px-3 py-2">⚠️ {svc.importantNote}</p>}
                                   </div>
                                 )}
                               </div>
                             </div>
                             {isSelected && selected && (
-                              <div className="px-4 pb-4 grid grid-cols-2 gap-3 border-t border-emerald-100 bg-emerald-50/30">
+                              <div className="px-4 pb-4 grid grid-cols-2 gap-3 border-t border-brand-line bg-brand-soft/30">
                                 <div className="pt-3">
-                                  <label className="text-[10px] font-bold uppercase tracking-wide text-slate-500 block mb-1.5">Setup Fee</label>
+                                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 block mb-1.5">Setup Fee</label>
                                   <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
-                                    <input type="number" value={selected.setupFee || ""} onChange={e => updateFee(svc.id, "setupFee", Number(e.target.value))} className="w-full pl-7 pr-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]" placeholder="0" />
+                                    <input type="number" value={selected.setupFee || ""} onChange={e => updateFee(svc.id, "setupFee", Number(e.target.value))} className="w-full pl-7 pr-3 py-2.5 text-sm border border-line rounded-lg bg-surface tabular-nums focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand-line" placeholder="0" />
                                   </div>
                                 </div>
                                 <div className="pt-3">
-                                  <label className="text-[10px] font-bold uppercase tracking-wide text-slate-500 block mb-1.5">Monthly Retainer</label>
+                                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 block mb-1.5">Monthly Retainer</label>
                                   <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
-                                    <input type="number" value={selected.monthlyRetainer || ""} onChange={e => updateFee(svc.id, "monthlyRetainer", Number(e.target.value))} className="w-full pl-7 pr-3 py-2.5 text-sm border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]" placeholder="0" />
+                                    <input type="number" value={selected.monthlyRetainer || ""} onChange={e => updateFee(svc.id, "monthlyRetainer", Number(e.target.value))} className="w-full pl-7 pr-3 py-2.5 text-sm border border-line rounded-lg bg-surface tabular-nums focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand-line" placeholder="0" />
                                   </div>
                                 </div>
                               </div>
@@ -563,23 +561,23 @@ FortuneMarq
               })}
 
               {/* Proposal meta */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Proposal Details</p>
+              <div className="bg-surface border border-line rounded-xl p-5 space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Proposal Details</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-semibold text-slate-600 block mb-1.5">Proposed Start Date</label>
-                    <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]" />
+                    <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full border border-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand-line" />
                   </div>
                   <div>
                     <label className="text-xs font-semibold text-slate-600 block mb-1.5">Valid For</label>
-                    <select value={validity} onChange={e => setValidity(e.target.value)} className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]">
+                    <select value={validity} onChange={e => setValidity(e.target.value)} className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand-line">
                       {["3","5","7","14","30"].map(v => <option key={v} value={v}>{v} days</option>)}
                     </select>
                   </div>
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-slate-600 block mb-1.5">Personal Note to Client (optional)</label>
-                  <textarea value={customNote} onChange={e => setCustomNote(e.target.value)} rows={2} placeholder="E.g. Great speaking with you today..." className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80] resize-none" />
+                  <textarea value={customNote} onChange={e => setCustomNote(e.target.value)} rows={2} placeholder="E.g. Great speaking with you today..." className="w-full border border-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand-line resize-none" />
                 </div>
               </div>
             </div>
@@ -588,7 +586,7 @@ FortuneMarq
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-4">
                 <div className="bg-slate-900 rounded-2xl p-5 text-white">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Proposal Summary</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-4">Proposal Summary</p>
                   {selectedServices.length === 0 ? (
                     <p className="text-sm text-slate-500 text-center py-4">Select services to see totals</p>
                   ) : (
@@ -597,24 +595,24 @@ FortuneMarq
                         {selectedServices.map(svc => (
                           <div key={svc.id} className="flex items-center justify-between gap-2">
                             <p className="text-xs text-slate-300 truncate flex-1">{svc.label}</p>
-                            <p className="text-xs font-mono text-slate-400 shrink-0">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</p>
+                            <p className="text-xs tabular-nums text-slate-400 shrink-0">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</p>
                           </div>
                         ))}
                       </div>
                       <div className="border-t border-slate-700 pt-3 space-y-2">
-                        {totalSetup > 0 && <div className="flex items-center justify-between"><span className="text-xs text-slate-400">One-time Setup</span><span className="text-sm font-bold font-mono">{formatINR(totalSetup)}</span></div>}
-                        <div className="flex items-center justify-between"><span className="text-xs text-slate-400">Monthly Retainer</span><span className="text-lg font-bold font-mono text-[#42CA80]">{formatINR(totalMonthly)}<span className="text-sm">/mo</span></span></div>
+                        {totalSetup > 0 && <div className="flex items-center justify-between"><span className="text-xs text-slate-400">One-time Setup</span><span className="text-sm font-semibold tabular-nums">{formatINR(totalSetup)}</span></div>}
+                        <div className="flex items-center justify-between"><span className="text-xs text-slate-400">Monthly Retainer</span><span className="text-lg font-semibold tabular-nums text-brand">{formatINR(totalMonthly)}<span className="text-sm">/mo</span></span></div>
                       </div>
                     </>
                   )}
                 </div>
-                <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-3">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Our Commitment</p>
+                <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Our Commitment</p>
                   {[{ icon: Shield, text: "No lock-in — cancel anytime" }, { icon: Clock, text: "Clear delivery timelines" }, { icon: Package, text: "Monthly reports, always" }].map(({ icon: Icon, text }, i) => (
-                    <div key={i} className="flex items-start gap-2.5"><Icon className="h-3.5 w-3.5 text-[#42CA80] shrink-0 mt-0.5" /><p className="text-xs text-slate-600">{text}</p></div>
+                    <div key={i} className="flex items-start gap-2.5"><Icon className="h-3.5 w-3.5 text-brand-deep shrink-0 mt-0.5" /><p className="text-xs text-slate-600">{text}</p></div>
                   ))}
                 </div>
-                <button onClick={() => setStep("preview")} disabled={selectedServices.length === 0} className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white font-bold py-3.5 rounded-2xl transition-colors flex items-center justify-center gap-2">
+                <button onClick={() => setStep("preview")} disabled={selectedServices.length === 0} className="w-full bg-brand-deep hover:bg-brand-deeper disabled:opacity-40 text-white font-semibold py-3.5 rounded-lg transition-colors flex items-center justify-center gap-2">
                   Preview Proposal <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -632,53 +630,51 @@ FortuneMarq
                 <button onClick={() => setStep("services")} className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1.5">← Back to edit</button>
                 <p className="text-xs text-slate-400 hidden sm:block">Full proposal view — exactly how it reads to the client.</p>
               </div>
-              <button onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"><Printer className="h-4 w-4" /> Download PDF</button>
+              <button onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-lg border border-line-strong bg-surface px-3.5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"><Printer className="h-4 w-4" /> Download PDF</button>
             </div>
 
-            <div className="print-area bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
+            <div className="print-area bg-surface rounded-2xl border border-line shadow-lg overflow-hidden">
 
               {/* ── 1. COVER ─────────────────────────────────────────────────── */}
               <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-10 py-12 text-white">
-                <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#42CA80]/10 blur-3xl" />
-                <div className="absolute -left-8 -bottom-8 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
                 <div className="relative">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#42CA80] mb-4">FortuneMarq Media & Marketing · Digital Growth Proposal</p>
-                  <h1 className="text-3xl font-bold leading-tight">{typeContent.headline}</h1>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand mb-4">FortuneMarq Media &amp; Marketing · Digital Growth Proposal</p>
+                  <h1 className="font-display text-3xl font-semibold leading-tight">{typeContent.headline}</h1>
                   <p className="text-slate-300 text-base mt-3">Prepared exclusively for</p>
-                  <p className="text-2xl font-bold text-white mt-1">{lead.company_name}</p>
+                  <p className="font-display text-2xl font-semibold text-white mt-1">{lead.company_name}</p>
                   {lead.city && <p className="text-slate-400 text-sm mt-0.5">{lead.city}{lead.industry ? ` · ${lead.industry}` : ""}</p>}
                   <div className="flex flex-wrap gap-5 mt-8 pt-8 border-t border-slate-700/50">
-                    <div><p className="text-[10px] text-slate-500 uppercase tracking-wide">Prepared For</p><p className="text-sm font-semibold text-white mt-0.5">{lead.contact_person || lead.company_name}</p></div>
-                    <div><p className="text-[10px] text-slate-500 uppercase tracking-wide">Prepared By</p><p className="text-sm font-semibold text-white mt-0.5">Jabeer · FortuneMarq</p></div>
-                    <div><p className="text-[10px] text-slate-500 uppercase tracking-wide">Date</p><p className="text-sm font-semibold text-white mt-0.5">{today}</p></div>
-                    <div><p className="text-[10px] text-slate-500 uppercase tracking-wide">Valid Until</p><p className="text-sm font-semibold text-[#42CA80] mt-0.5">{addDays(parseInt(validity))}</p></div>
-                    <div className="ml-auto"><p className="text-[10px] text-slate-500 uppercase tracking-wide">Ref</p><p className="text-sm font-mono font-bold text-slate-300 mt-0.5">{proposalNumber}</p></div>
+                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Prepared For</p><p className="text-sm font-semibold text-white mt-0.5">{lead.contact_person || lead.company_name}</p></div>
+                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Prepared By</p><p className="text-sm font-semibold text-white mt-0.5">Jabeer · FortuneMarq</p></div>
+                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Date</p><p className="text-sm font-semibold text-white mt-0.5">{today}</p></div>
+                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Valid Until</p><p className="text-sm font-semibold text-brand mt-0.5">{addDays(parseInt(validity))}</p></div>
+                    <div className="ml-auto"><p className="text-[11px] text-slate-500 uppercase tracking-wide">Ref</p><p className="text-sm tabular-nums font-semibold text-slate-300 mt-0.5">{proposalNumber}</p></div>
                   </div>
                 </div>
               </div>
 
               {/* Personal note */}
               {customNote && (
-                <div className="px-10 py-6 bg-emerald-50 border-b border-emerald-100">
-                  <p className="text-sm text-emerald-800 italic leading-relaxed">"{customNote}"</p>
-                  <p className="text-xs text-emerald-600 font-semibold mt-2">— Jabeer</p>
+                <div className="px-10 py-6 bg-brand-soft border-b border-brand-line">
+                  <p className="text-sm text-brand-deep italic leading-relaxed">"{customNote}"</p>
+                  <p className="text-xs text-brand-deep font-semibold mt-2">— Jabeer</p>
                 </div>
               )}
 
               {/* ── 2. THE SITUATION ─────────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-slate-100">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#42CA80] mb-5">Understanding Your Situation</p>
+              <div className="px-10 py-8 border-b border-line">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-5">Understanding Your Situation</p>
                 <div className="space-y-4">
                   {[
-                    { label: "Where You Are Now", text: typeContent.situation, color: "blue" },
-                    { label: "What This Is Costing You", text: typeContent.consequence, color: "red" },
-                    { label: "Why Now Is the Right Time", text: typeContent.urgency, color: "emerald" },
+                    { label: "Where You Are Now", text: typeContent.situation, color: "info" },
+                    { label: "What This Is Costing You", text: typeContent.consequence, color: "danger" },
+                    { label: "Why Now Is the Right Time", text: typeContent.urgency, color: "brand" },
                   ].map(({ label, text, color }, i) => {
-                    const borderColors: Record<string, string> = { blue: "border-blue-400 bg-blue-50", red: "border-red-400 bg-red-50", emerald: "border-emerald-400 bg-emerald-50" };
-                    const labelColors: Record<string, string> = { blue: "text-blue-700", red: "text-red-700", emerald: "text-emerald-700" };
+                    const borderColors: Record<string, string> = { info: "border-info-line bg-info-soft", danger: "border-danger-line bg-danger-soft", brand: "border-brand-line bg-brand-soft" };
+                    const labelColors: Record<string, string> = { info: "text-info", danger: "text-danger", brand: "text-brand-deep" };
                     return (
-                      <div key={i} className={`avoid-break rounded-2xl border-l-4 p-5 ${borderColors[color]}`}>
-                        <p className={`text-xs font-bold uppercase tracking-wide mb-2 ${labelColors[color]}`}>{label}</p>
+                      <div key={i} className={`avoid-break rounded-xl border-l-4 p-5 ${borderColors[color]}`}>
+                        <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${labelColors[color]}`}>{label}</p>
                         <p className="text-sm text-slate-700 leading-relaxed">{text}</p>
                       </div>
                     );
@@ -687,46 +683,33 @@ FortuneMarq
               </div>
 
               {/* ── 3. THE GROWTH FUNNEL ─────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/40">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#42CA80] mb-2">Our Approach — The Growth Funnel</p>
+              <div className="px-10 py-8 border-b border-line bg-slate-50">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">Our Approach — The Growth Funnel</p>
                 <p className="text-sm text-slate-500 mb-6">Every service we're proposing connects to a specific stage in your growth funnel. This is how we think — not individual services, but a coordinated system that moves a stranger into a paying client.</p>
 
-                {/* Funnel visual */}
+                {/* Funnel visual — single brand accent, active stages filled, inactive neutral */}
                 <div className="flex flex-col items-center gap-0">
                   {FUNNEL_STAGES.map((fs, i) => {
                     const hasActive = fs.services.some(sid => selectedIds.includes(sid));
                     const activeInStage = fs.services.filter(sid => selectedIds.includes(sid));
                     const FIcon = fs.icon;
                     const widths = ["w-full", "w-11/12", "w-10/12", "w-9/12", "w-8/12"];
-                    const funnelColors: Record<string, string> = {
-                      blue:    hasActive ? "bg-blue-600 text-white"    : "bg-blue-100 text-blue-400",
-                      indigo:  hasActive ? "bg-indigo-600 text-white"  : "bg-indigo-100 text-indigo-400",
-                      purple:  hasActive ? "bg-purple-600 text-white"  : "bg-purple-100 text-purple-400",
-                      emerald: hasActive ? "bg-emerald-600 text-white" : "bg-emerald-100 text-emerald-400",
-                      orange:  hasActive ? "bg-orange-500 text-white"  : "bg-orange-100 text-orange-400",
-                    };
-                    const descColors: Record<string, string> = {
-                      blue: "text-blue-100", indigo: "text-indigo-100", purple: "text-purple-100", emerald: "text-emerald-100", orange: "text-orange-100",
-                    };
-                    const tagBg: Record<string, string> = {
-                      blue: "bg-blue-500/30", indigo: "bg-indigo-500/30", purple: "bg-purple-500/30", emerald: "bg-emerald-500/30", orange: "bg-orange-500/30",
-                    };
                     return (
                       <div key={fs.key} className="avoid-break flex flex-col items-center w-full">
-                        <div className={`${widths[i]} mx-auto rounded-2xl px-5 py-4 transition-all ${funnelColors[fs.color]} ${!hasActive ? "opacity-40" : ""}`}>
+                        <div className={`${widths[i]} mx-auto rounded-xl px-5 py-4 transition-colors ${hasActive ? "bg-brand-deep text-white" : "bg-slate-100 text-slate-400 opacity-60"}`}>
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <div className="flex items-center gap-3">
                               <FIcon className="h-5 w-5 shrink-0" />
                               <div>
-                                <p className="font-bold text-sm">{fs.label}</p>
-                                <p className={`text-xs ${hasActive ? descColors[fs.color] : "opacity-60"}`}>{fs.desc}</p>
+                                <p className="font-semibold text-sm">{fs.label}</p>
+                                <p className={`text-xs ${hasActive ? "text-brand-soft" : "opacity-60"}`}>{fs.desc}</p>
                               </div>
                             </div>
                             {hasActive && activeInStage.length > 0 && (
                               <div className="flex flex-wrap gap-1.5">
                                 {activeInStage.map(sid => {
                                   const svcName = RAW_SERVICES.find(r => r.id === sid)?.label || sid;
-                                  return <span key={sid} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${tagBg[fs.color]}`}>{svcName}</span>;
+                                  return <span key={sid} className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white/20">{svcName}</span>;
                                 })}
                               </div>
                             )}
@@ -748,7 +731,7 @@ FortuneMarq
 
                 {/* Approach phases */}
                 <div className="mt-8">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">How We Execute — Phase by Phase</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-4">How We Execute — Phase by Phase</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     {[
                       { phase: "01", title: "Discovery", duration: "Week 1", steps: ["Deep dive into your business, market, and customers", "Competitor analysis — what are they doing and where are the gaps", "Identify your highest-impact quick wins"] },
@@ -756,15 +739,15 @@ FortuneMarq
                       { phase: "03", title: "Execution", duration: "Week 2 onwards", steps: ["Each service launched according to the roadmap", "You're updated at every milestone", "Nothing goes live without your approval"] },
                       { phase: "04", title: "Optimise & Scale", duration: "Monthly", steps: ["Monthly report: what worked, what didn't, what we're doing next", "Double down on what's generating leads", "Expand into the next phase of the funnel"] },
                     ].map(({ phase, title, duration, steps }) => (
-                      <div key={phase} className="avoid-break bg-white rounded-2xl border border-slate-200 p-4">
+                      <div key={phase} className="avoid-break bg-surface rounded-xl border border-line p-4">
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="text-2xl font-black text-slate-100">{phase}</span>
-                          <div><p className="text-sm font-bold text-slate-900 leading-tight">{title}</p><p className="text-[10px] text-slate-400">{duration}</p></div>
+                          <span className="text-2xl font-display font-semibold text-slate-200 tabular-nums">{phase}</span>
+                          <div><p className="text-sm font-semibold text-slate-900 leading-tight">{title}</p><p className="text-[11px] text-slate-400">{duration}</p></div>
                         </div>
                         <ul className="space-y-1.5">
                           {steps.map((s, i) => (
                             <li key={i} className="flex items-start gap-2 text-xs text-slate-600">
-                              <div className="h-3 w-3 rounded-full bg-[#42CA80]/30 flex items-center justify-center shrink-0 mt-0.5"><div className="h-1.5 w-1.5 rounded-full bg-[#42CA80]" /></div>
+                              <div className="h-3 w-3 rounded-full bg-brand-soft flex items-center justify-center shrink-0 mt-0.5"><div className="h-1.5 w-1.5 rounded-full bg-brand" /></div>
                               {s}
                             </li>
                           ))}
@@ -776,20 +759,20 @@ FortuneMarq
               </div>
 
               {/* ── 4. WHY WE'RE DIFFERENT ───────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-slate-100">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#42CA80] mb-2">Why FortuneMarq — Not a Typical Agency</p>
+              <div className="px-10 py-8 border-b border-line">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">Why FortuneMarq — Not a Typical Agency</p>
                 <p className="text-sm text-slate-500 mb-6">Most digital agencies share the same problems. Here's how we're built differently — and why that matters for your results.</p>
                 <div className="space-y-3">
                   {DIFFERENTIATORS.map(({ icon: Icon, title, agency, us }, i) => (
-                    <div key={i} className="avoid-break grid grid-cols-1 sm:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-slate-200">
-                      <div className="bg-red-50 px-5 py-4 border-b sm:border-b-0 sm:border-r border-slate-200">
-                        <p className="text-[10px] font-bold uppercase tracking-wide text-red-500 mb-2">Typical Agency</p>
+                    <div key={i} className="avoid-break grid grid-cols-1 sm:grid-cols-2 gap-0 rounded-xl overflow-hidden border border-line">
+                      <div className="bg-danger-soft px-5 py-4 border-b sm:border-b-0 sm:border-r border-line">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-danger mb-2">Typical Agency</p>
                         <p className="text-xs text-slate-600 leading-relaxed">{agency}</p>
                       </div>
-                      <div className="bg-emerald-50 px-5 py-4">
+                      <div className="bg-brand-soft px-5 py-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <div className="h-5 w-5 rounded-md bg-[#42CA80]/20 flex items-center justify-center"><Icon className="h-3 w-3 text-[#42CA80]" /></div>
-                          <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-600">{title}</p>
+                          <div className="h-5 w-5 rounded-md bg-brand/20 flex items-center justify-center"><Icon className="h-3 w-3 text-brand-deep" /></div>
+                          <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep">{title}</p>
                         </div>
                         <p className="text-xs text-slate-700 leading-relaxed font-medium">{us}</p>
                       </div>
@@ -799,15 +782,15 @@ FortuneMarq
               </div>
 
               {/* ── 5. SERVICE DEEP-DIVES ────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-slate-100">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#42CA80] mb-2">What We're Building For You</p>
+              <div className="px-10 py-8 border-b border-line">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">What We're Building For You</p>
                 <p className="text-sm text-slate-500 mb-6">Each service below comes with a detailed breakdown of what we do, how we do it, and what you get.</p>
                 <div className="space-y-6">
                   {selectedFullData.map((svc, idx) => {
                     const SvcIcon = SERVICE_ICONS[svc.id] || FileText;
                     const deep = svc.deep;
                     return (
-                      <div key={svc.id} className="rounded-3xl border border-slate-200 overflow-hidden print:rounded-none print:border-0 print:overflow-visible">
+                      <div key={svc.id} className="rounded-2xl border border-line overflow-hidden print:rounded-none print:border-0 print:overflow-visible">
                         {/* Service header */}
                         <div className="avoid-break keep-with-next bg-slate-900 px-6 py-5 text-white flex items-start justify-between gap-4">
                           <div className="flex items-start gap-4">
@@ -815,21 +798,21 @@ FortuneMarq
                               <SvcIcon className="h-5 w-5 text-white" />
                             </div>
                             <div>
-                              <p className="font-bold text-lg">{svc.label}</p>
+                              <p className="font-display font-semibold text-lg">{svc.label}</p>
                               {svc.raw?.tagline && <p className="text-slate-400 text-sm mt-0.5">{svc.raw.tagline.replace(/\{\{.*?\}\}/g, lead.city || "your city")}</p>}
                             </div>
                           </div>
                           <div className="text-right shrink-0">
-                            {svc.setupFee > 0 && <p className="text-xs text-slate-400">{formatINR(svc.setupFee)} setup</p>}
-                            {svc.monthlyRetainer > 0 && <p className="text-base font-bold text-[#42CA80]">{formatINR(svc.monthlyRetainer)}<span className="text-xs text-slate-400">/mo</span></p>}
+                            {svc.setupFee > 0 && <p className="text-xs text-slate-400 tabular-nums">{formatINR(svc.setupFee)} setup</p>}
+                            {svc.monthlyRetainer > 0 && <p className="text-base font-semibold tabular-nums text-brand">{formatINR(svc.monthlyRetainer)}<span className="text-xs text-slate-400">/mo</span></p>}
                           </div>
                         </div>
 
                         <div className="p-6 space-y-5">
                           {/* The problem this solves */}
                           {deep && (
-                            <div className="avoid-break bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                              <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-2">Why You Need This</p>
+                            <div className="avoid-break bg-slate-50 rounded-xl p-4 border border-line">
+                              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2">Why You Need This</p>
                               <p className="text-sm text-slate-700 leading-relaxed">{deep.problem}</p>
                             </div>
                           )}
@@ -837,11 +820,11 @@ FortuneMarq
                           {/* Our approach */}
                           {deep && (
                             <div className="avoid-break">
-                              <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-3">Our Approach</p>
+                              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Our Approach</p>
                               <div className="space-y-2">
                                 {deep.ourApproach.map((step, si) => (
                                   <div key={si} className="flex items-start gap-3">
-                                    <span className="h-5 w-5 rounded-full bg-slate-900 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{si + 1}</span>
+                                    <span className="h-5 w-5 rounded-full bg-brand-deep text-white text-[11px] font-semibold tabular-nums flex items-center justify-center shrink-0 mt-0.5">{si + 1}</span>
                                     <p className="text-sm text-slate-700">{step}</p>
                                   </div>
                                 ))}
@@ -852,16 +835,16 @@ FortuneMarq
                           {/* Features grid */}
                           {deep && (
                             <div>
-                              <p className="keep-with-next text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-3">What You Get — In Detail</p>
+                              <p className="keep-with-next text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">What You Get — In Detail</p>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {deep.features.map((feat, fi) => (
-                                  <div key={fi} className="avoid-break bg-white rounded-xl border border-slate-100 p-4">
+                                  <div key={fi} className="avoid-break bg-surface rounded-lg border border-line p-4">
                                     <div className="flex items-start gap-2.5">
-                                      <div className="h-5 w-5 rounded-lg bg-[#42CA80]/15 flex items-center justify-center shrink-0 mt-0.5">
-                                        <Check className="h-3 w-3 text-[#42CA80]" />
+                                      <div className="h-5 w-5 rounded-lg bg-brand-soft flex items-center justify-center shrink-0 mt-0.5">
+                                        <Check className="h-3 w-3 text-brand-deep" />
                                       </div>
                                       <div>
-                                        <p className="text-xs font-bold text-slate-900">{feat.title}</p>
+                                        <p className="text-xs font-semibold text-slate-900">{feat.title}</p>
                                         <p className="text-xs text-slate-500 mt-0.5 leading-snug">{feat.detail}</p>
                                       </div>
                                     </div>
@@ -873,8 +856,8 @@ FortuneMarq
 
                           {/* Why it works */}
                           {deep && (
-                            <div className="avoid-break bg-[#42CA80]/5 border border-[#42CA80]/20 rounded-2xl p-4">
-                              <p className="text-[10px] font-bold uppercase tracking-wide text-[#42CA80] mb-2">Why This Works</p>
+                            <div className="avoid-break bg-brand-soft border border-brand-line rounded-xl p-4">
+                              <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">Why This Works</p>
                               <p className="text-sm text-slate-700 leading-relaxed">{deep.whyItWorks}</p>
                             </div>
                           )}
@@ -883,13 +866,13 @@ FortuneMarq
                           {(svc.raw?.timeline || svc.raw?.importantNote) && (
                             <div className="avoid-break space-y-4">
                               {svc.raw?.timeline && (
-                                <div className="flex items-center gap-2 text-xs text-slate-500 border-t border-slate-100 pt-4">
+                                <div className="flex items-center gap-2 text-xs text-slate-500 border-t border-line pt-4">
                                   <Clock className="h-3.5 w-3.5 text-slate-400" />
                                   <span className="font-semibold text-slate-600">Timeline:</span> {svc.raw.timeline}
                                 </div>
                               )}
                               {svc.raw?.importantNote && (
-                                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">⚠️ {svc.raw.importantNote}</p>
+                                <p className="text-xs text-warn bg-warn-soft border border-warn-line rounded-lg px-4 py-3">⚠️ {svc.raw.importantNote}</p>
                               )}
                             </div>
                           )}
@@ -901,37 +884,37 @@ FortuneMarq
               </div>
 
               {/* ── 6. INVESTMENT TABLE ──────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-slate-100">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#42CA80] mb-5">Your Investment</p>
-                <div className="avoid-break rounded-2xl overflow-hidden border border-slate-200">
+              <div className="px-10 py-8 border-b border-line">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-5">Your Investment</p>
+                <div className="avoid-break rounded-xl overflow-hidden border border-line">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-slate-900 text-white">
-                        <th className="text-left px-5 py-3.5 text-xs font-bold uppercase tracking-wide">Service</th>
-                        <th className="text-right px-5 py-3.5 text-xs font-bold uppercase tracking-wide">One-time Setup</th>
-                        <th className="text-right px-5 py-3.5 text-xs font-bold uppercase tracking-wide">Monthly</th>
+                        <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wide">Service</th>
+                        <th className="text-right px-5 py-3.5 text-xs font-semibold uppercase tracking-wide">One-time Setup</th>
+                        <th className="text-right px-5 py-3.5 text-xs font-semibold uppercase tracking-wide">Monthly</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white">
+                    <tbody className="bg-surface">
                       {selectedServices.map((svc, i) => (
-                        <tr key={svc.id} className={`border-t border-slate-100 ${i % 2 === 0 ? "bg-white" : "bg-slate-50/50"}`}>
+                        <tr key={svc.id} className={`border-t border-line ${i % 2 === 0 ? "bg-surface" : "bg-slate-50"}`}>
                           <td className="px-5 py-3.5 font-medium text-slate-800">{svc.label}</td>
-                          <td className="px-5 py-3.5 text-right font-mono text-slate-600">{svc.setupFee > 0 ? formatINR(svc.setupFee) : "—"}</td>
-                          <td className="px-5 py-3.5 text-right font-mono text-slate-800 font-semibold">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</td>
+                          <td className="px-5 py-3.5 text-right tabular-nums text-slate-600">{svc.setupFee > 0 ? formatINR(svc.setupFee) : "—"}</td>
+                          <td className="px-5 py-3.5 text-right tabular-nums text-slate-800 font-semibold">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot>
                       <tr className="bg-slate-900 text-white">
-                        <td className="px-5 py-4 font-bold">Total</td>
-                        <td className="px-5 py-4 text-right font-bold font-mono text-base">{totalSetup > 0 ? formatINR(totalSetup) : "—"}</td>
-                        <td className="px-5 py-4 text-right font-bold font-mono text-lg text-[#42CA80]">{formatINR(totalMonthly)}/mo</td>
+                        <td className="px-5 py-4 font-semibold">Total</td>
+                        <td className="px-5 py-4 text-right font-semibold tabular-nums text-base">{totalSetup > 0 ? formatINR(totalSetup) : "—"}</td>
+                        <td className="px-5 py-4 text-right font-semibold tabular-nums text-lg text-brand">{formatINR(totalMonthly)}/mo</td>
                       </tr>
                     </tfoot>
                   </table>
                 </div>
                 {selectedServices.some(s => s.id === "GOOGLE_ADS" || s.id === "META_ADS") && (
-                  <p className="avoid-break text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5 mt-3">⚠️ Ad spend for Google Ads and Meta Ads is your own budget, billed directly to Google/Meta. The pricing above covers FortuneMarq management fees only.</p>
+                  <p className="avoid-break text-xs text-warn bg-warn-soft border border-warn-line rounded-lg px-4 py-2.5 mt-3">⚠️ Ad spend for Google Ads and Meta Ads is your own budget, billed directly to Google/Meta. The pricing above covers FortuneMarq management fees only.</p>
                 )}
                 {startDate && <p className="text-xs text-slate-500 mt-2">Proposed start date: {formatDate(startDate)}</p>}
               </div>
@@ -939,8 +922,8 @@ FortuneMarq
               {/* ── 7. HOW WE GET STARTED + footer (one print unit so the footer
                      never strands alone on a final page) ─────────────────────── */}
               <div className="avoid-break">
-              <div className="px-10 py-8 border-b border-slate-100">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#42CA80] mb-5">How We Get Started</p>
+              <div className="px-10 py-8 border-b border-line">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-5">How We Get Started</p>
                 <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                   {[
                     { n: "1", title: "Confirm", desc: "Reply 'Yes, confirmed' — that's all it takes to get started." },
@@ -950,9 +933,9 @@ FortuneMarq
                     { n: "5", title: "We Begin", desc: "First update from us within one week of starting." },
                   ].map(({ n, title, desc }, i, arr) => (
                     <div key={n} className="flex sm:flex-col items-start sm:items-center gap-3 sm:gap-2 sm:text-center">
-                      <div className="h-8 w-8 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center shrink-0">{n}</div>
+                      <div className="h-8 w-8 rounded-full bg-brand-deep text-white text-xs font-semibold tabular-nums flex items-center justify-center shrink-0">{n}</div>
                       <div>
-                        <p className="text-sm font-bold text-slate-900">{title}</p>
+                        <p className="text-sm font-semibold text-slate-900">{title}</p>
                         <p className="text-xs text-slate-500 mt-0.5 leading-snug">{desc}</p>
                       </div>
                     </div>
@@ -963,8 +946,8 @@ FortuneMarq
               {/* ── Footer ──────────────────────────────────────────────────── */}
               <div className="px-10 py-6 bg-slate-900 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <p className="font-bold text-white">Jabeer</p>
-                  <p className="text-xs text-slate-400 mt-0.5">FortuneMarq Media & Marketing</p>
+                  <p className="font-semibold text-white">Jabeer</p>
+                  <p className="text-xs text-slate-400 mt-0.5">FortuneMarq Media &amp; Marketing</p>
                 </div>
                 <div className="flex flex-wrap gap-4 text-xs text-slate-400">
                   <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />+91 93530 82656</span>
@@ -976,10 +959,10 @@ FortuneMarq
             </div>
 
             <div className="flex gap-3 print:hidden">
-              <button onClick={() => setStep("services")} className="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3 px-6 rounded-2xl transition-colors">Edit</button>
-              <button onClick={saveProposal} disabled={isPending} className="flex-1 bg-[#42CA80] hover:bg-[#35A66A] disabled:opacity-50 text-white font-bold py-3 rounded-2xl transition-colors flex items-center justify-center gap-2">
+              <button onClick={() => setStep("services")} className="border border-line bg-surface hover:bg-slate-50 text-slate-700 font-semibold py-3 px-6 rounded-lg transition-colors">Edit</button>
+              <button onClick={saveProposal} disabled={isPending} className="flex-1 bg-brand-deep hover:bg-brand-deeper disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                 {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
-                Save & Send to Client
+                Save &amp; Send to Client
               </button>
             </div>
           </div>
@@ -991,28 +974,28 @@ FortuneMarq
         {step === "done" && savedProposalId && (
           <div className="max-w-2xl mx-auto">
             <div className="text-center py-10">
-              <div className="h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-                <Check className="h-10 w-10 text-emerald-600" />
+              <div className="h-20 w-20 rounded-full bg-brand-soft flex items-center justify-center mx-auto mb-4">
+                <Check className="h-10 w-10 text-brand-deep" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">Proposal Ready</h2>
+              <h2 className="font-display text-2xl font-semibold text-slate-900">Proposal Ready</h2>
               <p className="text-slate-500 mt-1">{proposalNumber} · {lead.company_name} · Copy the message below and send via WhatsApp</p>
               <div className="flex items-center justify-center gap-4 mt-4 text-sm">
-                {totalSetup > 0 && <><span className="text-slate-700 font-semibold">{formatINR(totalSetup)} setup</span><span className="text-slate-300">·</span></>}
-                <span className="text-[#42CA80] font-bold text-lg">{formatINR(totalMonthly)}/mo</span>
+                {totalSetup > 0 && <><span className="text-slate-700 font-semibold tabular-nums">{formatINR(totalSetup)} setup</span><span className="text-slate-300">·</span></>}
+                <span className="text-brand-deep font-semibold tabular-nums text-lg">{formatINR(totalMonthly)}/mo</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm mb-4">
-              <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+            <div className="bg-surface border border-line rounded-2xl overflow-hidden shadow-sm mb-4">
+              <div className="px-6 py-4 border-b border-line flex items-center gap-3">
                 <div className="h-8 w-8 rounded-xl bg-green-500 flex items-center justify-center"><MessageSquare className="h-4 w-4 text-white" /></div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">Send Proposal via WhatsApp</p>
+                  <p className="text-sm font-semibold text-slate-900">Send Proposal via WhatsApp</p>
                   <p className="text-xs text-slate-400">Sends the approved template + schedules a 48h follow-up automatically</p>
                 </div>
               </div>
               <div className="p-6 space-y-4">
                 {waSent ? (
-                  <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2 text-sm text-brand-deep bg-brand-soft border border-brand-line rounded-lg px-4 py-3">
                     <CheckCheck className="h-4 w-4 shrink-0" />
                     Proposal sent via WhatsApp. 48h follow-up scheduled.
                   </div>
@@ -1048,11 +1031,11 @@ FortuneMarq
             </div>
 
             <div className="flex gap-3">
-              <button onClick={sendProposal} disabled={isPending || waSent} className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl transition-colors flex items-center justify-center gap-2">
+              <button onClick={sendProposal} disabled={isPending || waSent} className="flex-1 bg-brand-deep hover:bg-brand-deeper disabled:opacity-50 text-white font-semibold py-3.5 rounded-lg transition-colors flex items-center justify-center gap-2">
                 {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {waSent ? "Stage Updated" : "Mark Sent (no WA)"}
               </button>
-              <button onClick={() => router.push("/admin/proposals")} className="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-semibold px-6 py-3.5 rounded-2xl transition-colors">
+              <button onClick={() => router.push("/admin/proposals")} className="border border-line bg-surface hover:bg-slate-50 text-slate-600 font-semibold px-6 py-3.5 rounded-lg transition-colors">
                 Done
               </button>
             </div>

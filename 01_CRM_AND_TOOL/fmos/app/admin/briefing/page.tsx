@@ -1,7 +1,10 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
-import { AlertTriangle, CheckSquare, Phone, Flag, Activity, ArrowRight, Flame } from "lucide-react";
+import { CheckSquare, Phone, Flag, Activity, ArrowRight, Flame } from "lucide-react";
 import clsx from "clsx";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function AdminBriefingPage() {
     const supabase = await createServerClientWithCookies();
@@ -49,35 +52,33 @@ export default async function AdminBriefingPage() {
         .limit(10);
 
     return (
-        <div className="min-h-full bg-slate-50 p-6 text-slate-900">
+        <div className="min-h-full bg-canvas p-6 text-slate-900">
             <div className="mx-auto max-w-5xl space-y-8">
                 {/* Header */}
-                <div className="flex justify-between items-end">
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
-                            Good Morning, Admin
-                        </h1>
-                        <p className="text-slate-600 mt-1">Here is your daily briefing for {new Date().toLocaleDateString()}.</p>
-                    </div>
-                    <Link href="/admin" className="text-indigo-400 text-sm hover:underline flex items-center gap-1">
-                        Go to Command Hub <ArrowRight className="h-4 w-4" />
-                    </Link>
-                </div>
+                <PageHeader
+                    title="Good Morning, Admin"
+                    subtitle={`Here is your daily briefing for ${new Date().toLocaleDateString()}.`}
+                    actions={
+                        <Link href="/admin" className="flex items-center gap-1 text-sm font-semibold text-brand-deep hover:underline">
+                            Go to Command Hub <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    }
+                />
 
                 {/* Section 1: Top Fires */}
                 {fires && fires.length > 0 && (
                     <section className="animate-in fade-in slide-in-from-bottom-2">
-                        <h2 className="text-lg font-bold text-red-400 mb-4 flex items-center gap-2">
+                        <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-semibold text-danger">
                             <Flame className="h-5 w-5" /> Top Fires (Action Required)
                         </h2>
                         <div className="grid gap-3">
                             {fires.map((alert: any) => (
-                                <div key={alert.id} className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl flex justify-between items-center">
+                                <div key={alert.id} className="flex items-center justify-between rounded-xl border border-danger-line bg-danger-soft p-4">
                                     <div>
-                                        <h3 className="font-bold text-red-200">{alert.title}</h3>
-                                        <p className="text-sm text-red-300/70">{alert.body}</p>
+                                        <h3 className="font-semibold text-danger">{alert.title}</h3>
+                                        <p className="text-sm text-slate-600">{alert.body}</p>
                                     </div>
-                                    <Link href="/admin/alerts" className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs rounded-lg transition-colors">
+                                    <Link href="/admin/alerts" className={buttonVariants({ variant: "danger-soft", size: "sm" })}>
                                         Resolve
                                     </Link>
                                 </div>
@@ -88,90 +89,90 @@ export default async function AdminBriefingPage() {
 
                 {/* Section 2: Today's Focus Grid */}
                 <section>
-                    <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <CheckSquare className="h-5 w-5 text-indigo-400" /> Today's Focus
+                    <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-semibold text-slate-900">
+                        <CheckSquare className="h-5 w-5 text-slate-400" /> Today's Focus
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {/* Sales Focus */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-5">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                                    <Phone className="h-4 w-4 text-blue-400" /> Sales Calls
+                        <Card className="p-5">
+                            <div className="mb-4 flex items-center justify-between">
+                                <h3 className="flex items-center gap-2 font-semibold text-slate-800">
+                                    <Phone className="h-4 w-4 text-slate-400" /> Sales Calls
                                 </h3>
-                                <span className="bg-slate-100 text-xs px-2 py-0.5 rounded text-slate-500">{followups?.length} Due</span>
+                                <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">{followups?.length} Due</span>
                             </div>
                             <div className="space-y-3">
                                 {followups?.map((lead: any) => (
-                                    <div key={lead.id} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0 last:pb-0">
-                                        <span className="truncate max-w-[120px] text-slate-600">{lead.contact_person} — {lead.company_name}</span>
-                                        <Link href={`/admin/leads/${lead.id}`} className="text-blue-400 hover:text-blue-300 text-xs text-right">View</Link>
+                                    <div key={lead.id} className="flex items-center justify-between border-b border-line pb-2 text-sm last:border-0 last:pb-0">
+                                        <span className="max-w-[120px] truncate text-slate-600">{lead.contact_person} — {lead.company_name}</span>
+                                        <Link href={`/admin/leads/${lead.id}`} className="text-right text-xs font-semibold text-brand-deep hover:underline">View</Link>
                                     </div>
                                 ))}
-                                {followups?.length === 0 && <p className="text-xs text-slate-600 italic">No urgent follow-ups.</p>}
+                                {followups?.length === 0 && <p className="text-xs italic text-slate-500">No urgent follow-ups.</p>}
                             </div>
-                        </div>
+                        </Card>
 
                         {/* Delivery Focus */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-5">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                                    <CheckSquare className="h-4 w-4 text-green-400" /> Tasks Due
+                        <Card className="p-5">
+                            <div className="mb-4 flex items-center justify-between">
+                                <h3 className="flex items-center gap-2 font-semibold text-slate-800">
+                                    <CheckSquare className="h-4 w-4 text-slate-400" /> Tasks Due
                                 </h3>
-                                <span className="bg-slate-100 text-xs px-2 py-0.5 rounded text-slate-500">{tasksDue?.length} Due</span>
+                                <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">{tasksDue?.length} Due</span>
                             </div>
                             <div className="space-y-3">
                                 {tasksDue?.map((task: any) => (
-                                    <div key={task.id} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0 last:pb-0">
-                                        <span className="truncate max-w-[150px] text-slate-600">{task.title}</span>
-                                        <Link href={`/projects/${task.project_id}`} className="text-green-400 hover:text-green-300 text-xs">View</Link>
+                                    <div key={task.id} className="flex items-center justify-between border-b border-line pb-2 text-sm last:border-0 last:pb-0">
+                                        <span className="max-w-[150px] truncate text-slate-600">{task.title}</span>
+                                        <Link href={`/projects/${task.project_id}`} className="text-xs font-semibold text-brand-deep hover:underline">View</Link>
                                     </div>
                                 ))}
-                                {tasksDue?.length === 0 && <p className="text-xs text-slate-600 italic">No tasks due today.</p>}
+                                {tasksDue?.length === 0 && <p className="text-xs italic text-slate-500">No tasks due today.</p>}
                             </div>
-                        </div>
+                        </Card>
 
                         {/* Approvals Focus */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-5">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                                    <Flag className="h-4 w-4 text-amber-400" /> Approvals
+                        <Card className="p-5">
+                            <div className="mb-4 flex items-center justify-between">
+                                <h3 className="flex items-center gap-2 font-semibold text-slate-800">
+                                    <Flag className="h-4 w-4 text-slate-400" /> Approvals
                                 </h3>
-                                <span className="bg-slate-100 text-xs px-2 py-0.5 rounded text-slate-500">{approvals?.length} Pending</span>
+                                <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">{approvals?.length} Pending</span>
                             </div>
                             <div className="space-y-3">
                                 {approvals?.map((app: any) => (
-                                    <div key={app.id} className="flex justify-between items-center text-sm border-b border-slate-200 pb-2 last:border-0 last:pb-0">
+                                    <div key={app.id} className="flex items-center justify-between border-b border-line pb-2 text-sm last:border-0 last:pb-0">
                                         <span className="text-slate-600">Milestone Decision</span>
-                                        <span className="text-amber-500 text-xs font-medium">Pending</span>
+                                        <span className="text-xs font-medium text-warn">Pending</span>
                                     </div>
                                 ))}
-                                {approvals?.length === 0 && <p className="text-xs text-slate-600 italic">All caught up.</p>}
+                                {approvals?.length === 0 && <p className="text-xs italic text-slate-500">All caught up.</p>}
                             </div>
-                        </div>
+                        </Card>
                     </div>
                 </section>
 
                 {/* Section 4: Live Activity Feed */}
                 <section>
-                    <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <Activity className="h-5 w-5 text-purple-400" /> Live Activity
+                    <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-semibold text-slate-900">
+                        <Activity className="h-5 w-5 text-slate-400" /> Live Activity
                     </h2>
-                    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden text-sm">
+                    <Card className="overflow-hidden text-sm">
                         {activity?.map((event: any, i: number) => (
-                            <div key={event.id} className={clsx("p-3 flex gap-3 items-start border-b border-slate-200", i % 2 === 0 ? "bg-white" : "bg-slate-50")}>
-                                <div className="mt-1 w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0"></div>
+                            <div key={event.id} className={clsx("flex items-start gap-3 border-b border-line p-3 last:border-0", i % 2 === 0 ? "bg-surface" : "bg-slate-50")}>
+                                <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-brand"></div>
                                 <div>
                                     <p className="text-slate-700">
-                                        <span className="font-bold text-slate-800">{event.title}</span>
+                                        <span className="font-semibold text-slate-800">{event.title}</span>
                                         <span className="text-slate-600"> - {new Date(event.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                     </p>
-                                    <p className="text-slate-500 text-xs mt-0.5">
+                                    <p className="mt-0.5 text-xs text-slate-500">
                                         User: {event.actor_id ? "System/User" : "System"} • Entity: {event.entity_type}
                                     </p>
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </Card>
                 </section>
             </div>
         </div>

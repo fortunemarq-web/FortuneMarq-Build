@@ -30,37 +30,23 @@ export function KpiCard({
     delta,
     className,
 }: KpiCardProps) {
-    const borderColors = {
-        revenue: "border-[#42CA80]",
-        volume: "border-blue-400",
-        pipeline: "border-amber-400",
-        performance: "border-purple-400",
-        warning: "border-red-400",
-        default: "border-slate-300",
-    };
-
-    const iconColors = {
-        revenue: "bg-emerald-50 text-emerald-600",
-        volume: "bg-blue-50 text-blue-600",
-        pipeline: "bg-amber-50 text-amber-600",
-        performance: "bg-purple-50 text-purple-600",
-        warning: "bg-red-50 text-red-600",
-        default: "bg-slate-50 text-slate-600",
-    };
+    // Single brand accent — KPI cards never use colored top-borders or a rainbow per-category palette.
+    const iconClass = category === "warning"
+        ? "bg-danger-soft text-danger"
+        : "bg-brand-soft text-brand-deep";
 
     return (
         <div className={cn(
-            "group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md cursor-default border-t-4 animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both",
-            borderColors[category],
+            "group rounded-xl border border-line bg-surface p-5 shadow-sm transition-colors hover:border-line-strong cursor-default",
             className
         )}>
             <div className="flex items-start justify-between">
                 <div className="flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                         {title}
                     </p>
                     <div className="mt-2 flex flex-col">
-                        <h3 className="text-4xl font-mono font-bold tabular-nums tracking-tight text-slate-900">
+                        <h3 className="text-4xl font-display font-semibold tabular-nums tracking-tight text-slate-900">
                             {value}
                         </h3>
 
@@ -69,8 +55,8 @@ export function KpiCard({
                             {delta ? (
                                 <>
                                     <span className={cn(
-                                        "text-xs font-medium",
-                                        delta.isPositive ? "text-emerald-600" : "text-red-500"
+                                        "text-xs font-medium tabular-nums",
+                                        delta.isPositive ? "text-brand-deep" : "text-danger"
                                     )}>
                                         {delta.isPositive ? "↑" : "↓"} {delta.value}
                                     </span>
@@ -88,8 +74,8 @@ export function KpiCard({
                 </div>
 
                 <div className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110",
-                    iconColors[category]
+                    "flex h-10 w-10 items-center justify-center rounded-lg",
+                    iconClass
                 )}>
                     <Icon className="h-5 w-5" />
                 </div>

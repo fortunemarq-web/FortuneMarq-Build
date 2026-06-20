@@ -2,7 +2,7 @@ import { createServerClientWithCookies } from "@/lib/supabase-server";
 import TaskBoard from "@/components/tasks/task-board";
 import StaffTaskBoard from "@/components/tasks/staff-task-board";
 import Link from "next/link";
-import { ArrowLeft, ListTodo } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
 
 // Phase B3: Role-based task view
 // - staff / execution_specialist → StaffTaskBoard (only their own tasks, 4-column kanban)
@@ -111,10 +111,10 @@ export default async function TasksPage() {
 
   if (tasksError) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-canvas px-4">
         <div className="text-center">
-          <p className="text-red-500">Error loading tasks: {tasksError.message}</p>
-          <Link href="/" className="mt-4 inline-block text-[#42CA80] hover:underline">
+          <p className="text-danger">Error loading tasks: {tasksError.message}</p>
+          <Link href="/" className="mt-4 inline-block text-brand-deep hover:underline">
             Back to Home
           </Link>
         </div>
@@ -123,17 +123,14 @@ export default async function TasksPage() {
   }
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-canvas px-4 py-6">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-soft">
-            <ListTodo className="h-4 w-4 text-brand-deep" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">Tasks</h1>
-            <p className="text-[13px] text-slate-500">Manage and track all project tasks</p>
-          </div>
-        </div>
+        <PageHeader
+          eyebrow="Tasks"
+          title="Tasks"
+          subtitle="Manage and track all project tasks"
+          className="mb-6"
+        />
         <TaskBoard
           initialTasks={(tasks || []) as any[]}
           projects={projectsData || []}

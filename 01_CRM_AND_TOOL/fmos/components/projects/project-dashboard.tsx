@@ -8,6 +8,8 @@ import TaskManager from "./task-manager";
 import DeliverableManager from "./deliverable-manager";
 import ChangeRequestBoard from "./change-request-board";
 import ActivityTimeline from "@/components/ActivityTimeline";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
 
 interface ProjectDashboardProps {
     project: any;
@@ -51,38 +53,38 @@ export default function ProjectDashboard({
     const completedTasks = tasks.filter(t => t.status === 'completed').length;
     const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-    // Status color
-    const statusColors: any = {
-        not_started: "bg-gray-600 text-gray-200",
-        in_progress: "bg-[#42CA80] text-slate-900",
-        on_hold: "bg-yellow-600 text-slate-900",
-        completed: "bg-blue-600 text-slate-900",
-        cancelled: "bg-red-600 text-slate-900"
+    // Every project status maps to one of the five tones — no per-status rainbow.
+    const statusTones: Record<string, Tone> = {
+        not_started: "neutral",
+        in_progress: "brand",
+        on_hold: "warning",
+        completed: "info",
+        cancelled: "danger"
     };
 
     return (
-        <div className="min-h-full bg-slate-50 px-4 py-6">
+        <div className="min-h-full bg-canvas px-4 py-6">
             <div className="mx-auto max-w-6xl">
                 {/* Header Section */}
                 <div className="mb-6">
-                    <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-[#42CA80] mb-4">
+                    <Link href="/projects" className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-brand-deep">
                         <ArrowLeft className="h-4 w-4" />
                         <span>Back to Projects</span>
                     </Link>
 
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-2xl font-bold text-slate-900 md:text-4xl font-mono tabular-nums">{clientName}</h1>
-                            <p className="mt-1 text-slate-500">{project.service_type?.replace(/_/g, ' ') || 'Project'}</p>
+                            <h1 className="font-display text-2xl font-semibold text-slate-900 md:text-3xl">{clientName}</h1>
+                            <p className="mt-1 capitalize text-slate-500">{project.service_type?.replace(/_/g, ' ') || 'Project'}</p>
                         </div>
-                        <span className={clsx("self-start px-3 py-1 rounded-full text-sm font-medium", statusColors[project.status] || statusColors.not_started)}>
+                        <Badge tone={statusTones[project.status] || "neutral"} size="md" className="self-start capitalize">
                             {project.status?.replace(/_/g, ' ')}
-                        </span>
+                        </Badge>
                     </div>
                 </div>
 
                 {/* Tab Navigation */}
-                <div className="flex overflow-x-auto border-b border-slate-200 mb-6 no-scrollbar">
+                <div className="flex overflow-x-auto border-b border-line mb-6 no-scrollbar">
                     {tabs.map(tab => {
                         const Icon = tab.icon;
                         return (
@@ -92,7 +94,7 @@ export default function ProjectDashboard({
                                 className={clsx(
                                     "flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 whitespace-nowrap transition-colors",
                                     activeTab === tab.id
-                                        ? "border-[#42CA80] text-[#42CA80]"
+                                        ? "border-brand-deep text-brand-deep"
                                         : "border-transparent text-slate-600 hover:text-slate-900"
                                 )}
                             >
@@ -109,43 +111,43 @@ export default function ProjectDashboard({
                         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-6">
                             {/* Project Info Cards */}
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                <div className="bg-white p-4 rounded-xl border border-slate-200">
-                                    <div className="flex items-center gap-2 text-slate-600 mb-2 text-xs uppercase tracking-wider">
+                                <Card className="p-4">
+                                    <div className="flex items-center gap-2 text-slate-500 mb-2 text-xs uppercase tracking-wider">
                                         <Calendar className="h-4 w-4" /> Start Date
                                     </div>
-                                    <p className="font-semibold text-slate-900">{formatDate(project.start_date)}</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-xl border border-slate-200">
-                                    <div className="flex items-center gap-2 text-slate-600 mb-2 text-xs uppercase tracking-wider">
+                                    <p className="font-semibold text-slate-900 tabular-nums">{formatDate(project.start_date)}</p>
+                                </Card>
+                                <Card className="p-4">
+                                    <div className="flex items-center gap-2 text-slate-500 mb-2 text-xs uppercase tracking-wider">
                                         <Clock className="h-4 w-4" /> Deadline
                                     </div>
-                                    <p className="font-semibold text-slate-900">{formatDate(project.deadline)}</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-xl border border-slate-200">
-                                    <div className="flex items-center gap-2 text-slate-600 mb-2 text-xs uppercase tracking-wider">
+                                    <p className="font-semibold text-slate-900 tabular-nums">{formatDate(project.deadline)}</p>
+                                </Card>
+                                <Card className="p-4">
+                                    <div className="flex items-center gap-2 text-slate-500 mb-2 text-xs uppercase tracking-wider">
                                         <Briefcase className="h-4 w-4" /> Progress
                                     </div>
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="text-slate-900 font-semibold">{progress}%</span>
-                                        <span className="text-xs text-slate-600">{completedTasks}/{totalTasks} tasks</span>
+                                        <span className="text-slate-900 font-semibold tabular-nums">{progress}%</span>
+                                        <span className="text-xs text-slate-500 tabular-nums">{completedTasks}/{totalTasks} tasks</span>
                                     </div>
-                                    <div className="h-1.5 bg-slate-50 rounded-full overflow-hidden">
-                                        <div className="h-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 " style={{ width: `${progress}%` }}></div>
+                                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${progress}%` }}></div>
                                     </div>
-                                </div>
-                                <div className="bg-white p-4 rounded-xl border border-slate-200">
-                                    <div className="flex items-center gap-2 text-slate-600 mb-2 text-xs uppercase tracking-wider">
+                                </Card>
+                                <Card className="p-4">
+                                    <div className="flex items-center gap-2 text-slate-500 mb-2 text-xs uppercase tracking-wider">
                                         <Users className="h-4 w-4" /> Client
                                     </div>
                                     <p className="font-semibold text-slate-900 truncate">{project.clients?.primary_email}</p>
-                                </div>
+                                </Card>
                             </div>
 
                             {/* Recent Activity */}
-                            <div className="rounded-xl border border-slate-200 bg-white p-6">
-                                <h2 className="mb-4 text-lg font-bold text-slate-900">Recent Activity</h2>
+                            <Card className="p-6">
+                                <h2 className="mb-4 font-display text-lg font-semibold text-slate-900">Recent Activity</h2>
                                 <ActivityTimeline entityType="project" entityId={project.id} />
-                            </div>
+                            </Card>
                         </div>
                     )}
 

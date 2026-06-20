@@ -5,9 +5,15 @@ import { useRouter } from "next/navigation";
 import {
   CheckCircle, Clock, AlertTriangle, XCircle, Box,
   ChevronDown, ChevronUp, Loader2, Wand2, Plus, Printer,
+  Play, RotateCcw, Check, Ban,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { generateClientOnboarding, SERVICE_TASKS, SERVICE_ASSETS } from "@/lib/onboarding/generateClientOnboarding";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { buttonVariants } from "@/components/ui/button";
 
 const ALL_SERVICES = [
   { id: "WEBSITE", label: "Website Building" },
@@ -53,18 +59,18 @@ interface OnboardingTabProps {
   isAdmin: boolean;
 }
 
-const STATUS_CONFIG = {
-  PENDING: { label: "Pending", icon: Clock, color: "text-slate-500", bg: "bg-slate-100" },
-  IN_PROGRESS: { label: "In Progress", icon: Clock, color: "text-blue-600", bg: "bg-blue-100" },
-  DONE: { label: "Done", icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-100" },
-  BLOCKED: { label: "Blocked", icon: XCircle, color: "text-red-600", bg: "bg-red-100" },
+const STATUS_CONFIG: Record<string, { label: string; icon: typeof Clock; color: string; tone: Tone }> = {
+  PENDING: { label: "Pending", icon: Clock, color: "text-slate-500", tone: "neutral" },
+  IN_PROGRESS: { label: "In Progress", icon: Clock, color: "text-info", tone: "info" },
+  DONE: { label: "Done", icon: CheckCircle, color: "text-brand-deep", tone: "brand" },
+  BLOCKED: { label: "Blocked", icon: XCircle, color: "text-danger", tone: "danger" },
 };
 
-const ASSET_STATUS_CONFIG = {
-  NOT_COLLECTED: { label: "Not Collected", color: "text-red-600", bg: "bg-red-50" },
-  REQUESTED: { label: "Requested", color: "text-amber-600", bg: "bg-amber-50" },
-  RECEIVED: { label: "Received", color: "text-blue-600", bg: "bg-blue-50" },
-  STORED: { label: "Stored ✓", color: "text-emerald-600", bg: "bg-emerald-50" },
+const ASSET_STATUS_CONFIG: Record<string, { label: string; tone: Tone }> = {
+  NOT_COLLECTED: { label: "Not Collected", tone: "danger" },
+  REQUESTED: { label: "Requested", tone: "warning" },
+  RECEIVED: { label: "Received", tone: "info" },
+  STORED: { label: "Stored", tone: "brand" },
 };
 
 const ASSET_STATUS_FLOW: Record<string, AssetRecord["status"]> = {
@@ -211,14 +217,14 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   if (tasks.length === 0 && assets.length === 0) {
     return (
       <div className="space-y-4">
-        <div className="flex flex-col items-center justify-center py-12 text-slate-400 bg-white border border-slate-200 rounded-2xl">
+        <Card className="flex flex-col items-center justify-center py-12 text-slate-400">
           <Box className="h-10 w-10 mb-3 opacity-30" />
           <p className="text-sm font-semibold text-slate-600">No onboarding tasks yet</p>
           <p className="text-xs mt-1 mb-6 text-slate-400">Select services to generate the onboarding checklist</p>
 
           {isAdmin && (
             <div className="w-full max-w-sm px-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Select services</p>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Select services</p>
               <div className="grid grid-cols-2 gap-2 mb-4">
                 {ALL_SERVICES.map(svc => (
                   <button
@@ -228,10 +234,10 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                       next.has(svc.id) ? next.delete(svc.id) : next.add(svc.id);
                       return next;
                     })}
-                    className={`text-xs font-semibold px-3 py-2 rounded-xl border-2 transition-all text-left ${
+                    className={`text-xs font-semibold px-3 py-2 rounded-lg border transition-colors text-left ${
                       selectedServices.has(svc.id)
-                        ? "border-[#42CA80] bg-emerald-50 text-emerald-800"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                        ? "border-brand-line bg-brand-soft text-brand-deep"
+                        : "border-line bg-surface text-slate-600 hover:border-line-strong"
                     }`}
                   >
                     {svc.label}
@@ -241,14 +247,14 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
               <button
                 onClick={handleGenerateOnboarding}
                 disabled={selectedServices.size === 0 || generating}
-                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-sm font-bold py-3 rounded-xl transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-sm font-semibold py-3 rounded-lg transition-colors"
               >
                 {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
                 Generate Onboarding Tasks
               </button>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     );
   }
@@ -256,24 +262,24 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   return (
     <div className="space-y-4">
       {/* Progress Header */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+      <Card className="p-5">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-sm font-bold text-slate-900">Onboarding Progress</p>
-            <p className="text-xs text-slate-500 mt-0.5">{doneTasks}/{totalTasks} tasks complete</p>
+            <p className="font-display text-sm font-semibold text-slate-900">Onboarding Progress</p>
+            <p className="text-xs text-slate-500 mt-0.5 tabular-nums">{doneTasks}/{totalTasks} tasks complete</p>
           </div>
           <div className="flex items-center gap-2">
             {missingRequiredAssets > 0 && (
-              <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-lg px-3 py-1.5">
-                <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
-                <span className="text-xs font-semibold text-red-600">{missingRequiredAssets} required asset{missingRequiredAssets > 1 ? "s" : ""} outstanding</span>
+              <div className="flex items-center gap-1.5 bg-danger-soft border border-danger-line rounded-lg px-3 py-1.5">
+                <AlertTriangle className="h-3.5 w-3.5 text-danger" />
+                <span className="text-xs font-semibold text-danger">{missingRequiredAssets} required asset{missingRequiredAssets > 1 ? "s" : ""} outstanding</span>
               </div>
             )}
             <a
               href={`/admin/clients/${clientId}/onboarding/print`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 border border-line-strong rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors"
             >
               <Printer className="h-3.5 w-3.5" />
               Download PDF
@@ -291,70 +297,70 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
         </div>
         <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className="h-full rounded-full bg-[#42CA80] transition-all"
+            className="h-full rounded-full bg-brand transition-all"
             style={{ width: totalTasks > 0 ? `${(doneTasks / totalTasks) * 100}%` : "0%" }}
           />
         </div>
 
         {/* Add task inline form */}
         {showAddTask && (
-          <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-            <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Add Custom Task</p>
+          <div className="mt-4 p-4 bg-slate-50 border border-line rounded-xl space-y-3">
+            <p className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Add Custom Task</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] font-semibold text-slate-500 uppercase">Task</label>
-                <input
+                <label className="text-[11px] font-semibold text-slate-500 uppercase">Task</label>
+                <Input
                   type="text"
                   value={addTaskForm.task}
                   onChange={e => setAddTaskForm(f => ({ ...f, task: e.target.value }))}
                   placeholder="e.g. Share brand logo assets"
-                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                  className="mt-1 h-9 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[10px] font-semibold text-slate-500 uppercase">Section</label>
-                <select
+                <label className="text-[11px] font-semibold text-slate-500 uppercase">Section</label>
+                <Select
                   value={addTaskForm.service_id}
                   onChange={e => setAddTaskForm(f => ({ ...f, service_id: e.target.value }))}
-                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                  className="mt-1 text-xs"
                 >
                   {ALL_SERVICE_IDS.map(id => (
                     <option key={id} value={id}>{serviceLabel(id)}</option>
                   ))}
-                </select>
+                </Select>
               </div>
               <div>
-                <label className="text-[10px] font-semibold text-slate-500 uppercase">Owner</label>
-                <input
+                <label className="text-[11px] font-semibold text-slate-500 uppercase">Owner</label>
+                <Input
                   type="text"
                   value={addTaskForm.owner}
                   onChange={e => setAddTaskForm(f => ({ ...f, owner: e.target.value }))}
                   placeholder="Jabeer"
-                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                  className="mt-1 h-9 text-xs"
                 />
               </div>
               <div>
-                <label className="text-[10px] font-semibold text-slate-500 uppercase">Due</label>
-                <input
+                <label className="text-[11px] font-semibold text-slate-500 uppercase">Due</label>
+                <Input
                   type="text"
                   value={addTaskForm.due_by}
                   onChange={e => setAddTaskForm(f => ({ ...f, due_by: e.target.value }))}
                   placeholder="Day 3"
-                  className="mt-1 w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                  className="mt-1 h-9 text-xs"
                 />
               </div>
             </div>
             <div className="flex items-center gap-2 justify-end">
               <button
                 onClick={() => setShowAddTask(false)}
-                className="text-xs text-slate-500 hover:text-slate-700 px-3 py-1.5"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
               >
                 Cancel
               </button>
               <button
                 onClick={addCustomTask}
                 disabled={!addTaskForm.task.trim() || addingTask}
-                className="flex items-center gap-1.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white px-4 py-1.5 rounded-lg transition-colors"
+                className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white px-4 py-1.5 rounded-lg transition-colors"
               >
                 {addingTask ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
                 Add
@@ -365,20 +371,20 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
 
         {/* Complete banner */}
         {isComplete && (
-          <div className="mt-4 flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <div className="mt-4 flex items-center justify-between bg-brand-soft border border-brand-line rounded-xl p-4">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-emerald-600" />
-              <p className="text-sm font-semibold text-emerald-800">Onboarding Complete. Activate this client.</p>
+              <CheckCircle className="h-5 w-5 text-brand-deep" />
+              <p className="text-sm font-semibold text-brand-deep">Onboarding Complete. Activate this client.</p>
             </div>
             <button
               onClick={activateClient}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors"
+              className={buttonVariants({ variant: "primary", size: "sm" })}
             >
               Activate Client
             </button>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Service Sections */}
       {serviceIds.map(serviceId => {
@@ -389,21 +395,21 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
         const readiness = serviceReadiness(serviceAssets);
 
         return (
-          <div key={serviceId} className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <Card key={serviceId} className="overflow-hidden">
             {/* Section header */}
             <button
               onClick={() => toggleService(serviceId)}
-              className="w-full flex items-center justify-between px-5 py-4 bg-slate-50 border-b border-slate-200 hover:bg-slate-100 transition-colors"
+              className="w-full flex items-center justify-between px-5 py-4 bg-slate-50 border-b border-line hover:bg-slate-100 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <span className="text-sm font-bold text-slate-900">{serviceLabel(serviceId)}</span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${doneSvcTasks === serviceTasks.length && serviceTasks.length > 0 ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>
+                <span className="font-display text-sm font-semibold text-slate-900">{serviceLabel(serviceId)}</span>
+                <Badge tone={doneSvcTasks === serviceTasks.length && serviceTasks.length > 0 ? "brand" : "neutral"} size="sm" className="tabular-nums">
                   {doneSvcTasks}/{serviceTasks.length} tasks
-                </span>
+                </Badge>
                 {readiness && serviceId !== "GENERAL" && (
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${readiness.ready ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+                  <Badge tone={readiness.ready ? "brand" : "warning"} size="sm">
                     {readiness.ready ? "Ready to build" : `Waiting on ${readiness.missing}`}
-                  </span>
+                  </Badge>
                 )}
               </div>
               {isCollapsed ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronUp className="h-4 w-4 text-slate-400" />}
@@ -415,7 +421,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                 {serviceTasks.length > 0 && (
                   <div>
                     <div className="px-5 pt-4 pb-2">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tasks</p>
+                      <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tasks</p>
                     </div>
                     <div className="divide-y divide-slate-50">
                       {serviceTasks.map(task => {
@@ -427,10 +433,10 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                             <div className="flex-1 min-w-0">
                               <p className={`text-sm font-medium ${task.status === "DONE" ? "line-through text-slate-400" : "text-slate-800"}`}>{task.task}</p>
                               <div className="flex items-center gap-3 mt-0.5">
-                                <span className="text-[10px] text-slate-400">{task.owner}</span>
-                                {task.due_by && <span className="text-[10px] text-slate-400">Due: {task.due_by}</span>}
+                                <span className="text-[11px] text-slate-400">{task.owner}</span>
+                                {task.due_by && <span className="text-[11px] text-slate-400">Due: {task.due_by}</span>}
                               </div>
-                              {task.notes && <p className="text-[10px] text-slate-400 italic mt-0.5">{task.notes}</p>}
+                              {task.notes && <p className="text-[11px] text-slate-400 italic mt-0.5">{task.notes}</p>}
                             </div>
                             {isAdmin && (
                               <div className="flex items-center gap-1 shrink-0">
@@ -441,25 +447,25 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                                     task.status === "IN_PROGRESS" ? "Mark Done" :
                                     "Reset to Pending"
                                   }
-                                  className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${
+                                  className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${
                                     task.status === "DONE"
-                                      ? "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100"
+                                      ? "bg-slate-50 border-line text-slate-500 hover:bg-slate-100"
                                       : task.status === "IN_PROGRESS"
-                                      ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
-                                      : "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+                                      ? "bg-brand-soft border-brand-line text-brand-deep hover:bg-brand-100"
+                                      : "bg-info-soft border-info-line text-info hover:bg-blue-100"
                                   }`}
                                 >
-                                  {task.status === "PENDING" ? "▶ Start" :
-                                   task.status === "IN_PROGRESS" ? "✓ Done" :
-                                   task.status === "DONE" ? "↺ Reset" : "↺ Unblock"}
+                                  {task.status === "PENDING" ? <><Play className="h-3 w-3" /> Start</> :
+                                   task.status === "IN_PROGRESS" ? <><Check className="h-3 w-3" /> Done</> :
+                                   task.status === "DONE" ? <><RotateCcw className="h-3 w-3" /> Reset</> : <><RotateCcw className="h-3 w-3" /> Unblock</>}
                                 </button>
                                 {task.status !== "DONE" && task.status !== "BLOCKED" && (
                                   <button
                                     onClick={() => markTaskBlocked(task.id)}
                                     title="Mark Blocked"
-                                    className="text-xs font-semibold px-2 py-1.5 rounded-lg border bg-red-50 border-red-200 text-red-600 hover:bg-red-100 transition-colors"
+                                    className="inline-flex items-center text-xs font-semibold px-2 py-1.5 rounded-lg border bg-danger-soft border-danger-line text-danger hover:bg-red-100 transition-colors"
                                   >
-                                    ✕
+                                    <Ban className="h-3 w-3" />
                                   </button>
                                 )}
                               </div>
@@ -474,8 +480,8 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                 {/* Assets */}
                 {serviceAssets.length > 0 && (
                   <div>
-                    <div className="px-5 pt-4 pb-2 border-t border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assets to Collect</p>
+                    <div className="px-5 pt-4 pb-2 border-t border-line">
+                      <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Assets to Collect</p>
                     </div>
                     <div className="divide-y divide-slate-50">
                       {serviceAssets.map(asset => {
@@ -487,19 +493,17 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                               <div className="flex items-center gap-2">
                                 <p className="text-sm font-medium text-slate-800">{asset.asset_name}</p>
                                 {asset.required && (
-                                  <span className="text-[9px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded border border-red-200">Required</span>
+                                  <span className="text-[11px] font-semibold text-danger bg-danger-soft px-1.5 py-0.5 rounded border border-danger-line">Required</span>
                                 )}
                               </div>
-                              {asset.notes && <p className="text-[10px] text-slate-400 mt-0.5">{asset.notes}</p>}
+                              {asset.notes && <p className="text-[11px] text-slate-400 mt-0.5">{asset.notes}</p>}
                             </div>
-                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${cfg.bg} ${cfg.color}`}>
-                              {cfg.label}
-                            </span>
+                            <Badge tone={cfg.tone} size="sm">{cfg.label}</Badge>
                             {canAdvance && isAdmin && (
                               <button
                                 onClick={() => advanceAsset(asset.id, asset.status)}
                                 disabled={isPending}
-                                className="shrink-0 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg transition-colors"
+                                className={buttonVariants({ variant: "subtle", size: "sm", className: "shrink-0" })}
                               >
                                 {asset.status === "NOT_COLLECTED" ? "Mark Requested" :
                                  asset.status === "REQUESTED" ? "Mark Received" : "Mark Stored"}
@@ -513,7 +517,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                 )}
               </div>
             )}
-          </div>
+          </Card>
         );
       })}
     </div>

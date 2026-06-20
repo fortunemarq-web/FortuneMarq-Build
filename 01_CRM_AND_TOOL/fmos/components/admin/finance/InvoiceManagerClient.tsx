@@ -1,15 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Search, Filter, Download, MoreVertical, Send, CheckCircle2, AlertCircle, FileText, Trash2, X, ChevronRight, Pencil, Ban, Repeat, Loader2, MessageCircle } from "lucide-react";
+import { Plus, Search, Filter, Download, CheckCircle2, FileText, Trash2, ChevronRight, Pencil, Ban, Repeat, Loader2, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createInvoice, recordInvoicePayment, cancelInvoice, deleteInvoice, generateMonthlyInvoices } from "@/app/admin/finance/actions";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
 import InvoiceCreateModal from "@/components/admin/finance/InvoiceCreateModal";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import dynamic from "next/dynamic";
 import InvoicePDF from "@/components/admin/finance/InvoicePDF";
+import { Button } from "@/components/ui/button";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
+
+// react-pdf's PDFDownloadLink is a browser-only API — evaluating it during SSR
+// throws "PDFDownloadLink is a web specific API". Load it client-side only.
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  { ssr: false }
+);
 
 interface InvoiceManagerClientProps {
   initialInvoices: any[];
@@ -152,12 +165,13 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
     }).format(val);
   };
 
-  const statusColors: Record<string, string> = {
-    paid: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    unpaid: 'bg-amber-50 text-amber-600 border-amber-100',
-    partially_paid: 'bg-blue-50 text-blue-600 border-blue-100',
-    overdue: 'bg-red-50 text-red-600 border-red-100',
-    cancelled: 'bg-slate-50 text-slate-600 border-slate-100'
+  // Every invoice status maps to one of the five tones — no per-status colours.
+  const statusTone: Record<string, Tone> = {
+    paid: 'brand',
+    unpaid: 'warning',
+    partially_paid: 'info',
+    overdue: 'danger',
+    cancelled: 'neutral'
   };
 
   const isPayable = (s: string) => s === 'unpaid' || s === 'overdue' || s === 'partially_paid';
@@ -167,51 +181,48 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
       
       {/* Header & Stats */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-400 mb-1">
+        <div className="min-w-0">
+          <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-slate-400">
             <Link href="/admin/finance" className="hover:text-slate-700">Finance</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-slate-900">Invoice Manager</span>
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Invoices</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-[-0.02em] text-slate-900">Invoices</h1>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
+            variant="secondary"
             onClick={handleGenerateMrr}
             disabled={generating}
             title="One invoice per active retainer client; already-billed clients are skipped"
-            className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-colors disabled:opacity-50"
           >
             {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Repeat className="h-4 w-4" />}
             Generate MRR Invoices
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-brand-deep hover:bg-brand-hover text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-colors"
-          >
+          </Button>
+          <Button variant="primary" onClick={() => setIsModalOpen(true)}>
             <Plus className="h-4 w-4" /> Create Invoice
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Grid Layout Filter Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row items-center gap-4">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-          <input 
-            type="text" 
+      <Card className="flex flex-col md:flex-row items-center gap-4 p-4">
+        <div className="relative w-full flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            type="text"
             placeholder="Search by invoice number or client..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+            className="pl-10"
           />
         </div>
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <Filter className="h-4 w-4 text-slate-400 hidden md:block" />
-          <select 
+        <div className="flex w-full items-center gap-2 md:w-auto">
+          <Filter className="hidden h-4 w-4 text-slate-400 md:block" />
+          <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="flex-1 md:flex-none bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 focus:outline-none"
+            className="flex-1 md:w-40 md:flex-none"
           >
             <option value="all">All Status</option>
             <option value="unpaid">Unpaid</option>
@@ -219,81 +230,81 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
             <option value="paid">Paid</option>
             <option value="overdue">Overdue</option>
             <option value="cancelled">Cancelled</option>
-          </select>
-          <select 
+          </Select>
+          <Select
             value={revenueFilter}
             onChange={(e) => setRevenueFilter(e.target.value)}
-            className="flex-1 md:flex-none bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 focus:outline-none"
+            className="flex-1 md:w-40 md:flex-none"
           >
             <option value="all">All Revenues</option>
             <option value="mrr">MRR</option>
             <option value="setup_fee">Setup Fee</option>
             <option value="one_time">One-Time</option>
-          </select>
+          </Select>
           {/* (export button removed — it did nothing; add back when CSV export exists) */}
         </div>
-      </div>
+      </Card>
 
       {/* Invoice Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <Card className="overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-100">
-              <tr>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Invoice #</th>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Client</th>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Issue Date</th>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Total (Inc GST)</th>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Type</th>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-center">Status</th>
-                <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right pr-10">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
+          <Table>
+            <THead>
+              <TR className="hover:bg-transparent">
+                <TH>Invoice #</TH>
+                <TH>Client</TH>
+                <TH>Issue Date</TH>
+                <TH>Total (Inc GST)</TH>
+                <TH>Type</TH>
+                <TH className="text-center">Status</TH>
+                <TH className="pr-10 text-right">Actions</TH>
+              </TR>
+            </THead>
+            <TBody>
               {filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-50/50 group transition-colors">
-                  <td className="px-6 py-3">
+                <TR key={inv.id}>
+                  <TD>
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-slate-100 text-slate-500">
+                      <div className="rounded-lg bg-slate-100 p-2 text-slate-500">
                         <FileText className="h-4 w-4" />
                       </div>
-                      <span className="font-mono text-sm font-bold text-slate-900">{inv.invoice_number}</span>
+                      <span className="text-sm font-semibold tabular-nums text-slate-900">{inv.invoice_number}</span>
                     </div>
-                  </td>
-                  <td className="px-6 py-3">
+                  </TD>
+                  <TD>
                     <span className="text-sm font-semibold text-slate-700">{inv.clients?.business_name}</span>
-                  </td>
-                  <td className="px-6 py-3">
-                    <span className="text-xs text-slate-500 font-medium">{new Date(inv.issue_date).toLocaleDateString()}</span>
-                  </td>
-                  <td className="px-6 py-3">
+                  </TD>
+                  <TD>
+                    <span className="text-xs font-medium text-slate-500">{new Date(inv.issue_date).toLocaleDateString()}</span>
+                  </TD>
+                  <TD>
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-slate-900">{formatCurrency(inv.total_amount)}</span>
-                      <span className="text-[10px] text-slate-400">Sub: {formatCurrency(inv.subtotal)} | GST: {formatCurrency(inv.gst_amount)}</span>
+                      <span className="text-sm font-semibold tabular-nums text-slate-900">{formatCurrency(inv.total_amount)}</span>
+                      <span className="text-[11px] tabular-nums text-slate-400">Sub: {formatCurrency(inv.subtotal)} | GST: {formatCurrency(inv.gst_amount)}</span>
                     </div>
-                  </td>
-                  <td className="px-6 py-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  </TD>
+                  <TD>
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       {(inv.revenue_type || "mrr").replace("_", "-")}
                     </span>
-                  </td>
-                  <td className="px-6 py-3 text-center">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusColors[inv.status] || statusColors.unpaid}`}>
+                  </TD>
+                  <TD className="text-center">
+                    <Badge tone={statusTone[inv.status] || "warning"} size="sm" className="capitalize">
                       {String(inv.status).replace("_", " ")}
-                    </span>
+                    </Badge>
                     {inv.status === 'partially_paid' && (
-                      <p className="text-[10px] text-slate-400 mt-1">
+                      <p className="mt-1 text-[11px] tabular-nums text-slate-400">
                         {formatCurrency(Number(inv.paid_amount) || 0)} received
                       </p>
                     )}
-                  </td>
-                  <td className="px-6 py-3 text-right pr-6">
+                  </TD>
+                  <TD className="pr-6 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {isPayable(inv.status) && (
                         <button
                           onClick={() => handleRecordPayment(inv)}
                           title="Record payment (full or partial)"
-                          className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-brand-deep transition-colors hover:bg-brand-soft"
                         >
                           <CheckCircle2 className="h-4 w-4" />
                         </button>
@@ -305,7 +316,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                           target="_blank"
                           rel="noreferrer"
                           title="Send payment reminder on WhatsApp"
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-brand-deep transition-colors hover:bg-brand-soft"
                         >
                           <MessageCircle className="h-4 w-4" />
                         </a>
@@ -315,7 +326,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                         <button
                           onClick={() => { setEditInvoice(inv); setIsModalOpen(true); }}
                           title="Edit invoice"
-                          className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -325,7 +336,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                       <PDFDownloadLink
                         document={<InvoicePDF invoice={inv} settings={settings} />}
                         fileName={`${inv.invoice_number}.pdf`}
-                        className="p-2 text-indigo-500 hover:bg-indigo-50 rounded-lg transition-colors"
+                        className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
                       >
                         {({ loading }) => (
                           <Download className={`h-4 w-4 ${loading ? 'animate-pulse opacity-50' : ''}`} />
@@ -336,7 +347,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                         <button
                           onClick={() => handleCancel(inv.id)}
                           title="Cancel (void) invoice"
-                          className="p-2 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-warn transition-colors hover:bg-warn-soft"
                         >
                           <Ban className="h-4 w-4" />
                         </button>
@@ -346,29 +357,29 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                         <button
                           onClick={() => handleDelete(inv.id, inv.invoice_number)}
                           title="Delete invoice"
-                          className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-danger-soft hover:text-danger"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       )}
                     </div>
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               ))}
               {filteredInvoices.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="px-6 py-20 text-center">
-                    <div className="max-w-xs mx-auto text-slate-400">
-                      <Search className="h-10 w-10 mx-auto mb-3 opacity-20" />
+                <TR className="hover:bg-transparent">
+                  <TD colSpan={7} className="py-20 text-center">
+                    <div className="mx-auto max-w-xs text-slate-400">
+                      <Search className="mx-auto mb-3 h-10 w-10 opacity-20" />
                       <p className="text-sm font-medium">No invoices found matching your filters.</p>
                     </div>
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               )}
-            </tbody>
-          </table>
+            </TBody>
+          </Table>
         </div>
-      </div>
+      </Card>
 
       {isModalOpen && (
         <InvoiceCreateModal

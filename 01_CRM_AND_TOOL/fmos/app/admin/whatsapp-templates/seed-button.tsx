@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { Database, CheckCircle } from "lucide-react";
 import { seedWhatsAppTemplates } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function SeedTemplatesButton() {
   const [isPending, startTransition] = useTransition();
@@ -19,21 +21,17 @@ export default function SeedTemplatesButton() {
 
   if (result) {
     return (
-      <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2 rounded-lg text-sm font-semibold">
+      <Badge tone="brand" size="md">
         <CheckCircle className="h-4 w-4" />
         Seeded {result.seeded} templates ({result.skipped} already existed)
-      </div>
+      </Badge>
     );
   }
 
   return (
-    <button
-      onClick={handleSeed}
-      disabled={isPending}
-      className="flex items-center gap-2 bg-[#42CA80] hover:bg-[#35A66A] disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-sm"
-    >
+    <Button onClick={handleSeed} disabled={isPending} variant="primary">
       <Database className="h-4 w-4" />
       {isPending ? "Seeding..." : "Seed 17 Templates"}
-    </button>
+    </Button>
   );
 }

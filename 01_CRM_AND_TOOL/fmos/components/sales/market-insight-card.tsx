@@ -1,4 +1,5 @@
 import type { Database } from "@/types/database.types";
+import { Card } from "@/components/ui/card";
 
 type MarketInsight = Database["public"]["Tables"]["market_insights"]["Row"];
 
@@ -14,7 +15,7 @@ export default function MarketInsightCard({
   data,
 }: MarketInsightCardProps) {
   return (
-    <div className="w-full rounded-lg border-l-4 border-[#42CA80] bg-white p-4 shadow-sm">
+    <Card className="w-full border-l-4 border-l-brand p-4">
       <div className="space-y-3">
         <div className="space-y-1">
           <p className="text-sm font-medium text-slate-500">Industry</p>
@@ -50,14 +51,13 @@ export default function MarketInsightCard({
             )}
           </>
         ) : (
-          <div className="rounded-md bg-slate-50 p-3">
+          <div className="rounded-lg bg-slate-50 p-3">
             <p className="text-sm text-slate-500">
               No market data available for this segment yet.
             </p>
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
-

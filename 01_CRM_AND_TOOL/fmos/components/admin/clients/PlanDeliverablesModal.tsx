@@ -9,6 +9,8 @@ import {
 import { parseMilestones } from "@/lib/delivery/parseMilestones";
 import { planDeliverables } from "@/actions/plan-deliverables";
 import { toast } from "@/components/ui/toast";
+import { Textarea } from "@/components/ui/textarea";
+import { buttonVariants } from "@/components/ui/button";
 
 const PLACEHOLDER = `Milestone: Website Live (due 2026-07-05)
 - Build homepage @Zaid due 28 Jun
@@ -64,7 +66,7 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 px-3 py-2 text-xs font-bold text-white transition-colors min-h-[36px]"
+        className="flex items-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 px-3 py-2 text-xs font-semibold text-white transition-colors min-h-[36px]"
       >
         <ClipboardList className="h-3.5 w-3.5" />
         Plan Deliverables
@@ -72,11 +74,11 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden">
+          <div className="bg-surface rounded-2xl shadow-lg w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-line">
               <div>
-                <h2 className="text-base font-bold text-slate-900">Plan Deliverables</h2>
+                <h2 className="font-display text-base font-semibold text-slate-900">Plan Deliverables</h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   {step === "paste"
                     ? "Paste milestones + tasks from Cowork"
@@ -92,12 +94,12 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
             <div className="flex-1 overflow-y-auto px-6 py-5">
               {step === "paste" ? (
                 <div className="space-y-3">
-                  <textarea
+                  <Textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder={PLACEHOLDER}
                     rows={14}
-                    className="w-full text-sm font-mono border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-[#42CA80] resize-none leading-relaxed"
+                    className="font-mono rounded-xl px-4 py-3 resize-none leading-relaxed"
                   />
                   <div className="text-[11px] text-slate-400 leading-relaxed">
                     <span className="font-semibold text-slate-500">Format:</span>{" "}
@@ -113,7 +115,7 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-line bg-slate-50">
               {step === "paste" ? (
                 <>
                   <span className="text-xs text-slate-400">
@@ -122,7 +124,7 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
                   <button
                     onClick={() => setStep("preview")}
                     disabled={!parsed || parsed.taskCount === 0 && parsed.milestones.length === 0}
-                    className="flex items-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-40 px-4 py-2 text-sm font-bold text-white transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-40 px-4 py-2 text-sm font-semibold text-white transition-colors"
                   >
                     Preview <ChevronRight className="h-4 w-4" />
                   </button>
@@ -138,7 +140,7 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
                   <button
                     onClick={confirmSave}
                     disabled={saving || !parsed || parsed.milestones.length === 0}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 px-4 py-2 text-sm font-bold text-white transition-colors"
+                    className={buttonVariants({ variant: "primary" })}
                   >
                     {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
                     Confirm &amp; Save
@@ -158,26 +160,26 @@ function PreviewPane({ parsed }: { parsed: ReturnType<typeof parseMilestones> | 
   return (
     <div className="space-y-4">
       {parsed.warnings.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+        <div className="rounded-xl border border-warn-line bg-warn-soft px-4 py-3">
           <div className="flex items-center gap-1.5 mb-1.5">
-            <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
-            <span className="text-xs font-bold text-amber-700">{parsed.warnings.length} thing{parsed.warnings.length === 1 ? "" : "s"} to note</span>
+            <AlertTriangle className="h-3.5 w-3.5 text-warn" />
+            <span className="text-xs font-semibold text-warn">{parsed.warnings.length} thing{parsed.warnings.length === 1 ? "" : "s"} to note</span>
           </div>
           <ul className="space-y-1 ml-5 list-disc">
             {parsed.warnings.map((w, i) => (
-              <li key={i} className="text-[11px] text-amber-700">{w}</li>
+              <li key={i} className="text-[11px] text-warn">{w}</li>
             ))}
           </ul>
         </div>
       )}
 
       {parsed.milestones.map((m, i) => (
-        <div key={i} className="rounded-xl border border-slate-200 overflow-hidden">
-          <div className={`flex items-center justify-between px-4 py-2.5 ${m.isGeneral ? "bg-slate-100" : "bg-slate-50"} border-b border-slate-200`}>
+        <div key={i} className="rounded-xl border border-line overflow-hidden">
+          <div className={`flex items-center justify-between px-4 py-2.5 ${m.isGeneral ? "bg-slate-100" : "bg-slate-50"} border-b border-line`}>
             <div className="flex items-center gap-2">
-              <Flag className={`h-3.5 w-3.5 ${m.isGeneral ? "text-slate-400" : "text-[#1E7A4F]"}`} />
-              <span className="text-sm font-bold text-slate-800">{m.name}</span>
-              {m.isGeneral && <span className="text-[9px] font-bold uppercase tracking-wide text-slate-400 bg-white border border-slate-200 rounded px-1.5 py-0.5">auto-bucket</span>}
+              <Flag className={`h-3.5 w-3.5 ${m.isGeneral ? "text-slate-400" : "text-brand-deep"}`} />
+              <span className="text-sm font-semibold text-slate-800">{m.name}</span>
+              {m.isGeneral && <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 bg-surface border border-line rounded px-1.5 py-0.5">auto-bucket</span>}
             </div>
             <span className={`flex items-center gap-1 text-[11px] font-semibold ${m.dueIso ? "text-slate-500" : "text-slate-300"}`}>
               <CalendarDays className="h-3 w-3" />
@@ -193,12 +195,12 @@ function PreviewPane({ parsed }: { parsed: ReturnType<typeof parseMilestones> | 
                   <span className="text-sm text-slate-700">{t.title}</span>
                   <div className="flex items-center gap-3 shrink-0 ml-3">
                     {t.owner && (
-                      <span className="flex items-center gap-1 text-[11px] text-indigo-600 font-medium">
+                      <span className="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
                         <UserRound className="h-3 w-3" />{t.owner}
                       </span>
                     )}
                     {t.dueRaw && (
-                      <span className={`flex items-center gap-1 text-[11px] ${t.dueIso ? "text-slate-500" : "text-amber-600"}`}>
+                      <span className={`flex items-center gap-1 text-[11px] ${t.dueIso ? "text-slate-500" : "text-warn"}`}>
                         <CalendarDays className="h-3 w-3" />
                         {t.dueIso ? fmtDate(t.dueIso) : `? ${t.dueRaw}`}
                       </span>

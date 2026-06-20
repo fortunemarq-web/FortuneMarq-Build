@@ -29,9 +29,9 @@ const formatCurrency = (value: number) => {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 shadow-xl">
+      <div className="rounded-lg border border-line bg-surface px-3 py-2 shadow-md">
         <p className="font-medium text-slate-900">{payload[0].payload.fullName}</p>
-        <p className="text-sm text-emerald-400">
+        <p className="text-sm font-semibold tabular-nums text-brand-deep">
           ₹{payload[0].value.toLocaleString()}
         </p>
       </div>
@@ -54,31 +54,25 @@ export default function MonthlyRevenueChart({ data }: MonthlyRevenueChartProps) 
       <BarChart data={data as any} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
         <XAxis
           dataKey="name"
-          stroke="#a1a1aa"
+          stroke="#94a3b8"
           fontSize={12}
           tickLine={false}
-          axisLine={{ stroke: "#1a1a1a" }}
+          axisLine={{ stroke: "#e2e8f0" }}
         />
         <YAxis
-          stroke="#a1a1aa"
+          stroke="#94a3b8"
           fontSize={12}
           tickLine={false}
-          axisLine={{ stroke: "#1a1a1a" }}
+          axisLine={{ stroke: "#e2e8f0" }}
           tickFormatter={formatCurrency}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ fill: "#1a1a1a" }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f1f5f9" }} />
         <Bar
           dataKey="value"
-          fill="url(#revenueGradient)"
+          fill="#42CA80"
           radius={[6, 6, 0, 0]}
           maxBarSize={50}
         />
-        <defs>
-          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#42CA80" />
-            <stop offset="100%" stopColor="#3ab872" />
-          </linearGradient>
-        </defs>
       </BarChart>
     </ResponsiveContainer>
   );

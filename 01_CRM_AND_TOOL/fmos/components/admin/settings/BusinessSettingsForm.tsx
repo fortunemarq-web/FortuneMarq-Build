@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { saveBusinessSettings, BusinessSettings } from "@/app/admin/settings/actions";
-import { Building, CreditCard, FileText, CheckCircle, AlertCircle, Settings } from "lucide-react";
+import { Building, CreditCard, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   initialSettings: BusinessSettings;
@@ -35,13 +39,12 @@ export default function BusinessSettingsForm({ initialSettings }: Props) {
 
   const field = (label: string, key: keyof BusinessSettings, type = "text", placeholder = "") => (
     <div>
-      <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">{label}</label>
-      <input
+      <Label className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</Label>
+      <Input
         type={type}
         value={String(settings[key] ?? "")}
         onChange={(e) => update(key, type === "number" ? Number(e.target.value) : e.target.value)}
         placeholder={placeholder}
-        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition"
       />
     </div>
   );
@@ -50,9 +53,9 @@ export default function BusinessSettingsForm({ initialSettings }: Props) {
     <div className="space-y-8">
 
       {/* SQL note */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-        <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-1">One-time DB setup required</p>
-        <p className="text-xs text-amber-800 font-mono bg-amber-100 rounded p-2 mt-1 leading-relaxed">
+      <div className="rounded-xl border border-warn-line bg-warn-soft p-4">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-warn">One-time DB setup required</p>
+        <p className="mt-1 rounded bg-amber-100 p-2 font-mono text-xs leading-relaxed text-amber-800">
           CREATE TABLE IF NOT EXISTS business_settings (<br />
           &nbsp;&nbsp;id uuid PRIMARY KEY DEFAULT gen_random_uuid(),<br />
           &nbsp;&nbsp;business_name TEXT, gstin TEXT, address_line1 TEXT,<br />
@@ -64,16 +67,18 @@ export default function BusinessSettingsForm({ initialSettings }: Props) {
           &nbsp;&nbsp;updated_at TIMESTAMPTZ DEFAULT now()<br />
           );
         </p>
-        <p className="text-xs text-amber-700 mt-2">Run this once in Supabase SQL editor, then save settings below.</p>
+        <p className="mt-2 text-xs text-warn">Run this once in Supabase SQL editor, then save settings below.</p>
       </div>
 
       {/* Business Details */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3 bg-slate-50">
-          <Building className="h-4 w-4 text-indigo-600" />
-          <h2 className="text-sm font-bold text-slate-900">Business Details</h2>
-        </div>
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <Building className="h-4 w-4 text-slate-400" />
+            Business Details
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {field("Business Name", "business_name", "text", "FortuneMarq Media & Marketing")}
           {field("GSTIN", "gstin", "text", "29ICWPS9816Q1ZS")}
           {field("Email", "email", "email", "fortunemarq@gmail.com")}
@@ -83,81 +88,81 @@ export default function BusinessSettingsForm({ initialSettings }: Props) {
           {field("City", "city", "text", "Hubli")}
           {field("State", "state", "text", "Karnataka")}
           {field("Pincode", "pincode", "text", "580020")}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Bank Details */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3 bg-slate-50">
-          <CreditCard className="h-4 w-4 text-emerald-600" />
-          <h2 className="text-sm font-bold text-slate-900">Bank Details</h2>
-          <span className="ml-auto text-xs text-slate-400">Printed on every invoice</span>
-        </div>
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <CreditCard className="h-4 w-4 text-slate-400" />
+            Bank Details
+          </CardTitle>
+          <span className="text-xs text-slate-400">Printed on every invoice</span>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {field("Bank Name", "bank_name", "text", "Karnataka Bank")}
           {field("Account Name", "account_name", "text", "FortuneMarq Media & Marketing")}
           {field("Account Number", "account_number", "text", "0332202500001101")}
           {field("IFSC Code", "ifsc", "text", "KARB0000332")}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Invoice Settings */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3 bg-slate-50">
-          <FileText className="h-4 w-4 text-purple-600" />
-          <h2 className="text-sm font-bold text-slate-900">Invoice Settings</h2>
-        </div>
-        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <FileText className="h-4 w-4 text-slate-400" />
+            Invoice Settings
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Invoice Prefix</label>
+            <Label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Invoice Prefix</Label>
             <div className="flex items-center gap-2">
-              <input
+              <Input
                 type="text"
                 value={settings.invoice_prefix}
                 onChange={(e) => update("invoice_prefix", e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono font-bold focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                className="tabular-nums"
                 placeholder="FM"
               />
-              <span className="text-xs text-slate-400 shrink-0">e.g. FM-2026-001</span>
+              <span className="shrink-0 text-xs text-slate-400">e.g. FM-2026-001</span>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">GST Rate (%)</label>
-            <input
+            <Label className="text-xs font-semibold uppercase tracking-wide text-slate-500">GST Rate (%)</Label>
+            <Input
               type="number"
               value={settings.gst_rate}
               onChange={(e) => update("gst_rate", Number(e.target.value))}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono font-bold focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              className="tabular-nums"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Payment Terms (days)</label>
-            <input
+            <Label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Payment Terms (days)</Label>
+            <Input
               type="number"
               value={settings.payment_terms_days}
               onChange={(e) => update("payment_terms_days", Number(e.target.value))}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono font-bold focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+              className="tabular-nums"
             />
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Save */}
       <div className="flex items-center gap-4">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-xl text-sm transition-all shadow-sm"
-        >
+        <Button onClick={handleSave} disabled={saving} size="lg" className="px-8">
           {saving ? "Saving..." : "Save Settings"}
-        </button>
+        </Button>
         {saved && (
-          <div className="flex items-center gap-2 text-emerald-600 text-sm font-semibold">
+          <div className="flex items-center gap-2 text-sm font-semibold text-brand-deep">
             <CheckCircle className="h-4 w-4" /> Saved successfully
           </div>
         )}
         {error && (
-          <div className="flex items-center gap-2 text-red-600 text-sm font-semibold">
+          <div className="flex items-center gap-2 text-sm font-semibold text-danger">
             <AlertCircle className="h-4 w-4" /> {error}
           </div>
         )}

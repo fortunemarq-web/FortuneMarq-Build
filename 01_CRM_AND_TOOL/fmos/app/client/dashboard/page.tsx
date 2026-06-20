@@ -337,44 +337,42 @@ export default function ClientDashboardPage() {
             </Card>
 
             {/* Deliverables Section */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-black text-slate-900">Artifacts & Deliverables</h2>
-                <span className="bg-slate-900 text-white text-[10px] font-black px-2 py-1 rounded-lg">
-                  {deliverables.length}
-                </span>
+                <h2 className="font-display text-lg font-semibold text-slate-900">Artifacts &amp; Deliverables</h2>
+                <Badge tone="neutral" size="sm" className="tabular-nums">{deliverables.length}</Badge>
               </div>
 
               {deliverables.length === 0 ? (
-                <div className="py-12 text-center border-2 border-dashed border-slate-100 rounded-2xl">
-                  <FileSearch className="mx-auto h-10 w-10 text-slate-200 mb-2" />
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Awaiting Artifacts</p>
+                <div className="py-12 text-center border border-dashed border-line rounded-xl">
+                  <FileSearch className="mx-auto h-10 w-10 text-slate-300 mb-2" />
+                  <p className="text-sm font-medium text-slate-400 uppercase tracking-wide">Awaiting Artifacts</p>
                 </div>
               ) : (
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {deliverables.map(item => (
-                    <div key={item.id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all group">
+                  {deliverables.map(item => {
+                    const statusTone: Tone =
+                      item.status === 'approved' ? 'brand' :
+                        item.status === 'revision_requested' ? 'danger' : 'info';
+                    return (
+                    <div key={item.id} className="p-4 rounded-xl border border-line bg-slate-50 hover:bg-surface transition-colors group">
                       <div className="flex justify-between items-start mb-3">
                         <div className={clsx(
-                          "p-2 rounded-xl",
-                          item.status === 'approved' ? 'bg-emerald-50 text-emerald-500' :
-                            item.status === 'revision_requested' ? 'bg-rose-50 text-rose-500' : 'bg-blue-50 text-blue-500'
+                          "p-2 rounded-lg",
+                          item.status === 'approved' ? 'bg-brand-soft text-brand-deep' :
+                            item.status === 'revision_requested' ? 'bg-danger-soft text-danger' : 'bg-info-soft text-info'
                         )}>
                           <FileText className="h-5 w-5" />
                         </div>
-                        <div className={clsx(
-                          "text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-tighter",
-                          item.status === 'approved' ? 'bg-emerald-500 text-white' :
-                            item.status === 'revision_requested' ? 'bg-rose-500 text-white' : 'bg-blue-100 text-blue-600'
-                        )}>
+                        <Badge tone={statusTone} size="sm" className="capitalize">
                           {item.status.replace('_', ' ')}
-                        </div>
+                        </Badge>
                       </div>
-                      <h3 className="font-bold text-slate-900 leading-tight mb-2">{item.title}</h3>
+                      <h3 className="font-semibold text-slate-900 leading-tight mb-2">{item.title}</h3>
 
                       <div className="flex gap-2">
                         {item.file_url && (
-                          <a href={item.file_url} target="_blank" className="flex-1 text-center py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase hover:bg-slate-800 transition-all">
+                          <a href={item.file_url} target="_blank" className={clsx(buttonVariants({ variant: "primary", size: "sm" }), "flex-1")}>
                             View
                           </a>
                         )}
@@ -382,16 +380,15 @@ export default function ClientDashboardPage() {
                           <div>
                             {revisionItem === item.id ? (
                               <div className="mt-3 space-y-2">
-                                <textarea
+                                <Textarea
                                   value={revisionFeedback}
                                   onChange={e => setRevisionFeedback(e.target.value)}
                                   placeholder="Describe the revision needed..."
-                                  className="w-full p-3 text-sm rounded-xl border border-rose-200 bg-rose-50 focus:outline-none focus:ring-2 focus:ring-rose-300 resize-none"
                                   rows={3}
                                   autoFocus
                                 />
                                 <div className="flex gap-2">
-                                  <button
+                                  <Button
                                     onClick={() => {
                                       if (revisionFeedback.trim()) {
                                         handleDeliverableAction(item.id, 'revision_requested', revisionFeedback);
@@ -399,123 +396,129 @@ export default function ClientDashboardPage() {
                                         setRevisionFeedback("");
                                       }
                                     }}
-                                    className="flex-1 py-2 bg-rose-500 text-white rounded-xl text-xs font-black hover:bg-rose-600 transition-all"
+                                    variant="danger"
+                                    size="sm"
+                                    className="flex-1"
                                   >
                                     Submit Revision
-                                  </button>
-                                  <button
+                                  </Button>
+                                  <Button
                                     onClick={() => { setRevisionItem(null); setRevisionFeedback(""); }}
-                                    className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-black hover:bg-slate-200 transition-all"
+                                    variant="secondary"
+                                    size="sm"
                                   >
                                     Cancel
-                                  </button>
+                                  </Button>
                                 </div>
                               </div>
                             ) : (
                               <div className="flex gap-1">
-                                <button
+                                <Button
                                   onClick={() => handleDeliverableAction(item.id, 'approved')}
                                   disabled={processingId === item.id}
-                                  className="p-2 bg-emerald-100 text-emerald-600 rounded-xl hover:bg-emerald-500 hover:text-white transition-all disabled:opacity-50"
+                                  variant="primary"
+                                  size="icon"
                                 >
                                   <CheckCircle className="h-4 w-4" />
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                   onClick={() => setRevisionItem(item.id)}
-                                  className="p-2 bg-rose-100 text-rose-600 rounded-xl hover:bg-rose-500 hover:text-white transition-all"
+                                  variant="danger-soft"
+                                  size="icon"
                                 >
                                   <AlertCircle className="h-4 w-4" />
-                                </button>
+                                </Button>
                               </div>
                             )}
                           </div>
                         )}
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
-            </div>
+            </Card>
 
             {/* Roadmap */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-black text-slate-900 mb-6">Project Roadmap</h2>
+            <Card className="p-6">
+              <h2 className="font-display text-lg font-semibold text-slate-900 mb-6">Project Roadmap</h2>
               <div className="space-y-4">
                 {milestones.map((m, i) => {
                   const isDone = m.status === 'completed' || m.status === 'approved';
                   const isCurrent = i === currentMilestoneIndex;
                   return (
                     <div key={m.id} className={clsx(
-                      "flex items-center gap-4 p-4 rounded-2xl border transition-all",
-                      isCurrent ? "border-slate-900 bg-slate-50 shadow-md scale-[1.02]" : "border-slate-100 opacity-60"
+                      "flex items-center gap-4 p-4 rounded-xl border transition-colors",
+                      isCurrent ? "border-line-strong bg-slate-50" : "border-line opacity-60"
                     )}>
                       <div className={clsx(
-                        "w-8 h-8 rounded-full flex items-center justify-center font-black text-xs",
-                        isDone ? "bg-emerald-500 text-white" : isCurrent ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-400"
+                        "w-8 h-8 rounded-full flex items-center justify-center font-semibold text-xs tabular-nums",
+                        isDone ? "bg-brand text-white" : isCurrent ? "bg-brand-deep text-white" : "bg-slate-100 text-slate-400"
                       )}>
                         {isDone ? <CheckCircle className="h-4 w-4" /> : i + 1}
                       </div>
                       <div className="flex-1">
-                        <p className={clsx("font-bold", isDone && "line-through text-slate-400")}>{m.name}</p>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Phase {i + 1}</p>
+                        <p className={clsx("font-semibold", isDone && "line-through text-slate-400")}>{m.name}</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Phase {i + 1}</p>
                       </div>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </Card>
           </div>
 
           <div className="space-y-6">
             {/* Reports Sidebar */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Performance Reports</h2>
+            <Card className="p-6">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-6">Performance Reports</h2>
               {reports.length === 0 ? (
-                <p className="text-xs font-bold text-slate-300 italic">No reports available</p>
+                <p className="text-xs text-slate-400 italic">No reports available</p>
               ) : (
                 <div className="space-y-3">
                   {reports.map(report => (
                     <Link
                       key={report.id}
                       href={`/client/report/${report.magic_link_token}`}
-                      className="block p-3 rounded-2xl bg-indigo-50 border border-indigo-100 hover:shadow-lg transition-all"
+                      className="block p-3 rounded-xl bg-slate-50 border border-line hover:bg-surface transition-colors"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-600">
+                          <div className="w-10 h-10 bg-brand-soft rounded-lg flex items-center justify-center text-brand-deep">
                             <FileText className="h-5 w-5" />
                           </div>
                           <div>
-                            <p className="text-xs font-black text-slate-900">
+                            <p className="text-xs font-semibold text-slate-900">
                               {new Date(report.report_month).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
                             </p>
-                            <p className="text-[10px] font-bold text-indigo-500 uppercase">{report.report_type}</p>
+                            <p className="text-[11px] font-medium text-brand-deep uppercase">{report.report_type}</p>
                           </div>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-indigo-400" />
+                        <ArrowRight className="h-4 w-4 text-slate-400" />
                       </div>
                     </Link>
                   ))}
                 </div>
               )}
-            </div>
+            </Card>
 
             {/* PM Card */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">Your Manager</h3>
+            <Card className="p-6">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-6">Your Manager</h3>
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-xl font-bold text-white">
+                <div className="w-14 h-14 bg-brand-deep rounded-xl flex items-center justify-center text-xl font-semibold text-white">
                   {pmProfile?.full_name?.charAt(0) || "A"}
                 </div>
                 <div>
-                  <p className="font-bold text-slate-900">{pmProfile?.full_name || "Team FortuneMarq"}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-[#42CA80]">Project Success VP</p>
+                  <p className="font-semibold text-slate-900">{pmProfile?.full_name || "Team FortuneMarq"}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep">Project Success VP</p>
                 </div>
               </div>
-              <a href={`mailto:${pmProfile?.email || "projects@fortunemarq.com"}`} className="block w-full text-center py-3 bg-slate-100 text-slate-900 rounded-2xl text-xs font-black uppercase hover:bg-slate-200 transition-all">
+              <a href={`mailto:${pmProfile?.email || "projects@fortunemarq.com"}`} className={clsx(buttonVariants({ variant: "secondary" }), "w-full")}>
                 Send Message
               </a>
-            </div>
+            </Card>
           </div>
         </div>
       </div>

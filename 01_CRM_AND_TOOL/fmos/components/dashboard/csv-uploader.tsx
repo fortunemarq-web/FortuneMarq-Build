@@ -365,10 +365,10 @@ export default function CsvUploader() {
     >
 
       {/* 1. Market Context */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-xl border border-[#2a2a2a] bg-slate-50 p-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-xl border border-line bg-slate-50 p-5">
         <div className="md:col-span-2 flex items-center gap-2 mb-2">
-          <Building2 className="h-4 w-4 text-[#42CA80]" />
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Target Market</h3>
+          <Building2 className="h-4 w-4 text-brand-deep" />
+          <h3 className="font-display text-sm font-semibold text-slate-900 uppercase tracking-wide">Target Market</h3>
         </div>
 
         <div className="space-y-1.5">
@@ -377,13 +377,13 @@ export default function CsvUploader() {
             <select
               value={industry}
               onChange={e => setIndustry(e.target.value)}
-              className="w-full appearance-none rounded-lg bg-slate-50 border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:ring-1 focus:ring-[#42CA80] outline-none transition-all"
+              className="w-full appearance-none rounded-lg bg-surface border border-line px-3 py-2.5 text-sm text-slate-900 focus:border-brand-line focus:ring-1 focus:ring-brand-line outline-none transition-colors"
             >
               <option value="">Select Industry...</option>
               {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
               <option value="Other">+ Create New Industry</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
           </div>
           {industry === "Other" && (
             <input
@@ -391,7 +391,7 @@ export default function CsvUploader() {
               placeholder="Enter Custom Industry Name"
               value={customIndustry}
               onChange={e => setCustomIndustry(e.target.value)}
-              className="mt-2 w-full appearance-none rounded-lg bg-slate-50 border border-slate-300 px-3 py-2.5 text-sm text-[#42CA80] focus:border-[#42CA80] outline-none transition-all animate-in fade-in"
+              className="mt-2 w-full appearance-none rounded-lg bg-surface border border-line px-3 py-2.5 text-sm text-brand-deep focus:border-brand-line outline-none transition-colors animate-in fade-in"
               autoFocus
             />
           )}
@@ -403,13 +403,13 @@ export default function CsvUploader() {
             <select
               value={city}
               onChange={e => setCity(e.target.value)}
-              className="w-full appearance-none rounded-lg bg-slate-50 border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:ring-1 focus:ring-[#42CA80] outline-none transition-all"
+              className="w-full appearance-none rounded-lg bg-surface border border-line px-3 py-2.5 text-sm text-slate-900 focus:border-brand-line focus:ring-1 focus:ring-brand-line outline-none transition-colors"
             >
               <option value="">Select City...</option>
               {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
               <option value="Other">+ Create New City</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
           </div>
           {city === "Other" && (
             <input
@@ -417,7 +417,7 @@ export default function CsvUploader() {
               placeholder="Enter Custom City Name"
               value={customCity}
               onChange={e => setCustomCity(e.target.value)}
-              className="mt-2 w-full appearance-none rounded-lg bg-slate-50 border border-slate-300 px-3 py-2.5 text-sm text-[#42CA80] focus:border-[#42CA80] outline-none transition-all animate-in fade-in"
+              className="mt-2 w-full appearance-none rounded-lg bg-surface border border-line px-3 py-2.5 text-sm text-brand-deep focus:border-brand-line outline-none transition-colors animate-in fade-in"
               autoFocus
             />
           )}
@@ -428,15 +428,15 @@ export default function CsvUploader() {
       <motion.div
         animate={{
           scale: isDragging ? 1.02 : 1,
-          borderColor: isDragging ? "#42CA80" : "#2a2a2a",
+          borderColor: isDragging ? "#42CA80" : "#e2e8f0",
           backgroundColor: isDragging ? "rgba(66, 202, 128, 0.05)" : "#f8fafc",
         }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={clsx(
-          "relative border-2 border-dashed rounded-2xl p-10 transition-all duration-300 flex flex-col items-center justify-center text-center group",
-          files.length === 0 ? "cursor-pointer hover:border-slate-300" : "border-[#42CA80]/30 bg-[#42CA80]/5"
+          "relative border-2 border-dashed rounded-xl p-10 transition-all duration-300 flex flex-col items-center justify-center text-center group",
+          files.length === 0 ? "cursor-pointer hover:border-line-strong" : "border-brand-line bg-brand-soft/40"
         )}
         onClick={() => files.length === 0 && document.getElementById("hidden-file-input")?.click()}
       >
@@ -452,23 +452,23 @@ export default function CsvUploader() {
 
         {files.length === 0 ? (
           <>
-            <div className="h-16 w-16 mb-4 rounded-full bg-white flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <Upload className="h-7 w-7 text-slate-600 group-hover:text-slate-900 transition-colors" />
+            <div className="h-16 w-16 mb-4 rounded-full bg-surface flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <Upload className="h-7 w-7 text-slate-500 group-hover:text-slate-900 transition-colors" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Drag & Drop CSV File(s)</h3>
+            <h3 className="font-display text-lg font-semibold text-slate-900 mb-1">Drag &amp; Drop CSV File(s)</h3>
             <p className="text-sm text-slate-600 mb-4">or click to browse multiple files</p>
-            <div className="flex gap-2 text-xs text-[#555] bg-[#151515] px-3 py-1.5 rounded-full border border-[#222]">
+            <div className="flex gap-2 text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full border border-line">
               <span>Required: Business Name</span>
-              <span className="w-1 h-1 rounded-full bg-slate-200 self-center"></span>
+              <span className="w-1 h-1 rounded-full bg-slate-300 self-center"></span>
               <span>Phone No</span>
             </div>
           </>
         ) : (
           <div className="animate-in fade-in zoom-in duration-300 flex flex-col items-center">
             {files.length === 1 ? (
-              <FileSpreadsheet className="h-12 w-12 text-[#42CA80] mb-3" />
+              <FileSpreadsheet className="h-12 w-12 text-brand-deep mb-3" />
             ) : (
-              <Files className="h-12 w-12 text-[#42CA80] mb-3" />
+              <Files className="h-12 w-12 text-brand-deep mb-3" />
             )}
 
             <p className="text-slate-900 font-medium text-lg">
@@ -479,13 +479,13 @@ export default function CsvUploader() {
                 {files.map(f => f.name).join(", ")}
               </p>
             )}
-            <p className="text-[#42CA80] text-sm mt-3 font-semibold bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 px-3 py-1 rounded-full">{parsedLeads.length} Potential Leads Found Total</p>
+            <p className="text-brand-deep text-sm mt-3 font-semibold bg-brand-soft px-3 py-1 rounded-full tabular-nums">{parsedLeads.length} Potential Leads Found Total</p>
 
             <button
               onClick={(e) => { e.stopPropagation(); setFiles([]); setParsedLeads([]); setUploadResult(null); error && setError(null); }}
-              className="mt-4 text-xs text-red-400 hover:text-red-300 underline"
+              className="mt-4 text-xs text-danger hover:underline"
             >
-              Remove Files & Reset
+              Remove Files &amp; Reset
             </button>
           </div>
         )}
@@ -493,20 +493,20 @@ export default function CsvUploader() {
 
       {/* 3. Action Panel & Progress */}
       {files.length > 0 && parsedLeads.length > 0 && !uploadResult && (
-        <div className="bg-slate-50 border border-[#222] rounded-xl p-6 animate-in slide-in-from-top-4">
+        <div className="bg-slate-50 border border-line rounded-xl p-6 animate-in slide-in-from-top-4">
 
           {/* Lead Settings */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="text-xs text-slate-500 font-medium mb-2 block">Lead Type</label>
-              <div className="flex bg-white p-1 rounded-lg">
+              <div className="flex bg-surface border border-line p-1 rounded-lg">
                 {(["outbound", "inbound"] as const).map(t => (
                   <button
                     key={t}
                     onClick={() => { setLeadType(t); if (t === "outbound") setLeadSource("manual_upload"); else setLeadSource("Facebook Ads"); }}
                     className={clsx(
-                      "flex-1 py-1.5 text-xs font-bold uppercase tracking-wide rounded transition-all",
-                      leadType === t ? "bg-slate-200 text-slate-900 shadow" : "text-slate-600 hover:text-[#999]"
+                      "flex-1 py-1.5 text-xs font-semibold uppercase tracking-wide rounded-lg transition-colors",
+                      leadType === t ? "bg-slate-200 text-slate-900" : "text-slate-600 hover:text-slate-900"
                     )}
                   >
                     {t}
@@ -521,7 +521,7 @@ export default function CsvUploader() {
                 <select
                   value={leadSource}
                   onChange={e => setLeadSource(e.target.value)}
-                  className="w-full bg-white border border-slate-300 text-slate-900 text-sm rounded-lg px-3 py-2 outline-none focus:border-[#42CA80]"
+                  className="w-full bg-surface border border-line text-slate-900 text-sm rounded-lg px-3 py-2 outline-none focus:border-brand-line"
                 >
                   <option value="Facebook Ads">Facebook Ads</option>
                   <option value="Google Ads">Google Ads</option>
@@ -534,10 +534,10 @@ export default function CsvUploader() {
           </div>
 
           {/* Market Intel Toggle */}
-          <div className="mb-6 border-t border-[#222] pt-4">
+          <div className="mb-6 border-t border-line pt-4">
             <button
               onClick={() => setShowMarketIntelligence(!showMarketIntelligence)}
-              className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors"
+              className="flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
             >
               <BarChart3 className="h-3 w-3" />
               {showMarketIntelligence ? "Hide Market Research Data" : "Add Market Research Data (Optional)"}
@@ -545,12 +545,12 @@ export default function CsvUploader() {
 
             {showMarketIntelligence && (
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 animate-in slide-in-from-top-2">
-                <input placeholder="Monthly Search Demand (e.g. 1.5k)" className="bg-slate-50 border border-[#2a2a2a] text-xs text-slate-900 p-2.5 rounded-lg outline-none focus:border-[#42CA80]"
+                <input placeholder="Monthly Search Demand (e.g. 1.5k)" className="bg-surface border border-line text-xs text-slate-900 p-2.5 rounded-lg outline-none focus:border-brand-line"
                   value={marketData.monthlySearchDemand} onChange={e => setMarketData({ ...marketData, monthlySearchDemand: e.target.value })} />
-                <input placeholder="Competitor Traffic (e.g. 5k visits)" className="bg-slate-50 border border-[#2a2a2a] text-xs text-slate-900 p-2.5 rounded-lg outline-none focus:border-[#42CA80]"
+                <input placeholder="Competitor Traffic (e.g. 5k visits)" className="bg-surface border border-line text-xs text-slate-900 p-2.5 rounded-lg outline-none focus:border-brand-line"
                   value={marketData.competitorTraffic} onChange={e => setMarketData({ ...marketData, competitorTraffic: e.target.value })} />
                 {/* Simplified inputs for brevity/UI cleaniness, user can expand if needed */}
-                <textarea placeholder="Top Keywords..." rows={2} className="md:col-span-2 bg-slate-50 border border-[#2a2a2a] text-xs text-slate-900 p-2.5 rounded-lg outline-none focus:border-[#42CA80] resize-none"
+                <textarea placeholder="Top Keywords..." rows={2} className="md:col-span-2 bg-surface border border-line text-xs text-slate-900 p-2.5 rounded-lg outline-none focus:border-brand-line resize-none"
                   value={marketData.topKeywords} onChange={e => setMarketData({ ...marketData, topKeywords: e.target.value })} />
               </div>
             )}
@@ -565,7 +565,7 @@ export default function CsvUploader() {
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="h-full bg-gradient-to-r from-[#42CA80]/50 to-[#42CA80]"
+                  className="h-full bg-brand"
                 ></motion.div>
               </div>
             )}
@@ -574,8 +574,8 @@ export default function CsvUploader() {
               onClick={processUpload}
               disabled={isProcessing}
               className={clsx(
-                "relative w-full h-[44px] flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-wider rounded-lg transition-all",
-                isProcessing ? "text-slate-900 cursor-wait" : "bg-[#42CA80] text-black hover:bg-[#3bb572] shadow-[0_0_20px_rgba(66,202,128,0.3)]"
+                "relative w-full h-[44px] flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-wide rounded-lg transition-colors",
+                isProcessing ? "text-slate-900 cursor-wait" : "bg-brand-deep text-white hover:bg-brand-deeper"
               )}
             >
               {isProcessing ? (
@@ -593,7 +593,7 @@ export default function CsvUploader() {
           </div>
 
           {error && (
-            <div className="mt-4 flex items-center gap-2 text-red-400 text-xs bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+            <div className="mt-4 flex items-center gap-2 text-danger text-xs bg-danger-soft p-3 rounded-lg border border-danger-line">
               <AlertCircle className="h-4 w-4 shrink-0" />
               {error}
             </div>
@@ -609,28 +609,28 @@ export default function CsvUploader() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="flex flex-col items-center p-8 bg-slate-50 border border-[#2a2a2a] rounded-2xl shadow-2xl"
+            className="flex flex-col items-center p-8 bg-surface border border-line rounded-2xl shadow-lg"
           >
-            <div className="h-16 w-16 mb-4 rounded-full bg-[#42CA80] text-white flex items-center justify-center shadow-[0_0_30px_rgba(66,202,128,0.2)]">
+            <div className="h-16 w-16 mb-4 rounded-full bg-brand text-white flex items-center justify-center">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Import Successful!</h2>
+            <h2 className="font-display text-2xl font-semibold text-slate-900 mb-2">Import Successful!</h2>
             <p className="text-slate-500 mb-6 text-center max-w-sm">{uploadResult.message}</p>
 
             <div className="flex gap-4 w-full">
-              <div className="flex-1 bg-white p-3 rounded-xl border border-[#2a2a2a] text-center">
-                <p className="text-2xl font-bold text-slate-900">{uploadResult.added}</p>
-                <p className="text-[10px] text-slate-600 uppercase tracking-wider">Added</p>
+              <div className="flex-1 bg-slate-50 p-3 rounded-xl border border-line text-center">
+                <p className="text-2xl font-semibold tabular-nums text-slate-900">{uploadResult.added}</p>
+                <p className="text-[11px] text-slate-500 uppercase tracking-wide">Added</p>
               </div>
-              <div className="flex-1 bg-white p-3 rounded-xl border border-[#2a2a2a] text-center">
-                <p className="text-2xl font-bold text-slate-500">{uploadResult.skipped}</p>
-                <p className="text-[10px] text-slate-600 uppercase tracking-wider">Skipped (Dupes)</p>
+              <div className="flex-1 bg-slate-50 p-3 rounded-xl border border-line text-center">
+                <p className="text-2xl font-semibold tabular-nums text-slate-500">{uploadResult.skipped}</p>
+                <p className="text-[11px] text-slate-500 uppercase tracking-wide">Skipped (Dupes)</p>
               </div>
             </div>
 
             <button
               onClick={() => { setFiles([]); setParsedLeads([]); setUploadResult(null); }}
-              className="mt-8 text-sm text-[#42CA80] hover:text-slate-900 font-medium hover:underline"
+              className="mt-8 text-sm text-brand-deep hover:text-brand-deeper font-medium hover:underline"
             >
               Upload More Files
             </button>

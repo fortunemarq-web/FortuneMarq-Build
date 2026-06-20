@@ -684,19 +684,19 @@ export default function PMDashboard(props: PMDashboardProps) {
                             key={project.id}
                             href={`/projects/${project.id}`}
                             className={clsx(
-                              "block rounded-xl border bg-white p-4 transition-all active:scale-[0.98] sm:p-5",
+                              "block rounded-xl border bg-surface p-4 transition-all active:scale-[0.98] sm:p-5",
                               project.needsAttention
-                                ? "border-red-500/50 hover:border-red-500"
-                                : "border-slate-200 hover:border-[#42CA80]/50"
+                                ? "border-danger-line hover:border-danger"
+                                : "border-line hover:border-brand-line"
                             )}
                           >
                             {/* Client Name Header is redundant here, show Service instead */}
                             <div className="flex items-start justify-between gap-2">
-                              <h3 className="truncate text-base font-bold text-slate-900 sm:text-lg">
+                              <h3 className="truncate font-display text-base font-semibold text-slate-900 sm:text-lg">
                                 {formatServiceType(project.service_type || "Project")}
                               </h3>
                               {project.needsAttention && (
-                                <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-400" />
+                                <AlertTriangle className="h-4 w-4 flex-shrink-0 text-danger" />
                               )}
                             </div>
 
@@ -708,21 +708,21 @@ export default function PMDashboard(props: PMDashboardProps) {
 
                             {/* Progress Bar */}
                             <div className="mt-3">
-                              <div className="flex items-center justify-between text-[10px] text-slate-600 sm:text-xs">
+                              <div className="flex items-center justify-between text-[11px] text-slate-600 sm:text-xs">
                                 <span>Progress</span>
-                                <span className="font-medium text-slate-500">
+                                <span className="font-medium text-slate-500 tabular-nums">
                                   {project.completedTasks}/{project.totalTasks} tasks
                                 </span>
                               </div>
-                              <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-50">
+                              <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-100">
                                 <div
                                   className={clsx(
                                     "h-full rounded-full transition-all",
                                     project.progress === 100
-                                      ? "bg-blue-500"
+                                      ? "bg-info"
                                       : project.needsAttention
-                                        ? "bg-red-500"
-                                        : "bg-[#42CA80]"
+                                        ? "bg-danger"
+                                        : "bg-brand"
                                   )}
                                   style={{ width: `${project.progress}%` }}
                                 />
@@ -734,7 +734,7 @@ export default function PMDashboard(props: PMDashboardProps) {
                               {project.deadline && (
                                 <div className={clsx(
                                   "flex items-center gap-1",
-                                  isOverdue(project.deadline) ? "text-red-400" : "text-slate-600"
+                                  isOverdue(project.deadline) ? "text-danger" : "text-slate-600"
                                 )}>
                                   <Calendar className="h-3 w-3" />
                                   <span>{formatDisplayDate(project.deadline)}</span>
@@ -769,19 +769,19 @@ export default function PMDashboard(props: PMDashboardProps) {
                   key={project.id}
                   href={`/projects/${project.id}`}
                   className={clsx(
-                    "block rounded-xl border bg-white p-4 transition-all active:scale-[0.98] sm:p-5",
+                    "block rounded-xl border bg-surface p-4 transition-all active:scale-[0.98] sm:p-5",
                     project.needsAttention
-                      ? "border-red-500/50 hover:border-red-500"
-                      : "border-slate-200 hover:border-[#42CA80]/50"
+                      ? "border-danger-line hover:border-danger"
+                      : "border-line hover:border-brand-line"
                   )}
                 >
                   {/* Client Name */}
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="truncate text-base font-bold text-slate-900 sm:text-lg">
+                    <h3 className="truncate font-display text-base font-semibold text-slate-900 sm:text-lg">
                       {clientName}
                     </h3>
                     {project.needsAttention && (
-                      <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-400" />
+                      <AlertTriangle className="h-4 w-4 flex-shrink-0 text-danger" />
                     )}
                   </div>
 
@@ -797,21 +797,21 @@ export default function PMDashboard(props: PMDashboardProps) {
 
                   {/* Progress Bar */}
                   <div className="mt-3">
-                    <div className="flex items-center justify-between text-[10px] text-slate-600 sm:text-xs">
+                    <div className="flex items-center justify-between text-[11px] text-slate-600 sm:text-xs">
                       <span>Progress</span>
-                      <span className="font-medium text-slate-500">
+                      <span className="font-medium text-slate-500 tabular-nums">
                         {project.completedTasks}/{project.totalTasks} tasks
                       </span>
                     </div>
-                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-50">
+                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-100">
                       <div
                         className={clsx(
                           "h-full rounded-full transition-all",
                           project.progress === 100
-                            ? "bg-blue-500"
+                            ? "bg-info"
                             : project.needsAttention
-                              ? "bg-red-500"
-                              : "bg-[#42CA80]"
+                              ? "bg-danger"
+                              : "bg-brand"
                         )}
                         style={{ width: `${project.progress}%` }}
                       />
@@ -823,14 +823,14 @@ export default function PMDashboard(props: PMDashboardProps) {
                     {project.deadline && (
                       <div className={clsx(
                         "flex items-center gap-1",
-                        isOverdue(project.deadline) ? "text-red-400" : "text-slate-600"
+                        isOverdue(project.deadline) ? "text-danger" : "text-slate-600"
                       )}>
                         <Calendar className="h-3 w-3" />
                         <span>{formatDisplayDate(project.deadline)}</span>
                       </div>
                     )}
                     {project.overdueTasks > 0 && (
-                      <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-medium text-red-400">
+                      <span className="rounded-full bg-danger-soft px-2 py-0.5 text-[11px] font-medium text-danger tabular-nums">
                         {project.overdueTasks} overdue
                       </span>
                     )}

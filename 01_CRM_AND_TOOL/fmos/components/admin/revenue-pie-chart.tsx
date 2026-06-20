@@ -12,12 +12,11 @@ interface RevenuePieChartProps {
 }
 
 const COLORS = [
-  "#42CA80", // Green (primary)
-  "#3B82F6", // Blue
-  "#F59E0B", // Amber
-  "#EF4444", // Red
-  "#8B5CF6", // Purple
-  "#EC4899", // Pink
+  "#42CA80", // Green (primary / brand)
+  "#3b82f6", // Blue
+  "#f59e0b", // Amber
+  "#ef4444", // Red
+  "#64748b", // Slate
 ];
 
 const formatCurrency = (value: number) => {
@@ -32,9 +31,9 @@ const formatCurrency = (value: number) => {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 shadow-xl">
+      <div className="rounded-lg border border-line bg-surface px-3 py-2 shadow-md">
         <p className="font-medium text-slate-900">{payload[0].name}</p>
-        <p className="text-sm text-[#42CA80]">{formatCurrency(payload[0].value)}</p>
+        <p className="text-sm font-semibold tabular-nums text-brand-deep">{formatCurrency(payload[0].value)}</p>
       </div>
     );
   }
@@ -82,9 +81,9 @@ export default function RevenuePieChart({ data }: RevenuePieChartProps) {
           label={renderCustomLabel}
           outerRadius={100}
           innerRadius={50}
-          fill="#8884d8"
+          fill="#42CA80"
           dataKey="value"
-          stroke="#0f0f0f"
+          stroke="#ffffff"
           strokeWidth={2}
         >
           {data.map((_, index) => (

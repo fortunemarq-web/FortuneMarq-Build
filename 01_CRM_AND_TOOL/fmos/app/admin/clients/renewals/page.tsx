@@ -6,6 +6,7 @@ import {
   UpsellTable,
 } from "@/components/admin/renewals/RenewalAndUpsellTables";
 import { ArrowLeft, CalendarClock, TrendingUp } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
 
 export const metadata: Metadata = {
   title: "Renewals & Upsells — FortuneMarq",
@@ -76,32 +77,27 @@ export default async function RenewalsPage() {
   }));
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
-          <div>
-            <Link
-              href="/admin/clients"
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Clients
-            </Link>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              Renewals & Upsells
-            </h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Never miss a renewal. Identify upsell opportunities.
-            </p>
-          </div>
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <div>
+          <Link
+            href="/admin/clients"
+            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Clients
+          </Link>
+          <PageHeader
+            title="Renewals & Upsells"
+            subtitle="Never miss a renewal. Identify upsell opportunities."
+          />
         </div>
 
         {/* Section 1: Upcoming Renewals */}
-        <div className="mb-10">
+        <div>
           <div className="flex items-center gap-2 mb-4">
-            <CalendarClock className="h-5 w-5 text-red-500" />
-            <h2 className="text-lg font-bold text-slate-900">
+            <CalendarClock className="h-5 w-5 text-danger" />
+            <h2 className="font-display text-lg font-semibold text-slate-900">
               Upcoming Renewals
             </h2>
             <span className="text-xs font-medium text-slate-400">
@@ -114,8 +110,8 @@ export default async function RenewalsPage() {
         {/* Section 2: Upsell Opportunities */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-[#42CA80]" />
-            <h2 className="text-lg font-bold text-slate-900">
+            <TrendingUp className="h-5 w-5 text-brand-deep" />
+            <h2 className="font-display text-lg font-semibold text-slate-900">
               Upsell Opportunities
             </h2>
             <span className="text-xs font-medium text-slate-400">

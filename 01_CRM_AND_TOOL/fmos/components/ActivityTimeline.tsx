@@ -144,7 +144,7 @@ export default function ActivityTimeline({
 
     if (events.length === 0) {
         return (
-            <div className={clsx("flex flex-col items-center justify-center text-slate-500 border rounded-xl border-dashed border-slate-200 bg-slate-200/30", compact ? "py-4" : "py-8")}>
+            <div className={clsx("flex flex-col items-center justify-center text-slate-500 border rounded-xl border-dashed border-line bg-slate-50", compact ? "py-4" : "py-8")}>
                 <Activity className="mb-2 h-6 w-6 opacity-20" />
                 <p className="text-sm">No activity yet</p>
             </div>
@@ -153,14 +153,14 @@ export default function ActivityTimeline({
 
     return (
         <div className={clsx("space-y-6", className)}>
-            <div className={clsx("relative border-l border-slate-200 ml-3", compact ? "space-y-4 pb-2" : "space-y-8 pb-4")}>
+            <div className={clsx("relative border-l border-line ml-3", compact ? "space-y-4 pb-2" : "space-y-8 pb-4")}>
                 {events.map((event) => {
                     const Icon = EVENT_ICONS[event.event_type] || EVENT_ICONS.default;
 
                     return (
                         <div key={event.id} className="relative pl-6">
                             {/* Timeline Dot */}
-                            <div className="absolute -left-3 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-slate-50 border border-slate-300 shadow-sm z-10">
+                            <div className="absolute -left-3 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-surface border border-line-strong shadow-sm z-10">
                                 <Icon className="h-3 w-3 text-slate-600" />
                             </div>
 
@@ -170,13 +170,13 @@ export default function ActivityTimeline({
                                     <span className={clsx("font-medium text-slate-900", compact ? "text-xs" : "text-sm")}>
                                         {event.title}
                                     </span>
-                                    <span className="text-[10px] text-slate-500 whitespace-nowrap font-mono">
+                                    <span className="text-[11px] text-slate-500 whitespace-nowrap tabular-nums">
                                         {format(new Date(event.created_at), compact ? "MMM d" : "MMM d, h:mm a")}
                                     </span>
                                 </div>
 
                                 {event.body && (
-                                    <p className={clsx("text-slate-600 leading-relaxed", compact ? "text-xs" : "text-sm bg-slate-200/50 p-2.5 rounded-lg border border-slate-200/50")}>
+                                    <p className={clsx("text-slate-600 leading-relaxed", compact ? "text-xs" : "text-sm bg-slate-50 p-2.5 rounded-lg border border-line")}>
                                         {event.body}
                                     </p>
                                 )}
@@ -191,14 +191,14 @@ export default function ActivityTimeline({
                                                     {event.metadata.from_status}
                                                 </span>
                                                 <ArrowRight className="h-3 w-3" />
-                                                <span className="px-1.5 py-0.5 rounded bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 text-[#42CA80]">
+                                                <span className="px-1.5 py-0.5 rounded bg-brand-soft text-brand-deep">
                                                     {event.metadata.to_status}
                                                 </span>
                                             </div>
                                         )}
                                         {/* SLA Missed metadata */}
                                         {event.event_type === 'sla_missed' && event.metadata.minutes_overdue && (
-                                            <div className="text-[10px] text-red-500">
+                                            <div className="text-[11px] text-danger">
                                                 Overdue by {event.metadata.minutes_overdue}m
                                             </div>
                                         )}
@@ -206,7 +206,7 @@ export default function ActivityTimeline({
                                 )}
 
                                 <div className="flex items-center gap-2 mt-0.5">
-                                    <span className="text-[10px] text-slate-600 uppercase tracking-wider font-semibold">
+                                    <span className="text-[11px] text-slate-500 uppercase tracking-wide font-semibold">
                                         {event.profiles?.full_name || "Unknown"} as {event.event_type === 'sla_missed' ? 'System' : 'User'}
                                     </span>
                                 </div>
@@ -219,7 +219,7 @@ export default function ActivityTimeline({
             {hasMore && (
                 <button
                     onClick={loadMore}
-                    className="w-full py-2 text-xs text-slate-500 hover:text-slate-900 transition-colors border-t border-slate-200"
+                    className="w-full py-2 text-xs text-slate-500 hover:text-slate-900 transition-colors border-t border-line"
                 >
                     Load older...
                 </button>

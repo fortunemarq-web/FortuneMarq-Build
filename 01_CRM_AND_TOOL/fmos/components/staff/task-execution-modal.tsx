@@ -21,6 +21,9 @@ import { createClient } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Task {
   id: string;
@@ -48,18 +51,18 @@ interface TaskExecutionModalProps {
   onStatusChange: (taskId: string, newStatus: string, notes?: string) => void;
 }
 
-const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  not_started: { label: "Not Started", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
-  in_progress: { label: "In Progress", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-  in_review: { label: "In Review", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-  needs_attention: { label: "Needs Attention", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  completed: { label: "Completed", color: "bg-[#42CA80]/20 text-[#42CA80] border-[#42CA80]/30" },
+const STATUS_CONFIG: Record<string, { label: string; tone: Tone }> = {
+  not_started: { label: "Not Started", tone: "neutral" },
+  in_progress: { label: "In Progress", tone: "info" },
+  in_review: { label: "In Review", tone: "info" },
+  needs_attention: { label: "Needs Attention", tone: "warning" },
+  completed: { label: "Completed", tone: "brand" },
 };
 
-const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
-  high: { label: "High Priority", color: "bg-red-500/20 text-red-400" },
-  medium: { label: "Medium Priority", color: "bg-amber-500/20 text-amber-400" },
-  low: { label: "Low Priority", color: "bg-blue-500/20 text-blue-400" },
+const PRIORITY_CONFIG: Record<string, { label: string; tone: Tone }> = {
+  high: { label: "High Priority", tone: "danger" },
+  medium: { label: "Medium Priority", tone: "warning" },
+  low: { label: "Low Priority", tone: "info" },
 };
 
 function isOverdue(dateStr: string | null): boolean {
@@ -165,41 +168,37 @@ export default function TaskExecutionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="relative flex h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-2xl lg:flex-row">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
+      <div className="relative flex h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-line bg-canvas shadow-lg lg:flex-row">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 rounded-lg p-2 text-slate-600 transition-colors hover:bg-white hover:text-slate-900"
+          className="absolute right-4 top-4 z-10 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Left Side: Context & SOP */}
-        <div className="flex flex-1 flex-col border-b border-slate-200 lg:border-b-0 lg:border-r">
+        <div className="flex flex-1 flex-col border-b border-line lg:border-b-0 lg:border-r">
           {/* Task Header */}
-          <div className="border-b border-slate-200 p-4 sm:p-6">
+          <div className="border-b border-line p-4 sm:p-6">
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-slate-500">
+              <span className="flex items-center gap-1.5 rounded-lg bg-surface px-2.5 py-1 text-slate-500">
                 <Building2 className="h-3.5 w-3.5" />
                 {clientName}
               </span>
-              <span className="rounded-lg bg-indigo-500/20 px-2.5 py-1 text-xs font-medium text-indigo-400">
-                {formatServiceType(serviceType)}
-              </span>
-              <span className={clsx("rounded-lg px-2.5 py-1 text-xs font-medium", priorityInfo.color)}>
-                {priorityInfo.label}
-              </span>
+              <Badge tone="neutral" size="sm">{formatServiceType(serviceType)}</Badge>
+              <Badge tone={priorityInfo.tone} size="sm">{priorityInfo.label}</Badge>
             </div>
 
-            <h2 className="mt-3 text-xl font-bold text-slate-900 sm:text-2xl">
+            <h2 className="mt-3 font-display text-xl font-semibold text-slate-900 sm:text-2xl">
               {task.title}
             </h2>
 
             <div className="mt-3 flex items-center gap-4">
               <div className={clsx(
                 "flex items-center gap-1.5 text-sm",
-                taskOverdue ? "text-red-400" : taskDueToday ? "text-amber-400" : "text-slate-500"
+                taskOverdue ? "text-danger" : taskDueToday ? "text-warn" : "text-slate-500"
               )}>
                 <Calendar className="h-4 w-4" />
                 <span className="font-medium">
@@ -213,36 +212,36 @@ export default function TaskExecutionModal({
           {/* SOP Content */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Book className="h-5 w-5 text-indigo-400" />
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-600">
+              <Book className="h-5 w-5 text-slate-400" />
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
                 Standard Operating Procedure
               </h3>
             </div>
 
             {task.sop_content ? (
-              <div className="prose prose-invert prose-sm max-w-none rounded-xl bg-white p-4 sm:p-6">
+              <div className="prose prose-sm max-w-none rounded-xl border border-line bg-surface p-4 sm:p-6">
                 <ReactMarkdown
                   components={{
-                    h1: ({ children }) => <h1 className="text-xl font-bold text-slate-900 mb-4">{children}</h1>,
+                    h1: ({ children }) => <h1 className="text-xl font-semibold text-slate-900 mb-4">{children}</h1>,
                     h2: ({ children }) => <h2 className="text-base font-semibold text-slate-900 mt-6 mb-3">{children}</h2>,
                     h3: ({ children }) => <h3 className="text-base font-medium text-slate-900 mt-4 mb-2">{children}</h3>,
-                    p: ({ children }) => <p className="text-slate-500 mb-3 leading-relaxed">{children}</p>,
-                    ul: ({ children }) => <ul className="list-disc list-inside text-slate-500 space-y-1 mb-3">{children}</ul>,
-                    ol: ({ children }) => <ol className="list-decimal list-inside text-slate-500 space-y-1 mb-3">{children}</ol>,
-                    li: ({ children }) => <li className="text-slate-500">{children}</li>,
+                    p: ({ children }) => <p className="text-slate-600 mb-3 leading-relaxed">{children}</p>,
+                    ul: ({ children }) => <ul className="list-disc list-inside text-slate-600 space-y-1 mb-3">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal list-inside text-slate-600 space-y-1 mb-3">{children}</ol>,
+                    li: ({ children }) => <li className="text-slate-600">{children}</li>,
                     a: ({ href, children }) => (
-                      <a href={href} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline">
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand-deep hover:text-brand-deeper underline">
                         {children}
                       </a>
                     ),
                     code: ({ children }) => (
-                      <code className="bg-slate-50 rounded px-1.5 py-0.5 text-sm text-[#42CA80]">{children}</code>
+                      <code className="bg-slate-100 rounded px-1.5 py-0.5 text-sm text-brand-deep">{children}</code>
                     ),
                     pre: ({ children }) => (
-                      <pre className="bg-slate-50 rounded-lg p-4 overflow-x-auto text-sm">{children}</pre>
+                      <pre className="bg-slate-100 rounded-lg p-4 overflow-x-auto text-sm">{children}</pre>
                     ),
                     blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-slate-500">{children}</blockquote>
+                      <blockquote className="border-l-4 border-brand-line pl-4 italic text-slate-600">{children}</blockquote>
                     ),
                   }}
                 >
@@ -250,10 +249,10 @@ export default function TaskExecutionModal({
                 </ReactMarkdown>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white/50 p-8 text-center">
-                <Book className="h-12 w-12 text-[#333]" />
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line bg-slate-50/60 p-8 text-center">
+                <Book className="h-12 w-12 text-slate-300" />
                 <p className="mt-3 text-sm text-slate-600">No SOP provided for this task</p>
-                <p className="mt-1 text-xs text-[#555]">
+                <p className="mt-1 text-xs text-slate-500">
                   Contact your Project Manager for instructions
                 </p>
               </div>
@@ -262,36 +261,36 @@ export default function TaskExecutionModal({
         </div>
 
         {/* Right Side: Actions */}
-        <div className="flex w-full flex-col bg-slate-50 lg:w-80">
+        <div className="flex w-full flex-col bg-canvas lg:w-80">
           {/* Current Status */}
-          <div className="border-b border-slate-200 p-4 sm:p-6">
-            <p className="text-xs font-medium uppercase tracking-wider text-slate-600">Current Status</p>
-            <div className={clsx(
-              "mt-2 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold",
-              statusInfo.color
-            )}>
-              {task.status === "completed" ? (
-                <CheckCircle2 className="h-4 w-4" />
-              ) : task.status === "needs_attention" ? (
-                <AlertTriangle className="h-4 w-4" />
-              ) : (
-                <Clock className="h-4 w-4" />
-              )}
-              {statusInfo.label}
+          <div className="border-b border-line p-4 sm:p-6">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Current Status</p>
+            <div className="mt-2">
+              <Badge tone={statusInfo.tone}>
+                {task.status === "completed" ? (
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                ) : task.status === "needs_attention" ? (
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                ) : (
+                  <Clock className="h-3.5 w-3.5" />
+                )}
+                {statusInfo.label}
+              </Badge>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-slate-600">Actions</p>
+            <p className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-500">Actions</p>
             
             <div className="space-y-3">
               {/* Start Work */}
               {(task.status === "not_started" || task.status === "needs_attention") && (
-                <button
+                <Button
                   onClick={() => handleStatusUpdate("in_progress")}
                   disabled={isUpdating}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+                  variant="secondary"
+                  className="w-full py-3"
                 >
                   {activeAction === "in_progress" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -299,15 +298,16 @@ export default function TaskExecutionModal({
                     <Play className="h-4 w-4" />
                   )}
                   Start Work
-                </button>
+                </Button>
               )}
 
               {/* Submit for Review */}
               {task.status === "in_progress" && (
-                <button
+                <Button
                   onClick={() => handleStatusUpdate("in_review")}
                   disabled={isUpdating}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-purple-500 px-4 py-3 font-semibold text-white transition-colors hover:bg-purple-600 disabled:opacity-50"
+                  variant="secondary"
+                  className="w-full py-3"
                 >
                   {activeAction === "in_review" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -315,7 +315,7 @@ export default function TaskExecutionModal({
                     <Send className="h-4 w-4" />
                   )}
                   Submit for Review
-                </button>
+                </Button>
               )}
 
               {/* Needs Attention */}
@@ -326,34 +326,36 @@ export default function TaskExecutionModal({
                       setShowNotesInput(true);
                     }}
                     disabled={isUpdating}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-amber-500/50 bg-amber-500/10 px-4 py-3 font-semibold text-amber-400 transition-colors hover:border-amber-500 hover:bg-amber-500/20 disabled:opacity-50"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-warn-line bg-warn-soft px-4 py-3 font-semibold text-warn transition-colors hover:bg-amber-100 disabled:opacity-50"
                   >
                     <AlertTriangle className="h-4 w-4" />
                     Needs Attention
                   </button>
 
                   {showNotesInput && (
-                    <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
-                      <p className="mb-2 text-xs font-medium text-amber-400">
+                    <div className="rounded-lg border border-warn-line bg-warn-soft p-3">
+                      <p className="mb-2 text-xs font-medium text-warn">
                         What's blocking you?
                       </p>
-                      <textarea
+                      <Textarea
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Describe the issue..."
-                        className="h-24 w-full resize-none rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder-[#666] focus:border-amber-500/50 focus:outline-none"
+                        className="h-24 resize-none"
                       />
-                      <button
+                      <Button
                         onClick={() => handleStatusUpdate("needs_attention", true)}
                         disabled={isUpdating || !notes.trim()}
-                        className="mt-2 w-full rounded-lg bg-amber-500 px-3 py-2 text-sm font-semibold text-black transition-colors hover:bg-amber-400 disabled:opacity-50"
+                        variant="secondary"
+                        size="sm"
+                        className="mt-2 w-full"
                       >
                         {activeAction === "needs_attention" ? (
                           <Loader2 className="mx-auto h-4 w-4 animate-spin" />
                         ) : (
                           "Submit Issue"
                         )}
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </>
@@ -361,10 +363,11 @@ export default function TaskExecutionModal({
 
               {/* Mark Complete */}
               {(task.status === "in_progress" || task.status === "in_review") && (
-                <button
+                <Button
                   onClick={() => handleStatusUpdate("completed")}
                   disabled={isUpdating}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-4 py-3 font-semibold text-white disabled:opacity-50"
+                  variant="primary"
+                  className="w-full py-3"
                 >
                   {activeAction === "completed" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -372,33 +375,30 @@ export default function TaskExecutionModal({
                     <CheckCircle2 className="h-4 w-4" />
                   )}
                   Mark Complete
-                </button>
+                </Button>
               )}
             </div>
 
             {/* Comment Box */}
             <div className="mt-6">
-              <label className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-slate-600">
+              <label className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
                 <MessageSquare className="h-3.5 w-3.5" />
                 Notes for PM
               </label>
-              <textarea
+              <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Add any notes or updates..."
-                className="h-24 w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-[#666] focus:border-indigo-500/50 focus:outline-none"
+                className="h-24 resize-none"
               />
             </div>
           </div>
 
           {/* Footer */}
-          <div className="border-t border-slate-200 p-4">
-            <button
-              onClick={onClose}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-900 transition-colors hover:bg-slate-100"
-            >
+          <div className="border-t border-line p-4">
+            <Button onClick={onClose} variant="secondary" className="w-full">
               Close
-            </button>
+            </Button>
           </div>
         </div>
       </div>

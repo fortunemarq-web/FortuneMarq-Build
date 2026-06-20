@@ -15,6 +15,14 @@ import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 // Canonical WhatsApp template library — same table (whatsapp_templates) the
 // sales template picker reads, so anything created here reaches senders.
@@ -55,12 +63,14 @@ const VARIABLES = [
     { key: "{{name}}", description: "Contact name" },
 ];
 
-const CATEGORY_COLORS: Record<string, string> = {
-    CURIOSITY: "bg-emerald-50 text-emerald-600 border-emerald-200",
-    BOT_REPLY: "bg-sky-50 text-sky-600 border-sky-200",
-    OUTCOME_TRIGGERED: "bg-amber-50 text-amber-600 border-amber-200",
-    FOLLOWBACK_REMINDER: "bg-violet-50 text-violet-600 border-violet-200",
-    POST_MEETING: "bg-indigo-50 text-indigo-600 border-indigo-200",
+// Template categories aren't pipeline status — collapse to neutral/info/warning
+// so the table reads as one quiet system, not a five-colour rainbow.
+const CATEGORY_TONE: Record<string, Tone> = {
+    CURIOSITY: "brand",
+    BOT_REPLY: "info",
+    OUTCOME_TRIGGERED: "warning",
+    FOLLOWBACK_REMINDER: "neutral",
+    POST_MEETING: "info",
 };
 
 // Pull {{token}} names out of the body so the stored variables array stays accurate.
@@ -255,12 +265,12 @@ export default function TemplateManager() {
     return (
         <div className="space-y-6">
             {/* Header & Controls */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <Card className="flex flex-col items-start justify-between gap-4 p-4 md:flex-row md:items-center">
                 <div className="flex flex-wrap gap-3">
-                    <select
+                    <Select
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 text-sm font-medium rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-emerald-500/20"
+                        className="w-auto"
                     >
                         <option value="all">All Categories</option>
                         {CATEGORIES.map((c) => (
@@ -268,17 +278,17 @@ export default function TemplateManager() {
                                 {c.replace(/_/g, " ")}
                             </option>
                         ))}
-                    </select>
+                    </Select>
 
-                    <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                    <div className="flex rounded-lg border border-line bg-slate-100 p-1">
                         {["all", "universal", "A", "B", "C", "D"].map((o) => (
                             <button
                                 key={o}
                                 onClick={() => setSelectedType(o)}
                                 className={clsx(
-                                    "px-3 py-1 text-xs font-bold rounded-md transition-all capitalize",
+                                    "rounded-md px-3 py-1 text-xs font-semibold capitalize transition-all",
                                     selectedType === o
-                                        ? "bg-white text-slate-900 shadow-sm"
+                                        ? "bg-surface text-slate-900 shadow-sm"
                                         : "text-slate-500 hover:text-slate-700"
                                 )}
                             >
@@ -288,196 +298,186 @@ export default function TemplateManager() {
                     </div>
                 </div>
 
-                <button
-                    onClick={handleAdd}
-                    className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10"
-                >
+                <Button onClick={handleAdd} variant="primary">
                     <Plus className="h-4 w-4" /> Add Template
-                </button>
-            </div>
+                </Button>
+            </Card>
 
             {/* Templates Table */}
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-slate-50 border-b border-slate-200">
-                            <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Template</th>
-                            <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Category</th>
-                            <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Lead Type</th>
-                            <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Preview</th>
-                            <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                        {isLoading ? (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">
-                                    <div className="flex items-center justify-center gap-2">
-                                        <Loader2 className="h-5 w-5 animate-spin" /> Loading templates...
-                                    </div>
-                                </td>
-                            </tr>
-                        ) : filteredTemplates.length === 0 ? (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">
-                                    No templates found matching filters.
-                                </td>
-                            </tr>
-                        ) : (
-                            filteredTemplates.map((template) => (
-                                <tr key={template.id} className="group hover:bg-slate-50/50 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <p className="text-sm font-bold text-slate-900">{template.name}</p>
-                                        {template.requires_meta_approval && (
-                                            <p className="text-[10px] text-amber-600 uppercase tracking-tighter">Meta approval required</p>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span
-                                            className={clsx(
-                                                "px-2 py-0.5 rounded text-[10px] font-bold uppercase border",
-                                                CATEGORY_COLORS[template.category] || "bg-slate-50 text-slate-600 border-slate-200"
-                                            )}
-                                        >
-                                            {template.category.replace(/_/g, " ")}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-xs font-mono text-slate-500">
-                                        {template.lead_type ? `Type ${template.lead_type}` : "Universal"}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <p className="text-sm text-slate-500 line-clamp-1 max-w-xs">{template.content}</p>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                onClick={() => handleEdit(template)}
-                                                className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
-                                                title="Edit Template"
-                                            >
-                                                <Edit2 className="h-4 w-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(template)}
-                                                className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                                title="Delete Template"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
+            <Card className="overflow-hidden">
+                <div className="overflow-x-auto">
+                    <Table>
+                        <THead>
+                            <TR className="hover:bg-transparent">
+                                <TH>Template</TH>
+                                <TH>Category</TH>
+                                <TH>Lead Type</TH>
+                                <TH>Preview</TH>
+                                <TH className="text-right">Actions</TH>
+                            </TR>
+                        </THead>
+                        <TBody>
+                            {isLoading ? (
+                                <TR className="hover:bg-transparent">
+                                    <TD colSpan={5} className="py-12 text-center text-slate-400">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <Loader2 className="h-5 w-5 animate-spin" /> Loading templates...
                                         </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                                    </TD>
+                                </TR>
+                            ) : filteredTemplates.length === 0 ? (
+                                <TR className="hover:bg-transparent">
+                                    <TD colSpan={5} className="py-12 text-center text-slate-400">
+                                        No templates found matching filters.
+                                    </TD>
+                                </TR>
+                            ) : (
+                                filteredTemplates.map((template) => (
+                                    <TR key={template.id} className="group">
+                                        <TD>
+                                            <p className="text-sm font-semibold text-slate-900">{template.name}</p>
+                                            {template.requires_meta_approval && (
+                                                <p className="text-[11px] uppercase tracking-wide text-warn">Meta approval required</p>
+                                            )}
+                                        </TD>
+                                        <TD>
+                                            <Badge tone={CATEGORY_TONE[template.category] || "neutral"} size="sm" className="uppercase">
+                                                {template.category.replace(/_/g, " ")}
+                                            </Badge>
+                                        </TD>
+                                        <TD className="text-xs tabular-nums text-slate-500">
+                                            {template.lead_type ? `Type ${template.lead_type}` : "Universal"}
+                                        </TD>
+                                        <TD>
+                                            <p className="max-w-xs truncate text-sm text-slate-500">{template.content}</p>
+                                        </TD>
+                                        <TD className="text-right">
+                                            <div className="flex justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                                                <button
+                                                    onClick={() => handleEdit(template)}
+                                                    className="rounded-lg p-1.5 text-slate-400 transition-all hover:bg-brand-soft hover:text-brand-deep"
+                                                    title="Edit Template"
+                                                >
+                                                    <Edit2 className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(template)}
+                                                    className="rounded-lg p-1.5 text-slate-400 transition-all hover:bg-danger-soft hover:text-danger"
+                                                    title="Delete Template"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        </TD>
+                                    </TR>
+                                ))
+                            )}
+                        </TBody>
+                    </Table>
+                </div>
+            </Card>
 
             {/* Editor Drawer / Modal */}
             {isDrawerOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/40 backdrop-blur-sm">
-                    <div className="h-full w-full max-w-2xl bg-white shadow-2xl animate-in slide-in-from-right duration-300 overflow-y-auto">
-                        <div className="flex flex-col h-full border-l border-slate-200">
+                    <div className="h-full w-full max-w-2xl overflow-y-auto bg-surface shadow-lg animate-in slide-in-from-right duration-300">
+                        <div className="flex h-full flex-col border-l border-line">
                             {/* Drawer Header */}
-                            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 sticky top-0 z-10">
+                            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-slate-50 p-6">
                                 <div>
-                                    <h2 className="text-xl font-bold text-slate-900">
+                                    <h2 className="font-display text-xl font-semibold text-slate-900">
                                         {editingTemplate ? "Edit Template" : "New WhatsApp Template"}
                                     </h2>
                                     <p className="text-sm text-slate-500">Available in the sales template picker.</p>
                                 </div>
                                 <button
                                     onClick={() => setIsDrawerOpen(false)}
-                                    className="p-2 hover:bg-slate-200 rounded-full transition-colors"
+                                    className="rounded-full p-2 transition-colors hover:bg-slate-200"
                                 >
                                     <XCircle className="h-6 w-6 text-slate-400" />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSave} className="flex-1 p-6 space-y-8">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-slate-500 uppercase">Template Name</label>
-                                    <input
+                            <form onSubmit={handleSave} className="flex-1 space-y-8 p-6">
+                                <div>
+                                    <Label>Template Name</Label>
+                                    <Input
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         required
                                         placeholder="e.g. CURIOSITY_TYPE_A"
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-emerald-500 outline-none"
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-500 uppercase">Category</label>
-                                        <select
+                                    <div>
+                                        <Label>Category</Label>
+                                        <Select
                                             value={formData.category}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                             required
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-emerald-500 outline-none"
                                         >
                                             {CATEGORIES.map((c) => (
                                                 <option key={c} value={c}>
                                                     {c.replace(/_/g, " ")}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </Select>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-500 uppercase">Lead Type</label>
-                                        <select
+                                    <div>
+                                        <Label>Lead Type</Label>
+                                        <Select
                                             value={formData.lead_type}
                                             onChange={(e) => setFormData({ ...formData, lead_type: e.target.value })}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-emerald-500 outline-none"
                                         >
                                             {LEAD_TYPES.map((t) => (
                                                 <option key={t || "universal"} value={t}>
                                                     {t ? `Type ${t}` : "Universal (all types)"}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </Select>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-500 uppercase">Meta Category</label>
-                                        <select
+                                    <div>
+                                        <Label>Meta Category</Label>
+                                        <Select
                                             value={formData.meta_category}
                                             onChange={(e) => setFormData({ ...formData, meta_category: e.target.value })}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-emerald-500 outline-none"
                                         >
                                             {META_CATEGORIES.map((c) => (
                                                 <option key={c} value={c}>
                                                     {c}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </Select>
                                     </div>
-                                    <label className="flex items-end gap-3 pb-3 cursor-pointer">
+                                    <label className="flex cursor-pointer items-end gap-3 pb-2">
                                         <input
                                             type="checkbox"
                                             checked={formData.requires_meta_approval}
                                             onChange={(e) =>
                                                 setFormData({ ...formData, requires_meta_approval: e.target.checked })
                                             }
-                                            className="h-5 w-5 rounded accent-emerald-600"
+                                            className="h-5 w-5 rounded accent-brand-deep"
                                         />
-                                        <span className="text-xs font-bold text-slate-500 uppercase">Requires Meta approval</span>
+                                        <span className="text-sm font-medium text-slate-700">Requires Meta approval</span>
                                     </label>
                                 </div>
 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                                     <div className="space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <label className="text-xs font-bold text-slate-500 uppercase">Message Body</label>
-                                            <div className="relative group">
-                                                <Info className="h-4 w-4 text-slate-400 cursor-help" />
-                                                <div className="absolute right-0 bottom-full mb-2 w-64 bg-slate-900 text-white p-3 rounded-xl text-[10px] invisible group-hover:visible shadow-xl z-20">
-                                                    <p className="font-bold mb-2 border-b border-white/20 pb-1">Available Variables</p>
+                                        <div className="flex items-center justify-between">
+                                            <Label className="mb-0">Message Body</Label>
+                                            <div className="group relative">
+                                                <Info className="h-4 w-4 cursor-help text-slate-400" />
+                                                <div className="invisible absolute bottom-full right-0 z-20 mb-2 w-64 rounded-lg bg-slate-900 p-3 text-[11px] text-white shadow-md group-hover:visible">
+                                                    <p className="mb-2 border-b border-white/20 pb-1 font-semibold">Available Variables</p>
                                                     <div className="space-y-1.5">
                                                         {VARIABLES.map((v) => (
                                                             <div key={v.key} className="flex justify-between">
-                                                                <span className="text-emerald-400 font-mono">{v.key}</span>
+                                                                <span className="text-brand">{v.key}</span>
                                                                 <span className="opacity-60">{v.description}</span>
                                                             </div>
                                                         ))}
@@ -485,12 +485,12 @@ export default function TemplateManager() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <textarea
+                                        <Textarea
                                             value={formData.content}
                                             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                             required
                                             rows={12}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:border-emerald-500 outline-none font-sans leading-relaxed resize-none"
+                                            className="resize-none leading-relaxed"
                                             placeholder="Type your message here..."
                                         />
                                         <div className="flex flex-wrap gap-2 pt-2">
@@ -501,7 +501,7 @@ export default function TemplateManager() {
                                                     onClick={() =>
                                                         setFormData({ ...formData, content: formData.content + v.key })
                                                     }
-                                                    className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded text-[10px] font-mono border border-slate-200 transition-colors"
+                                                    className="rounded-md border border-line bg-slate-100 px-2 py-1 text-[11px] text-slate-600 transition-colors hover:bg-slate-200"
                                                 >
                                                     {v.key}
                                                 </button>
@@ -510,37 +510,40 @@ export default function TemplateManager() {
                                     </div>
 
                                     <div className="space-y-3">
-                                        <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+                                        <Label className="mb-0 flex items-center gap-2">
                                             <Eye className="h-3 w-3" /> Live Preview
-                                        </label>
-                                        <div className="bg-[#E9EDEF] rounded-2xl p-4 border border-slate-200 h-[calc(100%-2rem)] flex flex-col">
-                                            <div className="bg-white rounded-xl p-4 shadow-sm relative flex-1">
-                                                <div className="absolute -left-2 top-4 w-4 h-4 bg-white rotate-45 border-l border-b border-slate-100 hidden md:block" />
-                                                <div className="flex flex-col h-full bg-white">
-                                                    <div className="text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed flex-1 overflow-y-auto">
+                                        </Label>
+                                        {/* WhatsApp chat preview — keeps WhatsApp's own UI colours on purpose */}
+                                        <div className="flex h-[calc(100%-2rem)] flex-col rounded-xl border border-line bg-[#E9EDEF] p-4">
+                                            <div className="relative flex-1 rounded-lg bg-white p-4 shadow-sm">
+                                                <div className="absolute -left-2 top-4 hidden h-4 w-4 rotate-45 border-b border-l border-slate-100 bg-white md:block" />
+                                                <div className="flex h-full flex-col bg-white">
+                                                    <div className="flex-1 overflow-y-auto whitespace-pre-wrap text-xs leading-relaxed text-slate-900">
                                                         {formData.content ? (
                                                             renderPreview(formData.content)
                                                         ) : (
-                                                            <span className="text-slate-300 italic">Preview will appear here...</span>
+                                                            <span className="italic text-slate-300">Preview will appear here...</span>
                                                         )}
                                                     </div>
-                                                    <div className="text-[10px] text-slate-400 text-right mt-2 flex items-center justify-end gap-1">
+                                                    <div className="mt-2 flex items-center justify-end gap-1 text-right text-[11px] text-slate-400">
                                                         {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} ✓✓
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p className="text-[10px] text-slate-500 text-center mt-3 font-medium opacity-60 uppercase tracking-widest">
+                                            <p className="mt-3 text-center text-[11px] font-medium uppercase tracking-wide text-slate-500 opacity-60">
                                                 WhatsApp Web Preview
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="pt-6 border-t border-slate-100 flex gap-4 sticky bottom-0 bg-white pb-6 mt-auto">
-                                    <button
+                                <div className="sticky bottom-0 mt-auto flex gap-4 border-t border-line bg-surface pb-6 pt-6">
+                                    <Button
                                         type="submit"
                                         disabled={isSaving}
-                                        className="flex-1 bg-emerald-600 text-white py-4 rounded-2xl font-bold text-sm hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex justify-center items-center gap-2"
+                                        variant="primary"
+                                        size="lg"
+                                        className="flex-1"
                                     >
                                         {isSaving ? (
                                             <Loader2 className="h-5 w-5 animate-spin" />
@@ -549,14 +552,16 @@ export default function TemplateManager() {
                                         ) : (
                                             "Create Template"
                                         )}
-                                    </button>
-                                    <button
+                                    </Button>
+                                    <Button
                                         type="button"
                                         onClick={() => setIsDrawerOpen(false)}
-                                        className="px-8 bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl hover:bg-slate-200 transition-all"
+                                        variant="subtle"
+                                        size="lg"
+                                        className="px-8"
                                     >
                                         Cancel
-                                    </button>
+                                    </Button>
                                 </div>
                             </form>
                         </div>

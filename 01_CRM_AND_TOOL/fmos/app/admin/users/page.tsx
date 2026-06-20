@@ -12,22 +12,25 @@ import {
     CheckCircle2,
     XCircle,
     Mail,
-    Calendar,
-    ArrowRight
+    Calendar
 } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 const ROLES = [
-    { value: "admin", label: "Admin", color: "bg-red-500", desc: "Full system access" },
-    { value: "manager", label: "Manager", color: "bg-indigo-500", desc: "Project & Team control" },
-    { value: "strategist", label: "Strategist", color: "bg-purple-500", desc: "Strategy & Performance" },
-    { value: "sales", label: "Sales", color: "bg-blue-500", desc: "Pipeline & Deals" },
-    { value: "telecaller", label: "Telecaller", color: "bg-emerald-500", desc: "Calling & Follow-ups" },
-    { value: "client", label: "Client", color: "bg-amber-500", desc: "Portal access only" },
-    { value: "guest", label: "Guest", color: "bg-slate-500", desc: "Read-only access" },
+    { value: "admin", label: "Admin", desc: "Full system access" },
+    { value: "manager", label: "Manager", desc: "Project & Team control" },
+    { value: "strategist", label: "Strategist", desc: "Strategy & Performance" },
+    { value: "sales", label: "Sales", desc: "Pipeline & Deals" },
+    { value: "telecaller", label: "Telecaller", desc: "Calling & Follow-ups" },
+    { value: "client", label: "Client", desc: "Portal access only" },
+    { value: "guest", label: "Guest", desc: "Read-only access" },
 ];
 
 export default function UserManagementPage() {
@@ -90,150 +93,142 @@ export default function UserManagementPage() {
     );
 
     return (
-        <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
+        <div className="min-h-full bg-canvas p-4 md:p-8 lg:p-12">
             <div className="mx-auto max-w-6xl">
                 {/* Header */}
-                <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                    <div className="space-y-1">
-                        <Link href="/admin" className="flex items-center gap-2 text-slate-400 hover:text-slate-900 mb-4 transition-colors">
+                <div className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+                    <div>
+                        <Link href="/admin" className="mb-4 flex items-center gap-2 text-slate-400 transition-colors hover:text-brand-deep">
                             <ArrowLeft className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Admin Hub</span>
+                            <span className="text-xs font-semibold uppercase tracking-wide">Admin Hub</span>
                         </Link>
-                        <h1 className="text-4xl font-black text-slate-900 flex items-center gap-4">
-                            <Users className="h-10 w-10 text-[#42CA80]" />
+                        <h1 className="flex items-center gap-3 font-display text-2xl font-semibold tracking-[-0.02em] text-slate-900">
+                            <Users className="h-7 w-7 text-brand-deep" />
                             User Access
                         </h1>
-                        <p className="text-slate-500 font-medium">Manage team roles and system access permissions.</p>
+                        <p className="mt-1 text-sm text-slate-500">Manage team roles and system access permissions.</p>
                     </div>
 
                     <div className="relative w-full md:w-80">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                        <input
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Input
                             type="text"
                             placeholder="Search by name or email..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-bold focus:ring-4 focus:ring-slate-900/5 transition-all outline-none"
+                            className="pl-9"
                         />
                     </div>
                 </div>
 
                 {/* Profiles Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {loading ? (
                         Array.from({ length: 6 }).map((_, i) => (
-                            <div key={i} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm animate-pulse space-y-4">
+                            <Card key={i} className="animate-pulse space-y-4 p-6">
                                 <div className="flex items-center gap-4">
-                                    <div className="h-12 w-12 rounded-2xl bg-slate-100" />
+                                    <div className="h-12 w-12 rounded-lg bg-slate-100" />
                                     <div className="flex-1 space-y-2">
-                                        <div className="h-4 w-3/4 bg-slate-100 rounded" />
-                                        <div className="h-3 w-1/2 bg-slate-100 rounded" />
+                                        <div className="h-4 w-3/4 rounded bg-slate-100" />
+                                        <div className="h-3 w-1/2 rounded bg-slate-100" />
                                     </div>
                                 </div>
-                                <div className="h-10 w-full bg-slate-50 rounded-xl" />
-                            </div>
+                                <div className="h-10 w-full rounded-lg bg-slate-50" />
+                            </Card>
                         ))
                     ) : filteredProfiles.length === 0 ? (
-                        <div className="col-span-full py-20 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
-                            <ShieldAlert className="h-10 w-10 text-slate-200 mx-auto mb-4" />
-                            <p className="text-slate-400 font-bold uppercase tracking-widest">No users found</p>
+                        <div className="col-span-full rounded-xl border border-dashed border-line bg-slate-50/60 py-20 text-center">
+                            <ShieldAlert className="mx-auto mb-4 h-10 w-10 text-slate-300" />
+                            <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">No users found</p>
                         </div>
                     ) : (
                         filteredProfiles.map((profile) => (
-                            <div key={profile.id} className="bg-white rounded-[2rem] p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all group overflow-hidden relative">
-                                {/* Role Background Glow */}
-                                <div className={clsx(
-                                    "absolute -right-4 -top-4 w-24 h-24 blur-3xl opacity-0 group-hover:opacity-10 transition-opacity rounded-full",
-                                    ROLES.find(r => r.value === profile.role)?.color || "bg-slate-500"
-                                )} />
-
-                                <div className="flex items-start justify-between mb-6 relative z-10">
+                            <Card key={profile.id} className="group p-6 transition-all hover:border-line-strong hover:shadow-md">
+                                <div className="mb-6 flex items-start justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-14 w-14 rounded-2xl bg-slate-900 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-black/10 border-2 border-white">
+                                        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-900 text-xl font-semibold text-white">
                                             {profile.full_name?.charAt(0) || <Users className="h-6 w-6" />}
                                         </div>
                                         <div>
-                                            <h3 className="font-black text-slate-900 text-lg leading-tight">{profile.full_name || 'Anonymous'}</h3>
-                                            <div className="flex items-center gap-1.5 text-slate-400 mt-1">
+                                            <h3 className="font-display text-lg font-semibold leading-tight text-slate-900">{profile.full_name || 'Anonymous'}</h3>
+                                            <div className="mt-1 flex items-center gap-1.5 text-slate-400">
                                                 <Mail className="h-3 w-3" />
-                                                <span className="text-[10px] font-bold uppercase tracking-widest">{profile.email?.split('@')[0] || 'no-email'}</span>
+                                                <span className="text-[11px] font-medium">{profile.email?.split('@')[0] || 'no-email'}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-4 relative z-10">
-                                    <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
                                         <Shield className="h-3 w-3" /> System Role
                                     </div>
 
                                     <div className="relative">
-                                        <select
+                                        <Select
                                             value={profile.role || 'guest'}
                                             disabled={updatingId === profile.id}
                                             onChange={(e) => updateRole(profile.id, e.target.value, profile.role, profile.full_name)}
                                             className={clsx(
-                                                "w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-4 text-sm font-black appearance-none outline-none focus:ring-4 transition-all cursor-pointer",
-                                                updatingId === profile.id ? "opacity-50" : "hover:bg-white hover:border-slate-200 focus:bg-white"
+                                                "h-11 font-semibold",
+                                                updatingId === profile.id && "opacity-50"
                                             )}
                                         >
                                             {ROLES.map(r => (
                                                 <option key={r.value} value={r.value}>{r.label}</option>
                                             ))}
-                                        </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                            {updatingId === profile.id ? (
+                                        </Select>
+                                        {updatingId === profile.id && (
+                                            <div className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2">
                                                 <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
-                                            ) : (
-                                                <ArrowRight className="h-4 w-4 text-slate-300" />
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-3 pt-2">
-                                        <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-                                            <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Created</p>
-                                            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                                        <div className="rounded-lg border border-line bg-slate-50 p-3">
+                                            <p className="mb-1 text-[11px] font-semibold uppercase text-slate-400">Created</p>
+                                            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-700">
                                                 <Calendar className="h-3 w-3 text-slate-400" />
-                                                {new Date(profile.created_at).toLocaleDateString()}
+                                                <span className="tabular-nums">{new Date(profile.created_at).toLocaleDateString()}</span>
                                             </div>
                                         </div>
-                                        <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-                                            <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Status</p>
+                                        <div className="rounded-lg border border-line bg-slate-50 p-3">
+                                            <p className="mb-1 text-[11px] font-semibold uppercase text-slate-400">Status</p>
                                             {profile.is_active === false ? (
-                                                <div className="flex items-center gap-1.5 text-xs font-bold text-red-500">
+                                                <div className="flex items-center gap-1.5 text-xs font-medium text-danger">
                                                     <XCircle className="h-3 w-3" /> Inactive
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
+                                                <div className="flex items-center gap-1.5 text-xs font-medium text-brand-deep">
                                                     <CheckCircle2 className="h-3 w-3" /> Active
                                                 </div>
                                             )}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Card>
                         ))
                     )}
                 </div>
 
                 {/* Legend */}
-                <div className="mt-12 p-8 bg-white rounded-[3rem] border border-slate-200">
-                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                <Card className="mt-12 p-8">
+                    <h4 className="mb-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
                         <ShieldAlert className="h-4 w-4" /> Role Reference Guide
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                         {ROLES.map(r => (
                             <div key={r.value} className="space-y-1">
                                 <div className="flex items-center gap-2">
-                                    <div className={clsx("w-2 h-2 rounded-full", r.color)} />
-                                    <span className="text-xs font-black text-slate-900 uppercase tracking-wider">{r.label}</span>
+                                    <div className="h-2 w-2 rounded-full bg-brand" />
+                                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-900">{r.label}</span>
                                 </div>
-                                <p className="text-[10px] text-slate-500 font-medium pl-4">{r.desc}</p>
+                                <p className="pl-4 text-[11px] font-medium text-slate-500">{r.desc}</p>
                             </div>
                         ))}
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

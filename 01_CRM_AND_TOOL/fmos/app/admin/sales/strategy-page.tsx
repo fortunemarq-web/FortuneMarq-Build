@@ -13,7 +13,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import FunnelChart from "@/components/admin/funnel-chart";
-import { KpiCard } from "@/components/dashboard/kpi-card";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 interface Lead {
   id: string;
@@ -96,12 +99,13 @@ export default async function StrategyPage() {
   const totalProposals = proposalsSent + contractsSent + dealsWon;
   const proposalToCloseRate = totalProposals > 0 ? (dealsWon / totalProposals) * 100 : 0;
 
-  // Funnel Data
+  // Funnel Data — Recharts consumes literal hex (brand green for won; semantic
+  // slate/blue/amber otherwise), never Tailwind classes.
   const funnelData = [
-    { name: "Strategy Sessions", value: strategySessionsCount, color: "#8B5CF6" },
-    { name: "Proposals Sent", value: proposalsSent || Math.floor(strategySessionsCount * 0.7), color: "#06B6D4" },
-    { name: "Contracts Sent", value: contractsSent || Math.floor(strategySessionsCount * 0.5), color: "#F59E0B" },
-    { name: "Negotiation", value: negotiation || Math.floor(strategySessionsCount * 0.3), color: "#EC4899" },
+    { name: "Strategy Sessions", value: strategySessionsCount, color: "#64748b" },
+    { name: "Proposals Sent", value: proposalsSent || Math.floor(strategySessionsCount * 0.7), color: "#3b82f6" },
+    { name: "Contracts Sent", value: contractsSent || Math.floor(strategySessionsCount * 0.5), color: "#f59e0b" },
+    { name: "Negotiation", value: negotiation || Math.floor(strategySessionsCount * 0.3), color: "#64748b" },
     { name: "Deals Won", value: dealsWon, color: "#42CA80" },
   ];
 
@@ -152,216 +156,189 @@ export default async function StrategyPage() {
   }
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-full bg-canvas px-4 py-6">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* Header */}
-        <div className="mb-8">
+        <div>
           <Link
             href="/admin"
-            className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-[#42CA80]"
+            className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-brand-deep"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Command Hub
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-lg shadow-purple-500/20">
-              <Target className="h-6 w-6 text-slate-900" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 md:text-4xl font-mono tabular-nums">
-                Strategy Engine
-              </h1>
-              <p className="text-sm text-slate-500">Deal closing & strategist performance</p>
-            </div>
-          </div>
+          <PageHeader
+            title="Strategy Engine"
+            subtitle="Deal closing & strategist performance"
+          />
         </div>
 
         {/* KPI Cards - Row 1 */}
-        <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <KpiCard
-            title="Strategy Sessions"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard
+            label="Strategy Sessions"
             value={strategySessionsCount}
             icon={Calendar}
-            category="performance"
-            subtitle={`${strategyBookedLeads} currently booked`}
+            hint={`${strategyBookedLeads} currently booked`}
           />
-          <KpiCard
-            title="Deals Won"
+          <StatCard
+            label="Deals Won"
             value={dealsWon}
             icon={Trophy}
-            category="revenue"
-            subtitle="closed successfully"
+            hint="closed successfully"
           />
-          <KpiCard
-            title="Revenue Generated"
+          <StatCard
+            label="Revenue Generated"
             value={formatCurrency(totalRevenue)}
             icon={DollarSign}
-            category="pipeline"
-            subtitle="from closed deals"
+            hint="from closed deals"
           />
         </div>
 
         {/* Pipeline Breakdown Cards */}
-        <div className="mb-8 rounded-xl bg-slate-100/60 p-4 md:p-6">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {/* Proposals Sent */}
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-cyan-400" />
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-                  Proposals
-                </span>
-              </div>
-              <p className="mt-2 font-mono text-2xl font-bold tabular-nums text-slate-900">
-                {proposalsSent || Math.floor(strategySessionsCount * 0.7)}
-              </p>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <Card className="p-4">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-slate-400" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Proposals
+              </span>
             </div>
+            <p className="mt-2 font-display text-2xl font-semibold tabular-nums text-slate-900">
+              {proposalsSent || Math.floor(strategySessionsCount * 0.7)}
+            </p>
+          </Card>
 
-            {/* Contracts Sent */}
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2">
-                <FileSignature className="h-4 w-4 text-amber-400" />
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-                  Contracts
-                </span>
-              </div>
-              <p className="mt-2 font-mono text-2xl font-bold tabular-nums text-slate-900">
-                {contractsSent || Math.floor(strategySessionsCount * 0.5)}
-              </p>
+          <Card className="p-4">
+            <div className="flex items-center gap-2">
+              <FileSignature className="h-4 w-4 text-slate-400" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Contracts
+              </span>
             </div>
+            <p className="mt-2 font-display text-2xl font-semibold tabular-nums text-slate-900">
+              {contractsSent || Math.floor(strategySessionsCount * 0.5)}
+            </p>
+          </Card>
 
-            {/* Negotiation */}
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2">
-                <Handshake className="h-4 w-4 text-pink-400" />
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-                  Negotiating
-                </span>
-              </div>
-              <p className="mt-2 font-mono text-2xl font-bold tabular-nums text-slate-900">
-                {negotiation || Math.floor(strategySessionsCount * 0.3)}
-              </p>
+          <Card className="p-4">
+            <div className="flex items-center gap-2">
+              <Handshake className="h-4 w-4 text-slate-400" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Negotiating
+              </span>
             </div>
+            <p className="mt-2 font-display text-2xl font-semibold tabular-nums text-slate-900">
+              {negotiation || Math.floor(strategySessionsCount * 0.3)}
+            </p>
+          </Card>
 
-            {/* Proposal to Close Rate */}
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-emerald-600" />
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-700">
-                  Close Rate
-                </span>
-              </div>
-              <p className="mt-2 font-mono text-2xl font-bold tabular-nums text-emerald-700">
-                {proposalToCloseRate.toFixed(1)}%
-              </p>
+          <Card className="border-brand-line bg-brand-soft p-4">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-brand-deep" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-brand-deep">
+                Close Rate
+              </span>
             </div>
-          </div>
+            <p className="mt-2 font-display text-2xl font-semibold tabular-nums text-brand-deep">
+              {proposalToCloseRate.toFixed(1)}%
+            </p>
+          </Card>
         </div>
 
         {/* Charts Row */}
-        <div className="mb-8 rounded-xl bg-slate-100/60 p-4 md:p-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Sales Funnel */}
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
-                  <TrendingUp className="h-5 w-5 text-purple-400" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Sales Funnel */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+                  <TrendingUp className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Sales Funnel</h2>
-                  <p className="text-xs text-slate-600">Session to close conversion</p>
+                  <CardTitle>Sales Funnel</CardTitle>
+                  <p className="text-xs text-slate-500">Session to close conversion</p>
                 </div>
               </div>
+            </CardHeader>
+            <CardContent>
               <FunnelChart data={funnelData} />
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Strategist Performance */}
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
-                  <Award className="h-5 w-5 text-purple-400" />
+          {/* Strategist Performance */}
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+                  <Award className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Strategist Performance</h2>
-                  <p className="text-xs text-slate-600">Ranked by revenue generated</p>
+                  <CardTitle>Strategist Performance</CardTitle>
+                  <p className="text-xs text-slate-500">Ranked by revenue generated</p>
                 </div>
               </div>
+            </CardHeader>
 
-              {strategistLeaderboard.length === 0 ? (
-                <div className="flex h-[250px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50">
-                  <p className="text-sm text-slate-500">No strategist data yet</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto rounded-xl border border-slate-200">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="border-b border-slate-200 bg-slate-50">
-                        <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                          Strategist
-                        </th>
-                        <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                          Deals
-                        </th>
-                        <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                          Revenue
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {strategistLeaderboard.map((person, index) => (
-                        <tr key={index} className="transition-colors hover:bg-slate-50/70 duration-100">
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-slate-900 ${index === 0
-                                  ? "bg-gradient-to-br from-amber-400 to-yellow-500"
-                                  : index === 1
-                                    ? "bg-gradient-to-br from-gray-300 to-gray-400"
-                                    : index === 2
-                                      ? "bg-gradient-to-br from-amber-600 to-amber-700"
-                                      : "bg-slate-100"
-                                  }`}
-                              >
-                                {index + 1}
-                              </div>
-                              <span className="font-medium text-slate-900">{person.name}</span>
+            {strategistLeaderboard.length === 0 ? (
+              <div className="flex h-[250px] items-center justify-center">
+                <p className="text-sm text-slate-500">No strategist data yet</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <THead>
+                    <TR className="hover:bg-transparent">
+                      <TH>Strategist</TH>
+                      <TH className="text-center">Deals</TH>
+                      <TH className="text-right">Revenue</TH>
+                    </TR>
+                  </THead>
+                  <TBody>
+                    {strategistLeaderboard.map((person, index) => (
+                      <TR key={index}>
+                        <TD>
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold tabular-nums text-slate-700">
+                              {index + 1}
                             </div>
-                          </td>
-                          <td className="px-4 py-3 text-center">
-                            <span className="inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums text-emerald-600 border border-emerald-100 bg-emerald-50 px-2 py-0.5 rounded-full">
-                              <Trophy className="h-3 w-3" />
-                              {person.deals}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-right">
-                            <span className="font-mono text-sm font-bold tabular-nums text-slate-900">
-                              {formatCurrency(person.revenue)}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </div>
+                            <span className="font-medium text-slate-900">{person.name}</span>
+                          </div>
+                        </TD>
+                        <TD className="text-center">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-brand-soft px-2 py-0.5 text-sm font-semibold tabular-nums text-brand-deep">
+                            <Trophy className="h-3 w-3" />
+                            {person.deals}
+                          </span>
+                        </TD>
+                        <TD className="text-right">
+                          <span className="text-sm font-semibold tabular-nums text-slate-900">
+                            {formatCurrency(person.revenue)}
+                          </span>
+                        </TD>
+                      </TR>
+                    ))}
+                  </TBody>
+                </Table>
+              </div>
+            )}
+          </Card>
         </div>
 
         {/* Recent Wins */}
-        <div className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm p-6">
+        <Card className="p-6">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50">
-              <Trophy className="h-5 w-5 text-emerald-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+              <Trophy className="h-5 w-5 text-brand-deep" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-slate-900">Recent Wins</h2>
-              <p className="text-xs text-slate-600">Latest closed deals</p>
+              <h2 className="font-display text-base font-semibold text-slate-900">Recent Wins</h2>
+              <p className="text-xs text-slate-500">Latest closed deals</p>
             </div>
           </div>
 
           {recentWonDeals.length === 0 ? (
-            <div className="flex h-[150px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50">
+            <div className="flex h-[150px] items-center justify-center rounded-xl border border-dashed border-line bg-slate-50/60">
               <p className="text-sm text-slate-500">No closed deals yet</p>
             </div>
           ) : (
@@ -369,10 +346,10 @@ export default async function StrategyPage() {
               {recentWonDeals.map((deal) => (
                 <div
                   key={deal.id}
-                  className="flex flex-col items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-center"
+                  className="flex flex-col items-center justify-center rounded-xl border border-brand-line bg-brand-soft p-4 text-center"
                 >
-                  <Trophy className="h-5 w-5 text-emerald-400" />
-                  <span className="mt-2 text-xl font-bold text-emerald-400">
+                  <Trophy className="h-5 w-5 text-brand-deep" />
+                  <span className="mt-2 text-xl font-semibold tabular-nums text-brand-deep">
                     {formatCurrency(deal.deal_value || 0)}
                   </span>
                   <span className="mt-1 text-xs text-slate-500">
@@ -382,7 +359,7 @@ export default async function StrategyPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

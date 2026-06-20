@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { X, CheckCircle2, XCircle, Briefcase, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { generateProjectTasks } from "@/lib/project-utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface CreateProjectModalProps {
     onClose: () => void;
@@ -168,14 +172,14 @@ export default function CreateProjectModal({ onClose, onSuccess }: CreateProject
     const showBuildType = formData.selectedServices.includes("web_dev");
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-            <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-slate-50 shadow-2xl max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-                    <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <Briefcase className="h-5 w-5 text-[#42CA80]" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="w-full max-w-2xl rounded-2xl border border-line bg-surface shadow-lg max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center justify-between border-b border-line px-6 py-4">
+                    <h2 className="font-display text-xl font-semibold text-slate-900 flex items-center gap-2">
+                        <Briefcase className="h-5 w-5 text-brand-deep" />
                         Create Project Manually
                     </h2>
-                    <button onClick={onClose} className="rounded-full p-2 text-slate-600 hover:bg-white hover:text-slate-900">
+                    <button onClick={onClose} className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900">
                         <X className="h-5 w-5" />
                     </button>
                 </div>
@@ -183,16 +187,16 @@ export default function CreateProjectModal({ onClose, onSuccess }: CreateProject
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
 
                     {/* Client Selection */}
-                    <div className="space-y-4 rounded-xl border border-slate-200 bg-[#161616] p-4">
+                    <div className="space-y-4 rounded-xl border border-line bg-slate-50 p-4">
                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium text-slate-900">Client</label>
-                            <label className="flex items-center gap-2 text-xs text-[#42CA80] cursor-pointer">
+                            <Label className="mb-0">Client</Label>
+                            <label className="flex items-center gap-2 text-xs text-brand-deep cursor-pointer">
                                 <input
                                     type="checkbox"
                                     name="createClient"
                                     checked={formData.createClient}
                                     onChange={handleChange}
-                                    className="accent-[#42CA80]"
+                                    className="accent-brand-deep"
                                 />
                                 New Client?
                             </label>
@@ -200,48 +204,41 @@ export default function CreateProjectModal({ onClose, onSuccess }: CreateProject
 
                         {formData.createClient ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <input
-                                        type="text"
-                                        name="newClientName"
-                                        placeholder="Business Name *"
-                                        value={formData.newClientName}
-                                        onChange={handleChange}
-                                        className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 text-sm focus:border-[#42CA80] outline-none"
-                                        required={formData.createClient}
-                                    />
-                                </div>
-                                <div>
-                                    <input
-                                        type="email"
-                                        name="newClientEmail"
-                                        placeholder="Primary Email (Optional)"
-                                        value={formData.newClientEmail}
-                                        onChange={handleChange}
-                                        className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 text-sm focus:border-[#42CA80] outline-none"
-                                    />
-                                </div>
+                                <Input
+                                    type="text"
+                                    name="newClientName"
+                                    placeholder="Business Name *"
+                                    value={formData.newClientName}
+                                    onChange={handleChange}
+                                    required={formData.createClient}
+                                />
+                                <Input
+                                    type="email"
+                                    name="newClientEmail"
+                                    placeholder="Primary Email (Optional)"
+                                    value={formData.newClientEmail}
+                                    onChange={handleChange}
+                                />
                             </div>
                         ) : (
-                            <select
+                            <Select
                                 name="clientId"
                                 value={formData.clientId}
                                 onChange={handleChange}
-                                className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 text-sm focus:border-[#42CA80] outline-none"
                                 required={!formData.createClient}
                             >
                                 <option value="">Select Existing Client...</option>
                                 {clients.map(c => (
                                     <option key={c.id} value={c.id}>{c.business_name}</option>
                                 ))}
-                            </select>
+                            </Select>
                         )}
                     </div>
 
                     {/* Project Details */}
                     <div>
                         <div className="mb-4">
-                            <label className="mb-2 block text-sm font-medium text-slate-900">Service Types *</label>
+                            <Label>Service Types *</Label>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 {serviceTypes.map(s => {
                                     const isSelected = formData.selectedServices.includes(s.value);
@@ -250,15 +247,15 @@ export default function CreateProjectModal({ onClose, onSuccess }: CreateProject
                                             key={s.value}
                                             onClick={() => toggleService(s.value)}
                                             className={`
-                                                cursor-pointer flex items-center gap-2 p-3 rounded-lg border text-sm transition-all
+                                                cursor-pointer flex items-center gap-2 p-3 rounded-lg border text-sm transition-colors
                                                 ${isSelected
-                                                    ? 'border-[#42CA80] bg-[#42CA80]/10 text-slate-900'
-                                                    : 'border-slate-300 bg-slate-50 text-slate-500 hover:border-[#666]'
+                                                    ? 'border-brand-line bg-brand-soft text-slate-900'
+                                                    : 'border-line bg-surface text-slate-500 hover:border-line-strong'
                                                 }
                                             `}
                                         >
-                                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'border-[#42CA80] bg-[#42CA80]' : 'border-[#666]'}`}>
-                                                {isSelected && <CheckCircle2 className="h-3 w-3 text-black" />}
+                                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'border-brand bg-brand' : 'border-line-strong'}`}>
+                                                {isSelected && <CheckCircle2 className="h-3 w-3 text-white" />}
                                             </div>
                                             {s.label}
                                         </div>
@@ -266,47 +263,44 @@ export default function CreateProjectModal({ onClose, onSuccess }: CreateProject
                                 })}
                             </div>
                             {formData.selectedServices.length === 0 && (
-                                <p className="mt-1 text-xs text-slate-600">Select at least one service.</p>
+                                <p className="mt-1 text-xs text-slate-500">Select at least one service.</p>
                             )}
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {showBuildType && (
                                 <div className="sm:col-span-2">
-                                    <label className="mb-2 block text-sm font-medium text-slate-900">Build Type (for Web Dev) *</label>
-                                    <select
+                                    <Label>Build Type (for Web Dev) *</Label>
+                                    <Select
                                         name="buildType"
                                         value={formData.buildType}
                                         onChange={handleChange}
-                                        className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 text-sm focus:border-[#42CA80] outline-none"
                                         required={showBuildType}
                                     >
                                         <option value="">Select Build Type...</option>
                                         {buildTypes.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
-                                    </select>
+                                    </Select>
                                 </div>
                             )}
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-slate-900">Start Date *</label>
-                                <input
+                                <Label>Start Date *</Label>
+                                <Input
                                     type="date"
                                     name="startDate"
                                     value={formData.startDate}
                                     onChange={handleChange}
-                                    className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 text-sm focus:border-[#42CA80] outline-none"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-slate-900">Deadline *</label>
-                                <input
+                                <Label>Deadline *</Label>
+                                <Input
                                     type="date"
                                     name="deadline"
                                     value={formData.deadline}
                                     onChange={handleChange}
-                                    className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-900 text-sm focus:border-[#42CA80] outline-none"
                                     required
                                 />
                             </div>
@@ -314,21 +308,22 @@ export default function CreateProjectModal({ onClose, onSuccess }: CreateProject
                     </div>
 
                     {message && (
-                        <div className={`p-3 rounded-lg flex items-center gap-2 text-sm font-medium ${message.type === 'success' ? 'bg-[#42CA80]/10 text-[#42CA80]' : 'bg-red-500/10 text-red-500'}`}>
+                        <div className={`p-3 rounded-lg flex items-center gap-2 text-sm font-medium ${message.type === 'success' ? 'bg-brand-soft text-brand-deep' : 'bg-danger-soft text-danger'}`}>
                             {message.type === 'success' ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
                             {message.text}
                         </div>
                     )}
 
-                    <div className="flex gap-3 pt-4 border-t border-slate-200">
-                        <button type="button" onClick={onClose} className="flex-1 px-4 py-2 rounded-lg border border-slate-300 bg-slate-50 text-slate-900 hover:bg-white">Cancel</button>
-                        <button
+                    <div className="flex gap-3 pt-4 border-t border-line">
+                        <Button type="button" variant="secondary" onClick={onClose} className="flex-1">Cancel</Button>
+                        <Button
                             type="submit"
+                            variant="primary"
                             disabled={loading}
-                            className="flex-1 px-4 py-2 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white font-bold disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1"
                         >
                             {loading ? "Creating..." : <><Plus className="h-4 w-4" /> Create Projects</>}
-                        </button>
+                        </Button>
                     </div>
 
                 </form>

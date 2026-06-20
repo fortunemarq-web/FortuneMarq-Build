@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
-import { Search, Copy, BookOpen, AlertCircle } from "lucide-react";
-import clsx from "clsx";
+import { Search, Copy, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/cn";
+import { inputClasses } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/toast";
 
 interface ScriptObjectionPanelProps {
@@ -62,23 +64,23 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
     });
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 rounded-xl border border-[#222] overflow-hidden">
+        <div className="flex flex-col h-full bg-surface rounded-xl border border-line overflow-hidden">
             {/* Tabs */}
-            <div className="flex border-b border-[#222]">
+            <div className="flex border-b border-line">
                 <button
                     onClick={() => setActiveTab("scripts")}
-                    className={clsx(
+                    className={cn(
                         "flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors",
-                        activeTab === "scripts" ? "bg-white text-slate-900 border-b-2 border-[#42CA80]" : "text-slate-600 hover:bg-[#151515]"
+                        activeTab === "scripts" ? "bg-slate-50 text-slate-900 border-b-2 border-brand-deep" : "text-slate-600 hover:bg-slate-50"
                     )}
                 >
                     Scripts
                 </button>
                 <button
                     onClick={() => setActiveTab("objections")}
-                    className={clsx(
+                    className={cn(
                         "flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors",
-                        activeTab === "objections" ? "bg-white text-slate-900 border-b-2 border-[#42CA80]" : "text-slate-600 hover:bg-[#151515]"
+                        activeTab === "objections" ? "bg-slate-50 text-slate-900 border-b-2 border-brand-deep" : "text-slate-600 hover:bg-slate-50"
                     )}
                 >
                     Objections
@@ -86,15 +88,15 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
             </div>
 
             {/* Search */}
-            <div className="p-3 border-b border-[#222]">
+            <div className="p-3 border-b border-line">
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-600" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                     <input
                         type="text"
                         placeholder="Search library..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full rounded-lg bg-slate-50 border border-[#222] pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#42CA80]"
+                        className={cn(inputClasses, "pl-9 text-xs")}
                     />
                 </div>
             </div>
@@ -102,27 +104,27 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
             {/* Content List */}
             <div className="flex-1 overflow-y-auto p-3 space-y-4">
                 {loading ? (
-                    <div className="text-center text-slate-600 text-xs py-8">Loading library...</div>
+                    <div className="text-center text-slate-500 text-xs py-8">Loading library...</div>
                 ) : filteredData.length === 0 ? (
-                    <div className="text-center text-slate-600 text-xs py-8">No matching items found</div>
+                    <div className="text-center text-slate-500 text-xs py-8">No matching items found</div>
                 ) : (
                     filteredData.map((item) => (
-                        <div key={item.id} className="group rounded-lg border border-[#222] bg-[#161616] p-4 hover:border-slate-300">
+                        <div key={item.id} className="group rounded-lg border border-line bg-slate-50 p-4 transition-colors hover:border-line-strong">
                             {activeTab === "scripts" ? (
                                 <>
                                     <div className="flex items-center justify-between mb-2">
                                         <h4 className="font-semibold text-slate-900 text-sm">{item.script_title}</h4>
-                                        {item.industry && <span className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded uppercase">{item.industry}</span>}
+                                        {item.industry && <Badge tone="info" size="sm">{item.industry}</Badge>}
                                     </div>
-                                    <p className="text-xs text-slate-500 whitespace-pre-wrap leading-relaxed">{item.script_body}</p>
+                                    <p className="text-xs text-slate-600 whitespace-pre-wrap leading-relaxed">{item.script_body}</p>
                                 </>
                             ) : (
                                 <>
                                     <div className="flex items-start gap-3">
-                                        <AlertCircle className="h-4 w-4 text-orange-400 mt-0.5 flex-shrink-0" />
+                                        <AlertCircle className="h-4 w-4 text-warn mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <p className="text-sm font-medium text-slate-900 mb-2">"{item.objection}"</p>
-                                            <div className="bg-slate-100 rounded p-2 text-xs text-[#ccc] leading-relaxed">
+                                            <p className="text-sm font-medium text-slate-900 mb-2">&quot;{item.objection}&quot;</p>
+                                            <div className="bg-surface border border-line rounded-lg p-2 text-xs text-slate-600 leading-relaxed">
                                                 {item.rebuttal}
                                             </div>
                                         </div>
@@ -136,7 +138,7 @@ export default function ScriptObjectionPanel({ leadIndustry, leadCity }: ScriptO
                                     navigator.clipboard.writeText(text);
                                     toast.success("Copied to clipboard");
                                 }}
-                                className="mt-3 w-full flex items-center justify-center gap-2 rounded bg-slate-50 py-1.5 text-xs font-medium text-slate-600 opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-100 hover:text-slate-900"
+                                className="mt-3 w-full flex items-center justify-center gap-2 rounded-lg bg-surface border border-line py-1.5 text-xs font-medium text-slate-600 opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-100 hover:text-slate-900"
                             >
                                 <Copy className="h-3 w-3" /> Copy Text
                             </button>

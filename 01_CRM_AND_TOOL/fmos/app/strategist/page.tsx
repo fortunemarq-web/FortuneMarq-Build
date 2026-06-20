@@ -1,6 +1,8 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
 import StrategistPipeline from "@/components/strategist/strategist-pipeline";
+import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function StrategistDashboardPage() {
   const supabase = await createServerClientWithCookies();
@@ -8,11 +10,11 @@ export default async function StrategistDashboardPage() {
 
   if (!user) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-canvas px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900">Unauthorized</h1>
+          <h1 className="font-display text-2xl font-semibold text-slate-900">Unauthorized</h1>
           <p className="mt-2 text-slate-600">Please log in to access the Strategist Dashboard.</p>
-          <Link href="/login" className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700">
+          <Link href="/login" className={buttonVariants({ variant: "primary", className: "mt-4" })}>
             Log In
           </Link>
         </div>
@@ -82,26 +84,25 @@ export default async function StrategistDashboardPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-canvas px-4">
         <div className="text-center">
-          <p className="text-red-500">Error loading leads: {error.message}</p>
+          <p className="text-danger">Error loading leads: {error.message}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Strategist Dashboard</h1>
-          <Link
-            href="/strategist/deals"
-            className="px-4 py-2 bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white font-medium rounded-lg "
-          >
-            Manage All Deals
-          </Link>
-        </div>
+    <div className="min-h-full bg-canvas px-4 py-6">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <PageHeader
+          title="Strategist Dashboard"
+          actions={
+            <Link href="/strategist/deals" className={buttonVariants({ variant: "primary" })}>
+              Manage All Deals
+            </Link>
+          }
+        />
 
         <StrategistPipeline
           initialLeads={activeLeads || []}

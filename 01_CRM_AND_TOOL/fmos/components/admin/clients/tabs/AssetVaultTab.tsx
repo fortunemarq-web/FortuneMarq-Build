@@ -18,6 +18,8 @@ import {
 } from "@/app/admin/clients/actions";
 import { promptModal } from "@/components/ui/prompt-modal";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 
 interface Asset {
   id: string;
@@ -37,17 +39,17 @@ const CATEGORY_CONFIG = {
   credentials: {
     label: "Credentials",
     icon: Key,
-    color: "border-amber-200 bg-amber-50/50",
+    color: "border-line bg-slate-50/60",
   },
   brand_assets: {
     label: "Brand Assets",
     icon: Image,
-    color: "border-blue-200 bg-blue-50/50",
+    color: "border-line bg-slate-50/60",
   },
   links: {
     label: "Important Links",
     icon: LinkIcon,
-    color: "border-purple-200 bg-purple-50/50",
+    color: "border-line bg-slate-50/60",
   },
 };
 
@@ -136,7 +138,7 @@ export default function AssetVaultTab({
                 setAddCategory(cat);
                 setShowAddModal(true);
               }}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:border-slate-300 transition-all min-h-[36px]"
+              className="flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[36px]"
             >
               <Plus className="h-3 w-3" />
               {CATEGORY_CONFIG[cat as keyof typeof CATEGORY_CONFIG].label}
@@ -154,10 +156,10 @@ export default function AssetVaultTab({
             <div key={cat} className="mb-6">
               <div className="flex items-center gap-2 mb-3">
                 <Icon className="h-4 w-4 text-slate-400" />
-                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                <h3 className="font-display text-xs font-semibold uppercase tracking-widest text-slate-500">
                   {cfg.label}
                 </h3>
-                <span className="text-[10px] text-slate-400">
+                <span className="text-[11px] text-slate-400">
                   ({catAssets.length})
                 </span>
               </div>
@@ -210,7 +212,7 @@ export default function AssetVaultTab({
                               {asset.url && (
                                 <p className="text-xs text-slate-500 truncate">
                                   <span className="text-slate-400">URL:</span>{" "}
-                                  <a href={asset.url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                                  <a href={asset.url} target="_blank" rel="noreferrer" className="text-info hover:underline">
                                     {asset.url}
                                   </a>
                                 </p>
@@ -221,13 +223,13 @@ export default function AssetVaultTab({
                           {cat === "brand_assets" && (
                             <div className="mt-2 space-y-1">
                               {asset.file_type && (
-                                <span className="inline-block rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500 uppercase">
+                                <span className="inline-block rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500 uppercase">
                                   {asset.file_type}
                                 </span>
                               )}
                               {asset.file_url && (
                                 <p className="text-xs">
-                                  <a href={asset.file_url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                                  <a href={asset.file_url} target="_blank" rel="noreferrer" className="text-info hover:underline">
                                     Download / View
                                   </a>
                                 </p>
@@ -237,7 +239,7 @@ export default function AssetVaultTab({
 
                           {cat === "links" && asset.link_url && (
                             <p className="mt-2 text-xs truncate">
-                              <a href={asset.link_url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                              <a href={asset.link_url} target="_blank" rel="noreferrer" className="text-info hover:underline">
                                 {asset.link_url}
                               </a>
                             </p>
@@ -253,7 +255,7 @@ export default function AssetVaultTab({
                         <button
                           onClick={() => handleDelete(asset.id)}
                           disabled={deletingId === asset.id}
-                          className="flex-shrink-0 rounded-lg p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all min-h-[36px]"
+                          className="flex-shrink-0 rounded-lg p-2 text-slate-300 hover:text-danger hover:bg-danger-soft transition-colors min-h-[36px]"
                         >
                           {deletingId === asset.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -273,10 +275,10 @@ export default function AssetVaultTab({
 
       {/* Add Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm p-4 sm:items-center">
-          <div className="w-full max-w-md rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:rounded-2xl max-h-[85vh] overflow-y-auto">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
-              <h3 className="text-sm font-bold text-slate-900">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-4 sm:items-center">
+          <div className="w-full max-w-md rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl max-h-[85vh] overflow-y-auto">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface px-6 py-4">
+              <h3 className="font-display text-sm font-semibold text-slate-900">
                 Add {CATEGORY_CONFIG[addCategory as keyof typeof CATEGORY_CONFIG].label}
               </h3>
               <button
@@ -290,12 +292,12 @@ export default function AssetVaultTab({
             <form onSubmit={handleAdd} className="p-6 space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Label <span className="text-red-500">*</span>
+                  Label <span className="text-danger">*</span>
                 </label>
-                <input
+                <Input
                   name="label"
                   required
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20"
+                  className="h-10"
                   placeholder={addCategory === "credentials" ? "e.g. cPanel Login" : addCategory === "brand_assets" ? "e.g. Logo SVG" : "e.g. GMB Profile"}
                 />
               </div>
@@ -304,15 +306,15 @@ export default function AssetVaultTab({
                 <>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Username</label>
-                    <input name="username" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-mono focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" />
+                    <Input name="username" className="h-10 font-mono" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
-                    <input name="password" type="text" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-mono focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="Stored securely with admin-only access" />
+                    <Input name="password" type="text" className="h-10 font-mono" placeholder="Stored securely with admin-only access" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">URL</label>
-                    <input name="url" type="url" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="https://..." />
+                    <Input name="url" type="url" className="h-10" placeholder="https://..." />
                   </div>
                 </>
               )}
@@ -321,19 +323,19 @@ export default function AssetVaultTab({
                 <>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">File Type</label>
-                    <select name="file_type" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#42CA80] focus:outline-none min-h-[40px]">
+                    <Select name="file_type" className="h-10">
                       <option value="logo">Logo</option>
                       <option value="photo">Photo</option>
                       <option value="video">Video</option>
                       <option value="document">Document</option>
-                    </select>
+                    </Select>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">
                       File URL or Supabase Storage path
                     </label>
-                    <input name="file_url" type="url" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="https://..." />
-                    <p className="mt-1 text-[10px] text-slate-400">
+                    <Input name="file_url" type="url" className="h-10" placeholder="https://..." />
+                    <p className="mt-1 text-[11px] text-slate-400">
                       Upload file to Supabase Storage first, then paste the URL here.
                     </p>
                   </div>
@@ -343,27 +345,27 @@ export default function AssetVaultTab({
               {addCategory === "links" && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">URL</label>
-                  <input name="link_url" type="url" required className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="https://..." />
+                  <Input name="link_url" type="url" required className="h-10" placeholder="https://..." />
                 </div>
               )}
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Notes</label>
-                <input name="notes" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="Optional notes..." />
+                <Input name="notes" className="h-10" placeholder="Optional notes..." />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="flex-1 rounded-xl bg-[#42CA80] px-4 py-3 text-sm font-semibold text-white hover:bg-[#38b571] disabled:opacity-50 transition-colors min-h-[44px]"
+                  className="flex-1 rounded-lg bg-brand-deep px-4 py-3 text-sm font-semibold text-white hover:bg-brand-deeper disabled:opacity-50 transition-colors min-h-[44px]"
                 >
                   {isPending ? "Saving..." : "Save"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]"
+                  className="rounded-lg border border-line-strong px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]"
                 >
                   Cancel
                 </button>

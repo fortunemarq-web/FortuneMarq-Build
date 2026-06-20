@@ -165,48 +165,48 @@ export default function SavedViewsBar({
             <div className="relative">
                 <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 hover:bg-slate-100 transition-colors"
+                    className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm text-slate-900 hover:bg-slate-50 transition-colors"
                 >
                     <ListFilter className="h-4 w-4 text-slate-500" />
                     <span className="max-w-[150px] truncate">
                         {activeViewObj ? activeViewObj.name : "All Records"}
                     </span>
-                    <Plus className="h-3 w-3 text-slate-600" />
+                    <Plus className="h-3 w-3 text-slate-500" />
                 </button>
 
                 {showDropdown && (
-                    <div className="absolute left-0 top-full z-20 mt-1 w-64 rounded-xl border border-[#2a2a2a] bg-white py-1 shadow-xl">
+                    <div className="absolute left-0 top-full z-20 mt-1 w-64 rounded-lg border border-line bg-surface py-1 shadow-md">
                         <button
                             onClick={() => {
                                 setActiveViewId(null);
                                 onReset();
                                 setShowDropdown(false);
                             }}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            className="w-full px-4 py-2 text-left text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                         >
                             All Records (Reset)
                         </button>
-                        <div className="my-1 border-t border-[#2a2a2a]" />
+                        <div className="my-1 border-t border-line" />
                         {isLoading ? (
-                            <div className="px-4 py-2 text-xs text-slate-600">Loading...</div>
+                            <div className="px-4 py-2 text-xs text-slate-500">Loading...</div>
                         ) : views.length > 0 ? (
                             views.map((view) => (
-                                <div key={view.id} className="group flex items-center justify-between hover:bg-slate-100 pr-2">
+                                <div key={view.id} className="group flex items-center justify-between hover:bg-slate-50 pr-2">
                                     <button
                                         onClick={() => handleSelectView(view)}
                                         className={clsx(
                                             "flex-1 px-4 py-2 text-left text-sm",
-                                            view.id === activeViewId ? "text-[#42CA80]" : "text-slate-900"
+                                            view.id === activeViewId ? "text-brand-deep font-medium" : "text-slate-900"
                                         )}
                                     >
                                         {view.name}
-                                        {view.visibility === "global" && <span className="ml-2 text-[10px] bg-blue-500/20 text-blue-400 px-1 rounded">Global</span>}
+                                        {view.visibility === "global" && <span className="ml-2 text-[11px] bg-info-soft text-info px-1 rounded">Global</span>}
                                     </button>
                                     {/* View Actions: only show if owner */}
                                     {view.owner_id === userId && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleDeleteView(view.id); }}
-                                            className="opacity-0 group-hover:opacity-100 p-1 text-slate-600 hover:text-red-400"
+                                            className="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-danger"
                                             title="Delete view"
                                         >
                                             <Trash2 className="h-3 w-3" />
@@ -215,7 +215,7 @@ export default function SavedViewsBar({
                                 </div>
                             ))
                         ) : (
-                            <div className="px-4 py-2 text-xs text-slate-600">No saved views</div>
+                            <div className="px-4 py-2 text-xs text-slate-500">No saved views</div>
                         )}
                     </div>
                 )}
@@ -226,7 +226,7 @@ export default function SavedViewsBar({
                 {activeViewId && canModify ? (
                     <button
                         onClick={handleUpdateView}
-                        className="p-2 rounded-lg text-slate-500 hover:bg-white hover:text-slate-900"
+                        className="p-2 rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                         title="Save changes to current view"
                     >
                         <Save className="h-4 w-4" />
@@ -238,7 +238,7 @@ export default function SavedViewsBar({
                         setShowDropdown(false);
                         setShowSaveModal(true);
                     }}
-                    className="p-2 rounded-lg text-slate-500 hover:bg-white hover:text-slate-900"
+                    className="p-2 rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                     title="Save as new view"
                 >
                     {activeViewId ? <Copy className="h-4 w-4" /> : <Save className="h-4 w-4" />}
@@ -247,15 +247,15 @@ export default function SavedViewsBar({
 
             {/* Save As Modal */}
             {showSaveModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-sm rounded-xl border border-[#2a2a2a] bg-white p-4 shadow-2xl">
-                        <h3 className="mb-4 font-bold text-slate-900">Save View</h3>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                    <div className="w-full max-w-sm rounded-2xl border border-line bg-surface p-4 shadow-lg">
+                        <h3 className="mb-4 font-display font-semibold text-slate-900">Save View</h3>
                         <input
                             type="text"
                             value={newViewName}
                             onChange={(e) => setNewViewName(e.target.value)}
                             placeholder="View Name (e.g. 'Hot Leads Today')"
-                            className="w-full rounded-lg border border-[#2a2a2a] bg-slate-50 px-3 py-2 text-slate-900 placeholder-[#666] focus:border-[#42CA80] focus:outline-none"
+                            className="w-full rounded-lg border border-line bg-slate-50 px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-brand-line focus:outline-none"
                             autoFocus
                         />
                         <div className="mt-4 flex justify-end gap-2">
@@ -268,7 +268,7 @@ export default function SavedViewsBar({
                             <button
                                 onClick={handleCreateView}
                                 disabled={!newViewName.trim()}
-                                className="rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+                                className="rounded-lg bg-brand-deep px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-deeper disabled:opacity-50"
                             >
                                 Save View
                             </button>

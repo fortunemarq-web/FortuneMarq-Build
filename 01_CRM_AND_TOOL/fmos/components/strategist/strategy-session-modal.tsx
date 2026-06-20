@@ -33,10 +33,10 @@ interface StrategySessionModalProps {
 type InterestLevel = "low" | "medium" | "high" | "hot";
 
 const INTEREST_LEVELS: { value: InterestLevel; label: string; color: string }[] = [
-  { value: "low", label: "Low", color: "bg-gray-500" },
-  { value: "medium", label: "Med", color: "bg-amber-500" },
-  { value: "high", label: "High", color: "bg-blue-500" },
-  { value: "hot", label: "🔥", color: "bg-[#42CA80]" },
+  { value: "low", label: "Low", color: "bg-slate-500 text-white" },
+  { value: "medium", label: "Med", color: "bg-warn text-white" },
+  { value: "high", label: "High", color: "bg-info text-white" },
+  { value: "hot", label: "Hot", color: "bg-brand-deep text-white" },
 ];
 
 export default function StrategySessionModal({
@@ -196,25 +196,25 @@ export default function StrategySessionModal({
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="relative flex max-h-[90vh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-slate-50 shadow-2xl sm:max-w-lg sm:rounded-2xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-4">
+      <div className="relative flex max-h-[90vh] w-full flex-col overflow-hidden rounded-t-2xl border border-line bg-surface shadow-lg sm:max-w-lg sm:rounded-2xl">
         {/* Toast */}
         {toast && (
-          <div className="absolute left-1/2 top-4 z-50 -translate-x-1/2 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+          <div className="absolute left-1/2 top-4 z-50 -translate-x-1/2 rounded-lg bg-brand-deep px-4 py-2 text-sm font-semibold text-white shadow-md">
             {toast}
           </div>
         )}
 
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 px-4 py-3 sm:px-6 sm:py-4">
+        <div className="flex items-center justify-between border-b border-line bg-brand-soft px-4 py-3 sm:px-6 sm:py-4">
           <div className="min-w-0">
-            <h2 className="truncate text-base font-bold text-slate-900 sm:text-xl">{lead.company_name}</h2>
+            <h2 className="truncate font-display text-base font-semibold text-slate-900 sm:text-xl">{lead.company_name}</h2>
             <p className="text-xs text-slate-500 sm:text-sm">Strategy Session</p>
           </div>
           <button
             onClick={onClose}
             disabled={isProcessing}
-            className="ml-2 flex-shrink-0 rounded-lg p-2 text-slate-600 transition-colors active:bg-white active:text-slate-900 disabled:opacity-50"
+            className="ml-2 flex-shrink-0 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:opacity-50"
           >
             <X className="h-5 w-5" />
           </button>
@@ -224,7 +224,7 @@ export default function StrategySessionModal({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {/* Section 1: Call Outcome */}
           <div className="mb-4 sm:mb-6">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-600">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               Call Outcome
             </h3>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -233,13 +233,13 @@ export default function StrategySessionModal({
                 onClick={() => handleAction("no_show")}
                 disabled={isProcessing}
                 className={clsx(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-3 transition-all active:scale-[0.98] sm:gap-2 sm:p-4",
-                  "border-amber-500/30 bg-amber-500/10 active:border-amber-500 active:bg-amber-500/20",
+                  "flex flex-col items-center justify-center gap-1 rounded-xl border p-3 transition-colors active:scale-[0.98] sm:gap-2 sm:p-4",
+                  "border-warn-line bg-warn-soft hover:bg-amber-100",
                   isProcessing && "opacity-50"
                 )}
               >
-                <PhoneMissed className="h-5 w-5 text-amber-400 sm:h-6 sm:w-6" />
-                <span className="text-[10px] font-semibold text-amber-400 sm:text-xs">No Show</span>
+                <PhoneMissed className="h-5 w-5 text-warn sm:h-6 sm:w-6" />
+                <span className="text-[11px] font-semibold text-warn sm:text-xs">No Show</span>
               </button>
 
               {/* Reschedule */}
@@ -247,15 +247,15 @@ export default function StrategySessionModal({
                 onClick={() => setShowReschedule(!showReschedule)}
                 disabled={isProcessing}
                 className={clsx(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-3 transition-all active:scale-[0.98] sm:gap-2 sm:p-4",
+                  "flex flex-col items-center justify-center gap-1 rounded-xl border p-3 transition-colors active:scale-[0.98] sm:gap-2 sm:p-4",
                   showReschedule
-                    ? "border-blue-500 bg-blue-500/20"
-                    : "border-blue-500/30 bg-blue-500/10 active:border-blue-500 active:bg-blue-500/20",
+                    ? "border-info bg-info-soft"
+                    : "border-info-line bg-info-soft hover:bg-blue-100",
                   isProcessing && "opacity-50"
                 )}
               >
-                <CalendarClock className="h-5 w-5 text-blue-400 sm:h-6 sm:w-6" />
-                <span className="text-[10px] font-semibold text-blue-400 sm:text-xs">Reschedule</span>
+                <CalendarClock className="h-5 w-5 text-info sm:h-6 sm:w-6" />
+                <span className="text-[11px] font-semibold text-info sm:text-xs">Reschedule</span>
               </button>
 
               {/* Send Proposal */}
@@ -263,15 +263,15 @@ export default function StrategySessionModal({
                 onClick={() => setShowProposalInput(!showProposalInput)}
                 disabled={isProcessing}
                 className={clsx(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-3 transition-all active:scale-[0.98] sm:gap-2 sm:p-4",
+                  "flex flex-col items-center justify-center gap-1 rounded-xl border p-3 transition-colors active:scale-[0.98] sm:gap-2 sm:p-4",
                   showProposalInput
-                    ? "border-purple-500 bg-purple-500/20"
-                    : "border-purple-500/30 bg-purple-500/10 active:border-purple-500 active:bg-purple-500/20",
+                    ? "border-info bg-info-soft"
+                    : "border-info-line bg-info-soft hover:bg-blue-100",
                   isProcessing && "opacity-50"
                 )}
               >
-                <FileText className="h-5 w-5 text-purple-400 sm:h-6 sm:w-6" />
-                <span className="text-[10px] font-semibold text-purple-400 sm:text-xs">Proposal</span>
+                <FileText className="h-5 w-5 text-info sm:h-6 sm:w-6" />
+                <span className="text-[11px] font-semibold text-info sm:text-xs">Proposal</span>
               </button>
 
               {/* Contract Pending */}
@@ -279,17 +279,17 @@ export default function StrategySessionModal({
                 onClick={() => handleAction("contract_sent")}
                 disabled={isProcessing}
                 className={clsx(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-3 transition-all active:scale-[0.98] sm:gap-2 sm:p-4",
-                  "border-indigo-500/30 bg-indigo-500/10 active:border-indigo-500 active:bg-indigo-500/20",
+                  "flex flex-col items-center justify-center gap-1 rounded-xl border p-3 transition-colors active:scale-[0.98] sm:gap-2 sm:p-4",
+                  "border-info-line bg-info-soft hover:bg-blue-100",
                   isProcessing && activeAction === "contract_sent" && "opacity-50"
                 )}
               >
                 {activeAction === "contract_sent" ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-indigo-400 sm:h-6 sm:w-6" />
+                  <Loader2 className="h-5 w-5 animate-spin text-info sm:h-6 sm:w-6" />
                 ) : (
-                  <FileSignature className="h-5 w-5 text-indigo-400 sm:h-6 sm:w-6" />
+                  <FileSignature className="h-5 w-5 text-info sm:h-6 sm:w-6" />
                 )}
-                <span className="text-[10px] font-semibold text-indigo-400 sm:text-xs">Contract</span>
+                <span className="text-[11px] font-semibold text-info sm:text-xs">Contract</span>
               </button>
 
               {/* Deal Won */}
@@ -297,13 +297,13 @@ export default function StrategySessionModal({
                 onClick={handleCloseDealClick}
                 disabled={isProcessing}
                 className={clsx(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-3 transition-all active:scale-[0.98] sm:gap-2 sm:p-4",
-                  "border-[#42CA80]/30 bg-[#42CA80]/10 active:border-[#42CA80] active:bg-[#42CA80]/20",
+                  "flex flex-col items-center justify-center gap-1 rounded-xl border p-3 transition-colors active:scale-[0.98] sm:gap-2 sm:p-4",
+                  "border-brand-line bg-brand-soft hover:bg-emerald-100",
                   isProcessing && "opacity-50"
                 )}
               >
-                <Trophy className="h-5 w-5 text-[#42CA80] sm:h-6 sm:w-6" />
-                <span className="text-[10px] font-semibold text-[#42CA80] sm:text-xs">Won!</span>
+                <Trophy className="h-5 w-5 text-brand-deep sm:h-6 sm:w-6" />
+                <span className="text-[11px] font-semibold text-brand-deep sm:text-xs">Won!</span>
               </button>
 
               {/* Not Interested / Lost */}
@@ -311,42 +311,42 @@ export default function StrategySessionModal({
                 onClick={() => handleAction("closed_lost")}
                 disabled={isProcessing}
                 className={clsx(
-                  "flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-3 transition-all active:scale-[0.98] sm:gap-2 sm:p-4",
-                  "border-red-500/30 bg-red-500/10 active:border-red-500 active:bg-red-500/20",
+                  "flex flex-col items-center justify-center gap-1 rounded-xl border p-3 transition-colors active:scale-[0.98] sm:gap-2 sm:p-4",
+                  "border-danger-line bg-danger-soft hover:bg-red-100",
                   isProcessing && activeAction === "closed_lost" && "opacity-50"
                 )}
               >
                 {activeAction === "closed_lost" ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-red-400 sm:h-6 sm:w-6" />
+                  <Loader2 className="h-5 w-5 animate-spin text-danger sm:h-6 sm:w-6" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-red-400 sm:h-6 sm:w-6" />
+                  <XCircle className="h-5 w-5 text-danger sm:h-6 sm:w-6" />
                 )}
-                <span className="text-[10px] font-semibold text-red-400 sm:text-xs">Lost</span>
+                <span className="text-[11px] font-semibold text-danger sm:text-xs">Lost</span>
               </button>
             </div>
 
             {/* Reschedule Picker */}
             {showReschedule && (
-              <div className="mt-3 rounded-xl border border-blue-500/30 bg-blue-500/10 p-3 sm:mt-4 sm:p-4">
-                <p className="mb-2 text-xs font-medium text-blue-400 sm:mb-3 sm:text-sm">New Date & Time</p>
+              <div className="mt-3 rounded-xl border border-info-line bg-info-soft p-3 sm:mt-4 sm:p-4">
+                <p className="mb-2 text-xs font-medium text-info sm:mb-3 sm:text-sm">New Date & Time</p>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                   <input
                     type="date"
                     value={rescheduleDate}
                     onChange={(e) => setRescheduleDate(e.target.value)}
                     min={today}
-                    className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-blue-500/50 focus:outline-none"
+                    className="h-9 flex-1 rounded-lg border border-line bg-surface px-3 text-sm text-slate-900 transition-colors focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                   />
                   <input
                     type="time"
                     value={rescheduleTime}
                     onChange={(e) => setRescheduleTime(e.target.value)}
-                    className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-blue-500/50 focus:outline-none"
+                    className="h-9 flex-1 rounded-lg border border-line bg-surface px-3 text-sm text-slate-900 transition-colors focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                   />
                   <button
                     onClick={() => handleAction("reschedule")}
                     disabled={isProcessing || !rescheduleDate || !rescheduleTime}
-                    className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors active:bg-blue-600 disabled:opacity-50"
+                    className="rounded-lg bg-info px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-800 disabled:opacity-50"
                   >
                     {activeAction === "reschedule" ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -360,25 +360,25 @@ export default function StrategySessionModal({
 
             {/* Proposal Link Input */}
             {showProposalInput && (
-              <div className="mt-3 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 sm:mt-4 sm:p-4">
-                <p className="mb-2 text-xs font-medium text-purple-400 sm:mb-3 sm:text-sm">
+              <div className="mt-3 rounded-xl border border-info-line bg-info-soft p-3 sm:mt-4 sm:p-4">
+                <p className="mb-2 text-xs font-medium text-info sm:mb-3 sm:text-sm">
                   Proposal Link (Optional)
                 </p>
                 <div className="flex gap-2 sm:gap-3">
                   <div className="relative flex-1">
-                    <LinkIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
+                    <LinkIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <input
                       type="url"
                       value={proposalLink}
                       onChange={(e) => setProposalLink(e.target.value)}
                       placeholder="https://..."
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm text-slate-900 placeholder-[#666] focus:border-purple-500/50 focus:outline-none"
+                      className="h-9 w-full rounded-lg border border-line bg-surface pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                     />
                   </div>
                   <button
                     onClick={() => handleAction("proposal_sent")}
                     disabled={isProcessing}
-                    className="rounded-lg bg-purple-500 px-4 py-2 text-sm font-semibold text-white transition-colors active:bg-purple-600 disabled:opacity-50"
+                    className="rounded-lg bg-info px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-800 disabled:opacity-50"
                   >
                     {activeAction === "proposal_sent" ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -392,15 +392,15 @@ export default function StrategySessionModal({
           </div>
 
           {/* Section 2: Deal Intelligence */}
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-600 sm:mb-4">
+          <div className="rounded-xl border border-line bg-slate-50 p-3 sm:p-4">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 sm:mb-4">
               Deal Intelligence
             </h3>
 
             {/* Interest Level */}
             <div className="mb-3 sm:mb-4">
               <label className="mb-2 flex items-center gap-2 text-xs font-medium text-slate-900 sm:text-sm">
-                <Target className="h-3.5 w-3.5 text-indigo-400 sm:h-4 sm:w-4" />
+                <Target className="h-3.5 w-3.5 text-brand-deep sm:h-4 sm:w-4" />
                 Interest
               </label>
               <div className="flex gap-1.5 sm:gap-2">
@@ -409,10 +409,10 @@ export default function StrategySessionModal({
                     key={level.value}
                     onClick={() => setInterestLevel(level.value)}
                     className={clsx(
-                      "flex-1 rounded-lg px-2 py-2 text-xs font-semibold transition-all sm:px-3 sm:text-sm",
+                      "flex-1 rounded-lg border px-2 py-2 text-xs font-semibold transition-colors sm:px-3 sm:text-sm",
                       interestLevel === level.value
-                        ? `${level.color} text-slate-900`
-                        : "bg-white text-slate-500 active:bg-slate-100"
+                        ? `border-transparent ${level.color}`
+                        : "border-line bg-surface text-slate-500 hover:bg-slate-50"
                     )}
                   >
                     {level.label}
@@ -425,10 +425,10 @@ export default function StrategySessionModal({
             <div className="mb-3 sm:mb-4">
               <label className="mb-2 flex items-center justify-between text-xs font-medium text-slate-900 sm:text-sm">
                 <span className="flex items-center gap-2">
-                  <Percent className="h-3.5 w-3.5 text-indigo-400 sm:h-4 sm:w-4" />
+                  <Percent className="h-3.5 w-3.5 text-brand-deep sm:h-4 sm:w-4" />
                   Probability
                 </span>
-                <span className="text-base font-bold text-indigo-400 sm:text-lg">{dealProbability}%</span>
+                <span className="text-base font-semibold text-brand-deep sm:text-lg tabular-nums">{dealProbability}%</span>
               </label>
               <input
                 type="range"
@@ -437,35 +437,35 @@ export default function StrategySessionModal({
                 step="5"
                 value={dealProbability}
                 onChange={(e) => setDealProbability(parseInt(e.target.value))}
-                className="w-full accent-indigo-500"
+                className="w-full accent-brand-deep"
               />
             </div>
 
             {/* Meeting Notes */}
             <div>
               <label className="mb-2 flex items-center gap-2 text-xs font-medium text-slate-900 sm:text-sm">
-                <MessageSquare className="h-3.5 w-3.5 text-indigo-400 sm:h-4 sm:w-4" />
+                <MessageSquare className="h-3.5 w-3.5 text-brand-deep sm:h-4 sm:w-4" />
                 Notes
               </label>
               <textarea
                 value={meetingNotes}
                 onChange={(e) => setMeetingNotes(e.target.value)}
                 placeholder="Key points, budget, timeline..."
-                className="h-20 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder-[#666] focus:border-indigo-500/50 focus:outline-none"
+                className="h-20 w-full resize-none rounded-lg border border-line bg-surface px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
               />
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 sm:px-6 sm:py-4">
-          <p className="text-[10px] text-slate-600 sm:text-xs">
-            Status: <span className="font-medium text-slate-500">{lead.status}</span>
+        <div className="flex items-center justify-between border-t border-line bg-slate-50 px-4 py-3 sm:px-6 sm:py-4">
+          <p className="text-[11px] text-slate-500 sm:text-xs">
+            Status: <span className="font-medium text-slate-600">{lead.status}</span>
           </p>
           <button
             onClick={onClose}
             disabled={isProcessing}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition-colors active:bg-slate-100 disabled:opacity-50"
+            className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-50 disabled:opacity-50"
           >
             Close
           </button>

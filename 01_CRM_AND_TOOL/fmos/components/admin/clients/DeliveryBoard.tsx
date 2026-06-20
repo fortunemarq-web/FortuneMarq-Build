@@ -7,6 +7,10 @@ import {
 } from "lucide-react";
 import { setTaskStatus, setTaskDriveLinks, completeMilestone } from "@/actions/delivery";
 import { toast } from "@/components/ui/toast";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { buttonVariants } from "@/components/ui/button";
 
 export interface BoardMilestone {
   id: string;
@@ -29,11 +33,11 @@ export interface BoardTask {
   assigned_profile?: { full_name: string | null } | null;
 }
 
-const MS_STATUS: Record<string, { label: string; cls: string }> = {
-  not_started: { label: "Not started", cls: "bg-slate-100 text-slate-600" },
-  in_progress: { label: "In progress", cls: "bg-blue-50 text-blue-600" },
-  ready_for_approval: { label: "Ready for approval", cls: "bg-amber-50 text-amber-600" },
-  approved: { label: "Approved", cls: "bg-emerald-50 text-emerald-700" },
+const MS_STATUS: Record<string, { label: string; tone: Tone }> = {
+  not_started: { label: "Not started", tone: "neutral" },
+  in_progress: { label: "In progress", tone: "info" },
+  ready_for_approval: { label: "Ready for approval", tone: "warning" },
+  approved: { label: "Approved", tone: "brand" },
 };
 
 const DONE = "completed";
@@ -97,7 +101,7 @@ export default function DeliveryBoard({
 
   return (
     <div className="mt-6">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Delivery Plan</p>
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Delivery Plan</p>
       <div className="space-y-3">
         {ms.map((m) => {
           const mTasks = tasks.filter((t) => t.milestone_id === m.id);
@@ -107,21 +111,21 @@ export default function DeliveryBoard({
           const isApproved = m.status === "approved";
 
           return (
-            <div key={m.id} className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+            <Card key={m.id} className="overflow-hidden">
               {/* Milestone header */}
-              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-line">
                 <div className="flex items-center gap-2 min-w-0">
-                  <Flag className="h-3.5 w-3.5 text-[#1E7A4F] shrink-0" />
-                  <span className="text-sm font-bold text-slate-800 truncate">{m.name}</span>
-                  <span className={`text-[9px] font-bold uppercase tracking-wide rounded-full px-2 py-0.5 shrink-0 ${st.cls}`}>{st.label}</span>
+                  <Flag className="h-3.5 w-3.5 text-brand-deep shrink-0" />
+                  <span className="text-sm font-semibold text-slate-800 truncate">{m.name}</span>
+                  <Badge tone={st.tone} size="sm" className="shrink-0">{st.label}</Badge>
                   {m.client_notified_at && (
-                    <span className="text-[9px] font-bold text-emerald-600 flex items-center gap-0.5 shrink-0" title="Client notified on WhatsApp">
+                    <span className="text-[11px] font-semibold text-brand-deep flex items-center gap-0.5 shrink-0" title="Client notified on WhatsApp">
                       <BadgeCheck className="h-3 w-3" /> notified
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-3 shrink-0 ml-3">
-                  <span className="text-[10px] font-bold text-slate-400">{done}/{mTasks.length} done</span>
+                  <span className="text-[11px] font-semibold tabular-nums text-slate-400">{done}/{mTasks.length} done</span>
                   {m.due_date && (
                     <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
                       <CalendarDays className="h-3 w-3" />{fmtDate(m.due_date)}
@@ -132,7 +136,7 @@ export default function DeliveryBoard({
                       onClick={() => markComplete(m.id)}
                       disabled={pending}
                       title={allDone ? "All tasks done — notify client" : "Force-complete this milestone"}
-                      className="flex items-center gap-1 text-[11px] font-bold rounded-lg px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white transition-colors"
+                      className={buttonVariants({ variant: "primary", size: "sm" })}
                     >
                       {pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-3 w-3" />}
                       Complete
@@ -156,15 +160,15 @@ export default function DeliveryBoard({
                       <div key={t.id} className="px-4 py-2.5">
                         <div className="flex items-center justify-between gap-3">
                           <button onClick={() => toggleTask(t)} disabled={pending} className="flex items-center gap-2 min-w-0 text-left">
-                            {isDone ? <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" /> : <Circle className="h-4 w-4 text-slate-300 shrink-0" />}
+                            {isDone ? <CheckCircle2 className="h-4 w-4 text-brand shrink-0" /> : <Circle className="h-4 w-4 text-slate-300 shrink-0" />}
                             <span className={`text-sm ${isDone ? "line-through text-slate-400" : "text-slate-700"}`}>{t.title}</span>
                           </button>
                           <div className="flex items-center gap-3 shrink-0">
-                            {owner && <span className="flex items-center gap-1 text-[11px] text-indigo-600 font-medium"><UserRound className="h-3 w-3" />{owner}</span>}
+                            {owner && <span className="flex items-center gap-1 text-[11px] text-slate-500 font-medium"><UserRound className="h-3 w-3" />{owner}</span>}
                             {t.due_date && <span className="flex items-center gap-1 text-[11px] text-slate-500"><CalendarDays className="h-3 w-3" />{fmtDate(t.due_date)}</span>}
                             <button
                               onClick={() => setEditingLinks(isEditing ? null : t.id)}
-                              className={`flex items-center gap-1 text-[11px] font-semibold ${hasLinks ? "text-[#1E7A4F]" : "text-slate-400"} hover:text-slate-700`}
+                              className={`flex items-center gap-1 text-[11px] font-semibold ${hasLinks ? "text-brand-deep" : "text-slate-400"} hover:text-slate-700`}
                             >
                               <Link2 className="h-3 w-3" />
                               {hasLinks ? "Links" : "Add links"}
@@ -188,7 +192,7 @@ export default function DeliveryBoard({
                   })
                 )}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -197,10 +201,10 @@ export default function DeliveryBoard({
 }
 
 function LinkChip({ icon: Icon, label, url }: { icon: typeof Film; label: string; url: string | null }) {
-  if (!url) return <span className="flex items-center gap-1 text-[10px] text-slate-300"><Icon className="h-3 w-3" />{label}</span>;
+  if (!url) return <span className="flex items-center gap-1 text-[11px] text-slate-300"><Icon className="h-3 w-3" />{label}</span>;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      className="flex items-center gap-1 text-[10px] font-semibold text-[#1E7A4F] hover:underline">
+      className="flex items-center gap-1 text-[11px] font-semibold text-brand-deep hover:underline">
       <Icon className="h-3 w-3" />{label}
     </a>
   );
@@ -219,9 +223,8 @@ function LinkEditor({
 
   const row = (label: string, val: string, set: (v: string) => void, Icon: typeof Film) => (
     <div className="flex items-center gap-2">
-      <span className="flex items-center gap-1 text-[10px] font-bold text-slate-400 w-14 shrink-0"><Icon className="h-3 w-3" />{label}</span>
-      <input value={val} onChange={(e) => set(e.target.value)} placeholder="Drive link"
-        className="flex-1 text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#42CA80] font-mono" />
+      <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 w-14 shrink-0"><Icon className="h-3 w-3" />{label}</span>
+      <Input value={val} onChange={(e) => set(e.target.value)} placeholder="Drive link" className="flex-1 h-8 text-xs" />
     </div>
   );
 
@@ -231,9 +234,8 @@ function LinkEditor({
       {row("Edited", edited, setEdited, Scissors)}
       {row("Final", final, setFinal, BadgeCheck)}
       <div className="flex items-center justify-end gap-2 pt-1">
-        <button onClick={onCancel} className="text-[11px] text-slate-500 hover:text-slate-700 px-2 py-1">Cancel</button>
-        <button onClick={() => onSave(task, raw, edited, final)}
-          className="text-[11px] font-bold bg-slate-900 hover:bg-slate-800 text-white px-3 py-1 rounded-lg">Save links</button>
+        <button onClick={onCancel} className={buttonVariants({ variant: "ghost", size: "sm" })}>Cancel</button>
+        <button onClick={() => onSave(task, raw, edited, final)} className={buttonVariants({ variant: "secondary", size: "sm" })}>Save links</button>
       </div>
     </div>
   );

@@ -73,70 +73,70 @@ export default function StrategyTab({
       {/* History Area */}
       <section>
         <div className="mb-4">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Strategy History</h2>
+          <h2 className="font-display text-sm font-semibold uppercase tracking-widest text-slate-500">Strategy History</h2>
         </div>
-        
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+
+        <Card className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
-              <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100">
-                  <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Date Run</th>
-                  <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Strategy Type</th>
-                  <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Tasks Generated</th>
-                  <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Progress</th>
-                  <th className="px-6 py-3 text-center text-[10px] font-bold uppercase tracking-widest text-slate-400">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
+            <Table className="min-w-[700px]">
+              <THead>
+                <TR className="hover:bg-transparent">
+                  <TH>Date Run</TH>
+                  <TH>Strategy Type</TH>
+                  <TH className="text-right">Tasks Generated</TH>
+                  <TH className="text-right">Progress</TH>
+                  <TH className="text-center">Action</TH>
+                </TR>
+              </THead>
+              <TBody>
                 {strategyRuns.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-sm text-slate-400">
+                  <TR className="hover:bg-transparent">
+                    <TD colSpan={5} className="py-12 text-center text-sm text-slate-400">
                       No strategies have been run for this client yet.
-                    </td>
-                  </tr>
+                    </TD>
+                  </TR>
                 ) : (
                   strategyRuns.map((run: any) => {
                     const progress = run.counts.total > 0 ? (run.counts.completed / run.counts.total) * 100 : 0;
                     return (
-                      <tr key={run.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="px-6 py-4">
+                      <TR key={run.id}>
+                        <TD>
                           <span className="text-sm font-semibold text-slate-900">
                             {new Date(run.created_at).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
                           </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm font-semibold text-indigo-700">
+                        </TD>
+                        <TD>
+                          <span className="text-sm font-semibold text-slate-700">
                             {run.strategy_type || run.destination || "General Strategy"}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <span className="inline-flex items-center font-mono text-sm font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                        </TD>
+                        <TD className="text-right">
+                          <Badge tone="neutral" size="sm" className="tabular-nums">
                             {run.tasks_generated} tasks
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
+                          </Badge>
+                        </TD>
+                        <TD className="text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <span className="text-xs font-bold text-slate-400">{Math.round(progress)}%</span>
+                            <span className="text-xs font-semibold tabular-nums text-slate-400">{Math.round(progress)}%</span>
                             <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                              <div className="h-full bg-[#42CA80]" style={{ width: `${progress}%` }} />
+                              <div className="h-full bg-brand" style={{ width: `${progress}%` }} />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-400 min-w-[30px]">{run.counts.completed}/{run.counts.total}</span>
+                            <span className="text-[11px] font-semibold tabular-nums text-slate-400 min-w-[30px]">{run.counts.completed}/{run.counts.total}</span>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+                        </TD>
+                        <TD className="text-center">
+                          <button className="text-xs font-semibold text-brand-deep hover:text-brand-deeper transition-colors">
                             View Tasks
                           </button>
-                        </td>
-                      </tr>
+                        </TD>
+                      </TR>
                     );
                   })
                 )}
-              </tbody>
-            </table>
+              </TBody>
+            </Table>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* Generator Modal */}

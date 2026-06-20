@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase";
 import { Link as LinkIcon, AlertCircle, Plus, X } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 
 interface TaskDependency {
     id: string;
@@ -67,10 +69,10 @@ export default function TaskDependencies({ taskId, projectId, initialDependencie
     const options = availableTasks.filter(t => t.id !== taskId && !dependencies.some(d => d.depends_on.id === t.id));
 
     return (
-        <div className="mt-6 border-t border-slate-200 pt-4">
+        <div className="mt-6 border-t border-line pt-4">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <LinkIcon className="h-4 w-4 text-blue-400" />
+                <h3 className="font-display text-sm font-semibold text-slate-900 flex items-center gap-2">
+                    <LinkIcon className="h-4 w-4 text-info" />
                     Dependencies
                 </h3>
             </div>
@@ -78,30 +80,30 @@ export default function TaskDependencies({ taskId, projectId, initialDependencie
             {dependencies.length > 0 ? (
                 <div className="space-y-2 mb-4">
                     {dependencies.map(dep => (
-                        <div key={dep.id} className="flex justify-between items-center bg-white p-2 rounded border border-slate-200 group">
+                        <div key={dep.id} className="flex justify-between items-center bg-surface p-2 rounded-lg border border-line group">
                             <div className="flex items-center gap-2">
-                                <AlertCircle className={clsx("h-3.5 w-3.5", dep.depends_on.status === 'completed' ? "text-green-500" : "text-amber-500")} />
+                                <AlertCircle className={clsx("h-3.5 w-3.5", dep.depends_on.status === 'completed' ? "text-brand-deep" : "text-warn")} />
                                 <div className="text-sm">
-                                    <span className="text-slate-600 text-xs uppercase mr-2">{dep.dependency_type}</span>
-                                    <span className={dep.depends_on.status === 'completed' ? "text-slate-600 line-through" : "text-slate-700"}>
+                                    <span className="text-slate-500 text-xs uppercase mr-2">{dep.dependency_type}</span>
+                                    <span className={dep.depends_on.status === 'completed' ? "text-slate-500 line-through" : "text-slate-700"}>
                                         {dep.depends_on.title}
                                     </span>
                                 </div>
                             </div>
-                            <button onClick={() => removeDependency(dep.id)} className="text-slate-600 hover:text-slate-900 opacity-0 group-hover:opacity-100">
+                            <button onClick={() => removeDependency(dep.id)} className="text-slate-500 hover:text-slate-900 opacity-0 group-hover:opacity-100">
                                 <X className="h-4 w-4" />
                             </button>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className="text-xs text-slate-600 mb-4 italic">No dependencies. This task is not blocked.</p>
+                <p className="text-xs text-slate-500 mb-4 italic">No dependencies. This task is not blocked.</p>
             )}
 
             {isAdding ? (
                 <div className="flex gap-2">
-                    <select
-                        className="flex-1 bg-slate-50 border border-slate-200 rounded px-2 py-1.5 text-sm text-slate-900 focus:outline-none"
+                    <Select
+                        className="flex-1"
                         value={selectedTaskId}
                         onChange={e => setSelectedTaskId(e.target.value)}
                     >
@@ -109,12 +111,12 @@ export default function TaskDependencies({ taskId, projectId, initialDependencie
                         {options.map(t => (
                             <option key={t.id} value={t.id}>{t.title}</option>
                         ))}
-                    </select>
-                    <button onClick={addDependency} disabled={!selectedTaskId} className="bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white px-3 py-1 rounded text-sm font-bold">Add</button>
-                    <button onClick={() => setIsAdding(false)} className="bg-white text-slate-900 px-3 py-1 rounded text-sm">Cancel</button>
+                    </Select>
+                    <Button size="sm" onClick={addDependency} disabled={!selectedTaskId}>Add</Button>
+                    <Button variant="secondary" size="sm" onClick={() => setIsAdding(false)}>Cancel</Button>
                 </div>
             ) : (
-                <button onClick={() => setIsAdding(true)} className="text-xs text-[#42CA80] hover:underline flex items-center gap-1">
+                <button onClick={() => setIsAdding(true)} className="text-xs text-brand-deep hover:underline flex items-center gap-1">
                     <Plus className="h-3 w-3" /> Add Blocking Task
                 </button>
             )}

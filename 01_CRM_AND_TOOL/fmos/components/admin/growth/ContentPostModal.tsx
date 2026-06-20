@@ -5,6 +5,12 @@ import { X, Calendar as CalendarIcon, Loader2, Save, BarChart3, Image as ImageIc
 import { upsertContentPiece, deleteContentPiece, ContentPiece } from "@/app/admin/growth/actions";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface ContentPostModalProps {
   post: Partial<ContentPiece>;
@@ -79,15 +85,15 @@ export default function ContentPostModal({ post, channel, onClose, onSave, onDel
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm p-4 sm:items-center">
-      <div className="w-full max-w-2xl rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:rounded-2xl flex flex-col max-h-[90vh]">
-        <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50 rounded-t-2xl">
-          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+      <div className="w-full max-w-2xl rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl flex flex-col max-h-[90vh]">
+        <div className="flex flex-shrink-0 items-center justify-between border-b border-line px-6 py-4 bg-slate-50 rounded-t-2xl">
+          <h3 className="font-display text-base font-semibold text-slate-900 flex items-center gap-2">
             {post.id ? "Edit Post" : "New Post"}
-            <span className="inline-flex rounded bg-slate-200 px-2 py-0.5 text-[10px] uppercase font-bold text-slate-700 tracking-wide">
+            <Badge tone="neutral" size="sm" className="uppercase">
               {channel}
-            </span>
+            </Badge>
           </h3>
-          <button onClick={onClose} className="rounded-full p-2 text-slate-400 hover:bg-slate-200 transition-colors">
+          <button onClick={onClose} className="rounded-full p-2 text-slate-400 hover:bg-slate-100 transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -95,118 +101,121 @@ export default function ContentPostModal({ post, channel, onClose, onSave, onDel
         <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Title / Topic <span className="text-red-500">*</span></label>
-              <input required name="title" defaultValue={post.title} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none" placeholder="e.g. 5 SEO Tips for Local Businesses" />
+              <Label>Title / Topic <span className="text-danger">*</span></Label>
+              <Input required name="title" defaultValue={post.title} placeholder="e.g. 5 SEO Tips for Local Businesses" />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Content Type</label>
-              <select name="content_type" defaultValue={post.content_type || availableTypes[0]?.id} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none min-h-[38px] bg-white">
+              <Label>Content Type</Label>
+              <Select name="content_type" defaultValue={post.content_type || availableTypes[0]?.id}>
                 {availableTypes.map(t => (
                   <option key={t.id} value={t.id}>{t.label}</option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
-              <select name="status" defaultValue={post.status || "idea"} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none min-h-[38px] bg-white">
+              <Label>Status</Label>
+              <Select name="status" defaultValue={post.status || "idea"}>
                 <option value="idea">Idea</option>
                 <option value="drafted">Drafted</option>
                 <option value="ready">Ready</option>
                 <option value="published">Published</option>
-              </select>
+              </Select>
             </div>
-            
+
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Scheduled Date</label>
+              <Label>Scheduled Date</Label>
               <div className="relative">
-                <input type="date" name="scheduled_date" defaultValue={post.scheduled_date ? post.scheduled_date.split("T")[0] : ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 pl-9 text-sm focus:border-brand focus:outline-none" />
+                <Input type="date" name="scheduled_date" defaultValue={post.scheduled_date ? post.scheduled_date.split("T")[0] : ""} className="pl-9" />
                 <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Caption Draft / Body</label>
-            <textarea name="caption_draft" rows={4} defaultValue={post.caption_draft || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none resize-y" placeholder="Write your post caption here..." />
+            <Label>Caption Draft / Body</Label>
+            <Textarea name="caption_draft" rows={4} defaultValue={post.caption_draft || ""} placeholder="Write your post caption here..." />
           </div>
 
           {channel === 'gmb' && (
-            <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-line">
               <div className="col-span-2">
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Image Prompt (AI Gen)</label>
+                <Label>Image Prompt (AI Gen)</Label>
                 <div className="relative">
-                  <input name="image_prompt" defaultValue={post.image_prompt || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 pl-9 text-sm focus:border-brand focus:outline-none" placeholder="Describe the image you want for this post..." />
+                  <Input name="image_prompt" defaultValue={post.image_prompt || ""} className="pl-9" placeholder="Describe the image you want for this post..." />
                   <ImageIcon className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">CTA Type</label>
-                <select name="cta_type" defaultValue={post.cta_type || "Learn More"} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none bg-white">
+                <Label>CTA Type</Label>
+                <Select name="cta_type" defaultValue={post.cta_type || "Learn More"}>
                   <option value="Book">Book</option>
                   <option value="Call">Call</option>
                   <option value="Learn More">Learn More</option>
                   <option value="Order">Order</option>
                   <option value="Shop">Shop</option>
                   <option value="Sign Up">Sign Up</option>
-                </select>
+                </Select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">CTA URL</label>
-                <input name="cta_url" defaultValue={post.cta_url || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none" placeholder="https://..." />
+                <Label>CTA URL</Label>
+                <Input name="cta_url" defaultValue={post.cta_url || ""} placeholder="https://..." />
               </div>
             </div>
           )}
 
           {post.status === "published" && (
-            <div className="p-4 rounded-xl border border-emerald-100 bg-emerald-50/50">
+            <div className="p-4 rounded-xl border border-brand-line bg-brand-soft">
               <div className="flex items-center gap-2 mb-3">
-                <BarChart3 className="h-4 w-4 text-emerald-600" />
-                <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-800">Performance Metrics</h4>
+                <BarChart3 className="h-4 w-4 text-brand-deep" />
+                <h4 className="text-xs font-semibold uppercase tracking-wide text-brand-deep">Performance Metrics</h4>
               </div>
               <div className="grid grid-cols-5 gap-3">
                 {['reach', 'likes', 'comments', 'shares', 'saves'].map(metric => (
                   <div key={metric}>
-                    <label className="block text-[10px] font-bold uppercase text-emerald-700 opacity-70 mb-1">{metric}</label>
-                    <input type="number" name={metric} defaultValue={(post as any)[metric] || 0} className="w-full rounded border border-emerald-200 px-2 py-1 text-xs font-mono focus:border-emerald-400 focus:outline-none bg-white" />
+                    <Label className="text-[11px] uppercase text-brand-deep">{metric}</Label>
+                    <Input type="number" name={metric} defaultValue={(post as any)[metric] || 0} className="h-8 text-xs tabular-nums" />
                   </div>
                 ))}
               </div>
               {post.engagement_rate !== undefined && (
-                <div className="mt-3 pt-3 border-t border-emerald-100 flex justify-between items-center text-xs">
-                  <span className="text-emerald-700 font-medium">Engagement Rate:</span>
-                  <span className="font-bold text-emerald-800">{post.engagement_rate}%</span>
+                <div className="mt-3 pt-3 border-t border-brand-line flex justify-between items-center text-xs">
+                  <span className="text-brand-deep font-medium">Engagement Rate:</span>
+                  <span className="font-semibold tabular-nums text-brand-deep">{post.engagement_rate}%</span>
                 </div>
               )}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Internal Notes</label>
-            <textarea name="notes" rows={2} defaultValue={post.notes || ""} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand focus:outline-none resize-y" placeholder="Hashtags to use, references..." />
+            <Label>Internal Notes</Label>
+            <Textarea name="notes" rows={2} defaultValue={post.notes || ""} placeholder="Hashtags to use, references..." />
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-slate-100">
+          <div className="flex gap-3 pt-4 border-t border-line">
             {post.id && (
-              <button
+              <Button
                 type="button"
                 onClick={handleDelete}
                 disabled={isPending}
                 title="Delete post"
-                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:opacity-50 transition-colors"
+                variant="danger-soft"
+                size="lg"
               >
                 <Trash2 className="h-4 w-4" /> Delete
-              </button>
+              </Button>
             )}
-            <button
+            <Button
               type="submit"
               disabled={isPending}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#42CA80] px-4 py-3 text-sm font-semibold text-white hover:bg-[#38b571] disabled:opacity-50 transition-colors"
+              variant="primary"
+              size="lg"
+              className="flex-1"
             >
               {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               {post.id ? "Save Changes" : "Create Post"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

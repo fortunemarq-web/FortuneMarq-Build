@@ -43,9 +43,9 @@ export default async function StaffPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-slate-50 px-4">
+      <div className="flex min-h-full items-center justify-center bg-canvas px-4">
         <div className="text-center">
-          <p className="text-red-500">Error loading tasks: {error.message}</p>
+          <p className="text-danger">Error loading tasks: {error.message}</p>
         </div>
       </div>
     );
@@ -55,11 +55,11 @@ export default async function StaffPage() {
   const staffTasks = tasks?.filter(task => task.assigned_to === user.id) ?? [];
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-canvas px-4 py-6">
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-end mb-4">
           {/* Link to advanced Task Manager */}
-          <Link href="/tasks/list" className="text-sm text-[#42CA80] hover:underline">
+          <Link href="/tasks/list" className="text-sm font-semibold text-brand-deep hover:underline">
             Go to Advanced Task Manager &rarr;
           </Link>
         </div>

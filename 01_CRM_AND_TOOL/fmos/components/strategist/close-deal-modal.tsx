@@ -8,6 +8,10 @@ import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 import type { Database } from "@/types/database.types";
 import { leadStatusUpdate } from "@/lib/pipeline";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 type Lead = Database["public"]["Tables"]["leads"]["Row"];
 interface CloseDealModalProps {
@@ -356,16 +360,16 @@ export default function CloseDealModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
-      <div className="w-full max-w-2xl rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:rounded-2xl max-h-[90vh] overflow-y-auto">
+      <div className="w-full max-w-2xl rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between border-b border-[#0f0f0f] bg-white p-4 sm:p-6">
+        <div className="sticky top-0 flex items-center justify-between border-b border-line bg-surface p-4 sm:p-6">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Close Deal</h2>
+            <h2 className="font-display text-xl font-semibold text-slate-900">Close Deal</h2>
             <p className="mt-1 text-sm text-slate-500">{lead.company_name}</p>
           </div>
           <button
             onClick={handleClose}
-            className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
+            className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
             aria-label="Close modal"
             disabled={isSubmitting}
           >
@@ -378,16 +382,16 @@ export default function CloseDealModal({
           <div className="space-y-5">
             {/* Service Type - Multi-Select */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-900">
-                Service Types <span className="text-red-500">*</span>
-              </label>
+              <Label>
+                Service Types <span className="text-danger">*</span>
+              </Label>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {serviceTypes.map((service) => (
                   <label
                     key={service.value}
                     className={`flex cursor-pointer items-center rounded-lg border p-3 transition-colors ${formData.selectedServices.includes(service.value)
-                      ? "border-indigo-500 bg-indigo-500/10"
-                      : "border-[#0f0f0f] bg-slate-50 hover:bg-slate-100"
+                      ? "border-brand-line bg-brand-soft"
+                      : "border-line bg-surface hover:bg-slate-50"
                       }`}
                   >
                     <input
@@ -415,7 +419,7 @@ export default function CloseDealModal({
                         });
                         setMessage(null);
                       }}
-                      className="mr-3 h-4 w-4 accent-indigo-500"
+                      className="mr-3 h-4 w-4 accent-brand-deep"
                       disabled={isSubmitting}
                     />
                     <span className="text-sm text-slate-900">{service.label}</span>
@@ -423,7 +427,7 @@ export default function CloseDealModal({
                 ))}
               </div>
               {formData.selectedServices.length === 0 && (
-                <p className="mt-1 text-xs text-slate-600">Select at least one service.</p>
+                <p className="mt-1 text-xs text-slate-500">Select at least one service.</p>
               )}
             </div>
 
@@ -434,18 +438,14 @@ export default function CloseDealModal({
                 : "max-h-0 opacity-0"
                 }`}
             >
-              <label
-                htmlFor="buildType"
-                className="mb-2 block text-sm font-medium text-slate-900"
-              >
-                Build Type <span className="text-red-500">*</span>
-              </label>
-              <select
+              <Label htmlFor="buildType">
+                Build Type <span className="text-danger">*</span>
+              </Label>
+              <Select
                 id="buildType"
                 name="buildType"
                 value={formData.buildType}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-[#0f0f0f] bg-slate-50 px-4 py-3 text-slate-900 focus:border-indigo-500 focus:outline-none transition-all"
                 disabled={isSubmitting || !showBuildType}
                 required={showBuildType}
               >
@@ -455,22 +455,19 @@ export default function CloseDealModal({
                     {buildType.label}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {/* Deal Value */}
             <div>
-              <label
-                htmlFor="dealValue"
-                className="mb-2 block text-sm font-medium text-slate-900"
-              >
-                Deal Value (₹) <span className="text-red-500">*</span>
-              </label>
+              <Label htmlFor="dealValue">
+                Deal Value (₹) <span className="text-danger">*</span>
+              </Label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 text-slate-400">
                   ₹
                 </span>
-                <input
+                <Input
                   id="dealValue"
                   name="dealValue"
                   type="number"
@@ -479,7 +476,7 @@ export default function CloseDealModal({
                   value={formData.dealValue}
                   onChange={handleChange}
                   placeholder="5000"
-                  className="w-full rounded-lg border border-[#0f0f0f] bg-slate-50 px-4 py-3 pl-8 text-slate-900 placeholder-[#a1a1aa] focus:border-indigo-500 focus:outline-none"
+                  className="pl-7 tabular-nums"
                   disabled={isSubmitting}
                   required
                 />
@@ -488,20 +485,16 @@ export default function CloseDealModal({
 
             {/* Contract Link */}
             <div>
-              <label
-                htmlFor="contractLink"
-                className="mb-2 block text-sm font-medium text-slate-900"
-              >
-                Contract Link/URL <span className="text-red-500">*</span>
-              </label>
-              <input
+              <Label htmlFor="contractLink">
+                Contract Link/URL <span className="text-danger">*</span>
+              </Label>
+              <Input
                 id="contractLink"
                 name="contractLink"
                 type="url"
                 value={formData.contractLink}
                 onChange={handleChange}
                 placeholder="https://example.com/contract/..."
-                className="w-full rounded-lg border border-[#0f0f0f] bg-slate-50 px-4 py-3 text-slate-900 placeholder-[#a1a1aa] focus:border-indigo-500 focus:outline-none"
                 disabled={isSubmitting}
                 required
               />
@@ -509,20 +502,16 @@ export default function CloseDealModal({
 
             {/* Project Start Date */}
             <div>
-              <label
-                htmlFor="projectStartDate"
-                className="mb-2 block text-sm font-medium text-slate-900"
-              >
-                Project Start Date <span className="text-red-500">*</span>
-              </label>
-              <input
+              <Label htmlFor="projectStartDate">
+                Project Start Date <span className="text-danger">*</span>
+              </Label>
+              <Input
                 id="projectStartDate"
                 name="projectStartDate"
                 type="date"
                 value={formData.projectStartDate}
                 onChange={handleChange}
                 min={new Date().toISOString().split("T")[0]}
-                className="w-full rounded-lg border border-[#0f0f0f] bg-slate-50 px-4 py-3 text-slate-900 focus:border-indigo-500 focus:outline-none"
                 disabled={isSubmitting}
                 required
               />
@@ -530,13 +519,10 @@ export default function CloseDealModal({
 
             {/* Project Deadline */}
             <div>
-              <label
-                htmlFor="projectDeadline"
-                className="mb-2 block text-sm font-medium text-slate-900"
-              >
-                Project Deadline <span className="text-red-500">*</span>
-              </label>
-              <input
+              <Label htmlFor="projectDeadline">
+                Project Deadline <span className="text-danger">*</span>
+              </Label>
+              <Input
                 id="projectDeadline"
                 name="projectDeadline"
                 type="date"
@@ -546,7 +532,6 @@ export default function CloseDealModal({
                   formData.projectStartDate ||
                   new Date().toISOString().split("T")[0]
                 }
-                className="w-full rounded-lg border border-[#0f0f0f] bg-slate-50 px-4 py-3 text-slate-900 focus:border-indigo-500 focus:outline-none"
                 disabled={isSubmitting || !formData.projectStartDate}
                 required
               />
@@ -557,8 +542,8 @@ export default function CloseDealModal({
           {message && (
             <div
               className={`mt-5 flex items-center gap-2 rounded-lg border px-4 py-3 ${message.type === "success"
-                ? "border-indigo-500/50 bg-indigo-500/10 text-indigo-400"
-                : "border-red-500/50 bg-red-500/10 text-red-500"
+                ? "border-brand-line bg-brand-soft text-brand-deep"
+                : "border-danger-line bg-danger-soft text-danger"
                 }`}
               role="alert"
             >
@@ -573,21 +558,22 @@ export default function CloseDealModal({
 
           {/* Submit Button */}
           <div className="mt-6 flex gap-3">
-            <button
+            <Button
               type="submit"
+              variant="primary"
               disabled={isSubmitting}
-              className="flex-1 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1"
             >
               {isSubmitting ? "Creating Project..." : "Confirm & Start Project"}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="secondary"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="rounded-lg border border-[#0f0f0f] bg-slate-50 px-6 py-3 font-medium text-slate-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       </div>

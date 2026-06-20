@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Plus, Trash2, Calculator, Info } from "lucide-react";
+import { X, Plus, Trash2, Calculator } from "lucide-react";
 import { createInvoice, updateInvoice } from "@/app/admin/finance/actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 interface InvoiceCreateModalProps {
   isOpen: boolean;
@@ -108,30 +113,30 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden">
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-lg">
+
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-line p-6">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
+            <div className="rounded-xl bg-brand-soft p-2.5 text-brand-deep">
               <Calculator className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">{isEdit ? `Edit Invoice ${editInvoice.invoice_number}` : "Create New Invoice"}</h2>
-              <p className="text-xs text-slate-500 font-semibold tracking-wider uppercase opacity-80">FortuneMarq Finance</p>
+              <h2 className="font-display text-lg font-semibold text-slate-900">{isEdit ? `Edit Invoice ${editInvoice.invoice_number}` : "Create New Invoice"}</h2>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">FortuneMarq Finance</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg text-slate-400">
+          <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-slate-100">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Content */}
-        <form onSubmit={handleSubmit} className="overflow-y-auto p-6 space-y-8 flex-1">
+        <form onSubmit={handleSubmit} className="flex-1 space-y-8 overflow-y-auto p-6">
           {error && (
-            <div className="p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm font-medium flex gap-2">
-              <X className="h-4 w-4 shrink-0 mt-0.5" />
+            <div className="flex gap-2 rounded-lg border border-danger-line bg-danger-soft p-4 text-sm font-medium text-danger">
+              <X className="mt-0.5 h-4 w-4 shrink-0" />
               {error}
             </div>
           )}
@@ -139,56 +144,52 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
           {/* Primary Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Select Client</label>
-              <select 
+              <Label>Select Client</Label>
+              <Select
                 value={clientId}
                 onChange={(e) => setClientId(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
               >
                 <option value="">Choose a client...</option>
                 {clients.map(c => (
                   <option key={c.id} value={c.id}>{c.business_name}</option>
                 ))}
-              </select>
+              </Select>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Invoice Number</label>
-              <input 
-                type="text" 
+              <Label>Invoice Number</Label>
+              <Input
+                type="text"
                 value={invoiceNumber}
                 onChange={(e) => setInvoiceNumber(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono font-bold focus:outline-none"
+                className="font-semibold tabular-nums"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Revenue Type</label>
-              <select 
+              <Label>Revenue Type</Label>
+              <Select
                 value={revenueType}
                 onChange={(e) => setRevenueType(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
               >
                 <option value="mrr">Monthly Retainer (MRR)</option>
                 <option value="setup">Setup Fee</option>
                 <option value="one_time">One-Time Project</option>
-              </select>
+              </Select>
             </div>
             <div className="md:col-span-2 flex gap-6">
               <div className="flex-1">
-                <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Issue Date</label>
-                <input 
-                  type="date" 
+                <Label>Issue Date</Label>
+                <Input
+                  type="date"
                   value={issueDate}
                   onChange={(e) => setIssueDate(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none"
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Due Date</label>
-                <input 
-                  type="date" 
+                <Label>Due Date</Label>
+                <Input
+                  type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none"
                 />
               </div>
             </div>
@@ -197,41 +198,40 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
           {/* Line Items */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Services & Line Items</h3>
-              <button 
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Services & Line Items</h3>
+              <button
                 type="button"
                 onClick={addLineItem}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                className="flex items-center gap-1 text-xs font-semibold text-brand-deep hover:underline"
               >
                 <Plus className="h-3 w-3" /> Add Item
               </button>
             </div>
             <div className="space-y-3">
               {lineItems.map((item, i) => (
-                <div key={i} className="flex gap-3 items-start animate-in fade-in slide-in-from-top-2">
+                <div key={i} className="flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
                   <div className="flex-1">
-                    <input 
-                      type="text" 
+                    <Input
+                      type="text"
                       placeholder="Service description..."
                       value={item.description}
                       onChange={(e) => updateLineItem(i, 'description', e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none"
                     />
                   </div>
                   <div className="w-32">
-                    <input 
-                      type="number" 
+                    <Input
+                      type="number"
                       placeholder="Amount"
                       value={item.amount || ""}
                       onChange={(e) => updateLineItem(i, 'amount', e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono font-bold focus:outline-none"
+                      className="font-semibold tabular-nums"
                     />
                   </div>
-                  <button 
+                  <button
                     type="button"
                     onClick={() => removeLineItem(i)}
                     disabled={lineItems.length === 1}
-                    className="mt-2.5 p-1 text-slate-300 hover:text-red-500 transition-colors disabled:opacity-0"
+                    className="mt-1.5 p-1 text-slate-300 transition-colors hover:text-danger disabled:opacity-0"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -241,64 +241,55 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
           </div>
 
           {/* Totals Section */}
-          <div className="bg-slate-50 rounded-2xl p-6 space-y-4">
+          <div className="space-y-4 rounded-xl border border-line bg-slate-50 p-6">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-600">Include GST (18%)</span>
-                <button 
+                <button
                   type="button"
                   onClick={() => setIncludeGst(!includeGst)}
-                  className={`w-10 h-6 rounded-full transition-colors relative flex items-center px-1 ${includeGst ? 'bg-indigo-600' : 'bg-slate-300'}`}
+                  className={`relative flex h-6 w-10 items-center rounded-full px-1 transition-colors ${includeGst ? 'bg-brand-deep' : 'bg-slate-300'}`}
                 >
-                  <div className={`w-4 h-4 rounded-full bg-white transition-transform ${includeGst ? 'translate-x-4' : 'translate-x-0'}`} />
+                  <div className={`h-4 w-4 rounded-full bg-white transition-transform ${includeGst ? 'translate-x-4' : 'translate-x-0'}`} />
                 </button>
               </div>
               <div className="text-right">
-                <p className="text-xs font-bold text-slate-400">SUBTOTAL</p>
-                <p className="text-lg font-bold text-slate-900 font-mono">₹{subtotal.toLocaleString('en-IN')}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Subtotal</p>
+                <p className="font-display text-lg font-semibold tabular-nums text-slate-900">₹{subtotal.toLocaleString('en-IN')}</p>
               </div>
             </div>
             {includeGst && (
-              <div className="flex justify-between items-center text-sm">
-                <p className="font-semibold text-slate-500 italic">Central Tax (CGST + SGST)</p>
-                <p className="font-bold text-slate-600 font-mono">₹{gstAmount.toLocaleString('en-IN')}</p>
+              <div className="flex items-center justify-between text-sm">
+                <p className="font-medium italic text-slate-500">Central Tax (CGST + SGST)</p>
+                <p className="font-semibold tabular-nums text-slate-600">₹{gstAmount.toLocaleString('en-IN')}</p>
               </div>
             )}
-            <div className="pt-4 border-t border-slate-200 flex justify-between items-center">
-              <p className="text-sm font-bold text-slate-900 uppercase tracking-widest">Total Amount</p>
-              <p className="text-2xl font-black text-indigo-600 font-mono">₹{totalAmount.toLocaleString('en-IN')}</p>
+            <div className="flex items-center justify-between border-t border-line pt-4">
+              <p className="text-sm font-semibold uppercase tracking-wide text-slate-900">Total Amount</p>
+              <p className="font-display text-2xl font-semibold tabular-nums text-brand-deep">₹{totalAmount.toLocaleString('en-IN')}</p>
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Notes / Payment Instructions</label>
-            <textarea 
+            <Label>Notes / Payment Instructions</Label>
+            <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="E.g. Bank details, internal project code, etc."
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium h-24 focus:outline-none"
+              className="h-24"
             />
           </div>
         </form>
 
         {/* Footer Actions */}
-        <div className="p-6 border-t border-slate-100 flex justify-end bg-slate-50/50 gap-3">
-          <button 
-            type="button" 
-            onClick={onClose}
-            className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-200 transition-colors"
-          >
+        <div className="flex justify-end gap-3 border-t border-line bg-slate-50 p-6">
+          <Button type="button" variant="ghost" onClick={onClose}>
             Cancel
-          </button>
-          <button 
-            type="submit"
-            onClick={handleSubmit} 
-            disabled={loading}
-            className="px-8 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all disabled:opacity-50"
-          >
+          </Button>
+          <Button type="submit" variant="primary" onClick={handleSubmit} disabled={loading}>
             {loading ? "Saving..." : isEdit ? "Save Changes" : "Generate Invoice →"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

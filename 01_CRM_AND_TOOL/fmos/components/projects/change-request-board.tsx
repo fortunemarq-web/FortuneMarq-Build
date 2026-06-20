@@ -2,10 +2,25 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
-import { AlertTriangle, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import { AlertTriangle, ArrowRight, CheckCircle2, XCircle, DollarSign, Clock } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+
+// Every change-request status maps to one of the five tones.
+const STATUS_TONE: Record<string, Tone> = {
+    requested: "neutral",
+    reviewing: "info",
+    approved: "brand",
+    rejected: "danger",
+    implemented: "brand",
+};
 
 interface ChangeRequest {
     id: string;
@@ -61,29 +76,26 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Change Requests (Scope)</h2>
-                <button
-                    onClick={() => setIsAdding(!isAdding)}
-                    className="bg-indigo-600 text-white font-medium px-4 py-2 rounded-lg text-sm"
-                >
+                <h2 className="font-display text-xl font-semibold text-slate-900">Change Requests (Scope)</h2>
+                <Button onClick={() => setIsAdding(!isAdding)} variant="primary" size="sm">
                     Request Change
-                </button>
+                </Button>
             </div>
 
             {isAdding && (
-                <div className="bg-slate-50 border border-slate-300 p-4 rounded-xl mb-6">
-                    <h3 className="text-slate-900 font-bold mb-3">Submit Change Request</h3>
+                <div className="bg-slate-50 border border-line p-4 rounded-xl mb-6">
+                    <h3 className="text-slate-900 font-semibold mb-3">Submit Change Request</h3>
                     <div className="space-y-3">
-                        <input type="text" placeholder="Summary of change" value={newItem.title} onChange={e => setNewItem({ ...newItem, title: e.target.value })} className="w-full bg-slate-50 border border-[#222] rounded p-2 text-slate-900 text-sm" />
-                        <textarea placeholder="Detailed description and rationale..." value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} className="w-full h-24 bg-slate-50 border border-[#222] rounded p-2 text-slate-900 text-sm"></textarea>
-                        <select value={newItem.priority} onChange={e => setNewItem({ ...newItem, priority: e.target.value })} className="bg-slate-50 border border-[#222] rounded p-2 text-slate-900 text-sm">
+                        <Input type="text" placeholder="Summary of change" value={newItem.title} onChange={e => setNewItem({ ...newItem, title: e.target.value })} />
+                        <Textarea placeholder="Detailed description and rationale..." value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} className="h-24" />
+                        <Select value={newItem.priority} onChange={e => setNewItem({ ...newItem, priority: e.target.value })} className="w-auto">
                             <option value="low">Low Priority</option>
                             <option value="medium">Medium Priority</option>
                             <option value="high">High Priority</option>
-                        </select>
+                        </Select>
                         <div className="flex gap-2 pt-2">
-                            <button onClick={addRequest} className="bg-indigo-600 text-white px-4 py-2 rounded text-sm font-bold">Submit Request</button>
-                            <button onClick={() => setIsAdding(false)} className="text-slate-600 px-4 py-2 text-sm">Cancel</button>
+                            <Button onClick={addRequest} variant="primary" size="sm">Submit Request</Button>
+                            <Button onClick={() => setIsAdding(false)} variant="ghost" size="sm">Cancel</Button>
                         </div>
                     </div>
                 </div>
@@ -91,27 +103,27 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
 
             <div className="space-y-3">
                 {requests.map(req => (
-                    <div key={req.id} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row gap-4">
+                    <Card key={req.id} className="p-4 flex flex-col md:flex-row gap-4">
                         <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1">
-                                <span className={clsx("px-2 py-0.5 rounded text-[10px] uppercase font-bold", req.status === 'approved' ? "bg-green-500/10 text-green-500" : "bg-blue-500/10 text-blue-500")}>
+                                <Badge tone={STATUS_TONE[req.status] || "neutral"} size="sm" className="uppercase">
                                     {req.status}
-                                </span>
-                                <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{req.priority}</span>
-                                <h3 className="font-bold text-slate-900 text-lg">{req.title}</h3>
+                                </Badge>
+                                <Badge tone="neutral" variant="outline" size="sm" className="uppercase">{req.priority}</Badge>
+                                <h3 className="font-display font-semibold text-slate-900 text-lg">{req.title}</h3>
                             </div>
                             <p className="text-sm text-slate-500 mb-2">{req.description}</p>
                             {(req.impact_cost || req.impact_timeline_days) && (
-                                <div className="flex gap-4 text-xs text-slate-500 mt-2 bg-slate-50 p-2 rounded inline-flex">
-                                    {req.impact_cost && <span>💰 Cost Impact: ${req.impact_cost}</span>}
-                                    {req.impact_timeline_days && <span>⏱ Timeline: +{req.impact_timeline_days} days</span>}
+                                <div className="inline-flex gap-4 text-xs text-slate-500 mt-2 bg-slate-50 p-2 rounded-lg">
+                                    {req.impact_cost && <span className="flex items-center gap-1 tabular-nums"><DollarSign className="h-3.5 w-3.5" /> Cost Impact: ${req.impact_cost}</span>}
+                                    {req.impact_timeline_days && <span className="flex items-center gap-1 tabular-nums"><Clock className="h-3.5 w-3.5" /> Timeline: +{req.impact_timeline_days} days</span>}
                                 </div>
                             )}
                         </div>
 
                         {!isClientView && req.status === 'requested' && (
                             <div className="flex items-center gap-2 self-start md:self-center">
-                                <button onClick={() => updateStatus(req.id, 'reviewing')} className="px-3 py-1.5 bg-slate-100 text-slate-900 text-xs rounded hover:bg-zinc-700">Mark Reviewing</button>
+                                <Button onClick={() => updateStatus(req.id, 'reviewing')} variant="secondary" size="sm">Mark Reviewing</Button>
                             </div>
                         )}
                         {!isClientView && req.status === 'reviewing' && (
@@ -126,7 +138,7 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
                                         destructive: true,
                                     });
                                     if (reason) updateStatus(req.id, 'rejected', reason);
-                                }} className="p-2 bg-red-500/10 text-red-500 rounded hover:bg-red-500/20" title="Reject"><XCircle className="h-5 w-5" /></button>
+                                }} className="rounded-lg p-2 bg-danger-soft text-danger transition-colors hover:bg-red-100" title="Reject"><XCircle className="h-5 w-5" /></button>
                                 <button onClick={async () => {
                                     const note = await promptModal({
                                         title: "Approve change request",
@@ -136,14 +148,14 @@ export default function ChangeRequestBoard({ projectId, initialRequests, isClien
                                         confirmLabel: "Approve",
                                     });
                                     if (note) updateStatus(req.id, 'approved', note);
-                                }} className="p-2 bg-green-500/10 text-green-500 rounded hover:bg-green-500/20" title="Approve"><CheckCircle2 className="h-5 w-5" /></button>
+                                }} className="rounded-lg p-2 bg-brand-soft text-brand-deep transition-colors hover:bg-emerald-100" title="Approve"><CheckCircle2 className="h-5 w-5" /></button>
                             </div>
                         )}
-                    </div>
+                    </Card>
                 ))}
 
                 {requests.length === 0 && (
-                    <div className="text-center py-8 text-slate-600 italic">No change requests active.</div>
+                    <div className="text-center py-8 text-slate-500 italic">No change requests active.</div>
                 )}
             </div>
         </div>

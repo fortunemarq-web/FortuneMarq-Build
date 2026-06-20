@@ -11,7 +11,11 @@ import {
 import Link from "next/link";
 import LeadStatusChart from "@/components/admin/lead-status-chart";
 import FunnelChart from "@/components/admin/funnel-chart";
-import { KpiCard } from "@/components/dashboard/kpi-card";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 interface Lead {
   id: string;
@@ -72,18 +76,20 @@ export default async function SalesPage() {
     return acc;
   }, {} as Record<string, number>);
 
+  // Chart colors (Recharts consumes literal hex): brand green for won, semantic
+  // mapping (slate/blue/amber/red) for everything else, never Tailwind classes.
   const statusOrder = [
-    { key: "new", label: "New", color: "#6B7280" },
-    { key: "first_call_pending", label: "1st Call Pending", color: "#9CA3AF" },
-    { key: "calling", label: "Calling", color: "#60A5FA" },
-    { key: "contacted", label: "Contacted", color: "#3B82F6" },
-    { key: "qualified", label: "Qualified", color: "#8B5CF6" },
-    { key: "strategy_booked", label: "Strategy Booked", color: "#A78BFA" },
-    { key: "strategy_completed", label: "Strategy Done", color: "#F59E0B" },
-    { key: "nurture", label: "Nurture", color: "#FBBF24" },
+    { key: "new", label: "New", color: "#64748b" },
+    { key: "first_call_pending", label: "1st Call Pending", color: "#94a3b8" },
+    { key: "calling", label: "Calling", color: "#3b82f6" },
+    { key: "contacted", label: "Contacted", color: "#3b82f6" },
+    { key: "qualified", label: "Qualified", color: "#64748b" },
+    { key: "strategy_booked", label: "Strategy Booked", color: "#64748b" },
+    { key: "strategy_completed", label: "Strategy Done", color: "#f59e0b" },
+    { key: "nurture", label: "Nurture", color: "#f59e0b" },
     { key: "closed_won", label: "Closed Won", color: "#42CA80" },
-    { key: "closed_lost", label: "Closed Lost", color: "#EF4444" },
-    { key: "disqualified", label: "Disqualified", color: "#DC2626" },
+    { key: "closed_lost", label: "Closed Lost", color: "#ef4444" },
+    { key: "disqualified", label: "Disqualified", color: "#ef4444" },
   ];
 
   const leadStatusChartData = statusOrder
@@ -106,9 +112,9 @@ export default async function SalesPage() {
   ).length;
 
   const funnelData = [
-    { name: "Total Calls", value: totalCalls, color: "#3B82F6" },
-    { name: "Connected", value: connectedCalls, color: "#06B6D4" },
-    { name: "Interested", value: interestedCalls, color: "#8B5CF6" },
+    { name: "Total Calls", value: totalCalls, color: "#3b82f6" },
+    { name: "Connected", value: connectedCalls, color: "#64748b" },
+    { name: "Interested", value: interestedCalls, color: "#f59e0b" },
     { name: "Session Booked", value: sessionsBooked, color: "#42CA80" },
   ];
 
@@ -153,189 +159,160 @@ export default async function SalesPage() {
   const showLeaderboard = false;
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-full bg-canvas px-4 py-6">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* Header */}
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <Link
-              href="/admin"
-              className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-[#42CA80]"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Command Hub
-            </Link>
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/20">
-                <Phone className="h-6 w-6 text-slate-900" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900 md:text-4xl font-mono tabular-nums">
-                  Sales Force
-                </h1>
-                <p className="text-sm text-slate-500">Telecaller performance & lead generation</p>
-              </div>
-            </div>
-          </div>
+        <div>
           <Link
-            href="/admin/sales/leads"
-            className="rounded-lg bg-[#42CA80] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2"
+            href="/admin"
+            className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-brand-deep"
           >
-            Manage Leads
+            <ArrowLeft className="h-4 w-4" />
+            Back to Command Hub
           </Link>
+          <PageHeader
+            title="Sales Force"
+            subtitle="Telecaller performance & lead generation"
+            actions={
+              <Link href="/admin/sales/leads" className={buttonVariants({ variant: "primary" })}>
+                Manage Leads
+              </Link>
+            }
+          />
         </div>
 
         {/* KPI Cards */}
-        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <KpiCard
-            title="Total Leads"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            label="Total Leads"
             value={totalLeads.toLocaleString()}
             icon={Users}
-            category="volume"
-            subtitle="Total in the system"
-            className="delay-0"
+            hint="Total in the system"
           />
-          <KpiCard
-            title="Calls Logged"
+          <StatCard
+            label="Calls Logged"
             value={totalCalls.toLocaleString()}
             icon={Phone}
-            category="volume"
-            subtitle="Total call activities"
-            className="delay-75"
+            hint="Total call activities"
           />
-          <KpiCard
-            title="Sessions Booked"
+          <StatCard
+            label="Sessions Booked"
             value={strategySessionsBooked}
             icon={Calendar}
-            category="pipeline"
-            subtitle="Qualified + booked"
-            className="delay-150"
+            hint="Qualified + booked"
           />
-          <KpiCard
-            title="Contact Rate"
+          <StatCard
+            label="Contact Rate"
             value={`${callConversionRate.toFixed(1)}%`}
             icon={TrendingUp}
-            category="performance"
-            subtitle={`${leadsWithCalls.size} leads contacted`}
-            className="delay-300"
+            hint={`${leadsWithCalls.size} leads contacted`}
           />
         </div>
 
         {/* Charts & Tables Row */}
-        <div className="mb-8 rounded-xl bg-slate-100/60 p-4 md:p-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Call Outcomes Funnel */}
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50/50">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Call Outcomes Funnel */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+                  <TrendingUp className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Call Outcomes</h2>
+                  <CardTitle>Call Outcomes</CardTitle>
                   <p className="text-xs text-slate-500">From calls to sessions booked</p>
                 </div>
               </div>
+            </CardHeader>
+            <CardContent>
               <FunnelChart data={funnelData} />
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Lead Status Distribution */}
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50/50">
-                  <Target className="h-5 w-5 text-purple-600" />
+          {/* Lead Status Distribution */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+                  <Target className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Pipeline Breakdown</h2>
+                  <CardTitle>Pipeline Breakdown</CardTitle>
                   <p className="text-xs text-slate-500">Current status distribution</p>
                 </div>
               </div>
+            </CardHeader>
+            <CardContent>
               <LeadStatusChart data={leadStatusChartData} />
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Phase A: Leaderboard gated — showLeaderboard = false until manager role is built */}
         {showLeaderboard && (
-          <div className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200">
+          <Card className="overflow-hidden">
+            <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50/50">
-                  <Award className="h-5 w-5 text-amber-600" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+                  <Award className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Telecaller Leaderboard</h2>
+                  <CardTitle>Telecaller Leaderboard</CardTitle>
                   <p className="text-xs text-slate-500">Top performers by call volume &amp; sessions booked</p>
                 </div>
               </div>
-            </div>
+            </CardHeader>
 
             {telecallerLeaderboard.length === 0 ? (
-              <div className="flex h-[200px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50">
+              <div className="flex h-[200px] items-center justify-center">
                 <p className="text-sm text-slate-500">No call data yet</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[500px] border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50">
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                        Name
-                      </th>
-                      <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                        Calls Made
-                      </th>
-                      <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                        Sessions Booked
-                      </th>
-                      <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                        Converted
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
+                <Table>
+                  <THead>
+                    <TR className="hover:bg-transparent">
+                      <TH>Name</TH>
+                      <TH className="text-center">Calls Made</TH>
+                      <TH className="text-center">Sessions Booked</TH>
+                      <TH className="text-center">Converted</TH>
+                    </TR>
+                  </THead>
+                  <TBody>
                     {telecallerLeaderboard.map((person, index) => (
-                      <tr key={index} className="transition-colors hover:bg-slate-50/70 duration-100">
-                        <td className="px-4 py-3">
+                      <TR key={index}>
+                        <TD>
                           <div className="flex items-center gap-3">
-                            <div
-                              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-slate-900 ${index === 0
-                                ? "bg-gradient-to-br from-amber-400 to-yellow-500"
-                                : index === 1
-                                  ? "bg-gradient-to-br from-gray-300 to-gray-400"
-                                  : index === 2
-                                    ? "bg-gradient-to-br from-amber-600 to-amber-700"
-                                    : "bg-white"
-                                }`}
-                            >
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold tabular-nums text-slate-700">
                               {index + 1}
                             </div>
                             <span className="font-medium text-slate-900">{person.name}</span>
                           </div>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums text-slate-900">
+                        </TD>
+                        <TD className="text-center">
+                          <span className="inline-flex items-center gap-1 text-sm font-semibold tabular-nums text-slate-900">
                             <Phone className="h-3 w-3 text-slate-400" />
                             {person.calls}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2.5 py-1 font-mono text-sm font-semibold tabular-nums text-purple-600">
+                        </TD>
+                        <TD className="text-center">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-brand-soft px-2.5 py-1 text-sm font-semibold tabular-nums text-brand-deep">
                             <Calendar className="h-3 w-3" />
                             {person.sessions}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="inline-flex min-w-[2.5rem] items-center justify-center rounded-full bg-emerald-50 px-2 py-1 font-mono text-sm font-semibold tabular-nums text-emerald-600">
+                        </TD>
+                        <TD className="text-center">
+                          <span className="inline-flex min-w-[2.5rem] items-center justify-center rounded-md bg-brand-soft px-2 py-1 text-sm font-semibold tabular-nums text-brand-deep">
                             {person.converted}
                           </span>
-                        </td>
-                      </tr>
+                        </TD>
+                      </TR>
                     ))}
-                  </tbody>
-                </table>
+                  </TBody>
+                </Table>
               </div>
             )}
-          </div>
+          </Card>
         )}
       </div>
     </div>

@@ -25,26 +25,26 @@ export default function FinanceChart({ data }: FinanceChartProps) {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xl">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-50 pb-2">{label}</p>
+        <div className="rounded-lg border border-line bg-surface p-4 shadow-md">
+          <p className="mb-3 border-b border-line pb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded bg-brand"></div>
-                <p className="text-xs font-semibold text-slate-500">Revenue</p>
+                <div className="h-2 w-2 rounded bg-brand"></div>
+                <p className="text-xs font-medium text-slate-500">Revenue</p>
               </div>
-              <p className="text-sm font-bold text-slate-900 tabular-nums">₹{payload[0].value.toLocaleString('en-IN')}</p>
+              <p className="text-sm font-semibold tabular-nums text-slate-900">₹{payload[0].value.toLocaleString('en-IN')}</p>
             </div>
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded bg-red-400"></div>
-                <p className="text-xs font-semibold text-slate-500">Expenses</p>
+                <div className="h-2 w-2 rounded bg-danger"></div>
+                <p className="text-xs font-medium text-slate-500">Expenses</p>
               </div>
-              <p className="text-sm font-bold text-slate-900 tabular-nums">₹{payload[1].value.toLocaleString('en-IN')}</p>
+              <p className="text-sm font-semibold tabular-nums text-slate-900">₹{payload[1].value.toLocaleString('en-IN')}</p>
             </div>
-            <div className="flex items-center justify-between gap-8 pt-2 mt-2 border-t border-slate-50">
-              <p className="text-xs font-bold text-brand-deep">Net Profit</p>
-              <p className="text-sm font-bold text-brand-deep tabular-nums">₹{payload[2].value.toLocaleString('en-IN')}</p>
+            <div className="mt-2 flex items-center justify-between gap-8 border-t border-line pt-2">
+              <p className="text-xs font-semibold text-brand-deep">Net Profit</p>
+              <p className="text-sm font-semibold tabular-nums text-brand-deep">₹{payload[2].value.toLocaleString('en-IN')}</p>
             </div>
           </div>
         </div>
@@ -81,10 +81,10 @@ export default function FinanceChart({ data }: FinanceChartProps) {
             radius={[4, 4, 0, 0]}
             barSize={isMobile ? 15 : 25}
           />
-          <Bar 
-            dataKey="expenses" 
-            fill="#F87171" 
-            radius={[4, 4, 0, 0]} 
+          <Bar
+            dataKey="expenses"
+            fill="#ef4444"
+            radius={[4, 4, 0, 0]}
             barSize={isMobile ? 15 : 25}
           />
           <Area

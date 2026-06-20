@@ -84,17 +84,17 @@ export default function BulkActionBar({
     if (selectedCount === 0) return null;
 
     return (
-        <div className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-4 rounded-xl border border-[#2a2a2a] bg-white p-2 pl-4 shadow-2xl animate-in slide-in-from-bottom-4">
+        <div className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-4 rounded-xl border border-line bg-surface p-2 pl-4 shadow-lg animate-in slide-in-from-bottom-4">
             <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center rounded bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /20 p-1">
-                    <CheckSquare className="h-4 w-4 text-[#42CA80]" />
+                <div className="flex items-center justify-center rounded bg-brand-soft p-1">
+                    <CheckSquare className="h-4 w-4 text-brand-deep" />
                 </div>
-                <span className="text-sm font-medium text-slate-900">
+                <span className="text-sm font-medium text-slate-900 tabular-nums">
                     {selectedCount} selected
                 </span>
             </div>
 
-            <div className="h-6 w-px bg-[#2a2a2a]" />
+            <div className="h-6 w-px bg-line" />
 
             <div className="relative">
                 <button
@@ -107,12 +107,12 @@ export default function BulkActionBar({
                 </button>
 
                 {showMenu && (
-                    <div className="absolute bottom-full left-0 mb-2 w-48 rounded-xl border border-[#2a2a2a] bg-slate-50 py-1 shadow-xl">
+                    <div className="absolute bottom-full left-0 mb-2 w-48 rounded-lg border border-line bg-surface py-1 shadow-md">
                         {getActions().map((action) => (
                             <button
                                 key={action.value}
                                 onClick={() => handleAction(action.value)}
-                                className="w-full px-4 py-2 text-left text-sm text-slate-500 hover:bg-white hover:text-slate-900"
+                                className="w-full px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             >
                                 {action.label}
                             </button>
@@ -123,7 +123,7 @@ export default function BulkActionBar({
 
             <button
                 onClick={onClearSelection}
-                className="ml-2 rounded-lg p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-500"
+                className="ml-2 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                 title="Clear selection"
             >
                 <X className="h-4 w-4" />

@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import { X, Loader2, Book, Calendar, User, Flag, Briefcase } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { sendNotification } from "@/lib/notifications";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface Profile {
     id: string;
@@ -137,54 +142,50 @@ export default function CreateTaskModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4">
-            <div className="relative w-full max-w-lg overflow-hidden rounded-t-2xl border border-slate-200 bg-slate-50 shadow-2xl sm:rounded-2xl flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-4">
+            <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 sm:px-6 sm:py-4 bg-slate-50 z-10">
-                    <h2 className="text-base font-bold text-slate-900 sm:text-lg">
+                <div className="z-10 flex items-center justify-between border-b border-line bg-surface px-4 py-3 sm:px-6 sm:py-4">
+                    <h2 className="font-display text-base font-semibold text-slate-900 sm:text-lg">
                         Create New Task
                     </h2>
                     <button
                         onClick={onClose}
-                        className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-white hover:text-slate-900"
+                        className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
                     >
                         <X className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50 space-y-5">
+                <div className="flex-1 space-y-5 overflow-y-auto bg-surface p-4 sm:p-6">
                     {error && (
-                        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-500">
+                        <div className="rounded-lg border border-danger-line bg-danger-soft p-3 text-sm text-danger">
                             {error}
                         </div>
                     )}
 
                     {/* Title */}
                     <div>
-                        <label className="mb-2 block text-sm font-medium text-slate-900">
-                            Task Title *
-                        </label>
-                        <input
+                        <Label>Task Title *</Label>
+                        <Input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Enter task title..."
-                            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 placeholder-[#666] focus:border-[#42CA80]/50 focus:outline-none"
                             autoFocus
                         />
                     </div>
 
                     {/* Project Selection */}
                     <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+                        <Label className="flex items-center gap-2">
                             <Briefcase className="h-4 w-4 text-slate-500" />
                             Project *
-                        </label>
-                        <select
+                        </Label>
+                        <Select
                             value={projectId}
                             onChange={(e) => setProjectId(e.target.value)}
-                            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                         >
                             <option value="" disabled>Select a project...</option>
                             {projects.map((p) => (
@@ -192,68 +193,65 @@ export default function CreateTaskModal({
                                     {p.clients?.business_name ? `${p.clients.business_name} - ` : ""}{p.name}
                                 </option>
                             ))}
-                        </select>
+                        </Select>
                         {projects.length === 0 && (
-                            <p className="mt-1 text-xs text-amber-500">No active projects found.</p>
+                            <p className="mt-1 text-xs text-warn">No active projects found.</p>
                         )}
                     </div>
 
                     {/* Due Date & Priority Row */}
                     <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+                            <Label className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4 text-slate-500" />
                                 Due Date
-                            </label>
-                            <input
+                            </Label>
+                            <Input
                                 type="date"
                                 value={dueDate}
                                 onChange={(e) => setDueDate(e.target.value)}
-                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                             />
                             {dueDate && (
-                                <select
+                                <Select
                                     value={repeatMonths}
                                     onChange={(e) => setRepeatMonths(parseInt(e.target.value))}
                                     title="Also create future monthly copies of this task"
-                                    className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none cursor-pointer"
+                                    className="mt-2 h-8 text-xs"
                                 >
                                     <option value={0}>Does not repeat</option>
                                     <option value={2}>Repeat monthly ×3 (this + 2)</option>
                                     <option value={5}>Repeat monthly ×6 (this + 5)</option>
                                     <option value={11}>Repeat monthly ×12 (this + 11)</option>
-                                </select>
+                                </Select>
                             )}
                         </div>
                         <div>
-                            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+                            <Label className="flex items-center gap-2">
                                 <Flag className="h-4 w-4 text-slate-500" />
                                 Priority
-                            </label>
-                            <select
+                            </Label>
+                            <Select
                                 value={priority}
                                 onChange={(e) => setPriority(e.target.value)}
-                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                             >
                                 {PRIORITIES.map((p) => (
                                     <option key={p.value} value={p.value}>
                                         {p.label}
                                     </option>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                     </div>
 
                     {/* Assignee */}
                     <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+                        <Label className="flex items-center gap-2">
                             <User className="h-4 w-4 text-slate-500" />
                             Assignee
-                        </label>
-                        <select
+                        </Label>
+                        <Select
                             value={assigneeId}
                             onChange={(e) => setAssigneeId(e.target.value)}
-                            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                         >
                             <option value="unassigned">Unassigned</option>
                             {profiles.map((p) => (
@@ -261,36 +259,33 @@ export default function CreateTaskModal({
                                     {p.full_name}
                                 </option>
                             ))}
-                        </select>
+                        </Select>
                     </div>
 
                     {/* SOP Section */}
                     <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
-                            <Book className="h-4 w-4 text-indigo-400" />
+                        <Label className="flex items-center gap-2">
+                            <Book className="h-4 w-4 text-slate-500" />
                             Description / SOP
-                        </label>
-                        <textarea
+                        </Label>
+                        <Textarea
                             value={sop}
                             onChange={(e) => setSop(e.target.value)}
                             placeholder="Paste task instructions, SOP link, or step-by-step guide..."
-                            className="h-32 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 placeholder-[#666] focus:border-indigo-500/50 focus:outline-none"
+                            className="h-32 resize-none"
                         />
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="flex gap-3 border-t border-slate-200 bg-slate-50 px-4 py-3 sm:px-6 sm:py-4 z-10 mt-auto">
-                    <button
-                        onClick={onClose}
-                        className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-900 transition-colors hover:bg-slate-100"
-                    >
+                <div className="z-10 mt-auto flex gap-3 border-t border-line bg-surface px-4 py-3 sm:px-6 sm:py-4">
+                    <Button variant="secondary" onClick={onClose} className="flex-1">
                         Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={handleSubmit}
                         disabled={isSaving}
-                        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-4 py-2.5 font-semibold text-white disabled:opacity-50"
+                        className="flex-1"
                     >
                         {isSaving ? (
                             <>
@@ -300,7 +295,7 @@ export default function CreateTaskModal({
                         ) : (
                             "Create Task"
                         )}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

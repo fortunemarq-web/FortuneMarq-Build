@@ -1,6 +1,9 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
-import { Copy, Plus, Activity, PauseCircle } from "lucide-react";
+import { Activity, PauseCircle } from "lucide-react";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 export default async function ActiveCampaignsTable() {
   const supabase = await createServerClientWithCookies();
@@ -10,83 +13,81 @@ export default async function ActiveCampaignsTable() {
     .order("status", { ascending: true }); // Active first if status is 'active'
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-      <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
-        <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">
-          Active Campaigns
-        </h3>
-        <Link 
+    <Card className="overflow-hidden flex flex-col">
+      <CardHeader>
+        <CardTitle>Active Campaigns</CardTitle>
+        <Link
           href="/admin/marketing"
-          className="text-xs font-semibold text-[#42CA80] hover:text-[#38b571] transition-colors"
+          className="text-xs font-semibold text-brand-deep hover:text-brand-deeper transition-colors"
         >
           View All in Marketing &rarr;
         </Link>
-      </div>
+      </CardHeader>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px]">
-          <thead>
-            <tr className="bg-slate-50/70 border-b border-slate-100">
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Campaign Name</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Platform</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Spend (MTD)</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Leads</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">CPL</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-50">
+        <Table className="min-w-[900px]">
+          <THead>
+            <TR className="hover:bg-transparent">
+              <TH>Campaign Name</TH>
+              <TH>Platform</TH>
+              <TH>Status</TH>
+              <TH>Spend (MTD)</TH>
+              <TH>Leads</TH>
+              <TH>CPL</TH>
+            </TR>
+          </THead>
+          <TBody>
             {!campaigns || campaigns.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-sm text-slate-400">
+              <TR className="hover:bg-transparent">
+                <TD colSpan={6} className="px-6 py-8 text-center text-sm text-slate-400">
                   No campaigns active right now.
-                </td>
-              </tr>
+                </TD>
+              </TR>
             ) : (
               campaigns.map((c: any) => (
-                <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                  <td className="px-6 py-4">
+                <TR key={c.id}>
+                  <TD className="px-6 py-4">
                     <span className="text-sm font-semibold text-slate-900">
                       {c.campaign_name}
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600 shadow-sm">
+                  </TD>
+                  <TD className="px-6 py-4">
+                    <Badge tone="neutral" variant="outline" size="sm" className="uppercase">
                       {c.platform}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
+                    </Badge>
+                  </TD>
+                  <TD className="px-6 py-4">
                     {c.status === "active" ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700">
+                      <Badge tone="brand" size="sm">
                         <Activity className="h-3 w-3" /> Active
-                      </span>
+                      </Badge>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">
+                      <Badge tone="neutral" size="sm">
                         <PauseCircle className="h-3 w-3" /> Paused
-                      </span>
+                      </Badge>
                     )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-mono font-semibold text-slate-700">
+                  </TD>
+                  <TD className="px-6 py-4">
+                    <span className="text-sm font-semibold tabular-nums text-slate-700">
                       ₹{c.spend_mtd?.toLocaleString("en-IN") || 0}
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-semibold text-slate-700">
+                  </TD>
+                  <TD className="px-6 py-4">
+                    <span className="text-sm font-semibold tabular-nums text-slate-700">
                       {c.leads_generated || 0}
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-mono font-bold text-[#42CA80]">
+                  </TD>
+                  <TD className="px-6 py-4">
+                    <span className="text-sm font-semibold tabular-nums text-brand-deep">
                       ₹{c.cpl?.toLocaleString("en-IN") || 0}
                     </span>
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               ))
             )}
-          </tbody>
-        </table>
+          </TBody>
+        </Table>
       </div>
-    </div>
+    </Card>
   );
 }

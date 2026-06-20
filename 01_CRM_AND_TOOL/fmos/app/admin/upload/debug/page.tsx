@@ -1,7 +1,9 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import DataResetButton from "@/components/admin/data-reset-button";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
 
 export default async function UploadDebugPage() {
   const supabase = await createServerClientWithCookies();
@@ -27,47 +29,50 @@ export default async function UploadDebugPage() {
   const canReadLeads = !leadsError;
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-4xl">
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-4xl space-y-6">
         <Link
           href="/admin/upload"
-          className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-[#42CA80]"
+          className="inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-brand-deep"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Upload
         </Link>
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Upload Debug Info</h1>
-          <DataResetButton />
-        </div>
+        <PageHeader title="Upload Debug Info" actions={<DataResetButton />} />
 
         {/* User Info */}
-        <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Current User</h2>
+        <Card className="p-6">
+          <h2 className="mb-4 font-display text-base font-semibold text-slate-900">Current User</h2>
           {userData?.user ? (
             <div>
-              <p className="text-green-400 mb-2">✓ Authenticated</p>
-              <div className="text-sm text-slate-500 space-y-1">
+              <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-brand-deep">
+                <CheckCircle2 className="h-4 w-4" /> Authenticated
+              </p>
+              <div className="space-y-1 text-sm text-slate-500">
                 <p>Email: {userData.user.email}</p>
                 <p>User ID: {userData.user.id}</p>
               </div>
             </div>
           ) : (
-            <p className="text-yellow-400">⚠ Not authenticated (server-side session not detected)</p>
+            <p className="flex items-center gap-1.5 text-sm font-medium text-warn">
+              <AlertTriangle className="h-4 w-4" /> Not authenticated (server-side session not detected)
+            </p>
           )}
-        </div>
+        </Card>
 
         {/* RLS Check */}
-        <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Row Level Security (RLS)</h2>
+        <Card className="p-6">
+          <h2 className="mb-4 font-display text-base font-semibold text-slate-900">Row Level Security (RLS)</h2>
           {canReadLeads ? (
             <div>
-              <p className="text-green-400">✓ Can read leads table</p>
+              <p className="flex items-center gap-1.5 text-sm font-medium text-brand-deep">
+                <CheckCircle2 className="h-4 w-4" /> Can read leads table
+              </p>
               <p className="mt-2 text-sm text-slate-500">
                 If uploads fail, run this SQL in Supabase:
               </p>
-              <pre className="mt-2 rounded bg-slate-50 p-3 text-xs text-slate-500 overflow-x-auto">
+              <pre className="mt-2 overflow-x-auto rounded-lg bg-slate-50 p-3 text-xs text-slate-500">
                 {`-- Fix RLS policies for leads and csv_uploads
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Enable all for leads" ON public.leads;
@@ -81,36 +86,40 @@ CREATE POLICY "Enable all for csv_uploads" ON public.csv_uploads
               </pre>
             </div>
           ) : (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/50 p-4">
-              <p className="text-red-400 font-medium">✗ Cannot read leads</p>
-              <p className="mt-2 text-sm text-red-300">Error: {leadsError?.message}</p>
+            <div className="rounded-lg border border-danger-line bg-danger-soft p-4">
+              <p className="flex items-center gap-1.5 font-medium text-danger">
+                <XCircle className="h-4 w-4" /> Cannot read leads
+              </p>
+              <p className="mt-2 text-sm text-danger">Error: {leadsError?.message}</p>
             </div>
           )}
-        </div>
+        </Card>
 
         {/* CSV Uploads Table Status */}
-        <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">CSV Uploads Table</h2>
+        <Card className="p-6">
+          <h2 className="mb-4 font-display text-base font-semibold text-slate-900">CSV Uploads Table</h2>
           {uploadsError ? (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/50 p-4">
-              <p className="text-red-400 font-medium">Error: {uploadsError.message}</p>
-              <p className="mt-2 text-sm text-red-300">
+            <div className="rounded-lg border border-danger-line bg-danger-soft p-4">
+              <p className="font-medium text-danger">Error: {uploadsError.message}</p>
+              <p className="mt-2 text-sm text-danger">
                 The csv_uploads table may not exist. Run this migration:
               </p>
-              <code className="mt-2 block rounded bg-slate-50 p-2 text-xs text-slate-500">
+              <code className="mt-2 block rounded-lg bg-slate-50 p-2 text-xs text-slate-500">
                 supabase/migrations/create_csv_uploads_table.sql
               </code>
             </div>
           ) : (
             <div>
-              <p className="text-green-400 mb-2">✓ Table exists</p>
+              <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-brand-deep">
+                <CheckCircle2 className="h-4 w-4" /> Table exists
+              </p>
               <p className="text-sm text-slate-500">
                 Found {uploads?.length || 0} upload(s) in history
               </p>
               {uploads && uploads.length > 0 && (
                 <div className="mt-4 space-y-2">
                   {uploads.map((upload: any) => (
-                    <div key={upload.id} className="rounded bg-slate-50 p-3 text-sm">
+                    <div key={upload.id} className="rounded-lg bg-slate-50 p-3 text-sm">
                       <p className="text-slate-900">{upload.filename}</p>
                       <p className="text-slate-500">
                         {upload.leads_count} leads • {upload.lead_type} • {new Date(upload.created_at).toLocaleString()}
@@ -121,26 +130,28 @@ CREATE POLICY "Enable all for csv_uploads" ON public.csv_uploads
               )}
             </div>
           )}
-        </div>
+        </Card>
 
         {/* Recent Leads */}
-        <div className="rounded-lg border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-base font-semibold text-slate-900">Recent Leads</h2>
+        <Card className="p-6">
+          <h2 className="mb-4 font-display text-base font-semibold text-slate-900">Recent Leads</h2>
           {leadsError ? (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/50 p-4">
-              <p className="text-red-400">Error: {leadsError.message}</p>
+            <div className="rounded-lg border border-danger-line bg-danger-soft p-4">
+              <p className="text-danger">Error: {leadsError.message}</p>
             </div>
           ) : (
             <div>
-              <p className="text-green-400 mb-2">✓ Leads table accessible</p>
-              <p className="text-sm text-slate-500 mb-4">
+              <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-brand-deep">
+                <CheckCircle2 className="h-4 w-4" /> Leads table accessible
+              </p>
+              <p className="mb-4 text-sm text-slate-500">
                 Showing {recentLeads?.length || 0} most recent leads
               </p>
               {recentLeads && recentLeads.length > 0 ? (
                 <div className="space-y-2">
                   {recentLeads.map((lead: any) => (
-                    <div key={lead.id} className="rounded bg-slate-50 p-3 text-sm">
-                      <p className="text-slate-900 font-medium">{lead.company_name || "Unknown"}</p>
+                    <div key={lead.id} className="rounded-lg bg-slate-50 p-3 text-sm">
+                      <p className="font-medium text-slate-900">{lead.company_name || "Unknown"}</p>
                       <div className="mt-1 flex gap-4 text-xs text-slate-500">
                         <span>Type: {lead.lead_type || "outbound"}</span>
                         <span>Industry: {lead.industry || "N/A"}</span>
@@ -155,7 +166,7 @@ CREATE POLICY "Enable all for csv_uploads" ON public.csv_uploads
               )}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

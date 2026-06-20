@@ -3,6 +3,9 @@ import { fetchAcquisitionTargets } from "@/app/admin/growth/actions";
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { ArrowRight } from "lucide-react";
 import AddCityModal from "@/components/admin/growth/add-city-modal";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 const CLOSED_STAGES = ["won", "lost", "dead", "not_interested"];
 
@@ -48,61 +51,57 @@ export default async function CityOverviewTable() {
   const rows = Object.values(cityGroups);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-      <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
-        <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">
-          City Overview
-        </h3>
+    <Card className="overflow-hidden flex flex-col">
+      <CardHeader>
+        <CardTitle>City Overview</CardTitle>
         <AddCityModal />
-      </div>
-      
+      </CardHeader>
+
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px]">
-          <thead>
-            <tr className="bg-slate-50/70 border-b border-slate-100">
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">City</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Active Niches</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Leads</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">In Pipeline</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Meetings (MTD)</th>
-              <th className="px-6 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Won (MTD)</th>
-              <th className="px-6 py-3 text-right"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-50">
+        <Table className="min-w-[800px]">
+          <THead>
+            <TR className="hover:bg-transparent">
+              <TH>City</TH>
+              <TH>Active Niches</TH>
+              <TH>Total Leads</TH>
+              <TH>In Pipeline</TH>
+              <TH>Meetings (MTD)</TH>
+              <TH>Won (MTD)</TH>
+              <TH className="text-right"></TH>
+            </TR>
+          </THead>
+          <TBody>
             {rows.map((r: any) => (
-              <tr key={r.city} className="hover:bg-slate-50/60 transition-colors">
-                <td className="px-6 py-4">
-                  <Link href={`/admin/growth/acquisition/${r.city_slug}`} className="text-sm font-bold text-slate-900 hover:text-[#42CA80] flex items-center gap-2">
+              <TR key={r.city}>
+                <TD className="px-6 py-4">
+                  <Link href={`/admin/growth/acquisition/${r.city_slug}`} className="text-sm font-semibold text-slate-900 hover:text-brand-deep flex items-center gap-2">
                     {r.city}
                   </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-bold text-slate-600">
-                    {r.active_niches} niches
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm font-semibold text-slate-700">{r.total_leads}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-amber-600">{r.in_pipeline}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-blue-600">{r.meetings_mtd}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-emerald-600">{r.won_mtd}</td>
-                <td className="px-6 py-4 text-right">
-                  <Link href={`/admin/growth/acquisition/${r.city_slug}`} className="inline-flex items-center text-xs font-bold text-[#42CA80] hover:text-[#38b571]">
+                </TD>
+                <TD className="px-6 py-4">
+                  <Badge tone="neutral" size="sm">{r.active_niches} niches</Badge>
+                </TD>
+                <TD className="px-6 py-4 text-sm font-semibold tabular-nums text-slate-700">{r.total_leads}</TD>
+                <TD className="px-6 py-4 text-sm font-semibold tabular-nums text-warn">{r.in_pipeline}</TD>
+                <TD className="px-6 py-4 text-sm font-semibold tabular-nums text-info">{r.meetings_mtd}</TD>
+                <TD className="px-6 py-4 text-sm font-semibold tabular-nums text-brand-deep">{r.won_mtd}</TD>
+                <TD className="px-6 py-4 text-right">
+                  <Link href={`/admin/growth/acquisition/${r.city_slug}`} className="inline-flex items-center text-xs font-semibold text-brand-deep hover:text-brand-deeper">
                     Manage <ArrowRight className="h-3 w-3 ml-1" />
                   </Link>
-                </td>
-              </tr>
+                </TD>
+              </TR>
             ))}
             {rows.length === 0 && (
-              <tr>
-                <td colSpan={8} className="px-6 py-8 text-center text-sm text-slate-400">
+              <TR className="hover:bg-transparent">
+                <TD colSpan={8} className="px-6 py-8 text-center text-sm text-slate-400">
                   No cities found. Add one to get started.
-                </td>
-              </tr>
+                </TD>
+              </TR>
             )}
-          </tbody>
-        </table>
+          </TBody>
+        </Table>
       </div>
-    </div>
+    </Card>
   );
 }

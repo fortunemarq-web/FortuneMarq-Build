@@ -1635,11 +1635,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                             setDateTime(buildFollowUpDateTime(preset, "10:00"));
                           }
                         }}
-                        className={`py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
+                        className={cn(
+                          "py-2.5 rounded-lg text-sm font-semibold border transition-colors",
                           followUpPreset === preset
-                            ? "border-indigo-500 bg-indigo-50 text-indigo-800"
-                            : "border-slate-200 bg-white text-slate-600 hover:border-indigo-300"
-                        }`}
+                            ? "border-brand-line bg-brand-soft text-brand-deep"
+                            : "border-line bg-surface text-slate-600 hover:border-brand-line"
+                        )}
                       >
                         {preset === "today" ? "Today" : preset === "1hour" ? "In 1 hr" : "Tomorrow"}
                       </button>
@@ -1655,13 +1656,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                           setFollowUpCustomTime(e.target.value);
                           setDateTime(buildFollowUpDateTime(followUpPreset, e.target.value));
                         }}
-                        className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                        className={cn(inputClasses, "mt-1")}
                       />
                     </div>
                   )}
                   {dateTime && (
-                    <p className="text-xs text-indigo-600 font-semibold">
-                      ✓ Scheduled: {new Date(dateTime).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    <p className="text-xs text-brand-deep font-semibold">
+                      Scheduled: {new Date(dateTime).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                     </p>
                   )}
                 </div>
@@ -1669,33 +1670,34 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
               {selectedOutcome === "INTERESTED_SEND_INFO" && currentLead && (
                 <div className="space-y-3">
-                  <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm font-medium text-blue-800 mb-2">Select PDF to send:</p>
+                  <div className="p-3 bg-info-soft rounded-lg border border-info-line">
+                    <p className="text-sm font-medium text-info mb-2">Select PDF to send:</p>
                     <div className="flex flex-col gap-1">
                       {getPdfOptions(currentLead.industry, currentLead.city).map(pdf => (
                         <button
                           key={pdf}
                           onClick={() => setSelectedPdfName(pdf)}
-                          className={`text-left text-sm px-3 py-2 rounded border ${
+                          className={cn(
+                            "text-left text-sm px-3 py-2 rounded-lg border transition-colors",
                             selectedPdfName === pdf
-                              ? "bg-blue-600 text-white border-blue-600"
-                              : "bg-white border-slate-200 hover:border-blue-300"
-                          }`}
+                              ? "bg-info text-white border-info"
+                              : "bg-surface border-line hover:border-info-line"
+                          )}
                         >
                           {pdf}
                         </button>
                       ))}
                     </div>
                     {selectedPdfName && (
-                      <p className="text-xs text-blue-700 mt-2">✓ Will log: {selectedPdfName}</p>
+                      <p className="text-xs text-info mt-2">Will log: {selectedPdfName}</p>
                     )}
                   </div>
-                  
-                  <div className="p-3 bg-green-50 rounded-lg border border-green-200 flex flex-col items-start gap-2">
-                    <p className="text-sm font-medium text-green-800">Send via WhatsApp?</p>
-                    <button onClick={() => setShowWhatsApp(true)} className="px-3 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700 font-semibold flex items-center gap-2">
+
+                  <div className="p-3 bg-brand-soft rounded-lg border border-brand-line flex flex-col items-start gap-2">
+                    <p className="text-sm font-medium text-brand-deep">Send via WhatsApp?</p>
+                    <Button onClick={() => setShowWhatsApp(true)} size="sm">
                       <MessageCircle className="h-4 w-4" /> Open WhatsApp Templates
-                    </button>
+                    </Button>
                     {showWhatsApp && (
                       <WhatsAppTemplatePicker
                         lead={currentLead}
@@ -1711,21 +1713,21 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               {selectedOutcome === "NOT_INTERESTED" && (
                 <div>
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Reason</label>
-                  <select
+                  <Select
                     value={outcomeReason}
                     onChange={(e) => setOutcomeReason(e.target.value)}
-                    className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                    className="mt-1"
                   >
                     <option value="">Select reason...</option>
                     {["Already has an agency", "No budget right now", "Not the decision maker", "Bad timing / not now", "Service not relevant", "Rude / hung up", "Other"].map((r) => (
                       <option key={r} value={r}>{r}</option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               )}
 
               {selectedOutcome && (
-                <button
+                <Button
                   onClick={logOutcome}
                   disabled={
                     isPending ||
@@ -1734,10 +1736,11 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     (selectedOutcome === "INTERESTED_BOOK" && !dateTime) ||
                     ((selectedOutcome === "INTERESTED_FOLLOW_UP" || selectedOutcome === "FOLLOW_BACK") && !dateTime)
                   }
-                  className="w-full bg-[#42CA80] hover:bg-[#35A66A] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors"
+                  size="lg"
+                  className="w-full"
                 >
                   {isPending ? "Saving..." : "Save & Next Lead"}
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -1747,9 +1750,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       {/* ── ADD LEAD MODAL ─────────────────────────────────────────── */}
       {showAddLead && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50">
-              <p className="font-bold text-slate-900 text-base">Add Lead Manually</p>
+          <div className="w-full max-w-md bg-surface rounded-2xl shadow-lg overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-line bg-slate-50">
+              <p className="font-display font-semibold text-slate-900 text-base">Add Lead Manually</p>
               <button onClick={() => setShowAddLead(false)} className="text-slate-400 hover:text-slate-600 p-1">
                 <X className="h-5 w-5" />
               </button>
@@ -1760,7 +1763,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 <input
                   value={newLead.company_name}
                   onChange={(e) => setNewLead((p) => ({ ...p, company_name: e.target.value }))}
-                  className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                  className={cn(inputClasses, "mt-1")}
                   placeholder="e.g. Planet Health Dental"
                 />
               </div>
@@ -1769,7 +1772,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 <input
                   value={newLead.phone}
                   onChange={(e) => setNewLead((p) => ({ ...p, phone: e.target.value }))}
-                  className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                  className={cn(inputClasses, "mt-1")}
                   placeholder="e.g. 9876543210"
                   type="tel"
                 />
@@ -1780,7 +1783,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                   <input
                     value={newLead.industry}
                     onChange={(e) => setNewLead((p) => ({ ...p, industry: e.target.value }))}
-                    className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                    className={cn(inputClasses, "mt-1")}
                     placeholder="e.g. Dental Clinics"
                     list="niche-options"
                   />
@@ -1793,7 +1796,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                   <input
                     value={newLead.city}
                     onChange={(e) => setNewLead((p) => ({ ...p, city: e.target.value }))}
-                    className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                    className={cn(inputClasses, "mt-1")}
                     placeholder="e.g. Hubli"
                     list="city-options"
                   />
@@ -1807,23 +1810,23 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 <input
                   value={newLead.contact_person}
                   onChange={(e) => setNewLead((p) => ({ ...p, contact_person: e.target.value }))}
-                  className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                  className={cn(inputClasses, "mt-1")}
                   placeholder="e.g. Dr. Sharma"
                 />
               </div>
               <div>
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Where did this lead come from?</label>
-                <select
+                <Select
                   value={newLead.source}
                   onChange={(e) => setNewLead((p) => ({ ...p, source: e.target.value }))}
-                  className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                  className="mt-1"
                 >
                   <option value="manual">Cold list / manual entry</option>
                   <option value="call">They called us</option>
                   <option value="gbp">Google Business Profile</option>
                   <option value="referral">Referral</option>
                   <option value="walk_in">Walk-in</option>
-                </select>
+                </Select>
               </div>
               <div className="flex items-center gap-3 py-1">
                 <input
@@ -1831,7 +1834,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                   id="has_website"
                   checked={newLead.has_website}
                   onChange={(e) => setNewLead((p) => ({ ...p, has_website: e.target.checked }))}
-                  className="h-4 w-4 rounded border-slate-300 accent-[#42CA80]"
+                  className="h-4 w-4 rounded border-line accent-brand-deep"
                 />
                 <label htmlFor="has_website" className="text-sm font-medium text-slate-700">Has a website</label>
               </div>
@@ -1840,19 +1843,20 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 <textarea
                   value={newLead.notes}
                   onChange={(e) => setNewLead((p) => ({ ...p, notes: e.target.value }))}
-                  className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80] resize-none"
+                  className={cn(inputClasses, "mt-1 resize-none")}
                   placeholder="Any notes..."
                   rows={2}
                 />
               </div>
-              {addLeadError && <p className="text-xs text-red-600 font-medium">{addLeadError}</p>}
-              <button
+              {addLeadError && <p className="text-xs text-danger font-medium">{addLeadError}</p>}
+              <Button
                 onClick={saveNewLead}
                 disabled={addLeadLoading}
-                className="w-full bg-[#42CA80] hover:bg-[#35A66A] disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-colors"
+                size="lg"
+                className="w-full"
               >
                 {addLeadLoading ? "Saving..." : "Add Lead"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

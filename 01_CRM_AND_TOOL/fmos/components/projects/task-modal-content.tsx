@@ -5,6 +5,11 @@ import { X, Loader2, Book } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import TaskChecklist from "@/components/tasks/task-checklist";
 import TaskDependencies from "@/components/tasks/task-dependencies";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface Profile {
     id: string;
@@ -76,16 +81,16 @@ export default function TaskModalContent({
     }, [task?.id, isNew]);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4">
-            <div className="relative w-full max-w-lg overflow-hidden rounded-t-2xl border border-slate-200 bg-slate-50 shadow-2xl sm:rounded-2xl flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-4">
+            <div className="relative w-full max-w-lg overflow-hidden rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl flex flex-col max-h-[90vh]">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 sm:px-6 sm:py-4 bg-slate-50 z-10">
-                    <h2 className="text-base font-bold text-slate-900 sm:text-lg">
+                <div className="flex items-center justify-between border-b border-line px-4 py-3 sm:px-6 sm:py-4 bg-surface z-10">
+                    <h2 className="font-display text-base font-semibold text-slate-900 sm:text-lg">
                         {isNew ? "Add New Task" : "Edit Task"}
                     </h2>
                     <button
                         onClick={onClose}
-                        className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-white hover:text-slate-900"
+                        className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -93,22 +98,22 @@ export default function TaskModalContent({
 
                 {/* Tabs (only for existing tasks) */}
                 {!isNew && (
-                    <div className="flex border-b border-slate-200 bg-slate-50">
+                    <div className="flex border-b border-line bg-surface">
                         <button
                             onClick={() => setActiveTab('details')}
-                            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'details' ? 'border-[#42CA80] text-[#42CA80]' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
+                            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'details' ? 'border-brand-deep text-brand-deep' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
                         >
                             Details
                         </button>
                         <button
                             onClick={() => setActiveTab('checklist')}
-                            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'checklist' ? 'border-[#42CA80] text-[#42CA80]' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
+                            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'checklist' ? 'border-brand-deep text-brand-deep' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
                         >
                             Checklist
                         </button>
                         <button
                             onClick={() => setActiveTab('dependencies')}
-                            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'dependencies' ? 'border-[#42CA80] text-[#42CA80]' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
+                            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'dependencies' ? 'border-brand-deep text-brand-deep' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
                         >
                             Dependencies
                         </button>
@@ -116,63 +121,51 @@ export default function TaskModalContent({
                 )}
 
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-surface">
                     {activeTab === 'details' && (
                         <div className="space-y-4">
                             {/* Title */}
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-slate-900">
-                                    Task Title *
-                                </label>
-                                <input
+                                <Label>Task Title *</Label>
+                                <Input
                                     type="text"
                                     value={formTitle}
                                     onChange={(e) => setFormTitle(e.target.value)}
                                     placeholder="Enter task title..."
-                                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 placeholder-[#666] focus:border-[#42CA80]/50 focus:outline-none"
                                 />
                             </div>
 
                             {/* Due Date & Priority Row */}
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-slate-900">
-                                        Due Date
-                                    </label>
-                                    <input
+                                    <Label>Due Date</Label>
+                                    <Input
                                         type="date"
                                         value={formDueDate}
                                         onChange={(e) => setFormDueDate(e.target.value)}
-                                        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-sm font-medium text-slate-900">
-                                        Priority
-                                    </label>
-                                    <select
+                                    <Label>Priority</Label>
+                                    <Select
                                         value={formPriority}
                                         onChange={(e) => setFormPriority(e.target.value)}
-                                        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                                     >
                                         {PRIORITIES.map((p) => (
                                             <option key={p.value} value={p.value}>
                                                 {p.label}
                                             </option>
                                         ))}
-                                    </select>
+                                    </Select>
                                 </div>
                             </div>
 
                             {/* Assignee */}
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-slate-900">
-                                    Assignee
-                                </label>
-                                <select
+                                <Label>Assignee</Label>
+                                <Select
                                     value={formAssignee}
                                     onChange={(e) => setFormAssignee(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 focus:border-[#42CA80]/50 focus:outline-none"
                                 >
                                     <option value="Unassigned">Unassigned</option>
                                     {profiles.map((p) => (
@@ -180,49 +173,47 @@ export default function TaskModalContent({
                                             {p.full_name}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             </div>
 
                             {/* SOP Section */}
                             <div>
-                                <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
-                                    <Book className="h-4 w-4 text-indigo-400" />
+                                <Label className="flex items-center gap-2">
+                                    <Book className="h-4 w-4 text-brand-deep" />
                                     SOP / Instructions
-                                </label>
-                                <textarea
+                                </Label>
+                                <Textarea
                                     value={formSOP}
                                     onChange={(e) => setFormSOP(e.target.value)}
                                     placeholder="Paste task instructions, SOP link, or step-by-step guide..."
-                                    className="h-32 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 placeholder-[#666] focus:border-indigo-500/50 focus:outline-none"
+                                    className="h-32 resize-none"
                                 />
                             </div>
                         </div>
                     )}
 
                     {activeTab === 'checklist' && (
-                        loadingExtras ? <div className="p-8 text-center text-slate-600">Loading checklist...</div> :
+                        loadingExtras ? <div className="p-8 text-center text-slate-500">Loading checklist...</div> :
                             <TaskChecklist taskId={task.id} initialItems={checklistItems} />
                     )}
 
                     {activeTab === 'dependencies' && (
-                        loadingExtras ? <div className="p-8 text-center text-slate-600">Loading dependencies...</div> :
+                        loadingExtras ? <div className="p-8 text-center text-slate-500">Loading dependencies...</div> :
                             <TaskDependencies taskId={task.id} projectId={task.project_id} initialDependencies={dependencies} availableTasks={tasks} />
                     )}
                 </div>
 
                 {/* Footer */}
-                <div className="flex gap-3 border-t border-slate-200 bg-slate-50 px-4 py-3 sm:px-6 sm:py-4 z-10 mt-auto">
-                    <button
-                        onClick={onClose}
-                        className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-900 transition-colors hover:bg-slate-100"
-                    >
+                <div className="flex gap-3 border-t border-line bg-surface px-4 py-3 sm:px-6 sm:py-4 z-10 mt-auto">
+                    <Button onClick={onClose} variant="secondary" className="flex-1">
                         Close
-                    </button>
+                    </Button>
                     {activeTab === 'details' && (
-                        <button
+                        <Button
                             onClick={onSave}
+                            variant="primary"
                             disabled={isSaving || !formTitle.trim()}
-                            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-4 py-2.5 font-semibold text-white disabled:opacity-50"
+                            className="flex-1"
                         >
                             {isSaving ? (
                                 <>
@@ -232,7 +223,7 @@ export default function TaskModalContent({
                             ) : (
                                 "Save Changes"
                             )}
-                        </button>
+                        </Button>
                     )}
                 </div>
             </div>

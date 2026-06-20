@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { Card } from "@/components/ui/card";
 
 interface Point {
   label: string;
@@ -19,9 +20,9 @@ interface Point {
 
 export default function OrganicTrendChartClient({ series }: { series: Point[] }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">
+        <h3 className="font-display text-[15px] font-semibold text-slate-900">
           Growth Trend
         </h3>
       </div>
@@ -60,7 +61,7 @@ export default function OrganicTrendChartClient({ series }: { series: Point[] })
               type="monotone"
               dataKey="gmb"
               name="GMB Views"
-              stroke="#4285F4"
+              stroke="#3b82f6"
               strokeWidth={3}
               dot={false}
               activeDot={{ r: 6 }}
@@ -68,6 +69,6 @@ export default function OrganicTrendChartClient({ series }: { series: Point[] })
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </Card>
   );
 }

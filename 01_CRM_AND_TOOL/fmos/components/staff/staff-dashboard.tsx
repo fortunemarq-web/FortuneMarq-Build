@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 import TaskExecutionModal from "./task-execution-modal";
 import clsx from "clsx";
+import { StatCard } from "@/components/ui/stat-card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Select } from "@/components/ui/select";
 
 interface Task {
   id: string;
@@ -66,16 +69,16 @@ const STATUS_FILTERS = [
 ];
 
 const STATUS_GROUPS = [
-  { key: "not_started", label: "To Do", icon: Circle, color: "text-gray-400" },
-  { key: "in_progress", label: "In Progress", icon: Clock, color: "text-blue-400" },
-  { key: "in_review", label: "In Review", icon: AlertTriangle, color: "text-purple-400" },
-  { key: "needs_attention", label: "Needs Attention", icon: AlertTriangle, color: "text-amber-400" },
+  { key: "not_started", label: "To Do", icon: Circle, color: "text-slate-500" },
+  { key: "in_progress", label: "In Progress", icon: Clock, color: "text-info" },
+  { key: "in_review", label: "In Review", icon: AlertTriangle, color: "text-info" },
+  { key: "needs_attention", label: "Needs Attention", icon: AlertTriangle, color: "text-warn" },
 ];
 
-const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
-  high: { label: "High", color: "bg-red-500/20 text-red-400 border-red-500/30" },
-  medium: { label: "Med", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  low: { label: "Low", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+const PRIORITY_CONFIG: Record<string, { label: string; tone: Tone }> = {
+  high: { label: "High", tone: "danger" },
+  medium: { label: "Med", tone: "warning" },
+  low: { label: "Low", tone: "info" },
 };
 
 function isToday(dateStr: string | null): boolean {
@@ -228,7 +231,7 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
     <>
       {/* Header */}
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl font-bold text-slate-900 sm:text-2xl md:text-4xl font-mono tabular-nums">
+        <h1 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl">
           Welcome back, {staffName}
         </h1>
         <p className="mt-1 text-xs text-slate-500 sm:text-sm">
@@ -238,81 +241,25 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
 
       {/* Personal Metrics */}
       <div className="mb-4 grid grid-cols-2 gap-3 sm:mb-6 sm:grid-cols-4 sm:gap-4">
-        {/* My Load */}
-        <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
-          <div className="flex items-center gap-2">
-            <ListTodo className="h-4 w-4 text-indigo-400 sm:h-5 sm:w-5" />
-            <span className="text-[10px] text-slate-600 sm:text-xs">My Load</span>
-          </div>
-          <p className="mt-1 text-xl font-bold text-slate-900 sm:mt-2 sm:text-4xl font-mono tabular-nums">
-            {metrics.activeCount}
-          </p>
-          <p className="text-[10px] text-slate-600">Active tasks</p>
-        </div>
-
-        {/* Due Today */}
-        <div className={clsx(
-          "rounded-xl border p-3 sm:p-4",
-          metrics.dueTodayCount > 0
-            ? "border-amber-500/30 bg-amber-500/10"
-            : "border-slate-200 bg-white"
-        )}>
-          <div className="flex items-center gap-2">
-            <Clock className={clsx(
-              "h-4 w-4 sm:h-5 sm:w-5",
-              metrics.dueTodayCount > 0 ? "text-amber-400" : "text-slate-600"
-            )} />
-            <span className={clsx(
-              "text-[10px] sm:text-xs",
-              metrics.dueTodayCount > 0 ? "text-amber-300" : "text-slate-600"
-            )}>Due Today</span>
-          </div>
-          <p className={clsx(
-            "mt-1 text-xl font-bold sm:mt-2 sm:text-3xl",
-            metrics.dueTodayCount > 0 ? "text-amber-400" : "text-slate-600"
-          )}>
-            {metrics.dueTodayCount}
-          </p>
-          <p className="text-[10px] text-slate-600">Need attention</p>
-        </div>
-
-        {/* High Priority */}
-        <div className={clsx(
-          "rounded-xl border p-3 sm:p-4",
-          metrics.highPriorityCount > 0
-            ? "border-red-500/30 bg-red-500/10"
-            : "border-slate-200 bg-white"
-        )}>
-          <div className="flex items-center gap-2">
-            <Flag className={clsx(
-              "h-4 w-4 sm:h-5 sm:w-5",
-              metrics.highPriorityCount > 0 ? "text-red-400" : "text-slate-600"
-            )} />
-            <span className={clsx(
-              "text-[10px] sm:text-xs",
-              metrics.highPriorityCount > 0 ? "text-red-300" : "text-slate-600"
-            )}>High Priority</span>
-          </div>
-          <p className={clsx(
-            "mt-1 text-xl font-bold sm:mt-2 sm:text-3xl",
-            metrics.highPriorityCount > 0 ? "text-red-400" : "text-slate-600"
-          )}>
-            {metrics.highPriorityCount}
-          </p>
-          <p className="text-[10px] text-slate-600">Urgent tasks</p>
-        </div>
-
-        {/* Completion Rate */}
-        <div className="rounded-xl border border-[#42CA80]/30 bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 p-3 sm:p-4">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-[#42CA80] sm:h-5 sm:w-5" />
-            <span className="text-[10px] text-[#42CA80]/80 sm:text-xs">Today's Rate</span>
-          </div>
-          <p className="mt-1 text-xl font-bold text-[#42CA80] sm:mt-2 sm:text-4xl font-mono tabular-nums">
-            {metrics.completionRate}%
-          </p>
-          <p className="text-[10px] text-slate-600">Completion</p>
-        </div>
+        <StatCard label="My Load" value={metrics.activeCount} icon={ListTodo} hint="Active tasks" />
+        <StatCard
+          label="Due Today"
+          value={metrics.dueTodayCount}
+          icon={Clock}
+          hint="Need attention"
+        />
+        <StatCard
+          label="High Priority"
+          value={metrics.highPriorityCount}
+          icon={Flag}
+          hint="Urgent tasks"
+        />
+        <StatCard
+          label="Today's Rate"
+          value={`${metrics.completionRate}%`}
+          icon={TrendingUp}
+          hint="Completion"
+        />
       </div>
 
       {/* Status Filter Tabs */}
@@ -331,22 +278,16 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
               className={clsx(
                 "flex-shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
                 statusFilter === filter.value
-                  ? filter.value === "in_progress"
-                    ? "bg-blue-500 text-slate-900"
-                    : filter.value === "in_review"
-                    ? "bg-purple-500 text-slate-900"
-                    : filter.value === "needs_attention"
-                    ? "bg-amber-500 text-slate-900"
-                    : "bg-white text-black"
-                  : "bg-white text-slate-500 hover:bg-slate-100"
+                  ? "bg-brand-deep text-white"
+                  : "border border-line bg-surface text-slate-600 hover:bg-slate-50"
               )}
             >
               {filter.label}
               {count > 0 && (
                 <span className={clsx(
-                  "ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                  "ml-1.5 rounded-full px-1.5 py-0.5 text-[11px] font-semibold",
                   statusFilter === filter.value
-                    ? "bg-black/20 text-inherit"
+                    ? "bg-white/20 text-inherit"
                     : "bg-slate-200 text-slate-500"
                 )}>
                   {count}
@@ -368,8 +309,8 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
               className={clsx(
                 "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors sm:text-sm",
                 serviceFilter === filter.key
-                  ? "bg-indigo-500 text-slate-900"
-                  : "bg-white text-slate-500 hover:bg-slate-100"
+                  ? "bg-brand-deep text-white"
+                  : "border border-line bg-surface text-slate-600 hover:bg-slate-50"
               )}
             >
               {filter.label}
@@ -379,18 +320,18 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
 
         {/* Priority Filter */}
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-slate-600" />
-          <select
+          <Filter className="h-4 w-4 text-slate-500" />
+          <Select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 focus:border-indigo-500/50 focus:outline-none"
+            className="w-auto"
           >
             {PRIORITY_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -409,10 +350,10 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
                 {/* Group Header */}
                 <div className="mb-3 flex items-center gap-2">
                   <Icon className={clsx("h-4 w-4", group.color)} />
-                  <h2 className={clsx("text-sm font-semibold", group.color)}>
+                  <h2 className="font-display text-sm font-semibold text-slate-900">
                     {group.label}
                   </h2>
-                  <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-600">
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
                     {groupTasks.length}
                   </span>
                 </div>
@@ -432,16 +373,16 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
                         key={task.id}
                         onClick={() => handleTaskClick(task)}
                         className={clsx(
-                          "group flex flex-col rounded-xl border bg-white p-4 text-left transition-all active:scale-[0.98]",
+                          "group flex flex-col rounded-xl border bg-surface p-4 text-left transition-colors active:scale-[0.98]",
                           taskOverdue
-                            ? "border-red-500/50 hover:border-red-500"
+                            ? "border-danger-line hover:border-danger"
                             : taskDueToday
-                            ? "border-amber-500/50 hover:border-amber-500"
-                            : "border-slate-200 hover:border-indigo-500/50"
+                            ? "border-warn-line hover:border-warn"
+                            : "border-line hover:border-brand-line"
                         )}
                       >
                         {/* Title */}
-                        <h3 className="font-semibold text-slate-900 group-hover:text-indigo-400">
+                        <h3 className="font-semibold text-slate-900 group-hover:text-brand-deep">
                           {task.title}
                         </h3>
 
@@ -457,21 +398,16 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
                         <div className="mt-3 flex items-center justify-between">
                           <span className={clsx(
                             "flex items-center gap-1 text-xs",
-                            taskOverdue ? "text-red-400" : taskDueToday ? "text-amber-400" : "text-slate-600"
+                            taskOverdue ? "text-danger" : taskDueToday ? "text-warn" : "text-slate-500"
                           )}>
                             <Calendar className="h-3 w-3" />
                             {formatDisplayDate(task.due_date)}
                           </span>
-                          <span className={clsx(
-                            "rounded-full border px-2 py-0.5 text-[10px] font-medium",
-                            priority.color
-                          )}>
-                            {priority.label}
-                          </span>
+                          <Badge tone={priority.tone} size="sm">{priority.label}</Badge>
                         </div>
 
                         {/* Open Task Hint */}
-                        <div className="mt-3 flex items-center justify-end text-xs text-slate-600 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="mt-3 flex items-center justify-end text-xs text-slate-500 opacity-0 transition-opacity group-hover:opacity-100">
                           <span>Open Task</span>
                           <ChevronRight className="h-3 w-3" />
                         </div>
@@ -486,10 +422,10 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
           // Show flat list when specific status is selected
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-900">
+              <span className="font-display text-sm font-semibold text-slate-900">
                 {STATUS_FILTERS.find((f) => f.value === statusFilter)?.label}
               </span>
-              <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-600">
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
                 {filteredTasks.length}
               </span>
             </div>
@@ -505,16 +441,16 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
                     key={task.id}
                     onClick={() => handleTaskClick(task)}
                     className={clsx(
-                      "group flex flex-col rounded-xl border bg-white p-4 text-left transition-all active:scale-[0.98]",
+                      "group flex flex-col rounded-xl border bg-surface p-4 text-left transition-colors active:scale-[0.98]",
                       taskOverdue
-                        ? "border-red-500/50 hover:border-red-500"
+                        ? "border-danger-line hover:border-danger"
                         : taskDueToday
-                        ? "border-amber-500/50 hover:border-amber-500"
-                        : "border-slate-200 hover:border-indigo-500/50"
+                        ? "border-warn-line hover:border-warn"
+                        : "border-line hover:border-brand-line"
                     )}
                   >
                     {/* Title */}
-                    <h3 className="font-semibold text-slate-900 group-hover:text-indigo-400">
+                    <h3 className="font-semibold text-slate-900 group-hover:text-brand-deep">
                       {task.title}
                     </h3>
 
@@ -530,21 +466,16 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
                     <div className="mt-3 flex items-center justify-between">
                       <span className={clsx(
                         "flex items-center gap-1 text-xs",
-                        taskOverdue ? "text-red-400" : taskDueToday ? "text-amber-400" : "text-slate-600"
+                        taskOverdue ? "text-danger" : taskDueToday ? "text-warn" : "text-slate-500"
                       )}>
                         <Calendar className="h-3 w-3" />
                         {formatDisplayDate(task.due_date)}
                       </span>
-                      <span className={clsx(
-                        "rounded-full border px-2 py-0.5 text-[10px] font-medium",
-                        priority.color
-                      )}>
-                        {priority.label}
-                      </span>
+                      <Badge tone={priority.tone} size="sm">{priority.label}</Badge>
                     </div>
 
                     {/* Open Task Hint */}
-                    <div className="mt-3 flex items-center justify-end text-xs text-slate-600 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="mt-3 flex items-center justify-end text-xs text-slate-500 opacity-0 transition-opacity group-hover:opacity-100">
                       <span>Open Task</span>
                       <ChevronRight className="h-3 w-3" />
                     </div>
@@ -557,8 +488,8 @@ export default function StaffDashboard({ tasks, staffName }: StaffDashboardProps
 
         {/* Empty State */}
         {filteredTasks.length === 0 && (
-          <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center">
-            <CheckCircle2 className="mx-auto h-12 w-12 text-[#42CA80]" />
+          <div className="rounded-xl border border-dashed border-line p-8 text-center">
+            <CheckCircle2 className="mx-auto h-12 w-12 text-brand-deep" />
             <p className="mt-3 text-base font-semibold text-slate-900">All caught up!</p>
             <p className="mt-1 text-sm text-slate-600">
               {serviceFilter !== "all" || priorityFilter !== "all" || statusFilter !== "all"

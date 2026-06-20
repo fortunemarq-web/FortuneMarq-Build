@@ -2,7 +2,12 @@
 
 import { useState, useTransition, useRef } from "react";
 import { addModule } from "@/app/admin/build-tracker/actions";
-import { X, Plus, Loader2 } from "lucide-react";
+import { X, Plus, Loader2, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface AddModuleModalProps {
   systemId: number;
@@ -45,7 +50,7 @@ export default function AddModuleModal({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="mt-3 flex items-center gap-1.5 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-xs font-medium text-slate-500 transition-all hover:border-[#42CA80] hover:bg-emerald-50 hover:text-[#42CA80]"
+        className="mt-3 flex items-center gap-1.5 rounded-lg border border-dashed border-line-strong px-3 py-2 text-xs font-medium text-slate-500 transition-all hover:border-brand-line hover:bg-brand-soft hover:text-brand-deep"
       >
         <Plus className="h-3.5 w-3.5" />
         Add Module
@@ -55,16 +60,16 @@ export default function AddModuleModal({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/40"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Modal */}
-          <div className="relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-2xl">
+          <div className="relative z-10 w-full max-w-md rounded-2xl border border-line bg-surface shadow-lg">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-line px-6 py-4">
               <div>
-                <h3 className="text-base font-bold text-slate-900">
+                <h3 className="font-display text-base font-semibold text-slate-900">
                   Add Module
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">{systemName}</p>
@@ -80,74 +85,68 @@ export default function AddModuleModal({
             {/* Form */}
             <form ref={formRef} onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Module Name <span className="text-red-500">*</span>
-                </label>
-                <input
+                <Label htmlFor="module_name">
+                  Module Name <span className="text-danger">*</span>
+                </Label>
+                <Input
+                  id="module_name"
                   name="module_name"
                   type="text"
                   required
                   placeholder="e.g. Client Invoice Page"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 outline-none transition-all focus:border-[#42CA80] focus:bg-white focus:ring-2 focus:ring-[#42CA80]/20 placeholder:text-slate-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Priority
-                </label>
-                <select
-                  name="priority"
-                  defaultValue="medium"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 outline-none transition-all focus:border-[#42CA80] focus:bg-white focus:ring-2 focus:ring-[#42CA80]/20"
-                >
-                  <option value="high">🔴 High</option>
-                  <option value="medium">🟡 Medium</option>
-                  <option value="low">🟢 Low</option>
-                </select>
+                <Label htmlFor="priority">Priority</Label>
+                <Select id="priority" name="priority" defaultValue="medium">
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </Select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <Label htmlFor="notes">
                   Notes{" "}
                   <span className="text-slate-400 font-normal">(optional)</span>
-                </label>
-                <textarea
+                </Label>
+                <Textarea
+                  id="notes"
                   name="notes"
                   rows={2}
                   placeholder="Any context or blockers..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 outline-none transition-all focus:border-[#42CA80] focus:bg-white focus:ring-2 focus:ring-[#42CA80]/20 placeholder:text-slate-400 resize-none"
                 />
               </div>
 
               {error && (
-                <p className="text-xs text-red-600 font-medium">{error}</p>
+                <p className="text-xs text-danger font-medium">{error}</p>
               )}
 
               <div className="flex gap-3 pt-1">
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                  className="flex-1"
                 >
                   Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#42CA80] py-2.5 text-sm font-bold text-white hover:bg-[#38b571] transition-colors disabled:opacity-70"
-                >
+                </Button>
+                <Button type="submit" disabled={isPending} className="flex-1">
                   {isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : success ? (
-                    "✓ Added!"
+                    <>
+                      <Check className="h-4 w-4" />
+                      Added
+                    </>
                   ) : (
                     <>
                       <Plus className="h-4 w-4" />
                       Add Module
                     </>
                   )}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

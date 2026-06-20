@@ -18,6 +18,11 @@ import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
 import { notifyReportReady } from "@/actions/notify-report-ready";
 import { synthesizeReportSummary } from "@/actions/synthesize-report";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { buttonVariants } from "@/components/ui/button";
 
 // Public report magic links expire this many days after creation.
 const REPORT_LINK_TTL_DAYS = 30;
@@ -148,79 +153,79 @@ export default function AdminNewReportPage() {
     if (loading) return <div className="p-8"><Loader2 className="animate-spin" /></div>;
 
     return (
-        <div className="min-h-full bg-slate-50 p-4 md:p-12">
+        <div className="min-h-full bg-canvas p-4 md:p-12">
             <div className="max-w-2xl mx-auto">
                 <Link href={`/admin/clients/${clientId}`} className="flex items-center gap-2 text-slate-400 hover:text-slate-900 mb-8 transition-colors">
                     <ArrowLeft className="h-4 w-4" />
-                    <span className="text-sm font-bold uppercase tracking-widest">Back to Client</span>
+                    <span className="text-sm font-semibold uppercase tracking-widest">Back to Client</span>
                 </Link>
 
-                <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl p-8 md:p-12">
+                <Card className="p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
+                        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-white">
                             <Zap className="h-6 w-6" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-black text-slate-900">New Report</h1>
-                            <p className="text-sm font-bold text-[#42CA80] uppercase tracking-widest">{client?.business_name}</p>
+                            <h1 className="font-display text-2xl font-semibold text-slate-900">New Report</h1>
+                            <p className="text-sm font-semibold text-brand-deep uppercase tracking-widest">{client?.business_name}</p>
                         </div>
                     </div>
 
                     <div className="space-y-6">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Report Month</label>
-                                <input
+                                <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-2 px-1">Report Month</label>
+                                <Input
                                     type="month"
                                     value={reportMonth}
                                     onChange={(e) => setReportMonth(e.target.value)}
-                                    className="w-full bg-slate-50 border-none rounded-2xl p-4 font-bold focus:ring-2 focus:ring-slate-900 transition-all"
+                                    className="h-11"
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Report Type</label>
-                                <select
+                                <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-2 px-1">Report Type</label>
+                                <Select
                                     value={reportType}
                                     onChange={(e) => setReportType(e.target.value)}
-                                    className="w-full bg-slate-50 border-none rounded-2xl p-4 font-bold focus:ring-2 focus:ring-slate-900 transition-all"
+                                    className="h-11"
                                 >
                                     <option value="monthly">Monthly</option>
                                     <option value="weekly">Weekly</option>
                                     <option value="custom">Custom</option>
-                                </select>
+                                </Select>
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">PDF URL</label>
-                            <input
+                            <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-2 px-1">PDF URL</label>
+                            <Input
                                 type="url"
                                 placeholder="https://..."
                                 value={pdfUrl}
                                 onChange={(e) => setPdfUrl(e.target.value)}
-                                className="w-full bg-slate-50 border-none rounded-2xl p-4 font-bold focus:ring-2 focus:ring-slate-900 transition-all"
+                                className="h-11"
                             />
                         </div>
 
                         <div>
                             <div className="flex justify-between items-center mb-2 px-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">AI Performance Summary</label>
+                                <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">AI Performance Summary</label>
                                 <button
                                     type="button"
                                     onClick={handleSynthesize}
                                     disabled={isSynthesizing}
-                                    className="flex items-center gap-1 text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-500 transition-colors disabled:opacity-50"
+                                    className="flex items-center gap-1 text-[11px] font-semibold text-brand-deep uppercase tracking-widest hover:text-brand-deeper transition-colors disabled:opacity-50"
                                 >
                                     {isSynthesizing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
                                     {isSynthesizing ? "Synthesizing…" : "Synthesize"}
                                 </button>
                             </div>
-                            <textarea
+                            <Textarea
                                 rows={8}
                                 placeholder="Highlight strategic wins, KPI progress, and next steps..."
                                 value={aiSummary}
                                 onChange={(e) => setAiSummary(e.target.value)}
-                                className="w-full bg-slate-50 border-none rounded-3xl p-6 font-medium focus:ring-2 focus:ring-slate-900 transition-all placeholder:text-slate-300"
+                                className="p-4"
                             />
                         </div>
 
@@ -228,21 +233,21 @@ export default function AdminNewReportPage() {
                             <button
                                 onClick={() => handleSave(false)}
                                 disabled={isSaving}
-                                className="flex-1 py-4 bg-slate-100 text-slate-900 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-200 transition-all"
+                                className={buttonVariants({ variant: "secondary", size: "lg", className: "flex-1" })}
                             >
                                 Save Draft
                             </button>
                             <button
                                 onClick={() => handleSave(true)}
                                 disabled={isSaving}
-                                className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 flex items-center justify-center gap-2"
+                                className={buttonVariants({ variant: "primary", size: "lg", className: "flex-1" })}
                             >
                                 <Send className="h-4 w-4" />
                                 Publish to Portal
                             </button>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

@@ -273,7 +273,7 @@ export default function LeadsList({ userId }: { userId: string }) {
                                 <th className="px-4 py-3 w-[40px]">
                                     <input
                                         type="checkbox"
-                                        className="h-4 w-4 rounded border-slate-300 text-[#42CA80] focus:ring-[#42CA80] focus:ring-offset-0"
+                                        className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand focus:ring-offset-0"
                                         checked={data.length > 0 && isAllSelected(data.map(d => d.id))}
                                         onChange={handleSelectAllPage}
                                     />
@@ -357,7 +357,7 @@ export default function LeadsList({ userId }: { userId: string }) {
                                         </td>
                                         <td className="px-4 py-2">
                                             <span className={clsx(
-                                                "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider",
+                                                "inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wide",
                                                 stageDef ? stageDef.badge : "bg-slate-100 text-slate-600"
                                             )}>
                                                 {stageDef?.label || (lead.outreach_stage || "—").replace(/_/g, ' ')}
@@ -366,15 +366,15 @@ export default function LeadsList({ userId }: { userId: string }) {
                                         <td className="px-4 py-2 text-[13px] text-slate-600">
                                             {lead.city || "—"}
                                         </td>
-                                        <td className="px-4 py-2 font-mono text-[12px] text-slate-500 tabular-nums">
+                                        <td className="px-4 py-2 text-[12px] text-slate-500 tabular-nums">
                                             {lead.phone || "—"}
                                         </td>
                                         <td className="px-4 py-2">
-                                            <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                                            <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
                                                 {lead.lead_type || '—'}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-2 font-mono text-[11px] text-slate-400 tabular-nums whitespace-nowrap">
+                                        <td className="px-4 py-2 text-[11px] text-slate-400 tabular-nums whitespace-nowrap">
                                             {new Date(lead.created_at).toLocaleDateString(undefined, {
                                                 year: 'numeric',
                                                 month: 'short',

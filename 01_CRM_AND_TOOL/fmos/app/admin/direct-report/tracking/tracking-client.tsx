@@ -1,6 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 interface LogRow {
   id: string;
@@ -100,26 +105,26 @@ export default function TrackingClient({ logs }: Props) {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-36">
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">City</label>
-          <select
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+          <Label htmlFor="city-filter">City</Label>
+          <Select
+            id="city-filter"
             value={cityFilter}
             onChange={(e) => { setCityFilter(e.target.value); setNicheFilter(""); }}
           >
             <option value="">All cities</option>
             {cities.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
+          </Select>
         </div>
         <div className="flex-1 min-w-40">
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Niche</label>
-          <select
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+          <Label htmlFor="niche-filter">Niche</Label>
+          <Select
+            id="niche-filter"
             value={nicheFilter}
             onChange={(e) => setNicheFilter(e.target.value)}
           >
             <option value="">All niches</option>
             {niches.map((n) => <option key={n} value={n}>{n}</option>)}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -131,106 +136,106 @@ export default function TrackingClient({ logs }: Props) {
       ) : (
         <>
           {/* Summary funnel */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-4">
+          <Card className="p-5">
+            <h2 className="font-display text-sm font-semibold text-slate-900 mb-4">
               Funnel — {filtered.length} send{filtered.length !== 1 ? "s" : ""}
               {cityFilter ? ` · ${cityFilter}` : ""}
               {nicheFilter ? ` · ${nicheFilter}` : ""}
             </h2>
             <div className="grid grid-cols-5 gap-3 text-center">
-              <FunnelStat label="Sent" value={totals.sent} base={totals.sent} color="slate" />
-              <FunnelStat label="Delivered" value={totals.delivered} base={totals.sent} color="blue" />
-              <FunnelStat label="Read" value={totals.read} base={totals.sent} color="emerald" />
-              <FunnelStat label="Clicked / Replied" value={totals.clicked} base={totals.sent} color="violet" />
-              <FunnelStat label="Booked" value={totals.booked} base={totals.sent} color="brand" />
+              <FunnelStat label="Sent" value={totals.sent} base={totals.sent} tone="neutral" />
+              <FunnelStat label="Delivered" value={totals.delivered} base={totals.sent} tone="info" />
+              <FunnelStat label="Read" value={totals.read} base={totals.sent} tone="info" />
+              <FunnelStat label="Clicked / Replied" value={totals.clicked} base={totals.sent} tone="brand" />
+              <FunnelStat label="Booked" value={totals.booked} base={totals.sent} tone="brand" />
             </div>
-          </div>
+          </Card>
 
           {/* Per niche×city breakdown */}
           {grouped.length > 1 && (
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-              <div className="px-5 py-3 border-b border-slate-100">
-                <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
+            <Card className="overflow-hidden">
+              <div className="px-5 py-3 border-b border-line">
+                <h2 className="font-display text-sm font-semibold text-slate-900">
                   By niche × city
                 </h2>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 border-b border-slate-200">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">City</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">Niche</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Sent</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Delivered</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Read</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Clicked</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Booked</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Read %</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
+                <Table>
+                  <THead>
+                    <TR className="hover:bg-transparent">
+                      <TH>City</TH>
+                      <TH>Niche</TH>
+                      <TH className="text-right">Sent</TH>
+                      <TH className="text-right">Delivered</TH>
+                      <TH className="text-right">Read</TH>
+                      <TH className="text-right">Clicked</TH>
+                      <TH className="text-right">Booked</TH>
+                      <TH className="text-right">Read %</TH>
+                    </TR>
+                  </THead>
+                  <TBody>
                     {grouped.map((g) => (
-                      <tr key={`${g.city}__${g.industry}`} className="hover:bg-slate-50">
-                        <td className="px-4 py-2 font-medium text-slate-800">{g.city}</td>
-                        <td className="px-4 py-2 text-slate-600">{g.industry}</td>
-                        <td className="px-4 py-2 text-right tabular-nums">{g.sent}</td>
-                        <td className="px-4 py-2 text-right tabular-nums text-blue-700">{g.delivered}</td>
-                        <td className="px-4 py-2 text-right tabular-nums text-emerald-700">{g.read}</td>
-                        <td className="px-4 py-2 text-right tabular-nums text-violet-700">{g.clicked}</td>
-                        <td className="px-4 py-2 text-right tabular-nums font-semibold text-brand-deep">{g.booked}</td>
-                        <td className="px-4 py-2 text-right tabular-nums text-slate-500">{pct(g.read, g.sent)}</td>
-                      </tr>
+                      <TR key={`${g.city}__${g.industry}`}>
+                        <TD className="font-medium text-slate-800">{g.city}</TD>
+                        <TD className="text-slate-600">{g.industry}</TD>
+                        <TD className="text-right tabular-nums">{g.sent}</TD>
+                        <TD className="text-right tabular-nums text-info">{g.delivered}</TD>
+                        <TD className="text-right tabular-nums text-info">{g.read}</TD>
+                        <TD className="text-right tabular-nums text-brand-deep">{g.clicked}</TD>
+                        <TD className="text-right tabular-nums font-semibold text-brand-deep">{g.booked}</TD>
+                        <TD className="text-right tabular-nums text-slate-500">{pct(g.read, g.sent)}</TD>
+                      </TR>
                     ))}
-                  </tbody>
-                </table>
+                  </TBody>
+                </Table>
               </div>
-            </div>
+            </Card>
           )}
 
           {/* Recent sends */}
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 py-3 border-b border-slate-100">
-              <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
+          <Card className="overflow-hidden">
+            <div className="px-5 py-3 border-b border-line">
+              <h2 className="font-display text-sm font-semibold text-slate-900">
                 Recent sends {filtered.length > 100 ? "(last 100)" : ""}
               </h2>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">Business</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">City · Niche</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">Template</th>
-                    <th className="px-4 py-2 text-center text-xs font-semibold text-slate-500">Status</th>
-                    <th className="px-4 py-2 text-right text-xs font-semibold text-slate-500">Sent at</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
+              <Table>
+                <THead>
+                  <TR className="hover:bg-transparent">
+                    <TH>Business</TH>
+                    <TH>City · Niche</TH>
+                    <TH>Template</TH>
+                    <TH className="text-center">Status</TH>
+                    <TH className="text-right">Sent at</TH>
+                  </TR>
+                </THead>
+                <TBody>
                   {filtered.slice(0, 100).map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-50">
-                      <td className="px-4 py-2 font-medium text-slate-800">
+                    <TR key={log.id}>
+                      <TD className="font-medium text-slate-800">
                         {log.company_name || log.phone || "—"}
-                      </td>
-                      <td className="px-4 py-2 text-slate-500 text-xs">
+                      </TD>
+                      <TD className="text-slate-500 text-xs">
                         {log.city || "—"} · {log.industry || "—"}
-                      </td>
-                      <td className="px-4 py-2 text-xs text-slate-500 font-mono">
+                      </TD>
+                      <TD className="text-xs text-slate-500 tabular-nums">
                         {log.template || log.template_id || "—"}
-                      </td>
-                      <td className="px-4 py-2 text-center">
+                      </TD>
+                      <TD className="text-center">
                         <StatusBadge status={log.delivery_status} />
-                      </td>
-                      <td className="px-4 py-2 text-right text-xs text-slate-400">
+                      </TD>
+                      <TD className="text-right text-xs text-slate-400">
                         {log.sent_at
                           ? new Date(log.sent_at).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
                           : "—"}
-                      </td>
-                    </tr>
+                      </TD>
+                    </TR>
                   ))}
-                </tbody>
-              </table>
+                </TBody>
+              </Table>
             </div>
-          </div>
+          </Card>
         </>
       )}
     </div>
@@ -238,21 +243,21 @@ export default function TrackingClient({ logs }: Props) {
 }
 
 function FunnelStat({
-  label, value, base, color,
+  label, value, base, tone,
 }: {
-  label: string; value: number; base: number; color: string;
+  label: string; value: number; base: number; tone: Tone;
 }) {
-  const colorMap: Record<string, string> = {
-    slate: "text-slate-700 bg-slate-50 border-slate-200",
-    blue: "text-blue-700 bg-blue-50 border-blue-200",
-    emerald: "text-emerald-700 bg-emerald-50 border-emerald-200",
-    violet: "text-violet-700 bg-violet-50 border-violet-200",
-    brand: "text-brand-deep bg-emerald-50 border-emerald-200",
+  const toneMap: Record<Tone, string> = {
+    neutral: "text-slate-700 bg-slate-50 border-line",
+    info: "text-info bg-info-soft border-info-line",
+    brand: "text-brand-deep bg-brand-soft border-brand-line",
+    warning: "text-warn bg-warn-soft border-warn-line",
+    danger: "text-danger bg-danger-soft border-danger-line",
   };
   return (
-    <div className={`rounded-xl border p-3 ${colorMap[color] || colorMap.slate}`}>
-      <p className="text-xl font-bold tabular-nums">{value}</p>
-      <p className="text-[10px] uppercase tracking-wide font-semibold mt-0.5">{label}</p>
+    <div className={`rounded-xl border p-3 ${toneMap[tone] || toneMap.neutral}`}>
+      <p className="text-xl font-semibold tabular-nums">{value}</p>
+      <p className="text-[11px] uppercase tracking-wide font-semibold mt-0.5">{label}</p>
       <p className="text-xs mt-1 opacity-60">{pct(value, base)}</p>
     </div>
   );
@@ -261,12 +266,12 @@ function FunnelStat({
 function StatusBadge({ status }: { status: string | null }) {
   const s = (status || "sent").toLowerCase();
   if (s.includes("read"))
-    return <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Read</span>;
+    return <Badge tone="brand" size="sm">Read</Badge>;
   if (s.includes("delivered"))
-    return <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">Delivered</span>;
+    return <Badge tone="info" size="sm">Delivered</Badge>;
   if (s.includes("failed") || s.includes("error"))
-    return <span className="text-xs font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-full">Failed</span>;
+    return <Badge tone="danger" size="sm">Failed</Badge>;
   if (s.includes("clicked"))
-    return <span className="text-xs font-bold text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">Clicked</span>;
-  return <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Sent</span>;
+    return <Badge tone="brand" size="sm">Clicked</Badge>;
+  return <Badge tone="neutral" size="sm">Sent</Badge>;
 }

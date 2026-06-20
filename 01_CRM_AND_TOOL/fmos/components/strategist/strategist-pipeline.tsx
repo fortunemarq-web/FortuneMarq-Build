@@ -56,54 +56,54 @@ interface StrategistPipelineProps {
   userId?: string;
 }
 
-// Status configuration with labels and colors
+// Status configuration with labels and the five tones (no per-stage rainbow).
 const STATUS_CONFIG: Record<string, { label: string; bgColor: string; textColor: string; icon: any }> = {
   qualified: {
     label: "Qualified",
-    bgColor: "bg-indigo-500/20",
-    textColor: "text-indigo-400",
+    bgColor: "bg-info-soft",
+    textColor: "text-info",
     icon: CheckCircle,
   },
   strategy_booked: {
     label: "Session Booked",
-    bgColor: "bg-purple-500/20",
-    textColor: "text-purple-400",
+    bgColor: "bg-info-soft",
+    textColor: "text-info",
     icon: Calendar,
   },
   strategy_completed: {
     label: "Strategy Done",
-    bgColor: "bg-amber-500/20",
-    textColor: "text-amber-400",
+    bgColor: "bg-warn-soft",
+    textColor: "text-warn",
     icon: FileText,
   },
   proposal_requested: {
     label: "Proposal Req",
-    bgColor: "bg-blue-500/20",
-    textColor: "text-blue-400",
+    bgColor: "bg-info-soft",
+    textColor: "text-info",
     icon: FileText,
   },
   proposal_sent: {
     label: "Proposal Sent",
-    bgColor: "bg-orange-500/20",
-    textColor: "text-orange-400",
+    bgColor: "bg-warn-soft",
+    textColor: "text-warn",
     icon: Send,
   },
   contract_signed: {
     label: "Contract Signed",
-    bgColor: "bg-green-500/20",
-    textColor: "text-green-400",
+    bgColor: "bg-brand-soft",
+    textColor: "text-brand-deep",
     icon: FileSignature,
   },
   closed_won: {
     label: "Won",
-    bgColor: "bg-[#42CA80]/20",
-    textColor: "text-[#42CA80]",
+    bgColor: "bg-brand-soft",
+    textColor: "text-brand-deep",
     icon: Trophy,
   },
   closed_lost: {
     label: "Lost",
-    bgColor: "bg-red-500/20",
-    textColor: "text-red-400",
+    bgColor: "bg-danger-soft",
+    textColor: "text-danger",
     icon: XCircle,
   },
 };
@@ -401,10 +401,10 @@ export default function StrategistPipeline({
       <div
         onClick={() => handleCardClick(lead)}
         className={clsx(
-          "cursor-pointer rounded-xl border border-slate-200 bg-white p-4 transition-all active:scale-[0.98]",
+          "cursor-pointer rounded-xl border border-line bg-surface p-4 transition-all active:scale-[0.98]",
           ["strategy_booked", "strategy_completed"].includes(lead.status || "") &&
-          "hover:border-indigo-500/50",
-          lead.next_action_date === formatDate(new Date()) && "ring-2 ring-amber-400 ring-offset-2"
+          "hover:border-brand-line",
+          lead.next_action_date === formatDate(new Date()) && "ring-2 ring-warn ring-offset-2"
         )}
       >
         <div className="flex items-start justify-between gap-3">
@@ -452,7 +452,7 @@ export default function StrategistPipeline({
         {lead.next_action_date && (
           <div className={clsx(
             "mt-3 flex items-center gap-1.5 text-xs",
-            isToday(lead.next_action_date) ? "text-amber-400" : "text-slate-600"
+            isToday(lead.next_action_date) ? "text-warn" : "text-slate-600"
           )}>
             <Clock className="h-3.5 w-3.5" />
             {isToday(lead.next_action_date) ? (
@@ -474,7 +474,7 @@ export default function StrategistPipeline({
             <button
               onClick={(e) => handleBookSession(lead.id, e)}
               disabled={isUpdating === lead.id}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-purple-600 bg-purple-600/10 px-3 py-2.5 text-sm font-medium text-purple-400 transition-colors active:bg-purple-600/20 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-info-line bg-info-soft px-3 py-2.5 text-sm font-medium text-info transition-colors hover:bg-blue-100 disabled:opacity-50"
             >
               <Calendar className="h-4 w-4" />
               {isUpdating === lead.id ? "..." : "Book"}
@@ -488,7 +488,7 @@ export default function StrategistPipeline({
                 handleCloseDeal(lead);
               }}
               disabled={isUpdating === lead.id}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-3 py-2.5 text-sm font-semibold text-white active:bg-[#3ab872] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand-deep px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-deeper disabled:opacity-50"
             >
               <CheckCircle className="h-4 w-4" />
               Close Deal
@@ -499,7 +499,7 @@ export default function StrategistPipeline({
             <button
               onClick={(e) => updateLeadStatus(lead.id, "proposal_requested", e)}
               disabled={isUpdating === lead.id}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600/10 border border-blue-600 px-3 py-2.5 text-sm font-medium text-blue-400 transition-colors active:bg-blue-600/20 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-info-line bg-info-soft px-3 py-2.5 text-sm font-medium text-info transition-colors hover:bg-blue-100 disabled:opacity-50"
             >
               <FileText className="h-4 w-4" />
               Req Prop
@@ -510,7 +510,7 @@ export default function StrategistPipeline({
             <button
               onClick={(e) => updateLeadStatus(lead.id, "proposal_sent", e)}
               disabled={isUpdating === lead.id}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-orange-600/10 border border-orange-600 px-3 py-2.5 text-sm font-medium text-orange-400 transition-colors active:bg-orange-600/20 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-warn-line bg-warn-soft px-3 py-2.5 text-sm font-medium text-warn transition-colors hover:bg-amber-100 disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
               Sent
@@ -521,7 +521,7 @@ export default function StrategistPipeline({
             <button
               onClick={(e) => updateLeadStatus(lead.id, "contract_signed", e)}
               disabled={isUpdating === lead.id}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-green-600/10 border border-green-600 px-3 py-2.5 text-sm font-medium text-green-400 transition-colors active:bg-green-600/20 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-brand-line bg-brand-soft px-3 py-2.5 text-sm font-medium text-brand-deep transition-colors hover:bg-emerald-100 disabled:opacity-50"
             >
               <FileSignature className="h-4 w-4" />
               Signed
@@ -535,7 +535,7 @@ export default function StrategistPipeline({
                 handleCloseDeal(lead);
               }}
               disabled={isUpdating === lead.id}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-3 py-2.5 text-sm font-semibold text-white active:bg-[#3ab872] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand-deep px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-deeper disabled:opacity-50"
             >
               <Trophy className="h-4 w-4" />
               Won
@@ -545,7 +545,7 @@ export default function StrategistPipeline({
           <button
             onClick={(e) => handleNotFit(lead.id, e)}
             disabled={isUpdating === lead.id}
-            className="flex items-center justify-center rounded-lg border border-slate-300 px-3 py-2.5 text-slate-600 transition-colors active:border-red-600/50 active:text-red-400 disabled:opacity-50"
+            className="flex items-center justify-center rounded-lg border border-line px-3 py-2.5 text-slate-500 transition-colors hover:border-danger-line hover:text-danger disabled:opacity-50"
           >
             <XCircle className="h-4 w-4" />
           </button>
@@ -558,7 +558,7 @@ export default function StrategistPipeline({
     <>
       {/* Header Section */}
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl font-bold text-slate-900 sm:text-2xl md:text-4xl font-mono tabular-nums">
+        <h1 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl md:text-3xl">
           Strategist Dashboard
         </h1>
         <p className="mt-1 text-xs text-slate-500 sm:text-sm">
@@ -571,10 +571,10 @@ export default function StrategistPipeline({
         <button
           onClick={() => setActiveTab("pipeline")}
           className={clsx(
-            "flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-colors sm:flex-none sm:px-6",
+            "flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition-colors sm:flex-none sm:px-6",
             activeTab === "pipeline"
-              ? "bg-white text-black"
-              : "bg-white text-slate-500 active:bg-slate-100"
+              ? "border-line-strong bg-slate-900 text-white"
+              : "border-line bg-surface text-slate-500 hover:bg-slate-50"
           )}
         >
           Pipeline
@@ -582,10 +582,10 @@ export default function StrategistPipeline({
         <button
           onClick={() => setActiveTab("dashboard")}
           className={clsx(
-            "flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-colors sm:flex-none sm:px-6",
+            "flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition-colors sm:flex-none sm:px-6",
             activeTab === "dashboard"
-              ? "bg-white text-black"
-              : "bg-white text-slate-500 active:bg-slate-100"
+              ? "border-line-strong bg-slate-900 text-white"
+              : "border-line bg-surface text-slate-500 hover:bg-slate-50"
           )}
         >
           Dashboard
@@ -598,45 +598,45 @@ export default function StrategistPipeline({
           {/* Key Metrics */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {/* Proposals Needed */}
-            <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+            <div className="rounded-xl border border-line bg-surface p-4">
               <div className="flex items-center gap-2">
-                <Send className="h-4 w-4 text-purple-400" />
-                <span className="text-xs text-purple-300">Needs Proposal</span>
+                <Send className="h-4 w-4 text-slate-400" />
+                <span className="text-xs text-slate-500">Needs Proposal</span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-purple-400 sm:text-4xl font-mono tabular-nums">
+              <p className="mt-2 font-display text-2xl font-semibold text-slate-900 sm:text-4xl tabular-nums">
                 {dashboardMetrics.needsProposal.length}
               </p>
             </div>
 
             {/* Proposals Sent */}
-            <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4">
+            <div className="rounded-xl border border-line bg-surface p-4">
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-indigo-400" />
-                <span className="text-xs text-indigo-300">Proposals Sent</span>
+                <FileText className="h-4 w-4 text-slate-400" />
+                <span className="text-xs text-slate-500">Proposals Sent</span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-indigo-400 sm:text-4xl font-mono tabular-nums">
+              <p className="mt-2 font-display text-2xl font-semibold text-slate-900 sm:text-4xl tabular-nums">
                 {dashboardMetrics.proposalsSent}
               </p>
             </div>
 
             {/* Contracts Needed */}
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+            <div className="rounded-xl border border-line bg-surface p-4">
               <div className="flex items-center gap-2">
-                <FileSignature className="h-4 w-4 text-amber-400" />
-                <span className="text-xs text-amber-300">Needs Contract</span>
+                <FileSignature className="h-4 w-4 text-slate-400" />
+                <span className="text-xs text-slate-500">Needs Contract</span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-amber-400 sm:text-4xl font-mono tabular-nums">
+              <p className="mt-2 font-display text-2xl font-semibold text-slate-900 sm:text-4xl tabular-nums">
                 {dashboardMetrics.needsContract.length}
               </p>
             </div>
 
             {/* Contracts Sent */}
-            <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-4">
+            <div className="rounded-xl border border-line bg-surface p-4">
               <div className="flex items-center gap-2">
-                <FileSignature className="h-4 w-4 text-blue-400" />
-                <span className="text-xs text-blue-300">Contracts Sent</span>
+                <FileSignature className="h-4 w-4 text-slate-400" />
+                <span className="text-xs text-slate-500">Contracts Sent</span>
               </div>
-              <p className="mt-2 text-2xl font-bold text-blue-400 sm:text-4xl font-mono tabular-nums">
+              <p className="mt-2 font-display text-2xl font-semibold text-slate-900 sm:text-4xl tabular-nums">
                 {dashboardMetrics.contractsSent}
               </p>
             </div>
@@ -645,26 +645,26 @@ export default function StrategistPipeline({
           {/* Action Items - Proposals & Contracts Needed */}
           <div className="grid gap-4 lg:grid-cols-2">
             {/* Proposals Needed List */}
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <div className="rounded-xl border border-line bg-surface p-4">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Send className="h-4 w-4 text-purple-400" />
+                <Send className="h-4 w-4 text-brand-deep" />
                 Proposals to Send ({dashboardMetrics.needsProposal.length})
               </h3>
               {dashboardMetrics.needsProposal.length === 0 ? (
-                <p className="text-center text-sm text-slate-600">All caught up! ✨</p>
+                <p className="text-center text-sm text-slate-500">All caught up!</p>
               ) : (
                 <div className="max-h-48 space-y-2 overflow-y-auto">
                   {dashboardMetrics.needsProposal.map((lead) => (
                     <button
                       key={lead.id}
                       onClick={() => handleCardClick(lead)}
-                      className="flex w-full items-center justify-between rounded-lg border border-purple-500/20 bg-purple-500/5 p-3 text-left transition-colors active:bg-purple-500/10"
+                      className="flex w-full items-center justify-between rounded-lg border border-line bg-slate-50 p-3 text-left transition-colors hover:bg-slate-100"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-slate-900">{lead.company_name}</p>
-                        <p className="text-xs text-slate-600">{lead.contact_person}</p>
+                        <p className="text-xs text-slate-500">{lead.contact_person}</p>
                       </div>
-                      <Send className="h-4 w-4 flex-shrink-0 text-purple-400" />
+                      <Send className="h-4 w-4 flex-shrink-0 text-brand-deep" />
                     </button>
                   ))}
                 </div>
@@ -672,26 +672,26 @@ export default function StrategistPipeline({
             </div>
 
             {/* Contracts Needed List */}
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <div className="rounded-xl border border-line bg-surface p-4">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <FileSignature className="h-4 w-4 text-amber-400" />
+                <FileSignature className="h-4 w-4 text-brand-deep" />
                 Contracts to Send ({dashboardMetrics.needsContract.length})
               </h3>
               {dashboardMetrics.needsContract.length === 0 ? (
-                <p className="text-center text-sm text-slate-600">No pending contracts</p>
+                <p className="text-center text-sm text-slate-500">No pending contracts</p>
               ) : (
                 <div className="max-h-48 space-y-2 overflow-y-auto">
                   {dashboardMetrics.needsContract.map((lead) => (
                     <button
                       key={lead.id}
                       onClick={() => handleCardClick(lead)}
-                      className="flex w-full items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-left transition-colors active:bg-amber-500/10"
+                      className="flex w-full items-center justify-between rounded-lg border border-line bg-slate-50 p-3 text-left transition-colors hover:bg-slate-100"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-slate-900">{lead.company_name}</p>
-                        <p className="text-xs text-slate-600">{lead.contact_person}</p>
+                        <p className="text-xs text-slate-500">{lead.contact_person}</p>
                       </div>
-                      <FileSignature className="h-4 w-4 flex-shrink-0 text-amber-400" />
+                      <FileSignature className="h-4 w-4 flex-shrink-0 text-brand-deep" />
                     </button>
                   ))}
                 </div>
@@ -700,52 +700,52 @@ export default function StrategistPipeline({
           </div>
 
           {/* Closed Deals Section */}
-          <div className="rounded-xl border border-slate-200 bg-white">
+          <div className="rounded-xl border border-line bg-surface">
             <button
               onClick={() => setShowClosedDeals(!showClosedDeals)}
               className="flex w-full items-center justify-between p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /20">
-                  <Trophy className="h-5 w-5 text-[#42CA80]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft">
+                  <Trophy className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div className="text-left">
                   <h3 className="text-sm font-semibold text-slate-900 sm:text-base">Closed Deals</h3>
-                  <p className="text-xs text-slate-600">{closedWonLeads.length} total wins</p>
+                  <p className="text-xs text-slate-500">{closedWonLeads.length} total wins</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xl font-bold text-[#42CA80] sm:text-2xl">
+                <span className="text-xl font-semibold text-brand-deep sm:text-2xl tabular-nums">
                   {closedWonLeads.length}
                 </span>
                 {showClosedDeals ? (
-                  <ChevronUp className="h-5 w-5 text-slate-600" />
+                  <ChevronUp className="h-5 w-5 text-slate-500" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-slate-600" />
+                  <ChevronDown className="h-5 w-5 text-slate-500" />
                 )}
               </div>
             </button>
 
             {showClosedDeals && (
-              <div className="border-t border-slate-200 p-4">
+              <div className="border-t border-line p-4">
                 {closedWonLeads.length === 0 ? (
-                  <p className="text-center text-sm text-slate-600">No closed deals yet</p>
+                  <p className="text-center text-sm text-slate-500">No closed deals yet</p>
                 ) : (
                   <div className="max-h-64 space-y-2 overflow-y-auto">
                     {closedWonLeads.map((lead) => (
                       <div
                         key={lead.id}
-                        className="flex items-center justify-between rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /5 p-3"
+                        className="flex items-center justify-between rounded-lg bg-brand-soft p-3"
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium text-slate-900">{lead.company_name}</p>
-                          <p className="text-xs text-slate-600">
+                          <p className="text-xs text-slate-500">
                             {lead.industry} • {lead.city}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-[#42CA80]" />
-                          <span className="text-xs font-medium text-[#42CA80]">Won</span>
+                          <TrendingUp className="h-4 w-4 text-brand-deep" />
+                          <span className="text-xs font-medium text-brand-deep">Won</span>
                         </div>
                       </div>
                     ))}
@@ -756,45 +756,45 @@ export default function StrategistPipeline({
           </div>
 
           {/* Lost Leads Section */}
-          <div className="rounded-xl border border-slate-200 bg-white">
+          <div className="rounded-xl border border-line bg-surface">
             <button
               onClick={() => setShowLostLeads(!showLostLeads)}
               className="flex w-full items-center justify-between p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
-                  <TrendingDown className="h-5 w-5 text-red-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-danger-soft">
+                  <TrendingDown className="h-5 w-5 text-danger" />
                 </div>
                 <div className="text-left">
                   <h3 className="text-sm font-semibold text-slate-900 sm:text-base">Lost Leads</h3>
-                  <p className="text-xs text-slate-600">{closedLostLeads.length} total lost</p>
+                  <p className="text-xs text-slate-500">{closedLostLeads.length} total lost</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xl font-bold text-red-400 sm:text-2xl">
+                <span className="text-xl font-semibold text-danger sm:text-2xl tabular-nums">
                   {closedLostLeads.length}
                 </span>
                 {showLostLeads ? (
-                  <ChevronUp className="h-5 w-5 text-slate-600" />
+                  <ChevronUp className="h-5 w-5 text-slate-500" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-slate-600" />
+                  <ChevronDown className="h-5 w-5 text-slate-500" />
                 )}
               </div>
             </button>
 
             {showLostLeads && (
-              <div className="border-t border-slate-200 p-4">
+              <div className="border-t border-line p-4">
                 {/* Loss Reasons Summary */}
                 {Object.keys(dashboardMetrics.lossReasons).length > 0 && (
                   <div className="mb-4">
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-600">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-500">
                       Loss Reasons
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {Object.entries(dashboardMetrics.lossReasons).map(([reason, count]) => (
                         <span
                           key={reason}
-                          className="rounded-full bg-red-400/10 px-3 py-1 text-xs font-semibold text-red-500"
+                          className="rounded-full bg-danger-soft px-3 py-1 text-xs font-semibold text-danger tabular-nums"
                         >
                           {reason}: {count}
                         </span>
@@ -804,26 +804,26 @@ export default function StrategistPipeline({
                 )}
 
                 {closedLostLeads.length === 0 ? (
-                  <p className="text-center text-sm text-slate-600">No lost leads</p>
+                  <p className="text-center text-sm text-slate-500">No lost leads</p>
                 ) : (
                   <div className="max-h-64 space-y-2 overflow-y-auto">
                     {closedLostLeads.map((lead) => (
                       <div
                         key={lead.id}
-                        className="flex items-center justify-between rounded-lg bg-red-500/5 p-3"
+                        className="flex items-center justify-between rounded-lg bg-danger-soft p-3"
                       >
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-slate-900">{lead.company_name}</p>
-                          <p className="text-xs text-slate-600">
+                          <p className="text-xs text-slate-500">
                             {lead.industry} • {lead.city}
                           </p>
                           {lead.notes && (
-                            <p className="mt-1 truncate text-xs text-red-300/70">
+                            <p className="mt-1 truncate text-xs text-danger/70">
                               {lead.notes.slice(0, 50)}...
                             </p>
                           )}
                         </div>
-                        <AlertCircle className="ml-2 h-4 w-4 flex-shrink-0 text-red-400" />
+                        <AlertCircle className="ml-2 h-4 w-4 flex-shrink-0 text-danger" />
                       </div>
                     ))}
                   </div>
@@ -838,19 +838,19 @@ export default function StrategistPipeline({
           {/* Date Selector & Follow-ups - Stacked on mobile */}
           <div className="mb-4 space-y-3 sm:mb-6 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
             {/* Date Picker Card */}
-            <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+            <div className="rounded-xl border border-line bg-surface p-3 sm:p-4">
               {/* Date Navigation */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/20 sm:h-10 sm:w-10">
-                    <Calendar className="h-4 w-4 text-purple-400 sm:h-5 sm:w-5" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-soft sm:h-10 sm:w-10">
+                    <Calendar className="h-4 w-4 text-brand-deep sm:h-5 sm:w-5" />
                   </div>
                   <div className="relative">
-                    <p className="text-[10px] text-slate-600 sm:text-xs">Sessions</p>
+                    <p className="text-[11px] text-slate-500 sm:text-xs">Sessions</p>
                     <label className="cursor-pointer">
-                      <p className="flex items-center gap-1.5 text-sm font-bold text-slate-900 transition-colors hover:text-purple-400 sm:text-lg">
+                      <p className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 transition-colors hover:text-brand-deep sm:text-lg">
                         {isToday(formatDate(selectedDate)) ? "Today" : formatDisplayDate(selectedDate)}
-                        <Calendar className="h-3.5 w-3.5 text-purple-400 sm:h-4 sm:w-4" />
+                        <Calendar className="h-3.5 w-3.5 text-brand-deep sm:h-4 sm:w-4" />
                       </p>
                       <input
                         type="date"
@@ -865,7 +865,7 @@ export default function StrategistPipeline({
                 <div className="flex items-center gap-1 sm:gap-2">
                   <button
                     onClick={() => handleDateChange(-1)}
-                    className="rounded-lg border border-slate-300 bg-slate-50 p-2 text-slate-500 transition-colors active:bg-slate-100"
+                    className="rounded-lg border border-line bg-slate-50 p-2 text-slate-500 transition-colors hover:bg-slate-100"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -874,15 +874,15 @@ export default function StrategistPipeline({
                     className={clsx(
                       "rounded-lg border px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:py-2",
                       isToday(formatDate(selectedDate))
-                        ? "border-purple-500 bg-purple-500/20 text-purple-400"
-                        : "border-slate-300 bg-slate-50 text-slate-500 active:bg-slate-100"
+                        ? "border-brand-line bg-brand-soft text-brand-deep"
+                        : "border-line bg-slate-50 text-slate-500 hover:bg-slate-100"
                     )}
                   >
                     Today
                   </button>
                   <button
                     onClick={() => handleDateChange(1)}
-                    className="rounded-lg border border-slate-300 bg-slate-50 p-2 text-slate-500 transition-colors active:bg-slate-100"
+                    className="rounded-lg border border-line bg-slate-50 p-2 text-slate-500 transition-colors hover:bg-slate-100"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -892,14 +892,14 @@ export default function StrategistPipeline({
               {/* Sessions List */}
               <div className="mt-3">
                 {sessionsForDate.length === 0 ? (
-                  <p className="text-center text-xs text-slate-600 sm:text-sm">No sessions for this date</p>
+                  <p className="text-center text-xs text-slate-500 sm:text-sm">No sessions for this date</p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {sessionsForDate.map((lead) => (
                       <button
                         key={lead.id}
                         onClick={() => handleCardClick(lead)}
-                        className="flex items-center gap-1.5 rounded-lg border border-purple-500/30 bg-purple-500/10 px-2.5 py-1.5 text-xs text-purple-300 transition-colors active:border-purple-500 active:bg-purple-500/20 sm:px-3 sm:py-2 sm:text-sm"
+                        className="flex items-center gap-1.5 rounded-lg border border-brand-line bg-brand-soft px-2.5 py-1.5 text-xs text-brand-deep transition-colors hover:bg-emerald-100 sm:px-3 sm:py-2 sm:text-sm"
                       >
                         <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         <span className="max-w-[120px] truncate">{lead.company_name}</span>
@@ -911,30 +911,30 @@ export default function StrategistPipeline({
             </div>
 
             {/* Follow-ups Required Today */}
-            <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+            <div className="rounded-xl border border-line bg-surface p-3 sm:p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className={clsx(
                     "flex h-9 w-9 items-center justify-center rounded-lg sm:h-10 sm:w-10",
-                    followUpsToday.length > 0 ? "bg-amber-500/20" : "bg-slate-100"
+                    followUpsToday.length > 0 ? "bg-warn-soft" : "bg-slate-100"
                   )}>
                     <Bell className={clsx(
                       "h-4 w-4 sm:h-5 sm:w-5",
-                      followUpsToday.length > 0 ? "text-amber-400" : "text-slate-600"
+                      followUpsToday.length > 0 ? "text-warn" : "text-slate-500"
                     )} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-slate-600 sm:text-xs">Follow-ups</p>
+                    <p className="text-[11px] text-slate-500 sm:text-xs">Follow-ups</p>
                     <p className={clsx(
-                      "text-sm font-bold sm:text-lg",
-                      followUpsToday.length > 0 ? "text-amber-400" : "text-slate-600"
+                      "text-sm font-semibold sm:text-lg",
+                      followUpsToday.length > 0 ? "text-warn" : "text-slate-500"
                     )}>
                       {followUpsToday.length} Today
                     </p>
                   </div>
                 </div>
                 {followUpsToday.length > 0 && (
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-black sm:h-7 sm:w-7">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-warn text-xs font-semibold text-white sm:h-7 sm:w-7 tabular-nums">
                     {followUpsToday.length}
                   </div>
                 )}
@@ -943,7 +943,7 @@ export default function StrategistPipeline({
               {/* Follow-up List */}
               <div className="mt-3 max-h-32 space-y-2 overflow-y-auto sm:max-h-40">
                 {followUpsToday.length === 0 ? (
-                  <p className="text-center text-xs text-slate-600 sm:text-sm">All caught up! 🎉</p>
+                  <p className="text-center text-xs text-slate-500 sm:text-sm">All caught up!</p>
                 ) : (
                   followUpsToday.map((lead) => {
                     const ReasonIcon = getReasonIcon(lead.reasons[0]);
@@ -951,15 +951,15 @@ export default function StrategistPipeline({
                       <button
                         key={lead.id}
                         onClick={() => handleCardClick(lead)}
-                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-2 text-left transition-colors active:border-amber-500 active:bg-amber-500/20 sm:px-3"
+                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-warn-line bg-warn-soft px-2.5 py-2 text-left transition-colors hover:bg-amber-100 sm:px-3"
                       >
                         <div className="flex min-w-0 items-center gap-2">
-                          <ReasonIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-400 sm:h-4 sm:w-4" />
+                          <ReasonIcon className="h-3.5 w-3.5 flex-shrink-0 text-warn sm:h-4 sm:w-4" />
                           <span className="truncate text-xs font-medium text-slate-900 sm:text-sm">
                             {lead.company_name}
                           </span>
                         </div>
-                        <span className="flex-shrink-0 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-300">
+                        <span className="flex-shrink-0 rounded-full bg-warn-soft px-2 py-0.5 text-[11px] font-medium text-warn">
                           {getReasonLabel(lead.reasons[0])}
                         </span>
                       </button>
@@ -977,10 +977,10 @@ export default function StrategistPipeline({
               <button
                 onClick={() => setActiveStage("all")}
                 className={clsx(
-                  "flex-shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+                  "flex-shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
                   activeStage === "all"
-                    ? "bg-white text-black"
-                    : "bg-white text-slate-500 active:bg-slate-100"
+                    ? "border-line-strong bg-slate-900 text-white"
+                    : "border-line bg-surface text-slate-500 hover:bg-slate-50"
                 )}
               >
                 All ({totalLeads})
@@ -993,10 +993,10 @@ export default function StrategistPipeline({
                     key={stage.key}
                     onClick={() => setActiveStage(stage.key)}
                     className={clsx(
-                      "flex-shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+                      "flex-shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
                       activeStage === stage.key
-                        ? `${config.bgColor} ${config.textColor}`
-                        : "bg-white text-slate-500 active:bg-slate-100"
+                        ? `border-transparent ${config.bgColor} ${config.textColor}`
+                        : "border-line bg-surface text-slate-500 hover:bg-slate-50"
                     )}
                   >
                     {stage.title} ({count})
@@ -1006,12 +1006,12 @@ export default function StrategistPipeline({
             </div>
 
             {/* View Toggle - Hidden on mobile */}
-            <div className="hidden items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1 sm:flex">
+            <div className="hidden items-center gap-1 rounded-lg border border-line bg-slate-50 p-1 sm:flex">
               <button
                 onClick={() => setViewMode("grid")}
                 className={clsx(
                   "rounded-md p-2 transition-colors",
-                  viewMode === "grid" ? "bg-white text-slate-900" : "text-slate-600 hover:text-slate-900"
+                  viewMode === "grid" ? "bg-surface text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
                 )}
               >
                 <LayoutGrid className="h-4 w-4" />
@@ -1020,7 +1020,7 @@ export default function StrategistPipeline({
                 onClick={() => setViewMode("list")}
                 className={clsx(
                   "rounded-md p-2 transition-colors",
-                  viewMode === "list" ? "bg-white text-slate-900" : "text-slate-600 hover:text-slate-900"
+                  viewMode === "list" ? "bg-surface text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
                 )}
               >
                 <List className="h-4 w-4" />
@@ -1029,7 +1029,7 @@ export default function StrategistPipeline({
           </div>
 
           {totalLeads === 0 ? (
-            <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
+            <div className="rounded-xl border border-line bg-surface p-8 text-center">
               <p className="text-sm text-slate-500">
                 No qualified leads in the pipeline yet.
               </p>
@@ -1039,8 +1039,8 @@ export default function StrategistPipeline({
               {/* Mobile List View (default on mobile) */}
               <div className="space-y-3 sm:hidden">
                 {filteredLeads.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center">
-                    <p className="text-sm text-slate-600">No leads in this stage</p>
+                  <div className="rounded-xl border border-dashed border-line p-6 text-center">
+                    <p className="text-sm text-slate-500">No leads in this stage</p>
                   </div>
                 ) : (
                   filteredLeads.map((lead) => {
@@ -1063,18 +1063,15 @@ export default function StrategistPipeline({
                       return (
                         <div key={stage.key} className="flex flex-col">
                           {/* Column Header */}
-                          <div className={clsx(
-                            "mb-3 flex items-center justify-between rounded-lg p-3",
-                            config.bgColor
-                          )}>
+                          <div className="mb-3 flex items-center justify-between rounded-lg border border-line bg-slate-50 p-3">
                             <div className="flex items-center gap-2">
                               <Icon className={clsx("h-4 w-4", config.textColor)} />
-                              <span className={clsx("text-sm font-semibold", config.textColor)}>
+                              <span className="text-sm font-semibold text-slate-700">
                                 {stage.title}
                               </span>
                             </div>
                             <span className={clsx(
-                              "rounded-full px-2 py-0.5 text-xs font-bold",
+                              "rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums",
                               config.bgColor,
                               config.textColor
                             )}>
@@ -1085,8 +1082,8 @@ export default function StrategistPipeline({
                           {/* Cards */}
                           <div className="flex flex-col gap-3">
                             {stageLeads.length === 0 ? (
-                              <div className="rounded-lg border border-dashed border-slate-200 p-4 text-center">
-                                <p className="text-xs text-slate-600">No leads</p>
+                              <div className="rounded-lg border border-dashed border-line p-4 text-center">
+                                <p className="text-xs text-slate-500">No leads</p>
                               </div>
                             ) : (
                               stageLeads.map((lead) => (

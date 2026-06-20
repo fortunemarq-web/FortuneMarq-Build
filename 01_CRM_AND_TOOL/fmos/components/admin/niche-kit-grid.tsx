@@ -16,6 +16,7 @@ import {
 import clsx from "clsx";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
 
 interface Niche {
     id: string;
@@ -49,7 +50,7 @@ export default function NicheKitGrid({
 
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {niches.map((niche) => {
                     const kit = getKitForNiche(niche.id);
                     const isComplete = kit && kit.market_research_url && kit.case_study_url && kit.landing_page_url;
@@ -59,25 +60,25 @@ export default function NicheKitGrid({
                             key={niche.id}
                             onClick={() => setSelectedNiche(niche)}
                             className={clsx(
-                                "relative flex flex-col items-center p-6 rounded-2xl bg-white border-2 text-center transition-all hover:shadow-xl group",
-                                isComplete ? "border-emerald-500/10 hover:border-emerald-500/30" : "border-slate-100 hover:border-slate-300"
+                                "group relative flex flex-col items-center rounded-xl border bg-surface p-6 text-center transition-colors",
+                                isComplete ? "border-brand-line hover:border-brand" : "border-line hover:border-line-strong"
                             )}
                         >
-                            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
+                            <div className="mb-3 text-4xl transition-transform group-hover:scale-110">
                                 {niche.icon || "📁"}
                             </div>
-                            <h3 className="text-sm font-bold text-slate-900 mb-1">{niche.name}</h3>
+                            <h3 className="mb-1 text-sm font-semibold text-slate-900">{niche.name}</h3>
                             <div className="flex items-center gap-1.5">
                                 <span className={clsx(
-                                    "w-2 h-2 rounded-full",
-                                    isComplete ? "bg-emerald-500" : "bg-slate-300"
+                                    "h-2 w-2 rounded-full",
+                                    isComplete ? "bg-brand" : "bg-slate-300"
                                 )} />
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                                     {isComplete ? "Kit Ready" : "Incomplete"}
                                 </span>
                             </div>
                             {isComplete && (
-                                <CheckCircle2 className="absolute top-3 right-3 h-4 w-4 text-emerald-500 opacity-60" />
+                                <CheckCircle2 className="absolute right-3 top-3 h-4 w-4 text-brand-deep opacity-60" />
                             )}
                         </button>
                     );
@@ -86,19 +87,19 @@ export default function NicheKitGrid({
 
             {/* Modal */}
             {selectedNiche && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div className="fixed inset-0 z-50 flex animate-in fade-in items-center justify-center bg-slate-900/50 p-4 duration-200">
+                    <div className="relative w-full max-w-xl animate-in zoom-in-95 overflow-hidden rounded-2xl border border-line bg-surface shadow-lg duration-200">
+                        <div className="flex items-center justify-between border-b border-line bg-slate-50 p-8">
                             <div className="flex items-center gap-4">
                                 <div className="text-4xl">{selectedNiche.icon}</div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-slate-900">{selectedNiche.name} Kit</h2>
-                                    <p className="text-xs text-slate-500 uppercase font-black tracking-widest">Configure Assets</p>
+                                    <h2 className="font-display text-xl font-semibold text-slate-900">{selectedNiche.name} Kit</h2>
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Configure Assets</p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setSelectedNiche(null)}
-                                className="p-2 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200"
+                                className="rounded-full border border-transparent p-2 transition-colors hover:border-line hover:bg-slate-100"
                             >
                                 <X className="h-5 w-5 text-slate-400" />
                             </button>
@@ -207,13 +208,13 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
         <div className="space-y-6">
             {/* Landing Page URL */}
             <div className="space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-slate-500 ml-1">Landing Page URL</label>
-                <div className="relative group">
-                    <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-[#42CA80] transition-colors" />
+                <label className="ml-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Landing Page URL</label>
+                <div className="group relative">
+                    <Globe className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-brand-deep" />
                     <input
                         type="url"
                         placeholder="https://example.com/lp/real-estate"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:border-[#42CA80] outline-none transition-all"
+                        className="w-full rounded-lg border border-line bg-surface py-3 pl-12 pr-4 text-sm text-slate-900 outline-none transition-colors focus:border-brand-deep focus:ring-2 focus:ring-brand-ring"
                         value={landingPageUrl}
                         onChange={e => setLandingPageUrl(e.target.value)}
                     />
@@ -223,31 +224,31 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
             {/* Asset Uploads */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Market Research */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="space-y-3 rounded-xl border border-line bg-slate-50 p-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-[#42CA80]" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Market Research</span>
+                            <FileText className="h-4 w-4 text-slate-400" />
+                            <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Market Research</span>
                         </div>
                         {marketResearchUrl && (
-                            <a href={marketResearchUrl} target="_blank" className="text-slate-400 hover:text-slate-900 transition-colors">
+                            <a href={marketResearchUrl} target="_blank" className="text-slate-400 transition-colors hover:text-slate-900">
                                 <ExternalLink className="h-3 w-3" />
                             </a>
                         )}
                     </div>
 
-                    <label className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-slate-200 rounded-xl hover:border-[#42CA80] hover:bg-white transition-all cursor-pointer group">
+                    <label className="group flex h-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-line transition-colors hover:border-brand hover:bg-surface">
                         {uploadingField === 'market' ? (
-                            <Loader2 className="h-6 w-6 text-[#42CA80] animate-spin" />
+                            <Loader2 className="h-6 w-6 animate-spin text-brand-deep" />
                         ) : marketResearchUrl ? (
                             <div className="flex flex-col items-center">
-                                <CheckCircle2 className="h-6 w-6 text-emerald-500 mb-1" />
-                                <span className="text-[10px] font-bold text-slate-500">PDF Uploaded</span>
+                                <CheckCircle2 className="mb-1 h-6 w-6 text-brand-deep" />
+                                <span className="text-[11px] font-medium text-slate-500">PDF Uploaded</span>
                             </div>
                         ) : (
                             <div className="flex flex-col items-center">
-                                <FileUp className="h-6 w-6 text-slate-300 group-hover:text-[#42CA80] mb-1 transition-colors" />
-                                <span className="text-[10px] font-bold text-slate-500">Upload PDF</span>
+                                <FileUp className="mb-1 h-6 w-6 text-slate-300 transition-colors group-hover:text-brand-deep" />
+                                <span className="text-[11px] font-medium text-slate-500">Upload PDF</span>
                             </div>
                         )}
                         <input type="file" accept=".pdf" hidden onChange={(e) => handleFileUpload(e, 'market')} disabled={!!uploadingField} />
@@ -255,31 +256,31 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
                 </div>
 
                 {/* Case Study */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="space-y-3 rounded-xl border border-line bg-slate-50 p-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-[#42CA80]" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Case Study</span>
+                            <FileText className="h-4 w-4 text-slate-400" />
+                            <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Case Study</span>
                         </div>
                         {caseStudyUrl && (
-                            <a href={caseStudyUrl} target="_blank" className="text-slate-400 hover:text-slate-900 transition-colors">
+                            <a href={caseStudyUrl} target="_blank" className="text-slate-400 transition-colors hover:text-slate-900">
                                 <ExternalLink className="h-3 w-3" />
                             </a>
                         )}
                     </div>
 
-                    <label className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-slate-200 rounded-xl hover:border-[#42CA80] hover:bg-white transition-all cursor-pointer group">
+                    <label className="group flex h-24 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-line transition-colors hover:border-brand hover:bg-surface">
                         {uploadingField === 'case' ? (
-                            <Loader2 className="h-6 w-6 text-[#42CA80] animate-spin" />
+                            <Loader2 className="h-6 w-6 animate-spin text-brand-deep" />
                         ) : caseStudyUrl ? (
                             <div className="flex flex-col items-center">
-                                <CheckCircle2 className="h-6 w-6 text-emerald-500 mb-1" />
-                                <span className="text-[10px] font-bold text-slate-500">PDF Uploaded</span>
+                                <CheckCircle2 className="mb-1 h-6 w-6 text-brand-deep" />
+                                <span className="text-[11px] font-medium text-slate-500">PDF Uploaded</span>
                             </div>
                         ) : (
                             <div className="flex flex-col items-center">
-                                <FileUp className="h-6 w-6 text-slate-300 group-hover:text-[#42CA80] mb-1 transition-colors" />
-                                <span className="text-[10px] font-bold text-slate-500">Upload PDF</span>
+                                <FileUp className="mb-1 h-6 w-6 text-slate-300 transition-colors group-hover:text-brand-deep" />
+                                <span className="text-[11px] font-medium text-slate-500">Upload PDF</span>
                             </div>
                         )}
                         <input type="file" accept=".pdf" hidden onChange={(e) => handleFileUpload(e, 'case')} disabled={!!uploadingField} />
@@ -287,14 +288,15 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
                 </div>
             </div>
 
-            <button
+            <Button
                 disabled={isSaving || !!uploadingField}
                 onClick={handleSave}
-                className="w-full bg-[#42CA80] hover:bg-[#3bb572] text-black font-black uppercase tracking-widest text-xs py-5 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 mt-4"
+                size="lg"
+                className="mt-4 w-full"
             >
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
                 Save Niche Kit
-            </button>
+            </Button>
         </div>
     );
 }

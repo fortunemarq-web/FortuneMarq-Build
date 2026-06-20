@@ -14,10 +14,10 @@ export default function Home() {
     supabase = createClient();
   } catch (error: any) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 text-slate-900 gap-4">
-        <div className="p-6 max-w-md bg-red-900/20 border border-red-500/50 rounded-lg text-center">
-          <h2 className="text-xl font-bold text-red-500 mb-2">Configuration Error</h2>
-          <p className="text-sm text-gray-300">{error.message}</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-canvas text-slate-900">
+        <div className="max-w-md rounded-xl border border-danger-line bg-danger-soft p-6 text-center">
+          <h2 className="mb-2 text-xl font-semibold text-danger">Configuration Error</h2>
+          <p className="text-sm text-slate-600">{error.message}</p>
         </div>
       </div>
     );
@@ -89,13 +89,7 @@ export default function Home() {
   }, [router, supabase]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50">
-      {/* Background Effects */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /10 blur-[120px]" />
-        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 /5 blur-[120px]" />
-      </div>
-
+    <div className="flex min-h-screen flex-col items-center justify-center bg-canvas">
       {/* Loading Content */}
       <div className="relative flex flex-col items-center gap-6">
         {/* Logo */}
@@ -109,7 +103,7 @@ export default function Home() {
 
         {/* Loading Spinner */}
         <div className="flex items-center gap-3">
-          <Loader2 className="h-5 w-5 animate-spin text-[#42CA80]" />
+          <Loader2 className="h-5 w-5 animate-spin text-brand-deep" />
           <p className="text-sm text-slate-600">{status}</p>
         </div>
       </div>

@@ -5,19 +5,29 @@ import { createClient } from "@/lib/supabase";
 import {
     History,
     Search,
-    Filter,
     ArrowLeft,
     Download,
     ChevronLeft,
     ChevronRight,
     User,
     Eye,
-    Clock,
     Activity
 } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
-import { formatDistanceToNow } from "date-fns";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
+
+// Every action maps to one of the five tones — no per-action colour soup.
+const ACTION_TONE: Record<string, Tone> = {
+    create: "brand",
+    delete: "danger",
+    update: "info",
+    stage_change: "warning",
+};
 
 export default function AuditLogPage() {
     const [logs, setLogs] = useState<any[]>([]);
@@ -92,19 +102,19 @@ export default function AuditLogPage() {
     const renderDiff = (oldVal: any, newVal: any) => {
         if (!oldVal && !newVal) return null;
         return (
-            <div className="p-4 space-y-4 max-w-sm">
+            <div className="max-w-sm space-y-4 p-4">
                 {oldVal && (
                     <div>
-                        <p className="text-[10px] font-black uppercase text-rose-500 mb-1">Old Value</p>
-                        <pre className="text-[10px] bg-rose-50 p-2 rounded-lg overflow-x-auto max-h-40">
+                        <p className="mb-1 text-[11px] font-semibold uppercase text-danger">Old Value</p>
+                        <pre className="max-h-40 overflow-x-auto rounded-lg bg-danger-soft p-2 text-[11px]">
                             {JSON.stringify(oldVal, null, 2)}
                         </pre>
                     </div>
                 )}
                 {newVal && (
                     <div>
-                        <p className="text-[10px] font-black uppercase text-emerald-500 mb-1">New Value</p>
-                        <pre className="text-[10px] bg-emerald-50 p-2 rounded-lg overflow-x-auto max-h-40">
+                        <p className="mb-1 text-[11px] font-semibold uppercase text-brand-deep">New Value</p>
+                        <pre className="max-h-40 overflow-x-auto rounded-lg bg-brand-soft p-2 text-[11px]">
                             {JSON.stringify(newVal, null, 2)}
                         </pre>
                     </div>
@@ -114,50 +124,47 @@ export default function AuditLogPage() {
     };
 
     return (
-        <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
+        <div className="min-h-full bg-canvas p-4 md:p-8 lg:p-12">
             <div className="mx-auto max-w-7xl">
                 {/* Header */}
-                <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div className="mb-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
                     <div className="space-y-1">
-                        <Link href="/admin" className="flex items-center gap-2 text-slate-400 hover:text-slate-900 mb-4 transition-colors">
+                        <Link href="/admin" className="mb-4 flex items-center gap-2 text-slate-400 transition-colors hover:text-slate-900">
                             <ArrowLeft className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Admin Hub</span>
+                            <span className="text-[11px] font-semibold uppercase tracking-wide">Admin Hub</span>
                         </Link>
-                        <h1 className="text-4xl font-black text-slate-900 flex items-center gap-4">
-                            <History className="h-10 w-10 text-[#42CA80]" />
+                        <h1 className="flex items-center gap-4 font-display text-2xl font-semibold text-slate-900">
+                            <History className="h-8 w-8 text-brand-deep" />
                             Audit Logs
                         </h1>
-                        <p className="text-slate-500 font-medium">Complete trail of system activity and administrative changes.</p>
+                        <p className="text-slate-500">Complete trail of system activity and administrative changes.</p>
                     </div>
 
                     <div className="flex gap-3">
-                        <button
-                            onClick={handleExport}
-                            className="bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm"
-                        >
+                        <Button onClick={handleExport} variant="secondary">
                             <Download className="h-4 w-4" /> Export CSV
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-4 mb-6 flex flex-wrap items-center gap-4">
-                    <div className="relative flex-1 min-w-[200px]">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Card className="mb-6 flex flex-wrap items-center gap-4 p-4">
+                    <div className="relative min-w-[200px] flex-1">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                         <input
                             type="text"
                             placeholder="Search user..."
                             value={userFilter}
                             onChange={(e) => setUserFilter(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && fetchLogs()}
-                            className="w-full bg-slate-50 border-none rounded-xl pl-12 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-slate-900/5 transition-all transition-all"
+                            className="h-9 w-full rounded-lg border border-line bg-surface pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                         />
                     </div>
 
-                    <select
+                    <Select
                         value={resourceFilter}
                         onChange={(e) => setResourceFilter(e.target.value)}
-                        className="bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-slate-900/5 transition-all"
+                        className="w-auto"
                     >
                         <option value="all">All Resources</option>
                         <option value="lead">Leads</option>
@@ -170,12 +177,12 @@ export default function AuditLogPage() {
                         <option value="task">Tasks</option>
                         <option value="report">Reports</option>
                         <option value="profile">Users & Roles</option>
-                    </select>
+                    </Select>
 
-                    <select
+                    <Select
                         value={actionFilter}
                         onChange={(e) => setActionFilter(e.target.value)}
-                        className="bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-slate-900/5 transition-all"
+                        className="w-auto"
                     >
                         <option value="all">All Actions</option>
                         <option value="create">Create</option>
@@ -184,83 +191,77 @@ export default function AuditLogPage() {
                         <option value="stage_change">Stage Change</option>
                         <option value="login">Login</option>
                         <option value="export">Export</option>
-                    </select>
-                </div>
+                    </Select>
+                </Card>
 
                 {/* Table */}
-                <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden">
+                <Card className="overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-slate-50 border-b border-slate-100">
-                                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Time</th>
-                                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">User</th>
-                                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Action</th>
-                                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Resource</th>
-                                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Summary</th>
-                                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Details</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-50">
+                        <Table>
+                            <THead>
+                                <TR className="hover:bg-transparent">
+                                    <TH>Time</TH>
+                                    <TH>User</TH>
+                                    <TH>Action</TH>
+                                    <TH>Resource</TH>
+                                    <TH>Summary</TH>
+                                    <TH className="text-right">Details</TH>
+                                </TR>
+                            </THead>
+                            <TBody>
                                 {loading ? (
-                                    <tr>
-                                        <td colSpan={6} className="px-6 py-20 text-center">
-                                            <Activity className="h-8 w-8 text-slate-200 animate-pulse mx-auto mb-2" />
-                                            <p className="text-sm font-bold text-slate-300 uppercase tracking-widest">Auditing System...</p>
-                                        </td>
-                                    </tr>
+                                    <TR className="hover:bg-transparent">
+                                        <TD colSpan={6} className="px-6 py-20 text-center">
+                                            <Activity className="mx-auto mb-2 h-8 w-8 animate-pulse text-slate-200" />
+                                            <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">Auditing System...</p>
+                                        </TD>
+                                    </TR>
                                 ) : logs.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="px-6 py-20 text-center">
-                                            <History className="h-8 w-8 text-slate-200 mx-auto mb-2" />
-                                            <p className="text-sm font-bold text-slate-300 uppercase tracking-widest">No logs found</p>
-                                        </td>
-                                    </tr>
+                                    <TR className="hover:bg-transparent">
+                                        <TD colSpan={6} className="px-6 py-20 text-center">
+                                            <History className="mx-auto mb-2 h-8 w-8 text-slate-200" />
+                                            <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">No logs found</p>
+                                        </TD>
+                                    </TR>
                                 ) : (
                                     logs.map((log) => (
-                                        <tr key={log.id} className="group hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                        <TR key={log.id} className="group">
+                                            <TD className="whitespace-nowrap">
                                                 <div className="flex flex-col">
-                                                    <span className="text-sm font-black text-slate-900 tabular-nums">
+                                                    <span className="text-sm font-semibold tabular-nums text-slate-900">
                                                         {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                                     </span>
-                                                    <span className="text-[10px] font-bold text-slate-400">
+                                                    <span className="text-[11px] text-slate-400">
                                                         {new Date(log.created_at).toLocaleDateString()}
                                                     </span>
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4">
+                                            </TD>
+                                            <TD>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="h-8 w-8 rounded-full bg-slate-900 border border-slate-200 flex items-center justify-center text-white text-[10px] font-black">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-line bg-slate-100 text-[11px] font-semibold text-slate-700">
                                                         {log.user_name?.charAt(0) || <User className="h-4 w-4" />}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-slate-900 leading-none mb-1">{log.user_name}</p>
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                                                        <p className="mb-1 text-sm font-semibold leading-none text-slate-900">{log.user_name}</p>
+                                                        <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                                                             {log.user_role}
                                                         </span>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className={clsx(
-                                                    "px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border",
-                                                    log.action === 'create' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                                                        log.action === 'delete' ? 'bg-rose-50 text-rose-600 border-rose-100' :
-                                                            log.action === 'update' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
-                                                                log.action === 'stage_change' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-slate-50 text-slate-600 border-slate-100'
-                                                )}>
+                                            </TD>
+                                            <TD>
+                                                <Badge tone={ACTION_TONE[log.action] || "neutral"} size="sm">
                                                     {log.action.replace('_', ' ')}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
+                                                </Badge>
+                                            </TD>
+                                            <TD>
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">{log.resource_type}</span>
-                                                    <span className="text-sm font-bold text-slate-900 line-clamp-1">{log.resource_label || '—'}</span>
+                                                    <span className="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">{log.resource_type}</span>
+                                                    <span className="line-clamp-1 text-sm font-medium text-slate-900">{log.resource_label || '—'}</span>
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-slate-600 line-clamp-1">
+                                            </TD>
+                                            <TD>
+                                                <p className="line-clamp-1 text-sm text-slate-600">
                                                     {log.summary
                                                         ? log.summary
                                                         : log.action === 'stage_change' && log.old_value?.stage
@@ -270,54 +271,56 @@ export default function AuditLogPage() {
                                                             : log.action === 'delete' ? 'Record deleted'
                                                             : log.action.replace(/_/g, ' ')}
                                                 </p>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="relative group/tooltip inline-block">
-                                                    <button className="p-2 hover:bg-slate-100 rounded-xl transition-colors">
+                                            </TD>
+                                            <TD className="text-right">
+                                                <div className="group/tooltip relative inline-block">
+                                                    <button className="rounded-lg p-2 transition-colors hover:bg-slate-100">
                                                         <Eye className="h-4 w-4 text-slate-400" />
                                                     </button>
-                                                    <div className="absolute right-0 bottom-full mb-2 invisible group-hover/tooltip:visible z-50">
-                                                        <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden min-w-[300px]">
+                                                    <div className="invisible absolute bottom-full right-0 z-50 mb-2 group-hover/tooltip:visible">
+                                                        <div className="min-w-[300px] overflow-hidden rounded-xl border border-line bg-surface shadow-md">
                                                             {renderDiff(log.old_value, log.new_value)}
                                                             {!log.old_value && !log.new_value && (
                                                                 <div className="p-4 text-center">
-                                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No JSON data recorded</p>
+                                                                    <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">No JSON data recorded</p>
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </td>
-                                        </tr>
+                                            </TD>
+                                        </TR>
                                     ))
                                 )}
-                            </tbody>
-                        </table>
+                            </TBody>
+                        </Table>
                     </div>
 
                     {/* Pagination */}
-                    <div className="p-6 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    <div className="flex items-center justify-between border-t border-line bg-slate-50 p-6">
+                        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
                             Showing <span className="text-slate-900">{(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)}</span> of <span className="text-slate-900">{total}</span>
                         </p>
                         <div className="flex gap-2">
-                            <button
+                            <Button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="p-2 border border-slate-200 rounded-xl hover:bg-white disabled:opacity-50 transition-all font-bold text-xs"
+                                variant="secondary"
+                                size="icon"
                             >
                                 <ChevronLeft className="h-4 w-4" />
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => setPage(p => p + 1)}
                                 disabled={page * pageSize >= total}
-                                className="p-2 border border-slate-200 rounded-xl hover:bg-white disabled:opacity-50 transition-all font-bold text-xs"
+                                variant="secondary"
+                                size="icon"
                             >
                                 <ChevronRight className="h-4 w-4" />
-                            </button>
+                            </Button>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

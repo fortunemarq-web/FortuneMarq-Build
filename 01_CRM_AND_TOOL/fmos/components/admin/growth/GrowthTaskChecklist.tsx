@@ -43,12 +43,12 @@ export default function GrowthTaskChecklist({ initialTasks }: { initialTasks: Ta
       {tasks.map((task) => (
         <label
           key={task.id}
-          className="flex items-start gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors group"
+          className="flex items-start gap-3 p-3 rounded-lg border border-line hover:bg-slate-50 cursor-pointer transition-colors group"
         >
           <input
             type="checkbox"
             onChange={() => handleComplete(task.id)}
-            className="mt-1 flex-shrink-0 appearance-none h-4 w-4 rounded-full border-2 border-slate-300 checked:bg-[#42CA80] checked:border-[#42CA80] transition-all cursor-pointer"
+            className="mt-1 flex-shrink-0 appearance-none h-4 w-4 rounded-full border-2 border-slate-300 checked:bg-brand checked:border-brand transition-all cursor-pointer"
           />
           <div>
             <p className="text-sm font-medium text-slate-700 group-hover:text-slate-900">{task.title}</p>

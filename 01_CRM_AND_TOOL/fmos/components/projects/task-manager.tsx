@@ -26,6 +26,8 @@ import clsx from "clsx";
 import { sendNotification, NotificationType } from "@/lib/notifications";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface Task {
   id: string;
@@ -56,16 +58,16 @@ const TEAM_MEMBERS = [
 ];
 
 const PRIORITIES = [
-  { value: "high", label: "High", color: "bg-red-500/20 text-red-400 border-red-500/30" },
-  { value: "medium", label: "Med", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  { value: "low", label: "Low", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  { value: "high", label: "High", color: "bg-danger-soft text-danger border-danger-line" },
+  { value: "medium", label: "Med", color: "bg-warn-soft text-warn border-warn-line" },
+  { value: "low", label: "Low", color: "bg-info-soft text-info border-info-line" },
 ];
 
 const STATUS_OPTIONS = [
-  { value: "not_started", label: "Not Started", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
-  { value: "in_progress", label: "In Progress", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-  { value: "in_review", label: "In Review", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-  { value: "completed", label: "Completed", color: "bg-[#42CA80]/20 text-[#42CA80] border-[#42CA80]/30" },
+  { value: "not_started", label: "Not Started", color: "bg-slate-100 text-slate-500 border-line" },
+  { value: "in_progress", label: "In Progress", color: "bg-info-soft text-info border-info-line" },
+  { value: "in_review", label: "In Review", color: "bg-warn-soft text-warn border-warn-line" },
+  { value: "completed", label: "Completed", color: "bg-brand-soft text-brand-deep border-brand-line" },
 ];
 
 function isOverdue(dateStr: string | null): boolean {
@@ -306,8 +308,8 @@ export default function TaskManager({
 
   if (tasksError) {
     return (
-      <div className="rounded-xl border border-red-500/50 bg-red-500/10 p-4 text-center">
-        <p className="text-sm text-red-500">
+      <div className="rounded-xl border border-danger-line bg-danger-soft p-4 text-center">
+        <p className="text-sm text-danger">
           Error loading tasks: {tasksError.message}
         </p>
       </div>
@@ -318,48 +320,45 @@ export default function TaskManager({
     <>
       {/* Header with Add Button */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Tasks</h2>
-        <button
-          onClick={openAddModal}
-          className="flex items-center gap-2 rounded-lg bg-[#42CA80] px-3 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#3ab872] active:scale-[0.98]"
-        >
+        <h2 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">Tasks</h2>
+        <Button onClick={openAddModal} variant="primary" size="sm">
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">Add Task</span>
-        </button>
+        </Button>
       </div>
 
       {/* Task Table */}
       {tasks.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center">
-          <p className="text-sm text-slate-600">No tasks yet. Add your first task!</p>
+        <div className="rounded-xl border border-dashed border-line p-8 text-center">
+          <p className="text-sm text-slate-500">No tasks yet. Add your first task!</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
+        <div className="overflow-x-auto rounded-xl border border-line">
           {/* Desktop Table */}
           <table className="hidden w-full min-w-[720px] sm:table">
-            <thead className="border-b border-slate-200 bg-slate-50">
+            <thead className="border-b border-line bg-slate-50">
               <tr>
-                <th className="w-28 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">
+                <th className="w-28 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                   Status
                 </th>
-                <th className="p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">
+                <th className="p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                   Task
                 </th>
-                <th className="w-32 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">
+                <th className="w-32 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                   Assignee
                 </th>
-                <th className="w-28 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">
+                <th className="w-28 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                   Due Date
                 </th>
-                <th className="w-20 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">
+                <th className="w-20 p-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                   Priority
                 </th>
-                <th className="w-20 p-3 text-right text-xs font-medium uppercase tracking-wider text-slate-600">
+                <th className="w-20 p-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 bg-white">
+            <tbody className="divide-y divide-line bg-surface">
               {tasks.map((task) => {
                 const isCompleted = task.status === "completed";
                 const taskOverdue = !isCompleted && isOverdue(task.due_date);
@@ -383,7 +382,7 @@ export default function TaskManager({
                           }}
                           disabled={updatingTaskId === task.id}
                           className={clsx(
-                            "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium transition-colors",
+                            "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
                             STATUS_OPTIONS.find((s) => s.value === task.status)?.color || STATUS_OPTIONS[0].color
                           )}
                         >
@@ -402,13 +401,13 @@ export default function TaskManager({
                           <ChevronDown className="h-3 w-3" />
                         </button>
                         {openDropdown === `status-${task.id}` && (
-                          <div className="absolute left-0 top-full z-10 mt-1 w-32 rounded-lg border border-slate-300 bg-white py-1 shadow-xl">
+                          <div className="absolute left-0 top-full z-10 mt-1 w-32 rounded-lg border border-line bg-surface py-1 shadow-md">
                             {STATUS_OPTIONS.map((status) => (
                               <button
                                 key={status.value}
                                 onClick={() => updateTaskField(task.id, "status", status.value)}
                                 className={clsx(
-                                  "flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs transition-colors hover:bg-slate-100",
+                                  "flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs transition-colors hover:bg-slate-50",
                                   task.status === status.value ? status.color.split(" ")[1] : "text-slate-500"
                                 )}
                               >
@@ -441,7 +440,7 @@ export default function TaskManager({
                         {task.sop_content && (
                           <button
                             onClick={() => openSOPViewer(task)}
-                            className="rounded p-1 text-indigo-400 transition-colors hover:bg-indigo-500/20"
+                            className="rounded p-1 text-info transition-colors hover:bg-info-soft"
                             title="View SOP"
                           >
                             <Book className="h-4 w-4" />
@@ -460,19 +459,19 @@ export default function TaskManager({
                           }}
                           className="flex items-center gap-1.5 rounded-lg bg-slate-50 px-2 py-1 text-xs text-slate-500 transition-colors hover:bg-slate-100"
                         >
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/20 text-[10px] font-medium text-indigo-400">
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-soft text-[11px] font-medium text-brand-deep">
                             {(task.assigned_to || "U").charAt(0)}
                           </div>
                           <span className="max-w-[60px] truncate">{task.assigned_to || "Unassigned"}</span>
                           <ChevronDown className="h-3 w-3" />
                         </button>
                         {openDropdown === `assignee-${task.id}` && (
-                          <div className="absolute left-0 top-full z-10 mt-1 w-36 rounded-lg border border-slate-300 bg-white py-1 shadow-xl">
+                          <div className="absolute left-0 top-full z-10 mt-1 w-36 rounded-lg border border-line bg-surface py-1 shadow-md">
                             {TEAM_MEMBERS.map((member) => (
                               <button
                                 key={member}
                                 onClick={() => updateTaskField(task.id, "assigned_to", member === "Unassigned" ? null : member)}
-                                className="w-full px-3 py-1.5 text-left text-xs text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                                className="w-full px-3 py-1.5 text-left text-xs text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
                               >
                                 {member}
                               </button>
@@ -493,7 +492,7 @@ export default function TaskManager({
                           className={clsx(
                             "flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs transition-colors",
                             taskOverdue
-                              ? "bg-red-500/20 text-red-400"
+                              ? "bg-danger-soft text-danger"
                               : "bg-slate-50 text-slate-500 hover:bg-slate-100"
                           )}
                         >
@@ -501,12 +500,12 @@ export default function TaskManager({
                           {formatDisplayDate(task.due_date)}
                         </button>
                         {openDropdown === `date-${task.id}` && (
-                          <div className="absolute left-0 top-full z-10 mt-1 rounded-lg border border-slate-300 bg-white p-2 shadow-xl">
-                            <input
+                          <div className="absolute left-0 top-full z-10 mt-1 rounded-lg border border-line bg-surface p-2 shadow-md">
+                            <Input
                               type="date"
                               defaultValue={task.due_date?.split("T")[0] || ""}
                               onChange={(e) => updateTaskField(task.id, "due_date", e.target.value || null)}
-                              className="rounded-lg border border-slate-300 bg-slate-50 px-2 py-1 text-sm text-slate-900"
+                              className="h-8"
                             />
                           </div>
                         )}
@@ -522,19 +521,19 @@ export default function TaskManager({
                             setOpenDropdown(openDropdown === `priority-${task.id}` ? null : `priority-${task.id}`);
                           }}
                           className={clsx(
-                            "rounded-full border px-2 py-0.5 text-[10px] font-medium",
+                            "rounded-full border px-2 py-0.5 text-[11px] font-medium",
                             priority.color
                           )}
                         >
                           {priority.label}
                         </button>
                         {openDropdown === `priority-${task.id}` && (
-                          <div className="absolute left-0 top-full z-10 mt-1 w-24 rounded-lg border border-slate-300 bg-white py-1 shadow-xl">
+                          <div className="absolute left-0 top-full z-10 mt-1 w-24 rounded-lg border border-line bg-surface py-1 shadow-md">
                             {PRIORITIES.map((p) => (
                               <button
                                 key={p.value}
                                 onClick={() => updateTaskField(task.id, "priority", p.value)}
-                                className="w-full px-3 py-1.5 text-left text-xs text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                                className="w-full px-3 py-1.5 text-left text-xs text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
                               >
                                 {p.label}
                               </button>
@@ -549,7 +548,7 @@ export default function TaskManager({
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => openEditModal(task)}
-                          className="rounded p-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                          className="rounded p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
                           title="Edit"
                         >
                           <Edit3 className="h-4 w-4" />
@@ -557,7 +556,7 @@ export default function TaskManager({
                         <button
                           onClick={() => handleDeleteTask(task.id)}
                           disabled={updatingTaskId === task.id}
-                          className="rounded p-1.5 text-slate-600 transition-colors hover:bg-red-500/20 hover:text-red-400"
+                          className="rounded p-1.5 text-slate-500 transition-colors hover:bg-danger-soft hover:text-danger"
                           title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -571,7 +570,7 @@ export default function TaskManager({
           </table>
 
           {/* Mobile Cards */}
-          <div className="divide-y divide-slate-200 sm:hidden">
+          <div className="divide-y divide-line sm:hidden">
             {tasks.map((task) => {
               const isCompleted = task.status === "completed";
               const taskOverdue = !isCompleted && isOverdue(task.due_date);
@@ -582,7 +581,7 @@ export default function TaskManager({
                 <div
                   key={task.id}
                   className={clsx(
-                    "bg-white p-4",
+                    "bg-surface p-4",
                     isCompleted && "opacity-50"
                   )}
                 >
@@ -612,7 +611,7 @@ export default function TaskManager({
                         <span
                           className={clsx(
                             "font-medium",
-                            isCompleted ? "line-through text-slate-600" : "text-slate-900"
+                            isCompleted ? "line-through text-slate-500" : "text-slate-900"
                           )}
                         >
                           {task.title}
@@ -620,7 +619,7 @@ export default function TaskManager({
                         {task.sop_content && (
                           <button
                             onClick={() => openSOPViewer(task)}
-                            className="text-indigo-400"
+                            className="text-info"
                           >
                             <Book className="h-4 w-4" />
                           </button>
@@ -631,7 +630,7 @@ export default function TaskManager({
                         {/* Status Badge */}
                         <span
                           className={clsx(
-                            "rounded-full border px-2 py-0.5 text-[10px] font-medium",
+                            "rounded-full border px-2 py-0.5 text-[11px] font-medium",
                             statusOption.color
                           )}
                         >
@@ -644,7 +643,7 @@ export default function TaskManager({
                         <span
                           className={clsx(
                             "flex items-center gap-1 text-xs",
-                            taskOverdue ? "text-red-400" : "text-slate-500"
+                            taskOverdue ? "text-danger" : "text-slate-500"
                           )}
                         >
                           <Calendar className="h-3 w-3" />
@@ -652,7 +651,7 @@ export default function TaskManager({
                         </span>
                         <span
                           className={clsx(
-                            "rounded-full border px-2 py-0.5 text-[10px] font-medium",
+                            "rounded-full border px-2 py-0.5 text-[11px] font-medium",
                             priority.color
                           )}
                         >
@@ -664,13 +663,13 @@ export default function TaskManager({
                     <div className="flex gap-1">
                       <button
                         onClick={() => openEditModal(task)}
-                        className="rounded p-1.5 text-slate-600"
+                        className="rounded p-1.5 text-slate-500"
                       >
                         <Edit3 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteTask(task.id)}
-                        className="rounded p-1.5 text-slate-600"
+                        className="rounded p-1.5 text-slate-500"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -711,16 +710,16 @@ export default function TaskManager({
 
       {/* SOP Viewer Modal */}
       {showSOPModal && selectedSOP && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4">
-          <div className="relative w-full max-w-2xl overflow-hidden rounded-t-2xl border border-slate-200 bg-slate-50 shadow-2xl sm:rounded-2xl">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-4">
+          <div className="relative w-full max-w-2xl overflow-hidden rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-200 bg-indigo-500/10 px-4 py-3 sm:px-6 sm:py-4">
+            <div className="flex items-center justify-between border-b border-line bg-brand-soft px-4 py-3 sm:px-6 sm:py-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
-                  <Book className="h-5 w-5 text-indigo-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface">
+                  <Book className="h-5 w-5 text-brand-deep" />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-slate-900 sm:text-lg">
+                  <h2 className="font-display text-base font-semibold text-slate-900 sm:text-lg">
                     Standard Operating Procedure
                   </h2>
                   <p className="text-xs text-slate-500">{selectedSOP.title}</p>
@@ -731,7 +730,7 @@ export default function TaskManager({
                   setShowSOPModal(false);
                   setSelectedSOP(null);
                 }}
-                className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-white hover:text-slate-900"
+                className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -739,8 +738,8 @@ export default function TaskManager({
 
             {/* Body */}
             <div className="max-h-[60vh] overflow-y-auto p-4 sm:p-6">
-              <div className="prose prose-invert max-w-none">
-                <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 p-4 text-sm text-[#e0e0e0]">
+              <div className="max-w-none">
+                <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
                   {selectedSOP.content}
                 </pre>
               </div>
@@ -751,7 +750,7 @@ export default function TaskManager({
                   href={selectedSOP.content.split("\n")[0]}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-600"
+                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-deep px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-deeper"
                 >
                   <ExternalLink className="h-4 w-4" />
                   Open Link
@@ -760,13 +759,13 @@ export default function TaskManager({
             </div>
 
             {/* Footer */}
-            <div className="border-t border-slate-200 bg-slate-50 px-4 py-3 sm:px-6 sm:py-4">
+            <div className="border-t border-line bg-slate-50 px-4 py-3 sm:px-6 sm:py-4">
               <button
                 onClick={() => {
                   setShowSOPModal(false);
                   setSelectedSOP(null);
                 }}
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-900 transition-colors hover:bg-slate-100"
+                className="w-full rounded-lg border border-line bg-surface px-4 py-2.5 font-medium text-slate-900 transition-colors hover:bg-slate-50"
               >
                 Close
               </button>

@@ -40,7 +40,7 @@ export default function NotesEditor({ id, initialNotes }: NotesEditorProps) {
         onChange={(e) => setNotes(e.target.value)}
         onBlur={handleSave}
         onKeyDown={handleKeyDown}
-        className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-700 outline-none ring-2 ring-[#42CA80]/30 focus:border-[#42CA80]"
+        className="w-full rounded-lg border border-line bg-surface px-2 py-1 text-xs text-slate-700 outline-none ring-2 ring-brand-ring focus:border-brand-deep"
         placeholder="Add a note..."
         maxLength={200}
       />
