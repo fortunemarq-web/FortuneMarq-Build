@@ -36,6 +36,12 @@ import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
 import { FOLLOW_UP_QUEUE_STAGES, stageToStatus } from "@/lib/pipeline";
 import { calculateLeadScore } from "@/lib/lead-scoring";
+import { Button } from "@/components/ui/button";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Tabs } from "@/components/ui/tabs";
+import { Select } from "@/components/ui/select";
+import { inputClasses } from "@/components/ui/input";
+import { cn } from "@/lib/cn";
 
 // ─── Types ──────────────────────────────────────────────────────
 interface Lead {
@@ -84,11 +90,21 @@ const LANG_LABEL: Record<"kannada" | "hindi" | "english", string> = {
 };
 
 // ─── Outcome definitions ─────────────────────────────────────────
+// Status collapses to the five tones — no per-outcome rainbow.
+// positive=brand · negative=danger · neutral=slate · waiting=warning/info.
+const OUTCOME_TONE_CLASSES: Record<Tone, string> = {
+  brand: "border-brand-line bg-brand-soft text-brand-deep hover:bg-brand/10",
+  warning: "border-warn-line bg-warn-soft text-warn hover:bg-warn/10",
+  info: "border-info-line bg-info-soft text-info hover:bg-info/10",
+  neutral: "border-line bg-slate-50 text-slate-700 hover:bg-slate-100",
+  danger: "border-danger-line bg-danger-soft text-danger hover:bg-red-100",
+};
+
 const OUTCOMES = [
   {
     id: "INTERESTED_BOOK",
     label: "Interested — Book Meeting Now",
-    color: "bg-emerald-600 hover:bg-emerald-700",
+    tone: "brand",
     icon: Calendar,
     requiresDate: true,
     stage: "meeting_booked",
@@ -96,7 +112,7 @@ const OUTCOMES = [
   {
     id: "INTERESTED_FOLLOW_UP",
     label: "Interested — Follow Up Later",
-    color: "bg-teal-600 hover:bg-teal-700",
+    tone: "brand",
     icon: Clock,
     requiresDate: true,
     stage: "follow_up_due",
@@ -104,7 +120,7 @@ const OUTCOMES = [
   {
     id: "INTERESTED_SEND_INFO",
     label: "Interested — Send Info / PDF",
-    color: "bg-blue-600 hover:bg-blue-700",
+    tone: "info",
     icon: FileText,
     requiresDate: false,
     stage: "pdf_sent",
@@ -112,7 +128,7 @@ const OUTCOMES = [
   {
     id: "NOT_INTERESTED",
     label: "Not Interested",
-    color: "bg-red-600 hover:bg-red-700",
+    tone: "danger",
     icon: X,
     requiresDate: false,
     requiresReason: true,
@@ -121,7 +137,7 @@ const OUTCOMES = [
   {
     id: "FOLLOW_BACK",
     label: "Follow Back Later",
-    color: "bg-amber-600 hover:bg-amber-700",
+    tone: "warning",
     icon: Clock,
     requiresDate: true,
     stage: "follow_back",
@@ -129,7 +145,7 @@ const OUTCOMES = [
   {
     id: "WRONG_NUMBER",
     label: "Wrong / Dead Number",
-    color: "bg-slate-600 hover:bg-slate-700",
+    tone: "neutral",
     icon: AlertOctagon,
     requiresDate: false,
     stage: "dead",
@@ -137,7 +153,7 @@ const OUTCOMES = [
   {
     id: "NO_ANSWER",
     label: "No Answer",
-    color: "bg-slate-400 hover:bg-slate-500",
+    tone: "neutral",
     icon: Phone,
     requiresDate: false,
     stage: "no_answer",
@@ -145,7 +161,7 @@ const OUTCOMES = [
   {
     id: "GATEKEEPER",
     label: "Gatekeeper — Owner Not Available",
-    color: "bg-orange-500 hover:bg-orange-600",
+    tone: "warning",
     icon: User,
     requiresDate: false,
     stage: "gatekeeper",
@@ -153,12 +169,15 @@ const OUTCOMES = [
   {
     id: "LANGUAGE_BARRIER",
     label: "Language Barrier",
-    color: "bg-purple-500 hover:bg-purple-600",
+    tone: "info",
     icon: MessageCircle,
     requiresDate: false,
     stage: "language_barrier",
   },
-] as const;
+] as const satisfies readonly {
+  id: string; label: string; tone: Tone; icon: any;
+  requiresDate: boolean; requiresReason?: boolean; stage: string;
+}[];
 
 const SCRIPT_TYPES: { value: ScriptType; label: string; desc: string }[] = [
   { value: "A", label: "Type A", desc: "Already ranking on Google" },
@@ -247,11 +266,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       noContactIn7Days: false, // refine once last_activity_at is surfaced to the cockpit
     });
 
-  // No-emoji visual (design rule): colour dot + word label only.
-  const scoreVisual = (score: number) => {
-    if (score >= 7) return { label: "Hot", dot: "bg-emerald-500", text: "text-emerald-700", chip: "bg-emerald-50 border-emerald-200" };
-    if (score >= 4) return { label: "Warm", dot: "bg-amber-500", text: "text-amber-700", chip: "bg-amber-50 border-amber-200" };
-    return { label: "Cold", dot: "bg-slate-400", text: "text-slate-500", chip: "bg-slate-100 border-slate-200" };
+  // No-emoji visual (design rule): tone dot + word label only.
+  // Hot=brand · Warm=warning · Cold=neutral — within the five-tone system.
+  const scoreVisual = (score: number): { label: string; tone: Tone } => {
+    if (score >= 7) return { label: "Hot", tone: "brand" };
+    if (score >= 4) return { label: "Warm", tone: "warning" };
+    return { label: "Cold", tone: "neutral" };
   };
 
   const tabLeads = activeTab === "followups" ? localLeads.filter(isFollowUp) : localLeads.filter((l) => !isFollowUp(l));
@@ -652,13 +672,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
     .sort((a, b) => String(a.follow_up_date).localeCompare(String(b.follow_up_date)));
 
   return (
-    <div className="min-h-full bg-slate-50">
+    <div className="min-h-full bg-canvas">
 
       {/* ── STATS BAR ──────────────────────────────── */}
-      <div className="sticky top-0 z-30 border-b border-slate-700 bg-slate-900 shadow-sm">
+      <div className="sticky top-0 z-30 border-b border-line bg-surface">
         <div className="mx-auto max-w-2xl px-4">
           <div className="flex items-center justify-between py-3 gap-6 overflow-x-auto">
-            <p className="text-sm font-bold text-white shrink-0">Today</p>
+            <p className="text-sm font-semibold text-slate-900 shrink-0">Today</p>
             <div className="flex items-center gap-6 shrink-0">
               {[
                 { label: callTarget ? `Calls / ${callTarget}` : "Calls", value: stats.callsToday },
@@ -667,8 +687,8 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 { label: "Follow-ups due", value: followupsDueCount },
               ].map((s) => (
                 <div key={s.label} className="text-center">
-                  <p className="text-lg font-semibold tabular-nums text-white">{s.value}</p>
-                  <p className="text-[10px] text-slate-400 uppercase tracking-wide">{s.label}</p>
+                  <p className="font-display text-lg font-semibold tabular-nums text-slate-900">{s.value}</p>
+                  <p className="text-[11px] text-slate-500 uppercase tracking-wide">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -676,7 +696,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
           {/* Call-target progress bar */}
           {callTarget !== null && callTarget > 0 && (
             <div className="pb-2 -mt-1">
-              <div className="h-1 rounded-full bg-slate-700 overflow-hidden">
+              <div className="h-1 rounded-full bg-slate-100 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${stats.callsToday >= callTarget ? "bg-brand" : "bg-brand/60"}`}
                   style={{ width: `${Math.min((stats.callsToday / callTarget) * 100, 100)}%` }}
@@ -689,17 +709,17 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
       {/* ── TODAY'S MEETINGS STRIP ─────────────────── */}
       {meetingsTodayList.length > 0 && (
-        <div className="border-b border-green-200 bg-green-50">
+        <div className="border-b border-brand-line bg-brand-soft">
           <div className="mx-auto max-w-2xl px-4 py-2.5 flex items-center gap-3 overflow-x-auto">
-            <span className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-green-700">
+            <span className="shrink-0 text-[11px] font-semibold uppercase tracking-widest text-brand-deep">
               {meetingsTodayList.length} meeting{meetingsTodayList.length > 1 ? "s" : ""} today
             </span>
             <div className="flex items-center gap-2">
               {meetingsTodayList.map((m) => (
-                <span key={m.id} className="shrink-0 rounded-full border border-green-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700">
+                <span key={m.id} className="shrink-0 rounded-full border border-brand-line bg-surface px-2.5 py-1 text-xs font-semibold text-slate-700">
                   {m.company_name}
                   {m.follow_up_date && String(m.follow_up_date).includes("T") && (
-                    <span className="text-green-700 ml-1">
+                    <span className="text-brand-deep ml-1 tabular-nums">
                       {new Date(m.follow_up_date).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   )}
@@ -713,31 +733,17 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       <div className="mx-auto max-w-2xl px-4 py-5 space-y-4">
 
         {/* ── FILTER CARD ────────────────────────────── */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+        <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
           {/* Queue / Follow-up tabs */}
-          <div className="flex gap-2 p-1 bg-slate-100 rounded-lg">
-            <button
-              onClick={() => { setActiveTab("queue"); setCurrentIndex(0); setFilterOutcome("All"); }}
-              className={`flex-1 text-sm font-semibold px-3 py-1.5 rounded-md transition-all ${
-                activeTab === "queue" ? "bg-white shadow-sm text-slate-900" : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              Priority Queue
-            </button>
-            <button
-              onClick={() => { setActiveTab("followups"); setCurrentIndex(0); setFilterOutcome("All"); }}
-              className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-md transition-all ${
-                activeTab === "followups" ? "bg-white shadow-sm text-[#42CA80]" : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              Follow-ups
-              {localLeads.filter(l => l.follow_up_date !== null).length > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "followups" ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-500"}`}>
-                  {localLeads.filter(l => l.follow_up_date !== null).length}
-                </span>
-              )}
-            </button>
-          </div>
+          <Tabs
+            className="flex w-full"
+            value={activeTab}
+            onValueChange={(v) => { setActiveTab(v as "queue" | "followups"); setCurrentIndex(0); setFilterOutcome("All"); }}
+            tabs={[
+              { value: "queue", label: "Priority Queue" },
+              { value: "followups", label: "Follow-ups", count: localLeads.filter(l => l.follow_up_date !== null).length || undefined },
+            ]}
+          />
 
           {/* Follow-up outcome filter chips — only shown on follow-ups tab */}
           {activeTab === "followups" && (() => {
@@ -765,21 +771,23 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     <button
                       key={chip.value}
                       onClick={() => { setFilterOutcome(chip.value); setCurrentIndex(0); }}
-                      className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border transition-all ${
+                      className={cn(
+                        "flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors",
                         filterOutcome === chip.value
                           ? chip.highlight
-                            ? "bg-orange-500 text-white border-orange-500"
-                            : "bg-indigo-600 text-white border-indigo-600"
+                            ? "bg-warn text-white border-warn"
+                            : "bg-brand-deep text-white border-brand-deep"
                           : chip.highlight
-                            ? "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100"
-                            : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600"
-                      }`}
+                            ? "bg-warn-soft text-warn border-warn-line hover:bg-warn/10"
+                            : "bg-surface text-slate-600 border-line hover:border-brand-line hover:text-brand-deep"
+                      )}
                     >
                       {chip.label}
                       {counts[chip.value] > 0 && (
-                        <span className={`text-[10px] font-bold px-1 py-0.5 rounded-full ${
+                        <span className={cn(
+                          "text-[11px] font-semibold tabular-nums px-1 py-0.5 rounded-full",
                           filterOutcome === chip.value ? "bg-white/20" : "bg-slate-100 text-slate-500"
-                        }`}>
+                        )}>
                           {counts[chip.value]}
                         </span>
                       )}
@@ -792,20 +800,18 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
           {/* Niche + City selectors */}
           <div className="grid grid-cols-2 gap-2">
-            <select
+            <Select
               value={filterNiche}
               onChange={(e) => { setFilterNiche(e.target.value); setCurrentIndex(0); }}
-              className="w-full text-sm border border-slate-200 rounded-xl px-3 py-2 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
             >
               {niches.map(n => <option key={n} value={n}>{n === "All" ? "All Niches" : n}</option>)}
-            </select>
-            <select
+            </Select>
+            <Select
               value={filterCity}
               onChange={(e) => { setFilterCity(e.target.value); setCurrentIndex(0); }}
-              className="w-full text-sm border border-slate-200 rounded-xl px-3 py-2 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
             >
               {cities.map(c => <option key={c} value={c}>{c === "All" ? "All Cities" : c}</option>)}
-            </select>
+            </Select>
           </div>
 
           {/* Business Type filter */}
@@ -822,11 +828,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 <button
                   key={t.value}
                   onClick={() => { setFilterType(t.value); setCurrentIndex(0); }}
-                  className={`flex-1 text-xs font-bold py-1.5 rounded-lg border transition-all ${
+                  className={cn(
+                    "flex-1 text-xs font-semibold py-1.5 rounded-lg border transition-colors",
                     filterType === t.value
-                      ? "bg-indigo-600 text-white border-indigo-600"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600"
-                  }`}
+                      ? "bg-brand-deep text-white border-brand-deep"
+                      : "bg-surface text-slate-600 border-line hover:border-brand-line hover:text-brand-deep"
+                  )}
                   title={t.desc}
                 >
                   {t.label}
@@ -840,28 +847,29 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
-                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                className={cn(inputClasses, "pl-9")}
                 placeholder="Search leads..."
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentIndex(0); }}
               />
             </div>
-            <span className="text-sm font-mono text-slate-500 shrink-0 bg-slate-100 px-3 py-2 rounded-xl">
+            <span className="text-sm tabular-nums text-slate-500 shrink-0 bg-slate-100 px-3 py-1.5 rounded-lg">
               {filteredLeads.length > 0 ? `${safeIndex + 1} / ${filteredLeads.length}` : "0"}
             </span>
-            <button
+            <Button
               onClick={() => { setShowAddLead(true); setAddLeadError(null); }}
-              className="shrink-0 flex items-center justify-center gap-1 bg-[#42CA80] hover:bg-[#35A66A] text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors"
+              variant="primary"
+              size="icon"
               title="Add lead manually"
             >
               <Plus className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* ── EMPTY STATE ────────────────────────────── */}
         {filteredLeads.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 rounded-2xl border border-dashed border-slate-300 bg-white text-slate-400">
+          <div className="flex flex-col items-center justify-center py-16 rounded-xl border border-dashed border-line-strong bg-surface text-slate-400">
             <CheckCircle2 className="h-10 w-10 mb-3 opacity-40" />
             <p className="text-sm font-medium">No leads match — try adjusting filters</p>
           </div>
@@ -875,25 +883,25 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               <button
                 onClick={() => goToLead(Math.max(0, safeIndex - 1))}
                 disabled={safeIndex === 0}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-line bg-surface text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft className="h-4 w-4" /> Prev Lead
               </button>
               <button
                 onClick={() => goToLead(Math.min(filteredLeads.length - 1, safeIndex + 1))}
                 disabled={safeIndex >= filteredLeads.length - 1}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-line bg-surface text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Next Lead <ChevronRight className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-surface border border-line rounded-xl overflow-hidden">
               {/* Lead name + status */}
               <div className="px-5 pt-5 pb-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h2 className="text-xl font-bold text-slate-900 leading-tight">{currentLead.company_name}</h2>
+                    <h2 className="font-display text-xl font-semibold text-slate-900 leading-tight">{currentLead.company_name}</h2>
                     <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-slate-500">
                       {currentLead.contact_person && (
                         <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" />{currentLead.contact_person}</span>
@@ -905,31 +913,23 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                         <span className="flex items-center gap-1"><Building className="h-3.5 w-3.5" />{currentLead.industry}</span>
                       )}
                       {(currentLead.no_answer_count ?? 0) > 0 && (currentLead.outreach_stage === "no_answer" || currentLead.outreach_stage === "unreachable") && (
-                        <span className={`text-xs px-1.5 py-0.5 rounded font-bold ${
-                          currentLead.outreach_stage === "unreachable"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-orange-100 text-orange-700"
-                        }`}>
+                        <Badge tone={currentLead.outreach_stage === "unreachable" ? "danger" : "warning"} size="sm">
                           {currentLead.outreach_stage === "unreachable"
                             ? "UNREACHABLE"
                             : `No answer ${currentLead.no_answer_count}/3`}
-                        </span>
+                        </Badge>
                       )}
                       {(currentLead.gatekeeper_count ?? 0) > 0 && (
-                        <span className={`text-xs px-1.5 py-0.5 rounded font-bold ${
-                          currentLead.outreach_stage === "gatekeeper_flagged"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-orange-100 text-orange-700"
-                        }`}>
+                        <Badge tone={currentLead.outreach_stage === "gatekeeper_flagged" ? "danger" : "warning"} size="sm">
                           {currentLead.outreach_stage === "gatekeeper_flagged"
-                            ? "⚑ Gatekeeper 3/3"
+                            ? "Gatekeeper 3/3"
                             : `Gatekeeper ${currentLead.gatekeeper_count}/3`}
-                        </span>
+                        </Badge>
                       )}
                       {isReportEngaged(currentLead) && (
-                        <span className="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded font-bold">
+                        <Badge tone="warning" size="sm">
                           {currentLead.tags?.includes("tapped_book_meeting") ? "Wants Meeting" : "Wants Info"}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                   </div>
@@ -938,16 +938,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       const sc = scoreLead(currentLead);
                       const v = scoreVisual(sc);
                       return (
-                        <span className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg border ${v.chip} ${v.text}`} title={`Lead score ${sc}/10`}>
-                          <span className={`h-2 w-2 rounded-full ${v.dot}`} />
-                          {v.label} {sc}
-                        </span>
+                        <Badge tone={v.tone} variant="outline" size="sm" dot title={`Lead score ${sc}/10`}>
+                          {v.label} <span className="tabular-nums">{sc}</span>
+                        </Badge>
                       );
                     })()}
                     {effectiveScriptType && (
-                      <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg">
-                        Script {effectiveScriptType}
-                      </span>
+                      <Badge tone="neutral" size="sm">Script {effectiveScriptType}</Badge>
                     )}
                   </div>
                 </div>
@@ -962,7 +959,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     </span>
                   ))}
                   {currentLead.has_website && (
-                    <span className="flex items-center gap-1 text-[11px] font-medium bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
+                    <span className="flex items-center gap-1 text-[11px] font-medium bg-info-soft text-info px-2 py-0.5 rounded-full">
                       <Globe className="h-2.5 w-2.5" />Has Website
                     </span>
                   )}
@@ -975,7 +972,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                   <div className="flex gap-2">
                     <a
                       href={`tel:${currentLead.phone}`}
-                      className="flex-1 flex items-center justify-center gap-3 bg-brand-deep hover:bg-brand-active text-white font-semibold py-4 rounded-xl text-lg tracking-wide font-mono transition-colors active:scale-[0.98]"
+                      className="flex-1 flex items-center justify-center gap-3 bg-brand-deep hover:bg-brand-deeper text-white font-semibold py-4 rounded-lg text-lg tracking-wide tabular-nums transition-colors active:scale-[0.98]"
                     >
                       <Phone className="h-5 w-5" />
                       {currentLead.phone}
@@ -984,7 +981,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       href={`https://wa.me/${currentLead.phone.replace(/\D/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 rounded-xl font-semibold text-sm transition-colors active:scale-[0.98]"
+                      className="flex items-center justify-center gap-2 border border-brand-line bg-brand-soft text-brand-deep hover:bg-brand/10 px-4 rounded-lg font-semibold text-sm transition-colors active:scale-[0.98]"
                     >
                       <MessageCircle className="h-4 w-4" />
                     </a>
@@ -995,9 +992,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               {/* Previous notes */}
               {currentLead.notes && (
                 <div className="px-5 pb-4">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
-                    <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mb-1">Previous Notes</p>
-                    <p className="text-sm text-amber-900">{currentLead.notes}</p>
+                  <div className="bg-warn-soft border border-warn-line rounded-lg p-3">
+                    <p className="text-[11px] font-semibold text-warn uppercase tracking-wide mb-1">Previous Notes</p>
+                    <p className="text-sm text-slate-800">{currentLead.notes}</p>
                   </div>
                 </div>
               )}
@@ -1005,7 +1002,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               {/* Last outcome */}
               {currentLead.last_outcome && (
                 <div className="px-5 pb-4">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Last Outcome: </span>
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Last Outcome: </span>
                   <span className="text-xs font-semibold text-slate-600">{currentLead.last_outcome.replace(/_/g, " ")}</span>
                 </div>
               )}
@@ -1029,12 +1026,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
 
               type FUStep = { title: string; lines: string[]; objections?: { trigger: string; response: string }[] };
 
+              // One neutral surface for every follow-up script — no per-script rainbow.
               const scripts: Record<string, { label: string; color: string; headerBg: string; borderColor: string; steps: FUStep[] }> = {
                 inbound: {
                   label: `Inbound Enquiry — They Came To You${capturedAgo ? ` (via ${channel}, ${capturedAgo})` : ` (via ${channel})`}`,
-                  color: "text-emerald-800",
-                  headerBg: "bg-emerald-50",
-                  borderColor: "border-emerald-200",
+                  color: "text-slate-900",
+                  headerBg: "bg-slate-50",
+                  borderColor: "border-line",
                   steps: [
                     {
                       title: "Respond Fast — Warm Open",
@@ -1073,9 +1071,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 },
                 follow_up_due: {
                   label: "Interested — Follow-Up Call",
-                  color: "text-amber-800",
-                  headerBg: "bg-amber-50",
-                  borderColor: "border-amber-200",
+                  color: "text-slate-900",
+                  headerBg: "bg-slate-50",
+                  borderColor: "border-line",
                   steps: [
                     {
                       title: "Reconnect",
@@ -1114,9 +1112,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 },
                 no_answer: {
                   label: "No Answer — Callback Script",
-                  color: "text-gray-700",
-                  headerBg: "bg-gray-50",
-                  borderColor: "border-gray-300",
+                  color: "text-slate-900",
+                  headerBg: "bg-slate-50",
+                  borderColor: "border-line",
                   steps: [
                     {
                       title: "Opening — First Words",
@@ -1154,9 +1152,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                 },
                 follow_back: {
                   label: "Follow Back — They Requested Callback",
-                  color: "text-yellow-800",
-                  headerBg: "bg-yellow-50",
-                  borderColor: "border-yellow-200",
+                  color: "text-slate-900",
+                  headerBg: "bg-slate-50",
+                  borderColor: "border-line",
                   steps: [
                     {
                       title: "Acknowledge the Callback",
@@ -1202,9 +1200,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
               const step = s.steps[currentStep] || s.steps[0];
 
               return (
-                <div className={`bg-white border ${s.borderColor} rounded-2xl shadow-sm overflow-hidden`}>
+                <div className={`bg-surface border ${s.borderColor} rounded-xl overflow-hidden`}>
                   <div className={`px-5 py-3 border-b ${s.borderColor} flex items-center gap-2 ${s.headerBg}`}>
-                    <Clock className="h-4 w-4 text-amber-600" />
+                    <Clock className="h-4 w-4 text-brand-deep" />
                     <p className={`text-sm font-semibold ${s.color}`}>{s.label}</p>
                   </div>
                   <div className="p-5 space-y-4">
@@ -1216,26 +1214,26 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                             key={i}
                             onClick={() => { setCurrentStep(i); setExpandedObjections(new Set()); }}
                             className={`h-1.5 flex-1 rounded-full transition-colors ${
-                              i < currentStep ? "bg-[#42CA80]" : i === currentStep ? "bg-amber-500" : "bg-slate-200"
+                              i < currentStep ? "bg-brand" : i === currentStep ? "bg-brand-deep" : "bg-slate-200"
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-xs font-mono text-slate-500 shrink-0">{currentStep + 1} / {totalSteps}</span>
+                      <span className="text-xs tabular-nums text-slate-500 shrink-0">{currentStep + 1} / {totalSteps}</span>
                     </div>
 
                     {/* Step title */}
                     <div className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-white text-sm font-bold shrink-0">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-deep text-white text-sm font-semibold tabular-nums shrink-0">
                         {currentStep + 1}
                       </span>
-                      <h3 className="text-base font-bold text-slate-900">{step.title}</h3>
+                      <h3 className="font-display text-base font-semibold text-slate-900">{step.title}</h3>
                     </div>
 
                     {/* Script lines */}
                     <div className="space-y-2">
                       {step.lines.map((line, j) => (
-                        <div key={j} className="text-sm leading-relaxed p-3.5 rounded-lg bg-slate-900 text-green-300 font-mono">
+                        <div key={j} className="text-sm leading-relaxed p-3.5 rounded-lg bg-slate-50 border-l-2 border-brand text-slate-800">
                           {line}
                         </div>
                       ))}
@@ -1244,9 +1242,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     {/* Objections */}
                     {step.objections && step.objections.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">If they object...</p>
+                        <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">If they object...</p>
                         {step.objections.map((obj, k) => (
-                          <div key={k} className="rounded-lg border border-slate-200 overflow-hidden">
+                          <div key={k} className="rounded-lg border border-line overflow-hidden">
                             <button
                               onClick={() => {
                                 setExpandedObjections((prev) => {
@@ -1255,17 +1253,19 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                   return next;
                                 });
                               }}
-                              className="w-full flex items-center justify-between px-3 py-2.5 bg-slate-50 hover:bg-orange-50 text-left transition-colors"
+                              className="w-full flex items-center justify-between px-3 py-2.5 bg-slate-50 hover:bg-slate-100 text-left transition-colors"
                             >
-                              <span className="text-xs font-semibold text-slate-700">💬 &quot;{obj.trigger}&quot;</span>
+                              <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                                <MessageCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />&quot;{obj.trigger}&quot;
+                              </span>
                               {expandedObjections.has(k + currentStep * 10)
                                 ? <ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0 ml-2" />
                                 : <ChevronRight className="h-3.5 w-3.5 text-slate-400 shrink-0 ml-2" />
                               }
                             </button>
                             {expandedObjections.has(k + currentStep * 10) && (
-                              <div className="px-3 py-3 bg-indigo-50 border-t border-slate-200">
-                                <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide mb-1.5">Say this:</p>
+                              <div className="px-3 py-3 bg-slate-50 border-t border-line">
+                                <p className="text-[11px] font-semibold text-brand-deep uppercase tracking-wide mb-1.5">Say this:</p>
                                 <p className="text-sm text-slate-800 leading-relaxed">{obj.response}</p>
                               </div>
                             )}
@@ -1279,21 +1279,21 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       <button
                         onClick={() => { setCurrentStep((s) => Math.max(0, s - 1)); setExpandedObjections(new Set()); }}
                         disabled={currentStep === 0}
-                        className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-line text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                       >
                         <ChevronLeft className="h-4 w-4" /> Previous
                       </button>
                       {currentStep < totalSteps - 1 ? (
                         <button
                           onClick={() => { setCurrentStep((s) => s + 1); setExpandedObjections(new Set()); }}
-                          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors"
+                          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
                         >
                           Next Step <ChevronRight className="h-4 w-4" />
                         </button>
                       ) : (
                         <button
                           onClick={() => setShowOutcomeLogger(true)}
-                          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#42CA80] hover:bg-[#35A66A] text-white text-sm font-semibold transition-colors"
+                          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-brand-deep hover:bg-brand-deeper text-white text-sm font-semibold transition-colors"
                         >
                           Log Outcome <ArrowRight className="h-4 w-4" />
                         </button>
@@ -1307,8 +1307,8 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
             {/* ── SCRIPT (queue tab) ─────────────────── */}
             {activeTab === "queue" && !isInboundFresh && (
               !effectiveScriptType ? (
-                <div className="bg-white border border-amber-200 rounded-2xl p-5 shadow-sm">
-                  <p className="text-sm font-semibold text-amber-700 mb-4">
+                <div className="bg-surface border border-warn-line rounded-xl p-5">
+                  <p className="text-sm font-semibold text-warn mb-4">
                     No script type detected. Select manually:
                   </p>
                   <div className="grid grid-cols-2 gap-3">
@@ -1316,20 +1316,20 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       <button
                         key={t.value}
                         onClick={() => setScriptTypeOverride(t.value)}
-                        className="text-left border border-slate-200 rounded-xl p-4 hover:border-[#42CA80] hover:bg-emerald-50 transition-all"
+                        className="text-left border border-line rounded-lg p-4 hover:border-brand-line hover:bg-brand-soft transition-colors"
                       >
-                        <p className="text-sm font-bold text-slate-900">{t.label}</p>
+                        <p className="text-sm font-semibold text-slate-900">{t.label}</p>
                         <p className="text-xs text-slate-500 mt-0.5">{t.desc}</p>
                       </button>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                <div className="bg-surface border border-line rounded-xl overflow-hidden">
                   {/* Script header */}
-                  <div className="px-5 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50">
+                  <div className="px-5 py-4 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50">
                     <div>
-                      <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Call Script</p>
+                      <p className="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Call Script</p>
                       <p className="text-sm font-semibold text-slate-800 mt-0.5">
                         {script?.typeLabel || `Script Type ${effectiveScriptType}`}
                       </p>
@@ -1337,19 +1337,19 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => { setCurrentStep(0); setExpandedObjections(new Set()); }}
-                        className="flex items-center justify-center gap-1 text-xs text-slate-500 hover:text-slate-700 border border-slate-200 rounded-lg px-3 py-2 bg-white transition-colors shrink-0"
+                        className="flex items-center justify-center gap-1 text-xs text-slate-500 hover:text-slate-700 border border-line rounded-lg px-3 py-2 bg-surface transition-colors shrink-0"
                       >
                         <RotateCcw className="h-3 w-3" /> Reset
                       </button>
-                      <select
+                      <Select
                         value={scriptTypeOverride || effectiveScriptType}
                         onChange={(e) => { setScriptTypeOverride(e.target.value as ScriptType); setCurrentStep(0); setExpandedObjections(new Set()); }}
-                        className="text-xs border border-slate-200 rounded-lg px-2 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-[#42CA80] flex-1 min-w-0"
+                        className="h-auto py-2 text-xs flex-1 min-w-0"
                       >
                         {SCRIPT_TYPES.map((t) => (
                           <option key={t.value} value={t.value}>{t.label} — {t.desc}</option>
                         ))}
-                      </select>
+                      </Select>
                     </div>
                   </div>
 
@@ -1367,26 +1367,26 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                 key={i}
                                 onClick={() => { setCurrentStep(i); setExpandedObjections(new Set()); }}
                                 className={`h-1.5 flex-1 rounded-full transition-colors ${
-                                  i < currentStep ? "bg-[#42CA80]" : i === currentStep ? "bg-indigo-500" : "bg-slate-200"
+                                  i < currentStep ? "bg-brand" : i === currentStep ? "bg-brand-deep" : "bg-slate-200"
                                 }`}
                               />
                             ))}
                           </div>
-                          <span className="text-xs font-mono text-slate-500 shrink-0">
+                          <span className="text-xs tabular-nums text-slate-500 shrink-0">
                             {currentStep + 1} / {totalSteps}
                           </span>
                         </div>
 
                         {/* Step header */}
                         <div className="flex items-center gap-3">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white text-sm font-bold shrink-0">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-deep text-white text-sm font-semibold tabular-nums shrink-0">
                             {step.stepId}
                           </span>
-                          <h3 className="text-base font-bold text-slate-900">{step.stepName}</h3>
+                          <h3 className="font-display text-base font-semibold text-slate-900">{step.stepName}</h3>
                           {selectedLang && step.stepName !== "Language Preference" && (
-                            <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 uppercase tracking-wide">
+                            <Badge tone="neutral" size="sm" className="ml-auto uppercase tracking-wide">
                               {LANG_LABEL[selectedLang]}
-                            </span>
+                            </Badge>
                           )}
                         </div>
 
@@ -1397,12 +1397,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                               <div
                                 className={`text-sm leading-relaxed p-3.5 rounded-lg ${
                                   line.type === "branch"
-                                    ? "bg-amber-50 border border-amber-200 text-amber-900"
-                                    : "bg-slate-900 text-green-300 font-mono"
+                                    ? "bg-warn-soft border border-warn-line text-slate-800"
+                                    : "bg-slate-50 border-l-2 border-brand text-slate-800"
                                 }`}
                               >
                                 {line.type === "branch" && line.condition && (
-                                  <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mb-1">
+                                  <p className="text-[11px] font-semibold text-warn uppercase tracking-wide mb-1">
                                     {line.condition}
                                   </p>
                                 )}
@@ -1415,7 +1415,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                         {/* Language selector — only shown on Language Preference step */}
                         {step.stepName === "Language Preference" && (
                           <div className="space-y-2">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
                               Select language — script will switch
                             </p>
                             <div className="grid grid-cols-3 gap-2">
@@ -1427,11 +1427,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                     setCurrentStep((s) => s + 1);
                                     setExpandedObjections(new Set());
                                   }}
-                                  className={`py-3 rounded-xl text-sm font-bold border-2 transition-all ${
+                                  className={cn(
+                                    "py-3 rounded-lg text-sm font-semibold border transition-colors",
                                     selectedLang === lang
-                                      ? "border-indigo-500 bg-indigo-50 text-indigo-800"
-                                      : "border-slate-200 bg-white text-slate-700 hover:border-indigo-300 hover:bg-indigo-50"
-                                  }`}
+                                      ? "border-brand-line bg-brand-soft text-brand-deep"
+                                      : "border-line bg-surface text-slate-700 hover:border-brand-line hover:bg-brand-soft"
+                                  )}
                                 >
                                   {LANG_LABEL[lang]}
                                 </button>
@@ -1443,11 +1444,11 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                         {/* Objections */}
                         {step.objections.length > 0 && (
                           <div className="space-y-2">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
                               If they object...
                             </p>
                             {step.objections.map((obj, k) => (
-                              <div key={k} className="rounded-lg border border-slate-200 overflow-hidden">
+                              <div key={k} className="rounded-lg border border-line overflow-hidden">
                                 <button
                                   onClick={() => {
                                     setExpandedObjections((prev) => {
@@ -1456,10 +1457,10 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                       return next;
                                     });
                                   }}
-                                  className="w-full flex items-center justify-between px-3 py-2.5 bg-slate-50 hover:bg-orange-50 text-left transition-colors"
+                                  className="w-full flex items-center justify-between px-3 py-2.5 bg-slate-50 hover:bg-slate-100 text-left transition-colors"
                                 >
-                                  <span className="text-xs font-semibold text-slate-700">
-                                    💬 &quot;{obj.trigger}&quot;
+                                  <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                                    <MessageCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />&quot;{obj.trigger}&quot;
                                   </span>
                                   {expandedObjections.has(k)
                                     ? <ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0 ml-2" />
@@ -1467,8 +1468,8 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                   }
                                 </button>
                                 {expandedObjections.has(k) && (
-                                  <div className="px-3 py-3 bg-indigo-50 border-t border-slate-200">
-                                    <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide mb-1.5">Say this:</p>
+                                  <div className="px-3 py-3 bg-slate-50 border-t border-line">
+                                    <p className="text-[11px] font-semibold text-brand-deep uppercase tracking-wide mb-1.5">Say this:</p>
                                     <p className="text-sm text-slate-800 leading-relaxed">{obj.response}</p>
                                   </div>
                                 )}
@@ -1482,21 +1483,21 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                           <button
                             onClick={() => { setCurrentStep((s) => Math.max(0, s - 1)); setExpandedObjections(new Set()); }}
                             disabled={currentStep === 0}
-                            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-line text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                           >
                             <ChevronLeft className="h-4 w-4" /> Previous
                           </button>
                           {currentStep < totalSteps - 1 ? (
                             <button
                               onClick={() => { setCurrentStep((s) => s + 1); setExpandedObjections(new Set()); }}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
                             >
                               Next Step <ChevronRight className="h-4 w-4" />
                             </button>
                           ) : (
                             <button
                               onClick={() => setShowOutcomeLogger(true)}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#42CA80] hover:bg-[#35A66A] text-white text-sm font-semibold transition-colors"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-brand-deep hover:bg-brand-deeper text-white text-sm font-semibold transition-colors"
                             >
                               Log Outcome <ArrowRight className="h-4 w-4" />
                             </button>
@@ -1513,7 +1514,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
             <div className="space-y-2 pb-6">
               <button
                 onClick={() => setShowOutcomeLogger(true)}
-                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-xl font-semibold text-sm transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-lg font-semibold text-sm transition-colors"
               >
                 <FileText className="h-4 w-4" />
                 Log Call Outcome
@@ -1527,10 +1528,10 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       {/* ── OUTCOME LOGGER MODAL ───────────────────────────────────── */}
       {showOutcomeLogger && currentLead && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50">
+          <div className="w-full max-w-lg bg-surface rounded-2xl shadow-lg overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-line bg-slate-50">
               <div>
-                <p className="font-bold text-slate-900 text-base">Log Outcome</p>
+                <p className="font-display font-semibold text-slate-900 text-base">Log Outcome</p>
                 <p className="text-xs text-slate-500 mt-0.5 truncate">{currentLead.company_name}</p>
               </div>
               <button
@@ -1542,6 +1543,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
             </div>
 
             <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
+              {/* Outcome buttons — five tones only, no per-outcome rainbow */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {OUTCOMES.map((outcome) => {
                   const Icon = outcome.icon;
@@ -1549,9 +1551,11 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     <button
                       key={outcome.id}
                       onClick={() => setSelectedOutcome(outcome.id)}
-                      className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold text-white transition-all ${outcome.color} ${
-                        selectedOutcome === outcome.id ? "ring-2 ring-white ring-offset-1 scale-[0.98]" : ""
-                      }`}
+                      className={cn(
+                        "flex items-center gap-2 px-4 py-3 rounded-lg border text-sm font-semibold transition-colors",
+                        OUTCOME_TONE_CLASSES[outcome.tone],
+                        selectedOutcome === outcome.id ? "ring-2 ring-brand-ring ring-offset-1" : ""
+                      )}
                     >
                       <Icon className="h-4 w-4 shrink-0" />
                       {outcome.label}
@@ -1576,11 +1580,12 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                             setDateTime(buildFollowUpDateTime(preset, "10:00"));
                           }
                         }}
-                        className={`py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
+                        className={cn(
+                          "py-2.5 rounded-lg text-sm font-semibold border transition-colors",
                           followUpPreset === preset
-                            ? "border-emerald-500 bg-emerald-50 text-emerald-800"
-                            : "border-slate-200 bg-white text-slate-600 hover:border-emerald-300"
-                        }`}
+                            ? "border-brand-line bg-brand-soft text-brand-deep"
+                            : "border-line bg-surface text-slate-600 hover:border-brand-line"
+                        )}
                       >
                         {preset === "today" ? "Today" : preset === "1hour" ? "In 1 hr" : "Tomorrow"}
                       </button>
@@ -1596,7 +1601,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                           setFollowUpCustomTime(e.target.value);
                           setDateTime(buildFollowUpDateTime(followUpPreset!, e.target.value));
                         }}
-                        className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                        className={cn(inputClasses, "mt-1")}
                       />
                     </div>
                   )}
@@ -1604,10 +1609,10 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                     type="datetime-local"
                     value={dateTime}
                     onChange={(e) => { setDateTime(e.target.value); setFollowUpPreset(null); }}
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80]"
+                    className={inputClasses}
                   />
                   {dateTime && (
-                    <p className="text-xs text-emerald-700 font-semibold">
+                    <p className="text-xs text-brand-deep font-semibold">
                       Meeting: {new Date(dateTime).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                     </p>
                   )}

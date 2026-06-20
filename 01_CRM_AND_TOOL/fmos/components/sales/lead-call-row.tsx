@@ -38,9 +38,9 @@ export default function LeadCallRow({ lead, onCallOutcome }: LeadCallRowProps) {
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-4 transition-colors hover:border-[#42CA80]/30">
+      <div className="flex items-center justify-between rounded-lg border border-line bg-surface p-4 transition-colors hover:border-brand-line">
         <div className="flex-1 min-w-0 pr-4">
-          <h3 className="text-base font-semibold text-slate-900 truncate">
+          <h3 className="font-display text-base font-semibold text-slate-900 truncate">
             {lead.company_name}
           </h3>
           {lead.contact_person && (
@@ -49,14 +49,14 @@ export default function LeadCallRow({ lead, onCallOutcome }: LeadCallRowProps) {
             </p>
           )}
           {lead.phone && (
-            <p className="mt-1 text-sm text-[#42CA80] truncate">{lead.phone}</p>
+            <p className="mt-1 text-sm tabular-nums text-brand-deep truncate">{lead.phone}</p>
           )}
         </div>
 
         <button
           onClick={handleCall}
           disabled={!lead.phone}
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 text-white hover:bg-[#42CA80]/90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-deep text-white transition-colors duration-150 hover:bg-brand-deeper active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
           aria-label={`Call ${lead.company_name} at ${lead.phone || "no number"}`}
         >
           <Phone className="h-6 w-6" />

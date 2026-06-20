@@ -127,12 +127,12 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
 
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="w-full max-w-2xl bg-surface rounded-2xl shadow-lg overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line">
           <div className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-emerald-500" />
-            <h2 className="text-sm font-bold text-slate-900">WhatsApp Template Picker</h2>
+            <MessageCircle className="h-5 w-5 text-brand-deep" />
+            <h2 className="font-display text-sm font-semibold text-slate-900">WhatsApp Template Picker</h2>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-400">{lead.company_name} · Stage: <span className="font-medium text-slate-600">{stage.replace(/_/g, " ")}</span></span>
@@ -144,37 +144,37 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
 
         <div className="flex flex-1 overflow-hidden min-h-0">
           {/* Template List */}
-          <div className="w-64 shrink-0 border-r border-slate-100 overflow-y-auto">
+          <div className="w-64 shrink-0 border-r border-line overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-20 text-slate-400 text-sm">Loading…</div>
             ) : templates.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4 text-center text-slate-400">
                 <MessageCircle className="h-8 w-8 mb-2 opacity-20" />
                 <p className="text-xs font-medium">No templates found.</p>
-                <p className="text-[10px] mt-1 text-slate-300">Check Supabase — templates may not be seeded.</p>
+                <p className="text-[11px] mt-1 text-slate-300">Check Supabase — templates may not be seeded.</p>
               </div>
             ) : (
               <div className="p-2">
                 {stageTemplates.length > 0 && (
                   <>
-                    <p className="text-[10px] font-bold text-[#42CA80] uppercase tracking-wider px-2 py-2">Recommended for this stage</p>
+                    <p className="text-[11px] font-semibold text-brand-deep uppercase tracking-wider px-2 py-2">Recommended for this stage</p>
                     {stageTemplates.map(t => (
                       <button key={t.id} onClick={() => setSelectedId(t.id)}
-                        className={`w-full text-left rounded-xl px-3 py-2.5 mb-1 transition-all ${selectedId === t.id ? "bg-emerald-50 border border-[#42CA80]" : "hover:bg-slate-50 border border-transparent"}`}>
+                        className={`w-full text-left rounded-lg px-3 py-2.5 mb-1 transition-colors ${selectedId === t.id ? "bg-brand-soft border border-brand-line" : "hover:bg-slate-50 border border-transparent"}`}>
                         <p className="text-xs font-semibold text-slate-800 leading-snug">{t.name}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{CATEGORY_LABELS[t.category] || t.category}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">{CATEGORY_LABELS[t.category] || t.category}</p>
                       </button>
                     ))}
                   </>
                 )}
                 {otherTemplates.length > 0 && (
                   <>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2 py-2 mt-2">Other Templates</p>
+                    <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-2 py-2 mt-2">Other Templates</p>
                     {otherTemplates.map(t => (
                       <button key={t.id} onClick={() => setSelectedId(t.id)}
-                        className={`w-full text-left rounded-xl px-3 py-2.5 mb-1 transition-all ${selectedId === t.id ? "bg-slate-100 border border-slate-300" : "hover:bg-slate-50 border border-transparent"}`}>
+                        className={`w-full text-left rounded-lg px-3 py-2.5 mb-1 transition-colors ${selectedId === t.id ? "bg-slate-100 border border-line-strong" : "hover:bg-slate-50 border border-transparent"}`}>
                         <p className="text-xs font-semibold text-slate-700 leading-snug">{t.name}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{CATEGORY_LABELS[t.category] || t.category}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">{CATEGORY_LABELS[t.category] || t.category}</p>
                       </button>
                     ))}
                   </>
@@ -197,11 +197,11 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
               </div>
             ) : (
               <div>
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">{selected.name}</p>
-                <div className="bg-[#e9f5d5] rounded-2xl rounded-tl-none px-4 py-3.5 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap font-sans border border-[#d4efa8]">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{selected.name}</p>
+                <div className="bg-brand-soft rounded-xl rounded-tl-none px-4 py-3.5 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap font-sans border border-brand-line">
                   {previewText}
                 </div>
-                <p className="text-[10px] text-slate-400 mt-2 italic">Variables substituted from lead data.</p>
+                <p className="text-[11px] text-slate-400 mt-2 italic">Variables substituted from lead data.</p>
               </div>
             )}
           </div>
@@ -209,22 +209,22 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
 
         {/* Footer */}
         {selected && (
-          <div className="px-5 py-4 border-t border-slate-100 flex gap-3">
+          <div className="px-5 py-4 border-t border-line flex gap-3">
             <button
               onClick={copyToClipboard}
-              className={`flex-1 flex items-center justify-center gap-2 font-bold py-2.5 rounded-xl text-sm transition-all border border-slate-300 hover:bg-slate-50 text-slate-700`}
+              className="flex-1 flex items-center justify-center gap-2 font-display font-semibold py-2.5 rounded-lg text-sm transition-colors border border-line-strong hover:bg-slate-50 text-slate-700"
             >
               {copied ? <><Check className="h-4 w-4" /> Copied!</> : <><Copy className="h-4 w-4" /> Copy Message</>}
             </button>
             <button
               onClick={markAsSent}
-              className={`flex-1 flex items-center justify-center gap-2 font-bold py-2.5 rounded-xl text-sm transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-2 font-display font-semibold py-2.5 rounded-lg text-sm transition-colors ${
                 justSent
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-brand-deep text-white"
                   : "bg-slate-900 text-white hover:bg-slate-800"
               }`}
             >
-              {justSent ? "✓ Logged!" : "Mark as Sent"}
+              {justSent ? <><Check className="h-4 w-4" /> Logged!</> : "Mark as Sent"}
             </button>
           </div>
         )}
