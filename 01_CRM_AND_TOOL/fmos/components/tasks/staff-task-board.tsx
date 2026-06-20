@@ -12,6 +12,9 @@ import {
   Inbox,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface Task {
   id: string;
@@ -47,6 +50,7 @@ type Column = {
   canDragTo: string[];
 };
 
+// Columns are neutral surfaces — status colour lives on the badge tone only.
 const COLUMNS: Column[] = [
   {
     id: "todo",
@@ -55,7 +59,7 @@ const COLUMNS: Column[] = [
     icon: Inbox,
     color: "text-slate-600",
     bg: "bg-slate-50",
-    border: "border-slate-200",
+    border: "border-line",
     canDragTo: ["in_progress"],
   },
   {
@@ -63,9 +67,9 @@ const COLUMNS: Column[] = [
     label: "In Progress",
     statuses: ["in_progress"],
     icon: Clock,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-    border: "border-blue-200",
+    color: "text-slate-600",
+    bg: "bg-slate-50",
+    border: "border-line",
     canDragTo: ["not_started"],
   },
   {
@@ -73,9 +77,9 @@ const COLUMNS: Column[] = [
     label: "Submitted",
     statuses: ["in_review", "needs_revision"],
     icon: ChevronRight,
-    color: "text-purple-600",
-    bg: "bg-purple-50",
-    border: "border-purple-200",
+    color: "text-slate-600",
+    bg: "bg-slate-50",
+    border: "border-line",
     canDragTo: [], // No drag — only set by "Submit for Review" button
   },
   {
@@ -83,12 +87,21 @@ const COLUMNS: Column[] = [
     label: "Done",
     statuses: ["completed"],
     icon: CheckCircle,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
+    color: "text-slate-600",
+    bg: "bg-slate-50",
+    border: "border-line",
     canDragTo: [], // No drag to done — set by Jabeer only
   },
 ];
+
+// Every task status maps to one of the five tones — no per-status rainbow.
+const STATUS_TONE: Record<string, Tone> = {
+  not_started: "neutral",
+  in_progress: "info",
+  in_review: "info",
+  needs_revision: "warning",
+  completed: "brand",
+};
 
 function isOverdue(dueDate: string | null): boolean {
   if (!dueDate) return false;
@@ -174,12 +187,12 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
   const completedTasks = tasks.filter((t) => t.status === "completed").length;
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-canvas px-4 py-6">
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">My Tasks</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-[-0.02em] text-slate-900">My Tasks</h1>
           <p className="text-sm text-slate-500 mt-1">
             {totalTasks} task{totalTasks !== 1 ? "s" : ""} assigned to you
             {completedTasks > 0 && ` · ${completedTasks} completed`}
@@ -187,11 +200,11 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
         </div>
 
         {totalTasks === 0 && (
-          <div className="flex flex-col items-center justify-center h-72 rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/50">
-            <CheckCircle className="h-10 w-10 text-emerald-500 mb-3" />
-            <p className="text-lg font-semibold text-emerald-700">All caught up!</p>
-            <p className="text-sm text-emerald-600 mt-1">No tasks assigned to you right now.</p>
-          </div>
+          <EmptyState
+            icon={CheckCircle}
+            title="All caught up!"
+            description="No tasks assigned to you right now."
+          />
         )}
 
         {/* Kanban Board */}
@@ -214,15 +227,15 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
                   key={col.id}
                   onDragOver={(e) => { if (isDraggableTarget) e.preventDefault(); }}
                   onDrop={(e) => handleDrop(e, col)}
-                  className={`rounded-2xl border min-h-[200px] transition-all ${col.border} ${
-                    isDraggableTarget ? "ring-2 ring-[#42CA80] ring-offset-2 bg-emerald-50/30" : "bg-white"
+                  className={`rounded-xl border min-h-[200px] transition-all ${col.border} ${
+                    isDraggableTarget ? "ring-2 ring-brand ring-offset-2 bg-brand-soft/40" : "bg-surface"
                   }`}
                 >
                   {/* Column header */}
-                  <div className={`flex items-center gap-2 px-4 py-3 rounded-t-2xl ${col.bg} border-b ${col.border}`}>
+                  <div className={`flex items-center gap-2 px-4 py-3 rounded-t-xl ${col.bg} border-b ${col.border}`}>
                     <Icon className={`h-4 w-4 ${col.color}`} />
-                    <span className={`text-sm font-bold ${col.color}`}>{col.label}</span>
-                    <span className="ml-auto text-xs font-bold bg-white/70 px-1.5 py-0.5 rounded-full text-slate-600">
+                    <span className={`font-display text-sm font-semibold ${col.color}`}>{col.label}</span>
+                    <span className="ml-auto text-xs font-semibold tabular-nums bg-surface px-1.5 py-0.5 rounded-full text-slate-600">
                       {colTasks.length}
                     </span>
                   </div>
@@ -230,7 +243,7 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
                   {/* Tasks */}
                   <div className="p-3 space-y-3">
                     {colTasks.length === 0 && (
-                      <div className="flex items-center justify-center h-20 text-xs text-slate-300 font-medium">
+                      <div className="flex items-center justify-center h-20 text-xs text-slate-400 font-medium">
                         Empty
                       </div>
                     )}
@@ -245,17 +258,17 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
                           draggable={isDraggable}
                           onDragStart={() => isDraggable && handleDragStart(task.id)}
                           onDragEnd={() => setDraggedId(null)}
-                          className={`rounded-xl border bg-white p-3.5 shadow-sm transition-all ${
+                          className={`rounded-xl border border-line bg-surface p-3.5 shadow-sm transition-all ${
                             draggedId === task.id ? "opacity-50 scale-[0.98]" : "hover:shadow-md"
                           } ${isDraggable ? "cursor-grab active:cursor-grabbing" : ""}`}
                         >
                           {/* Revision notes banner */}
                           {task.status === "in_progress" && task.revision_notes && (
-                            <div className="mb-3 rounded-lg bg-orange-50 border border-orange-200 px-3 py-2.5">
-                              <p className="text-[10px] font-bold text-orange-600 uppercase tracking-wider mb-1">
-                                ⚠️ Revision Needed — Jabeer&apos;s Notes:
+                            <div className="mb-3 rounded-lg bg-warn-soft border border-warn-line px-3 py-2.5">
+                              <p className="flex items-center gap-1 text-[11px] font-semibold text-warn uppercase tracking-wider mb-1">
+                                <AlertTriangle className="h-3 w-3" /> Revision Needed — Jabeer&apos;s Notes:
                               </p>
-                              <p className="text-xs text-orange-800 leading-relaxed">{task.revision_notes}</p>
+                              <p className="text-xs text-warn leading-relaxed">{task.revision_notes}</p>
                             </div>
                           )}
 
@@ -267,7 +280,7 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
                             <p className="text-xs text-slate-500 mt-1 truncate">
                               {(task.projects.clients as any)?.business_name || task.projects.name}
                               {task.projects.service_type && (
-                                <span className="ml-1.5 text-[10px] font-medium text-slate-400">
+                                <span className="ml-1.5 text-[11px] font-medium text-slate-400">
                                   · {serviceLabel(task.projects.service_type)}
                                 </span>
                               )}
@@ -276,8 +289,8 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
 
                           {/* Due date */}
                           <div className="flex items-center gap-1.5 mt-2.5">
-                            <Calendar className={`h-3 w-3 ${overdue ? "text-red-500" : "text-slate-400"}`} />
-                            <span className={`text-xs font-medium ${overdue ? "text-red-500 font-bold" : "text-slate-400"}`}>
+                            <Calendar className={`h-3 w-3 ${overdue ? "text-danger" : "text-slate-400"}`} />
+                            <span className={`text-xs font-medium ${overdue ? "text-danger font-semibold" : "text-slate-400"}`}>
                               {formatDate(task.due_date)}
                               {overdue && " — OVERDUE"}
                             </span>
@@ -285,29 +298,23 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
 
                           {/* Status badge */}
                           <div className="mt-2.5">
-                            <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${
-                              task.status === "not_started" ? "bg-slate-100 text-slate-500" :
-                              task.status === "in_progress" ? "bg-blue-100 text-blue-600" :
-                              task.status === "in_review" ? "bg-purple-100 text-purple-600" :
-                              task.status === "needs_revision" ? "bg-orange-100 text-orange-600" :
-                              "bg-emerald-100 text-emerald-600"
-                            }`}>
+                            <Badge tone={STATUS_TONE[task.status || ""] || "neutral"} size="sm" className="uppercase tracking-wide">
                               {task.status?.replace(/_/g, " ")}
-                            </span>
+                            </Badge>
                           </div>
 
                           {/* Description toggle */}
                           {task.description && (
                             <button
                               onClick={() => setExpandedId(isExpanded ? null : task.id)}
-                              className="mt-2.5 text-xs text-[#42CA80] hover:text-[#35A66A] font-medium flex items-center gap-1 transition-colors"
+                              className="mt-2.5 text-xs text-brand-deep hover:underline font-medium flex items-center gap-1 transition-colors"
                             >
                               {isExpanded ? "Hide brief" : "View brief"}
                               <ChevronRight className={`h-3 w-3 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                             </button>
                           )}
                           {isExpanded && task.description && (
-                            <div className="mt-2 rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-700 leading-relaxed">
+                            <div className="mt-2 rounded-lg bg-slate-50 border border-line p-3 text-xs text-slate-700 leading-relaxed">
                               {task.description}
                             </div>
                           )}
@@ -318,7 +325,7 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
                               href={`/admin/clients/${task.client_id}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="mt-2.5 flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 transition-colors"
+                              className="mt-2.5 flex items-center gap-1 text-xs text-brand-deep hover:underline transition-colors"
                             >
                               <ExternalLink className="h-3 w-3" /> View Brief
                             </a>
@@ -326,13 +333,15 @@ export default function StaffTaskBoard({ initialTasks, userId }: StaffTaskBoardP
 
                           {/* Submit for Review button */}
                           {(col.id === "todo" || col.id === "in_progress") && (
-                            <button
+                            <Button
+                              variant="primary"
+                              size="sm"
                               onClick={() => submitForReview(task.id)}
                               disabled={isPending}
-                              className="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-bold py-2 rounded-lg transition-colors"
+                              className="mt-3 w-full"
                             >
                               Submit for Review
-                            </button>
+                            </Button>
                           )}
                         </div>
                       );

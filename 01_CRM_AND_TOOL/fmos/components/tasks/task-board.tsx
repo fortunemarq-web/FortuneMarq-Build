@@ -9,6 +9,9 @@ import TaskModalContent from "@/components/projects/task-modal-content";
 import { createClient } from "@/lib/supabase";
 import { sendNotification } from "@/lib/notifications";
 import { toast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
+import { Tabs } from "@/components/ui/tabs";
+import { EmptyState } from "@/components/ui/empty-state";
 import clsx from "clsx";
 
 interface Task {
@@ -50,12 +53,13 @@ const statusLabels: Record<string, string> = {
   completed: "Completed",
 };
 
+// Status dots collapse to the five tones — no per-status rainbow.
 const statusColors: Record<string, string> = {
-  pending: "bg-amber-500",
-  not_started: "bg-gray-500",
-  in_progress: "bg-[#42CA80]",
-  in_review: "bg-purple-500",
-  completed: "bg-blue-500",
+  pending: "bg-warn",
+  not_started: "bg-slate-400",
+  in_progress: "bg-brand",
+  in_review: "bg-info",
+  completed: "bg-brand",
 };
 
 export default function TaskBoard({ initialTasks, projects, currentUserId }: TaskBoardProps) {
@@ -205,24 +209,21 @@ export default function TaskBoard({ initialTasks, projects, currentUserId }: Tas
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-blue-500" />
+            <div className="h-2 w-2 rounded-full bg-slate-400" />
             <span className="text-sm text-slate-500">
               <span className="font-semibold text-slate-900">{totalCompleted}</span> completed
             </span>
           </div>
         </div>
 
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 rounded-lg bg-brand-deep px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-hover active:scale-[0.98]"
-        >
+        <Button variant="primary" onClick={() => setShowCreateModal(true)}>
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">Add Task</span>
-        </button>
+        </Button>
       </div>
 
       {/* Quick-add row */}
-      <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-1.5 focus-within:border-brand focus-within:border-solid transition-colors">
+      <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-line-strong bg-surface px-3 py-1.5 focus-within:border-brand focus-within:border-solid transition-colors">
         <Plus className="h-4 w-4 text-slate-300 shrink-0" />
         <input
           type="text"
@@ -233,7 +234,7 @@ export default function TaskBoard({ initialTasks, projects, currentUserId }: Tas
           disabled={quickAddSaving}
           className="flex-1 bg-transparent py-1 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none disabled:opacity-50"
         />
-        {quickAddSaving && <span className="text-[11px] text-slate-400">Saving…</span>}
+        {quickAddSaving && <span className="text-[11px] text-slate-500">Saving…</span>}
       </div>
 
       {showCreateModal && (
@@ -266,50 +267,37 @@ export default function TaskBoard({ initialTasks, projects, currentUserId }: Tas
       )}
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-lg bg-white p-1">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={clsx(
-                "flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all",
-                isActive
-                  ? "bg-slate-100 text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-900"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
-          );
-        })}
+      <div className="mb-6">
+        <Tabs
+          tabs={tabs.map((tab) => ({ value: tab.id, label: tab.label }))}
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as TabType)}
+        />
       </div>
 
       {/* Task List */}
       {activeTab === "completed" ? (
         <div className="space-y-2">
           {completedTasks.length === 0 ? (
-            <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
-              <CheckCircle2 className="mx-auto h-8 w-8 text-slate-300" />
-              <p className="mt-2 text-sm text-slate-500">No completed tasks yet</p>
-            </div>
+            <EmptyState
+              icon={CheckCircle2}
+              title="No completed tasks yet"
+              description="Tasks you mark complete will collect here."
+            />
           ) : (
             completedTasks.map((task) => (
               <div
                 key={task.id}
-                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2.5 opacity-60"
+                className="flex items-center gap-3 rounded-lg border border-line bg-surface px-4 py-2.5 opacity-60"
               >
-                <CheckCircle2 className="h-5 w-5 text-[#42CA80]" />
+                <CheckCircle2 className="h-5 w-5 text-brand" />
                 <div className="min-w-0 flex-1">
                   <h4 className="truncate text-sm text-slate-500 line-through">
                     {task.title}
                   </h4>
-                  <p className="mt-0.5 truncate text-xs text-slate-600">
-                    {task.projects?.clients?.business_name 
-                      ? `${task.projects.clients.business_name} · ${task.projects.service_type?.replace(/_/g, " ")}` 
+                  <p className="mt-0.5 truncate text-xs text-slate-500">
+                    {task.projects?.clients?.business_name
+                      ? `${task.projects.clients.business_name} · ${task.projects.service_type?.replace(/_/g, " ")}`
                       : (task.section_tag?.replace(/_/g, " ") || "Strategy Task")
                     }
                   </p>
@@ -329,10 +317,10 @@ export default function TaskBoard({ initialTasks, projects, currentUserId }: Tas
                 {/* Status Header */}
                 <div className="mb-3 flex items-center gap-2">
                   <div className={clsx("h-2 w-2 rounded-full", statusColors[status])} />
-                  <h3 className="text-sm font-semibold text-slate-900">
+                  <h3 className="font-display text-sm font-semibold text-slate-900">
                     {statusLabels[status]}
                   </h3>
-                  <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-500">
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs tabular-nums text-slate-500">
                     {statusTasks.length}
                   </span>
                 </div>
@@ -353,10 +341,11 @@ export default function TaskBoard({ initialTasks, projects, currentUserId }: Tas
           })}
 
           {filteredTasks.length === 0 && (
-            <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
-              <ListTodo className="mx-auto h-8 w-8 text-slate-300" />
-              <p className="mt-2 text-sm text-slate-500">No tasks found</p>
-            </div>
+            <EmptyState
+              icon={ListTodo}
+              title="No tasks found"
+              description="Nothing matches this view yet. Add a task or switch tabs."
+            />
           )}
         </div>
       )}

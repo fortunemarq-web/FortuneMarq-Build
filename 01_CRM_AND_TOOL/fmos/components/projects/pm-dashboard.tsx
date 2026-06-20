@@ -26,6 +26,15 @@ import { createClient } from "@/lib/supabase";
 import CreateProjectModal from "./create-project-modal";
 import { toast } from "@/components/ui/toast";
 import { promptModal } from "@/components/ui/prompt-modal";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs } from "@/components/ui/tabs";
+import { Avatar } from "@/components/ui/avatar";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface Task {
   id: string;
@@ -86,6 +95,14 @@ const statusLabels: Record<string, string> = {
   on_hold: "On Hold",
   completed: "Completed",
   cancelled: "Cancelled",
+};
+
+const PROJECT_STATUS_TONE: Record<string, Tone> = {
+  not_started: "neutral",
+  in_progress: "info",
+  on_hold: "warning",
+  completed: "brand",
+  cancelled: "danger",
 };
 
 function formatDate(dateStr: string): string {
@@ -318,20 +335,21 @@ export default function PMDashboard(props: PMDashboardProps) {
     setExpandedClients(prev => ({ ...prev, [clientId]: !prev[clientId] }));
   };
 
-  const getStatusBadgeColor = (status: string) => {
+  // Every project status maps to one of the five tones — no per-status rainbow.
+  const getStatusTone = (status: string): Tone => {
     switch (status) {
       case "not_started":
-        return "bg-slate-100 text-slate-600";
+        return "neutral";
       case "in_progress":
-        return "bg-brand-soft text-brand-deep";
+        return "brand";
       case "on_hold":
-        return "bg-amber-100 text-amber-700";
+        return "warning";
       case "completed":
-        return "bg-blue-100 text-blue-700";
+        return "info";
       case "cancelled":
-        return "bg-red-600 text-slate-900";
+        return "danger";
       default:
-        return "bg-slate-100 text-slate-600";
+        return "neutral";
     }
   };
 
@@ -345,64 +363,43 @@ export default function PMDashboard(props: PMDashboardProps) {
   return (
     <>
       {/* Header */}
-      <div className="mb-4 sm:mb-6 flex justify-between items-start">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 sm:text-2xl md:text-4xl font-mono tabular-nums">
-            Projects Dashboard
-          </h1>
-          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-            Manage all active projects and team workload
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-          {/* Search Bar */}
-          <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 group-focus-within:text-brand-deep transition-colors" />
-            <input
-              type="text"
-              placeholder="Search client or email..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-[#666] focus:outline-none focus:border-brand w-[200px] sm:w-[240px] transition-all"
-            />
-          </div>
+      <PageHeader
+        className="mb-4 sm:mb-6"
+        title="Projects Dashboard"
+        subtitle="Manage all active projects and team workload"
+        actions={
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            {/* Search Bar */}
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-brand-deep transition-colors" />
+              <Input
+                type="text"
+                placeholder="Search client or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 w-[200px] sm:w-[240px]"
+              />
+            </div>
 
-          <div className="flex bg-slate-100 rounded-lg p-1 mr-2">
-            <button
-              onClick={() => setViewMode('clients')}
-              className={clsx(
-                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
-                viewMode === 'clients' ? "bg-slate-900 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
-              )}
-            >
-              Clients
-            </button>
-            <button
-              onClick={() => setViewMode('projects')}
-              className={clsx(
-                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
-                viewMode === 'projects' ? "bg-slate-900 text-white shadow-sm" : "text-slate-500 hover:text-slate-900"
-              )}
-            >
-              All Projects
-            </button>
+            <Tabs
+              tabs={[
+                { value: "clients", label: "Clients" },
+                { value: "projects", label: "All Projects" },
+              ]}
+              value={viewMode}
+              onValueChange={(v) => setViewMode(v as 'projects' | 'clients')}
+            />
+            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">New Project</span>
+            </Button>
+            <Link href="/projects/list" className={buttonVariants({ variant: "subtle" })}>
+              <ListTodo className="h-4 w-4" />
+              <span className="hidden sm:inline">List View</span>
+            </Link>
           </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-deep hover:bg-brand-hover text-white text-sm font-bold rounded-lg shadow-sm transition-colors active:scale-[0.98]"
-          >
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">New Project</span>
-          </button>
-          <Link
-            href="/projects/list"
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-900 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors"
-          >
-            <ListTodo className="h-4 w-4" />
-            <span className="hidden sm:inline">List View</span>
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {showCreateModal && (
         <CreateProjectModal
@@ -416,86 +413,51 @@ export default function PMDashboard(props: PMDashboardProps) {
 
       {/* Team Pulse - Key Metrics */}
       <div className="mb-4 grid grid-cols-3 gap-3 sm:mb-6 sm:gap-4">
-        {/* Tasks Due Today */}
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 sm:p-4">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-amber-400 sm:h-5 sm:w-5" />
-            <span className="text-[10px] text-amber-300 sm:text-xs">Due Today</span>
-          </div>
-          <p className="mt-1 text-xl font-bold text-amber-400 sm:mt-2 sm:text-4xl font-mono tabular-nums">
-            {metrics.tasksDueToday}
-          </p>
-        </div>
-
-        {/* Completed Today */}
-        <div className="rounded-xl border border-brand/30 bg-brand-soft p-3 sm:p-4">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-brand-deep sm:h-5 sm:w-5" />
-            <span className="text-[10px] text-brand-deep/80 sm:text-xs">Completed</span>
-          </div>
-          <p className="mt-1 text-xl font-bold text-brand-deep sm:mt-2 sm:text-4xl font-mono tabular-nums">
-            {metrics.completedToday}
-          </p>
-        </div>
-
-        {/* At Risk / Overdue */}
-        <div className={clsx(
-          "rounded-xl border p-3 sm:p-4",
-          metrics.overdueTasks > 0
-            ? "border-red-500/30 bg-red-500/10"
-            : "border-slate-200 bg-white"
-        )}>
-          <div className="flex items-center gap-2">
-            <AlertTriangle className={clsx(
-              "h-4 w-4 sm:h-5 sm:w-5",
-              metrics.overdueTasks > 0 ? "text-red-400" : "text-slate-600"
-            )} />
-            <span className={clsx(
-              "text-[10px] sm:text-xs",
-              metrics.overdueTasks > 0 ? "text-red-300" : "text-slate-600"
-            )}>At Risk</span>
-          </div>
-          <p className={clsx(
-            "mt-1 text-xl font-bold sm:mt-2 sm:text-3xl",
-            metrics.overdueTasks > 0 ? "text-red-400" : "text-slate-600"
-          )}>
-            {metrics.overdueTasks}
-          </p>
-        </div>
+        <StatCard label="Due Today" value={metrics.tasksDueToday} icon={Clock} />
+        <StatCard label="Completed" value={metrics.completedToday} icon={CheckCircle2} />
+        <StatCard
+          label="At Risk"
+          value={
+            <span className={metrics.overdueTasks > 0 ? "text-danger" : undefined}>
+              {metrics.overdueTasks}
+            </span>
+          }
+          icon={AlertTriangle}
+        />
       </div>
 
       {/* Who is doing what? */}
-      <div className="mb-4 rounded-xl border border-slate-200 bg-white sm:mb-6">
+      <Card className="mb-4 sm:mb-6">
         <button
           onClick={() => setShowTeamDetails(!showTeamDetails)}
           className="flex w-full items-center justify-between p-3 sm:p-4"
         >
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/20 sm:h-10 sm:w-10">
-              <Users className="h-4 w-4 text-indigo-400 sm:h-5 sm:w-5" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-soft sm:h-10 sm:w-10">
+              <Users className="h-4 w-4 text-brand-deep sm:h-5 sm:w-5" />
             </div>
             <div className="text-left">
-              <h3 className="text-sm font-semibold text-slate-900 sm:text-base">Team Workload</h3>
-              <p className="text-[10px] text-slate-600 sm:text-xs">
+              <h3 className="font-display text-sm font-semibold text-slate-900 sm:text-base">Team Workload</h3>
+              <p className="text-[11px] text-slate-500 sm:text-xs">
                 {Object.keys(metrics.teamWorkload).length} team members with active tasks
               </p>
             </div>
           </div>
           {showTeamDetails ? (
-            <ChevronUp className="h-5 w-5 text-slate-600" />
+            <ChevronUp className="h-5 w-5 text-slate-500" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-slate-600" />
+            <ChevronDown className="h-5 w-5 text-slate-500" />
           )}
         </button>
 
         {showTeamDetails && (
-          <div className="border-t border-slate-200 p-3 sm:p-4">
+          <div className="border-t border-line p-3 sm:p-4">
             {Object.keys(metrics.teamWorkload).length === 0 ? (
-              <p className="text-center text-sm text-slate-600">No assigned tasks</p>
+              <p className="text-center text-sm text-slate-500">No assigned tasks</p>
             ) : (
               <div className="space-y-2">
                 {/* Header - Hidden on mobile */}
-                <div className="hidden grid-cols-3 gap-4 border-b border-slate-200 pb-2 text-xs font-medium text-slate-600 sm:grid">
+                <div className="hidden grid-cols-3 gap-4 border-b border-line pb-2 text-xs font-medium text-slate-500 sm:grid">
                   <span>Team Member</span>
                   <span className="text-center">Tasks</span>
                   <span className="text-right">Next Deadline</span>
@@ -509,25 +471,23 @@ export default function PMDashboard(props: PMDashboardProps) {
                       className="flex flex-col gap-1 rounded-lg bg-slate-50 p-3 sm:grid sm:grid-cols-3 sm:items-center sm:gap-4 sm:p-2"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-medium text-indigo-400">
-                          {member.charAt(0).toUpperCase()}
-                        </div>
+                        <Avatar name={member} size="sm" className="h-7 w-7 text-[11px]" />
                         <span className="text-sm font-medium text-slate-900">{member}</span>
                       </div>
                       <div className="flex items-center justify-between sm:justify-center">
-                        <span className="text-xs text-slate-600 sm:hidden">Tasks:</span>
-                        <span className="rounded-full bg-indigo-500/20 px-2.5 py-0.5 text-xs font-semibold text-indigo-400">
+                        <span className="text-xs text-slate-500 sm:hidden">Tasks:</span>
+                        <Badge tone="neutral" size="sm" className="tabular-nums">
                           {data.count}
-                        </span>
+                        </Badge>
                       </div>
                       <div className="flex items-center justify-between sm:justify-end">
-                        <span className="text-xs text-slate-600 sm:hidden">Next:</span>
+                        <span className="text-xs text-slate-500 sm:hidden">Next:</span>
                         <span className={clsx(
                           "text-xs",
                           data.nextDeadline && isOverdue(data.nextDeadline)
-                            ? "font-medium text-red-400"
+                            ? "font-medium text-danger"
                             : data.nextDeadline && isToday(data.nextDeadline)
-                              ? "font-medium text-amber-400"
+                              ? "font-medium text-warn"
                               : "text-slate-500"
                         )}>
                           {data.nextDeadline
@@ -541,7 +501,7 @@ export default function PMDashboard(props: PMDashboardProps) {
             )}
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Filter Tabs */}
       <div className="mb-4 flex gap-1 overflow-x-auto pb-1 sm:mb-6 sm:gap-2">
@@ -555,24 +515,24 @@ export default function PMDashboard(props: PMDashboardProps) {
               key={filter.key}
               onClick={() => setActiveFilter(filter.key)}
               className={clsx(
-                "flex-shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
+                "flex-shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
                 isActive
                   ? isNeedsAttention
-                    ? "bg-red-500 text-slate-900"
-                    : "bg-white text-black"
+                    ? "border-danger-line bg-danger-soft text-danger"
+                    : "border-line-strong bg-slate-900 text-white"
                   : isNeedsAttention && count > 0
-                    ? "bg-red-500/20 text-red-400 active:bg-red-500/30"
-                    : "bg-white text-slate-500 active:bg-slate-100"
+                    ? "border-danger-line bg-danger-soft text-danger hover:bg-red-100"
+                    : "border-line bg-surface text-slate-500 hover:bg-slate-50"
               )}
             >
               {filter.label}
               {count > 0 && (
                 <span className={clsx(
-                  "ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                  "ml-1.5 rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums",
                   isActive
-                    ? "bg-black/20 text-inherit"
+                    ? "bg-white/20 text-inherit"
                     : isNeedsAttention && count > 0
-                      ? "bg-red-500/30 text-red-300"
+                      ? "bg-danger-soft text-danger"
                       : "bg-slate-200 text-slate-500"
                 )}>
                   {count}
@@ -588,30 +548,31 @@ export default function PMDashboard(props: PMDashboardProps) {
         // CLIENTS VIEW
         <div className="space-y-4">
           {clientGroups.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center">
-              <Briefcase className="mx-auto h-8 w-8 text-slate-600" />
-              <p className="mt-2 text-sm text-slate-600">No active client folders</p>
-            </div>
+            <EmptyState
+              icon={Briefcase}
+              title="No active client folders"
+              description="Active client projects will be grouped here."
+            />
           ) : (
             clientGroups.map((group) => {
               const clientId = group.client?.id || 'unknown';
               const isExpanded = expandedClients[clientId];
 
               return (
-                <div key={clientId} className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+                <Card key={clientId} className="bg-slate-50 overflow-hidden">
                   <div
                     onClick={() => toggleClientExpand(clientId)}
-                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-white transition-colors"
+                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-surface transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-indigo-500/10 rounded-lg flex items-center justify-center border border-indigo-500/20">
-                        <User className="h-5 w-5 text-indigo-400" />
+                      <div className="h-10 w-10 bg-brand-soft rounded-lg flex items-center justify-center border border-brand-line">
+                        <User className="h-5 w-5 text-brand-deep" />
                       </div>
                       <div>
-                        <h3 className="text-base font-bold text-slate-900 max-w-[200px] sm:max-w-md truncate">
+                        <h3 className="font-display text-base font-semibold text-slate-900 max-w-[200px] sm:max-w-md truncate">
                           {group.client?.business_name || "Unknown Client"}
                         </h3>
-                        <p className="text-xs text-slate-600">
+                        <p className="text-xs text-slate-500">
                           {group.projects.length} Active Services
                         </p>
                       </div>
@@ -619,23 +580,23 @@ export default function PMDashboard(props: PMDashboardProps) {
 
                     <div className="flex items-center gap-4">
                       {/* Mini Metrics for Client */}
-                      <div className="hidden sm:flex items-center gap-3 text-xs text-slate-600">
-                        <span className="flex items-center gap-1">
+                      <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500">
+                        <span className="flex items-center gap-1 tabular-nums">
                           <ListTodo className="h-3 w-3" /> {group.metrics.completedTasks}/{group.metrics.totalTasks} Tasks
                         </span>
                         {group.metrics.overdueCount > 0 && (
-                          <span className="text-red-400 flex items-center gap-1 font-medium">
+                          <span className="text-danger flex items-center gap-1 font-medium tabular-nums">
                             <AlertTriangle className="h-3 w-3" /> {group.metrics.overdueCount} Alerts
                           </span>
                         )}
                       </div>
 
-                      {isExpanded ? <ChevronUp className="h-5 w-5 text-slate-600" /> : <ChevronDown className="h-5 w-5 text-slate-600" />}
+                      {isExpanded ? <ChevronUp className="h-5 w-5 text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-500" />}
                     </div>
                   </div>
 
                   {isExpanded && (
-                    <div className="border-t border-slate-200 p-4 bg-slate-50">
+                    <div className="border-t border-line p-4 bg-slate-50">
 
                       {/* CLIENT RESOURCES SECTION */}
                       <div className="mb-6">
@@ -655,7 +616,7 @@ export default function PMDashboard(props: PMDashboardProps) {
                                 setNewLinkTitle("");
                               }
                             }}
-                            className="text-xs text-brand-deep hover:text-brand-hover font-medium"
+                            className="text-xs text-brand-deep hover:underline font-medium"
                           >
                             {editingResourceClientId === clientId ? "Cancel" : "+ Add Link"}
                           </button>
@@ -663,54 +624,55 @@ export default function PMDashboard(props: PMDashboardProps) {
 
                         {/* Add Resource Form */}
                         {editingResourceClientId === clientId && (
-                          <div className="mb-4 bg-white p-3 rounded-lg border border-slate-300 flex flex-col gap-2 sm:flex-row sm:items-center">
-                            <input
+                          <div className="mb-4 bg-surface p-3 rounded-lg border border-line flex flex-col gap-2 sm:flex-row sm:items-center">
+                            <Input
                               type="text"
                               placeholder="Link Title (e.g. Drive Folder)"
                               value={newLinkTitle}
                               onChange={(e) => setNewLinkTitle(e.target.value)}
-                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-brand outline-none"
+                              className="flex-1 h-8 text-xs"
                             />
-                            <input
+                            <Input
                               type="text"
                               placeholder="URL (https://...)"
                               value={newLinkUrl}
                               onChange={(e) => setNewLinkUrl(e.target.value)}
-                              className="flex-1 bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-900 placeholder-[#666] focus:border-brand outline-none"
+                              className="flex-1 h-8 text-xs"
                             />
-                            <button
+                            <Button
+                              variant="primary"
+                              size="sm"
                               disabled={isSubmittingResource}
                               onClick={() => handleAddResource(clientId)}
-                              className="bg-brand-deep hover:bg-brand-hover text-white text-xs font-bold px-4 py-1.5 rounded transition-colors disabled:opacity-50"
                             >
                               {isSubmittingResource ? "Adding..." : "Save"}
-                            </button>
+                            </Button>
                           </div>
                         )}
 
                         {/* Existing Resources List */}
                         <div className="flex flex-wrap gap-2">
                           {resources.filter(r => r.client_id === clientId).map(resource => (
-                            <div key={resource.id} className="group flex items-center gap-2 bg-white border border-slate-300 px-3 py-2 rounded-lg hover:border-[#666] transition-colors">
+                            <div key={resource.id} className="group flex items-center gap-2 bg-surface border border-line px-3 py-2 rounded-lg hover:border-line-strong transition-colors">
                               <a
                                 href={resource.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-xs text-slate-900 hover:text-[#42CA80]"
+                                className="flex items-center gap-2 text-xs text-slate-900 hover:text-brand-deep"
                               >
                                 <ExternalLink className="h-3 w-3" />
                                 {resource.title}
                               </a>
                               <button
                                 onClick={() => handleDeleteResource(resource.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-600 hover:text-red-400"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-danger"
                               >
                                 <Trash2 className="h-3 w-3" />
                               </button>
                             </div>
                           ))}
                           {resources.filter(r => r.client_id === clientId).length === 0 && !editingResourceClientId && (
-                            <p className="text-xs text-slate-600 italic">No resources linked.</p>
+                            <p className="text-xs text-slate-500 italic">No resources linked.</p>
                           )}
                         </div>
                       </div>
@@ -784,7 +746,7 @@ export default function PMDashboard(props: PMDashboardProps) {
                       </div>
                     </div>
                   )}
-                </div>
+                </Card>
               );
             })
           )}
@@ -792,10 +754,12 @@ export default function PMDashboard(props: PMDashboardProps) {
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProjects.length === 0 ? (
-            <div className="col-span-full rounded-xl border border-dashed border-slate-300 p-8 text-center">
-              <Briefcase className="mx-auto h-8 w-8 text-slate-600" />
-              <p className="mt-2 text-sm text-slate-600">No projects match this filter</p>
-            </div>
+            <EmptyState
+              className="col-span-full"
+              icon={Briefcase}
+              title="No projects match this filter"
+              description="Try a different status filter or clear your search."
+            />
           ) : (
             filteredProjects.map((project) => {
               const clientName = project.clients?.business_name || "Unknown Client";
@@ -826,14 +790,9 @@ export default function PMDashboard(props: PMDashboardProps) {
                     <span className="truncate text-xs text-slate-500 sm:text-sm">
                       {formatServiceType(project.service_type || "")}
                     </span>
-                    <span
-                      className={clsx(
-                        "flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium sm:px-2.5 sm:text-xs",
-                        getStatusBadgeColor(project.status)
-                      )}
-                    >
+                    <Badge tone={PROJECT_STATUS_TONE[project.status] || "neutral"} size="sm" className="flex-shrink-0">
                       {statusLabels[project.status] || project.status}
-                    </span>
+                    </Badge>
                   </div>
 
                   {/* Progress Bar */}

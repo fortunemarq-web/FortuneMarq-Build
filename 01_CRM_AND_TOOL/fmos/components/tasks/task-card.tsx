@@ -5,6 +5,7 @@ import { Clock, AlertCircle, ChevronDown, Circle, Loader2, AlertTriangle, CheckC
 import { createClient } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
+import { Avatar } from "@/components/ui/avatar";
 import clsx from "clsx";
 
 interface Task {
@@ -28,11 +29,11 @@ interface Task {
   } | null;
 }
 
-// ClickUp-style priority flags
+// ClickUp-style priority flags — collapsed to the five tones
 const PRIORITY_FLAGS: Record<string, { label: string; cls: string }> = {
-  urgent: { label: "Urgent", cls: "text-red-600" },
-  high: { label: "High", cls: "text-orange-500" },
-  medium: { label: "Medium", cls: "text-blue-500" },
+  urgent: { label: "Urgent", cls: "text-danger" },
+  high: { label: "High", cls: "text-warn" },
+  medium: { label: "Medium", cls: "text-info" },
   low: { label: "Low", cls: "text-slate-300" },
 };
 
@@ -42,13 +43,14 @@ interface TaskCardProps {
   onEdit?: (task: Task) => void;
 }
 
-// Status options - these should match the database enum/check constraint
+// Status options - these should match the database enum/check constraint.
+// Status dots collapse to the five tones — no per-status rainbow.
 const statusOptions = [
-  { value: "pending", label: "Pending", color: "bg-amber-500", icon: Clock },
-  { value: "not_started", label: "Not Started", color: "bg-gray-500", icon: Circle },
-  { value: "in_progress", label: "In Progress", color: "bg-[#42CA80]", icon: Loader2 },
-  { value: "in_review", label: "In Review", color: "bg-purple-500", icon: Clock },
-  { value: "completed", label: "Completed", color: "bg-blue-500", icon: CheckCircle2 },
+  { value: "pending", label: "Pending", color: "bg-warn", icon: Clock },
+  { value: "not_started", label: "Not Started", color: "bg-slate-400", icon: Circle },
+  { value: "in_progress", label: "In Progress", color: "bg-brand", icon: Loader2 },
+  { value: "in_review", label: "In Review", color: "bg-info", icon: Clock },
+  { value: "completed", label: "Completed", color: "bg-brand", icon: CheckCircle2 },
 ];
 
 export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps) {
@@ -83,11 +85,11 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
     });
 
     if (diffDays < 0) {
-      return { label: `Overdue: ${formatted}`, color: "text-red-600", icon: AlertCircle };
+      return { label: `Overdue: ${formatted}`, color: "text-danger", icon: AlertCircle };
     } else if (diffDays === 0) {
-      return { label: "Due Today", color: "text-orange-600", icon: AlertCircle };
+      return { label: "Due Today", color: "text-warn", icon: AlertCircle };
     } else if (diffDays <= 3) {
-      return { label: formatted, color: "text-amber-600", icon: Clock };
+      return { label: formatted, color: "text-warn", icon: Clock };
     } else {
       return { label: formatted, color: "text-slate-500", icon: Clock };
     }
@@ -181,7 +183,7 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
   return (
     <div
       onClick={() => onEdit && onEdit(task)}
-      className="group flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white px-3.5 py-2 transition-all hover:border-slate-300 hover:shadow-sm cursor-pointer"
+      className="group flex items-center justify-between gap-4 rounded-lg border border-line bg-surface px-3.5 py-2 transition-all hover:border-line-strong hover:shadow-sm cursor-pointer"
     >
       {/* Left: Status Dropdown + Content */}
       <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -194,8 +196,8 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
             }}
             disabled={isUpdating}
             className={clsx(
-              "flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all",
-              "border border-slate-200 bg-white hover:border-slate-300",
+              "flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-all",
+              "border border-line bg-surface hover:border-line-strong",
               isUpdating && "opacity-50 cursor-not-allowed"
             )}
             aria-label="Change task status"
@@ -210,7 +212,7 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute left-0 top-full z-50 mt-1 w-44 rounded-lg border border-slate-200 bg-white py-1 shadow-xl">
+            <div className="absolute left-0 top-full z-50 mt-1 w-44 rounded-lg border border-line bg-surface py-1 shadow-md">
               {statusOptions.map((option) => {
                 const isSelected = option.value === task.status;
                 return (
@@ -237,7 +239,7 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
         {/* Content */}
         <div className="min-w-0 flex-1">
           <h4 className="truncate text-[13px] font-medium text-slate-900">{task.title}</h4>
-          <p className="mt-0.5 truncate text-[11px] text-slate-400">
+          <p className="mt-0.5 truncate text-[11px] text-slate-500">
             {secondaryLabel}
           </p>
         </div>
@@ -251,12 +253,7 @@ export default function TaskCard({ task, onStatusChange, onEdit }: TaskCardProps
           </span>
         )}
         {assigneeName && (
-          <span
-            title={assigneeName}
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-600 uppercase"
-          >
-            {assigneeName.split(" ").map(w => w.charAt(0)).slice(0, 2).join("")}
-          </span>
+          <Avatar name={assigneeName} size="sm" className="h-6 w-6 text-[11px]" />
         )}
         <div className={clsx("flex items-center gap-1.5 text-xs", dueDateInfo.color)}>
           <DueDateIcon className="h-3.5 w-3.5" />
