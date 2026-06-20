@@ -90,3 +90,8 @@ A full read-and-fix pass over the app for two high-frequency bug classes — Sup
 
 The auth gate lives in `proxy.ts` (Next 16's renamed middleware) and is intentionally
 **fail-open** — read the notes in that file before touching it. Public LP routes (`/lp/*`) bypass the gate by design.
+
+## Testing (2026-06-19)
+
+- **E2E suite** — `tests/e2e/` (Playwright): `route-health.e2e.ts` (41 routes load without a client/server error — `/admin/strategy{,/archive}` are excluded because they stall server-side ~100s without an AI key on staging) plus verify-the-row specs `invoice.e2e.ts` (green) and `record-payment.e2e.ts` (parked as `test.fixme` — correct in isolation but flaky in the full suite because the invoices LIST server-render can omit a just-created row; a real app finding). Fixtures `tests/e2e/fixtures/{auth,db}.ts` give authenticated sessions + direct DB assertions. Run with `npm run test:e2e` (`playwright.e2e.config.ts`; 90s/test timeout to absorb dev cold-compiles). **Runs against a STAGING Supabase, never production** — requires `.env.staging` (copy `.env.staging.example` → `.env.staging`; see `E2E_STAGING_SETUP.md`), injected into both the Playwright workers and the `next dev` server it starts, refusing to run without it. `scripts/seed-staging.mjs` seeds staging; both the seed and the DB fixture hard-refuse the prod ref. The older `playwright.config.ts` is a lighter page-loads smoke suite.
+- **Manual testing** — `npm run dev:staging` runs the app wired to the staging DB (safe: never prod, never messages a real customer, host-split forced to serve the app) so you can click through `FMOS_MANUAL_TESTING_GUIDE.md` by hand; `FMOS_APP_WORKFLOW.md` explains the end-to-end app workflow.
