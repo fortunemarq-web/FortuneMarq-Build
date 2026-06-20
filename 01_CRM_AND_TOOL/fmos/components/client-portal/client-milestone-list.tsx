@@ -5,6 +5,8 @@ import { Check, Clock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import clsx from "clsx";
 import { toast } from "@/components/ui/toast";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Milestone {
   id: string;
@@ -23,31 +25,26 @@ interface ClientMilestoneListProps {
 
 type MilestoneStatus = "not_started" | "in_progress" | "ready_for_approval" | "approved";
 
-const statusConfig: Record<MilestoneStatus, { label: string; color: string; bgColor: string; icon: React.ReactNode }> = {
-  not_started: {
-    label: "Upcoming",
-    color: "text-gray-400",
-    bgColor: "bg-gray-500/20 border-gray-500/30",
-    icon: <Clock className="h-4 w-4" />,
-  },
-  in_progress: {
-    label: "In Progress",
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/20 border-blue-500/30",
-    icon: <Clock className="h-4 w-4 animate-pulse" />,
-  },
-  ready_for_approval: {
-    label: "Needs Approval",
-    color: "text-orange-400",
-    bgColor: "bg-orange-500/20 border-orange-500/30",
-    icon: <AlertCircle className="h-4 w-4" />,
-  },
-  approved: {
-    label: "Approved",
-    color: "text-[#42CA80]",
-    bgColor: "bg-[#42CA80]/20 border-[#42CA80]/30",
-    icon: <CheckCircle2 className="h-4 w-4" />,
-  },
+const STATUS: Record<MilestoneStatus, { label: string; tone: Tone; icon: React.ReactNode }> = {
+  not_started: { label: "Upcoming", tone: "neutral", icon: <Clock className="h-4 w-4" /> },
+  in_progress: { label: "In progress", tone: "info", icon: <Clock className="h-4 w-4" /> },
+  ready_for_approval: { label: "Needs approval", tone: "warning", icon: <AlertCircle className="h-4 w-4" /> },
+  approved: { label: "Approved", tone: "brand", icon: <CheckCircle2 className="h-4 w-4" /> },
+};
+
+const TONE_TEXT: Record<Tone, string> = {
+  neutral: "text-slate-500",
+  brand: "text-brand-deep",
+  info: "text-info",
+  warning: "text-warn",
+  danger: "text-danger",
+};
+
+const CIRCLE: Record<MilestoneStatus, string> = {
+  approved: "border-brand bg-brand text-white",
+  in_progress: "border-info bg-info-soft text-info",
+  ready_for_approval: "border-warn bg-warn-soft text-warn",
+  not_started: "border-line bg-slate-50 text-slate-500",
 };
 
 export default function ClientMilestoneList({
@@ -92,8 +89,8 @@ export default function ClientMilestoneList({
 
   if (milestonesError) {
     return (
-      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6 text-center">
-        <p className="text-red-400">
+      <div className="rounded-xl border border-danger-line bg-danger-soft p-6 text-center">
+        <p className="text-sm text-danger">
           Error loading milestones: {milestonesError.message}
         </p>
       </div>
@@ -102,8 +99,8 @@ export default function ClientMilestoneList({
 
   if (!milestones || milestones.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-slate-200/50 p-8 text-center">
-        <p className="text-slate-500">No milestones found for this project.</p>
+      <div className="rounded-xl border border-line bg-surface p-8 text-center">
+        <p className="text-sm text-slate-500">No milestones found for this project.</p>
       </div>
     );
   }
@@ -112,7 +109,7 @@ export default function ClientMilestoneList({
     <div className="space-y-4">
       {milestones.map((milestone, index) => {
         const status = (milestone.status as MilestoneStatus) || "not_started";
-        const config = statusConfig[status] || statusConfig.not_started;
+        const config = STATUS[status] || STATUS.not_started;
         const isApproving = approvingId === milestone.id;
         const isLastItem = index === milestones.length - 1;
 
@@ -123,7 +120,7 @@ export default function ClientMilestoneList({
               <div
                 className={clsx(
                   "absolute left-6 top-16 h-full w-0.5",
-                  status === "approved" ? "bg-[#42CA80]/50" : "bg-white"
+                  status === "approved" ? "bg-brand/40" : "bg-line"
                 )}
               />
             )}
@@ -133,21 +130,15 @@ export default function ClientMilestoneList({
               className={clsx(
                 "relative flex items-center gap-4 rounded-xl border p-4 transition-all",
                 status === "approved"
-                  ? "border-[#42CA80]/30 bg-[#42CA80]/5"
-                  : "border-slate-200 bg-slate-200/50 hover:border-slate-200/80"
+                  ? "border-brand-line bg-brand-soft"
+                  : "border-line bg-surface hover:border-line-strong"
               )}
             >
               {/* Order Number Circle */}
               <div
                 className={clsx(
-                  "relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border-2 text-lg font-bold",
-                  status === "approved"
-                    ? "border-[#42CA80] bg-[#42CA80] text-slate-900"
-                    : status === "in_progress"
-                    ? "border-blue-500 bg-blue-500/20 text-blue-400"
-                    : status === "ready_for_approval"
-                    ? "border-orange-500 bg-orange-500/20 text-orange-400"
-                    : "border-slate-200 bg-slate-50 text-slate-500"
+                  "relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border-2 text-lg font-semibold",
+                  CIRCLE[status]
                 )}
               >
                 {status === "approved" ? (
@@ -162,14 +153,14 @@ export default function ClientMilestoneList({
                 <h3
                   className={clsx(
                     "font-semibold",
-                    status === "approved" ? "text-[#42CA80]" : "text-slate-900"
+                    status === "approved" ? "text-brand-deep" : "text-slate-900"
                   )}
                 >
                   {milestone.name}
                 </h3>
                 <div className="mt-1 flex items-center gap-1.5">
-                  <span className={config.color}>{config.icon}</span>
-                  <span className={clsx("text-sm font-medium", config.color)}>
+                  <span className={TONE_TEXT[config.tone]}>{config.icon}</span>
+                  <span className={clsx("text-sm font-medium", TONE_TEXT[config.tone])}>
                     {config.label}
                   </span>
                 </div>
@@ -181,7 +172,7 @@ export default function ClientMilestoneList({
                   <button
                     onClick={() => handleApprove(milestone.id)}
                     disabled={isApproving}
-                    className="inline-flex items-center gap-2 rounded-lg bg-[#42CA80] text-white shadow-sm transition-all duration-150 hover:bg-[#35A66A] hover:shadow active:scale-[0.98] active:bg-[#2d9960] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42CA80] focus-visible:ring-offset-2 px-4 py-2 text-sm font-semibold text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                    className={buttonVariants({ variant: "primary" })}
                     aria-label={`Approve ${milestone.name}`}
                   >
                     {isApproving ? (
@@ -197,16 +188,10 @@ export default function ClientMilestoneList({
                     )}
                   </button>
                 ) : (
-                  <span
-                    className={clsx(
-                      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium",
-                      config.bgColor,
-                      config.color
-                    )}
-                  >
+                  <Badge tone={config.tone} variant="outline">
                     {config.icon}
                     {config.label}
-                  </span>
+                  </Badge>
                 )}
               </div>
             </div>
@@ -216,4 +201,3 @@ export default function ClientMilestoneList({
     </div>
   );
 }
-

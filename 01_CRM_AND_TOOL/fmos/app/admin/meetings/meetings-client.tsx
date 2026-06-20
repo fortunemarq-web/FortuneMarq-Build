@@ -5,16 +5,19 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Calendar, Phone, MapPin, Building, Clock, CheckCircle2,
-  XCircle, RotateCcw, User, CalendarX, Flame, Filter,
+  XCircle, RotateCcw, User, CalendarX, Flame,
   Link2, Copy, MessageCircle, ChevronDown, ChevronUp,
   Globe, Search, FileText, Bell, BellOff, Target,
-  TrendingUp, BarChart2, ChevronRight, Pencil, Check, X,
-  Lightbulb, AlertTriangle, HelpCircle, TrendingDown, ThumbsDown,
+  BarChart2, ChevronRight, Pencil, Check, X, Minus,
+  Lightbulb, AlertTriangle, HelpCircle, ThumbsDown,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
 import { leadStageUpdate, stageToStatus } from "@/lib/pipeline";
 import { rescheduleMeeting, handleNoShow } from "@/actions/book-meeting";
+import { PageHeader } from "@/components/ui/page-header";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 
 // ─── Types ────────────────────────────────────────────────────
 interface Meeting {
@@ -83,17 +86,18 @@ function getScriptType(m: Meeting): string {
   return "C";
 }
 
-const SCRIPT_TYPE_INFO: Record<string, { label: string; desc: string; color: string; tip: string }> = {
-  A: { label: "Type A", desc: "Already ranking on Google", color: "bg-green-100 text-green-700", tip: "They already trust Google presence. Lead with ROI improvement and getting to position 1." },
-  B: { label: "Type B", desc: "Has website, not ranking", color: "bg-blue-100 text-blue-700", tip: "They have invested in a website but it's not working. Lead with 'your website isn't generating leads yet — we can fix that.'" },
-  C: { label: "Type C", desc: "No website, not ranking", color: "bg-purple-100 text-purple-700", tip: "Start from scratch. Lead with competitor comparison — 'your competitors with websites get 3x more inquiries.'" },
-  D: { label: "Type D", desc: "Low-volume niche", color: "bg-amber-100 text-amber-700", tip: "Search volume is low — focus on social proof, local dominance, and WhatsApp-first strategy." },
+// Script type is categorical, not status — keep it neutral (the letter carries meaning).
+const SCRIPT_TYPE_INFO: Record<string, { label: string; desc: string; tip: string }> = {
+  A: { label: "Type A", desc: "Already ranking on Google", tip: "They already trust Google presence. Lead with ROI improvement and getting to position 1." },
+  B: { label: "Type B", desc: "Has website, not ranking", tip: "They have invested in a website but it's not working. Lead with 'your website isn't generating leads yet — we can fix that.'" },
+  C: { label: "Type C", desc: "No website, not ranking", tip: "Start from scratch. Lead with competitor comparison — 'your competitors with websites get 3x more inquiries.'" },
+  D: { label: "Type D", desc: "Low-volume niche", tip: "Search volume is low — focus on social proof, local dominance, and WhatsApp-first strategy." },
 };
 
 const STATUS_CONFIG = {
-  overdue:  { label: "Overdue",  bg: "bg-red-50",   border: "border-red-200",   badge: "bg-red-100 text-red-700",     dot: "bg-red-500"   },
-  today:    { label: "Today",    bg: "bg-green-50",  border: "border-green-200", badge: "bg-green-100 text-green-700", dot: "bg-green-500" },
-  upcoming: { label: "Upcoming", bg: "bg-white",     border: "border-slate-200", badge: "bg-slate-100 text-slate-600", dot: "bg-blue-400"  },
+  overdue:  { label: "Overdue",  bg: "bg-danger-soft", border: "border-danger-line", tone: "danger" as const,  dot: "bg-danger" },
+  today:    { label: "Today",    bg: "bg-brand-soft",  border: "border-brand-line",  tone: "brand" as const,   dot: "bg-brand" },
+  upcoming: { label: "Upcoming", bg: "bg-surface",     border: "border-line",        tone: "neutral" as const, dot: "bg-slate-400" },
 };
 
 // ─── Main Component ───────────────────────────────────────────
@@ -180,9 +184,6 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
     today:    meetings.filter(m => getMeetingStatus(m.follow_up_date) === "today").length,
     upcoming: meetings.filter(m => getMeetingStatus(m.follow_up_date) === "upcoming").length,
   };
-  const showRate = meetings.length > 0
-    ? Math.round((initialMeetings.length / (initialMeetings.length + 1)) * 100)
-    : 0;
 
   // ── Actions ───────────────────────────────────────────────
   async function handleAction(id: string, action: "attended" | "no_show" | "cancelled") {
@@ -306,91 +307,89 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
   // ── Render ────────────────────────────────────────────────
   return (
-    <div className="min-h-full bg-slate-50 p-4 md:p-8">
+    <div className="min-h-full bg-canvas p-4 md:p-8">
       <div className="mx-auto max-w-4xl space-y-6">
 
         {/* ── Success Toast ── */}
         {successToast && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <CheckCircle2 className="h-4 w-4 text-brand flex-shrink-0" />
+          <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-brand" />
             {successToast}
           </div>
         )}
 
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Booked Meetings</h1>
-            <p className="text-sm text-slate-500 mt-0.5">{meetings.length} meeting{meetings.length !== 1 ? "s" : ""} scheduled</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Notification toggle */}
-            {notifSupported && (
-              <button
-                onClick={requestNotifPermission}
-                className={`flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-xl border transition-colors ${
-                  notifPermission === "granted"
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                    : "bg-white border-slate-200 text-slate-500 hover:border-slate-400"
-                }`}
-                title="Enable meeting reminders"
-              >
-                {notifPermission === "granted" ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
-                {notifPermission === "granted" ? "Reminders On" : "Enable Reminders"}
-              </button>
-            )}
-            <Link href="/admin/outreach" className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 bg-white px-3 py-2 rounded-xl transition-colors">
-              Outreach <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
+        <PageHeader
+          title="Booked Meetings"
+          subtitle={`${meetings.length} meeting${meetings.length !== 1 ? "s" : ""} scheduled`}
+          actions={
+            <>
+              {notifSupported && (
+                <button
+                  onClick={requestNotifPermission}
+                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                    notifPermission === "granted"
+                      ? "border-brand-line bg-brand-soft text-brand-deep"
+                      : "border-line-strong bg-surface text-slate-500 hover:bg-slate-50"
+                  }`}
+                  title="Enable meeting reminders"
+                >
+                  {notifPermission === "granted" ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                  {notifPermission === "granted" ? "Reminders on" : "Enable reminders"}
+                </button>
+              )}
+              <Link href="/admin/outreach" className={buttonVariants({ variant: "secondary" })}>
+                Outreach <ChevronRight className="h-4 w-4" />
+              </Link>
+            </>
+          }
+        />
 
         {/* Analytics bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {([
-            ["overdue",  Flame,     "text-red-500",   counts.overdue,  "Overdue"],
-            ["today",    Calendar,  "text-green-600", counts.today,    "Today"],
-            ["upcoming", Clock,     "text-blue-500",  counts.upcoming, "Upcoming"],
-            ["all",      BarChart2, "text-indigo-500",meetings.length, "Total"],
+            ["overdue",  Flame,     "text-danger",     counts.overdue,  "Overdue"],
+            ["today",    Calendar,  "text-brand-deep", counts.today,    "Today"],
+            ["upcoming", Clock,     "text-info",       counts.upcoming, "Upcoming"],
+            ["all",      BarChart2, "text-slate-500",  meetings.length, "Total"],
           ] as const).map(([key, Icon, color, count, label]) => (
             <button
               key={key}
               onClick={() => setFilter(filter === key ? "all" : key as any)}
-              className={`rounded-2xl border p-4 text-left transition-all ${
+              className={`rounded-xl border p-4 text-left transition-all ${
                 filter === key
-                  ? "bg-slate-900 border-slate-900 text-white shadow-md"
-                  : "bg-white border-slate-200 hover:border-slate-300"
+                  ? "border-slate-900 bg-slate-900 text-white shadow-sm"
+                  : "border-line bg-surface hover:border-line-strong"
               }`}
             >
-              <Icon className={`h-4 w-4 mb-2 ${filter === key ? "text-white" : color}`} />
-              <p className={`text-2xl font-bold tabular-nums ${filter === key ? "text-white" : "text-slate-900"}`}>{count}</p>
-              <p className={`text-[11px] font-semibold uppercase tracking-wide mt-0.5 ${filter === key ? "text-slate-300" : "text-slate-500"}`}>{label}</p>
+              <Icon className={`mb-2 h-4 w-4 ${filter === key ? "text-white" : color}`} />
+              <p className={`font-display text-2xl font-semibold tabular-nums ${filter === key ? "text-white" : "text-slate-900"}`}>{count}</p>
+              <p className={`mt-0.5 text-[11px] font-semibold uppercase tracking-wide ${filter === key ? "text-slate-300" : "text-slate-500"}`}>{label}</p>
             </button>
           ))}
         </div>
 
         {/* Notification banner */}
         {notifPermission === "default" && notifSupported && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-warn-line bg-warn-soft px-4 py-3">
             <div className="flex items-center gap-3">
-              <Bell className="h-5 w-5 text-amber-600 shrink-0" />
-              <p className="text-sm text-amber-800 font-medium">Enable browser notifications to get 15-min & 1-hour reminders before each meeting.</p>
+              <Bell className="h-5 w-5 shrink-0 text-warn" />
+              <p className="text-sm font-medium text-warn">Enable browser notifications to get 15-min &amp; 1-hour reminders before each meeting.</p>
             </div>
-            <button onClick={requestNotifPermission} className="shrink-0 text-xs font-bold bg-amber-600 text-white px-3 py-1.5 rounded-lg hover:bg-amber-700 transition-colors">
+            <button onClick={requestNotifPermission} className={buttonVariants({ variant: "primary", size: "sm" })}>
               Enable
             </button>
           </div>
         )}
 
         {actionError && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700 flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-lg border border-danger-line bg-danger-soft p-3 text-sm text-danger">
             <AlertTriangle className="h-4 w-4 shrink-0" /> {actionError}
           </div>
         )}
 
         {filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-slate-300 bg-white text-slate-400">
-            <CalendarX className="h-10 w-10 mb-3 opacity-40" />
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line bg-surface py-20 text-slate-400">
+            <CalendarX className="mb-3 h-10 w-10 opacity-40" />
             <p className="text-sm font-medium">No {filter === "all" ? "" : filter} meetings</p>
           </div>
         )}
@@ -410,41 +409,37 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
             const isPostMeeting = postMeetingId === m.id;
 
             return (
-              <div key={m.id} className={`rounded-2xl border ${cfg.border} ${cfg.bg} shadow-sm overflow-hidden`}>
+              <div key={m.id} className={`overflow-hidden rounded-xl border ${cfg.border} ${cfg.bg}`}>
 
                 {/* ── Card Header ── */}
-                <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-3">
+                <div className="flex items-start justify-between gap-3 px-5 pb-3 pt-4">
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`h-2 w-2 rounded-full shrink-0 ${cfg.dot}`} />
-                      <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${cfg.badge}`}>
-                        {cfg.label} · {getCountdown(m.follow_up_date)}
-                      </span>
+                    <div className="mb-1 flex items-center gap-2">
+                      <span className={`h-2 w-2 shrink-0 rounded-full ${cfg.dot}`} />
+                      <Badge tone={cfg.tone} size="sm">{cfg.label} · {getCountdown(m.follow_up_date)}</Badge>
                       {status === "today" && (
-                        <span className="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full animate-pulse">LIVE TODAY</span>
+                        <Badge tone="brand" size="sm">Live today</Badge>
                       )}
                     </div>
-                    <h2 className="text-lg font-bold text-slate-900 leading-tight">{m.company_name}</h2>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-slate-500">
+                    <h2 className="font-display text-lg font-semibold leading-tight text-slate-900">{m.company_name}</h2>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
                       {m.contact_person && <span className="flex items-center gap-1"><User className="h-3 w-3" />{m.contact_person}</span>}
                       {m.industry && <span className="flex items-center gap-1"><Building className="h-3 w-3" />{m.industry}</span>}
                       {m.city && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{m.city}</span>}
                     </div>
                   </div>
-                  <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-lg ${scriptInfo.color}`}>
-                    Script {scriptType}
-                  </span>
+                  <Badge tone="neutral" variant="outline" size="sm">Script {scriptType}</Badge>
                 </div>
 
                 {/* ── Date/Time + Call button ── */}
-                <div className="px-5 pb-3 flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
+                <div className="flex flex-wrap items-center gap-2 px-5 pb-3">
+                  <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2">
                     <Calendar className="h-4 w-4 text-slate-400" />
                     <span className="text-sm font-semibold text-slate-800">{formatDate(m.follow_up_date)}</span>
                     <span className="text-sm text-slate-400">{formatTime(m.follow_up_date)}</span>
                   </div>
                   {m.phone && (
-                    <a href={`tel:${m.phone}`} className="flex items-center gap-2 bg-brand-deep hover:bg-brand-hover text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
+                    <a href={`tel:${m.phone}`} className={buttonVariants({ variant: "primary" })}>
                       <Phone className="h-4 w-4" />{m.phone}
                     </a>
                   )}
@@ -452,9 +447,9 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
                 {/* ── Meeting Link ── */}
                 <div className="px-5 pb-3">
-                  <div className="bg-white border border-slate-200 rounded-xl p-3">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1">
-                      <Link2 className="h-3 w-3" /> Meeting Link
+                  <div className="rounded-lg border border-line bg-surface p-3">
+                    <p className="mb-2 flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                      <Link2 className="h-3 w-3" /> Meeting link
                     </p>
                     {isEditingLink ? (
                       <div className="flex gap-2">
@@ -462,36 +457,34 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                           value={linkDraft}
                           onChange={(e) => setLinkDraft(e.target.value)}
                           placeholder="https://meet.google.com/... or https://zoom.us/..."
-                          className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+                          className="flex-1 rounded-lg border border-line px-3 py-2 text-sm focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                         />
-                        <button onClick={() => saveMeetingLink(m.id)} className="bg-brand-deep hover:bg-brand-hover text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors">
+                        <button onClick={() => saveMeetingLink(m.id)} className={buttonVariants({ variant: "primary", size: "icon" })}>
                           <Check className="h-4 w-4" />
                         </button>
-                        <button onClick={() => { setEditingLink(null); setLinkDraft(""); }} className="border border-slate-200 text-slate-500 px-3 py-2 rounded-lg text-xs hover:bg-slate-50 transition-colors">
+                        <button onClick={() => { setEditingLink(null); setLinkDraft(""); }} className={buttonVariants({ variant: "secondary", size: "icon" })}>
                           <X className="h-4 w-4" />
                         </button>
                       </div>
                     ) : m.meeting_link ? (
                       <div className="flex items-center gap-2">
-                        <a href={m.meeting_link} target="_blank" rel="noreferrer" className="flex-1 text-sm text-blue-600 hover:underline truncate font-mono">
+                        <a href={m.meeting_link} target="_blank" rel="noreferrer" className="flex-1 truncate text-sm text-info hover:underline">
                           {m.meeting_link}
                         </a>
-                        <button onClick={() => copyLink(m.id, m.meeting_link!)} className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-colors ${copiedId === m.id ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "border-slate-200 text-slate-500 hover:text-slate-700"}`} title="Copy link">
+                        <button onClick={() => copyLink(m.id, m.meeting_link!)} className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors ${copiedId === m.id ? "border-brand-line bg-brand-soft text-brand-deep" : "border-line text-slate-500 hover:text-slate-700"}`} title="Copy link">
                           {copiedId === m.id ? <><Check className="h-3.5 w-3.5" /> Copied</> : <><Copy className="h-3.5 w-3.5" /> Copy</>}
                         </button>
-                        <button onClick={() => { setEditingLink(m.id); setLinkDraft(m.meeting_link!); }} className="shrink-0 p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-slate-700 transition-colors">
+                        <button onClick={() => { setEditingLink(m.id); setLinkDraft(m.meeting_link!); }} className="shrink-0 rounded-lg border border-line p-1.5 text-slate-400 transition-colors hover:text-slate-700">
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => { setEditingLink(m.id); setLinkDraft("https://meet.google.com/"); }}
-                          className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-deep border border-dashed border-slate-300 hover:border-brand rounded-lg px-3 py-2 w-full transition-colors"
-                        >
-                          <Link2 className="h-4 w-4" /> Add Google Meet / Zoom link
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => { setEditingLink(m.id); setLinkDraft("https://meet.google.com/"); }}
+                        className="flex w-full items-center gap-2 rounded-lg border border-dashed border-line-strong px-3 py-2 text-sm text-slate-400 transition-colors hover:border-brand hover:text-brand-deep"
+                      >
+                        <Link2 className="h-4 w-4" /> Add Google Meet / Zoom link
+                      </button>
                     )}
                   </div>
                 </div>
@@ -499,28 +492,32 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                 {/* ── WhatsApp Templates ── */}
                 {m.phone && (
                   <div className="px-5 pb-3">
-                    <div className="bg-white border border-slate-200 rounded-xl p-3 space-y-2">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
+                    <div className="space-y-2 rounded-lg border border-line bg-surface p-3">
+                      <p className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                         <MessageCircle className="h-3 w-3" /> Send via WhatsApp
                       </p>
                       {!m.meeting_link && (
-                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-                          <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                          <p className="text-xs text-amber-700">Add a meeting link above — it will be included in all messages.</p>
+                        <div className="flex items-center gap-2 rounded-lg border border-warn-line bg-warn-soft px-3 py-2">
+                          <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-warn" />
+                          <p className="text-xs text-warn">Add a meeting link above — it will be included in all messages.</p>
                         </div>
                       )}
                       <div className="grid grid-cols-3 gap-2">
                         {(["confirmation", "reminder_1h", "reminder_15"] as const).map((type) => {
                           const labels = { confirmation: "Confirmation", reminder_1h: "1h Reminder", reminder_15: "15-min Reminder" };
                           const icons = { confirmation: Calendar, reminder_1h: Clock, reminder_15: Bell };
-                          const colors = { confirmation: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100", reminder_1h: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100", reminder_15: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100" };
+                          const colors = {
+                            confirmation: "border-brand-line bg-brand-soft text-brand-deep hover:bg-brand-100",
+                            reminder_1h: "border-info-line bg-info-soft text-info hover:bg-blue-100",
+                            reminder_15: "border-warn-line bg-warn-soft text-warn hover:bg-amber-100",
+                          };
                           const Icon = icons[type];
                           const isOpen = previewMsg?.id === m.id && previewMsg?.type === type;
                           return (
                             <button
                               key={type}
                               onClick={() => setPreviewMsg(isOpen ? null : { id: m.id, type })}
-                              className={`flex flex-col items-center gap-1 text-[11px] font-semibold border px-2 py-2 rounded-lg transition-colors ${colors[type]} ${isOpen ? "ring-2 ring-offset-1 ring-current" : ""}`}
+                              className={`flex flex-col items-center gap-1 rounded-lg border px-2 py-2 text-[11px] font-semibold transition-colors ${colors[type]} ${isOpen ? "ring-2 ring-current ring-offset-1" : ""}`}
                             >
                               <Icon className="h-4 w-4" />
                               {labels[type]}
@@ -529,12 +526,12 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                         })}
                       </div>
 
-                      {/* Message preview */}
+                      {/* Message preview — styled like a WhatsApp thread */}
                       {previewMsg?.id === m.id && (
-                        <div className="bg-slate-900 rounded-xl p-3 space-y-3">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Message Preview</p>
-                          <div className="bg-emerald-900/30 border border-emerald-700/30 rounded-xl p-3">
-                            <pre className="text-xs text-emerald-200 whitespace-pre-wrap leading-relaxed font-sans">
+                        <div className="space-y-3 rounded-lg bg-slate-900 p-3">
+                          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Message preview</p>
+                          <div className="rounded-lg border border-emerald-700/30 bg-emerald-900/30 p-3">
+                            <pre className="whitespace-pre-wrap font-sans text-xs leading-relaxed text-emerald-100">
                               {buildMsg(m, previewMsg.type)}
                             </pre>
                           </div>
@@ -542,9 +539,9 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                             href={`https://wa.me/${m.phone!.replace(/\D/g,"")}?text=${encodeURIComponent(buildMsg(m, previewMsg.type))}`}
                             target="_blank" rel="noreferrer"
                             onClick={() => setPreviewMsg(null)}
-                            className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors"
+                            className="flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
                           >
-                            <MessageCircle className="h-4 w-4" /> Open in WhatsApp & Send
+                            <MessageCircle className="h-4 w-4" /> Open in WhatsApp &amp; send
                           </a>
                         </div>
                       )}
@@ -556,77 +553,77 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                 <div className="px-5 pb-3">
                   <button
                     onClick={() => setExpandedIntel(prev => { const n = new Set(prev); isIntelOpen ? n.delete(m.id) : n.add(m.id); return n; })}
-                    className="w-full flex items-center justify-between bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 text-sm font-semibold text-indigo-800 hover:bg-indigo-100 transition-colors"
+                    className="flex w-full items-center justify-between rounded-lg border border-brand-line bg-brand-soft px-4 py-3 text-sm font-semibold text-brand-deep transition-colors hover:bg-brand-100"
                   >
-                    <span className="flex items-center gap-2"><Target className="h-4 w-4" /> Pre-Meeting Intel & Talking Points</span>
+                    <span className="flex items-center gap-2"><Target className="h-4 w-4" /> Pre-meeting intel &amp; talking points</span>
                     {isIntelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </button>
 
                   {isIntelOpen && (
-                    <div className="mt-2 bg-white border border-indigo-100 rounded-xl p-4 space-y-3">
+                    <div className="mt-2 space-y-3 rounded-lg border border-line bg-surface p-4">
                       {/* Script type */}
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Script Type</span>
-                        <span className={`text-xs font-bold px-2 py-1 rounded-lg ${scriptInfo.color}`}>{scriptInfo.label} — {scriptInfo.desc}</span>
+                        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">Script type</span>
+                        <span className="text-xs font-semibold text-slate-700">{scriptInfo.label} — {scriptInfo.desc}</span>
                       </div>
 
                       {/* Online presence */}
                       <div className="grid grid-cols-2 gap-2">
-                        <div className={`rounded-lg p-2.5 border ${m.has_website ? "bg-blue-50 border-blue-200" : "bg-slate-50 border-slate-200"}`}>
-                          <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">Website</p>
+                        <div className={`rounded-lg border p-2.5 ${m.has_website ? "border-info-line bg-info-soft" : "border-line bg-slate-50"}`}>
+                          <p className="mb-1 text-[11px] font-semibold uppercase text-slate-500">Website</p>
                           {m.has_website && m.website_link ? (
-                            <a href={m.website_link} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline flex items-center gap-1">
-                              <Globe className="h-3 w-3" /> View Website
+                            <a href={m.website_link} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-info hover:underline">
+                              <Globe className="h-3 w-3" /> View website
                             </a>
                           ) : m.has_website ? (
-                            <span className="text-xs text-blue-700 font-semibold flex items-center gap-1"><Globe className="h-3 w-3" /> Has Website</span>
+                            <span className="flex items-center gap-1 text-xs font-semibold text-info"><Globe className="h-3 w-3" /> Has website</span>
                           ) : (
                             <span className="text-xs text-slate-500">No website</span>
                           )}
                         </div>
-                        <div className={`rounded-lg p-2.5 border ${m.gmb_link ? "bg-green-50 border-green-200" : "bg-slate-50 border-slate-200"}`}>
-                          <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">GMB / Maps</p>
+                        <div className={`rounded-lg border p-2.5 ${m.gmb_link ? "border-brand-line bg-brand-soft" : "border-line bg-slate-50"}`}>
+                          <p className="mb-1 text-[11px] font-semibold uppercase text-slate-500">GMB / Maps</p>
                           {m.gmb_link ? (
-                            <a href={m.gmb_link} target="_blank" rel="noreferrer" className="text-xs text-green-600 hover:underline flex items-center gap-1">
+                            <a href={m.gmb_link} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-brand-deep hover:underline">
                               <Search className="h-3 w-3" /> View on Maps
                             </a>
                           ) : (
                             <span className="text-xs text-slate-500">No GMB</span>
                           )}
                         </div>
-                        <div className={`rounded-lg p-2.5 border ${m.serp_ranked ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
-                          <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">Google Ranking</p>
-                          <span className={`text-xs font-semibold ${m.serp_ranked ? "text-green-700" : "text-red-600"}`}>
-                            {m.serp_ranked ? "✓ Ranking" : "✗ Not Ranking"}
+                        <div className={`rounded-lg border p-2.5 ${m.serp_ranked ? "border-brand-line bg-brand-soft" : "border-danger-line bg-danger-soft"}`}>
+                          <p className="mb-1 text-[11px] font-semibold uppercase text-slate-500">Google ranking</p>
+                          <span className={`text-xs font-semibold ${m.serp_ranked ? "text-brand-deep" : "text-danger"}`}>
+                            {m.serp_ranked ? "Ranking" : "Not ranking"}
                           </span>
                         </div>
-                        <div className="rounded-lg p-2.5 border bg-amber-50 border-amber-200">
-                          <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">Last Outcome</p>
-                          <span className="text-xs font-semibold text-amber-700">{m.last_outcome?.replace(/_/g, " ") || "First contact"}</span>
+                        <div className="rounded-lg border border-warn-line bg-warn-soft p-2.5">
+                          <p className="mb-1 text-[11px] font-semibold uppercase text-slate-500">Last outcome</p>
+                          <span className="text-xs font-semibold text-warn">{m.last_outcome?.replace(/_/g, " ") || "First contact"}</span>
                         </div>
                       </div>
 
                       {/* Talking point */}
-                      <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3">
-                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide mb-1.5 flex items-center gap-1">
-                          <Lightbulb className="h-3 w-3" /> Opening Strategy
+                      <div className="rounded-lg border border-brand-line bg-brand-soft p-3">
+                        <p className="mb-1.5 flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-brand-deep">
+                          <Lightbulb className="h-3 w-3" /> Opening strategy
                         </p>
-                        <p className="text-sm text-indigo-900 leading-relaxed">{scriptInfo.tip}</p>
+                        <p className="text-sm leading-relaxed text-slate-700">{scriptInfo.tip}</p>
                       </div>
 
                       {/* Prep checklist */}
                       <div className="space-y-1.5">
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Pre-call Checklist</p>
-                        {[
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Pre-call checklist</p>
+                        {([
                           ["Review their Google listing", m.gmb_link ? "done" : "pending"],
                           ["Check their website", m.has_website ? "done" : "skip"],
                           ["Know their niche + city combo", m.industry && m.city ? "done" : "pending"],
                           ["Meeting link sent on WhatsApp", m.meeting_link ? "done" : "pending"],
                           ["Confirmation message sent", "pending"],
-                        ].map(([item, state]) => (
+                        ] as const).map(([item, state]) => (
                           <div key={item} className="flex items-center gap-2 text-xs">
-                            <span className={`h-4 w-4 rounded-full flex items-center justify-center text-white shrink-0 text-[9px] font-bold ${state === "done" ? "bg-emerald-500" : state === "skip" ? "bg-slate-300" : "bg-amber-400"}`}>
-                              {state === "done" ? "✓" : state === "skip" ? "–" : "!"}
+                            <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-white ${state === "done" ? "bg-brand" : state === "skip" ? "bg-slate-300" : "bg-warn"}`}>
+                              {state === "done" ? <Check className="h-2.5 w-2.5" /> : state === "skip" ? <Minus className="h-2.5 w-2.5" /> : <AlertTriangle className="h-2.5 w-2.5" />}
                             </span>
                             <span className={state === "done" ? "text-slate-400 line-through" : "text-slate-700"}>{item}</span>
                           </div>
@@ -638,10 +635,10 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
                 {/* ── Meeting Notes ── */}
                 <div className="px-5 pb-3">
-                  <div className="bg-white border border-slate-200 rounded-xl p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
-                        <FileText className="h-3 w-3" /> Meeting Notes
+                  <div className="rounded-lg border border-line bg-surface p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                        <FileText className="h-3 w-3" /> Meeting notes
                       </p>
                       {!isEditingNotes ? (
                         <button
@@ -649,18 +646,18 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                             setNotesDraft(prev => ({ ...prev, [m.id]: m.meeting_notes || "" }));
                             setEditingNotes(prev => new Set(prev).add(m.id));
                           }}
-                          className="text-[11px] text-slate-400 hover:text-slate-700 flex items-center gap-1"
+                          className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-700"
                         >
                           <Pencil className="h-3 w-3" /> {m.meeting_notes ? "Edit" : "Add notes"}
                         </button>
                       ) : (
                         <div className="flex gap-1">
-                          <button onClick={() => saveMeetingNotes(m.id)} className="text-[11px] text-emerald-600 font-bold hover:text-emerald-700 flex items-center gap-1">
+                          <button onClick={() => saveMeetingNotes(m.id)} className="flex items-center gap-1 text-[11px] font-semibold text-brand-deep hover:text-brand-deeper">
                             <Check className="h-3 w-3" /> Save
                           </button>
                           <button
                             onClick={() => setEditingNotes(prev => { const n = new Set(prev); n.delete(m.id); return n; })}
-                            className="text-[11px] text-slate-400 hover:text-slate-600 ml-2"
+                            className="ml-2 text-[11px] text-slate-400 hover:text-slate-600"
                           >
                             Cancel
                           </button>
@@ -673,12 +670,12 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                         onChange={(e) => setNotesDraft(prev => ({ ...prev, [m.id]: e.target.value }))}
                         placeholder="Key discussion points, objections raised, next steps agreed..."
                         rows={3}
-                        className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand resize-none"
+                        className="w-full resize-none rounded-lg border border-line px-3 py-2 text-sm focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                       />
                     ) : m.meeting_notes ? (
-                      <p className="text-sm text-slate-700 whitespace-pre-wrap">{m.meeting_notes}</p>
+                      <p className="whitespace-pre-wrap text-sm text-slate-700">{m.meeting_notes}</p>
                     ) : (
-                      <p className="text-xs text-slate-400 italic">No notes yet — add key points during or after the call</p>
+                      <p className="text-xs italic text-slate-400">No notes yet — add key points during or after the call</p>
                     )}
                   </div>
                 </div>
@@ -686,24 +683,24 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                 {/* ── Post-meeting outcome panel ── */}
                 {isPostMeeting && (
                   <div className="px-5 pb-3">
-                    <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-4">
-                      <p className="text-sm font-bold text-slate-800">What was the outcome?</p>
+                    <div className="space-y-4 rounded-xl border border-line bg-surface p-4">
+                      <p className="text-sm font-semibold text-slate-800">What was the outcome?</p>
 
                       {/* Outcome selector */}
                       <div className="grid grid-cols-3 gap-2">
                         {([
-                          { key: "interested",    label: "Interested",        sub: "Ready for proposal", icon: CheckCircle2, active: "bg-emerald-600 border-emerald-600 text-white", inactive: "border-slate-200 text-slate-600 hover:border-emerald-400" },
-                          { key: "thinking",      label: "Thinking About It", sub: "Needs more time",     icon: HelpCircle,   active: "bg-amber-500 border-amber-500 text-white",   inactive: "border-slate-200 text-slate-600 hover:border-amber-400" },
-                          { key: "not_interested",label: "Not Interested",    sub: "Doesn't want it",    icon: ThumbsDown,   active: "bg-red-600 border-red-600 text-white",       inactive: "border-slate-200 text-slate-600 hover:border-red-400" },
+                          { key: "interested",    label: "Interested",        sub: "Ready for proposal", icon: CheckCircle2, active: "bg-brand-deep border-brand-deep text-white", inactive: "border-line text-slate-600 hover:border-brand" },
+                          { key: "thinking",      label: "Thinking About It", sub: "Needs more time",     icon: HelpCircle,   active: "bg-warn border-warn text-white",            inactive: "border-line text-slate-600 hover:border-warn-line" },
+                          { key: "not_interested",label: "Not Interested",    sub: "Doesn't want it",    icon: ThumbsDown,   active: "bg-danger border-danger text-white",        inactive: "border-line text-slate-600 hover:border-danger-line" },
                         ] as const).map(({ key, label, sub, icon: Icon, active, inactive }) => (
                           <button
                             key={key}
                             onClick={() => setPostMeetingOutcome(key)}
-                            className={`flex flex-col items-center gap-1.5 border-2 rounded-xl px-2 py-3 text-xs font-semibold transition-colors ${postMeetingOutcome === key ? active : inactive}`}
+                            className={`flex flex-col items-center gap-1.5 rounded-xl border-2 px-2 py-3 text-xs font-semibold transition-colors ${postMeetingOutcome === key ? active : inactive}`}
                           >
                             <Icon className="h-5 w-5" />
                             <span className="text-center leading-tight">{label}</span>
-                            <span className={`text-[10px] font-normal ${postMeetingOutcome === key ? "opacity-80" : "text-slate-400"}`}>{sub}</span>
+                            <span className={`text-[11px] font-normal ${postMeetingOutcome === key ? "opacity-80" : "text-slate-400"}`}>{sub}</span>
                           </button>
                         ))}
                       </div>
@@ -711,12 +708,12 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                       {/* Follow-up date for "thinking" */}
                       {postMeetingOutcome === "thinking" && (
                         <div>
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1.5">Follow-up Date</label>
+                          <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-slate-500">Follow-up date</label>
                           <input
                             type="datetime-local"
                             value={followUpDate}
                             onChange={e => setFollowUpDate(e.target.value)}
-                            className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400"
+                            className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:border-warn focus:outline-none focus:ring-2 focus:ring-warn/20"
                           />
                         </div>
                       )}
@@ -727,7 +724,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                         onChange={(e) => setNotesDraft(prev => ({ ...prev, [m.id]: e.target.value }))}
                         placeholder="What was discussed? Objections? Key points?"
                         rows={3}
-                        className="w-full text-sm border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand resize-none"
+                        className="w-full resize-none rounded-lg border border-line px-3 py-2 text-sm focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                       />
 
                       {/* Confirm actions */}
@@ -735,29 +732,26 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                         <button
                           onClick={() => confirmPostMeeting(m.id)}
                           disabled={!postMeetingOutcome || isPending}
-                          className={`flex-1 disabled:opacity-40 text-white font-bold py-2.5 rounded-xl text-sm transition-colors ${
-                            postMeetingOutcome === "not_interested" ? "bg-red-600 hover:bg-red-700" :
-                            postMeetingOutcome === "thinking"       ? "bg-amber-500 hover:bg-amber-600" :
-                            "bg-emerald-600 hover:bg-emerald-700"
+                          className={`flex-1 rounded-lg py-2.5 text-sm font-semibold text-white transition-colors disabled:opacity-40 ${
+                            postMeetingOutcome === "not_interested" ? "bg-danger hover:bg-red-800" :
+                            postMeetingOutcome === "thinking"       ? "bg-warn hover:bg-amber-800" :
+                            "bg-brand-deep hover:bg-brand-deeper"
                           }`}
                         >
                           {isPending ? "Saving…" :
-                            postMeetingOutcome === "interested"     ? "Confirm & Move to Proposals" :
-                            postMeetingOutcome === "thinking"       ? "Save & Schedule Follow-up" :
-                            postMeetingOutcome === "not_interested" ? "Mark as Not Interested" :
+                            postMeetingOutcome === "interested"     ? "Confirm & move to proposals" :
+                            postMeetingOutcome === "thinking"       ? "Save & schedule follow-up" :
+                            postMeetingOutcome === "not_interested" ? "Mark as not interested" :
                             "Select an outcome above"
                           }
                         </button>
                         {postMeetingOutcome === "interested" && (
-                          <Link
-                            href={`/admin/leads/${m.id}/proposal/new`}
-                            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-colors"
-                          >
-                            <FileText className="h-4 w-4" /> Create Proposal
+                          <Link href={`/admin/leads/${m.id}/proposal/new`} className={buttonVariants({ variant: "secondary" })}>
+                            <FileText className="h-4 w-4" /> Create proposal
                           </Link>
                         )}
                       </div>
-                      <button onClick={() => { setPostMeetingId(null); setPostMeetingOutcome(null); }} className="text-xs text-slate-400 hover:text-slate-600 w-full text-center">
+                      <button onClick={() => { setPostMeetingId(null); setPostMeetingOutcome(null); }} className="w-full text-center text-xs text-slate-400 hover:text-slate-600">
                         Cancel
                       </button>
                     </div>
@@ -767,19 +761,19 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
                 {/* ── Reschedule ── */}
                 {isRescheduling && (
                   <div className="px-5 pb-3">
-                    <div className="bg-white border border-slate-200 rounded-xl p-3 space-y-2">
-                      <p className="text-xs font-semibold text-slate-600">New date & time:</p>
+                    <div className="space-y-2 rounded-lg border border-line bg-surface p-3">
+                      <p className="text-xs font-semibold text-slate-600">New date &amp; time:</p>
                       <input
                         type="datetime-local"
                         value={rescheduleDate}
                         onChange={(e) => setRescheduleDate(e.target.value)}
-                        className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+                        className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-ring"
                       />
                       <div className="flex gap-2">
-                        <button onClick={() => handleReschedule(m.id)} disabled={!rescheduleDate || isPending} className="flex-1 bg-brand-deep hover:bg-brand-hover disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors">
-                          Confirm Reschedule
+                        <button onClick={() => handleReschedule(m.id)} disabled={!rescheduleDate || isPending} className="flex-1 rounded-lg bg-brand-deep py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-deeper disabled:opacity-50">
+                          Confirm reschedule
                         </button>
-                        <button onClick={() => { setRescheduleId(null); setRescheduleDate(""); }} className="flex-1 border border-slate-200 text-slate-600 font-semibold py-2 rounded-lg text-sm hover:bg-slate-50 transition-colors">
+                        <button onClick={() => { setRescheduleId(null); setRescheduleDate(""); }} className="flex-1 rounded-lg border border-line-strong py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50">
                           Cancel
                         </button>
                       </div>
@@ -789,23 +783,23 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
                 {/* ── Action Buttons ── */}
                 {!isPostMeeting && (
-                  <div className="px-5 pb-4 grid grid-cols-3 gap-2">
-                    <button onClick={() => handleAction(m.id, "attended")} disabled={isPending} className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl text-xs transition-colors">
+                  <div className="grid grid-cols-3 gap-2 px-5 pb-4">
+                    <button onClick={() => handleAction(m.id, "attended")} disabled={isPending} className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-deep py-2.5 text-xs font-semibold text-white transition-colors hover:bg-brand-deeper disabled:opacity-50">
                       <CheckCircle2 className="h-4 w-4" /> Attended
                     </button>
-                    <button onClick={() => { setRescheduleId(isRescheduling ? null : m.id); setRescheduleDate(""); }} disabled={isPending} className="flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl text-xs transition-colors">
+                    <button onClick={() => { setRescheduleId(isRescheduling ? null : m.id); setRescheduleDate(""); }} disabled={isPending} className="flex items-center justify-center gap-1.5 rounded-lg border border-line-strong bg-surface py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50">
                       <RotateCcw className="h-4 w-4" /> Reschedule
                     </button>
-                    <button onClick={() => handleAction(m.id, "no_show")} disabled={isPending} className="flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl text-xs transition-colors">
-                      <XCircle className="h-4 w-4" /> No Show
+                    <button onClick={() => handleAction(m.id, "no_show")} disabled={isPending} className="flex items-center justify-center gap-1.5 rounded-lg bg-danger py-2.5 text-xs font-semibold text-white transition-colors hover:bg-red-800 disabled:opacity-50">
+                      <XCircle className="h-4 w-4" /> No show
                     </button>
                   </div>
                 )}
 
                 {/* ── Footer ── */}
-                <div className="border-t border-slate-100 px-5 py-2 flex justify-end">
-                  <Link href={`/admin/leads/${m.id}`} className="text-xs font-medium text-slate-400 hover:text-slate-700 flex items-center gap-1 transition-colors">
-                    View Lead Profile <ChevronRight className="h-3 w-3" />
+                <div className="flex justify-end border-t border-line px-5 py-2">
+                  <Link href={`/admin/leads/${m.id}`} className="flex items-center gap-1 text-xs font-medium text-slate-400 transition-colors hover:text-slate-700">
+                    View lead profile <ChevronRight className="h-3 w-3" />
                   </Link>
                 </div>
               </div>
