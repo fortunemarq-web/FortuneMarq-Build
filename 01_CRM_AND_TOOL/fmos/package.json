@@ -6,7 +6,12 @@
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:staging": "node scripts/seed-staging.mjs",
+    "dev:staging": "node scripts/dev-staging.mjs",
+    "test:e2e": "playwright test --config=playwright.e2e.config.ts",
+    "test:e2e:ui": "playwright test --config=playwright.e2e.config.ts --ui",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.2",

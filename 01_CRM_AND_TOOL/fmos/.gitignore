@@ -36,6 +36,7 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+!.env.staging.example
 
 # vercel
 .vercel
@@ -51,3 +52,8 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Understand-Anything (knowledge graph internals)
+.understand-anything/intermediate/
+.understand-anything/diff-overlay.json
+.understand-anything/tmp/
