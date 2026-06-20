@@ -8,6 +8,14 @@ import {
   ExternalLink, X, ChevronRight, Loader2, Send,
 } from "lucide-react";
 import { toggleBotPaused, getTranscript, sendInboxReply, type TranscriptEntry } from "@/actions/inbox";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/cn";
 
 export interface Conversation {
   leadId: string;
@@ -27,12 +35,12 @@ export interface Conversation {
   needsAttention: boolean;
 }
 
-const STATUS_META: Record<Conversation["status"], { label: string; cls: string; icon: typeof CircleDot }> = {
-  escalated: { label: "Escalated", cls: "bg-red-50 text-red-700 border-red-200", icon: AlertTriangle },
-  active:    { label: "Active",    cls: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: CircleDot },
-  paused:    { label: "Paused",    cls: "bg-amber-50 text-amber-700 border-amber-200", icon: PauseCircle },
-  opted_out: { label: "Opted out", cls: "bg-slate-100 text-slate-500 border-slate-200", icon: BellOff },
-  idle:      { label: "Idle",      cls: "bg-slate-50 text-slate-500 border-slate-200", icon: CircleDot },
+const STATUS_META: Record<Conversation["status"], { label: string; tone: Tone; icon: typeof CircleDot }> = {
+  escalated: { label: "Escalated", tone: "danger",  icon: AlertTriangle },
+  active:    { label: "Active",    tone: "brand",   icon: CircleDot },
+  paused:    { label: "Paused",    tone: "warning", icon: PauseCircle },
+  opted_out: { label: "Opted out", tone: "neutral", icon: BellOff },
+  idle:      { label: "Idle",      tone: "neutral", icon: CircleDot },
 };
 
 const FILTERS = [
@@ -65,8 +73,8 @@ function formatTime(iso: string): string {
 }
 
 function DirIcon({ dir }: { dir: Conversation["lastDir"] }) {
-  if (dir === "in") return <ArrowDownLeft className="h-3 w-3 text-blue-500" />;
-  if (dir === "bot") return <Bot className="h-3 w-3 text-[#1E7A4F]" />;
+  if (dir === "in") return <ArrowDownLeft className="h-3 w-3 text-info" />;
+  if (dir === "bot") return <Bot className="h-3 w-3 text-brand-deep" />;
   return <ArrowUpRight className="h-3 w-3 text-slate-400" />;
 }
 
@@ -79,10 +87,10 @@ function TranscriptBubble({ entry }: { entry: TranscriptEntry }) {
   if (isInbound) {
     return (
       <div className="flex flex-col items-start mb-3 max-w-[80%]">
-        <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-3.5 py-2 shadow-sm">
+        <div className="bg-surface border border-line rounded-2xl rounded-tl-sm px-3.5 py-2 shadow-sm">
           <p className="text-sm text-slate-800 whitespace-pre-wrap break-words">{entry.text}</p>
         </div>
-        <span className="text-[10px] text-slate-400 mt-1 ml-1">{formatTime(entry.at)}</span>
+        <span className="text-[11px] text-slate-400 mt-1 ml-1">{formatTime(entry.at)}</span>
       </div>
     );
   }
@@ -90,25 +98,25 @@ function TranscriptBubble({ entry }: { entry: TranscriptEntry }) {
   return (
     <div className="flex flex-col items-end mb-3 ml-auto max-w-[80%]">
       <div className={`rounded-2xl rounded-tr-sm px-3.5 py-2 shadow-sm ${
-        isBot ? "bg-[#1E7A4F] text-white" : "bg-slate-700 text-white"
+        isBot ? "bg-brand-deep text-white" : "bg-slate-700 text-white"
       }`}>
         <div className="flex items-center gap-1.5 mb-0.5">
           {isBot
             ? <Bot className="h-3 w-3 opacity-70" />
             : <User className="h-3 w-3 opacity-70" />}
-          <span className="text-[10px] font-semibold opacity-70">
+          <span className="text-[11px] font-semibold opacity-70">
             {isBot ? "Bot" : "Team"}
             {entry.meta && entry.meta !== "escalated" ? ` · ${entry.meta}` : ""}
           </span>
           {entry.meta === "escalated" && (
-            <span className="text-[9px] font-bold bg-red-500 text-white px-1.5 py-0.5 rounded-full ml-1">
+            <span className="text-[11px] font-bold bg-danger text-white px-1.5 py-0.5 rounded-full ml-1">
               ESCALATED
             </span>
           )}
         </div>
         <p className="text-sm whitespace-pre-wrap break-words">{entry.text}</p>
       </div>
-      <span className="text-[10px] text-slate-400 mt-1 mr-1">{formatTime(entry.at)}</span>
+      <span className="text-[11px] text-slate-400 mt-1 mr-1">{formatTime(entry.at)}</span>
     </div>
   );
 }
@@ -179,12 +187,12 @@ function TranscriptDrawer({
       <div className="flex-1 bg-black/20" onClick={onClose} />
 
       {/* Drawer panel */}
-      <div className="w-full max-w-md bg-white flex flex-col shadow-2xl border-l border-slate-200">
+      <div className="w-full max-w-md bg-surface flex flex-col shadow-lg border-l border-line">
         {/* Header */}
-        <div className="flex items-start gap-3 px-4 py-4 border-b border-slate-100 bg-slate-50">
+        <div className="flex items-start gap-3 px-4 py-4 border-b border-line bg-slate-50">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-bold text-slate-900">{conv.businessName}</span>
+              <span className="text-sm font-semibold text-slate-900">{conv.businessName}</span>
               {conv.contactName && (
                 <span className="text-xs text-slate-500">· {conv.contactName}</span>
               )}
@@ -192,22 +200,19 @@ function TranscriptDrawer({
             {conv.phone && (
               <p className="text-xs text-slate-400 mt-0.5">{conv.phone}</p>
             )}
-            <p className="text-[10px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-slate-400 mt-0.5">
               {conv.messageCount} messages total
             </p>
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <button
+            <Button
               onClick={handleToggle}
               disabled={toggling}
+              variant={botPaused ? "secondary" : "danger-soft"}
+              size="sm"
               title={botPaused ? "Resume bot" : "Pause bot / take over"}
-              className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg border transition-colors ${
-                botPaused
-                  ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
-                  : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
-              } disabled:opacity-50`}
             >
               {toggling
                 ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -215,7 +220,7 @@ function TranscriptDrawer({
                   ? <Play className="h-3.5 w-3.5" />
                   : <Pause className="h-3.5 w-3.5" />}
               {botPaused ? "Resume bot" : "Take over"}
-            </button>
+            </Button>
 
             <Link
               href={`/admin/leads/${conv.leadId}`}
@@ -244,7 +249,7 @@ function TranscriptDrawer({
             </div>
           ) : fetchError ? (
             <div className="flex items-center justify-center h-full">
-              <p className="text-sm text-red-500">{fetchError}</p>
+              <p className="text-sm text-danger">{fetchError}</p>
             </div>
           ) : entries.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-2 text-slate-400">
@@ -262,10 +267,10 @@ function TranscriptDrawer({
         </div>
 
         {/* Composer — type a reply (takes over the chat, pauses the bot) */}
-        <div className="border-t border-slate-100 p-3 bg-white">
-          {replyError && <p className="text-xs text-red-500 mb-2">{replyError}</p>}
+        <div className="border-t border-line p-3 bg-surface">
+          {replyError && <p className="text-xs text-danger mb-2">{replyError}</p>}
           <div className="flex items-end gap-2">
-            <textarea
+            <Textarea
               value={reply}
               onChange={(e) => setReply(e.target.value)}
               onKeyDown={(e) => {
@@ -277,18 +282,19 @@ function TranscriptDrawer({
               rows={1}
               placeholder={conv.optedOut ? "This lead opted out of WhatsApp" : "Type a reply…  (sends as your team, pauses the bot)"}
               disabled={sending || conv.optedOut}
-              className="flex-1 resize-none text-sm border border-slate-200 rounded-lg px-3 py-2 max-h-32 focus:outline-none focus:ring-1 focus:ring-[#42CA80] disabled:bg-slate-50 disabled:text-slate-400"
+              className="flex-1 resize-none max-h-32"
             />
-            <button
+            <Button
               onClick={handleSend}
               disabled={sending || !reply.trim() || conv.optedOut}
+              variant="primary"
+              size="icon"
               title="Send reply"
-              className="shrink-0 rounded-lg bg-[#1E7A4F] text-white px-3 py-2.5 hover:bg-[#176b44] disabled:opacity-40 flex items-center"
             >
               {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </button>
+            </Button>
           </div>
-          <p className="text-[10px] text-slate-400 mt-1.5">
+          <p className="text-[11px] text-slate-400 mt-1.5">
             Free-typed replies work within 24h of the customer’s last message; older chats need an approved template.
           </p>
         </div>
@@ -358,61 +364,59 @@ export default function InboxClient({ conversations }: { conversations: Conversa
 
   return (
     <>
-      <div className="min-h-full bg-slate-50 px-4 py-6">
-        <div className="mx-auto max-w-5xl">
+      <div className="min-h-full bg-canvas px-4 py-6">
+        <div className="mx-auto max-w-5xl space-y-5">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-1">
-            <MessageSquare className="h-6 w-6 text-[#1E7A4F]" />
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">WhatsApp Inbox</h1>
-          </div>
-          <p className="text-sm text-slate-500 mb-5">
-            Every conversation across the bot and your team — escalations and active threads first.
-          </p>
+          <PageHeader
+            title="WhatsApp Inbox"
+            subtitle="Every conversation across the bot and your team — escalations and active threads first."
+          />
 
           {/* Filters + search */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="flex items-center gap-1.5 flex-wrap">
               {FILTERS.map((f) => (
                 <button
                   key={f.key}
                   onClick={() => setFilter(f.key)}
-                  className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                  className={cn(
+                    "text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors",
                     filter === f.key
-                      ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                  }`}
+                      ? "bg-brand-deep text-white border-brand-deep"
+                      : "bg-surface text-slate-600 border-line hover:border-line-strong"
+                  )}
                 >
                   {f.label}
-                  <span className={`ml-1.5 ${filter === f.key ? "text-slate-300" : "text-slate-400"}`}>
+                  <span className={cn("ml-1.5 tabular-nums", filter === f.key ? "text-white/70" : "text-slate-400")}>
                     {counts[f.key as keyof typeof counts]}
                   </span>
                 </button>
               ))}
             </div>
             <div className="sm:ml-auto relative">
-              <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
+              <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 z-10" />
+              <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search business, contact, phone"
-                className="text-sm border border-slate-200 rounded-lg pl-9 pr-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-1 focus:ring-[#42CA80]"
+                className="pl-9 sm:w-64"
               />
             </div>
           </div>
 
           {/* List */}
           {rows.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
-              <MessageSquare className="h-8 w-8 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-slate-600">No conversations</p>
-              <p className="text-xs text-slate-400 mt-1">
-                {conversations.length === 0
+            <EmptyState
+              icon={MessageSquare}
+              title="No conversations"
+              description={
+                conversations.length === 0
                   ? "WhatsApp conversations will appear here as messages come in."
-                  : "Nothing matches this filter."}
-              </p>
-            </div>
+                  : "Nothing matches this filter."
+              }
+            />
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100 overflow-hidden">
+            <Card className="divide-y divide-slate-100 overflow-hidden">
               {rows.map((c) => {
                 const paused = getEffectivePaused(c);
                 const toggling = togglingIds.has(c.leadId);
@@ -424,19 +428,21 @@ export default function InboxClient({ conversations }: { conversations: Conversa
                   <div
                     key={c.leadId}
                     onClick={() => setSelected(c)}
-                    className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-colors ${
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-colors",
                       isSelected
                         ? "bg-slate-100"
                         : c.needsAttention
-                          ? "bg-amber-50/30 hover:bg-amber-50/60"
+                          ? "bg-warn-soft/40 hover:bg-warn-soft/70"
                           : "hover:bg-slate-50/70"
-                    }`}
+                    )}
                   >
                     {/* Bot vs human avatar */}
                     <div
-                      className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${
-                        paused || !c.hasBot ? "bg-slate-100 text-slate-500" : "bg-emerald-50 text-[#1E7A4F]"
-                      }`}
+                      className={cn(
+                        "h-9 w-9 rounded-full flex items-center justify-center shrink-0",
+                        paused || !c.hasBot ? "bg-slate-100 text-slate-500" : "bg-brand-soft text-brand-deep"
+                      )}
                       title={paused ? "Human (bot paused)" : c.hasBot ? "Bot-handled" : "Human"}
                     >
                       {paused || !c.hasBot ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -445,7 +451,7 @@ export default function InboxClient({ conversations }: { conversations: Conversa
                     {/* Name + last message */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-900 truncate">{c.businessName}</span>
+                        <span className="text-sm font-semibold text-slate-900 truncate">{c.businessName}</span>
                         {c.contactName && (
                           <span className="text-xs text-slate-400 truncate">· {c.contactName}</span>
                         )}
@@ -458,12 +464,10 @@ export default function InboxClient({ conversations }: { conversations: Conversa
 
                     {/* Status + time + actions */}
                     <div className="flex flex-col items-end gap-1.5 shrink-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide rounded-full border px-2 py-0.5 ${st.cls}`}>
-                          <StIcon className="h-3 w-3" />
-                          {st.label}
-                        </span>
-                      </div>
+                      <Badge tone={st.tone} size="sm">
+                        <StIcon className="h-3 w-3" />
+                        {st.label}
+                      </Badge>
                       <div className="flex items-center gap-2">
                         <span className="text-[11px] text-slate-400">{timeAgo(c.lastAt)}</span>
 
@@ -472,11 +476,12 @@ export default function InboxClient({ conversations }: { conversations: Conversa
                           onClick={(e) => handleInlineToggle(e, c)}
                           disabled={toggling || c.optedOut}
                           title={paused ? "Resume bot" : "Take over (pause bot)"}
-                          className={`p-1 rounded-md transition-colors disabled:opacity-40 ${
+                          className={cn(
+                            "p-1 rounded-md transition-colors disabled:opacity-40",
                             paused
-                              ? "text-amber-500 hover:bg-amber-50"
-                              : "text-emerald-600 hover:bg-emerald-50"
-                          }`}
+                              ? "text-warn hover:bg-warn-soft"
+                              : "text-brand-deep hover:bg-brand-soft"
+                          )}
                         >
                           {toggling
                             ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -499,7 +504,7 @@ export default function InboxClient({ conversations }: { conversations: Conversa
                   </div>
                 );
               })}
-            </div>
+            </Card>
           )}
         </div>
       </div>
