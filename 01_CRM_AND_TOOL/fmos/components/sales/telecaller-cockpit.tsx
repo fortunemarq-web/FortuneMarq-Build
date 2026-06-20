@@ -442,7 +442,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
         touch_type: selectedOutcome === "INTERESTED_SEND_INFO" ? "pdf_sent" : "call",
         outcome: selectedOutcome,
         pdf_name: selectedOutcome === "INTERESTED_SEND_INFO" ? selectedPdfName : null,
-        notes: outcomeReason || null,
+        note: outcomeReason || null,
         created_at: new Date().toISOString(),
       });
 
