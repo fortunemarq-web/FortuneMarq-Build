@@ -106,7 +106,7 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
       touch_type: "whatsapp_sent",
       outcome: selected.name,
       pdf_name: null,
-      notes: `Template: ${selected.name}`,
+      note: `Template: ${selected.name}`,
       actor_id: actorId,
     });
 
