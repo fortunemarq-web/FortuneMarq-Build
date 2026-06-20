@@ -4,9 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { Loader2, Lock, Mail, AlertCircle } from "lucide-react";
-import clsx from "clsx";
 import FortuneMarqLogo from "@/components/ui/fortune-marq-logo";
 import { logAudit } from "@/lib/audit";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -122,19 +125,19 @@ export default function LoginPage() {
   // Show loading spinner while checking auth
   if (isCheckingAuth) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="flex min-h-screen items-center justify-center bg-canvas">
         <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-canvas px-4">
       <div className="w-full max-w-sm">
         {/* Logo & Branding */}
         <div className="mb-8 flex flex-col items-center text-center">
           <FortuneMarqLogo size="lg" showText={false} />
-          <h1 className="mt-5 text-xl font-semibold tracking-tight text-slate-900">
+          <h1 className="mt-5 font-display text-xl font-semibold tracking-tight text-slate-900">
             Sign in to FortuneMarq
           </h1>
           <p className="mt-1.5 text-sm text-slate-500">
@@ -142,15 +145,15 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <Card className="p-6 shadow-[0_1px_2px_rgba(15,23,42,0.05)] sm:p-8">
           {/* Error Message */}
           {error && (
             <div
               role="alert"
-              className="mb-5 flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5"
+              className="mb-5 flex items-start gap-2.5 rounded-lg border border-danger-line bg-danger-soft px-3.5 py-2.5"
             >
-              <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
-              <p className="text-sm text-red-700">{error}</p>
+              <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-danger" />
+              <p className="text-sm text-danger">{error}</p>
             </div>
           )}
 
@@ -158,17 +161,12 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Input */}
             <div>
-              <label
-                htmlFor="email"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
-              >
-                Email address
-              </label>
+              <Label htmlFor="email">Email address</Label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Mail className="h-4 w-4 text-slate-400" />
                 </div>
-                <input
+                <Input
                   id="email"
                   type="email"
                   value={email}
@@ -176,24 +174,19 @@ export default function LoginPage() {
                   placeholder="you@company.com"
                   required
                   autoComplete="email"
-                  className="h-11 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-shadow focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-ring"
+                  className="h-11 pl-10"
                 />
               </div>
             </div>
 
             {/* Password Input */}
             <div>
-              <label
-                htmlFor="password"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
-              >
-                Password
-              </label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Lock className="h-4 w-4 text-slate-400" />
                 </div>
-                <input
+                <Input
                   id="password"
                   type="password"
                   value={password}
@@ -201,21 +194,18 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   required
                   autoComplete="current-password"
-                  className="h-11 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-shadow focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-ring"
+                  className="h-11 pl-10"
                 />
               </div>
             </div>
 
             {/* Sign In Button */}
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              size="lg"
               disabled={isLoading}
-              className={clsx(
-                "mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold text-white transition-colors",
-                isLoading
-                  ? "cursor-not-allowed bg-brand-deep/60"
-                  : "bg-brand-deep hover:bg-brand-active active:bg-brand-deep"
-              )}
+              className="mt-2 h-11 w-full"
             >
               {isLoading ? (
                 <>
@@ -225,9 +215,9 @@ export default function LoginPage() {
               ) : (
                 "Sign in"
               )}
-            </button>
+            </Button>
           </form>
-        </div>
+        </Card>
 
         {/* Bottom text */}
         <p className="mt-6 text-center text-xs text-slate-400">

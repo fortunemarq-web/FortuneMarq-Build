@@ -25,6 +25,13 @@ import clsx from "clsx";
 import { sendNotification, NotificationType } from "@/lib/notifications";
 import { formatDistanceToNow } from "date-fns";
 import { logAudit } from "@/lib/audit";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar } from "@/components/ui/avatar";
+import { EmptyState } from "@/components/ui/empty-state";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Milestone {
   id: string;
@@ -222,8 +229,8 @@ export default function ClientDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-full flex-col items-center justify-center bg-slate-50">
-        <Zap className="h-10 w-10 text-[#42CA80] animate-pulse mb-4" />
+      <div className="flex min-h-full flex-col items-center justify-center bg-canvas">
+        <Zap className="mb-4 h-10 w-10 animate-pulse text-brand" />
         <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
       </div>
     );
@@ -231,12 +238,12 @@ export default function ClientDashboardPage() {
 
   if (error && !client) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-slate-50 p-4 text-center">
+      <div className="flex min-h-full items-center justify-center bg-canvas p-4 text-center">
         <div className="max-w-md">
-          <Building2 className="mx-auto h-12 w-12 text-slate-300 mb-4" />
-          <h1 className="text-xl font-bold mb-2">Portal Access</h1>
-          <p className="text-slate-500 mb-6">{error}</p>
-          <Link href="/login" className="bg-slate-900 text-white px-6 py-2 rounded-xl text-sm font-bold">Back to Login</Link>
+          <Building2 className="mx-auto mb-4 h-12 w-12 text-slate-300" />
+          <h1 className="mb-2 font-display text-xl font-semibold text-slate-900">Portal Access</h1>
+          <p className="mb-6 text-sm text-slate-500">{error}</p>
+          <Link href="/login" className={buttonVariants({ variant: "primary" })}>Back to login</Link>
         </div>
       </div>
     );
@@ -244,11 +251,11 @@ export default function ClientDashboardPage() {
 
   if (client && projects.length === 0) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-slate-50 p-4 text-center">
+      <div className="flex min-h-full items-center justify-center bg-canvas p-4 text-center">
         <div className="max-w-md">
-          <CheckCircle2 className="mx-auto h-12 w-12 text-[#42CA80] mb-4" />
-          <h1 className="text-xl font-bold mb-2">Welcome, {client.business_name}</h1>
-          <p className="text-slate-500">Your project is currently being initialized. Please check back soon.</p>
+          <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-brand" />
+          <h1 className="mb-2 font-display text-xl font-semibold text-slate-900">Welcome, {client.business_name}</h1>
+          <p className="text-sm text-slate-500">Your project is currently being initialized. Please check back soon.</p>
         </div>
       </div>
     );
@@ -261,29 +268,29 @@ export default function ClientDashboardPage() {
   const currentMilestoneIndex = milestones.findIndex(m => m.status !== "completed" && m.status !== "approved");
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8 md:px-8 lg:py-12">
+    <div className="min-h-full bg-canvas px-4 py-8 md:px-8 lg:py-12">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-xl">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-deep text-white">
             <Zap className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-[#42CA80]">Client Portal</p>
-            <h1 className="text-2xl font-black text-slate-900 md:text-4xl">{client.business_name}</h1>
+            <p className="text-xs font-semibold uppercase tracking-widest text-brand-deep">Client Portal</p>
+            <h1 className="font-display text-2xl font-semibold text-slate-900 md:text-3xl">{client.business_name}</h1>
           </div>
         </div>
 
         {projects.length > 1 && (
-          <div className="flex gap-2 mb-6 flex-wrap">
+          <div className="mb-6 flex flex-wrap gap-2">
             {projects.map((p, i) => (
               <button
                 key={p.id}
                 onClick={() => setActiveProjectIndex(i)}
                 className={clsx(
-                  "px-4 py-2 rounded-xl text-sm font-bold transition-all",
+                  "rounded-lg px-4 py-2 text-sm font-semibold capitalize transition-colors",
                   activeProjectIndex === i
-                    ? "bg-slate-900 text-white"
-                    : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                    ? "bg-brand-deep text-white"
+                    : "border border-line bg-surface text-slate-600 hover:bg-slate-50"
                 )}
               >
                 {p.service_type?.replace("_", " ") ?? `Project ${i + 1}`}
@@ -296,38 +303,38 @@ export default function ClientDashboardPage() {
           <div className="space-y-6 lg:col-span-2">
 
             {/* Project Overview */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm overflow-hidden relative">
-              <div className="absolute top-0 right-0 p-4">
-                <span className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500">
+            <Card className="relative overflow-hidden p-6">
+              <div className="absolute right-0 top-0 p-4">
+                <Badge tone="neutral" variant="soft" size="sm" className="uppercase tracking-wide">
                   {formatServiceType(project.service_type)}
-                </span>
+                </Badge>
               </div>
 
-              <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Live Progress</h2>
+              <h2 className="mb-6 text-xs font-semibold uppercase tracking-widest text-slate-500">Live Progress</h2>
 
-              <div className="flex items-end justify-between mb-2">
-                <span className="text-4xl font-black text-slate-900">{progressPercent}<span className="text-lg text-slate-400">%</span></span>
-                <span className="text-xs font-bold text-slate-400">{completedMilestones} / {milestones.length} Milestones</span>
+              <div className="mb-2 flex items-end justify-between">
+                <span className="font-display text-4xl font-semibold tabular-nums text-slate-900">{progressPercent}<span className="text-lg text-slate-400">%</span></span>
+                <span className="text-xs font-medium text-slate-500">{completedMilestones} / {milestones.length} Milestones</span>
               </div>
 
-              <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden mb-8">
+              <div className="mb-8 h-3 w-full overflow-hidden rounded-full bg-slate-100">
                 <div
-                  className="h-full bg-slate-900 rounded-full transition-all duration-1000 ease-out"
+                  className="h-full rounded-full bg-brand transition-all duration-1000 ease-out"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-slate-50 rounded-2xl">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Start Date</p>
-                  <p className="font-bold text-slate-900">{formatDate(project.start_date)}</p>
+                <div className="rounded-lg border border-line bg-slate-50 p-4">
+                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Start Date</p>
+                  <p className="font-semibold text-slate-900">{formatDate(project.start_date)}</p>
                 </div>
-                <div className="p-4 bg-slate-50 rounded-2xl">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Est. Completion</p>
-                  <p className="font-bold text-slate-900">{formatDate(project.deadline)}</p>
+                <div className="rounded-lg border border-line bg-slate-50 p-4">
+                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Est. Completion</p>
+                  <p className="font-semibold text-slate-900">{formatDate(project.deadline)}</p>
                 </div>
               </div>
-            </div>
+            </Card>
 
             {/* Deliverables Section */}
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
