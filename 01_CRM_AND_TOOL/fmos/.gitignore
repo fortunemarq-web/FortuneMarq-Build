@@ -57,3 +57,7 @@ node_modules/
 .understand-anything/intermediate/
 .understand-anything/diff-overlay.json
 .understand-anything/tmp/
+
+# UI audit screenshots (local artifacts)
+tests/e2e/__screens__/
+tests/e2e/__screens_after__/

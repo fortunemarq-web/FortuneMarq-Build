@@ -40,7 +40,10 @@ process.env.MARKETING_PREVIEW_LOCAL = "0";
 console.log(`[dev:staging] DB → ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
 console.log("[dev:staging] MARKETING_PREVIEW_LOCAL=0 (serving the FMOS app on localhost)");
 
-const child = spawn("next", ["dev", "-H", "0.0.0.0"], {
+const PORT = process.env.PORT || "3000";
+console.log(`[dev:staging] PORT → ${PORT}`);
+
+const child = spawn("next", ["dev", "-H", "0.0.0.0", "-p", PORT], {
   stdio: "inherit",
   env: process.env,
   shell: true,
