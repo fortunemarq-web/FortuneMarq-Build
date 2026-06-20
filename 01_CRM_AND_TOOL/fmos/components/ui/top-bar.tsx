@@ -87,7 +87,7 @@ export default function TopBar() {
   return (
     <header className="hidden md:flex h-12 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 print:hidden">
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1 text-[13px] min-w-0" aria-label="Breadcrumb">
+      <nav className="flex items-center gap-1 text-sm min-w-0" aria-label="Breadcrumb">
         {visibleCrumbs.length === 0 ? (
           <span className="font-semibold text-slate-900">Home</span>
         ) : (
@@ -117,7 +117,7 @@ export default function TopBar() {
         >
           <Search className="h-3.5 w-3.5" />
           <span className="hidden lg:inline">Search anything…</span>
-          <span className="flex items-center gap-0.5 rounded border border-slate-200 bg-white px-1 py-0.5 text-[9px] font-bold text-slate-400">
+          <span className="flex items-center gap-0.5 rounded border border-slate-200 bg-white px-1 py-0.5 text-[10px] font-bold text-slate-400">
             <CommandIcon className="h-2.5 w-2.5" />K
           </span>
         </button>

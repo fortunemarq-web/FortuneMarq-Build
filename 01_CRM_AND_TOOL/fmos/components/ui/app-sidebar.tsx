@@ -295,7 +295,7 @@ export default function AppSidebar() {
               <Search className="h-3.5 w-3.5" />
               <span>Quick Search...</span>
             </div>
-            <div className="flex items-center gap-1 rounded bg-slate-700 px-1.5 py-0.5 text-[9px] font-bold">
+            <div className="flex items-center gap-1 rounded bg-slate-700 px-1.5 py-0.5 text-[10px] font-bold">
               <CommandIcon className="h-2.5 w-2.5" />
               <span>K</span>
             </div>
@@ -307,7 +307,7 @@ export default function AppSidebar() {
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-5 w-5 animate-spin text-[#42CA80]" />
+            <Loader2 className="h-5 w-5 animate-spin text-brand" />
           </div>
         ) : navGroups ? (
           <div className="space-y-3">
@@ -315,7 +315,7 @@ export default function AppSidebar() {
               <div key={group.label}>
                 {!isCollapsed && (
                   <div className="mb-0.5 px-2.5">
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       {group.label}
                     </span>
                   </div>
@@ -330,9 +330,9 @@ export default function AppSidebar() {
                           href={item.href}
                           onClick={() => setIsOpen(false)}
                           className={clsx(
-                            "group flex items-center rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors duration-150",
+                            "group flex items-center rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors duration-150",
                             isActive
-                              ? "border-l-2 border-[#42CA80] bg-slate-800 pl-[8px] text-white"
+                              ? "border-l-2 border-brand bg-slate-800 pl-[8px] text-white"
                               : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-200",
                             isCollapsed && "justify-center px-0 pl-0 py-2"
                           )}
@@ -362,7 +362,7 @@ export default function AppSidebar() {
                       className={clsx(
                         "group flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150",
                         isActive
-                          ? "border-l-2 border-[#42CA80] bg-slate-800 pl-[10px] text-white"
+                          ? "border-l-2 border-brand bg-slate-800 pl-[10px] text-white"
                           : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-200",
                         isCollapsed && "justify-center px-0 pl-0"
                       )}
@@ -388,7 +388,7 @@ export default function AppSidebar() {
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium text-slate-300">{userName}</p>
-              <p className="truncate text-[10px] text-slate-500">{role}</p>
+              <p className="truncate text-[11px] capitalize text-slate-500">{role}</p>
             </div>
           )}
           {!isCollapsed && (
@@ -417,7 +417,7 @@ export default function AppSidebar() {
             {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : (
               <div className="flex items-center gap-1.5">
                 <ChevronLeft className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-medium">Collapse</span>
+                <span className="text-[11px] font-medium">Collapse</span>
               </div>
             )}
           </button>
