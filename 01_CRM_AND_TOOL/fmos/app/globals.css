@@ -39,6 +39,11 @@
   --font-body: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
   --font-sans: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Proposal document (client-facing "growth report" deliverable) fonts —
+     loaded scoped via next/font in proposal-creator.tsx. */
+  --font-jakarta: var(--font-plus-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-jbmono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {

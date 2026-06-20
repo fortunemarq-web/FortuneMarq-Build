@@ -11,12 +11,15 @@ const OUT = resolve(__dirname, process.env.SHOT_DIR || "__verify__");
 mkdirSync(OUT, { recursive: true });
 
 const SCREENS = [
-  { name: "10-agreements", path: "/admin/agreements" }, // re-shoot after FK fix
-  { name: "14-strategy", path: "/admin/strategy" },
-  { name: "16-growth", path: "/admin/growth" },
-  { name: "19-tasks", path: "/tasks" },
-  { name: "20-projects", path: "/projects" },
-  { name: "21-inbox", path: "/admin/inbox" },
+  { name: "30-settings", path: "/admin/settings" },
+  { name: "31-audit-log", path: "/admin/audit-log" },
+  { name: "32-finance-gst", path: "/admin/finance/gst" },
+  { name: "33-finance-pnl", path: "/admin/finance/pnl" },
+  { name: "34-build-tracker", path: "/admin/build-tracker" },
+  { name: "35-niche-kits", path: "/admin/niche-kits" },
+  { name: "36-growth-gmb", path: "/admin/growth/gmb" },
+  { name: "37-work-hours", path: "/admin/work-hours" },
+  { name: "38-agreements", path: "/admin/agreements" }, // FK now patched on staging
 ];
 
 test("capture remaining screens", async ({ page }) => {

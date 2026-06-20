@@ -9,8 +9,13 @@ import {
   Copy, CheckCheck, Target, TrendingUp, Eye, Users, Repeat,
   ArrowDown, Lightbulb, Search, MousePointer, Heart, Printer,
 } from "lucide-react";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { createClient } from "@/lib/supabase";
 import servicesData from "@/lib/data/services_data.json";
+
+// Proposal document fonts — scoped to this route via next/font.
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-plus-jakarta", display: "swap" });
+const jbmono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-jetbrains", display: "swap" });
 import { sendNotification } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 import { toast } from "@/components/ui/toast";
@@ -633,328 +638,219 @@ FortuneMarq
               <button onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-lg border border-line-strong bg-surface px-3.5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"><Printer className="h-4 w-4" /> Download PDF</button>
             </div>
 
-            <div className="print-area bg-surface rounded-2xl border border-line shadow-lg overflow-hidden">
+            <div className={`${jakarta.variable} ${jbmono.variable} print-area overflow-hidden rounded-2xl bg-[#0e0e0e] text-white shadow-lg`}>
 
-              {/* ── 1. COVER ─────────────────────────────────────────────────── */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-10 py-12 text-white">
+              {/* ── COVER ────────────────────────────────────────────────────── */}
+              <div className="relative overflow-hidden px-10 py-14 sm:px-14 sm:py-20">
+                <div className="pointer-events-none absolute -top-32 right-0 h-96 w-96 rounded-full bg-brand/10 blur-[120px]" />
                 <div className="relative">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand mb-4">FortuneMarq Media &amp; Marketing · Digital Growth Proposal</p>
-                  <h1 className="font-display text-3xl font-semibold leading-tight">{typeContent.headline}</h1>
-                  <p className="text-slate-300 text-base mt-3">Prepared exclusively for</p>
-                  <p className="font-display text-2xl font-semibold text-white mt-1">{lead.company_name}</p>
-                  {lead.city && <p className="text-slate-400 text-sm mt-0.5">{lead.city}{lead.industry ? ` · ${lead.industry}` : ""}</p>}
-                  <div className="flex flex-wrap gap-5 mt-8 pt-8 border-t border-slate-700/50">
-                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Prepared For</p><p className="text-sm font-semibold text-white mt-0.5">{lead.contact_person || lead.company_name}</p></div>
-                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Prepared By</p><p className="text-sm font-semibold text-white mt-0.5">Jabeer · FortuneMarq</p></div>
-                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Date</p><p className="text-sm font-semibold text-white mt-0.5">{today}</p></div>
-                    <div><p className="text-[11px] text-slate-500 uppercase tracking-wide">Valid Until</p><p className="text-sm font-semibold text-brand mt-0.5">{addDays(parseInt(validity))}</p></div>
-                    <div className="ml-auto"><p className="text-[11px] text-slate-500 uppercase tracking-wide">Ref</p><p className="text-sm tabular-nums font-semibold text-slate-300 mt-0.5">{proposalNumber}</p></div>
+                  <div className="flex flex-wrap items-center justify-between gap-2 font-jbmono text-[10px] uppercase tracking-[0.22em] text-white/40">
+                    <span>FortuneMarq Media &amp; Marketing</span>
+                    <span>Confidential · {today}</span>
+                  </div>
+                  <p className="mt-16 font-jbmono text-[11px] uppercase tracking-[0.22em] text-brand">Digital Growth Proposal · {proposalNumber}</p>
+                  <h1 className="mt-5 font-jakarta text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
+                    Growing<br /><span className="italic text-brand">{lead.company_name}</span><br />Online.
+                  </h1>
+                  <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-white/55">{typeContent.headline} A full-funnel plan{lead.city ? ` for ${lead.city}` : ""} — what we&apos;ll build, how it works, and the investment.</p>
+
+                  {/* Chapter TOC */}
+                  <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-white/10 pt-8 sm:grid-cols-4">
+                    {[["01", "The Opportunity"], ["02", "Your Growth Plan"], ["03", "The Investment"], ["04", "Next Steps"]].map(([n, t]) => (
+                      <div key={n}>
+                        <p className="font-jbmono text-[10px] tracking-[0.18em] text-brand">CHAPTER {n}</p>
+                        <p className="mt-1.5 font-jakarta text-sm font-semibold text-white">{t}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Footer meta */}
+                  <div className="mt-12 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-6">
+                    <p className="font-jakarta text-lg font-bold">Fortune<span className="text-brand">Marq</span></p>
+                    <div className="flex flex-wrap gap-x-8 gap-y-1 font-jbmono text-[11px] text-white/50">
+                      <span>Prepared for {lead.contact_person || lead.company_name}{lead.city ? ` · ${lead.city}` : ""}</span>
+                      <span>Valid until {addDays(parseInt(validity))}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Personal note */}
               {customNote && (
-                <div className="px-10 py-6 bg-brand-soft border-b border-brand-line">
-                  <p className="text-sm text-brand-deep italic leading-relaxed">"{customNote}"</p>
-                  <p className="text-xs text-brand-deep font-semibold mt-2">— Jabeer</p>
+                <div className="border-t border-white/10 bg-brand/5 px-10 py-7 sm:px-14">
+                  <p className="max-w-2xl text-[15px] italic leading-relaxed text-white/80">&ldquo;{customNote}&rdquo;</p>
+                  <p className="mt-3 font-jbmono text-[11px] uppercase tracking-[0.18em] text-brand">— Jabeer, FortuneMarq</p>
                 </div>
               )}
 
-              {/* ── 2. THE SITUATION ─────────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-line">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-5">Understanding Your Situation</p>
-                <div className="space-y-4">
-                  {[
-                    { label: "Where You Are Now", text: typeContent.situation, color: "info" },
-                    { label: "What This Is Costing You", text: typeContent.consequence, color: "danger" },
-                    { label: "Why Now Is the Right Time", text: typeContent.urgency, color: "brand" },
-                  ].map(({ label, text, color }, i) => {
-                    const borderColors: Record<string, string> = { info: "border-info-line bg-info-soft", danger: "border-danger-line bg-danger-soft", brand: "border-brand-line bg-brand-soft" };
-                    const labelColors: Record<string, string> = { info: "text-info", danger: "text-danger", brand: "text-brand-deep" };
-                    return (
-                      <div key={i} className={`avoid-break rounded-xl border-l-4 p-5 ${borderColors[color]}`}>
-                        <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${labelColors[color]}`}>{label}</p>
-                        <p className="text-sm text-slate-700 leading-relaxed">{text}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* ── 3. THE GROWTH FUNNEL ─────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-line bg-slate-50">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">Our Approach — The Growth Funnel</p>
-                <p className="text-sm text-slate-500 mb-6">Every service we're proposing connects to a specific stage in your growth funnel. This is how we think — not individual services, but a coordinated system that moves a stranger into a paying client.</p>
-
-                {/* Funnel visual — single brand accent, active stages filled, inactive neutral */}
-                <div className="flex flex-col items-center gap-0">
-                  {FUNNEL_STAGES.map((fs, i) => {
-                    const hasActive = fs.services.some(sid => selectedIds.includes(sid));
-                    const activeInStage = fs.services.filter(sid => selectedIds.includes(sid));
-                    const FIcon = fs.icon;
-                    const widths = ["w-full", "w-11/12", "w-10/12", "w-9/12", "w-8/12"];
-                    return (
-                      <div key={fs.key} className="avoid-break flex flex-col items-center w-full">
-                        <div className={`${widths[i]} mx-auto rounded-xl px-5 py-4 transition-colors ${hasActive ? "bg-brand-deep text-white" : "bg-slate-100 text-slate-400 opacity-60"}`}>
-                          <div className="flex items-center justify-between flex-wrap gap-2">
-                            <div className="flex items-center gap-3">
-                              <FIcon className="h-5 w-5 shrink-0" />
-                              <div>
-                                <p className="font-semibold text-sm">{fs.label}</p>
-                                <p className={`text-xs ${hasActive ? "text-brand-soft" : "opacity-60"}`}>{fs.desc}</p>
-                              </div>
-                            </div>
-                            {hasActive && activeInStage.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5">
-                                {activeInStage.map(sid => {
-                                  const svcName = RAW_SERVICES.find(r => r.id === sid)?.label || sid;
-                                  return <span key={sid} className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white/20">{svcName}</span>;
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        {i < FUNNEL_STAGES.length - 1 && (
-                          <div className="flex flex-col items-center my-1">
-                            <ArrowDown className="h-5 w-5 text-slate-300" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {!activeFunnelStages.length && (
-                  <p className="text-xs text-slate-400 text-center mt-4 italic">Select services to see how they map to your growth funnel</p>
-                )}
-
-                {/* Approach phases */}
-                <div className="mt-8">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-4">How We Execute — Phase by Phase</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* ── CHAPTER 01 — THE OPPORTUNITY ─────────────────────────────── */}
+              <div className="relative border-t border-white/10 px-10 py-14 sm:px-14 sm:py-16">
+                <p className="pointer-events-none absolute right-8 top-6 select-none font-jakarta text-[120px] font-extrabold leading-none text-white/[0.03]">01</p>
+                <div className="relative">
+                  <p className="font-jbmono text-[11px] uppercase tracking-[0.22em] text-brand">Chapter One</p>
+                  <h2 className="mt-3 max-w-2xl font-jakarta text-4xl font-bold leading-[1.05] tracking-tight">The opportunity in front of you</h2>
+                  <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3">
                     {[
-                      { phase: "01", title: "Discovery", duration: "Week 1", steps: ["Deep dive into your business, market, and customers", "Competitor analysis — what are they doing and where are the gaps", "Identify your highest-impact quick wins"] },
-                      { phase: "02", title: "Strategy", duration: "Week 1–2", steps: ["Build your custom growth roadmap", "Define KPIs and success metrics for each service", "Agree on timelines and first deliverables"] },
-                      { phase: "03", title: "Execution", duration: "Week 2 onwards", steps: ["Each service launched according to the roadmap", "You're updated at every milestone", "Nothing goes live without your approval"] },
-                      { phase: "04", title: "Optimise & Scale", duration: "Monthly", steps: ["Monthly report: what worked, what didn't, what we're doing next", "Double down on what's generating leads", "Expand into the next phase of the funnel"] },
-                    ].map(({ phase, title, duration, steps }) => (
-                      <div key={phase} className="avoid-break bg-surface rounded-xl border border-line p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="text-2xl font-display font-semibold text-slate-200 tabular-nums">{phase}</span>
-                          <div><p className="text-sm font-semibold text-slate-900 leading-tight">{title}</p><p className="text-[11px] text-slate-400">{duration}</p></div>
-                        </div>
-                        <ul className="space-y-1.5">
-                          {steps.map((s, i) => (
-                            <li key={i} className="flex items-start gap-2 text-xs text-slate-600">
-                              <div className="h-3 w-3 rounded-full bg-brand-soft flex items-center justify-center shrink-0 mt-0.5"><div className="h-1.5 w-1.5 rounded-full bg-brand" /></div>
-                              {s}
-                            </li>
-                          ))}
-                        </ul>
+                      { label: "Where you are now", text: typeContent.situation },
+                      { label: "What it is costing you", text: typeContent.consequence },
+                      { label: "Why now", text: typeContent.urgency, accent: true },
+                    ].map(({ label, text, accent }, i) => (
+                      <div key={i} className={`avoid-break p-6 ${accent ? "bg-brand text-[#0b3d26]" : "bg-[#141414]"}`}>
+                        <p className={`font-jbmono text-[10px] uppercase tracking-[0.18em] ${accent ? "text-[#0b3d26]/70" : "text-white/40"}`}>{label}</p>
+                        <p className={`mt-3 text-[13px] leading-relaxed ${accent ? "text-[#0b3d26]" : "text-white/65"}`}>{text}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* ── 4. WHY WE'RE DIFFERENT ───────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-line">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">Why FortuneMarq — Not a Typical Agency</p>
-                <p className="text-sm text-slate-500 mb-6">Most digital agencies share the same problems. Here's how we're built differently — and why that matters for your results.</p>
-                <div className="space-y-3">
-                  {DIFFERENTIATORS.map(({ icon: Icon, title, agency, us }, i) => (
-                    <div key={i} className="avoid-break grid grid-cols-1 sm:grid-cols-2 gap-0 rounded-xl overflow-hidden border border-line">
-                      <div className="bg-danger-soft px-5 py-4 border-b sm:border-b-0 sm:border-r border-line">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-danger mb-2">Typical Agency</p>
-                        <p className="text-xs text-slate-600 leading-relaxed">{agency}</p>
-                      </div>
-                      <div className="bg-brand-soft px-5 py-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="h-5 w-5 rounded-md bg-brand/20 flex items-center justify-center"><Icon className="h-3 w-3 text-brand-deep" /></div>
-                          <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep">{title}</p>
+              {/* ── CHAPTER 02 — YOUR GROWTH PLAN (condensed services) ───────── */}
+              <div className="relative border-t border-white/10 px-10 py-14 sm:px-14 sm:py-16">
+                <p className="pointer-events-none absolute right-8 top-6 select-none font-jakarta text-[120px] font-extrabold leading-none text-white/[0.03]">02</p>
+                <div className="relative">
+                  <p className="font-jbmono text-[11px] uppercase tracking-[0.22em] text-brand">Chapter Two</p>
+                  <h2 className="mt-3 max-w-2xl font-jakarta text-4xl font-bold leading-[1.05] tracking-tight">What we&apos;ll build for you</h2>
+                  <p className="mt-4 max-w-xl text-[14px] leading-relaxed text-white/55">A coordinated system — not one-off services. Here&apos;s each piece, why it matters, and what you get.</p>
+
+                  <div className="mt-10 space-y-5">
+                    {selectedFullData.map((svc) => {
+                      const SvcIcon = SERVICE_ICONS[svc.id] || FileText;
+                      const deep = svc.deep;
+                      const features = deep?.features?.slice(0, 4) ?? [];
+                      return (
+                        <div key={svc.id} className="avoid-break overflow-hidden rounded-2xl border border-white/10 bg-[#141414]">
+                          {/* Service header */}
+                          <div className="keep-with-next flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5">
+                            <div className="flex items-start gap-4">
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/15">
+                                <SvcIcon className="h-5 w-5 text-brand" />
+                              </div>
+                              <div>
+                                <p className="font-jakarta text-lg font-bold">{svc.label}</p>
+                                {svc.raw?.tagline && <p className="mt-0.5 text-[13px] text-white/45">{svc.raw.tagline.replace(/\{\{.*?\}\}/g, lead.city || "your city")}</p>}
+                              </div>
+                            </div>
+                            <div className="shrink-0 text-right">
+                              {svc.setupFee > 0 && <p className="font-jbmono text-[11px] text-white/40">{formatINR(svc.setupFee)} setup</p>}
+                              {svc.monthlyRetainer > 0 && <p className="font-jakarta text-xl font-bold text-[#d4a843]">{formatINR(svc.monthlyRetainer)}<span className="text-[11px] font-medium text-white/40">/mo</span></p>}
+                            </div>
+                          </div>
+
+                          <div className="px-6 py-5">
+                            {deep?.problem && <p className="text-[13px] leading-relaxed text-white/60">{deep.problem}</p>}
+                            {features.length > 0 && (
+                              <div className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
+                                {features.map((feat, fi) => (
+                                  <div key={fi} className="avoid-break flex items-start gap-2.5">
+                                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
+                                    <p className="text-[12px] leading-snug text-white/70"><span className="font-semibold text-white">{feat.title}.</span> {feat.detail}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {svc.raw?.timeline && <p className="mt-5 font-jbmono text-[10px] uppercase tracking-[0.16em] text-white/35">Timeline · {svc.raw.timeline}</p>}
+                          </div>
                         </div>
-                        <p className="text-xs text-slate-700 leading-relaxed font-medium">{us}</p>
-                      </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* ── CHAPTER 03 — THE INVESTMENT ──────────────────────────────── */}
+              <div className="relative border-t border-white/10 px-10 py-14 sm:px-14 sm:py-16">
+                <p className="pointer-events-none absolute right-8 top-6 select-none font-jakarta text-[120px] font-extrabold leading-none text-white/[0.03]">03</p>
+                <div className="relative">
+                  <p className="font-jbmono text-[11px] uppercase tracking-[0.22em] text-brand">Chapter Three</p>
+                  <h2 className="mt-3 font-jakarta text-4xl font-bold leading-[1.05] tracking-tight">The investment</h2>
+
+                  {/* Headline totals */}
+                  <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
+                    <div className="avoid-break bg-[#141414] p-6">
+                      <p className="font-jbmono text-[10px] uppercase tracking-[0.18em] text-white/40">One-time setup</p>
+                      <p className="mt-2 font-jakarta text-3xl font-extrabold tabular-nums text-[#d4a843]">{totalSetup > 0 ? formatINR(totalSetup) : "—"}</p>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div className="avoid-break bg-brand p-6 text-[#0b3d26]">
+                      <p className="font-jbmono text-[10px] uppercase tracking-[0.18em] text-[#0b3d26]/70">Monthly retainer</p>
+                      <p className="mt-2 font-jakarta text-3xl font-extrabold tabular-nums">{formatINR(totalMonthly)}<span className="text-base font-semibold">/mo</span></p>
+                    </div>
+                  </div>
 
-              {/* ── 5. SERVICE DEEP-DIVES ────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-line">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">What We're Building For You</p>
-                <p className="text-sm text-slate-500 mb-6">Each service below comes with a detailed breakdown of what we do, how we do it, and what you get.</p>
-                <div className="space-y-6">
-                  {selectedFullData.map((svc, idx) => {
-                    const SvcIcon = SERVICE_ICONS[svc.id] || FileText;
-                    const deep = svc.deep;
-                    return (
-                      <div key={svc.id} className="rounded-2xl border border-line overflow-hidden print:rounded-none print:border-0 print:overflow-visible">
-                        {/* Service header */}
-                        <div className="avoid-break keep-with-next bg-slate-900 px-6 py-5 text-white flex items-start justify-between gap-4">
-                          <div className="flex items-start gap-4">
-                            <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                              <SvcIcon className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                              <p className="font-display font-semibold text-lg">{svc.label}</p>
-                              {svc.raw?.tagline && <p className="text-slate-400 text-sm mt-0.5">{svc.raw.tagline.replace(/\{\{.*?\}\}/g, lead.city || "your city")}</p>}
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0">
-                            {svc.setupFee > 0 && <p className="text-xs text-slate-400 tabular-nums">{formatINR(svc.setupFee)} setup</p>}
-                            {svc.monthlyRetainer > 0 && <p className="text-base font-semibold tabular-nums text-brand">{formatINR(svc.monthlyRetainer)}<span className="text-xs text-slate-400">/mo</span></p>}
-                          </div>
-                        </div>
-
-                        <div className="p-6 space-y-5">
-                          {/* The problem this solves */}
-                          {deep && (
-                            <div className="avoid-break bg-slate-50 rounded-xl p-4 border border-line">
-                              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2">Why You Need This</p>
-                              <p className="text-sm text-slate-700 leading-relaxed">{deep.problem}</p>
-                            </div>
-                          )}
-
-                          {/* Our approach */}
-                          {deep && (
-                            <div className="avoid-break">
-                              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Our Approach</p>
-                              <div className="space-y-2">
-                                {deep.ourApproach.map((step, si) => (
-                                  <div key={si} className="flex items-start gap-3">
-                                    <span className="h-5 w-5 rounded-full bg-brand-deep text-white text-[11px] font-semibold tabular-nums flex items-center justify-center shrink-0 mt-0.5">{si + 1}</span>
-                                    <p className="text-sm text-slate-700">{step}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Features grid */}
-                          {deep && (
-                            <div>
-                              <p className="keep-with-next text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">What You Get — In Detail</p>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {deep.features.map((feat, fi) => (
-                                  <div key={fi} className="avoid-break bg-surface rounded-lg border border-line p-4">
-                                    <div className="flex items-start gap-2.5">
-                                      <div className="h-5 w-5 rounded-lg bg-brand-soft flex items-center justify-center shrink-0 mt-0.5">
-                                        <Check className="h-3 w-3 text-brand-deep" />
-                                      </div>
-                                      <div>
-                                        <p className="text-xs font-semibold text-slate-900">{feat.title}</p>
-                                        <p className="text-xs text-slate-500 mt-0.5 leading-snug">{feat.detail}</p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Why it works */}
-                          {deep && (
-                            <div className="avoid-break bg-brand-soft border border-brand-line rounded-xl p-4">
-                              <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-2">Why This Works</p>
-                              <p className="text-sm text-slate-700 leading-relaxed">{deep.whyItWorks}</p>
-                            </div>
-                          )}
-
-                          {/* Timeline + note — kept together so the card tail never strands */}
-                          {(svc.raw?.timeline || svc.raw?.importantNote) && (
-                            <div className="avoid-break space-y-4">
-                              {svc.raw?.timeline && (
-                                <div className="flex items-center gap-2 text-xs text-slate-500 border-t border-line pt-4">
-                                  <Clock className="h-3.5 w-3.5 text-slate-400" />
-                                  <span className="font-semibold text-slate-600">Timeline:</span> {svc.raw.timeline}
-                                </div>
-                              )}
-                              {svc.raw?.importantNote && (
-                                <p className="text-xs text-warn bg-warn-soft border border-warn-line rounded-lg px-4 py-3">⚠️ {svc.raw.importantNote}</p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* ── 6. INVESTMENT TABLE ──────────────────────────────────────── */}
-              <div className="px-10 py-8 border-b border-line">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-5">Your Investment</p>
-                <div className="avoid-break rounded-xl overflow-hidden border border-line">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-slate-900 text-white">
-                        <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wide">Service</th>
-                        <th className="text-right px-5 py-3.5 text-xs font-semibold uppercase tracking-wide">One-time Setup</th>
-                        <th className="text-right px-5 py-3.5 text-xs font-semibold uppercase tracking-wide">Monthly</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-surface">
-                      {selectedServices.map((svc, i) => (
-                        <tr key={svc.id} className={`border-t border-line ${i % 2 === 0 ? "bg-surface" : "bg-slate-50"}`}>
-                          <td className="px-5 py-3.5 font-medium text-slate-800">{svc.label}</td>
-                          <td className="px-5 py-3.5 text-right tabular-nums text-slate-600">{svc.setupFee > 0 ? formatINR(svc.setupFee) : "—"}</td>
-                          <td className="px-5 py-3.5 text-right tabular-nums text-slate-800 font-semibold">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</td>
+                  {/* Line items */}
+                  <div className="avoid-break mt-5 overflow-hidden rounded-2xl border border-white/10">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-white/10 bg-[#141414] text-left font-jbmono text-[10px] uppercase tracking-[0.16em] text-white/40">
+                          <th className="px-5 py-3 font-medium">Service</th>
+                          <th className="px-5 py-3 text-right font-medium">Setup</th>
+                          <th className="px-5 py-3 text-right font-medium">Monthly</th>
                         </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr className="bg-slate-900 text-white">
-                        <td className="px-5 py-4 font-semibold">Total</td>
-                        <td className="px-5 py-4 text-right font-semibold tabular-nums text-base">{totalSetup > 0 ? formatINR(totalSetup) : "—"}</td>
-                        <td className="px-5 py-4 text-right font-semibold tabular-nums text-lg text-brand">{formatINR(totalMonthly)}/mo</td>
-                      </tr>
-                    </tfoot>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {selectedServices.map((svc) => (
+                          <tr key={svc.id} className="border-b border-white/5">
+                            <td className="px-5 py-3.5 font-medium text-white/85">{svc.label}</td>
+                            <td className="px-5 py-3.5 text-right tabular-nums text-white/50">{svc.setupFee > 0 ? formatINR(svc.setupFee) : "—"}</td>
+                            <td className="px-5 py-3.5 text-right font-semibold tabular-nums text-white/85">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr className="bg-[#141414]">
+                          <td className="px-5 py-4 font-jakarta font-bold">Total</td>
+                          <td className="px-5 py-4 text-right font-bold tabular-nums text-[#d4a843]">{totalSetup > 0 ? formatINR(totalSetup) : "—"}</td>
+                          <td className="px-5 py-4 text-right font-jakarta text-lg font-bold tabular-nums text-[#d4a843]">{formatINR(totalMonthly)}/mo</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+
+                  {selectedServices.some(s => s.id === "GOOGLE_ADS" || s.id === "META_ADS") && (
+                    <p className="avoid-break mt-4 rounded-lg border border-[#d4a843]/30 bg-[#d4a843]/10 px-4 py-2.5 text-[12px] text-[#e8c87a]">Ad spend for Google Ads and Meta Ads is your own budget, billed directly to Google/Meta. The pricing above covers FortuneMarq management fees only.</p>
+                  )}
+                  {startDate && <p className="mt-3 font-jbmono text-[11px] uppercase tracking-[0.16em] text-white/40">Proposed start · {formatDate(startDate)}</p>}
                 </div>
-                {selectedServices.some(s => s.id === "GOOGLE_ADS" || s.id === "META_ADS") && (
-                  <p className="avoid-break text-xs text-warn bg-warn-soft border border-warn-line rounded-lg px-4 py-2.5 mt-3">⚠️ Ad spend for Google Ads and Meta Ads is your own budget, billed directly to Google/Meta. The pricing above covers FortuneMarq management fees only.</p>
-                )}
-                {startDate && <p className="text-xs text-slate-500 mt-2">Proposed start date: {formatDate(startDate)}</p>}
               </div>
 
-              {/* ── 7. HOW WE GET STARTED + footer (one print unit so the footer
-                     never strands alone on a final page) ─────────────────────── */}
+              {/* ── CHAPTER 04 — NEXT STEPS + footer (one print unit) ────────── */}
               <div className="avoid-break">
-              <div className="px-10 py-8 border-b border-line">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-deep mb-5">How We Get Started</p>
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                  {[
-                    { n: "1", title: "Confirm", desc: "Reply 'Yes, confirmed' — that's all it takes to get started." },
-                    { n: "2", title: "Agreement", desc: "Service agreement sent within 24 hours, for your records." },
-                    { n: "3", title: "Invoice", desc: "Setup fee invoiced. Pay via bank transfer or UPI." },
-                    { n: "4", title: "Onboarding", desc: "Payment confirmed → onboarding starts within 24 hours." },
-                    { n: "5", title: "We Begin", desc: "First update from us within one week of starting." },
-                  ].map(({ n, title, desc }, i, arr) => (
-                    <div key={n} className="flex sm:flex-col items-start sm:items-center gap-3 sm:gap-2 sm:text-center">
-                      <div className="h-8 w-8 rounded-full bg-brand-deep text-white text-xs font-semibold tabular-nums flex items-center justify-center shrink-0">{n}</div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{title}</p>
-                        <p className="text-xs text-slate-500 mt-0.5 leading-snug">{desc}</p>
-                      </div>
+                <div className="relative border-t border-white/10 px-10 py-14 sm:px-14 sm:py-16">
+                  <p className="pointer-events-none absolute right-8 top-6 select-none font-jakarta text-[120px] font-extrabold leading-none text-white/[0.03]">04</p>
+                  <div className="relative">
+                    <p className="font-jbmono text-[11px] uppercase tracking-[0.22em] text-brand">Chapter Four</p>
+                    <h2 className="mt-3 font-jakarta text-4xl font-bold leading-[1.05] tracking-tight">How we get started</h2>
+                    <div className="mt-10 grid gap-4 sm:grid-cols-5">
+                      {[
+                        { n: "1", title: "Confirm", desc: "Reply “Yes, confirmed” — that’s all it takes." },
+                        { n: "2", title: "Agreement", desc: "Service agreement sent within 24 hours." },
+                        { n: "3", title: "Invoice", desc: "Setup fee invoiced — pay via bank transfer or UPI." },
+                        { n: "4", title: "Onboarding", desc: "Payment confirmed → onboarding starts in 24 hours." },
+                        { n: "5", title: "We begin", desc: "First update from us within one week." },
+                      ].map(({ n, title, desc }) => (
+                        <div key={n} className="flex items-start gap-3 sm:flex-col">
+                          <span className="font-jakarta text-2xl font-extrabold tabular-nums text-brand">{n}</span>
+                          <div>
+                            <p className="font-jakarta text-sm font-bold text-white">{title}</p>
+                            <p className="mt-1 text-[12px] leading-snug text-white/50">{desc}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* ── Footer ──────────────────────────────────────────────────── */}
-              <div className="px-10 py-6 bg-slate-900 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <p className="font-semibold text-white">Jabeer</p>
-                  <p className="text-xs text-slate-400 mt-0.5">FortuneMarq Media &amp; Marketing</p>
+                {/* Footer */}
+                <div className="flex flex-col items-start justify-between gap-4 border-t border-white/10 bg-[#080808] px-10 py-8 sm:flex-row sm:items-center sm:px-14">
+                  <div>
+                    <p className="font-jakarta text-lg font-bold">Fortune<span className="text-brand">Marq</span></p>
+                    <p className="mt-0.5 font-jbmono text-[11px] uppercase tracking-[0.16em] text-white/40">Jabeer · Media &amp; Marketing</p>
+                  </div>
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 font-jbmono text-[11px] text-white/50">
+                    <span className="flex items-center gap-1.5"><Phone className="h-3 w-3 text-brand" />+91 93530 82656</span>
+                    <span className="flex items-center gap-1.5"><Mail className="h-3 w-3 text-brand" />fortunemarq@gmail.com</span>
+                    <span className="flex items-center gap-1.5"><ExternalLink className="h-3 w-3 text-brand" />fortunemarq.com</span>
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-4 text-xs text-slate-400">
-                  <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />+91 93530 82656</span>
-                  <span className="flex items-center gap-1.5"><Mail className="h-3 w-3" />fortunemarq@gmail.com</span>
-                  <span className="flex items-center gap-1.5"><ExternalLink className="h-3 w-3" />fortunemarq.com</span>
-                </div>
-              </div>
               </div>
             </div>
 
