@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { Users, Target, CheckCircle2, ListTodo, Plus } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { buttonVariants } from "@/components/ui/button";
 import TeamMemberCard from "@/components/team/team-member-card";
 import DailyTargetsTable from "@/components/team/daily-targets-table";
 import SetTargetsModal from "@/components/team/set-targets-modal";
@@ -25,72 +28,46 @@ export default function TeamOverviewClient({ profiles, targets, taskStats, actua
   return (
     <div className="mx-auto max-w-7xl">
       {/* Header */}
-      <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div className="space-y-1">
-          <h1 className="text-4xl font-black text-slate-900 flex items-center gap-4">
-            <Users className="h-10 w-10 text-amber-500" />
-            Team Overview
-          </h1>
-          <p className="text-slate-500 font-medium">Manage workloads, targets, and team performance.</p>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => { setAssignDefault(undefined); setIsAssignTaskOpen(true); }}
-            className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95"
-          >
-            <Plus className="h-4 w-4" />
-            Assign Task
-          </button>
-          <button
-            onClick={() => setIsAddMemberOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800 transition-all shadow-md active:scale-95"
-          >
-            <Plus className="h-4 w-4" />
-            Add Member
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="Team Overview"
+        subtitle="Manage workloads, targets, and team performance."
+        className="mb-10"
+        actions={
+          <>
+            <button
+              onClick={() => { setAssignDefault(undefined); setIsAssignTaskOpen(true); }}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              <Plus className="h-4 w-4" /> Assign Task
+            </button>
+            <button
+              onClick={() => setIsAddMemberOpen(true)}
+              className={buttonVariants({ variant: "primary" })}
+            >
+              <Plus className="h-4 w-4" /> Add Member
+            </button>
+          </>
+        }
+      />
 
       {/* Aggregate Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm" style={{ borderTop: '4px solid #42CA80' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-black text-slate-400 uppercase tracking-widest text-[10px]">Total Team</p>
-            <Users className="h-4 w-4 text-slate-300" />
-          </div>
-          <p className="text-3xl font-black text-slate-900">{profiles.length}</p>
-        </div>
-        
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm" style={{ borderTop: '4px solid #f59e0b' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-black text-slate-400 uppercase tracking-widest text-[10px]">Active Tasks</p>
-            <ListTodo className="h-4 w-4 text-slate-300" />
-          </div>
-          <p className="text-3xl font-black text-slate-900">
-            {Object.values(taskStats).reduce((acc, s) => acc + (s.active || 0), 0)}
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm" style={{ borderTop: '4px solid #10b981' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-black text-slate-400 uppercase tracking-widest text-[10px]">Done Today</p>
-            <CheckCircle2 className="h-4 w-4 text-slate-300" />
-          </div>
-          <p className="text-3xl font-black text-slate-900">
-            {Object.values(taskStats).reduce((acc, s) => acc + (s.completedToday || 0), 0)}
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm" style={{ borderTop: '4px solid #6366f1' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-black text-slate-400 uppercase tracking-widest text-[10px]">Done This Week</p>
-            <Trophy className="h-4 w-4 text-slate-300" />
-          </div>
-          <p className="text-3xl font-black text-slate-900">
-            {Object.values(taskStats).reduce((acc, s) => acc + (s.completedThisWeek || 0), 0)}
-          </p>
-        </div>
+      <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <StatCard label="Total Team" value={profiles.length} icon={Users} />
+        <StatCard
+          label="Active Tasks"
+          value={Object.values(taskStats).reduce((acc, s) => acc + (s.active || 0), 0)}
+          icon={ListTodo}
+        />
+        <StatCard
+          label="Done Today"
+          value={Object.values(taskStats).reduce((acc, s) => acc + (s.completedToday || 0), 0)}
+          icon={CheckCircle2}
+        />
+        <StatCard
+          label="Done This Week"
+          value={Object.values(taskStats).reduce((acc, s) => acc + (s.completedThisWeek || 0), 0)}
+          icon={Target}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
