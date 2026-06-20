@@ -5,6 +5,8 @@ import { ArrowLeft, CheckCircle, Clock, Check } from "lucide-react";
 import SERVICES_DATA from "@/lib/data/services_data.json";
 import PrintButton from "@/components/ui/print-button";
 import AgreementConfirmButton from "@/components/admin/agreements/AgreementConfirmButton";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 const SERVICE_DETAILS: Record<string, { whatWeDo: string; deliverables: string[]; timeline: string; importantNote?: string }> =
   Object.fromEntries(
@@ -50,23 +52,21 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
   });
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
+    <div className="min-h-full bg-canvas px-4 py-8">
       <div className="mx-auto max-w-3xl">
 
         {/* Back + status bar */}
-        <div className="flex items-center justify-between mb-6 print:hidden">
-          <Link href="/admin/agreements" className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors">
+        <div className="mb-6 flex items-center justify-between print:hidden">
+          <Link href="/admin/agreements" className="flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-slate-900">
             <ArrowLeft className="h-4 w-4" /> All Agreements
           </Link>
           <div className="flex items-center gap-3">
-            <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${
-              isConfirmed ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
-            }`}>
+            <Badge tone={isConfirmed ? "brand" : "warning"}>
               {isConfirmed
                 ? <><CheckCircle className="h-3.5 w-3.5" /> Confirmed</>
                 : <><Clock className="h-3.5 w-3.5" /> Pending</>
               }
-            </span>
+            </Badge>
             {!isConfirmed && (
               <AgreementConfirmButton agreementId={agreement.id} clientName={lead?.company_name || "Client"} />
             )}
@@ -75,7 +75,7 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
         </div>
 
         {/* Agreement document */}
-        <div className="print-area bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <Card className="print-area overflow-hidden">
 
           {/* Header */}
           <div className="bg-slate-900 text-white px-8 py-8">
@@ -84,12 +84,12 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
                 <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold">FortuneMarq Media & Marketing</p>
                 <h2 className="text-2xl font-bold mt-2">Service Agreement</h2>
               </div>
-              <div className="text-right text-xs text-slate-400 space-y-0.5">
-                <p className="font-mono">{agreement.agreement_number || "—"}</p>
+              <div className="space-y-0.5 text-right text-xs text-slate-400">
+                <p className="tabular-nums">{agreement.agreement_number || "—"}</p>
                 {agreement.proposal_ref && <p>Ref: {agreement.proposal_ref}</p>}
                 <p>{formatDate(agreement.created_at)}</p>
                 {isConfirmed && (
-                  <p className="text-emerald-400 font-semibold mt-1">Confirmed {formatDate(agreement.confirmed_at)}</p>
+                  <p className="mt-1 font-semibold text-brand">Confirmed {formatDate(agreement.confirmed_at)}</p>
                 )}
               </div>
             </div>
@@ -129,10 +129,10 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
                 {services.map((svc: any) => (
                   <tr key={svc.id} className="border-b border-slate-50">
                     <td className="py-2.5 font-medium text-slate-700">{svc.label}</td>
-                    <td className="py-2.5 text-right font-mono text-slate-800">
+                    <td className="py-2.5 text-right tabular-nums text-slate-800">
                       {svc.setupFee ? formatINR(svc.setupFee) : "—"}
                     </td>
-                    <td className="py-2.5 text-right font-mono text-slate-800">
+                    <td className="py-2.5 text-right tabular-nums text-slate-800">
                       {svc.monthlyRetainer ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}
                     </td>
                   </tr>
@@ -140,9 +140,9 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-slate-900">
-                  <td className="py-3 font-bold text-slate-900">Total</td>
-                  <td className="py-3 text-right font-bold font-mono">{formatINR(agreement.total_setup)}</td>
-                  <td className="py-3 text-right font-bold font-mono text-brand-deep">
+                  <td className="py-3 font-semibold text-slate-900">Total</td>
+                  <td className="py-3 text-right font-semibold tabular-nums">{formatINR(agreement.total_setup)}</td>
+                  <td className="py-3 text-right font-semibold tabular-nums text-brand-deep">
                     {formatINR(agreement.total_monthly)}/mo
                   </td>
                 </tr>
@@ -158,16 +158,16 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
                 const detail = SERVICE_DETAILS[svc.id];
                 return (
                   <div key={svc.id} className="avoid-break">
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="h-6 w-6 rounded-full bg-slate-900 text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[11px] font-semibold text-white">
                           {idx + 1}
                         </span>
-                        <h3 className="text-sm font-bold text-slate-900">{svc.label}</h3>
+                        <h3 className="font-display text-sm font-semibold text-slate-900">{svc.label}</h3>
                       </div>
                       <div className="text-right text-xs text-slate-500">
-                        {svc.setupFee ? <span className="mr-3">Setup: <span className="font-mono font-semibold text-slate-700">{formatINR(svc.setupFee)}</span></span> : null}
-                        {svc.monthlyRetainer ? <span>Monthly: <span className="font-mono font-semibold text-brand-deep">{formatINR(svc.monthlyRetainer)}/mo</span></span> : null}
+                        {svc.setupFee ? <span className="mr-3">Setup: <span className="font-semibold tabular-nums text-slate-700">{formatINR(svc.setupFee)}</span></span> : null}
+                        {svc.monthlyRetainer ? <span>Monthly: <span className="font-semibold tabular-nums text-brand-deep">{formatINR(svc.monthlyRetainer)}/mo</span></span> : null}
                       </div>
                     </div>
 
@@ -190,8 +190,8 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
                           <span className="text-xs text-slate-600">{detail.timeline}</span>
                         </div>
                         {detail.importantNote && (
-                          <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
-                            <p className="text-xs text-amber-700">Note: {detail.importantNote}</p>
+                          <div className="rounded-lg border border-warn-line bg-warn-soft px-3 py-2">
+                            <p className="text-xs text-warn">Note: {detail.importantNote}</p>
                           </div>
                         )}
                       </div>
@@ -229,18 +229,18 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
               </p>
             )}
             {isConfirmed ? (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-emerald-600 shrink-0" />
+              <div className="flex items-center gap-3 rounded-xl border border-brand-line bg-brand-soft p-4">
+                <CheckCircle className="h-5 w-5 shrink-0 text-brand-deep" />
                 <div>
-                  <p className="text-sm font-semibold text-emerald-800">Agreement confirmed</p>
-                  <p className="text-xs text-emerald-600 mt-0.5">
+                  <p className="text-sm font-semibold text-brand-deep">Agreement confirmed</p>
+                  <p className="mt-0.5 text-xs text-brand-deep">
                     {lead?.company_name} confirmed on {formatDate(agreement.confirmed_at)}
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                <p className="text-sm font-semibold text-slate-800 mb-1">Awaiting Confirmation</p>
+              <div className="rounded-xl border border-line bg-slate-50 p-4">
+                <p className="mb-1 text-sm font-semibold text-slate-800">Awaiting Confirmation</p>
                 <p className="text-xs text-slate-600">
                   Please reply with <strong>'Yes, confirmed'</strong> to this agreement to get started.
                 </p>
@@ -270,19 +270,19 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Document footer */}
-          <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-            <p className="text-[10px] text-slate-400">
+          <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-8 py-4">
+            <p className="text-[11px] text-slate-400">
               FortuneMarq Media & Marketing · Hubli, Karnataka · +91 93530 82656
             </p>
-            <p className="text-[10px] font-mono text-slate-400">{agreement.agreement_number || ""}</p>
+            <p className="text-[11px] tabular-nums text-slate-400">{agreement.agreement_number || ""}</p>
           </div>
-        </div>
+        </Card>
 
         {/* Footer links */}
         <div className="mt-4 flex items-center gap-4 text-xs text-slate-400 print:hidden">
-          <Link href="/admin/agreements" className="hover:text-slate-700 transition-colors">← Back to all agreements</Link>
+          <Link href="/admin/agreements" className="transition-colors hover:text-slate-700">← Back to all agreements</Link>
           {lead && (
-            <Link href={`/admin/leads/${lead.id}`} className="hover:text-slate-700 transition-colors">View lead profile</Link>
+            <Link href={`/admin/leads/${lead.id}`} className="transition-colors hover:text-slate-700">View lead profile</Link>
           )}
         </div>
       </div>

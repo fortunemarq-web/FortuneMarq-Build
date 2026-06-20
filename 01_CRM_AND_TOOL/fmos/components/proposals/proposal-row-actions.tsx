@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Pencil, Trash2, Ban, Loader2, FileSignature, Receipt } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { logAudit } from "@/lib/audit";
 import { promptModal } from "@/components/ui/prompt-modal";
@@ -107,26 +108,30 @@ export default function ProposalRowActions({ proposalId, proposalNumber, status,
       {/* Send Agreement — available on sent proposals */}
       {st === "sent" && (
         agrBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-400" /> : (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleSendAgreement}
             title="Send Agreement via WhatsApp"
-            className="p-1.5 text-[#1E7A4F] hover:bg-green-50 rounded-lg transition-colors"
+            className="h-7 w-7 text-brand-deep hover:bg-brand-soft hover:text-brand-deep"
           >
             <FileSignature className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         )
       )}
 
       {/* Issue Invoice — available on sent proposals with no confirmed agreement yet */}
       {st === "sent" && (
         invBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-400" /> : (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleIssueInvoice}
             title="Issue Advance Invoice"
-            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="h-7 w-7 text-info hover:bg-info-soft hover:text-info"
           >
             <Receipt className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         )
       )}
 
@@ -138,28 +143,32 @@ export default function ProposalRowActions({ proposalId, proposalNumber, status,
             <Link
               href={`/admin/leads/${leadId}/proposal/new?edit=${proposalId}`}
               title="Edit proposal"
-              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+              className={buttonVariants({ variant: "ghost", size: "icon", className: "h-7 w-7 text-slate-400 hover:text-slate-700" })}
             >
               <Pencil className="h-3.5 w-3.5" />
             </Link>
           )}
           {st === "sent" && (
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={handleVoid}
               title="Void proposal"
-              className="p-1.5 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
+              className="h-7 w-7 text-warn hover:bg-warn-soft hover:text-warn"
             >
               <Ban className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           )}
           {(st === "draft" || st === "rejected") && (
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={handleDelete}
               title="Delete proposal"
-              className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="h-7 w-7 text-slate-300 hover:bg-danger-soft hover:text-danger"
             >
               <Trash2 className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           )}
         </>
       )}

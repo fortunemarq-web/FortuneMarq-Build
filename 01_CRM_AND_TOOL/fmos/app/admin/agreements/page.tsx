@@ -3,14 +3,20 @@ import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
 import { FileSignature, CheckCircle, Clock, XCircle } from "lucide-react";
 import AgreementRowActions from "@/components/proposals/agreement-row-actions";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
-const STATUS_CONFIG: Record<string, { label: string; classes: string; icon: ElementType }> = {
-  // agreements.status CHECK allows only pending / confirmed / cancelled.
-  pending:   { label: "Pending",   classes: "bg-amber-100 text-amber-700",   icon: Clock },
-  confirmed: { label: "Confirmed", classes: "bg-emerald-100 text-emerald-700", icon: CheckCircle },
-  cancelled: { label: "Cancelled", classes: "bg-red-100 text-red-600",       icon: XCircle },
+// agreements.status CHECK allows only pending / confirmed / cancelled.
+// Every status maps to one of the five tones — no per-status colours.
+const STATUS_CONFIG: Record<string, { label: string; tone: Tone; icon: ElementType }> = {
+  pending:   { label: "Pending",   tone: "warning", icon: Clock },
+  confirmed: { label: "Confirmed", tone: "brand",   icon: CheckCircle },
+  cancelled: { label: "Cancelled", tone: "danger",  icon: XCircle },
 };
 
 export default async function AgreementsPage() {
@@ -64,55 +70,38 @@ export default async function AgreementsPage() {
     .reduce((s: number, a: any) => s + (a.total_monthly || 0), 0);
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-6xl">
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-6xl space-y-6">
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <FileSignature className="h-6 w-6 text-indigo-500" /> Agreements
-            </h1>
-            <p className="text-sm text-slate-500 mt-1">{total} total</p>
-          </div>
-        </div>
+        <PageHeader title="Agreements" subtitle={`${total} total`} />
 
         {/* KPI strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {[
-            { label: "Total", value: total, color: "text-slate-900" },
-            { label: "Confirmed", value: confirmed, color: "text-emerald-600" },
-            { label: "Pending", value: pending, color: "text-amber-600" },
-            { label: "Confirmed MRR", value: formatINR(totalMRR) + "/mo", color: "text-indigo-600" },
-          ].map((k) => (
-            <div key={k.label} className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{k.label}</p>
-              <p className={`text-xl font-bold font-mono mt-0.5 ${k.color}`}>{k.value}</p>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatCard label="Total" value={total} />
+          <StatCard label="Confirmed" value={confirmed} />
+          <StatCard label="Pending" value={pending} />
+          <StatCard label="Confirmed MRR" value={formatINR(totalMRR) + "/mo"} />
         </div>
 
         {/* Table */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <Card className="overflow-hidden">
           {!agreements || agreements.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-              <FileSignature className="h-10 w-10 mb-3 opacity-30" />
+              <FileSignature className="mb-3 h-10 w-10 opacity-30" />
               <p className="text-sm font-medium">No agreements yet.</p>
-              <p className="text-xs mt-1">Generate one from a lead's proposal.</p>
+              <p className="mt-1 text-xs">Generate one from a lead's proposal.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
+              <Table>
+                <THead>
+                  <TR className="hover:bg-transparent">
                     {["Agreement No", "Lead / Client", "Services", "Setup", "Monthly", "Status", "Start Date", "Actions"].map((h) => (
-                      <th key={h} className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                        {h}
-                      </th>
+                      <TH key={h} className="whitespace-nowrap">{h}</TH>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
+                  </TR>
+                </THead>
+                <TBody>
                   {(agreements as any[]).map((a) => {
                     const sc = STATUS_CONFIG[a.status] || STATUS_CONFIG.pending;
                     const StatusIcon = sc.icon;
@@ -121,23 +110,23 @@ export default async function AgreementsPage() {
                       : "—";
 
                     return (
-                      <tr key={a.id} className="hover:bg-slate-50/80 transition-colors">
+                      <TR key={a.id}>
                         {/* Agreement number */}
-                        <td className="px-4 py-3">
-                          <span className="font-mono text-xs font-bold text-slate-700">
+                        <TD>
+                          <span className="text-xs font-semibold tabular-nums text-slate-700">
                             {a.agreement_number || "—"}
                           </span>
                           {a.proposal_ref && (
-                            <p className="text-[10px] text-slate-400">Ref: {a.proposal_ref}</p>
+                            <p className="text-[11px] text-slate-400">Ref: {a.proposal_ref}</p>
                           )}
-                        </td>
+                        </TD>
 
                         {/* Lead */}
-                        <td className="px-4 py-3">
+                        <TD>
                           {a.lead ? (
                             <Link
                               href={`/admin/leads/${a.lead.id}`}
-                              className="font-semibold text-slate-900 hover:text-[#42CA80] transition-colors"
+                              className="font-semibold text-slate-900 transition-colors hover:text-brand-deep"
                             >
                               {a.lead.company_name}
                             </Link>
@@ -145,56 +134,56 @@ export default async function AgreementsPage() {
                             <span className="text-slate-400">—</span>
                           )}
                           {a.lead?.city && (
-                            <p className="text-[10px] text-slate-400">{a.lead.city}</p>
+                            <p className="text-[11px] text-slate-400">{a.lead.city}</p>
                           )}
-                        </td>
+                        </TD>
 
                         {/* Services */}
-                        <td className="px-4 py-3 max-w-[160px]">
-                          <p className="text-xs text-slate-600 truncate" title={services}>{services}</p>
-                        </td>
+                        <TD className="max-w-[160px]">
+                          <p className="truncate text-xs text-slate-600" title={services}>{services}</p>
+                        </TD>
 
                         {/* Setup */}
-                        <td className="px-4 py-3 font-mono text-sm font-semibold text-slate-800 whitespace-nowrap">
+                        <TD className="whitespace-nowrap text-sm font-semibold tabular-nums text-slate-800">
                           {formatINR(a.total_setup)}
-                        </td>
+                        </TD>
 
                         {/* Monthly */}
-                        <td className="px-4 py-3 font-mono text-sm font-semibold text-[#42CA80] whitespace-nowrap">
+                        <TD className="whitespace-nowrap text-sm font-semibold tabular-nums text-brand-deep">
                           {formatINR(a.total_monthly)}/mo
-                        </td>
+                        </TD>
 
                         {/* Status */}
-                        <td className="px-4 py-3">
-                          <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full ${sc.classes}`}>
+                        <TD>
+                          <Badge tone={sc.tone} size="sm">
                             <StatusIcon className="h-3 w-3" />
                             {sc.label}
-                          </span>
+                          </Badge>
                           {a.confirmed_at && (
-                            <p className="text-[10px] text-slate-400 mt-0.5">
+                            <p className="mt-0.5 text-[11px] text-slate-400">
                               {formatDate(a.confirmed_at)}
                             </p>
                           )}
-                        </td>
+                        </TD>
 
                         {/* Start date */}
-                        <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">
+                        <TD className="whitespace-nowrap text-xs text-slate-500">
                           {formatDate(a.start_date)}
-                        </td>
+                        </TD>
 
                         {/* Actions */}
-                        <td className="px-4 py-3">
+                        <TD>
                           <div className="flex items-center gap-2">
                             <Link
                               href={`/admin/agreements/${a.id}`}
-                              className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline whitespace-nowrap"
+                              className="whitespace-nowrap text-[11px] font-semibold text-brand-deep hover:underline"
                             >
                               View →
                             </Link>
                             {a.status === "confirmed" && a.lead && (
                               <Link
                                 href={clientHref(a.lead?.company_name)}
-                                className="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 hover:underline whitespace-nowrap"
+                                className="whitespace-nowrap text-[11px] font-semibold text-brand-deep hover:underline"
                               >
                                 Client ↗
                               </Link>
@@ -206,15 +195,15 @@ export default async function AgreementsPage() {
                               companyName={a.lead?.company_name || null}
                             />
                           </div>
-                        </td>
-                      </tr>
+                        </TD>
+                      </TR>
                     );
                   })}
-                </tbody>
-              </table>
+                </TBody>
+              </Table>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

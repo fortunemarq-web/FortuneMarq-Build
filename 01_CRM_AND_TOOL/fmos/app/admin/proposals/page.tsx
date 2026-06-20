@@ -1,15 +1,21 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import Link from "next/link";
-import { FileText, Plus, ArrowRight, Clock, Users } from "lucide-react";
+import { FileText, ArrowRight, Clock, Users } from "lucide-react";
 import ProposalRowActions from "@/components/proposals/proposal-row-actions";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
-const STATUS_COLORS: Record<string, string> = {
-  draft: "bg-slate-100 text-slate-500",
-  sent: "bg-blue-100 text-blue-700",
-  confirmed: "bg-emerald-100 text-emerald-700",
-  rejected: "bg-red-100 text-red-600",
+// Every proposal status maps to one of the five tones — no per-status colours.
+const STATUS_TONE: Record<string, Tone> = {
+  draft: "neutral",
+  sent: "info",
+  confirmed: "brand",
+  rejected: "danger",
 };
 
 export default async function ProposalsListPage() {
@@ -54,37 +60,30 @@ export default async function ProposalsListPage() {
     : "—";
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="h-6 w-6 text-purple-500" /> Proposals
-            </h1>
-            <p className="text-sm text-slate-500 mt-1">{(proposals || []).length} total</p>
-          </div>
-        </div>
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-6xl space-y-6">
+        <PageHeader title="Proposals" subtitle={`${(proposals || []).length} total`} />
 
         {/* Leads ready for proposal */}
         {leadsNeedingProposal.length > 0 && (
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Clock className="h-4 w-4 text-amber-500" />
-              <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">Awaiting Proposal ({leadsNeedingProposal.length})</h2>
+          <div>
+            <div className="mb-3 flex items-center gap-2">
+              <Clock className="h-4 w-4 text-warn" />
+              <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Awaiting Proposal ({leadsNeedingProposal.length})</h2>
             </div>
             <div className="space-y-2">
               {leadsNeedingProposal.map((lead: any) => (
-                <div key={lead.id} className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-center justify-between gap-4">
+                <div key={lead.id} className="flex items-center justify-between gap-4 rounded-lg border border-warn-line bg-warn-soft px-4 py-3">
                   <div className="min-w-0">
                     <p className="font-semibold text-slate-900">{lead.company_name}</p>
                     <p className="text-xs text-slate-500">{lead.industry}{lead.city ? ` · ${lead.city}` : ""}{lead.phone ? ` · ${lead.phone}` : ""}</p>
                     {lead.meeting_notes && (
-                      <p className="text-xs text-amber-700 mt-1 truncate max-w-md italic">{lead.meeting_notes}</p>
+                      <p className="mt-1 max-w-md truncate text-xs italic text-warn">{lead.meeting_notes}</p>
                     )}
                   </div>
                   <Link
                     href={`/admin/leads/${lead.id}/proposal/new`}
-                    className="shrink-0 flex items-center gap-2 bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+                    className={buttonVariants({ variant: "primary", size: "sm", className: "shrink-0" })}
                   >
                     Create Proposal <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -94,61 +93,61 @@ export default async function ProposalsListPage() {
           </div>
         )}
 
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <Card className="overflow-hidden">
           {(!proposals || proposals.length === 0) ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-              <FileText className="h-10 w-10 mb-3 opacity-30" />
+              <FileText className="mb-3 h-10 w-10 opacity-30" />
               <p className="text-sm font-medium">No proposals yet.</p>
-              <p className="text-xs mt-1">Create one from a Lead Profile.</p>
+              <p className="mt-1 text-xs">Create one from a Lead Profile.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
+              <Table>
+                <THead>
+                  <TR className="hover:bg-transparent">
                     {["Proposal No", "Lead / Client", "Services", "Setup", "Monthly", "Status", "Created", "Sent", ""].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <TH key={h}>{h}</TH>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
+                  </TR>
+                </THead>
+                <TBody>
                   {(proposals || []).map((p: any) => {
                     const clientId = p.status === "confirmed"
                       ? clientMap[(p.lead?.company_name || "").toLowerCase()]
                       : null;
                     return (
-                    <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="px-4 py-3">
-                        <span className="font-mono text-xs font-bold text-slate-700">{p.proposal_number || "—"}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Link href={`/admin/leads/${p.lead?.id}`} className="font-semibold text-slate-900 hover:text-[#42CA80] transition-colors">
+                    <TR key={p.id}>
+                      <TD>
+                        <span className="text-xs font-semibold tabular-nums text-slate-700">{p.proposal_number || "—"}</span>
+                      </TD>
+                      <TD>
+                        <Link href={`/admin/leads/${p.lead?.id}`} className="font-semibold text-slate-900 transition-colors hover:text-brand-deep">
                           {p.lead?.company_name || "—"}
                         </Link>
-                        <p className="text-[10px] text-slate-400">{p.lead?.city}</p>
-                      </td>
-                      <td className="px-4 py-3">
+                        <p className="text-[11px] text-slate-400">{p.lead?.city}</p>
+                      </TD>
+                      <TD>
                         <p className="text-xs text-slate-600">
                           {Array.isArray(p.services) ? p.services.map((s: any) => s.label).join(", ") : "—"}
                         </p>
-                      </td>
-                      <td className="px-4 py-3 font-mono text-sm font-semibold text-slate-800">{formatINR(p.total_setup ?? p.onetime_value ?? 0)}</td>
-                      <td className="px-4 py-3 font-mono text-sm font-semibold text-[#42CA80]">{formatINR(p.total_monthly ?? p.monthly_value ?? 0)}/mo</td>
-                      <td className="px-4 py-3">
-                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${STATUS_COLORS[p.status] || "bg-slate-100 text-slate-500"}`}>
+                      </TD>
+                      <TD className="text-sm font-semibold tabular-nums text-slate-800">{formatINR(p.total_setup ?? p.onetime_value ?? 0)}</TD>
+                      <TD className="text-sm font-semibold tabular-nums text-brand-deep">{formatINR(p.total_monthly ?? p.monthly_value ?? 0)}/mo</TD>
+                      <TD>
+                        <Badge tone={STATUS_TONE[p.status] || "neutral"} size="sm" className="capitalize">
                           {p.status || "draft"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">{formatDate(p.created_at)}</td>
-                      <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">{formatDate(p.sent_at)}</td>
-                      <td className="px-4 py-3">
+                        </Badge>
+                      </TD>
+                      <TD className="whitespace-nowrap text-xs text-slate-500">{formatDate(p.created_at)}</TD>
+                      <TD className="whitespace-nowrap text-xs text-slate-500">{formatDate(p.sent_at)}</TD>
+                      <TD>
                         <div className="flex items-center justify-end gap-2">
                           {clientId ? (
-                            <Link href={`/admin/clients/${clientId}`} className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 hover:text-emerald-800 hover:underline whitespace-nowrap">
+                            <Link href={`/admin/clients/${clientId}`} className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold text-brand-deep hover:underline">
                               <Users className="h-3 w-3" /> View Client
                             </Link>
                           ) : p.status === "sent" && p.lead?.id ? (
-                            <Link href={`/admin/leads/${p.lead.id}`} className="text-[10px] font-bold text-blue-600 hover:underline whitespace-nowrap">
+                            <Link href={`/admin/leads/${p.lead.id}`} className="whitespace-nowrap text-[11px] font-semibold text-info hover:underline">
                               Confirm →
                             </Link>
                           ) : null}
@@ -161,15 +160,15 @@ export default async function ProposalsListPage() {
                             totalAmount={p.total_setup ?? p.onetime_value ?? 0}
                           />
                         </div>
-                      </td>
-                    </tr>
+                      </TD>
+                    </TR>
                     );
                   })}
-                </tbody>
-              </table>
+                </TBody>
+              </Table>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );
