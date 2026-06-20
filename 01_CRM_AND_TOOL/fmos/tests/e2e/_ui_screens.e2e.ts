@@ -40,6 +40,7 @@ const SCREENS: { name: string; path: string }[] = [
 ];
 
 test("capture UI screenshots", async ({ page }) => {
+  test.skip(!process.env.SHOT_DIR, "screenshot capture only — set SHOT_DIR to run");
   test.setTimeout(900_000);
   await page.setViewportSize({ width: 1440, height: 900 });
 

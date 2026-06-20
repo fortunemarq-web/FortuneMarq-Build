@@ -20,6 +20,7 @@ const SCREENS = [
 ];
 
 test("capture remaining screens", async ({ page }) => {
+  test.skip(!process.env.SHOT_DIR, "screenshot capture only — set SHOT_DIR to run");
   test.setTimeout(600_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await loginAdmin(page);
