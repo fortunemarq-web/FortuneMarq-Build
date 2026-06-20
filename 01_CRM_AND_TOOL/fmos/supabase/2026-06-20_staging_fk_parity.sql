@@ -31,5 +31,14 @@ alter table public.invoices
   add constraint invoices_client_id_fkey
   foreign key (client_id) references public.clients(id) on delete set null;
 
+-- /admin/agreements embeds lead:leads(...) AND proposal:proposals(...) — both FKs missing on staging.
+alter table public.agreements
+  add constraint agreements_lead_id_fkey
+  foreign key (lead_id) references public.leads(id) on delete cascade;
+
+alter table public.agreements
+  add constraint agreements_proposal_id_fkey
+  foreign key (proposal_id) references public.proposals(id) on delete set null;
+
 -- Tell PostgREST to pick up the new relationships.
 notify pgrst, 'reload schema';
