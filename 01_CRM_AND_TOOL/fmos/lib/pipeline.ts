@@ -10,6 +10,9 @@
 
 export type StageGroup = "active" | "parked" | "closed";
 
+/** The five design-system status tones — the ONLY status colors in the app. */
+export type StageTone = "neutral" | "brand" | "info" | "warning" | "danger";
+
 export interface StageDef {
   key: string;
   label: string;
@@ -17,33 +20,35 @@ export interface StageDef {
   /** Tailwind classes for board columns / badges */
   color: string;
   badge: string;
+  /** Design-system tone — collapses the legacy per-stage rainbow to 5 tones. */
+  tone: StageTone;
   /** Should this stage surface in the telecaller follow-up queue? */
   followUpQueue: boolean;
 }
 
 export const PIPELINE_STAGES: StageDef[] = [
   // ── Active outreach ──────────────────────────────────────
-  { key: "touch1_pending",     label: "Touch 1 Pending",   group: "active", color: "bg-slate-100 border-slate-300",  badge: "bg-slate-200 text-slate-700",    followUpQueue: false },
-  { key: "no_answer",          label: "No Answer",         group: "active", color: "bg-gray-50 border-gray-300",     badge: "bg-gray-200 text-gray-600",      followUpQueue: true },
-  { key: "follow_back",        label: "Follow Back",       group: "active", color: "bg-yellow-50 border-yellow-200", badge: "bg-yellow-100 text-yellow-700",  followUpQueue: true },
-  { key: "curiosity_sent",     label: "Direct Report Sent", group: "active", color: "bg-blue-50 border-blue-200",     badge: "bg-blue-100 text-blue-700",      followUpQueue: false },
-  { key: "pdf_sent",           label: "PDF Sent",          group: "active", color: "bg-indigo-50 border-indigo-200", badge: "bg-indigo-100 text-indigo-700",  followUpQueue: false },
-  { key: "follow_up_due",      label: "Follow-up Due",     group: "active", color: "bg-amber-50 border-amber-200",   badge: "bg-amber-100 text-amber-700",    followUpQueue: true },
-  { key: "gatekeeper",         label: "Gatekeeper",        group: "active", color: "bg-orange-50 border-orange-200", badge: "bg-orange-100 text-orange-700",  followUpQueue: true },
-  { key: "meeting_booked",     label: "Meeting Booked",    group: "active", color: "bg-green-50 border-green-200",   badge: "bg-green-100 text-green-700",    followUpQueue: false },
-  { key: "proposal_sent",      label: "Proposal Sent",     group: "active", color: "bg-purple-50 border-purple-200", badge: "bg-purple-100 text-purple-700",  followUpQueue: false },
+  { key: "touch1_pending",     label: "Touch 1 Pending",   group: "active", color: "bg-slate-100 border-slate-300",  badge: "bg-slate-200 text-slate-700",    tone: "neutral", followUpQueue: false },
+  { key: "no_answer",          label: "No Answer",         group: "active", color: "bg-gray-50 border-gray-300",     badge: "bg-gray-200 text-gray-600",      tone: "warning", followUpQueue: true },
+  { key: "follow_back",        label: "Follow Back",       group: "active", color: "bg-yellow-50 border-yellow-200", badge: "bg-yellow-100 text-yellow-700",  tone: "warning", followUpQueue: true },
+  { key: "curiosity_sent",     label: "Direct Report Sent", group: "active", color: "bg-blue-50 border-blue-200",     badge: "bg-blue-100 text-blue-700",      tone: "info", followUpQueue: false },
+  { key: "pdf_sent",           label: "PDF Sent",          group: "active", color: "bg-indigo-50 border-indigo-200", badge: "bg-indigo-100 text-indigo-700",  tone: "info", followUpQueue: false },
+  { key: "follow_up_due",      label: "Follow-up Due",     group: "active", color: "bg-amber-50 border-amber-200",   badge: "bg-amber-100 text-amber-700",    tone: "warning", followUpQueue: true },
+  { key: "gatekeeper",         label: "Gatekeeper",        group: "active", color: "bg-orange-50 border-orange-200", badge: "bg-orange-100 text-orange-700",  tone: "warning", followUpQueue: true },
+  { key: "meeting_booked",     label: "Meeting Booked",    group: "active", color: "bg-green-50 border-green-200",   badge: "bg-green-100 text-green-700",    tone: "brand", followUpQueue: false },
+  { key: "proposal_sent",      label: "Proposal Sent",     group: "active", color: "bg-purple-50 border-purple-200", badge: "bg-purple-100 text-purple-700",  tone: "brand", followUpQueue: false },
 
   // ── Parked (recoverable, out of the calling rotation) ────
-  { key: "unreachable",        label: "Unreachable",       group: "parked", color: "bg-stone-50 border-stone-300",   badge: "bg-stone-200 text-stone-600",    followUpQueue: false },
-  { key: "gatekeeper_flagged", label: "Gatekeeper Wall",   group: "parked", color: "bg-orange-50 border-orange-300", badge: "bg-orange-200 text-orange-700",  followUpQueue: true },
-  { key: "language_barrier",   label: "Language Barrier",  group: "parked", color: "bg-cyan-50 border-cyan-200",     badge: "bg-cyan-100 text-cyan-700",      followUpQueue: false },
-  { key: "revival",            label: "Revival",           group: "parked", color: "bg-rose-50 border-rose-200",     badge: "bg-rose-100 text-rose-700",      followUpQueue: false },
+  { key: "unreachable",        label: "Unreachable",       group: "parked", color: "bg-stone-50 border-stone-300",   badge: "bg-stone-200 text-stone-600",    tone: "neutral", followUpQueue: false },
+  { key: "gatekeeper_flagged", label: "Gatekeeper Wall",   group: "parked", color: "bg-orange-50 border-orange-300", badge: "bg-orange-200 text-orange-700",  tone: "warning", followUpQueue: true },
+  { key: "language_barrier",   label: "Language Barrier",  group: "parked", color: "bg-cyan-50 border-cyan-200",     badge: "bg-cyan-100 text-cyan-700",      tone: "info", followUpQueue: false },
+  { key: "revival",            label: "Revival",           group: "parked", color: "bg-rose-50 border-rose-200",     badge: "bg-rose-100 text-rose-700",      tone: "info", followUpQueue: false },
 
   // ── Closed ───────────────────────────────────────────────
-  { key: "not_interested",     label: "Not Interested",    group: "closed", color: "bg-orange-50 border-orange-200", badge: "bg-orange-100 text-orange-700",  followUpQueue: false },
-  { key: "won",                label: "Won",               group: "closed", color: "bg-emerald-50 border-emerald-200", badge: "bg-emerald-100 text-emerald-700", followUpQueue: false },
-  { key: "lost",               label: "Lost",              group: "closed", color: "bg-red-50 border-red-200",       badge: "bg-red-100 text-red-700",        followUpQueue: false },
-  { key: "dead",               label: "Dead",              group: "closed", color: "bg-slate-100 border-slate-200",  badge: "bg-slate-100 text-slate-500",    followUpQueue: false },
+  { key: "not_interested",     label: "Not Interested",    group: "closed", color: "bg-orange-50 border-orange-200", badge: "bg-orange-100 text-orange-700",  tone: "danger", followUpQueue: false },
+  { key: "won",                label: "Won",               group: "closed", color: "bg-emerald-50 border-emerald-200", badge: "bg-emerald-100 text-emerald-700", tone: "brand", followUpQueue: false },
+  { key: "lost",               label: "Lost",              group: "closed", color: "bg-red-50 border-red-200",       badge: "bg-red-100 text-red-700",        tone: "danger", followUpQueue: false },
+  { key: "dead",               label: "Dead",              group: "closed", color: "bg-slate-100 border-slate-200",  badge: "bg-slate-100 text-slate-500",    tone: "neutral", followUpQueue: false },
 ];
 
 export type OutreachStage = (typeof PIPELINE_STAGES)[number]["key"];

@@ -9,11 +9,18 @@ import {
   FileText,
   Calendar,
   ArrowRight,
+  Inbox,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/toast";
 import { logAudit } from "@/lib/audit";
 import { PIPELINE_STAGES, leadStageUpdate } from "@/lib/pipeline";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Tabs } from "@/components/ui/tabs";
+import { cn } from "@/lib/cn";
 
 // ─── Stage Config (single source of truth: lib/pipeline.ts) ──
 const stageByKey = Object.fromEntries(PIPELINE_STAGES.map((s) => [s.key, s]));
@@ -33,11 +40,12 @@ const QUICK_ACTION_STAGES = new Set([
   "touch1_pending", "curiosity_sent", "pdf_sent", "follow_up_due", "meeting_booked", "proposal_sent",
 ]);
 
-const LEAD_TYPE_COLORS: Record<string, string> = {
-  A: "bg-green-100 text-green-700 border border-green-300",
-  B: "bg-blue-100 text-blue-700 border border-blue-300",
-  C: "bg-purple-100 text-purple-700 border border-purple-300",
-  D: "bg-amber-100 text-amber-700 border border-amber-300",
+// Lead-type → one of the five tones (no per-type rainbow).
+const LEAD_TYPE_TONES: Record<string, Tone> = {
+  A: "brand",
+  B: "info",
+  C: "neutral",
+  D: "warning",
 };
 
 // ─── Types ────────────────────────────────────────────────────
@@ -75,36 +83,35 @@ function QuickActionButton({ lead }: { lead: Lead }) {
   const stage = lead.outreach_stage;
   if (stage === "touch1_pending") return (
     <a href={`https://wa.me/${lead.phone?.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"
-      className="flex items-center gap-1 text-[10px] font-bold bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors">
-      <MessageCircle className="h-2.5 w-2.5" /> WhatsApp
+      className={buttonVariants({ variant: "primary", size: "sm", className: "w-full" })}>
+      <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
     </a>
   );
   if (stage === "curiosity_sent") return (
     <Link href={`/admin/leads/${lead.id}`}
-      className="flex items-center gap-1 text-[10px] font-bold bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition-colors">
-      <FileText className="h-2.5 w-2.5" /> Send PDF
+      className={buttonVariants({ variant: "primary", size: "sm", className: "w-full" })}>
+      <FileText className="h-3.5 w-3.5" /> Send PDF
     </Link>
   );
-  if (stage === "pdf_sent" || stage === "follow_up_due") return (
-    <Link href={`/admin/leads/${lead.id}`}
-      className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-lg transition-colors ${
-        stage === "follow_up_due" && lead.follow_up_date && new Date(lead.follow_up_date) < new Date()
-          ? "bg-red-600 text-white hover:bg-red-700"
-          : "bg-slate-700 text-white hover:bg-slate-800"
-      }`}>
-      <Phone className="h-2.5 w-2.5" /> Log Call
-    </Link>
-  );
+  if (stage === "pdf_sent" || stage === "follow_up_due") {
+    const isOverdue = stage === "follow_up_due" && !!lead.follow_up_date && new Date(lead.follow_up_date) < new Date();
+    return (
+      <Link href={`/admin/leads/${lead.id}`}
+        className={buttonVariants({ variant: isOverdue ? "danger" : "secondary", size: "sm", className: "w-full" })}>
+        <Phone className="h-3.5 w-3.5" /> Log Call
+      </Link>
+    );
+  }
   if (stage === "meeting_booked") return (
     <Link href={`/admin/leads/${lead.id}`}
-      className="flex items-center gap-1 text-[10px] font-bold bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors">
-      <Calendar className="h-2.5 w-2.5" /> Open Lead
+      className={buttonVariants({ variant: "primary", size: "sm", className: "w-full" })}>
+      <Calendar className="h-3.5 w-3.5" /> Open Lead
     </Link>
   );
   if (stage === "proposal_sent") return (
     <Link href={`/admin/leads/${lead.id}`}
-      className="flex items-center gap-1 text-[10px] font-bold bg-purple-600 text-white px-2 py-1 rounded-lg hover:bg-purple-700 transition-colors">
-      <ArrowRight className="h-2.5 w-2.5" /> Open Proposal
+      className={buttonVariants({ variant: "secondary", size: "sm", className: "w-full" })}>
+      <ArrowRight className="h-3.5 w-3.5" /> Open Proposal
     </Link>
   );
   return null;
@@ -179,79 +186,60 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
   const totalClosed = tabCount("closed");
 
   return (
-    <div className="min-h-full bg-slate-50">
+    <div className="min-h-full bg-canvas">
       {/* Header (sticky) — title, filters, and the workflow tabs all live here so
           the board itself only ever shows one screen-width of columns. */}
-      <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
+      <div className="sticky top-0 z-20 border-b border-line bg-surface shadow-sm">
         <div className="px-4 py-3">
-          <div className="flex items-center justify-between mb-3">
+          <div className="mb-3 flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Outreach Board</h1>
-              <p className="text-xs text-slate-500 mt-0.5">{totalActive} active · {totalClosed} closed</p>
+              <h1 className="font-display text-xl font-semibold tracking-[-0.02em] text-slate-900">Outreach Board</h1>
+              <p className="mt-0.5 text-xs text-slate-500 tabular-nums">{totalActive} active · {totalClosed} closed</p>
             </div>
             <Link
               href="/admin/outreach/pdf-log"
-              className="flex items-center gap-2 text-xs font-semibold border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 px-3 py-2 rounded-xl transition-colors"
+              className={buttonVariants({ variant: "secondary", size: "sm" })}
             >
               <FileText className="h-3.5 w-3.5" /> PDF Log
             </Link>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-2">
-            <div className="relative flex-1 min-w-[160px] max-w-xs">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-              <input
-                className="w-full pl-8 pr-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative min-w-[160px] max-w-xs flex-1">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <Input
+                className="pl-8"
                 placeholder="Search business name…"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
               />
             </div>
-            <select value={filterNiche} onChange={e => setFilterNiche(e.target.value)}
-              className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none">
+            <Select value={filterNiche} onChange={e => setFilterNiche(e.target.value)} className="w-auto min-w-[130px]">
               <option value="">All Niches</option>
               {niches.map(n => <option key={n} value={n}>{n}</option>)}
-            </select>
-            <select value={filterCity} onChange={e => setFilterCity(e.target.value)}
-              className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none">
+            </Select>
+            <Select value={filterCity} onChange={e => setFilterCity(e.target.value)} className="w-auto min-w-[120px]">
               <option value="">All Cities</option>
               {cities.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-            <select value={filterType} onChange={e => setFilterType(e.target.value)}
-              className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none">
+            </Select>
+            <Select value={filterType} onChange={e => setFilterType(e.target.value)} className="w-auto min-w-[120px]">
               <option value="">All Types</option>
               {["A", "B", "C", "D"].map(t => <option key={t} value={t}>Type {t}</option>)}
-            </select>
-            <select value={filterAssigned} onChange={e => setFilterAssigned(e.target.value)}
-              className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none">
+            </Select>
+            <Select value={filterAssigned} onChange={e => setFilterAssigned(e.target.value)} className="w-auto min-w-[140px]">
               <option value="">All Assignees</option>
               {profiles.map(p => <option key={p.id} value={p.id}>{p.full_name}</option>)}
-            </select>
+            </Select>
           </div>
 
           {/* Workflow tabs */}
-          <div className="flex gap-1.5 mt-3 overflow-x-auto -mb-px">
-            {STAGE_TABS.map(tab => {
-              const count = tabCount(tab.key);
-              const active = activeTab === tab.key;
-              return (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
-                    active ? "bg-brand-deep text-white shadow-sm" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
-                >
-                  {tab.label}
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                    active ? "bg-white/25 text-white" : "bg-white text-slate-500"
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+          <div className="mt-3 overflow-x-auto">
+            <Tabs
+              tabs={STAGE_TABS.map(tab => ({ value: tab.key, label: tab.label, count: tabCount(tab.key) }))}
+              value={activeTab}
+              onValueChange={setActiveTab}
+            />
           </div>
         </div>
       </div>
@@ -269,25 +257,25 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
                 onDragOver={e => { if (isAdmin) { e.preventDefault(); setIsDraggingOver(stage.key); } }}
                 onDragLeave={() => setIsDraggingOver(null)}
                 onDrop={e => handleDrop(e, stage.key)}
-                className={`flex-1 min-w-[210px] max-w-[360px] rounded-2xl border transition-all ${stage.color} ${
-                  isOver ? "ring-2 ring-brand ring-offset-1" : ""
-                }`}
+                className={cn(
+                  "flex-1 min-w-[210px] max-w-[360px] rounded-xl border border-line bg-surface transition-all",
+                  isOver && "ring-2 ring-brand ring-offset-1"
+                )}
               >
                 {/* Column header */}
-                <div className="px-3 py-3 border-b border-current/10">
+                <div className="border-b border-line px-3 py-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">{stage.label}</span>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${stage.badge}`}>
-                      {stageLeads.length}
-                    </span>
+                    <span className="font-display text-xs font-semibold text-slate-700">{stage.label}</span>
+                    <Badge tone={stage.tone} size="sm">{stageLeads.length}</Badge>
                   </div>
                 </div>
 
                 {/* Cards — taller scroll area now that the board is only one tab deep */}
-                <div className="p-2 space-y-2 max-h-[calc(100dvh-250px)] overflow-y-auto">
+                <div className="max-h-[calc(100dvh-250px)] space-y-2 overflow-y-auto p-2">
                   {stageLeads.length === 0 && (
-                    <div className="flex items-center justify-center h-16 text-[10px] text-slate-300 font-medium">
-                      Empty
+                    <div className="flex h-20 flex-col items-center justify-center gap-1 text-center text-slate-300">
+                      <Inbox className="h-5 w-5" />
+                      <span className="text-[11px] font-medium">Empty</span>
                     </div>
                   )}
                   {stageLeads.map(lead => {
@@ -303,46 +291,47 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
                         draggable={isAdmin}
                         onDragStart={() => handleDragStart(lead.id)}
                         onDragEnd={() => { setDraggedLeadId(null); setIsDraggingOver(null); }}
-                        className={`rounded-xl bg-white border p-3 shadow-sm transition-all ${
-                          isAdmin ? "cursor-grab active:cursor-grabbing" : ""
-                        } ${isStalled ? "border-l-[3px] border-l-orange-400 border-r border-t border-b border-slate-200" : "border-slate-200"} ${
-                          draggedLeadId === lead.id ? "opacity-50 scale-[0.97]" : "hover:shadow-md"
-                        }`}
+                        className={cn(
+                          "rounded-lg border bg-surface p-3 transition-all",
+                          isAdmin && "cursor-grab active:cursor-grabbing",
+                          isStalled ? "border-l-[3px] border-l-warn border-r border-t border-b border-line" : "border-line",
+                          draggedLeadId === lead.id ? "scale-[0.97] opacity-50" : "hover:shadow-md"
+                        )}
                       >
                         {isStalled && (
-                          <div className="flex items-center gap-1 mb-1.5">
-                            <span className="text-[9px] font-bold uppercase text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-full border border-orange-200">
+                          <div className="mb-1.5 flex items-center gap-1">
+                            <Badge tone="warning" size="sm" className="uppercase">
                               Stalled {daysInStage}d
-                            </span>
+                            </Badge>
                           </div>
                         )}
 
-                        <Link href={`/admin/leads/${lead.id}`} className="block hover:text-brand-deep transition-colors">
-                          <p className="text-xs font-bold text-slate-900 leading-snug line-clamp-1">{lead.company_name}</p>
+                        <Link href={`/admin/leads/${lead.id}`} className="block transition-colors hover:text-brand-deep">
+                          <p className="line-clamp-1 text-xs font-semibold leading-snug text-slate-900">{lead.company_name}</p>
                         </Link>
 
-                        <p className="text-[10px] text-slate-400 mt-0.5 truncate">
+                        <p className="mt-0.5 truncate text-[11px] text-slate-400">
                           {lead.industry || "—"} · {lead.city || "—"}
                         </p>
 
-                        <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
                           {typeKey && (
-                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${LEAD_TYPE_COLORS[typeKey] || "bg-slate-100 text-slate-600"}`}>
+                            <Badge tone={LEAD_TYPE_TONES[typeKey] || "neutral"} size="sm">
                               {typeKey}
-                            </span>
+                            </Badge>
                           )}
-                          <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${daysInStage > 5 ? "bg-red-50 text-red-500" : "bg-slate-50 text-slate-400"}`}>
+                          <Badge tone={daysInStage > 5 ? "danger" : "neutral"} variant="outline" size="sm" className="tabular-nums">
                             {daysInStage}d
-                          </span>
+                          </Badge>
                           {assignee && (
-                            <span className="ml-auto text-[9px] text-slate-400 truncate max-w-[60px]">
+                            <span className="ml-auto max-w-[60px] truncate text-[11px] text-slate-400">
                               {assignee.full_name.split(" ")[0]}
                             </span>
                           )}
                         </div>
 
                         {hasQuickAction && (
-                          <div className="mt-2.5 pt-2 border-t border-slate-100">
+                          <div className="mt-2.5 border-t border-line pt-2">
                             <QuickActionButton lead={lead} />
                           </div>
                         )}

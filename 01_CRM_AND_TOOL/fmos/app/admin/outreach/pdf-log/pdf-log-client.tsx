@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, FileText, Filter } from "lucide-react";
+import { ArrowLeft, Search, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
+import { inputClasses } from "@/components/ui/input";
+import { cn } from "@/lib/cn";
 
 interface PdfLog {
   id: string;
@@ -50,19 +59,19 @@ export default function PdfLogClient({ logs }: { logs: PdfLog[] }) {
   });
 
   return (
-    <div className="min-h-full bg-slate-50">
+    <div className="min-h-full bg-canvas">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-4 py-4 shadow-sm">
+      <div className="border-b border-line bg-surface px-4 py-4 shadow-sm">
         <div className="mx-auto max-w-7xl">
-          <Link href="/admin/outreach" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#42CA80] transition-colors mb-3">
+          <Link href="/admin/outreach" className="mb-3 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-brand-deep">
             <ArrowLeft className="h-4 w-4" /> Outreach Board
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-indigo-500" /> PDF Delivery Log
+              <h1 className="flex items-center gap-2 font-display text-xl font-semibold tracking-[-0.02em] text-slate-900">
+                <FileText className="h-5 w-5 text-brand-deep" /> PDF Delivery Log
               </h1>
-              <p className="text-xs text-slate-500 mt-1">{filtered.length} PDFs sent</p>
+              <p className="mt-1 text-xs text-slate-500 tabular-nums">{filtered.length} PDFs sent</p>
             </div>
           </div>
         </div>
@@ -70,102 +79,101 @@ export default function PdfLogClient({ logs }: { logs: PdfLog[] }) {
 
       <div className="mx-auto max-w-7xl px-4 py-6">
         {/* Filters */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 mb-5">
-          <div className="flex flex-wrap gap-3">
-            <div className="relative flex-1 min-w-[200px] max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-              <input
-                className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#42CA80]/30 focus:border-[#42CA80] focus:bg-white"
+        <Card className="mb-5 p-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative min-w-[200px] max-w-sm flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <Input
+                className="pl-9"
                 placeholder="Search lead name or PDF..."
                 value={query}
                 onChange={e => setQuery(e.target.value)}
               />
             </div>
-            <select value={filterNiche} onChange={e => setFilterNiche(e.target.value)}
-              className="text-sm border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none">
+            <Select value={filterNiche} onChange={e => setFilterNiche(e.target.value)} className="w-auto min-w-[130px]">
               <option value="">All Niches</option>
               {niches.map(n => <option key={n} value={n}>{n}</option>)}
-            </select>
-            <select value={filterCity} onChange={e => setFilterCity(e.target.value)}
-              className="text-sm border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none">
+            </Select>
+            <Select value={filterCity} onChange={e => setFilterCity(e.target.value)} className="w-auto min-w-[120px]">
               <option value="">All Cities</option>
               {cities.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-            <select value={filterPdf} onChange={e => setFilterPdf(e.target.value)}
-              className="text-sm border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none">
+            </Select>
+            <Select value={filterPdf} onChange={e => setFilterPdf(e.target.value)} className="w-auto min-w-[130px]">
               <option value="">All PDFs</option>
               {pdfNames.map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
+            </Select>
             <div className="flex items-center gap-2">
               <input type="date" value={filterDateFrom} onChange={e => setFilterDateFrom(e.target.value)}
-                className="text-sm border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none" />
-              <span className="text-slate-400 text-xs">to</span>
+                className={cn(inputClasses, "w-auto")} />
+              <span className="text-xs text-slate-400">to</span>
               <input type="date" value={filterDateTo} onChange={e => setFilterDateTo(e.target.value)}
-                className="text-sm border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none" />
+                className={cn(inputClasses, "w-auto")} />
             </div>
             {(query || filterNiche || filterCity || filterPdf || filterDateFrom || filterDateTo) && (
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => { setQuery(""); setFilterNiche(""); setFilterCity(""); setFilterPdf(""); setFilterDateFrom(""); setFilterDateTo(""); }}
-                className="text-xs font-semibold text-slate-500 hover:text-red-500 transition-colors px-3"
               >
                 Clear
-              </button>
+              </Button>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* Table */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-          {filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-              <FileText className="h-10 w-10 mb-3 opacity-30" />
-              <p className="text-sm font-medium">No PDFs sent yet</p>
-            </div>
-          ) : (
+        {filtered.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title="No PDFs sent yet"
+            description="PDF deliveries to leads will appear here once you start sending reports."
+          />
+        ) : (
+          <Card className="overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
+              <Table>
+                <THead>
+                  <TR className="hover:bg-transparent">
                     {["Lead Name", "Niche", "City", "PDF Name", "Sent By", "Sent At", "Lead Stage"].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <TH key={h}>{h}</TH>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
+                  </TR>
+                </THead>
+                <TBody>
                   {filtered.map(log => (
-                    <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="px-4 py-3">
-                        <Link href={`/admin/leads/${log.lead_id}`} className="font-semibold text-slate-900 hover:text-[#42CA80] transition-colors">
+                    <TR key={log.id}>
+                      <TD>
+                        <Link href={`/admin/leads/${log.lead_id}`} className="font-semibold text-slate-900 transition-colors hover:text-brand-deep">
                           {log.lead?.company_name || "—"}
                         </Link>
-                      </td>
-                      <td className="px-4 py-3 text-slate-500 text-xs">{log.lead?.industry || "—"}</td>
-                      <td className="px-4 py-3 text-slate-500 text-xs">{log.lead?.city || "—"}</td>
-                      <td className="px-4 py-3">
+                      </TD>
+                      <TD className="text-xs text-slate-500">{log.lead?.industry || "—"}</TD>
+                      <TD className="text-xs text-slate-500">{log.lead?.city || "—"}</TD>
+                      <TD>
                         {log.pdf_name ? (
-                          <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg">
+                          <Badge tone="neutral" size="sm">
                             <FileText className="h-3 w-3" /> {log.pdf_name}
-                          </span>
-                        ) : <span className="text-slate-400 text-xs">—</span>}
-                      </td>
-                      <td className="px-4 py-3 text-slate-500 text-xs">{log.actor?.full_name || "—"}</td>
-                      <td className="px-4 py-3 text-slate-500 text-xs whitespace-nowrap">
+                          </Badge>
+                        ) : <span className="text-xs text-slate-400">—</span>}
+                      </TD>
+                      <TD className="text-xs text-slate-500">{log.actor?.full_name || "—"}</TD>
+                      <TD className="whitespace-nowrap text-xs text-slate-500 tabular-nums">
                         {new Date(log.created_at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                      </td>
-                      <td className="px-4 py-3">
+                      </TD>
+                      <TD>
                         {log.lead?.outreach_stage && (
-                          <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                          <Badge tone="neutral" variant="outline" size="sm">
                             {STAGE_LABELS[log.lead.outreach_stage] || log.lead.outreach_stage}
-                          </span>
+                          </Badge>
                         )}
-                      </td>
-                    </tr>
+                      </TD>
+                    </TR>
                   ))}
-                </tbody>
-              </table>
+                </TBody>
+              </Table>
             </div>
-          )}
-        </div>
+          </Card>
+        )}
       </div>
     </div>
   );
