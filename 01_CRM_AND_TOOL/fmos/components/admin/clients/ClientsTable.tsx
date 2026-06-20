@@ -13,6 +13,11 @@ import ServicePills from "./ServicePills";
 import PackageModal from "@/app/admin/clients/package-modal";
 import HealthScoreModal from "@/app/admin/clients/health-score-modal";
 import UpsellAttemptModal from "@/app/admin/clients/upsell-attempt-modal";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { buttonVariants } from "@/components/ui/button";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 type SortField = "monthly_value" | "health_score" | "start_date" | "renewal_date" | "business_name";
 type SortDir = "asc" | "desc";
@@ -159,116 +164,100 @@ export default function ClientsTable({
     const days = Math.floor(
       (new Date(date).getTime() - Date.now()) / 86400000
     );
-    if (days <= 30) return "text-red-600 font-semibold";
-    if (days <= 60) return "text-amber-600 font-medium";
+    if (days <= 30) return "text-danger font-semibold";
+    if (days <= 60) return "text-warn font-medium";
     return "text-slate-600";
   };
 
-  const statusBadge = (status: string) => {
-    const map: Record<string, string> = {
-      active: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      paused: "bg-amber-50 text-amber-700 border-amber-200",
-      churned: "bg-red-50 text-red-700 border-red-200",
-    };
-    return map[status] ?? "bg-slate-50 text-slate-600 border-slate-200";
-  };
-
-  const getHealthBadge = (score: number | null) => {
-    if (score == null) return { text: "—", color: "text-slate-400 bg-slate-50" };
-    if (score >= 80) return { text: String(score), color: "text-green-700 bg-green-100" };
-    if (score >= 60) return { text: String(score), color: "text-blue-700 bg-blue-100" };
-    if (score >= 40) return { text: String(score), color: "text-amber-700 bg-amber-100" };
-    return { text: String(score), color: "text-red-700 bg-red-100" };
-  };
-
-  const tierColors: Record<string, string> = {
-    starter: "bg-blue-50 text-blue-700 border-blue-200",
-    growth: "bg-indigo-50 text-indigo-700 border-indigo-200",
-    pro: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    custom: "bg-purple-50 text-purple-700 border-purple-200",
+  const getHealthBadge = (score: number | null): { text: string; tone: Tone } => {
+    if (score == null) return { text: "—", tone: "neutral" };
+    if (score >= 80) return { text: String(score), tone: "brand" };
+    if (score >= 60) return { text: String(score), tone: "info" };
+    if (score >= 40) return { text: String(score), tone: "warning" };
+    return { text: String(score), tone: "danger" };
   };
 
   return (
     <div>
       {/* Filters Bar */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative max-w-xs flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search clients..."
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+            className="pl-9"
           />
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 text-xs text-slate-500">
             <SlidersHorizontal className="h-3.5 w-3.5" />
             <span className="font-medium">Filter:</span>
           </div>
-          <select
+          <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand focus:outline-none min-h-[36px]"
+            className="h-8 w-auto"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
             <option value="paused">Paused</option>
             <option value="churned">Churned</option>
-          </select>
-          <select
+          </Select>
+          <Select
             value={packageFilter}
             onChange={(e) => setPackageFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand focus:outline-none min-h-[36px]"
+            className="h-8 w-auto"
           >
             <option value="all">All Packages</option>
             <option value="starter">Starter</option>
             <option value="growth">Growth</option>
             <option value="pro">Pro</option>
             <option value="custom">Custom</option>
-          </select>
-          <select
+          </Select>
+          <Select
             value={healthFilter}
             onChange={(e) => setHealthFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand focus:outline-none min-h-[36px]"
+            className="h-8 w-auto"
           >
             <option value="all">Health</option>
             <option value="80">Healthy (80+)</option>
             <option value="60">Stable (60-79)</option>
             <option value="40">At Risk (40-59)</option>
             <option value="0">Critical (&lt;40)</option>
-          </select>
+          </Select>
 
-          <span className="text-xs text-slate-400 ml-2">
+          <span className="ml-2 text-xs text-slate-400">
             {filtered.length} client{filtered.length !== 1 ? "s" : ""}
           </span>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full min-w-[1000px] text-sm">
-          <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/70">
+      <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+        <Table className="min-w-[1000px]">
+          <THead>
+            <TR className="hover:bg-transparent">
               <SortHeader label="Client" field="business_name" current={sortField} dir={sortDir} onToggle={toggleSort} />
-              <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Package</th>
-              <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 min-w-[180px]">Services</th>
+              <TH>Package</TH>
+              <TH className="min-w-[180px]">Services</TH>
               <SortHeader label="MRR" field="monthly_value" current={sortField} dir={sortDir} onToggle={toggleSort} />
               <SortHeader label="Health" field="health_score" current={sortField} dir={sortDir} onToggle={toggleSort} />
               <SortHeader label="Renewal" field="renewal_date" current={sortField} dir={sortDir} onToggle={toggleSort} />
-              <th className="px-4 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
-              <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-50">
+              <TH>Status</TH>
+              <TH className="text-right">Actions</TH>
+            </TR>
+          </THead>
+          <TBody>
             {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-sm text-slate-400">
+              <TR className="hover:bg-transparent">
+                <TD colSpan={8} className="py-12 text-center text-sm text-slate-400">
                   No clients match your filters.
-                </td>
-              </tr>
+                </TD>
+              </TR>
             ) : (
               filtered.map((c) => {
                 const healthBadge = getHealthBadge(c.health_score ?? null);
@@ -277,103 +266,103 @@ export default function ClientsTable({
                 const services = c.services_active || [];
 
                 return (
-                  <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-4 py-2.5">
+                  <TR key={c.id}>
+                    <TD>
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/admin/clients/${c.id}`}
-                          className="font-semibold text-slate-900 hover:text-brand-deep transition-colors truncate max-w-[150px] inline-block"
+                          className="inline-block max-w-[150px] truncate font-semibold text-slate-900 transition-colors hover:text-brand-deep"
                         >
                           {c.business_name}
                         </Link>
                         {c.upsell_eligible && (
-                          <span title="Upsell Opportunity" className="flex shrink-0 h-4 w-4 bg-orange-100 text-orange-600 rounded-full items-center justify-center">
+                          <span title="Upsell Opportunity" className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-deep">
                             <Zap className="h-2.5 w-2.5" />
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">{c.city ?? "—"}</p>
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className={`inline-flex border px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${tierColors[tier]}`}>
+                      <p className="mt-0.5 text-[11px] text-slate-400">{c.city ?? "—"}</p>
+                    </TD>
+                    <TD>
+                      <Badge tone="neutral" variant="outline" size="sm" className="uppercase">
                         {tier}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5">
+                      </Badge>
+                    </TD>
+                    <TD>
                       <div className="flex flex-wrap gap-1">
                         {services.length > 0 ? services.map(s => (
-                          <span key={s} className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-medium border border-slate-200 truncate max-w-[80px]" title={s}>
+                          <Badge key={s} tone="neutral" variant="outline" size="sm" className="max-w-[80px] truncate" title={s}>
                             {s}
-                          </span>
+                          </Badge>
                         )) : (
-                          <span className="text-[10px] text-slate-400 italic">No services</span>
+                          <span className="text-[11px] italic text-slate-400">No services</span>
                         )}
                       </div>
-                    </td>
-                    <td className="px-4 py-2.5 font-mono font-bold text-slate-800">
+                    </TD>
+                    <TD className="font-semibold tabular-nums text-slate-800">
                       ₹{mrr.toLocaleString("en-IN")}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className={`inline-flex flex-col items-center justify-center h-[26px] min-w-[26px] rounded-full text-[11px] font-bold ${healthBadge.color}`}>
+                    </TD>
+                    <TD>
+                      <Badge tone={healthBadge.tone} size="sm" className="tabular-nums">
                         {healthBadge.text}
-                      </span>
-                    </td>
-                    <td className={`px-4 py-2.5 text-xs ${renewalClass(c.renewal_date)}`}>
+                      </Badge>
+                    </TD>
+                    <TD className={`text-xs ${renewalClass(c.renewal_date)}`}>
                       {c.renewal_date
                         ? new Date(c.renewal_date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
                         : "—"}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <select
+                    </TD>
+                    <TD>
+                      <Select
                         value={localStatus[c.id] ?? c.status ?? "active"}
                         onChange={(e) => changeStatus(c, e.target.value)}
                         title="Change status"
-                        className={`rounded border px-1.5 py-1 text-[9px] font-bold uppercase tracking-widest cursor-pointer focus:outline-none ${statusBadge(localStatus[c.id] ?? c.status ?? "active")}`}
+                        className="h-8 w-auto text-xs"
                       >
                         <option value="active">Active</option>
                         <option value="onboarding">Onboarding</option>
                         <option value="paused">Paused</option>
                         <option value="churned">Churned</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2.5">
+                      </Select>
+                    </TD>
+                    <TD>
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => openModal(c, "package")}
-                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-brand-deep hover:text-brand-deep transition-colors"
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-surface text-slate-500 transition-colors hover:border-brand-deep hover:text-brand-deep"
                           title="Manage Package"
                         >
                           <Package className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => openModal(c, "health")}
-                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-red-400 hover:text-red-500 transition-colors"
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-surface text-slate-500 transition-colors hover:border-danger-line hover:text-danger"
                           title="Update Health"
                         >
                           <Heart className="h-3.5 w-3.5" />
                         </button>
                         <Link
                           href={`/admin/clients/${c.id}`}
-                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                          className={buttonVariants({ variant: "primary", size: "icon", className: "h-7 w-7" })}
                           title="View Profile"
                         >
                           <Eye className="h-3.5 w-3.5" />
                         </Link>
                         <button
                           onClick={() => handleDelete(c)}
-                          className="inline-flex items-center justify-center h-7 w-7 rounded-lg border border-slate-200 bg-white text-slate-300 hover:border-red-300 hover:text-red-500 transition-colors"
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-surface text-slate-300 transition-colors hover:border-danger-line hover:text-danger"
                           title="Delete Client"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </TD>
+                  </TR>
                 );
               })
             )}
-          </tbody>
-        </table>
+          </TBody>
+        </Table>
       </div>
 
       {/* Modals */}
@@ -406,21 +395,21 @@ function SortHeader({
 }) {
   const isActive = current === field;
   return (
-    <th className="px-4 py-2.5 text-left">
+    <TH className="p-0">
       <button
         onClick={() => onToggle(field)}
-        className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+        className="flex items-center gap-1 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-slate-700"
       >
         {label}
         <ArrowUpDown
           className={`h-3 w-3 ${isActive ? "text-brand-deep" : "opacity-30"}`}
         />
         {isActive && (
-          <span className="text-[8px] text-brand-deep">
+          <span className="text-[11px] text-brand-deep">
             {dir === "asc" ? "↑" : "↓"}
           </span>
         )}
       </button>
-    </th>
+    </TH>
   );
 }

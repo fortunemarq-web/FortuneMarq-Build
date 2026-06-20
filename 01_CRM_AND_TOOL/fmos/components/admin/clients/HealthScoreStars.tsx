@@ -1,12 +1,13 @@
 import { Star } from "lucide-react";
 
+// Health maps to the five tones: low = danger, mid = warning, high = brand (success).
 const COLORS = [
-  "", // 0 (unused)
-  "text-red-500",     // 1
-  "text-red-400",     // 2
-  "text-amber-500",   // 3
-  "text-emerald-500", // 4
-  "text-emerald-600", // 5
+  "",           // 0 (unused)
+  "text-danger", // 1
+  "text-danger", // 2
+  "text-warn",   // 3
+  "text-brand",  // 4
+  "text-brand",  // 5
 ];
 
 export default function HealthScoreStars({

@@ -20,6 +20,8 @@ import { getInvoicesByClient } from "@/app/admin/finance/actions";
 import CommunicationsTab from "@/components/admin/clients/tabs/CommunicationsTab";
 import HealthScoreStars from "@/components/admin/clients/HealthScoreStars";
 import ServicePills from "@/components/admin/clients/ServicePills";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
 import {
   ArrowLeft,
   Mail,
@@ -132,58 +134,52 @@ export default async function ClientProfilePage({
     }
   }
 
-  const statusBadge = (status: string) => {
-    const map: Record<string, string> = {
-      active: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      paused: "bg-amber-50 text-amber-700 border-amber-200",
-      churned: "bg-red-50 text-red-700 border-red-200",
-    };
-    return map[status] ?? "bg-slate-50 text-slate-600 border-slate-200";
+  // Every status maps to one of the five tones — no per-status rainbow.
+  const STATUS_TONE: Record<string, Tone> = {
+    active: "brand",
+    onboarding: "info",
+    paused: "warning",
+    churned: "danger",
   };
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-6">
+    <div className="min-h-full bg-canvas px-4 py-6">
       <div className="mx-auto max-w-6xl">
         {/* Back */}
         <Link
           href="/admin/clients"
-          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-6"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-700"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Clients
         </Link>
 
         {/* Header Card */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6"
-             style={{ borderTop: "3px solid #42CA80" }}>
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <Card className="mb-6 p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex-1">
               {/* Name & Core Info */}
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="font-display text-2xl font-semibold tracking-[-0.02em] text-slate-900">
                   {client.business_name}
                 </h1>
-                <span
-                  className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${statusBadge(
-                    client.status || ""
-                  )}`}
-                >
+                <Badge tone={STATUS_TONE[client.status || ""] ?? "neutral"} size="sm" className="uppercase">
                   {client.status}
-                </span>
+                </Badge>
                 {client.package_tier && (
-                  <span className="rounded-full border border-indigo-200 px-2.5 py-0.5 text-[10px] font-bold text-indigo-700 bg-indigo-50 uppercase tracking-wide">
+                  <Badge tone="neutral" variant="outline" size="sm" className="uppercase">
                     {client.package_tier}
-                  </span>
+                  </Badge>
                 )}
                 {client.upsell_eligible && (
-                  <span className="rounded-full border border-orange-200 px-2.5 py-0.5 text-[10px] font-bold text-orange-600 bg-orange-50 uppercase tracking-wide flex items-center gap-1" title="Flagged for upsell">
+                  <Badge tone="warning" size="sm" className="uppercase" title="Flagged for upsell">
                     <Zap className="h-3 w-3" /> Upsell Opportunity
-                  </span>
+                  </Badge>
                 )}
               </div>
 
               {/* Contact Row */}
-              <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-slate-500">
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-slate-500">
                 {client.owner_name && (
                   <span className="flex items-center gap-1.5">
                     <Building2 className="h-3.5 w-3.5" />
@@ -193,7 +189,7 @@ export default async function ClientProfilePage({
                 {client.phone && (
                   <a
                     href={`tel:${client.phone}`}
-                    className="flex items-center gap-1.5 hover:text-[#42CA80] transition-colors"
+                    className="flex items-center gap-1.5 transition-colors hover:text-brand-deep"
                   >
                     <Phone className="h-3.5 w-3.5" />
                     {client.phone}
@@ -202,7 +198,7 @@ export default async function ClientProfilePage({
                 {client.primary_email && (
                   <a
                     href={`mailto:${client.primary_email}`}
-                    className="flex items-center gap-1.5 hover:text-[#42CA80] transition-colors"
+                    className="flex items-center gap-1.5 transition-colors hover:text-brand-deep"
                   >
                     <Mail className="h-3.5 w-3.5" />
                     {client.primary_email}
@@ -211,7 +207,7 @@ export default async function ClientProfilePage({
               </div>
 
               {/* Details Row */}
-              <div className="flex flex-wrap items-center gap-4 mt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-4">
                 {client.city && (
                   <span className="flex items-center gap-1.5 text-xs text-slate-500">
                     <MapPin className="h-3 w-3" />
@@ -219,17 +215,17 @@ export default async function ClientProfilePage({
                   </span>
                 )}
                 {client.niche && (
-                  <span className="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-bold text-slate-600 uppercase">
+                  <Badge tone="neutral" variant="outline" size="sm" className="uppercase">
                     {client.niche}
-                  </span>
+                  </Badge>
                 )}
                 <HealthScoreStars score={client.health_score ?? 3} size="md" />
               </div>
 
               {/* Services & Metrics */}
-              <div className="flex flex-wrap items-center gap-4 mt-4">
+              <div className="mt-4 flex flex-wrap items-center gap-4">
                 <ServicePills services={client.services_active || client.services} max={6} />
-                <span className="text-sm font-mono font-bold text-[#42CA80]">
+                <span className="text-sm font-semibold tabular-nums text-brand-deep">
                   ₹{(client.monthly_value ?? 0).toLocaleString("en-IN")}/mo
                 </span>
                 {client.start_date && (
@@ -255,7 +251,7 @@ export default async function ClientProfilePage({
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Tabs */}
         <ClientProfileTabs

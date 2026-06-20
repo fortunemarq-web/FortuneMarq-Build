@@ -4,6 +4,10 @@ import { useState, useTransition } from "react";
 import { X, Plus, Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/app/admin/clients/actions";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/cn";
 
 const SERVICE_OPTIONS = [
   { value: "website", label: "Website" },
@@ -67,30 +71,27 @@ export default function AddClientModal() {
 
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-xl bg-[#42CA80] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#38b571] transition-colors min-h-[44px]"
-      >
+      <Button onClick={() => setOpen(true)} variant="primary">
         <Plus className="h-4 w-4" />
         Add Client
-      </button>
+      </Button>
     );
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm p-4 sm:items-center">
-      <div className="w-full max-w-xl rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:rounded-2xl max-h-[90vh] overflow-y-auto">
+      <div className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface px-6 py-4">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Add New Client</h2>
+            <h2 className="font-display text-lg font-semibold text-slate-900">Add New Client</h2>
             <p className="text-xs text-slate-500">
               Onboarding checklist will be created automatically
             </p>
           </div>
           <button
             onClick={() => { setOpen(false); setError(""); }}
-            className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+            className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
           >
             <X className="h-5 w-5" />
           </button>
@@ -98,7 +99,7 @@ export default function AddClientModal() {
 
         {success ? (
           <div className="flex flex-col items-center justify-center gap-3 p-12">
-            <CheckCircle2 className="h-12 w-12 text-[#42CA80]" />
+            <CheckCircle2 className="h-12 w-12 text-brand" />
             <p className="text-sm font-semibold text-slate-900">
               Client created successfully!
             </p>
@@ -107,16 +108,15 @@ export default function AddClientModal() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 p-6">
             {/* Business Name */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Business Name <span className="text-red-500">*</span>
-              </label>
-              <input
+              <Label>
+                Business Name <span className="text-danger">*</span>
+              </Label>
+              <Input
                 name="business_name"
                 required
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20"
                 placeholder="e.g. Sunrise Dental Clinic"
               />
             </div>
@@ -124,47 +124,48 @@ export default function AddClientModal() {
             {/* Owner + Phone row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Owner Name</label>
-                <input name="owner_name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="Dr. Sharma" />
+                <Label>Owner Name</Label>
+                <Input name="owner_name" placeholder="Dr. Sharma" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Phone</label>
-                <input name="phone" type="tel" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="+91 98765 43210" />
+                <Label>Phone</Label>
+                <Input name="phone" type="tel" placeholder="+91 98765 43210" />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Email</label>
-              <input name="primary_email" type="email" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="owner@business.com" />
+              <Label>Email</Label>
+              <Input name="primary_email" type="email" placeholder="owner@business.com" />
             </div>
 
             {/* City + Niche */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">City</label>
-                <input name="city" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="Hubli" />
+                <Label>City</Label>
+                <Input name="city" placeholder="Hubli" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Niche</label>
-                <input name="niche" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" placeholder="Dental" />
+                <Label>Niche</Label>
+                <Input name="niche" placeholder="Dental" />
               </div>
             </div>
 
             {/* Services multi-select */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-2">Services</label>
+              <Label>Services</Label>
               <div className="flex flex-wrap gap-2">
                 {SERVICE_OPTIONS.map((svc) => (
                   <button
                     key={svc.value}
                     type="button"
                     onClick={() => toggleService(svc.value)}
-                    className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all min-h-[36px] ${
+                    className={cn(
+                      "min-h-[36px] rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
                       services.includes(svc.value)
-                        ? "border-[#42CA80] bg-[#42CA80]/10 text-[#2a9d5c]"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                    }`}
+                        ? "border-brand-line bg-brand-soft text-brand-deep"
+                        : "border-line bg-surface text-slate-600 hover:border-line-strong"
+                    )}
                   >
                     {svc.label}
                   </button>
@@ -175,46 +176,49 @@ export default function AddClientModal() {
             {/* MRR + Dates */}
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">MRR (₹)</label>
-                <input name="monthly_value" type="number" min="0" step="100" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20 font-mono" placeholder="5000" />
+                <Label>MRR (₹)</Label>
+                <Input name="monthly_value" type="number" min="0" step="100" placeholder="5000" className="tabular-nums" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Start Date</label>
-                <input name="start_date" type="date" defaultValue={new Date().toISOString().split("T")[0]} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" />
+                <Label>Start Date</Label>
+                <Input name="start_date" type="date" defaultValue={new Date().toISOString().split("T")[0]} />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Renewal Date</label>
-                <input name="renewal_date" type="date" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20" />
+                <Label>Renewal Date</Label>
+                <Input name="renewal_date" type="date" />
               </div>
             </div>
 
             {/* Error */}
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs text-red-600">
+              <div className="rounded-lg border border-danger-line bg-danger-soft px-4 py-2 text-xs text-danger">
                 {error}
               </div>
             )}
 
             {/* Actions */}
             <div className="flex gap-3 pt-2">
-              <button
+              <Button
                 type="submit"
                 disabled={isPending}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#42CA80] px-4 py-3 text-sm font-semibold text-white hover:bg-[#38b571] disabled:opacity-50 transition-colors min-h-[44px]"
+                variant="primary"
+                size="lg"
+                className="flex-1"
               >
                 {isPending ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> Creating...</>
                 ) : (
                   "Create Client"
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => { setOpen(false); setError(""); }}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]"
+                variant="secondary"
+                size="lg"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         )}

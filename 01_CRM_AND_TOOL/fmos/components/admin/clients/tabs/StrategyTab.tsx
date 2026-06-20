@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { Search, MousePointerClick, Facebook, Instagram, LayoutTemplate, CalendarSync, FileText, CheckCircle2, CircleDashed } from "lucide-react";
 import StrategyGeneratorModal from "./StrategyGeneratorModal";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 const STRATEGY_CARDS = [
   { id: "client_seo", label: "SEO Strategy", icon: Search },
@@ -38,30 +41,30 @@ export default function StrategyTab({
       {/* Strategy Generator Grid */}
       <section>
         <div className="mb-4">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Generate Client Strategy</h2>
+          <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-slate-500">Generate Client Strategy</h2>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {STRATEGY_CARDS.map((card) => {
             const Icon = card.icon;
             return (
-              <div key={card.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow relative group">
+              <Card key={card.id} className="group relative p-5">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-lg bg-indigo-50 text-indigo-600">
+                    <div className="rounded-lg bg-brand-soft p-2.5 text-brand-deep">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="font-bold text-slate-900">{card.label}</h3>
+                    <h3 className="font-display font-semibold text-slate-900">{card.label}</h3>
                   </div>
-                  
+
                   <button
                     onClick={() => handleOpenModal(card.id, card.label)}
-                    className="w-full rounded-lg bg-slate-50 border border-slate-200 py-2.5 text-sm font-semibold text-slate-600 hover:bg-[#42CA80] hover:text-white hover:border-[#42CA80] transition-colors"
+                    className="w-full rounded-lg border border-line bg-slate-50 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:border-brand-deep hover:bg-brand-deep hover:text-white"
                   >
                     Generate Tasks →
                   </button>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>

@@ -3,9 +3,13 @@
 import { useState, useEffect } from "react";
 import type { ClientRecord } from "@/app/admin/clients/actions";
 import { updateClientNotes, updateClientField } from "@/app/admin/clients/actions";
-import { Calendar, FolderKanban, FileText, Save, Loader2, Zap } from "lucide-react";
+import { Calendar, FolderKanban, FileText, Save, Loader2, Zap, Check } from "lucide-react";
 import { promptModal } from "@/components/ui/prompt-modal";
 import ActivityTimeline from "@/components/ActivityTimeline";
+import { Card } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/cn";
 
 export default function OverviewTab({
   client,
@@ -63,156 +67,161 @@ export default function OverviewTab({
     : 0;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       {/* Summary Card */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+      <Card className="p-5">
+        <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
           Quick Summary
         </h3>
         <div className="space-y-3">
-          <div className="flex justify-between items-center py-2 border-b border-slate-50">
+          <div className="flex items-center justify-between border-b border-line py-2">
             <span className="text-xs text-slate-500">Days as Client</span>
-            <span className="text-sm font-mono font-bold text-slate-800">
+            <span className="text-sm font-semibold tabular-nums text-slate-800">
               {daysAsClient}
             </span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-slate-50">
+          <div className="flex items-center justify-between border-b border-line py-2">
             <span className="text-xs text-slate-500">Active Projects</span>
-            <span className="text-sm font-mono font-bold text-slate-800">
+            <span className="text-sm font-semibold tabular-nums text-slate-800">
               {projects.filter((p) => p.status !== "completed").length}
             </span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-slate-50">
+          <div className="flex items-center justify-between border-b border-line py-2">
             <span className="text-xs text-slate-500">Monthly Value</span>
-            <span className="text-sm font-mono font-bold text-[#42CA80]">
+            <span className="text-sm font-semibold tabular-nums text-brand-deep">
               ₹{(client.monthly_value ?? 0).toLocaleString("en-IN")}
             </span>
           </div>
           {client.services_active && client.services_active.length > 0 && (
-            <div className="py-2 border-b border-slate-50">
-              <p className="text-xs text-slate-500 mb-1 flex justify-between items-center">
+            <div className="border-b border-line py-2">
+              <p className="mb-1 flex items-center justify-between text-xs text-slate-500">
                 <span>Active Services</span>
               </p>
-              <div className="flex flex-wrap gap-1 mt-1">
+              <div className="mt-1 flex flex-wrap gap-1">
                 {client.services_active.map((service: string) => (
-                  <span
-                    key={service}
-                    className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200 uppercase"
-                  >
+                  <Badge key={service} tone="brand" variant="outline" size="sm" className="uppercase">
                     {service.replace(/_/g, " ")}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>
           )}
-          <div className="flex justify-between items-center py-2">
+          <div className="flex items-center justify-between py-2">
             <span className="text-xs text-slate-500">Onboarding</span>
             <span
-              className={`text-xs font-bold ${
-                client.onboarding_completed
-                  ? "text-emerald-600"
-                  : "text-amber-600"
-              }`}
+              className={cn(
+                "flex items-center gap-1 text-xs font-semibold",
+                client.onboarding_completed ? "text-brand-deep" : "text-warn"
+              )}
             >
-              {client.onboarding_completed ? "✓ Complete" : "In Progress"}
+              {client.onboarding_completed ? (
+                <>
+                  <Check className="h-3.5 w-3.5" /> Complete
+                </>
+              ) : (
+                "In Progress"
+              )}
             </span>
           </div>
-          <div className="flex justify-between items-center py-2 pt-4 border-t border-slate-100">
-            <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-orange-500" /> Upsell Eligible
+          <div className="flex items-center justify-between border-t border-line-strong py-2 pt-4">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+              <Zap className="h-3.5 w-3.5 text-warn" /> Upsell Eligible
             </span>
             <button
               onClick={toggleUpsell}
               disabled={togglingUpsell}
-              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#42CA80] focus:ring-offset-2 ${
-                client.upsell_eligible ? "bg-[#42CA80]" : "bg-slate-200"
-              } ${togglingUpsell ? "opacity-50" : ""}`}
+              className={cn(
+                "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-ring focus:ring-offset-2",
+                client.upsell_eligible ? "bg-brand" : "bg-slate-200",
+                togglingUpsell && "opacity-50"
+              )}
             >
               <span className="sr-only">Toggle Upsell Eligibility</span>
               <span
                 aria-hidden="true"
-                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                className={cn(
+                  "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
                   client.upsell_eligible ? "translate-x-2" : "-translate-x-2"
-                }`}
+                )}
               />
             </button>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Active Projects */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+      <Card className="p-5">
+        <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
           <FolderKanban className="h-3.5 w-3.5" />
           Active Projects
         </h3>
         {projects.length === 0 ? (
-          <p className="text-sm text-slate-400 italic py-4 text-center">
+          <p className="py-4 text-center text-sm italic text-slate-400">
             No projects yet
           </p>
         ) : (
           <div className="space-y-2">
-            {projects.slice(0, 5).map((p) => (
-              <div
-                key={p.id}
-                className="flex items-center justify-between rounded-lg border border-slate-100 p-3 hover:bg-slate-50 transition-colors"
-              >
-                <div>
-                  <p className="text-sm font-medium text-slate-800">
-                    {p.service_type?.replace(/_/g, " ") ?? "Project"}
-                  </p>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <Calendar className="h-3 w-3 text-slate-400" />
-                    <span className="text-[10px] text-slate-400">
-                      {p.deadline
-                        ? new Date(p.deadline).toLocaleDateString("en-IN", {
-                            day: "2-digit",
-                            month: "short",
-                          })
-                        : "No deadline"}
-                    </span>
-                  </div>
-                </div>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                    p.status === "completed"
-                      ? "bg-emerald-50 text-emerald-700"
-                      : p.status === "in_progress"
-                      ? "bg-blue-50 text-blue-700"
-                      : "bg-slate-50 text-slate-600"
-                  }`}
+            {projects.slice(0, 5).map((p) => {
+              const statusTone: Tone =
+                p.status === "completed"
+                  ? "brand"
+                  : p.status === "in_progress"
+                  ? "info"
+                  : "neutral";
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between rounded-lg border border-line p-3 transition-colors hover:bg-slate-50"
                 >
-                  {p.status?.replace(/_/g, " ") ?? "—"}
-                </span>
-              </div>
-            ))}
+                  <div>
+                    <p className="text-sm font-medium text-slate-800">
+                      {p.service_type?.replace(/_/g, " ") ?? "Project"}
+                    </p>
+                    <div className="mt-0.5 flex items-center gap-2">
+                      <Calendar className="h-3 w-3 text-slate-400" />
+                      <span className="text-[11px] text-slate-400">
+                        {p.deadline
+                          ? new Date(p.deadline).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                            })
+                          : "No deadline"}
+                      </span>
+                    </div>
+                  </div>
+                  <Badge tone={statusTone} size="sm" className="uppercase">
+                    {p.status?.replace(/_/g, " ") ?? "—"}
+                  </Badge>
+                </div>
+              );
+            })}
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Recent Activity + Notes */}
       <div className="space-y-6">
         {/* Activity Feed */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+        <Card className="p-5">
+          <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
             <FileText className="h-3.5 w-3.5" />
             Recent Activity
           </h3>
           {activityFeed.length === 0 ? (
-            <p className="text-sm text-slate-400 italic text-center py-4">
+            <p className="py-4 text-center text-sm italic text-slate-400">
               No recent activity
             </p>
           ) : (
-            <div className="space-y-2 max-h-48 overflow-y-auto">
+            <div className="max-h-48 space-y-2 overflow-y-auto">
               {activityFeed.slice(0, 10).map((a) => (
                 <div
                   key={a.id}
-                  className="border-l-2 border-slate-200 pl-3 py-1"
+                  className="border-l-2 border-line-strong py-1 pl-3"
                 >
                   <p className="text-xs font-medium text-slate-700">
                     {a.title}
                   </p>
-                  <p className="text-[10px] text-slate-400">
+                  <p className="text-[11px] text-slate-400">
                     {new Date(a.created_at || "").toLocaleDateString("en-IN", {
                       day: "2-digit",
                       month: "short",
@@ -224,32 +233,34 @@ export default function OverviewTab({
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
         {/* Full Activity Trail (audit triggers + activity events) */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+        <Card className="p-5">
+          <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
             <Zap className="h-3.5 w-3.5" />
             Activity Trail
           </h3>
           <ActivityTimeline entityType="client" entityId={client.id} compact limit={8} />
-        </div>
+        </Card>
 
         {/* Notes */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">
+        <Card className="p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Notes
             </h3>
             <button
               onClick={handleSaveNotes}
               disabled={saving}
-              className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-[#42CA80] transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-slate-500 transition-colors hover:text-brand-deep"
             >
               {saving ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : saved ? (
-                <span className="text-[#42CA80]">✓ Saved</span>
+                <span className="flex items-center gap-1 text-brand-deep">
+                  <Check className="h-3 w-3" /> Saved
+                </span>
               ) : (
                 <>
                   <Save className="h-3 w-3" />
@@ -258,14 +269,14 @@ export default function OverviewTab({
               )}
             </button>
           </div>
-          <textarea
+          <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={4}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 placeholder-slate-400 focus:border-[#42CA80] focus:outline-none focus:ring-2 focus:ring-[#42CA80]/20 resize-none"
+            className="resize-none bg-slate-50"
             placeholder="Add notes about this client..."
           />
-        </div>
+        </Card>
       </div>
     </div>
   );
