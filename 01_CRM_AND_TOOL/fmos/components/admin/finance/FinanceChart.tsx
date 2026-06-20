@@ -30,21 +30,21 @@ export default function FinanceChart({ data }: FinanceChartProps) {
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded bg-emerald-500"></div>
+                <div className="w-2 h-2 rounded bg-brand"></div>
                 <p className="text-xs font-semibold text-slate-500">Revenue</p>
               </div>
-              <p className="text-sm font-bold text-slate-900 font-mono">₹{payload[0].value.toLocaleString('en-IN')}</p>
+              <p className="text-sm font-bold text-slate-900 tabular-nums">₹{payload[0].value.toLocaleString('en-IN')}</p>
             </div>
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded bg-red-400"></div>
                 <p className="text-xs font-semibold text-slate-500">Expenses</p>
               </div>
-              <p className="text-sm font-bold text-slate-900 font-mono">₹{payload[1].value.toLocaleString('en-IN')}</p>
+              <p className="text-sm font-bold text-slate-900 tabular-nums">₹{payload[1].value.toLocaleString('en-IN')}</p>
             </div>
             <div className="flex items-center justify-between gap-8 pt-2 mt-2 border-t border-slate-50">
-              <p className="text-xs font-bold text-indigo-600">Net Profit</p>
-              <p className="text-sm font-bold text-indigo-600 font-mono">₹{payload[2].value.toLocaleString('en-IN')}</p>
+              <p className="text-xs font-bold text-brand-deep">Net Profit</p>
+              <p className="text-sm font-bold text-brand-deep tabular-nums">₹{payload[2].value.toLocaleString('en-IN')}</p>
             </div>
           </div>
         </div>
@@ -75,10 +75,10 @@ export default function FinanceChart({ data }: FinanceChartProps) {
             tickFormatter={(value) => `₹${Number(value) >= 1000 ? (value / 1000) + 'k' : value}`}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar 
-            dataKey="revenue" 
-            fill="#10B981" 
-            radius={[4, 4, 0, 0]} 
+          <Bar
+            dataKey="revenue"
+            fill="#42CA80"
+            radius={[4, 4, 0, 0]}
             barSize={isMobile ? 15 : 25}
           />
           <Bar 
@@ -87,17 +87,17 @@ export default function FinanceChart({ data }: FinanceChartProps) {
             radius={[4, 4, 0, 0]} 
             barSize={isMobile ? 15 : 25}
           />
-          <Area 
-            type="monotone" 
-            dataKey="profit" 
-            fill="url(#colorProfit)" 
-            stroke="#6366F1"
+          <Area
+            type="monotone"
+            dataKey="profit"
+            fill="url(#colorProfit)"
+            stroke="#1E7A4F"
             strokeWidth={3}
           />
           <defs>
             <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#6366F1" stopOpacity={0.1}/>
-              <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
+              <stop offset="5%" stopColor="#1E7A4F" stopOpacity={0.1}/>
+              <stop offset="95%" stopColor="#1E7A4F" stopOpacity={0}/>
             </linearGradient>
           </defs>
         </ComposedChart>

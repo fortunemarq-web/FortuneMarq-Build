@@ -9,6 +9,12 @@ import { autoMarkOverdueInvoices, getRevenueVsExpensesChartData } from "./action
 import { getBusinessSettings } from "@/app/admin/settings/actions";
 import FinanceChart from "@/components/admin/finance/FinanceChart";
 import { Suspense } from "react";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge, type Tone } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 
 export default async function FinanceDashboard() {
   const supabase = await createServerClientWithCookies();
@@ -94,299 +100,238 @@ export default async function FinanceDashboard() {
     one_time: "One-Time",
   };
 
-  const statusColors: Record<string, string> = {
-    paid: "bg-emerald-50 text-emerald-600 border-emerald-100",
-    unpaid: "bg-amber-50 text-amber-600 border-amber-100",
-    overdue: "bg-red-50 text-red-600 border-red-100",
-    cancelled: "bg-slate-50 text-slate-600 border-slate-100",
-  };
-
-  const revenueTypeColors: Record<string, string> = {
-    mrr: "bg-indigo-50 text-indigo-600",
-    setup_fee: "bg-emerald-50 text-emerald-600",
-    one_time: "bg-purple-50 text-purple-600",
+  // Every invoice status maps to one of the five tones — no per-status colours.
+  const STATUS_TONE: Record<string, Tone> = {
+    paid: "brand",
+    unpaid: "warning",
+    overdue: "danger",
+    cancelled: "neutral",
+    partially_paid: "info",
   };
 
   const kpis = [
-    {
-      label: "MRR This Month",
-      value: formatINR(mrr),
-      sub: "Paid monthly retainers",
-      icon: TrendingUp,
-      color: "#4F46E5",
-      border: "border-t-indigo-500",
-    },
-    {
-      label: "Setup Fees",
-      value: formatINR(setupFees),
-      sub: "One-time setup charges",
-      icon: Package,
-      color: "#10B981",
-      border: "border-t-emerald-500",
-    },
-    {
-      label: "One-Time Revenue",
-      value: formatINR(oneTime),
-      sub: "Project / ad-hoc work",
-      icon: Layers,
-      color: "#8B5CF6",
-      border: "border-t-violet-500",
-    },
-    {
-      label: "Total Revenue MTD",
-      value: formatINR(totalRevenue),
-      sub: "MRR + Setup + One-Time",
-      icon: DollarSign,
-      color: "#42CA80",
-      border: "border-t-[#42CA80]",
-    },
-    {
-      label: "Outstanding",
-      value: formatINR(outstanding),
-      sub: `${outstandingResult.data?.length || 0} invoices`,
-      icon: Clock,
-      color: "#F59E0B",
-      border: "border-t-amber-400",
-    },
+    { label: "MRR This Month", value: formatINR(mrr), sub: "Paid monthly retainers", icon: TrendingUp },
+    { label: "Setup Fees", value: formatINR(setupFees), sub: "One-time setup charges", icon: Package },
+    { label: "One-Time Revenue", value: formatINR(oneTime), sub: "Project / ad-hoc work", icon: Layers },
+    { label: "Total Revenue MTD", value: formatINR(totalRevenue), sub: "MRR + Setup + One-Time", icon: DollarSign },
+    { label: "Outstanding", value: formatINR(outstanding), sub: `${outstandingResult.data?.length || 0} invoices`, icon: Clock },
   ];
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-7xl space-y-6">
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Finance Dashboard</h1>
-            <p className="text-slate-500 mt-1 text-sm">MRR, setup fees, one-time revenue and outstanding — all separated.</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/admin/finance/invoices"
-              className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
-              Manage Invoices
-            </Link>
-            <Link href="/admin/finance/pnl"
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-colors">
-              P&L View
-            </Link>
-          </div>
+        <PageHeader
+          title="Finance"
+          subtitle="MRR, setup fees, one-time revenue and outstanding — all separated."
+          actions={
+            <>
+              <Link href="/admin/finance/invoices" className={buttonVariants({ variant: "secondary" })}>
+                Manage invoices
+              </Link>
+              <Link href="/admin/finance/pnl" className={buttonVariants({ variant: "primary" })}>
+                P&amp;L view
+              </Link>
+            </>
+          }
+        />
+
+        {/* KPI cards — one accent, no rainbow top borders */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {kpis.map((kpi) => (
+            <StatCard key={kpi.label} label={kpi.label} value={kpi.value} icon={kpi.icon} hint={kpi.sub} />
+          ))}
         </div>
 
-        {/* E1: 5 KPI Cards — MRR Split */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-          {kpis.map(kpi => {
-            const Icon = kpi.icon;
-            return (
-              <div key={kpi.label} className={`bg-white rounded-xl border border-slate-200 shadow-sm p-5 border-t-[3px] ${kpi.border}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{kpi.label}</p>
-                  <Icon className="h-4 w-4 opacity-20" style={{ color: kpi.color }} />
-                </div>
-                <p className="text-xl font-bold text-slate-900 font-mono tracking-tight">{kpi.value}</p>
-                <p className="text-[10px] text-slate-400 mt-1">{kpi.sub}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Revenue breakdown bar */}
+        {/* Revenue mix — brand accent + neutrals, not a 3-colour rainbow */}
         {totalRevenue > 0 && (
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm mb-8">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Revenue Mix This Month</p>
-              <p className="text-sm font-bold text-slate-800 font-mono">{formatINR(totalRevenue)}</p>
+          <Card className="p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Revenue mix this month</p>
+              <p className="text-sm font-semibold tabular-nums text-slate-800">{formatINR(totalRevenue)}</p>
             </div>
-            <div className="h-3 rounded-full overflow-hidden flex gap-0.5">
-              {mrr > 0 && <div className="bg-indigo-500 rounded-l-full" style={{ width: `${(mrr / totalRevenue) * 100}%` }} title={`MRR: ${formatINR(mrr)}`} />}
-              {setupFees > 0 && <div className="bg-emerald-500" style={{ width: `${(setupFees / totalRevenue) * 100}%` }} title={`Setup: ${formatINR(setupFees)}`} />}
-              {oneTime > 0 && <div className="bg-violet-500 rounded-r-full" style={{ width: `${(oneTime / totalRevenue) * 100}%` }} title={`One-Time: ${formatINR(oneTime)}`} />}
+            <div className="flex h-2.5 gap-0.5 overflow-hidden rounded-full">
+              {mrr > 0 && <div className="rounded-l-full bg-brand" style={{ width: `${(mrr / totalRevenue) * 100}%` }} title={`MRR: ${formatINR(mrr)}`} />}
+              {setupFees > 0 && <div className="bg-slate-400" style={{ width: `${(setupFees / totalRevenue) * 100}%` }} title={`Setup: ${formatINR(setupFees)}`} />}
+              {oneTime > 0 && <div className="rounded-r-full bg-slate-300" style={{ width: `${(oneTime / totalRevenue) * 100}%` }} title={`One-Time: ${formatINR(oneTime)}`} />}
             </div>
-            <div className="flex gap-4 mt-2">
+            <div className="mt-2 flex flex-wrap gap-4">
               {[
-                { label: "MRR", value: mrr, color: "bg-indigo-500" },
-                { label: "Setup Fees", value: setupFees, color: "bg-emerald-500" },
-                { label: "One-Time", value: oneTime, color: "bg-violet-500" },
-              ].filter(i => i.value > 0).map(item => (
+                { label: "MRR", value: mrr, color: "bg-brand" },
+                { label: "Setup Fees", value: setupFees, color: "bg-slate-400" },
+                { label: "One-Time", value: oneTime, color: "bg-slate-300" },
+              ].filter((i) => i.value > 0).map((item) => (
                 <div key={item.label} className="flex items-center gap-1.5">
                   <div className={`h-2 w-2 rounded-full ${item.color}`} />
-                  <span className="text-[10px] text-slate-500">{item.label}: <strong>{formatINR(item.value)}</strong></span>
+                  <span className="text-xs text-slate-500">{item.label}: <strong className="font-semibold text-slate-700">{formatINR(item.value)}</strong></span>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Chart + Recent Invoices */}
-          <div className="lg:col-span-8 space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-hidden">
-              <div className="flex items-center justify-between mb-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Left */}
+          <div className="space-y-6 lg:col-span-8">
+            <Card>
+              <CardHeader>
                 <div>
-                  <h2 className="text-base font-bold text-slate-900">Revenue vs Expenses</h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Trailing monthly comparison</p>
+                  <CardTitle>Revenue vs expenses</CardTitle>
+                  <p className="mt-0.5 text-xs text-slate-500">Trailing monthly comparison</p>
                 </div>
-                <div className="flex items-center gap-4 text-xs font-bold">
-                  <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded bg-emerald-500" /> Revenue</div>
-                  <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded bg-red-400" /> Expenses</div>
+                <div className="flex items-center gap-4 text-xs font-medium text-slate-600">
+                  <div className="flex items-center gap-1.5"><div className="h-2.5 w-2.5 rounded-sm bg-brand" /> Revenue</div>
+                  <div className="flex items-center gap-1.5"><div className="h-2.5 w-2.5 rounded-sm bg-red-400" /> Expenses</div>
                 </div>
-              </div>
-              <div className="h-[300px]">
-                <FinanceChart data={chartData} />
-              </div>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px]">
+                  <FinanceChart data={chartData} />
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Recent Invoices with Revenue Type column */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                <h2 className="text-sm font-bold text-slate-900">Recent Invoices</h2>
-                <Link href="/admin/finance/invoices" className="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1">
-                  View All <ArrowRight className="h-3.5 w-3.5" />
+            <Card className="overflow-hidden">
+              <CardHeader>
+                <CardTitle>Recent invoices</CardTitle>
+                <Link href="/admin/finance/invoices" className="flex items-center gap-1 text-xs font-semibold text-brand-deep hover:underline">
+                  View all <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              </div>
+              </CardHeader>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 border-b border-slate-100">
-                    <tr>
-                      {["Invoice", "Client", "Type", "Amount", "Status"].map(h => (
-                        <th key={h} className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">{h}</th>
+                <Table>
+                  <THead>
+                    <TR className="hover:bg-transparent">
+                      {["Invoice", "Client", "Type", "Amount", "Status"].map((h) => (
+                        <TH key={h} className={h === "Amount" ? "text-right" : ""}>{h}</TH>
                       ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
+                    </TR>
+                  </THead>
+                  <TBody>
                     {(recentInvoicesResult.data || []).map((inv: any) => (
-                      <tr key={inv.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-5 py-3.5 font-mono text-xs font-bold text-slate-700">{inv.invoice_number}</td>
-                        <td className="px-5 py-3.5 font-semibold text-slate-800">{inv.clients?.business_name || "—"}</td>
-                        <td className="px-5 py-3.5">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${revenueTypeColors[inv.revenue_type] || "bg-slate-100 text-slate-500"}`}>
-                            {REVENUE_TYPE_LABELS[inv.revenue_type] || inv.revenue_type}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5 font-mono font-bold text-slate-900">{formatINR(inv.amount)}</td>
-                        <td className="px-5 py-3.5">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${statusColors[inv.status]}`}>
-                            {inv.status}
-                          </span>
-                        </td>
-                      </tr>
+                      <TR key={inv.id}>
+                        <TD className="tabular-nums font-medium text-slate-600">{inv.invoice_number}</TD>
+                        <TD className="font-medium text-slate-900">{inv.clients?.business_name || "—"}</TD>
+                        <TD><Badge tone="neutral" variant="outline" size="sm">{REVENUE_TYPE_LABELS[inv.revenue_type] || inv.revenue_type}</Badge></TD>
+                        <TD className="text-right font-semibold tabular-nums text-slate-900">{formatINR(inv.amount)}</TD>
+                        <TD><Badge tone={STATUS_TONE[inv.status] || "neutral"} size="sm" className="capitalize">{inv.status}</Badge></TD>
+                      </TR>
                     ))}
                     {!recentInvoicesResult.data?.length && (
-                      <tr><td colSpan={5} className="px-5 py-12 text-center text-slate-400 italic text-sm">No invoices yet.</td></tr>
+                      <TR className="hover:bg-transparent"><TD colSpan={5} className="py-12 text-center text-sm text-slate-400">No invoices yet.</TD></TR>
                     )}
-                  </tbody>
-                </table>
+                  </TBody>
+                </Table>
               </div>
-            </div>
+            </Card>
           </div>
 
-          {/* Side Column */}
-          <div className="lg:col-span-4 space-y-4">
-            {/* P&L Summary */}
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">P&L This Month</h3>
+          {/* Right */}
+          <div className="space-y-4 lg:col-span-4">
+            {/* P&L */}
+            <Card className="p-5">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-500">P&amp;L this month</h3>
               <div className="space-y-2.5">
                 {[
-                  { label: "MRR", value: mrr, color: "text-indigo-600" },
-                  { label: "Setup Fees", value: setupFees, color: "text-emerald-600" },
-                  { label: "One-Time", value: oneTime, color: "text-violet-600" },
-                ].map(row => (
+                  { label: "MRR", value: mrr },
+                  { label: "Setup Fees", value: setupFees },
+                  { label: "One-Time", value: oneTime },
+                ].map((row) => (
                   <div key={row.label} className="flex items-center justify-between text-sm">
                     <span className="text-slate-500">{row.label}</span>
-                    <span className={`font-bold font-mono ${row.color}`}>{formatINR(row.value)}</span>
+                    <span className="font-semibold tabular-nums text-slate-900">{formatINR(row.value)}</span>
                   </div>
                 ))}
-                <div className="flex items-center justify-between text-sm border-t border-slate-100 pt-2.5">
-                  <span className="font-bold text-slate-800">Total Revenue</span>
-                  <span className="font-bold font-mono text-slate-900">{formatINR(totalRevenue)}</span>
+                <div className="flex items-center justify-between border-t border-line pt-2.5 text-sm">
+                  <span className="font-semibold text-slate-800">Total revenue</span>
+                  <span className="font-semibold tabular-nums text-slate-900">{formatINR(totalRevenue)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-slate-500">Expenses</span>
-                  <span className="font-bold font-mono text-red-500">-{formatINR(expenses)}</span>
+                  <span className="font-semibold tabular-nums text-danger">-{formatINR(expenses)}</span>
                 </div>
-                <div className="flex items-center justify-between text-sm border-t-2 border-slate-900 pt-2.5">
-                  <span className="font-bold text-slate-900">Net</span>
-                  <span className={`font-bold font-mono text-lg ${totalRevenue - expenses >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                <div className="flex items-center justify-between border-t-2 border-slate-900 pt-2.5">
+                  <span className="font-semibold text-slate-900">Net</span>
+                  <span className={`font-display text-lg font-semibold tabular-nums ${totalRevenue - expenses >= 0 ? "text-brand-deep" : "text-danger"}`}>
                     {formatINR(totalRevenue - expenses)}
                   </span>
                 </div>
               </div>
-            </div>
+            </Card>
 
-            {/* GST Summary Card */}
-            <div className="bg-white border border-indigo-100 rounded-2xl shadow-sm p-5">
-              <div className="flex items-center justify-between mb-3">
+            {/* GST */}
+            <Card className="p-5">
+              <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Receipt className="h-4 w-4 text-indigo-500" />
-                  <h3 className="text-sm font-bold text-slate-900">GST — {qBounds.label}</h3>
+                  <Receipt className="h-4 w-4 text-brand-deep" />
+                  <h3 className="text-sm font-semibold text-slate-900">GST — {qBounds.label}</h3>
                 </div>
-                <Link href="/admin/finance/gst" className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">
-                  Full Report <ArrowRight className="h-2.5 w-2.5" />
+                <Link href="/admin/finance/gst" className="flex items-center gap-0.5 text-xs font-semibold text-brand-deep hover:underline">
+                  Full report <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
-              <p className="text-2xl font-bold font-mono text-slate-900">{formatINR(currentQtrGST)}</p>
-              <p className="text-[10px] text-slate-400 mt-1">Output GST collected this quarter (18%)</p>
+              <p className="font-display text-2xl font-semibold tabular-nums text-slate-900">{formatINR(currentQtrGST)}</p>
+              <p className="mt-1 text-xs text-slate-500">Output GST collected this quarter (18%)</p>
               <div className="mt-3 flex items-center gap-2">
-                <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                  <div className="h-full rounded-full bg-indigo-400" style={{ width: "100%" }} />
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-full rounded-full bg-brand" style={{ width: "100%" }} />
                 </div>
-                <span className="text-[10px] font-bold text-slate-500">CGST+SGST: {formatINR(currentQtrGST / 2)} each</span>
+                <span className="text-[11px] font-medium text-slate-500">CGST+SGST: {formatINR(currentQtrGST / 2)} each</span>
               </div>
-            </div>
+            </Card>
 
             {/* Overdue */}
-            <div className="bg-white border border-red-100 rounded-2xl shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-3.5 bg-red-50/50 border-b border-red-100">
+            <Card className="overflow-hidden">
+              <div className="flex items-center justify-between border-b border-danger-line bg-danger-soft px-5 py-3.5">
                 <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-red-500" />
-                  <h3 className="text-sm font-bold text-red-900">Overdue</h3>
+                  <AlertCircle className="h-4 w-4 text-danger" />
+                  <h3 className="text-sm font-semibold text-danger">Overdue</h3>
                 </div>
-                <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                  {overdueResult.data?.length || 0}
-                </span>
+                <Badge tone="danger" size="sm">{overdueResult.data?.length || 0}</Badge>
               </div>
-              <div className="p-3 space-y-2">
+              <div className="space-y-2 p-3">
                 {(overdueResult.data || []).map((inv: any) => (
-                  <div key={inv.id} className="p-3.5 rounded-xl border border-red-100 bg-white hover:shadow-sm transition-shadow">
-                    <div className="flex justify-between items-start mb-1">
-                      <p className="text-xs font-mono text-slate-400">{inv.invoice_number}</p>
-                      <span className="text-[10px] font-bold text-red-600">
+                  <div key={inv.id} className="rounded-lg border border-danger-line bg-surface p-3.5">
+                    <div className="mb-1 flex items-start justify-between">
+                      <p className="text-xs tabular-nums text-slate-400">{inv.invoice_number}</p>
+                      <span className="text-[11px] font-semibold text-danger">
                         {Math.ceil((Date.now() - new Date(inv.due_date).getTime()) / 86400000)}d late
                       </span>
                     </div>
-                    <p className="text-sm font-bold text-slate-900">{inv.clients?.business_name}</p>
-                    <p className="font-mono font-bold text-red-500 text-sm mt-1">{formatINR(inv.amount)}</p>
+                    <p className="text-sm font-semibold text-slate-900">{inv.clients?.business_name}</p>
+                    <p className="mt-1 text-sm font-semibold tabular-nums text-danger">{formatINR(inv.amount)}</p>
                   </div>
                 ))}
                 {!overdueResult.data?.length && (
-                  <div className="text-center py-8 opacity-40">
-                    <CheckCircle2 className="h-8 w-8 mx-auto mb-2" />
-                    <p className="text-xs font-semibold">All clear</p>
+                  <div className="py-8 text-center">
+                    <CheckCircle2 className="mx-auto mb-2 h-7 w-7 text-brand" />
+                    <p className="text-xs font-medium text-slate-500">All clear — nothing overdue</p>
                   </div>
                 )}
               </div>
-            </div>
+            </Card>
 
-            {/* Quick links */}
-            <div className="bg-slate-900 rounded-2xl p-5 text-white">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Finance Tools</h3>
-              <div className="space-y-2">
+            {/* Tools */}
+            <Card className="p-5">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Finance tools</h3>
+              <div className="space-y-1.5">
                 {[
-                  { label: "P&L View", href: "/admin/finance/pnl", icon: TrendingUp },
-                  { label: "Expense Audit", href: "/admin/finance/expenses", icon: DollarSign },
-                  { label: "Manage Invoices", href: "/admin/finance/invoices", icon: Wallet },
-                  { label: "GST Report", href: "/admin/finance/gst", icon: Receipt },
-                ].map(link => (
+                  { label: "P&L view", href: "/admin/finance/pnl", icon: TrendingUp },
+                  { label: "Expense audit", href: "/admin/finance/expenses", icon: DollarSign },
+                  { label: "Manage invoices", href: "/admin/finance/invoices", icon: Wallet },
+                  { label: "GST report", href: "/admin/finance/gst", icon: Receipt },
+                ].map((link) => (
                   <Link key={link.href} href={link.href}
-                    className="flex justify-between items-center p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                    <div className="flex items-center gap-2.5">
-                      <link.icon className="h-4 w-4 text-[#42CA80]" />
-                      <span className="text-sm font-semibold">{link.label}</span>
-                    </div>
-                    <ArrowRight className="h-3.5 w-3.5 opacity-30" />
+                    className="flex items-center justify-between rounded-lg border border-line px-3 py-2.5 transition-colors hover:bg-slate-50">
+                    <span className="flex items-center gap-2.5">
+                      <link.icon className="h-4 w-4 text-slate-400" />
+                      <span className="text-sm font-medium text-slate-700">{link.label}</span>
+                    </span>
+                    <ArrowRight className="h-4 w-4 text-slate-300" />
                   </Link>
                 ))}
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>

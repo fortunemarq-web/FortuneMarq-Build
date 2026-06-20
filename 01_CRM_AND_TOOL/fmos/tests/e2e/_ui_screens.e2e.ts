@@ -10,7 +10,7 @@ import { loginAdmin } from "./fixtures/auth";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-const OUT = resolve(__dirname, "__screens__");
+const OUT = resolve(__dirname, process.env.SHOT_DIR || "__screens__");
 mkdirSync(OUT, { recursive: true });
 
 const SCREENS: { name: string; path: string }[] = [
