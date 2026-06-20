@@ -36,6 +36,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: 1,
+  // Heavy admin routes cold-compile on first hit in `next dev` (can exceed 30s),
+  // so give each test generous headroom to avoid cold-compile flakiness.
+  timeout: 90_000,
+  expect: { timeout: 10_000 },
   reporter: [["html", { open: "never" }], ["list"]],
   use: {
     baseURL: BASE_URL,

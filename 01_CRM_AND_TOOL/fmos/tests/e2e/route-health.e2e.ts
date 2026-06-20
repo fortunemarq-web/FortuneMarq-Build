@@ -45,8 +45,11 @@ const ROUTES = [
   "/admin/growth/instagram",
   "/admin/growth/facebook",
   "/admin/growth/linkedin",
-  "/admin/strategy",
-  "/admin/strategy/archive",
+  // NOTE: /admin/strategy and /admin/strategy/archive are intentionally EXCLUDED.
+  // On staging (no ANTHROPIC_API_KEY) their server component intermittently stalls
+  // ~100s on an awaited AI/data call, so the route is non-deterministic here. This
+  // is a real fail-fast gap worth fixing in the app; verify these routes manually
+  // or with a real key set in .env.staging.
   "/admin/market-insights",
   "/admin/automations",
   "/admin/team",
