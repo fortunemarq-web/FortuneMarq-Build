@@ -1,7 +1,8 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
-import { Trophy, Calendar, ArrowLeft, ArrowRight, User, TrendingUp, BarChart } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import RoleScorecard from "@/components/team/role-scorecard";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default async function ScorecardsPage({
   searchParams,
@@ -69,40 +70,36 @@ export default async function ScorecardsPage({
     .lte("created_at", endStr);
 
   return (
-    <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div className="space-y-1">
-            <h1 className="text-4xl font-black text-slate-900 flex items-center gap-4">
-              <Trophy className="h-10 w-10 text-amber-500" />
-              Weekly Scorecards
-            </h1>
-            <p className="text-slate-500 font-medium">Performance tracking grouped by organizational roles.</p>
-          </div>
-          
-          <div className="flex items-center bg-white rounded-2xl border border-slate-200 p-1 shadow-sm">
-            <Link 
-              href={`/admin/team/scorecards?week=${prevWeek.toISOString()}`}
-              className="p-3 hover:bg-slate-50 rounded-xl transition-all"
-            >
-              <ArrowLeft className="h-5 w-5 text-slate-400" />
-            </Link>
-            <div className="px-6 py-2 text-center">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Week of</p>
-              <p className="text-sm font-black text-slate-900">{startOfWeek.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} - {endOfWeek.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <PageHeader
+          eyebrow="Team"
+          title="Weekly Scorecards"
+          subtitle="Performance tracking grouped by organizational roles."
+          actions={
+            <div className="flex items-center rounded-lg border border-line bg-surface p-1">
+              <Link
+                href={`/admin/team/scorecards?week=${prevWeek.toISOString()}`}
+                className="rounded-md p-2.5 transition-colors hover:bg-slate-50"
+              >
+                <ArrowLeft className="h-4 w-4 text-slate-400" />
+              </Link>
+              <div className="px-5 py-1 text-center">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Week of</p>
+                <p className="text-sm font-semibold tabular-nums text-slate-900">{startOfWeek.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} - {endOfWeek.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+              </div>
+              <Link
+                href={`/admin/team/scorecards?week=${nextWeek.toISOString()}`}
+                className="rounded-md p-2.5 transition-colors hover:bg-slate-50"
+              >
+                <ArrowRight className="h-4 w-4 text-slate-400" />
+              </Link>
             </div>
-            <Link 
-              href={`/admin/team/scorecards?week=${nextWeek.toISOString()}`}
-              className="p-3 hover:bg-slate-50 rounded-xl transition-all"
-            >
-              <ArrowRight className="h-5 w-5 text-slate-400" />
-            </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* Role Groups */}
-        <div className="space-y-16">
+        <div className="space-y-12">
           {/* Telecallers */}
           <RoleScorecard 
             role="telecaller" 

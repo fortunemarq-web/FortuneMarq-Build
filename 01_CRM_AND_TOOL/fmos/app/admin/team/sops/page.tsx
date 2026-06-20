@@ -1,8 +1,11 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
-import { BookOpen, Plus, Search, FileText, Clock } from "lucide-react";
+import { Plus, Search, FileText } from "lucide-react";
 import Link from "next/link";
 import SopCard from "@/components/team/sop-card";
 import clsx from "clsx";
+import { PageHeader } from "@/components/ui/page-header";
+import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const CATEGORIES = [
   "Sales & Outreach",
@@ -36,52 +39,45 @@ export default async function SopLibraryPage({
   const { data: sops, error } = await query;
 
   return (
-    <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div className="space-y-1">
-            <h1 className="text-4xl font-black text-slate-900 flex items-center gap-4">
-              <BookOpen className="h-10 w-10 text-emerald-500" />
-              SOP Library
-            </h1>
-            <p className="text-slate-500 font-medium">Standard Operating Procedures for consistent agency delivery.</p>
-          </div>
-          
-          <Link 
-            href="/admin/team/sops/new"
-            className="flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
-          >
-            <Plus className="h-4 w-4" />
-            Create SOP
-          </Link>
-        </div>
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <PageHeader
+          eyebrow="Team"
+          title="SOP Library"
+          subtitle="Standard Operating Procedures for consistent agency delivery."
+          actions={
+            <Link href="/admin/team/sops/new" className={buttonVariants({ variant: "primary" })}>
+              <Plus className="h-4 w-4" />
+              Create SOP
+            </Link>
+          }
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Categories Sidebar */}
-          <div className="space-y-6">
-            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Categories</h2>
+          <div className="space-y-4">
+            <h2 className="px-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Categories</h2>
             <div className="flex flex-col gap-1">
-              <Link 
+              <Link
                 href="/admin/team/sops"
                 className={clsx(
-                  "px-4 py-3 rounded-xl text-sm font-bold transition-all border",
-                  !selectedCategory 
-                    ? "bg-white border-slate-200 text-slate-900 shadow-sm" 
-                    : "border-transparent text-slate-500 hover:bg-white hover:border-slate-100 hover:text-slate-900"
+                  "rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
+                  !selectedCategory
+                    ? "border-line bg-surface text-slate-900"
+                    : "border-transparent text-slate-500 hover:bg-surface hover:text-slate-900"
                 )}
               >
                 All SOPs
               </Link>
               {CATEGORIES.map(cat => (
-                <Link 
+                <Link
                   key={cat}
                   href={`/admin/team/sops?category=${encodeURIComponent(cat)}`}
                   className={clsx(
-                    "px-4 py-3 rounded-xl text-sm font-bold transition-all border",
-                    selectedCategory === cat 
-                      ? "bg-white border-slate-200 text-slate-900 shadow-sm" 
-                      : "border-transparent text-slate-500 hover:bg-white hover:border-slate-100 hover:text-slate-900"
+                    "rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
+                    selectedCategory === cat
+                      ? "border-line bg-surface text-slate-900"
+                      : "border-transparent text-slate-500 hover:bg-surface hover:text-slate-900"
                   )}
                 >
                   {cat}
@@ -91,30 +87,28 @@ export default async function SopLibraryPage({
           </div>
 
           {/* Main Library Area */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-                <form method="GET" action="/admin/team/sops" className="relative flex-1 group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                    <input 
-                        type="text" 
-                        name="search"
-                        defaultValue={searchQuery || ""}
-                        placeholder="Search templates, scripts, or instructions..."
-                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold focus:ring-4 focus:ring-slate-900/5 transition-all outline-none"
-                    />
-                    {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
-                </form>
-            </div>
+          <div className="space-y-6 lg:col-span-3">
+            <form method="GET" action="/admin/team/sops" className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                    type="text"
+                    name="search"
+                    defaultValue={searchQuery || ""}
+                    placeholder="Search templates, scripts, or instructions..."
+                    className="pl-10"
+                />
+                {selectedCategory && <input type="hidden" name="category" value={selectedCategory} />}
+            </form>
 
             {error ? (
-                <div className="p-8 text-red-500">Error: {error.message}</div>
+                <div className="p-8 text-danger">Error: {error.message}</div>
             ) : sops?.length === 0 ? (
-                <div className="py-20 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
-                    <FileText className="h-10 w-10 text-slate-200 mx-auto mb-4" />
-                    <p className="text-slate-400 font-bold uppercase tracking-widest">No procedures found in this category</p>
+                <div className="rounded-xl border border-dashed border-line bg-slate-50/60 py-20 text-center">
+                    <FileText className="mx-auto mb-4 h-10 w-10 text-slate-300" />
+                    <p className="text-sm font-semibold text-slate-500">No procedures found in this category</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {sops?.map((sop: any) => (
                         <SopCard key={sop.id} sop={sop} />
                     ))}

@@ -1,7 +1,8 @@
 "use client";
 
-import { User, Phone, ListTodo, Target, FolderKanban, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
-import clsx from "clsx";
+import { Phone, ListTodo, Target, FolderKanban, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Avatar } from "@/components/ui/avatar";
 
 interface RoleScorecardProps {
   role: string;
@@ -15,48 +16,41 @@ export default function RoleScorecard({ role, title, profiles, data }: RoleScore
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3 px-4">
-        <div className={clsx(
-            "h-8 w-8 rounded-lg flex items-center justify-center text-white",
-            role === 'telecaller' ? 'bg-emerald-500' : 
-            role === 'staff' ? 'bg-slate-900' : 
-            role === 'pm' ? 'bg-purple-500' : 'bg-blue-500'
-        )}>
-            {role === 'telecaller' ? <Phone className="h-4 w-4" /> : 
-             role === 'staff' ? <ListTodo className="h-4 w-4" /> : 
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-slate-100 text-slate-500">
+            {role === 'telecaller' ? <Phone className="h-4 w-4" /> :
+             role === 'staff' ? <ListTodo className="h-4 w-4" /> :
              role === 'pm' ? <FolderKanban className="h-4 w-4" /> : <Target className="h-4 w-4" />}
         </div>
-        <h2 className="text-xl font-black text-slate-900">{title}</h2>
-        <div className="h-px flex-1 bg-slate-200 ml-4" />
+        <h2 className="font-display text-xl font-semibold text-slate-900">{title}</h2>
+        <div className="ml-4 h-px flex-1 bg-line" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {profiles.map(profile => {
           const stats = calculateStats(role, profile.id, data);
           return (
-            <div key={profile.id} className="bg-white rounded-[2rem] border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-600">
-                    {profile.full_name?.charAt(0)}
-                </div>
+            <Card key={profile.id} className="p-6">
+              <div className="mb-6 flex items-center gap-4">
+                <Avatar name={profile.full_name} src={profile.avatar_url} size="md" />
                 <div>
-                    <h3 className="font-bold text-slate-900">{profile.full_name}</h3>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{profile.role}</p>
+                    <h3 className="font-display font-semibold text-slate-900">{profile.full_name}</h3>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{profile.role}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 {stats.map((stat: any, idx: number) => (
-                    <div key={idx} className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100">
-                        <p className="text-[8px] font-black text-slate-400 uppercase mb-2 tracking-widest">{stat.label}</p>
+                    <div key={idx} className="rounded-lg border border-line bg-slate-50 p-4">
+                        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">{stat.label}</p>
                         <div className="flex items-baseline gap-2">
                             <StatIcon type={stat.type} />
-                            <p className="text-xl font-black text-slate-900">{stat.value}</p>
+                            <p className="font-display text-xl font-semibold tabular-nums text-slate-900">{stat.value}</p>
                         </div>
                     </div>
                 ))}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -66,10 +60,10 @@ export default function RoleScorecard({ role, title, profiles, data }: RoleScore
 
 function StatIcon({ type }: { type: string }) {
     switch (type) {
-        case 'positive': return <TrendingUp className="h-3 w-3 text-emerald-500" />;
-        case 'negative': return <AlertCircle className="h-3 w-3 text-red-500" />;
-        case 'neutral': return <TrendingUp className="h-3 w-3 text-slate-400" rotate={90} />;
-        case 'success': return <CheckCircle2 className="h-3 w-3 text-emerald-500" />;
+        case 'positive': return <TrendingUp className="h-3.5 w-3.5 text-brand-deep" />;
+        case 'negative': return <AlertCircle className="h-3.5 w-3.5 text-danger" />;
+        case 'neutral': return <TrendingUp className="h-3.5 w-3.5 text-slate-400" />;
+        case 'success': return <CheckCircle2 className="h-3.5 w-3.5 text-brand-deep" />;
         default: return null;
     }
 }

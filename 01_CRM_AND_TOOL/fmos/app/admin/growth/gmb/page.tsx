@@ -6,6 +6,8 @@ import ContentCalendar from "@/components/admin/growth/ContentCalendar";
 import GMBChecklist from "@/components/admin/growth/GMBChecklist";
 import ReviewRequestsTable from "@/components/admin/growth/ReviewRequestsTable";
 import GmbUpdateMetricsButton from "@/components/admin/growth/GmbUpdateMetricsButton";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
 
 export const metadata = {
   title: "GMB Manager — FortuneMarq",

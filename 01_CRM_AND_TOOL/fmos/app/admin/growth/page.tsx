@@ -2,21 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import {
-  TrendingUp,
   Instagram,
   Linkedin,
   Facebook,
   MapPin,
   Search,
-  Target,
-  ArrowUpRight,
-  ArrowDownRight,
-  Circle
 } from "lucide-react";
 import OrganicTrendChart from "@/components/admin/growth/OrganicTrendChart";
 import CityOverviewTable from "@/components/admin/growth/CityOverviewTable";
 import ActiveCampaignsTable from "@/components/admin/growth/ActiveCampaignsTable";
 import GrowthTaskChecklist from "@/components/admin/growth/GrowthTaskChecklist";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
   title: "Agency Growth — FortuneMarq",
@@ -83,104 +82,94 @@ export default async function AgencyGrowthHub({
   ];
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-full bg-canvas px-4 py-8">
+      <div className="mx-auto max-w-7xl space-y-8">
         {/* Header Setup */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-              <TrendingUp className="h-8 w-8 text-[#42CA80]" />
-              Agency Growth
-            </h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Track and accelerate FortuneMarq's organic and acquisition growth.
-            </p>
-          </div>
-          
-          <div className="inline-flex rounded-xl bg-slate-200/50 p-1 mt-4 md:mt-0">
-            <Link
-              href="?tab=organic"
-              className={`rounded-lg px-6 py-2.5 text-sm font-semibold transition-all ${
-                currentTab === "organic"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
-              }`}
-            >
-              Organic Presence
-            </Link>
-            <Link
-              href="?tab=acquisition"
-              className={`rounded-lg px-6 py-2.5 text-sm font-semibold transition-all ${
-                currentTab === "acquisition"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
-              }`}
-            >
-              Client Acquisition
-            </Link>
-          </div>
-        </div>
+        <PageHeader
+          eyebrow="Growth"
+          title="Agency Growth"
+          subtitle="Track and accelerate FortuneMarq's organic and acquisition growth."
+          actions={
+            <div className="inline-flex rounded-lg bg-slate-100 p-1">
+              <Link
+                href="?tab=organic"
+                className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                  currentTab === "organic"
+                    ? "bg-surface text-slate-900 shadow-[0_1px_2px_rgba(15,23,42,0.06)]"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                Organic Presence
+              </Link>
+              <Link
+                href="?tab=acquisition"
+                className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                  currentTab === "acquisition"
+                    ? "bg-surface text-slate-900 shadow-[0_1px_2px_rgba(15,23,42,0.06)]"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                Client Acquisition
+              </Link>
+            </div>
+          }
+        />
 
         {/* Top Stats Row (Always visible) */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {headerStats.map((stat, i) => (
-            <div key={i} className="bg-white rounded-xl border border-slate-200 shadow-sm p-5" style={{ borderTop: "3px solid #42CA80" }}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold font-mono text-slate-900">{stat.value}</p>
-            </div>
+            <StatCard key={i} label={stat.label} value={stat.value} />
           ))}
         </div>
 
         {currentTab === "organic" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
               <OrganicTrendChart />
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {platforms.map((p, i) => (
-                  <div key={i} className="bg-white rounded-xl border border-slate-200 p-5 flex flex-col hover:border-[#42CA80]/50 transition-colors">
-                    <div className="flex items-center justify-between mb-4">
+                  <Card key={i} className="flex flex-col p-5 transition-colors hover:border-brand-line">
+                    <div className="mb-4 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
-                          <p.icon className="h-5 w-5 text-slate-700" />
+                        <div className="rounded-lg border border-line bg-slate-50 p-2">
+                          <p.icon className="h-5 w-5 text-slate-600" />
                         </div>
-                        <h3 className="font-bold text-slate-900">{p.name}</h3>
+                        <h3 className="font-display font-semibold text-slate-900">{p.name}</h3>
                       </div>
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-4 mt-auto">
+
+                    <div className="mb-4 mt-auto grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Current</p>
-                        <p className="text-sm font-semibold text-slate-700">{p.metric}</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Current</p>
+                        <p className="text-sm font-medium text-slate-700">{p.metric}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Output (MTD)</p>
-                        <p className="text-sm font-semibold text-slate-700">{p.postsThisMonth} posts</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Output (MTD)</p>
+                        <p className="text-sm font-medium tabular-nums text-slate-700">{p.postsThisMonth} posts</p>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+
+                    <div className="flex items-center justify-between border-t border-line pt-4">
                       <p className="text-xs text-slate-400">Last: {p.lastPost}</p>
-                      <Link href={p.href} className="text-xs font-semibold text-[#42CA80] hover:text-[#38b571]">
+                      <Link href={p.href} className="text-xs font-semibold text-brand-deep hover:underline">
                         Manage &rarr;
                       </Link>
                     </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
             </div>
-            
+
             <div className="space-y-6">
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 overflow-hidden flex flex-col min-h-[500px]">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">Pending Tasks</h3>
-                  <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600">
-                    This Week
-                  </span>
+              <Card className="flex min-h-[500px] flex-col overflow-hidden p-6">
+                <div className="mb-6 flex items-center justify-between">
+                  <h3 className="font-display text-sm font-semibold text-slate-900">Pending Tasks</h3>
+                  <Badge tone="neutral" size="sm">This Week</Badge>
                 </div>
-                
+
                 <GrowthTaskChecklist initialTasks={(pendingTasks || []) as any} />
-              </div>
+              </Card>
             </div>
           </div>
         )}

@@ -6,6 +6,9 @@ import { ArrowLeft, Save, FileText, CheckCircle2, Clock, MapPin, Trash2, Plus } 
 import Link from "next/link";
 import { saveApprovedTasks } from "@/app/admin/strategy/actions";
 import { toast } from "@/components/ui/toast";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface Task {
   title: string;
@@ -120,131 +123,128 @@ export default function ReviewPageClient({ team }: { team: any[] }) {
     }
   };
 
-  if (!data) return <div className="p-8 text-center text-slate-500 animate-pulse">Loading review panel...</div>;
+  if (!data) return <div className="animate-pulse p-8 text-center text-slate-500">Loading review panel...</div>;
 
   const checkedCount = activeTasks.filter(t => t.checked).length;
 
   return (
-    <div className="min-h-full bg-slate-50 px-4 py-8 pb-32">
+    <div className="min-h-full bg-canvas px-4 py-8 pb-32">
       <div className="mx-auto max-w-7xl space-y-6">
-        
+
         {/* Header */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6">
-          <Link href="/admin/strategy" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-4">
+        <Card className="mb-6 p-6">
+          <Link href="/admin/strategy" className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-700">
             <ArrowLeft className="h-4 w-4" /> Discard and go back
           </Link>
-          
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">{data.generated.strategy_title || "Strategy Task Extraction"}</h1>
-              <div className="flex items-center gap-4 mt-2">
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+              <h1 className="font-display text-2xl font-semibold tracking-[-0.02em] text-slate-900">{data.generated.strategy_title || "Strategy Task Extraction"}</h1>
+              <div className="mt-2 flex items-center gap-3">
+                <Badge tone="info" size="sm">
                   <FileText className="h-3.5 w-3.5" />
                   {activeTasks.length} tasks generated
-                </span>
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                </Badge>
+                <Badge tone="brand" size="sm">
                   <MapPin className="h-3.5 w-3.5" />
                   Destination: {data.destination}
-                </span>
+                </Badge>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <button 
-                onClick={() => router.push("/admin/strategy")}
-                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm hover:bg-slate-50 transition-colors"
-              >
+              <Button onClick={() => router.push("/admin/strategy")} variant="secondary">
                 Cancel
-              </button>
-              <button 
+              </Button>
+              <Button
                 onClick={handleApproveAndSave}
                 disabled={isSaving || checkedCount === 0}
-                className="flex items-center gap-2 rounded-lg bg-[#42CA80] px-4 py-2 text-sm font-bold text-white shadow hover:bg-[#38b571] disabled:opacity-50 transition-colors"
+                variant="primary"
               >
-                {isSaving ? "Saving..." : "Approve & Save Tasks"} 
-              </button>
+                {isSaving ? "Saving..." : "Approve & Save Tasks"}
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Task Review Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">
-              Task Review & Edit
+        <Card className="flex flex-col overflow-hidden">
+          <div className="flex items-center justify-between border-b border-line bg-slate-50/50 px-6 py-4">
+            <h3 className="font-display text-sm font-semibold text-slate-900">
+              Task Review &amp; Edit
             </h3>
-            
+
             <div className="flex items-center gap-3">
-              <button onClick={() => handleToggleAll(true)} className="text-xs font-bold text-slate-500 hover:text-indigo-600">Select All</button>
+              <button onClick={() => handleToggleAll(true)} className="text-xs font-semibold text-slate-500 hover:text-brand-deep">Select All</button>
               <span className="text-slate-300">|</span>
-              <button onClick={() => handleToggleAll(false)} className="text-xs font-bold text-slate-500 hover:text-indigo-600">Deselect All</button>
+              <button onClick={() => handleToggleAll(false)} className="text-xs font-semibold text-slate-500 hover:text-brand-deep">Deselect All</button>
               <span className="text-slate-300">|</span>
-              <button onClick={handleDeleteSelected} className="text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1">
+              <button onClick={handleDeleteSelected} className="flex items-center gap-1 text-xs font-semibold text-danger hover:text-red-700">
                 <Trash2 className="h-3 w-3" /> Delete Selected
               </button>
             </div>
           </div>
           
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1000px]">
+            <table className="w-full min-w-[1000px] text-sm">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100">
-                  <th className="px-4 py-3 w-10 text-center"></th>
-                  <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400">Task Title & Details</th>
-                  <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 w-40">Due Date</th>
-                  <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 w-32">Priority</th>
-                  <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-slate-400 w-48">Assignee</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400 w-24">Est. Min</th>
+                <tr className="border-b border-line bg-slate-50">
+                  <th className="w-10 px-4 py-2.5 text-center"></th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Task Title &amp; Details</th>
+                  <th className="w-40 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Due Date</th>
+                  <th className="w-32 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Priority</th>
+                  <th className="w-48 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Assignee</th>
+                  <th className="w-24 px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Est. Min</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
+              <tbody className="divide-y divide-slate-100 bg-surface">
                 {activeTasks.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400 text-sm">
+                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-slate-400">
                       Zero tasks remaining. Add a task manually or run extraction again.
                     </td>
                   </tr>
                 ) : (
                   activeTasks.map((task) => (
-                    <tr key={task.id} className={`transition-colors ${task.checked ? 'hover:bg-slate-50/60' : 'opacity-40 bg-slate-50'}`}>
-                      <td className="px-4 py-3 text-center align-top pt-5">
-                        <input 
-                          type="checkbox" 
+                    <tr key={task.id} className={`transition-colors ${task.checked ? 'hover:bg-slate-50/70' : 'bg-slate-50 opacity-40'}`}>
+                      <td className="px-4 py-3 pt-5 text-center align-top">
+                        <input
+                          type="checkbox"
                           checked={task.checked}
                           onChange={() => handleToggleCheck(task.id)}
-                          className="h-4 w-4 appearance-none rounded border-2 border-slate-300 checked:bg-[#42CA80] checked:border-[#42CA80] transition-colors cursor-pointer"
+                          className="h-4 w-4 cursor-pointer appearance-none rounded border-2 border-slate-300 transition-colors checked:border-brand-deep checked:bg-brand-deep"
                         />
                       </td>
                       <td className="px-4 py-3">
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={task.title}
                           onChange={(e) => handleTaskChange(task.id, "title", e.target.value)}
-                          className={`w-full text-sm font-semibold p-1 focus:outline-none focus:bg-indigo-50/50 rounded ${task.checked ? 'text-slate-900 bg-transparent' : 'text-slate-500 bg-transparent'}`}
+                          className={`w-full rounded p-1 text-sm font-semibold focus:bg-brand-soft/40 focus:outline-none ${task.checked ? 'bg-transparent text-slate-900' : 'bg-transparent text-slate-500'}`}
                           placeholder="Task Title..."
                         />
                         <textarea
                           rows={2}
                           value={task.description}
                           onChange={(e) => handleTaskChange(task.id, "description", e.target.value)}
-                          className={`w-full mt-1 text-xs p-1 focus:outline-none focus:bg-indigo-50/50 rounded resize-none min-h-[40px] ${task.checked ? 'text-slate-600 bg-transparent' : 'text-slate-400 bg-transparent'}`}
+                          className={`mt-1 min-h-[40px] w-full resize-none rounded p-1 text-xs focus:bg-brand-soft/40 focus:outline-none ${task.checked ? 'bg-transparent text-slate-600' : 'bg-transparent text-slate-400'}`}
                           placeholder="Short description or context..."
                         />
                       </td>
-                      <td className="px-4 py-3 align-top pt-4">
-                        <input 
+                      <td className="px-4 py-3 pt-4 align-top">
+                        <input
                           type="date"
                           value={task.due_date}
                           onChange={(e) => handleTaskChange(task.id, "due_date", e.target.value)}
-                          className="w-full text-sm font-mono text-slate-700 bg-transparent border border-transparent hover:border-slate-200 focus:border-indigo-400 focus:outline-none rounded px-2 py-1"
+                          className="w-full rounded border border-transparent bg-transparent px-2 py-1 text-sm tabular-nums text-slate-700 hover:border-line focus:border-brand-deep focus:outline-none"
                         />
                       </td>
-                      <td className="px-4 py-3 align-top pt-4">
+                      <td className="px-4 py-3 pt-4 align-top">
                         <select
                           value={task.priority}
                           onChange={(e) => handleTaskChange(task.id, "priority", e.target.value)}
-                          className={`w-full text-xs font-bold uppercase tracking-widest bg-transparent border border-transparent hover:border-slate-200 focus:border-indigo-400 focus:outline-none rounded px-2 py-1.5 appearance-none cursor-pointer ${
-                            task.priority === 'high' ? 'text-red-600' : task.priority === 'medium' ? 'text-amber-600' : 'text-slate-500'
+                          className={`w-full cursor-pointer appearance-none rounded border border-transparent bg-transparent px-2 py-1.5 text-xs font-semibold uppercase tracking-wide hover:border-line focus:border-brand-deep focus:outline-none ${
+                            task.priority === 'high' ? 'text-danger' : task.priority === 'medium' ? 'text-warn' : 'text-slate-500'
                           }`}
                         >
                           <option value="high">High</option>
@@ -252,23 +252,23 @@ export default function ReviewPageClient({ team }: { team: any[] }) {
                           <option value="low">Low</option>
                         </select>
                       </td>
-                      <td className="px-4 py-3 align-top pt-4">
+                      <td className="px-4 py-3 pt-4 align-top">
                         <select
                           value={task.assignee}
                           onChange={(e) => handleTaskChange(task.id, "assignee", e.target.value)}
-                          className="w-full text-sm font-medium text-slate-700 bg-transparent border border-transparent hover:border-slate-200 focus:border-indigo-400 focus:outline-none rounded px-2 py-1 cursor-pointer"
+                          className="w-full cursor-pointer rounded border border-transparent bg-transparent px-2 py-1 text-sm font-medium text-slate-700 hover:border-line focus:border-brand-deep focus:outline-none"
                         >
                           {team.map(m => (
                             <option key={m.id} value={m.id}>{m.full_name}</option>
                           ))}
                         </select>
                       </td>
-                      <td className="px-4 py-3 align-top pt-4 text-right">
-                        <input 
+                      <td className="px-4 py-3 pt-4 text-right align-top">
+                        <input
                           type="number"
                           value={task.estimated_minutes}
                           onChange={(e) => handleTaskChange(task.id, "estimated_minutes", parseInt(e.target.value) || 0)}
-                          className="w-full font-mono text-sm text-right text-slate-700 font-bold bg-transparent border border-transparent hover:border-slate-200 focus:border-indigo-400 focus:outline-none rounded px-2 py-1"
+                          className="w-full rounded border border-transparent bg-transparent px-2 py-1 text-right text-sm font-semibold tabular-nums text-slate-700 hover:border-line focus:border-brand-deep focus:outline-none"
                         />
                       </td>
                     </tr>
@@ -277,43 +277,42 @@ export default function ReviewPageClient({ team }: { team: any[] }) {
               </tbody>
             </table>
           </div>
-          
-          <div className="bg-slate-50 p-4 border-t border-slate-200 text-center">
-            <button 
+
+          <div className="border-t border-line bg-slate-50 p-4 text-center">
+            <button
               onClick={handleAddTask}
-              className="inline-flex items-center gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#42CA80] hover:border-[#42CA80] hover:bg-emerald-50 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2 text-xs font-semibold uppercase tracking-wide text-brand-deep transition-colors hover:border-brand-line hover:bg-brand-soft"
             >
               <Plus className="h-4 w-4" /> Add Blank Task manually
             </button>
           </div>
-        </div>
+        </Card>
       </div>
       
       {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgb(0,0,0,0.05)] p-4 flex items-center justify-between z-40">
-        <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between border-t border-line bg-surface p-4 shadow-md">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
           <div className="flex items-center gap-4">
-            <h3 className="text-sm font-bold text-slate-900">
-              Saving <span className="text-[#42CA80]">{checkedCount}</span> / {activeTasks.length} tasks
+            <h3 className="text-sm font-semibold text-slate-900">
+              Saving <span className="tabular-nums text-brand-deep">{checkedCount}</span> / {activeTasks.length} tasks
             </h3>
-            <div className="hidden sm:flex items-center gap-3 text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
+            <div className="hidden items-center gap-3 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500 sm:flex">
               <span>Timeframe: <b>{data.timeframe.replace('_',' ')}</b></span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => router.push("/admin/strategy")}
-              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              ← Back to Edit
-            </button>
-            <button 
+            <Button onClick={() => router.push("/admin/strategy")} variant="ghost">
+              Back to Edit
+            </Button>
+            <Button
               onClick={handleApproveAndSave}
               disabled={isSaving || checkedCount === 0}
-              className="flex items-center gap-2 rounded-lg bg-[#42CA80] px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#38b571] disabled:opacity-50 transition-colors"
+              variant="primary"
+              size="lg"
             >
-              {isSaving ? "Saving Tasks..." : "✓ Approve & Save →"} 
-            </button>
+              <CheckCircle2 className="h-4 w-4" />
+              {isSaving ? "Saving Tasks..." : "Approve & Save"}
+            </Button>
           </div>
         </div>
       </div>

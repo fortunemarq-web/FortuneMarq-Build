@@ -14,7 +14,7 @@ export default async function TeamOverviewPage() {
     .order("full_name");
 
   if (profilesError) {
-    return <div className="p-8 text-red-500">Error loading team: {profilesError.message}</div>;
+    return <div className="p-8 text-danger">Error loading team: {profilesError.message}</div>;
   }
 
   // 2. Fetch Tasks stats for each member
@@ -79,7 +79,7 @@ export default async function TeamOverviewPage() {
   });
 
   return (
-    <div className="min-h-full bg-slate-50 p-4 md:p-8 lg:p-12">
+    <div className="min-h-full bg-canvas px-4 py-8">
       <TeamOverviewClient
         profiles={profiles}
         targets={targets || []}
