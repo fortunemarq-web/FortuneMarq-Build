@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FileSignature, CheckCircle, Clock, XCircle } from "lucide-react";
 import AgreementRowActions from "@/components/proposals/agreement-row-actions";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
 const STATUS_CONFIG: Record<string, { label: string; classes: string; icon: ElementType }> = {
   // agreements.status CHECK allows only pending / confirmed / cancelled.

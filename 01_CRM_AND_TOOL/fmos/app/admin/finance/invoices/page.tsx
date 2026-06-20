@@ -4,6 +4,8 @@ import { autoMarkOverdueInvoices } from "../actions";
 import { getBusinessSettings } from "@/app/admin/settings/actions";
 import InvoiceManagerClient from "@/components/admin/finance/InvoiceManagerClient";
 
+export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
+
 export default async function InvoiceManagerPage() {
   const supabase = await createServerClientWithCookies();
 

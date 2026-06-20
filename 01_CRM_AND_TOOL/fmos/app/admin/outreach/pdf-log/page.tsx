@@ -1,7 +1,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import PdfLogClient from "./pdf-log-client";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
 export default async function PdfLogPage() {
   const supabase = await createServerClientWithCookies();

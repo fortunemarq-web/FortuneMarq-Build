@@ -1,7 +1,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import OutreachBoardClient from "./outreach-board-client";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
 export default async function OutreachBoardPage() {
   const supabase = await createServerClientWithCookies();

@@ -12,14 +12,10 @@ import { db } from "./fixtures/db";
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 test.describe("Finance — record payment (verify the row)", () => {
-  // PARKED as test.fixme: the spec logic is correct and PASSES in isolation, but is
-  // flaky in the FULL suite. After route-health loads /admin/finance/invoices, the
-  // invoices LIST server-render intermittently does NOT reflect a freshly-created
-  // invoice (a server/route data-freshness quirk — also seen when seeding the row
-  // directly), so the Record-Payment trigger never appears and the nav hangs to the
-  // timeout. This is a real finding worth fixing in the app (the invoices list should
-  // always reflect just-committed rows). Re-enable once that's addressed.
-  test.fixme("Record Payment writes paid_amount + partially_paid status", async ({ page }) => {
+  // Previously parked (flaky): the invoices list could omit a just-created invoice.
+  // Fixed by making app/admin/finance/invoices/page.tsx force-dynamic (no stale server
+  // fetch caching), so this is live again.
+  test("Record Payment writes paid_amount + partially_paid status", async ({ page }) => {
     const marker = `E2E-PAY-${Date.now()}`;
 
     await loginAdmin(page);

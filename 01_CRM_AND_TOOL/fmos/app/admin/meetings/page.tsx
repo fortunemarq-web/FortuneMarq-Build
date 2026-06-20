@@ -1,7 +1,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import MeetingsClient from "./meetings-client";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
 export default async function MeetingsPage() {
   const supabase = await createServerClientWithCookies();

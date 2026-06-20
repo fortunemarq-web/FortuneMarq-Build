@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FileText, Plus, ArrowRight, Clock, Users } from "lucide-react";
 import ProposalRowActions from "@/components/proposals/proposal-row-actions";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic"; // live admin list — must reflect just-created rows
 
 const STATUS_COLORS: Record<string, string> = {
   draft: "bg-slate-100 text-slate-500",
