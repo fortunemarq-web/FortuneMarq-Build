@@ -4,28 +4,34 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import {
   Search,
-  ChevronDown,
-  ChevronUp,
   Phone,
   MessageCircle,
   FileText,
   Calendar,
-  AlertTriangle,
   ArrowRight,
-  Filter,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/toast";
 import { logAudit } from "@/lib/audit";
-import { PIPELINE_STAGES, STAGES_BY_GROUP, leadStageUpdate } from "@/lib/pipeline";
+import { PIPELINE_STAGES, leadStageUpdate } from "@/lib/pipeline";
 
 // ─── Stage Config (single source of truth: lib/pipeline.ts) ──
-// Parked stages (unreachable / gatekeeper wall / language barrier /
-// revival) render in the main drag-drop row so leads never vanish
-// from the board.
-const ACTIVE_STAGES = [...STAGES_BY_GROUP.active, ...STAGES_BY_GROUP.parked];
-const CLOSED_STAGES = STAGES_BY_GROUP.closed;
-const ALL_STAGES = PIPELINE_STAGES;
+const stageByKey = Object.fromEntries(PIPELINE_STAGES.map((s) => [s.key, s]));
+
+// Workflow tabs — the 17-stage pipeline split into 4 groups so each view shows
+// ≤5 columns and fits on one screen (no giant horizontal strip, no per-column
+// scrolling for the whole board). Drag-and-drop between columns still works.
+const STAGE_TABS: { key: string; label: string; stages: (typeof PIPELINE_STAGES) }[] = [
+  { key: "pipeline", label: "Pipeline", stages: ["touch1_pending", "curiosity_sent", "pdf_sent", "meeting_booked", "proposal_sent"].map((k) => stageByKey[k]).filter(Boolean) },
+  { key: "followups", label: "Follow-ups", stages: ["no_answer", "follow_back", "follow_up_due", "gatekeeper"].map((k) => stageByKey[k]).filter(Boolean) },
+  { key: "parked", label: "Parked", stages: ["unreachable", "gatekeeper_flagged", "language_barrier", "revival"].map((k) => stageByKey[k]).filter(Boolean) },
+  { key: "closed", label: "Closed", stages: ["not_interested", "won", "lost", "dead"].map((k) => stageByKey[k]).filter(Boolean) },
+];
+
+// Stages that surface a one-tap action on the card.
+const QUICK_ACTION_STAGES = new Set([
+  "touch1_pending", "curiosity_sent", "pdf_sent", "follow_up_due", "meeting_booked", "proposal_sent",
+]);
 
 const LEAD_TYPE_COLORS: Record<string, string> = {
   A: "bg-green-100 text-green-700 border border-green-300",
@@ -63,10 +69,6 @@ interface OutreachBoardClientProps {
 function daysSince(dateStr: string | null): number {
   if (!dateStr) return 0;
   return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
-}
-
-function getStageLabel(key: string): string {
-  return ALL_STAGES.find(s => s.key === key)?.label || key;
 }
 
 function QuickActionButton({ lead }: { lead: Lead }) {
@@ -108,9 +110,9 @@ function QuickActionButton({ lead }: { lead: Lead }) {
   return null;
 }
 
-export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, userId }: OutreachBoardClientProps) {
+export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }: OutreachBoardClientProps) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
-  const [showClosed, setShowClosed] = useState(false);
+  const [activeTab, setActiveTab] = useState("pipeline");
   const [query, setQuery] = useState("");
   const [filterNiche, setFilterNiche] = useState("");
   const [filterCity, setFilterCity] = useState("");
@@ -118,7 +120,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
   const [filterAssigned, setFilterAssigned] = useState("");
   const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null);
   const [isDraggingOver, setIsDraggingOver] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const supabase = createClient();
 
   // Unique filter options
@@ -137,6 +139,12 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
 
   function getLeadsForStage(stageKey: string): Lead[] {
     return filtered.filter(l => (l.outreach_stage || "touch1_pending") === stageKey);
+  }
+
+  function tabCount(tabKey: string): number {
+    const tab = STAGE_TABS.find(t => t.key === tabKey);
+    if (!tab) return 0;
+    return tab.stages.reduce((sum, s) => sum + getLeadsForStage(s.key).length, 0);
   }
 
   async function moveLeadToStage(leadId: string, newStage: string) {
@@ -166,15 +174,17 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
     setIsDraggingOver(null);
   }
 
-  const totalActive = ACTIVE_STAGES.reduce((sum, s) => sum + getLeadsForStage(s.key).length, 0);
-  const totalClosed = CLOSED_STAGES.reduce((sum, s) => sum + getLeadsForStage(s.key).length, 0);
+  const currentTab = STAGE_TABS.find(t => t.key === activeTab) || STAGE_TABS[0];
+  const totalActive = tabCount("pipeline") + tabCount("followups") + tabCount("parked");
+  const totalClosed = tabCount("closed");
 
   return (
     <div className="min-h-full bg-slate-50">
-      {/* Header */}
+      {/* Header (sticky) — title, filters, and the workflow tabs all live here so
+          the board itself only ever shows one screen-width of columns. */}
       <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between mb-3">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Outreach Board</h1>
               <p className="text-xs text-slate-500 mt-0.5">{totalActive} active · {totalClosed} closed</p>
@@ -219,13 +229,38 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
               {profiles.map(p => <option key={p.id} value={p.id}>{p.full_name}</option>)}
             </select>
           </div>
+
+          {/* Workflow tabs */}
+          <div className="flex gap-1.5 mt-3 overflow-x-auto -mb-px">
+            {STAGE_TABS.map(tab => {
+              const count = tabCount(tab.key);
+              const active = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
+                    active ? "bg-brand-deep text-white shadow-sm" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                >
+                  {tab.label}
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                    active ? "bg-white/25 text-white" : "bg-white text-slate-500"
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <div className="overflow-x-auto pb-6">
-        <div className="flex gap-4 p-4 min-w-max">
-          {ACTIVE_STAGES.map(stage => {
+      {/* Columns for the active tab — flex-fill so ≤5 columns use the full width
+          (no horizontal strip on a normal screen; falls back to scroll if narrow). */}
+      <div className="p-4">
+        <div className="flex gap-3 overflow-x-auto">
+          {currentTab.stages.map(stage => {
             const stageLeads = getLeadsForStage(stage.key);
             const isOver = isDraggingOver === stage.key;
             return (
@@ -234,7 +269,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                 onDragOver={e => { if (isAdmin) { e.preventDefault(); setIsDraggingOver(stage.key); } }}
                 onDragLeave={() => setIsDraggingOver(null)}
                 onDrop={e => handleDrop(e, stage.key)}
-                className={`w-[240px] shrink-0 rounded-2xl border transition-all ${stage.color} ${
+                className={`flex-1 min-w-[210px] max-w-[360px] rounded-2xl border transition-all ${stage.color} ${
                   isOver ? "ring-2 ring-brand ring-offset-1" : ""
                 }`}
               >
@@ -248,9 +283,8 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                   </div>
                 </div>
 
-                {/* Cards */}
-                {/* dvh + top-bar (48px) aware; avoids the old 100vh overshoot */}
-                <div className="p-2 space-y-2 max-h-[calc(100dvh-280px)] overflow-y-auto">
+                {/* Cards — taller scroll area now that the board is only one tab deep */}
+                <div className="p-2 space-y-2 max-h-[calc(100dvh-250px)] overflow-y-auto">
                   {stageLeads.length === 0 && (
                     <div className="flex items-center justify-center h-16 text-[10px] text-slate-300 font-medium">
                       Empty
@@ -261,6 +295,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                     const isStalled = daysInStage >= 7;
                     const typeKey = (lead.lead_type || "").toUpperCase();
                     const assignee = profiles.find(p => p.id === lead.assigned_sales_exec);
+                    const hasQuickAction = QUICK_ACTION_STAGES.has(lead.outreach_stage || "touch1_pending");
 
                     return (
                       <div
@@ -274,7 +309,6 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                           draggedLeadId === lead.id ? "opacity-50 scale-[0.97]" : "hover:shadow-md"
                         }`}
                       >
-                        {/* Stalled badge */}
                         {isStalled && (
                           <div className="flex items-center gap-1 mb-1.5">
                             <span className="text-[9px] font-bold uppercase text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-full border border-orange-200">
@@ -283,17 +317,14 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                           </div>
                         )}
 
-                        {/* Business name */}
                         <Link href={`/admin/leads/${lead.id}`} className="block hover:text-brand-deep transition-colors">
                           <p className="text-xs font-bold text-slate-900 leading-snug line-clamp-1">{lead.company_name}</p>
                         </Link>
 
-                        {/* Niche + City */}
                         <p className="text-[10px] text-slate-400 mt-0.5 truncate">
                           {lead.industry || "—"} · {lead.city || "—"}
                         </p>
 
-                        {/* Badges row */}
                         <div className="flex items-center gap-1.5 mt-2 flex-wrap">
                           {typeKey && (
                             <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${LEAD_TYPE_COLORS[typeKey] || "bg-slate-100 text-slate-600"}`}>
@@ -310,10 +341,11 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
                           )}
                         </div>
 
-                        {/* Quick action */}
-                        <div className="mt-2.5 pt-2 border-t border-slate-100">
-                          <QuickActionButton lead={lead} />
-                        </div>
+                        {hasQuickAction && (
+                          <div className="mt-2.5 pt-2 border-t border-slate-100">
+                            <QuickActionButton lead={lead} />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -321,49 +353,6 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin, u
               </div>
             );
           })}
-        </div>
-
-        {/* Closed Section */}
-        <div className="px-4">
-          <button
-            onClick={() => setShowClosed(!showClosed)}
-            className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors mb-3"
-          >
-            {showClosed ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            Closed Leads
-            <span className="text-xs font-medium text-slate-400">({totalClosed})</span>
-          </button>
-
-          {showClosed && (
-            <div className="flex gap-4 overflow-x-auto pb-4">
-              {CLOSED_STAGES.map(stage => {
-                const stageLeads = getLeadsForStage(stage.key);
-                return (
-                  <div key={stage.key} className="w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-slate-50">
-                    <div className="flex items-center justify-between px-3 py-3 border-b border-slate-200">
-                      <span className="text-xs font-bold text-slate-600">{stage.label}</span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${stage.badge}`}>
-                        {stageLeads.length}
-                      </span>
-                    </div>
-                    <div className="p-2 space-y-2 max-h-72 overflow-y-auto">
-                      {stageLeads.length === 0 && (
-                        <div className="flex items-center justify-center h-12 text-[10px] text-slate-300 font-medium">Empty</div>
-                      )}
-                      {stageLeads.map(lead => (
-                        <Link key={lead.id} href={`/admin/leads/${lead.id}`}>
-                          <div className="rounded-xl bg-white border border-slate-200 p-3 hover:shadow-sm transition-shadow cursor-pointer">
-                            <p className="text-xs font-bold text-slate-700 truncate">{lead.company_name}</p>
-                            <p className="text-[10px] text-slate-400 truncate">{lead.industry} · {lead.city}</p>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
         </div>
       </div>
     </div>
