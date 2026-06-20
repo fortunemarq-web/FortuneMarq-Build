@@ -12,11 +12,17 @@ import { db } from "./fixtures/db";
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 test.describe("Finance — record payment (verify the row)", () => {
-  // Previously parked (flaky): the invoices list could omit a just-created invoice.
-  // Fixed by making app/admin/finance/invoices/page.tsx force-dynamic (no stale server
-  // fetch caching), so this is live again.
+  // Previously flaky for two reasons, both fixed: (1) the invoices list could omit a
+  // just-created invoice (fixed by making the invoices page force-dynamic + this spec
+  // re-navigates to a fresh list before acting); (2) leftover invoices from failed runs
+  // made the Record-Payment trigger ambiguous (fixed by the clean-slate below).
   test("Record Payment writes paid_amount + partially_paid status", async ({ page }) => {
     const marker = `E2E-PAY-${Date.now()}`;
+
+    // Clean slate: remove any leftover E2E invoices so our created one is the only payable row.
+    const { data: stale } = await db.from("invoices").select("id").ilike("notes", "E2E%");
+    for (const s of stale || []) await db.from("invoice_line_items").delete().eq("invoice_id", s.id);
+    if ((stale || []).length) await db.from("invoices").delete().ilike("notes", "E2E%");
 
     await loginAdmin(page);
     await page.goto(`${BASE_URL}/admin/finance/invoices`);
@@ -32,6 +38,11 @@ test.describe("Finance — record payment (verify the row)", () => {
     await page.getByPlaceholder(/amount|0\.00|^0$/i).first().fill("10000");
     await page.locator("textarea").first().fill(marker); // notes — our lookup key
     await page.getByRole("button", { name: /generate invoice/i }).click();
+
+    // Re-navigate to the (force-dynamic) invoices list so the just-created invoice is
+    // server-rendered fresh — avoids a client-state timing race on the same page that
+    // made this spec flaky when relying on the modal's optimistic state.
+    await page.goto(`${BASE_URL}/admin/finance/invoices`);
 
     // --- record a partial payment against it ---
     // The created invoice is the only payable one, so its Record-Payment action is unique.

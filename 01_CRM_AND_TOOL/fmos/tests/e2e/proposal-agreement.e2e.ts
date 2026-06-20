@@ -1,18 +1,16 @@
 /**
- * VERIFY-THE-ROW — proposal (DEAL-05) and agreement (DEAL-06).
+ * VERIFY-THE-ROW — proposal (DEAL-05) and agreement (DEAL-06). Both live + green.
  *
- * The proposal half is live + asserted. The agreement half is PARKED as test.fixme
- * for two reasons (re-enable when both are addressed):
- *   1. AGREEMENT BLOCKER: actions/send-agreement-wa.ts sends the 'agreement_sent'
- *      WhatsApp template; on stock .env.staging WHATSAPP_API_TOKEN is EMPTY, so the
- *      send fails and the UI shows toast.error. Needs real WHATSAPP_API_TOKEN +
- *      WHATSAPP_PHONE_NUMBER_ID + WHATSAPP_TEST_RECIPIENTS on staging.
- *   2. LIST FRESHNESS: app/admin/proposals/page.tsx has `revalidate = 60`; a just-
- *      sent proposal can fail to render on first server paint (same quirk that
- *      parked record-payment.e2e.ts).
+ * Why the agreement half works on staging despite blank WhatsApp creds:
+ * actions/send-agreement-wa.ts INSERTS the 'pending' agreement row BEFORE the
+ * WhatsApp send, so the row commits even when the send fails (the UI just shows a
+ * toast.error). It became testable once (a) the proposals list was made
+ * force-dynamic so the just-sent proposal shows reliably, and (b) the staging DB got
+ * the proposals.lead_id -> leads FK that prod already has — the page's
+ * `lead:leads(...)` PostgREST embed requires it (without it the list errors out).
  *
- * The proposal half deliberately uses 'Mark Sent (no WA)' (pure DB writes, no
- * WhatsApp) — NOT 'Send via FMOS WhatsApp' (WA-dependent, fails on empty creds).
+ * The proposal half uses 'Mark Sent (no WA)' (pure DB writes) — NOT 'Send via FMOS
+ * WhatsApp' (WA-dependent, fails on empty creds).
  */
 import { test, expect } from "@playwright/test";
 import { loginAdmin } from "./fixtures/auth";
@@ -107,9 +105,11 @@ test.describe("Deals — proposal + agreement (verify the rows)", () => {
     await db.from("leads").update({ outreach_stage: null, status: null, last_activity_at: null }).eq("id", leadId);
   });
 
-  // DEAL-06 — PARKED: agreement send needs real WhatsApp creds on staging, and the
-  // proposals list has revalidate=60 (freshness). See the file header.
-  test.fixme("send agreement writes a pending agreement", async ({ page }) => {
+  // DEAL-06 — send agreement. The agreement row is inserted BEFORE the WhatsApp send
+  // (actions/send-agreement-wa.ts), so it lands even with staging's blank WhatsApp
+  // creds (the send returns an error to the UI, but the 'pending' row is committed).
+  // The proposals list is now force-dynamic, so the just-sent proposal appears reliably.
+  test("send agreement writes a pending agreement", async ({ page }) => {
     const leadId = await resolveLead();
     await cleanProposals(leadId);
 

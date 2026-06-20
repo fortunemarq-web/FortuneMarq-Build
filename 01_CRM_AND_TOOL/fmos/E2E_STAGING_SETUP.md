@@ -37,6 +37,12 @@ Ephemeral, billed per active hour, created via the Supabase MCP. It replays `sup
 
 1. **Provision** the staging DB (Option A or B) and get its URL + anon key + service-role key.
 2. **Apply the schema** to it (the consolidated SQL above) if not already present.
+   - ⚠ **Then apply `supabase/2026-06-20_staging_fk_parity.sql`** — the consolidated SQL
+     creates tables but NOT prod's foreign keys, and PostgREST needs them to resolve the
+     embedded selects on `/admin/proposals` and `/admin/finance/invoices` (otherwise those
+     lists error/empty on staging and the proposal/payment specs hang). Prod already has
+     these FKs. For a fully faithful replica, prefer regenerating the schema from prod
+     (`supabase db dump --schema-only`) over the hand-maintained consolidated SQL.
 3. **Configure env:**
    ```bash
    cp .env.staging.example .env.staging
