@@ -278,10 +278,10 @@ const WHY_US_BULLETS: Record<ReportType, Record<"en" | "kn", string[]>> = {
       "Expand to additional keywords you're not ranking for yet",
     ],
     kn: [
-      "ನಿರಂತರ SEO ನಿರ್ವಹಣೆಯಿಂದ ನಿಮ್ಮ Google ರ್ಯಾಂಕಿಂಗ್ ರಕ್ಷಿಸಿ",
-      "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ರ್ಯಾಂಕಿಂಗ್ ಟ್ರಾಫಿಕ್ ಅನ್ನು ಹೆಚ್ಚಿನ ಅಪಾಯಿಂಟ್ಮೆಂಟ್‌ಗಳಾಗಿ ಪರಿವರ್ತಿಸಿ",
-      "ಸ್ಪರ್ಧಿಗಳ ಚಲನೆಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ ಮತ್ತು ಅವರು ಮೀರುವ ಮೊದಲೇ ಪ್ರತಿಕ್ರಿಯಿಸಿ",
-      "ನೀವು ಇನ್ನೂ ರ್ಯಾಂಕ್ ಆಗದ ಹೆಚ್ಚುವರಿ ಕೀವರ್ಡ್‌ಗಳಿಗೆ ವಿಸ್ತರಿಸಿ",
+      "ನಿರಂತರ SEO maintenance ಜೊತೆಗೆ ನಿಮ್ಮ Google Ranking ಅನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ",
+      "ಈಗ ಬರುತ್ತಿರುವ Traffic ಅನ್ನು ಇನ್ನಷ್ಟು Bookings ಮತ್ತು Appointments ಆಗಿ ಬದಲಾಯಿಸಿ",
+      "Competitors ಏನು ಮಾಡುತ್ತಿದ್ದಾರೆ ಎಂದು ಗಮನಿಸಿ, ಅವರು ನಿಮ್ಮನ್ನು ಹಿಂದಿಕ್ಕುವ ಮುನ್ನವೇ ಎಚ್ಚೆತ್ತುಕೊಳ್ಳಿ",
+      "ನೀವು ಇನ್ನೂ Rank ಆಗದೇ ಇರುವ ಹೊಸ Keywords ಗಳಿಗೂ Expand ಆಗಿ",
     ],
   },
   B: {
@@ -292,10 +292,10 @@ const WHY_US_BULLETS: Record<ReportType, Record<"en" | "kn", string[]>> = {
       "Monthly rank tracking with transparent reporting",
     ],
     kn: [
-      "ತಾಂತ್ರಿಕ SEO ಆಡಿಟ್ ಮತ್ತು ಫಿಕ್ಸ್ — ನಿಮ್ಮ ಸೈಟ್ ಅನ್ನು ಹಿಡಿದಿರುವುದನ್ನು ಸರಿಪಡಿಸಿ",
-      "ಲೋಕಲ್ ಕೀವರ್ಡ್ ಟಾರ್ಗೆಟಿಂಗ್ — {city}ಯಲ್ಲಿ ಹುಡುಕಾಟಗಳಿಗೆ ರ್ಯಾಂಕ್ ಆಗಿ",
-      "ಮ್ಯಾಪ್-ಪ್ಯಾಕ್ ಟ್ರಾಫಿಕ್ ಪಡೆಯಲು Google My Business ಆಪ್ಟಿಮೈಸೇಶನ್",
-      "ಪಾರದರ್ಶಕ ವರದಿಯೊಂದಿಗೆ ಮಾಸಿಕ ರ್ಯಾಂಕ್ ಟ್ರ್ಯಾಕಿಂಗ್",
+      "Technical SEO audit ಮತ್ತು ಸರಿಪಡಿಸುವಿಕೆ — ನಿಮ್ಮ Website ಅನ್ನು ಹಿಂದಕ್ಕೆ ಎಳೆಯುತ್ತಿರುವ ಪ್ರಾಬ್ಲಮ್ಸ್ ಬಗೆಹರಿಸುತ್ತೇವೆ",
+      "{city} ನಲ್ಲಿ ಹುಡುಕಿದಾಗ ನಿಮ್ಮ Website ಕಾಣಿಸುವಂತೆ ಮಾಡಲು Local keyword targeting",
+      "Map-pack ಟ್ರಾಫಿಕ್ ಪಡೆಯಲು Google My Business optimisation",
+      "ಪಾರದರ್ಶಕ ರಿಪೋರ್ಟ್‌ನೊಂದಿಗೆ ಪ್ರತಿ ತಿಂಗಳ Rank tracking",
     ],
   },
   C: {
@@ -306,10 +306,10 @@ const WHY_US_BULLETS: Record<ReportType, Record<"en" | "kn", string[]>> = {
       "WhatsApp Business setup so leads can reach you instantly",
     ],
     kn: [
-      "Google Maps ಲಿಸ್ಟಿಂಗ್ — ಹತ್ತಿರ ಹುಡುಕುತ್ತಿರುವ ಗ್ರಾಹಕರಿಗೆ ಕಂಡುಬನ್ನಿ",
-      "7 ದಿನಗಳಲ್ಲಿ ಲೋಕಲ್ ಸರ್ಚ್‌ಗೆ ಆಪ್ಟಿಮೈಸ್ ಮಾಡಿದ ವೃತ್ತಿಪರ ವೆಬ್‌ಸೈಟ್",
-      "ನಿಮ್ಮ ಮುಖ್ಯ ಕೀವರ್ಡ್‌ಗಳಿಗೆ ಪೇಜ್ 1 ರಲ್ಲಿ ರ್ಯಾಂಕ್ ಆಗಲು ಪ್ರಾರಂಭಿಸಿ",
-      "ಲೀಡ್‌ಗಳು ತಕ್ಷಣ ನಿಮ್ಮನ್ನು ತಲುಪಲು WhatsApp Business ಸೆಟಪ್",
+      "Google Maps listing — ನಿಮ್ಮ ಹತ್ತಿರದಲ್ಲಿ Search ಮಾಡುವ Customers ಗೆ ಸುಲಭವಾಗಿ ಸಿಗಿ",
+      "Local search ಗೆ ತಕ್ಕಂತೆ Optimise ಮಾಡಲಾದ Professional Website ಕೇವಲ 7 ದಿನಗಳಲ್ಲಿ",
+      "ನಿಮ್ಮ ಮುಖ್ಯವಾದ Keywords ಗಳಿಗಾಗಿ page 1 ನಲ್ಲಿ Rank ಆಗುವುದನ್ನು ಶುರುಮಾಡಿ",
+      "Customers ತಕ್ಷಣ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಲು WhatsApp Business ಸೆಟಪ್",
     ],
   },
   D: {
@@ -320,10 +320,10 @@ const WHY_US_BULLETS: Record<ReportType, Record<"en" | "kn", string[]>> = {
       "Ready to scale as search volume grows in coming years",
     ],
     kn: [
-      "ಸ್ಪರ್ಧಿಗಳು ಗಮನಿಸುವ ಮೊದಲೇ ನಿಮ್ಮ Google ಉಪಸ್ಥಿತಿ ಸ್ಥಾಪಿಸಿ",
-      "ಕಡಿಮೆ ಸ್ಪರ್ಧೆ ಎಂದರೆ ವೇಗದ ರ್ಯಾಂಕಿಂಗ್ — ವಾರಗಳಲ್ಲಿ ಗೋಚರ ಫಲಿತಾಂಶಗಳು",
-      "ಮಾರ್ಕೆಟ್ ತೆರೆದಿರುವಾಗ ನಿಮ್ಮ ನಿಶ್‌ನಲ್ಲಿ ಬ್ರ್ಯಾಂಡ್ ಅಧಿಕಾರ ನಿರ್ಮಿಸಿ",
-      "ಮುಂದಿನ ವರ್ಷಗಳಲ್ಲಿ ಸರ್ಚ್ ವಾಲ್ಯೂಮ್ ಬೆಳೆದಂತೆ ಸ್ಕೇಲ್ ಮಾಡಲು ಸಿದ್ಧ",
+      "Competitors ಎಚ್ಚೆತ್ತುಕೊಳ್ಳುವ ಮುನ್ನವೇ, ಈಗಲೇ ನಿಮ್ಮ Google Presence ಅನ್ನು ಸೆಟ್ ಮಾಡಿ",
+      "ಕಡಿಮೆ Competition ಎಂದರೆ ಫಾಸ್ಟ್ Ranking — ಕೆಲವೇ ವಾರಗಳಲ್ಲಿ ಕಣ್ಣಿಗೆ ಕಾಣುವಂತಹ Result",
+      "ಮಾರ್ಕೆಟ್ ಇನ್ನೂ ಓಪನ್ ಇರುವಾಗಲೇ ನಿಮ್ಮ Niche ನಲ್ಲಿ ನಿಮ್ಮ Brand ಅನ್ನು ಬೆಳೆಸಿಕೊಳ್ಳಿ",
+      "ಮುಂದಿನ ವರ್ಷಗಳಲ್ಲಿ Search Volume ಬೆಳೆದಂತೆ, ನಿಮ್ಮ Business ಅನ್ನು ದೊಡ್ಡದು ಮಾಡಲು ರೆಡಿಯಾಗಿ",
     ],
   },
 };
@@ -331,20 +331,25 @@ const WHY_US_BULLETS: Record<ReportType, Record<"en" | "kn", string[]>> = {
 const OPPORTUNITY_TEXT: Record<ReportType, Record<"en" | "kn", string>> = {
   A: {
     en: "You've already done the hard work of ranking. The risk now is standing still — competitors are investing in SEO every month. Protecting and expanding your ranking is far cheaper than rebuilding it after losing position.",
-    kn: "ನೀವು ರ್ಯಾಂಕ್ ಆಗುವ ಕಠಿಣ ಕೆಲಸ ಈಗಾಗಲೇ ಮಾಡಿದ್ದೀರಿ. ಈಗ ಅಪಾಯವೆಂದರೆ ನಿಂತಿರುವುದು — ಸ್ಪರ್ಧಿಗಳು ಪ್ರತಿ ತಿಂಗಳು SEO ಯಲ್ಲಿ ಹೂಡಿಕೆ ಮಾಡುತ್ತಿದ್ದಾರೆ. ನಿಮ್ಮ ರ್ಯಾಂಕಿಂಗ್ ರಕ್ಷಿಸಿ ಮತ್ತು ವಿಸ್ತರಿಸುವುದು ಸ್ಥಾನ ಕಳೆದ ನಂತರ ಮರುನಿರ್ಮಿಸುವುದಕ್ಕಿಂತ ಹೆಚ್ಚು ಅಗ್ಗ.",
+    kn: "ಟಾಪ್‌ಗೆ ಬರುವ ಕಷ್ಟದ ಕೆಲಸವನ್ನು ನೀವು ಈಗಾಗಲೇ ಮಾಡಿದ್ದೀರಿ. ಈಗ ಸುಮ್ಮನೆ ಕೂತರೆ ಅದೇ ದೊಡ್ಡ Risk — ಯಾಕೆಂದರೆ ನಿಮ್ಮ Competitors ಪ್ರತಿ ತಿಂಗಳು SEO ಮೇಲೆ Invest ಮಾಡುತ್ತಿದ್ದಾರೆ. ಒಮ್ಮೆ ನಿಮ್ಮ ಸ್ಥಾನ ಕಳೆದುಕೊಂಡು ಮತ್ತೆ ಅದನ್ನು ಪಡೆಯುವುದಕ್ಕಿಂತ, ಈಗಿರುವ ಸ್ಥಾನವನ್ನು ಉಳಿಸಿಕೊಂಡು ಬೆಳೆಸಿಕೊಳ್ಳುವುದು ತುಂಬಾ ಸುಲಭ ಮತ್ತು ಅಗ್ಗ.",
   },
   B: {
     en: "Your website exists but is invisible in search. Every month without ranking, you are paying to maintain an asset that generates no organic leads. The competitors who do rank are capturing customers who would otherwise have found you.",
-    kn: "ನಿಮ್ಮ ವೆಬ್‌ಸೈಟ್ ಇದೆ ಆದರೆ ಸರ್ಚ್‌ನಲ್ಲಿ ಅದೃಶ್ಯ. ರ್ಯಾಂಕ್ ಇಲ್ಲದ ಪ್ರತಿ ತಿಂಗಳು, ಯಾವುದೇ ಆರ್ಗಾನಿಕ್ ಲೀಡ್ ಉತ್ಪಾದಿಸದ ಆಸ್ತಿಯನ್ನು ನಿರ್ವಹಿಸಲು ನೀವು ಪಾವತಿಸುತ್ತಿದ್ದೀರಿ. ರ್ಯಾಂಕ್ ಆಗುವ ಸ್ಪರ್ಧಿಗಳು ಇಲ್ಲದಿದ್ದರೆ ನಿಮ್ಮನ್ನು ಕಂಡುಕೊಳ್ಳುತ್ತಿದ್ದ ಗ್ರಾಹಕರನ್ನು ಸೆಳೆಯುತ್ತಿದ್ದಾರೆ.",
+    kn: "ನಿಮ್ಮ Website ಇದೆ, ಆದರೆ Search ಮಾಡಿದಾಗ ಅದು ಎಲ್ಲಿಯೂ ಕಾಣುತ್ತಿಲ್ಲ. Ranking ಇಲ್ಲದೆ, ಯಾವುದೇ Leads ತಂದುಕೊಡದ Website ಗೆ ನೀವು ಪ್ರತಿ ತಿಂಗಳು ಸುಮ್ಮನೆ ಹಣ ಕಟ್ಟುತ್ತಿದ್ದೀರಿ ಅಷ್ಟೇ. ನಿಮಗಿಂತ ಮುಂದೆ Rank ಆಗುತ್ತಿರುವವರು, ನಿಮಗೆ ಸಿಗಬೇಕಿದ್ದ Customers ಅನ್ನು ತಮ್ಮತ್ತ ಸೆಳೆಯುತ್ತಿದ್ದಾರೆ.",
   },
   C: {
     en: "Customers searching for your service cannot find you — they go to whoever appears first on Google. Without a website or Maps listing, you are invisible to the largest customer-discovery channel that exists. Every day this continues is leads going to your competitors.",
-    kn: "ನಿಮ್ಮ ಸೇವೆ ಹುಡುಕುತ್ತಿರುವ ಗ್ರಾಹಕರು ನಿಮ್ಮನ್ನು ಕಂಡುಕೊಳ್ಳಲಾಗುತ್ತಿಲ್ಲ — ಅವರು Google ನಲ್ಲಿ ಮೊದಲು ಕಾಣಿಸುವವರ ಬಳಿ ಹೋಗುತ್ತಾರೆ. ವೆಬ್‌ಸೈಟ್ ಅಥವಾ Maps ಲಿಸ್ಟಿಂಗ್ ಇಲ್ಲದೆ, ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಅತಿದೊಡ್ಡ ಗ್ರಾಹಕ-ಶೋಧನೆ ಚಾನಲ್‌ನಲ್ಲಿ ನೀವು ಅದೃಶ್ಯ. ಪ್ರತಿ ದಿನ ಮುಂದುವರೆದರೆ ಲೀಡ್‌ಗಳು ನಿಮ್ಮ ಸ್ಪರ್ಧಿಗಳ ಬಳಿ ಹೋಗುತ್ತವೆ.",
+    kn: "ನಿಮ್ಮ ಸೇವೆಗಾಗಿ Search ಮಾಡುವ Customers ಗೆ ನೀವು ಸಿಗುತ್ತಿಲ್ಲ — ಬದಲಾಗಿ Google ನಲ್ಲಿ ಯಾರು ಮೊದಲು ಕಾಣುತ್ತಾರೋ ಅವರ ಬಳಿ ಹೋಗುತ್ತಿದ್ದಾರೆ. Website ಅಥವಾ Maps listing ಇಲ್ಲದಿದ್ದರೆ, Customers ಹುಡುಕುವ ಅತಿದೊಡ್ಡ ಜಾಗದಲ್ಲಿ ನೀವು ಯಾರಿಗೂ ಕಾಣುವುದಿಲ್ಲ. ಇದು ಹೀಗೆ ಮುಂದುವರಿದರೆ, ಪ್ರತಿದಿನ ನಿಮ್ಮ Customers ನಿಮ್ಮ Competitors ಪಾಲಾಗುತ್ತಾರೆ.",
   },
   D: {
     en: "Low search volume now means low competition. Businesses that establish a strong digital presence early — Google Maps, website, ranking — capture the market as it grows. This is the cheapest time to become the market leader in this niche.",
-    kn: "ಈಗ ಕಡಿಮೆ ಸರ್ಚ್ ವಾಲ್ಯೂಮ್ ಎಂದರೆ ಕಡಿಮೆ ಸ್ಪರ್ಧೆ. Google Maps, ವೆಬ್‌ಸೈಟ್, ರ್ಯಾಂಕಿಂಗ್ — ಬಲವಾದ ಡಿಜಿಟಲ್ ಉಪಸ್ಥಿತಿ ಮೊದಲೇ ಸ್ಥಾಪಿಸುವ ವ್ಯಾಪಾರಗಳು ಮಾರ್ಕೆಟ್ ಬೆಳೆದಂತೆ ಅದನ್ನು ಸ್ವಾಧೀನಪಡಿಸಿಕೊಳ್ಳುತ್ತವೆ. ಈ ನಿಶ್‌ನಲ್ಲಿ ಮಾರ್ಕೆಟ್ ಲೀಡರ್ ಆಗಲು ಇದು ಅಗ್ಗದ ಸಮಯ.",
+    kn: "ಈಗ Search ಕಡಿಮೆ ಇದೆ ಎಂದರೆ, Competition ಕೂಡ ಕಡಿಮೆ ಇದೆ ಎಂದರ್ಥ. ಯಾರು ಬೇಗನೆ ತಮ್ಮ Digital Presence (Google Maps, Website, Ranking) ಅನ್ನು ಸ್ಟ್ರಾಂಗ್ ಆಗಿ ಕಟ್ಟಿಕೊಳ್ಳುತ್ತಾರೋ, ಅವರು ಮುಂದೆ ಮಾರ್ಕೆಟ್ ಬೆಳೆದಾಗ ಅದರ ಪೂರ್ಣ ಲಾಭ ಪಡೆಯುತ್ತಾರೆ. ಈ Niche ನಲ್ಲಿ Market Leader ಆಗಲು ಇದಕ್ಕಿಂತ ಕಮ್ಮಿ ಖರ್ಚಿನ ಸಮಯ ಇನ್ನೊಂದಿಲ್ಲ.",
   },
+};
+
+const UI: Record<"en" | "kn", { searchesPerMonth: string; avgCpc: string; perClick: string; marketStatus: string; active: string; niche: string }> = {
+  en: { searchesPerMonth: "searches / month", avgCpc: "Avg. CPC (top of page)", perClick: "per click (Google Ads estimate)", marketStatus: "Market status", active: "Active", niche: "Niche" },
+  kn: { searchesPerMonth: "searches / ತಿಂಗಳಿಗೆ", avgCpc: "ಸರಾಸರಿ CPC (page ನ ಟಾಪ್)", perClick: "ಪ್ರತಿ click ಗೆ (Google Ads ಅಂದಾಜು)", marketStatus: "Market Status", active: "Active", niche: "Niche (ಸೀಮಿತ ಮಾರ್ಕೆಟ್)" },
 };
 
 export function ReportDocument({ data }: { data: ReportData }) {
@@ -352,6 +357,7 @@ export function ReportDocument({ data }: { data: ReportData }) {
   const fontFamily = data.lang === "kn" ? "NotoKannada" : "Inter";
   const S = makeStyles(accentColor, fontFamily);
   const c = data.copy;
+  const ui = UI[data.lang];
   const vars = {
     city: data.city,
     industry: data.industry,
@@ -395,18 +401,18 @@ export function ReportDocument({ data }: { data: ReportData }) {
               <View style={S.statCard}>
                 <Text style={S.statLabel}>{fill(c.labelVolume)}</Text>
                 <Text style={S.statValue}>{data.monthlySearchDemand.toLocaleString("en-IN")}</Text>
-                <Text style={S.statSub}>searches / month</Text>
+                <Text style={S.statSub}>{ui.searchesPerMonth}</Text>
               </View>
               {data.avgCpcLow > 0 && (
                 <View style={S.statCard}>
-                  <Text style={S.statLabel}>Avg. CPC (top of page)</Text>
-                  <Text style={S.statValue}>₹{data.avgCpcLow}–{data.avgCpcHigh}</Text>
-                  <Text style={S.statSub}>per click (Google Ads estimate)</Text>
+                  <Text style={S.statLabel}>{ui.avgCpc}</Text>
+                  <Text style={S.statValue}>Rs {data.avgCpcLow}–{data.avgCpcHigh}</Text>
+                  <Text style={S.statSub}>{ui.perClick}</Text>
                 </View>
               )}
               <View style={S.statCard}>
-                <Text style={S.statLabel}>Market status</Text>
-                <Text style={S.statValue}>{data.isLowVolume ? "Niche" : "Active"}</Text>
+                <Text style={S.statLabel}>{ui.marketStatus}</Text>
+                <Text style={S.statValue}>{data.isLowVolume ? ui.niche : ui.active}</Text>
                 <Text style={S.statSub}>{data.isLowVolume ? "< 1,000 / mo" : "> 1,000 / mo"}</Text>
               </View>
             </View>
