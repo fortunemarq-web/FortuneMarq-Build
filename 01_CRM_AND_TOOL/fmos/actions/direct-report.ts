@@ -84,6 +84,28 @@ function reportComponents(asset: ReportAssetRow, businessName: string, niche: st
   ];
 }
 
+/**
+ * Send a direct_report template, falling back to the English wrapper when the
+ * requested language has no approved translation on Meta (error #132001). The
+ * attached PDF (asset.public_url) is already language-specific, so a Kannada
+ * report still delivers as a Kannada PDF even if only the English template
+ * wrapper exists. Once KN template translations are approved on Meta, the first
+ * attempt succeeds and the message wrapper is fully Kannada too.
+ */
+async function sendReportTemplate(
+  to: string,
+  template: string,
+  lang: "en" | "kn",
+  components: any[],
+  extra?: { leadId?: string | null; proactive?: boolean }
+) {
+  let r = await sendWhatsAppTemplate(to, template, { language: lang, components, ...extra });
+  if (!r.success && /132001|does not exist in the translation/i.test(r.error || "")) {
+    r = await sendWhatsAppTemplate(to, template, { language: "en", components, ...extra });
+  }
+  return r;
+}
+
 function emptyResult(over: Partial<BlastResult>): BlastResult {
   return {
     ok: false, dryRun: false, test: false, matched: 0, eligible: 0, optedOut: 0,
@@ -125,10 +147,7 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
     if (!to) return emptyResult({ test: true, message: "Invalid test phone number." });
     const chosen = chooseReport(assets, input.leadType || "A") || assets[0];
     const components = reportComponents(chosen, "there", input.niche, input.city);
-    const r = await sendWhatsAppTemplate(to, templateFor(chosen.lead_type), {
-      language: lang,
-      components,
-    });
+    const r = await sendReportTemplate(to, templateFor(chosen.lead_type), lang, components);
     return emptyResult({
       test: true,
       ok: r.success,
@@ -208,9 +227,7 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
   for (const { lead, asset } of sendable) {
     if (sent >= capRemaining) break;
     const components = reportComponents(asset, lead.company_name, input.niche, input.city);
-    const r = await sendWhatsAppTemplate(lead.phone, templateFor(asset.lead_type), {
-      language: lang,
-      components,
+    const r = await sendReportTemplate(lead.phone, templateFor(asset.lead_type), lang, components, {
       leadId: lead.id,
       proactive: true, // 6.3 — suppress if the lead is mid inbound conversation
     });

@@ -24,6 +24,22 @@ export async function generateReportsForNiche(
   city: string,
   langs: ReportLang[] = LANGS
 ): Promise<GenerateReportResult> {
+  // GUARD: the canonical reports are now built by the reportlab pipeline
+  // (07_DATA_AND_RESEARCH/PDF_Generator — the original 5-page design) and uploaded
+  // to the SAME storage paths. This in-app @react-pdf generator produces the OLD
+  // dense template; running it would overwrite the good files in storage. Disabled
+  // by default — set REPORTS_INAPP_GENERATOR=1 to deliberately re-enable.
+  if (process.env.REPORTS_INAPP_GENERATOR !== "1") {
+    return {
+      ok: false,
+      generated: [],
+      errors: [
+        "In-app report generator is disabled. Reports are built by the reportlab " +
+          "pipeline (07_DATA_AND_RESEARCH/PDF_Generator). Set REPORTS_INAPP_GENERATOR=1 to override.",
+      ],
+    };
+  }
+
   registerFonts();
 
   const admin = createAdminClient();
