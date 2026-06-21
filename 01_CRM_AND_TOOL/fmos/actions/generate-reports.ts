@@ -2,7 +2,6 @@
 
 import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
-import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { registerFonts } from "@/lib/reports/fonts";
 import { ReportDocument } from "@/lib/reports/template";
@@ -22,15 +21,15 @@ const BUCKET = "market-reports";
 
 export async function generateReportsForNiche(
   industry: string,
-  city: string
+  city: string,
+  langs: ReportLang[] = LANGS
 ): Promise<GenerateReportResult> {
   registerFonts();
 
-  const supabase = await createServerClientWithCookies();
   const admin = createAdminClient();
 
-  // Fetch market_insights row
-  const { data: mi, error: miErr } = await (supabase.from("market_insights") as any)
+  // Fetch market_insights row (admin client — works headless, e.g. batch route)
+  const { data: mi, error: miErr } = await (admin.from("market_insights") as any)
     .select("general_insights, competitor_insights, search_volume")
     .eq("industry", industry)
     .eq("city", city)
@@ -71,7 +70,7 @@ export async function generateReportsForNiche(
   const errors: string[] = [];
 
   for (const type of TYPES) {
-    for (const lang of LANGS) {
+    for (const lang of langs) {
       try {
         const copy = getCopy(type, lang);
         const element = React.createElement(ReportDocument, {

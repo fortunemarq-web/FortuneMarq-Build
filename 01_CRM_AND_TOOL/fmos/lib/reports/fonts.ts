@@ -12,8 +12,8 @@ export function registerFonts() {
   Font.register({
     family: "Inter",
     fonts: [
-      { src: path.join(fontsDir, "Inter-Regular.otf"), fontWeight: 400 },
-      { src: path.join(fontsDir, "Inter-Bold.otf"), fontWeight: 700 },
+      { src: path.join(fontsDir, "Inter-Regular.ttf"), fontWeight: 400 },
+      { src: path.join(fontsDir, "Inter-Bold.ttf"), fontWeight: 700 },
     ],
   });
 
