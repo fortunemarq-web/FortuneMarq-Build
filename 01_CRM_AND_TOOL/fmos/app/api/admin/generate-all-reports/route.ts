@@ -6,7 +6,7 @@ import type { ReportLang } from "@/lib/reports/content";
 // Batch-generate the report library for every market_insights row.
 // Guarded by CRON_SECRET. POST with header x-cron-secret.
 // Body (optional): { langs?: ("en"|"kn")[] } — defaults to English only.
-export const maxDuration = 800;
+export const maxDuration = 300; // Vercel Hobby cap. Big batches: run locally instead.
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
