@@ -15,15 +15,24 @@ export default async function SalesPage() {
     const today = new Date().toISOString().split("T")[0];
     const todayStart = today + "T00:00:00";
 
-    const [leadsResult, callsTodayResult, pdfsTodayResult, meetingsTodayResult, allNichesResult, allCitiesResult, marketInsightsResult] = await Promise.all([
-      // All active leads — no limit so niche/city filters see the full dataset
-      supabase
+    // Page through ALL active leads. Supabase caps each request at 1000 rows,
+    // so a single .limit() truncated the dataset (the niche/city filters + queue
+    // only saw the first cities). Loop with .range() until a short page returns.
+    const LEAD_COLS = "id, company_name, contact_person, phone, industry, city, status, notes, lead_type, pitch_type, is_low_volume, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, outreach_stage, lead_source, captured_at";
+    const leadRows: any[] = [];
+    for (let from = 0; from < 50000; from += 1000) {
+      const { data, error } = await supabase
         .from("leads")
-        .select("id, company_name, contact_person, phone, industry, city, status, notes, lead_type, pitch_type, is_low_volume, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, outreach_stage, lead_source, captured_at")
+        .select(LEAD_COLS)
         .or("status.is.null,status.not.in.(closed_won,closed_lost,disqualified)")
         .order("follow_up_date", { ascending: true, nullsFirst: true })
-        .limit(2000),
+        .range(from, from + 999);
+      if (error) break;
+      leadRows.push(...(data || []));
+      if (!data || data.length < 1000) break;
+    }
 
+    const [callsTodayResult, pdfsTodayResult, meetingsTodayResult, marketInsightsResult] = await Promise.all([
       // Calls logged today — the cockpit logs call outcomes to outreach_logs
       // (touch_type 'call'), not lead_outcomes.
       supabase
@@ -48,25 +57,13 @@ export default async function SalesPage() {
         .eq("outreach_stage", "meeting_booked")
         .gte("meeting_booked_at", todayStart),
 
-      // All distinct niches across entire leads table (for filter dropdown)
-      supabase
-        .from("leads")
-        .select("industry")
-        .not("industry", "is", null),
-
-      // All distinct cities across entire leads table (for filter dropdown)
-      supabase
-        .from("leads")
-        .select("city")
-        .not("city", "is", null),
-
       // Market insights — for search volume lookup by niche+city
       supabase
         .from("market_insights")
         .select("industry, city, search_volume"),
     ]);
 
-    const leads = (leadsResult.data || []).map((l: any) => ({
+    const leads = leadRows.map((l: any) => ({
       id: l.id,
       company_name: l.company_name,
       contact_person: l.contact_person,
@@ -85,12 +82,13 @@ export default async function SalesPage() {
       outreach_stage: l.outreach_stage || null,
     }));
 
+    // Filter options derived from the COMPLETE (paged) lead set
     const allNiches = Array.from(new Set(
-      (allNichesResult.data || []).map((r: any) => r.industry).filter(Boolean)
+      leads.map((l: any) => l.industry).filter(Boolean)
     )).sort() as string[];
 
     const allCities = Array.from(new Set(
-      (allCitiesResult.data || []).map((r: any) => r.city).filter(Boolean)
+      leads.map((l: any) => l.city).filter(Boolean)
     )).sort() as string[];
 
     // Build niche+city → search_volume lookup map
