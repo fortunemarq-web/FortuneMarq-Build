@@ -76,7 +76,6 @@ function prettyNiche(niche: string): string {
  */
 function reportComponents(asset: ReportAssetRow, businessName: string, niche: string, city: string): any[] {
   return [
-    { type: "header", parameters: [{ type: "image", image: { link: coverUrl(asset) } }] },
     {
       type: "body",
       parameters: [
