@@ -1,7 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase-admin";
-import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
+import { sendWhatsAppTemplate, sendWhatsAppDocument, toWaNumber } from "@/lib/whatsapp/send";
 import { leadScriptType } from "@/lib/whatsapp/params";
 import { slugify, chooseReport, type LeadType, type ReportAssetRow } from "@/lib/whatsapp/report-lookup";
 import { isOptedOut } from "@/lib/whatsapp/recipients";
@@ -53,10 +53,14 @@ export interface BlastResult {
 }
 
 function templateFor(leadType: string): string {
-  const t = String(leadType).toLowerCase();
-  // The approved type-C template is registered on Meta as `direct_report_type_c_`
-  // (trailing underscore) — match it exactly or the send fails "template not found".
-  return t === "c" ? "direct_report_type_c_" : `direct_report_type_${t}`;
+  // Approved image-header "cover" templates: cover preview + short body + buttons.
+  // The PDF itself is sent as a follow-up document (see sendCoverPlusPdf).
+  return `direct_report_cover_${String(leadType).toLowerCase()}`;
+}
+
+/** The cover PNG sits next to the report PDF in storage (same path, .png). */
+function coverUrl(asset: ReportAssetRow): string {
+  return asset.public_url.replace(/\.pdf$/i, ".png");
 }
 
 /** "CarRentals" -> "Car Rentals" for the customer-facing message body. */
@@ -72,7 +76,7 @@ function prettyNiche(niche: string): string {
  */
 function reportComponents(asset: ReportAssetRow, businessName: string, niche: string, city: string): any[] {
   return [
-    { type: "header", parameters: [{ type: "document", document: { link: asset.public_url, filename: asset.filename } }] },
+    { type: "header", parameters: [{ type: "image", image: { link: coverUrl(asset) } }] },
     {
       type: "body",
       parameters: [
@@ -92,16 +96,22 @@ function reportComponents(asset: ReportAssetRow, businessName: string, niche: st
  * wrapper exists. Once KN template translations are approved on Meta, the first
  * attempt succeeds and the message wrapper is fully Kannada too.
  */
-async function sendReportTemplate(
+async function sendCoverPlusPdf(
   to: string,
-  template: string,
+  asset: ReportAssetRow,
   lang: "en" | "kn",
   components: any[],
   extra?: { leadId?: string | null; proactive?: boolean }
 ) {
+  const template = templateFor(asset.lead_type);
   let r = await sendWhatsAppTemplate(to, template, { language: lang, components, ...extra });
   if (!r.success && /132001|does not exist in the translation/i.test(r.error || "")) {
     r = await sendWhatsAppTemplate(to, template, { language: "en", components, ...extra });
+  }
+  // The cover template opened the 24h window — follow up with the actual readable
+  // PDF as a session document message so the lead gets both preview AND the report.
+  if (r.success) {
+    await sendWhatsAppDocument(to, { link: asset.public_url, filename: asset.filename }, extra);
   }
   return r;
 }
@@ -147,7 +157,7 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
     if (!to) return emptyResult({ test: true, message: "Invalid test phone number." });
     const chosen = chooseReport(assets, input.leadType || "A") || assets[0];
     const components = reportComponents(chosen, "there", input.niche, input.city);
-    const r = await sendReportTemplate(to, templateFor(chosen.lead_type), lang, components);
+    const r = await sendCoverPlusPdf(to, chosen, lang, components);
     return emptyResult({
       test: true,
       ok: r.success,
@@ -227,7 +237,7 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
   for (const { lead, asset } of sendable) {
     if (sent >= capRemaining) break;
     const components = reportComponents(asset, lead.company_name, input.niche, input.city);
-    const r = await sendReportTemplate(lead.phone, templateFor(asset.lead_type), lang, components, {
+    const r = await sendCoverPlusPdf(lead.phone, asset, lang, components, {
       leadId: lead.id,
       proactive: true, // 6.3 — suppress if the lead is mid inbound conversation
     });
