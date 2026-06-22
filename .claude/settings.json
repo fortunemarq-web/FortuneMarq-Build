@@ -1,5 +1,17 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/doc_sync.mjs\" --session",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "",

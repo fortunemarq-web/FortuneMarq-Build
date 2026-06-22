@@ -17,6 +17,8 @@
 #   (6.1), messaging safety + unified inbox (6.2/6.3/6.4). Latest build on continue-on-mac. Not yet
 #   built: Stage 2 campaigns, Stage 5 presence (5.1 home page live), 4.8, 6.5/6.6/6.8/6.9, collection
 #   automation (1.1/1.2), pipeline orchestrator. Team = Jabeer + Afifa only (delivery = freelancers).
+#   LIVE DATA COUNTS: see 00_MASTER/LIVE_STATE.md (machine-generated each session by
+#   scripts/doc_sync.mjs; SessionStart hook + /sync-docs skill keep docs in sync — scripts/DOC_AUTOMATION.md).
 #
 # LATEST SESSION (2026-06-15): Build phase DONE + accounts consolidated + deploy started.
 # - Marketing fixed: 9 fake widgets → real data/honest empty states; strategy→outcome loop;

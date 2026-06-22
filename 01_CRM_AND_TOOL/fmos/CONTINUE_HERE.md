@@ -13,6 +13,7 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 ## 0. Doc trust map (what to read vs ignore)
 **Authoritative / current:**
 - **This file** — current state + next steps.
+- `00_MASTER/LIVE_STATE.md` — **machine-generated** live snapshot (Supabase counts + deploy state), refreshed each session by `scripts/doc_sync.mjs`. Never hand-edit it; trust it for current data counts. Doc-automation design: `scripts/DOC_AUTOMATION.md`; reconcile on drift with the `/sync-docs` skill.
 - `CLAUDE.md` — app structure, routes, conventions (auto-loaded).
 - `WHATSAPP_TEMPLATES_FINAL.md` + `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` — the 33 submitted WhatsApp templates (SOURCE OF TRUTH).
 - `WHATSAPP_HANDOFF_2026-06-16.md` — the WhatsApp work order (BUILD/CHANGE/REMOVE, 12 surfaces, DoD).
