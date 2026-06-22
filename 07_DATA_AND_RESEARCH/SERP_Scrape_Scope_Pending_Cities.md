@@ -1,6 +1,6 @@
 # SERP Scrape Scope — Pending Cities (Dharwad, Mysuru, Kalaburgi, Vijayapura)
 
-**Status:** Not started. Lead Final CSVs for these cities currently have `SERP Ranked = "Not Scraped"`.
+**Status:** DONE (updated 2026-06-22). SERP/competitor data now exists for all 9 cities (Hubli, Dharwad, Belagavi, Mysuru, Mangalore, Davangere, Ballari, Kalaburagi, Vijayapura). The pending scope below is complete — 117 market_insights (9×13) and 936 market-intel reports are loaded and aligned. This file is retained as a record of the scrape pipeline.
 
 ## Why this is needed
 
@@ -10,8 +10,9 @@ niche — this drives the pitch angle (Type A script vs Type B/C). For Hubli thi
 computed by matching leads against real scraped Google results
 (`Hubli_GBP_Data.csv` + `Hubli_Organic_Results.csv`, sourced via SearchAPI.io).
 
-These 4 cities have no equivalent scrape yet, so the column is marked
-"Not Scraped" rather than guessed.
+All 9 cities have now been scraped and cross-matched (the same pipeline was run
+for each), so `SERP Ranked` is populated with real Y/N + source rather than
+"Not Scraped".
 
 ## What exists already
 
@@ -25,7 +26,8 @@ Gyms, Skin Clinics, Computer Training, Dental Clinics, JEE NEET Coaching (JEE +
 NEET combined), Car Rentals, Physiotherapy, IVF Clinics, IELTS Coaching, Interior
 Designers, Modular Kitchens, Real Estate, Tuition Centres.
 
-(Hubli also scraped "Salons" — optional 14th niche if relevant for these cities.)
+(The loaded DB niche set is these 13. "Salons" appeared in old scope notes but is
+not a loaded DB niche.)
 
 ## Process (mirrors Hubli's pipeline)
 
@@ -54,6 +56,7 @@ Designers, Modular Kitchens, Real Estate, Tuition Centres.
 - Pipeline re-run is instant once GBP/Organic CSVs exist — `process_city_leads.py`
   needs no changes
 
-## Recommended order
+## Execution order (completed)
 
-Dharwad first (next city in the attack order), then Mysuru, Kalaburgi, Vijayapura.
+Ran in attack order — Dharwad, then Mysuru, Kalaburagi, Vijayapura — alongside the
+other cities, so all 9 are now scraped and loaded.

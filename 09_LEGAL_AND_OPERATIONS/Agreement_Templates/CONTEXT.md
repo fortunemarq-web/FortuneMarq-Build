@@ -1,5 +1,5 @@
 # 09 — Agreement Templates
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** COMPLETE — agreement_template.md + service_terms.json ready
+**Last Updated:** 2026-06-22 (revised: FMOS deployed & live) | **Status:** COMPLETE — agreement_template.md + service_terms.json ready; agreement flow built in FMOS
 
 ## Folder Purpose
 Store the client service agreement template and service-specific terms. The agreement is the closing document sent to clients after verbal/message confirmation. It is 1 page, sent via WhatsApp or email, confirmed by client reply.
@@ -39,12 +39,11 @@ Store the client service agreement template and service-specific terms. The agre
 - WHATSAPP_MARKETING: Client provides opt-in contact list, FortuneMarq manages templates
 - AI_AUTOMATIONS: Scoped per project, separate agreement per automation built
 
-## What's Pending
-- FMOS Phase D: Build agreement generation flow (from proposal → generate agreement → send → log confirmation)
+## What's Built / Active
+- FMOS is deployed & live (fmos.fortunemarq.com). The agreement generation flow is built: from proposal → generate agreement → auto-send via WhatsApp document → capture typed "Yes, confirmed" reply → advance to invoice.
 - FMOS_Change_Specs/data/agreement_template.json is the FMOS-compatible version (already created)
 
-## What's Blocked
-- Agreement generation blocked on FMOS Phase D
+## What's Pending
 - No agreements signed yet (no clients)
 
 ## Connections to Other Folders
@@ -65,3 +64,4 @@ Store the client service agreement template and service-specific terms. The agre
 | March 2026 | Folder created. Agreement template not yet written. |
 | 2026-04-02 | agreement_template.md created. service_terms.json created for all 7 services + universal terms + exit policy. |
 | 2026-04-28 | CONTEXT.md fully rewritten with file contents documented. |
+| 2026-06-22 | FMOS deployed & live; agreement generation flow built (auto-send via WhatsApp document → typed "Yes, confirmed" capture → advance invoice). Status corrected. |

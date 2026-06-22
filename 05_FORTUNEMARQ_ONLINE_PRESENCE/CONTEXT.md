@@ -1,5 +1,5 @@
 # 05 — FortuneMarq Online Presence
-**Last Updated:** 2026-06-20 | **Status:** Own-presence work is largely **still pending**, BUT the website redesign is **DONE & live**: fortunemarq.com is now the **redesigned Next.js marketing site that lives inside the FMOS app** (`01_CRM_AND_TOOL/fmos`, see `components/site/` + its public marketing routes), **deployed on Vercel** — NOT the old Hostinger static `public_html` build (that is legacy/superseded). Still pending: GMB optimization; social content strategy; the 11 niche landing pages (still the old HTML — need porting into the new site before deploy); ad accounts. The FMOS app itself is deployed & live. This folder also hosts `Proof_Vault/` (case studies written by FMOS's "Mark as Case Study" flow, behind a consent gate).
+**Last Updated:** 2026-06-22 | **Status:** Own-presence work is largely **still pending**, BUT the website redesign is **DONE & live**: fortunemarq.com is now the **redesigned Next.js marketing site that lives inside the FMOS app** (`01_CRM_AND_TOOL/fmos`, see `components/site/` + its public marketing routes), **deployed on Vercel** — NOT the old Hostinger static `public_html` build (that is legacy/superseded). The marketing-site HOME page is live; other pages still pending. Niche landing pages have been **rebuilt in-app** at `/lp/[niche]/[city]` (Dental·Hubli enabled; the rest to be enabled). Still pending: GMB optimization; social content strategy; ad accounts. The FMOS app itself is deployed & live (at fmos.fortunemarq.com). This folder also hosts `Proof_Vault/` (case studies written by FMOS's "Mark as Case Study" flow, behind a consent gate).
 
 > Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
@@ -10,9 +10,9 @@ Build and manage FortuneMarq's own digital presence — website SEO, GMB, Instag
 
 | Channel | Status | Next Action |
 |---|---|---|
-| fortunemarq.com | **Redesigned & live on Vercel** (Next.js site inside the FMOS app, `components/site/` — NOT the old Hostinger `public_html` build) | Port the 11 niche landing pages into the new site |
+| fortunemarq.com | **Redesigned & live on Vercel** (Next.js site inside the FMOS app, `components/site/` — NOT the old Hostinger `public_html` build); HOME page live, other pages pending | Build out the remaining marketing-site pages |
 | GMB | Created, verified, not optimized | Full optimization starts June 15 |
-| Niche landing pages | 11 HTML files built — need redesign | Redesign before deploying to fortunemarq.com |
+| Niche landing pages | **Rebuilt in-app** at `/lp/[niche]/[city]` (Dental·Hubli enabled) | Enable the remaining niches/cities |
 | Instagram | Account created, few posts live | Complete content strategy + consistent posting |
 | Facebook | Account created, few posts live | Complete content strategy + consistent posting |
 | LinkedIn | Account created, few posts live | Complete content strategy + consistent posting |
@@ -27,8 +27,8 @@ Build and manage FortuneMarq's own digital presence — website SEO, GMB, Instag
 | `public_html/` | **LEGACY** static HTML/CSS/JS site — the PRE-redesign fortunemarq.com. **Superseded** by the live Next.js marketing site in `01_CRM_AND_TOOL/fmos` (`components/site/`). Kept for reference only; editing it does NOT change the live site. (The old `public_html.zip` was removed.) |
 | `CONTEXT.md` | This file |
 
-### niches/ — Niche Landing Pages (April 2026)
-11 HTML files — one per Hubli niche, data-driven with real search volumes and competitor gaps. **Pending redesign before deployment.**
+### niches/ — Niche Landing Pages (April 2026, now superseded)
+11 HTML files — one per Hubli niche, data-driven with real search volumes and competitor gaps. **Superseded:** niche landing pages have been **rebuilt in-app** in the FMOS app at `/lp/[niche]/[city]` (Dental·Hubli enabled). These old HTML files are kept for reference only.
 - `car-rentals-hubli.html`
 - `dental-clinics-hubli.html`
 - `gyms-hubli.html`
@@ -43,7 +43,7 @@ Build and manage FortuneMarq's own digital presence — website SEO, GMB, Instag
 
 Note: physiotherapy landing page is missing — needs to be created.
 
-These landing pages are referenced by WhatsApp templates as `{{landingPageLink}}`. All WhatsApp messages that include the landing page link are blocked until these pages are redesigned and deployed.
+WhatsApp outreach is **live** via the Direct Report v3 flow (`direct_report_v3_{a,b,c,d}` — a text template with 3 quick-reply buttons, then the matched market-intel PDF as a follow-up). The in-app niche LP at `/lp/[niche]/[city]` (Dental·Hubli enabled) is the new home for the landing-page link.
 
 ### assets/ — Brand Images
 - `images/niches/funnels/` — 13 funnel SVGs (one per niche)
@@ -66,7 +66,7 @@ These landing pages are referenced by WhatsApp templates as `{{landingPageLink}}
 
 ## Goals
 - **GMB:** Rank for "digital marketing agency Hubli" and related searches. Optimization starts June 15.
-- **Niche pages:** Redesigned and live on fortunemarq.com so WhatsApp templates can send links
+- **Niche pages:** In-app niche LP at `/lp/[niche]/[city]` live (Dental·Hubli enabled); enable the remaining niches/cities
 - **SEO:** fortunemarq.com appearing for local agency keywords. Starts June 15.
 - **Instagram/Facebook/LinkedIn:** Consistent posting, complete content strategy
 - **Ad accounts:** Google Ads + Meta Ads accounts created and strategy built
@@ -82,7 +82,7 @@ These landing pages are referenced by WhatsApp templates as `{{landingPageLink}}
 
 ## What's Pending
 1. ~~fortunemarq.com redesign~~ — **DONE & live (2026-06-20):** the redesigned Next.js marketing site is live on Vercel (in the FMOS app, `components/site/`). Remaining work has moved to item 2.
-2. **Niche landing pages** — the 11 HTML pages in `niches/` are still the OLD design and are NOT yet on the new Next.js site. Port/redesign them into the new site (route them under fortunemarq.com/[niche]-hubli). Physiotherapy page missing — create it.
+2. **Niche landing pages** — rebuilt in-app at `/lp/[niche]/[city]` (Dental·Hubli enabled). Remaining: enable the rest of the niches/cities. The 11 old HTML pages in `niches/` are superseded and kept for reference only.
 3. **GMB full optimization** — starts June 15: add all 7 services, 15+ photos, keyword-rich description, posting schedule (2x/week), pre-populate Q&A, request reviews from existing clients
 4. **SEO** — starts June 15: keyword targeting for fortunemarq.com, "digital marketing agency Hubli" and niche searches
 5. **Social media content strategy** — complete content calendar for Instagram, Facebook, LinkedIn. Consistent posting schedule
@@ -90,15 +90,15 @@ These landing pages are referenced by WhatsApp templates as `{{landingPageLink}}
 7. **Meta Ads account** — create account + build full strategy before launching campaigns
 
 ## What's Blocked
-- All WhatsApp `{{landingPageLink}}` references blocked until niche pages are redesigned and deployed
 - Ad campaigns blocked until accounts created and strategy built
-- Niche page deployment blocked on redesign completion
+
+(WhatsApp outreach is no longer blocked — it is live via Direct Report v3, and the niche LP is rebuilt in-app at `/lp/[niche]/[city]`.)
 
 ## Connections to Other Folders
 - **Feeds INTO:** `06_PAID_MARKETING` (brand awareness reduces CPL), `03_SALES_SYSTEM` (inbound leads from content)
 - **Uses data FROM:** `07_DATA_AND_RESEARCH` (niche search volumes for content hooks)
-- **Landing pages enable:** `03_SALES_SYSTEM/WhatsApp_Templates/` — all templates referencing `{{landingPageLink}}` are blocked until pages are live
-- **Note:** bot_reply_templates.json is deprecated (2026-06-08) — landing page link is now sent via direct PDF report flow and Tell Me More auto-reply in curiosity_templates.json
+- **Landing pages enable:** `03_SALES_SYSTEM/WhatsApp_Templates/` — outreach is live via Direct Report v3; the in-app niche LP at `/lp/[niche]/[city]` (Dental·Hubli enabled) is the link target
+- **Note:** bot_reply_templates.json is deprecated (2026-06-08) — outreach now runs through the Direct Report v3 flow (`direct_report_v3_{a,b,c,d}`): a text template with 3 quick-reply buttons ("Book a meeting" / "Tell me more" / "ಕನ್ನಡ ವರದಿ"), then the matched market-intel PDF as a follow-up document
 
 ## Key Decisions Made (Locked)
 - FortuneMarq brand first (not Jabeer's personal brand) — agency brand building
@@ -115,3 +115,4 @@ These landing pages are referenced by WhatsApp templates as `{{landingPageLink}}
 | 2026-06-08 | Full section review. Website and niche pages flagged for redesign. Social accounts confirmed created with few posts — content strategy pending. Ad accounts (Google + Meta) added as pending. bot_reply_templates reference updated to reflect deprecated flow. |
 | 2026-06-17 | Doc-accuracy sweep. Clarified FMOS app is deployed & live (separate from this folder's own-presence work, which remains pending). Noted `Proof_Vault/` now lives here (FMOS case-study consent flow). Past "June 15" optimization date treated as a checklist item, not a deadline. |
 | 2026-06-20 | **Corrected stale state.** fortunemarq.com is the **redesigned Next.js site live on Vercel** (inside the FMOS app, `components/site/`), NOT the old Hostinger static `public_html` (now legacy/superseded; the `.zip` was removed). Added a legal-identity line (legal name *Sayed Jabeer* + trade name *FortuneMarq Media & Marketing* + GSTIN 29ICWPS9816Q1ZS + address) to the site footer (`components/site/site-footer.tsx`) for WhatsApp Cloud API display-name verification. Niche landing pages still pending port to the new site. |
+| 2026-06-22 | **Doc-accuracy sweep.** Niche landing pages are now **rebuilt in-app** at `/lp/[niche]/[city]` (Dental·Hubli enabled) — the old 11 HTML files in `niches/` are superseded. WhatsApp outreach is **live** via Direct Report v3 (`direct_report_v3_{a,b,c,d}`); no `curiosity_templates.json`. Marketing-site HOME page is live; other pages pending. Removed stale "WhatsApp messages blocked" / "blocked on redesign" framing. |

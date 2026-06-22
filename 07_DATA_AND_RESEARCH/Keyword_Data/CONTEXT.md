@@ -1,5 +1,5 @@
 # 07 — Keyword Data
-**Last Updated:** 2026-04-28 | **Status:** COMPLETE — all 9 cities × 14 niches, real Google Keyword Planner data
+**Last Updated:** 2026-06-22 | **Status:** COMPLETE — keyword research across all 9 cities × 14 researched niches (real Google Keyword Planner data). NOTE: **13** of these are the niches loaded into FMOS (`market_insights`); **Hotels** was researched but is not a pursued/loaded niche. Per-market search-volume ranking in `SearchVolume_Ranking.csv`.
 
 ## Folder Purpose
 Store all keyword research data — monthly search volumes, top keywords, and competition levels per niche per city. This data powers the sales pitches, ad campaigns, SEO strategies, and is the source of truth for all search volume numbers across the project.
@@ -14,6 +14,7 @@ Store all keyword research data — monthly search volumes, top keywords, and co
 | `FortuneMarq_Detailed_Report.txt` | Text summary of key findings across all cities |
 | `analyze_keywords.py` | Python script to analyze and aggregate keyword data |
 | `generate_master_excel.py` | Script to generate/update the master Excel from city CSVs |
+| `SearchVolume_Ranking.csv` | **All 125 city×niche markets ranked by total monthly searches** (Rank, City, Niche, TotalMonthlySearches, Keywords, AvgCPC_INR). Generated 2026-06-20 by summing "Avg. monthly searches" per file. Used to prioritize SERP scans + report generation (highest-demand markets first). |
 
 ### City Folders (all 9 cities)
 Each city folder contains CSV files per niche (12–14 files per city) with: keyword, monthly volume, competition level, CPC estimate
@@ -25,7 +26,7 @@ Each city folder contains CSV files per niche (12–14 files per city) with: key
 | `Belgaum_Keywords/` | Complete |
 | `Ballari_Cleaned_Keywords/` | Complete |
 | `Davangere_Cleaned_Keywords/` | Complete |
-| `Kalaburagi_keywords/` | Complete |
+| `Kalaburgi_keywords/` | Complete |
 | `Mangalore_keywords/` | Complete |
 | `Mysuru_Cleaned_Keywords/` | Complete |
 | `Vijayapura_Cleaned_Keywords/` | Complete |
@@ -51,8 +52,19 @@ Not a single competitor in the 6 priority Hubli niches runs paid ads. The search
 - Top niche overall: Gyms — 278,100/month
 - Top city overall: Mysuru — 220,150/month
 
+## Search-Volume Ranking (2026-06-20)
+`SearchVolume_Ranking.csv` ranks all 125 city×niche markets by total monthly searches.
+Top markets: Mysuru Gyms (151,350), Mysuru Skin Clinic (103,550), Mangalore Gym (81,750),
+Belgaum Gym (67,250), Hubli Gym (63,950). Gyms → Skin Clinics → Dental Clinics dominate
+demand across all cities; IVF / Physiotherapy / IELTS are negligible (often <500/mo).
+
+**Data-quality notes (from the ranking pass):**
+- 9 files did not parse: 8 are genuinely **empty** exports (Physiotherapy / IVF for several cities — no data collected). 1 — **Kalaburgi JEE Coaching** — needs a recheck (failed to parse; not truly empty, so it is wrongly ranked 0).
+- Niche labels in the ranking are derived from filenames and still carry folder artifacts ("Cleaned", "gym-keywords", a "Keword" typo). Volumes are correct; only the display labels need tidying.
+
 ## What's Pending
-- None. All keyword data is collected and ready.
+- Recheck/re-export **Kalaburgi JEE Coaching** keyword file (parse failure in the 2026-06-20 ranking).
+- Collect Physiotherapy / IVF keyword data where files are empty (low priority — negligible demand).
 - Data feeds into: `07_DATA_AND_RESEARCH/PDF_Generator/data_loader.py` (volumes used in PDFs)
 
 ## What's Blocked
@@ -75,3 +87,4 @@ Not a single competitor in the 6 priority Hubli niches runs paid ads. The search
 | March 2026 | Context file created. All keyword data confirmed. |
 | 2026-03-19 | All niche volumes updated from master Excel across all context files and data_loader.py. |
 | 2026-04-28 | CONTEXT.md fully rewritten with file-level inventory. |
+| 2026-06-20 | Generated `SearchVolume_Ranking.csv` — 125 city×niche markets ranked by monthly searches. Flagged 1 parse failure (Kalaburgi JEE) + 8 empty Physio/IVF files. Fixed stale `Kalaburagi`→`Kalaburgi` folder reference. |

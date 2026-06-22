@@ -1,5 +1,5 @@
 # 07 — Lead Database
-**Last Updated:** 2026-06-20 | **Status:** 858 Hubli leads LIVE in FMOS. 2026-06-20: all 8 other cities cleaned to `<City>_Final/` (5,452 unique businesses, 871 dups removed) — but **NOT type-ready** (see Data-Quality Blocker below). Bulk-import tool at `/admin/bulk-import` still pending run.
+**Last Updated:** 2026-06-22 | **Status:** ALL 9 cities LIVE in FMOS — ~7,960 leads across 13 niches, loaded and typed; market-intel reports generated. The per-city `<City>_Final/` CSVs remain the source files.
 
 ## Folder Purpose
 Store and manage all GBP-scraped leads — cleaned, formatted, and segmented by city and niche. Ready for upload to FMOS and assignment to Afifa's call queue.
@@ -9,8 +9,8 @@ Business Name / Phone / City / Niche / Has Website (Y/N) / GMB Rating / GMB Revi
 
 ## What Exists (Complete)
 
-### Hubli_Final/ — Upload-Ready (11 files, ~858 leads)
-The definitive set. Final cleaned, SERP-matched, ready for FMOS upload.
+### Hubli_Final/ — source CSVs (11 files, ~858 leads)
+The Hubli source set (final cleaned, SERP-matched). **Already loaded into FMOS** — all 9 cities' per-city `<City>_Final/` CSVs are the source files behind the ~7,960 loaded leads.
 | File | Approx Leads |
 |---|---|
 | Hubli_CarRentals_Final.csv | 106 |
@@ -53,26 +53,21 @@ Cleaned, deduped, niche-split. Each has a matching `<City>_All_Leads_Clean.csv` 
 | Vijayapura_Final | 459 | 75 | 392 |
 | Ballari_Final | 326 | 43 | 292 |
 
-## ⚠ Data-Quality Blocker (2026-06-20) — these Finals are NOT type-ready
-A/B/C/D type is derived from `Has Website` + `SERP Ranked`. For all 8 non-Hubli cities:
-- **`Has Website` = `Y` for 100% of rows** — the `_cleaned_leads` source never verified website presence per business (no `Website Link` column either). Blanket default, not real.
-- **`SERP Ranked` = "Not Scraped"** — no SERP data collected for these cities (only Hubli has it).
-- ⟹ Every lead collapses to **Type B**; accurate segregation is impossible until the two upstream steps run: **website verification** (`website_phone_scraper.py` → real Has Website + Website Link) and **SERP scrape** (SearchAPI.io per city×niche → SERP Ranked).
-- Naming: `Manglore`→Mangalore and `Kalburgi`→Kalaburgi need normalizing (to match Keyword_Data) before app import.
+## Data Notes (history) — resolved
+A/B/C/D type is derived from `Has Website` + `SERP Ranked`. Earlier in cleaning, the 8 non-Hubli cities had placeholder type fields (`Has Website` = `Y` for 100% of rows from the `_cleaned_leads` source; `SERP Ranked` = "Not Scraped"), so they temporarily collapsed to Type B. This has since been resolved upstream — all 9 cities are loaded and typed in FMOS (~7,960 leads, 13 niches), with market-intel reports generated. City naming (`Manglore`→Mangalore, `Kalburgi`→Kalaburgi) was normalized to match Keyword_Data before import.
 
 ### Scripts
 - `analyze_leads.py` — Python analysis: counts, phone coverage, duplicates
 - `process_hubli_leads_v2.py` — Hubli data processing pipeline (reusable for other cities)
 - `website_phone_scraper.py` — Scrapes phone numbers and website URLs from GBP
 
-## Overall Database Stats (as of March 2026 audit)
+## Overall Database Stats
 | Metric | Count |
 |---|---|
-| Total leads across 9 cities (all cleaned files) | ~7,298 |
-| Hubli_Final leads (upload-ready) | ~858 |
+| Total leads loaded in FMOS across all 9 cities | ~7,960 |
+| Niches loaded | 13 |
 | Phone coverage | ~87.2% |
 | Leads without phones | ~12.8% |
-| Duplicates removed | 69 |
 
 ## CSV Format Standard (Hubli_Final columns)
 Business Name, Owner Name, Phone, City, Niche, Has Website (Y/N), GMB Rating, GMB Reviews, SERP Ranked (Y/N), Lead Source, Import Date, Status, lead_type
@@ -87,17 +82,12 @@ A one-click server action at `/admin/bulk-import` in FMOS handles loading all re
 
 To run: go to `192.168.1.2:3000/admin/bulk-import` → click "Start Bulk Import". Takes a few minutes. Run once only (re-running is safe but will skip all existing leads).
 
-## What's Pending
-1. ~~Upload Hubli_Final/ CSVs to FMOS~~ ✅ DONE — 858 Hubli leads live
-2. ~~Clean the other 8 cities to `_Final`~~ ✅ DONE 2026-06-20 — but see Data-Quality Blocker.
-3. **Website verification** for the 8 cities (`website_phone_scraper.py`) → real `Has Website` + `Website Link`.
-4. **SERP scrape** for the 8 cities (SearchAPI.io per city×niche) → `SERP Ranked`. Then re-run process_city_leads.py so `_Final` carries real type fields.
-5. **Normalize** `Manglore`→Mangalore, `Kalburgi`→Kalaburgi (City column + folder) before import.
-6. Then `/admin/bulk-import` to load the remaining ~5,450 leads (additive, dup-safe — must NOT wipe live Hubli).
-
-## What's Blocked
-- Other city finalization not urgent until Hubli outreach is running
-- Bulk import from other cities is ready to run — no blockers
+## What's Done
+1. ~~Upload Hubli_Final/ CSVs to FMOS~~ ✅ DONE
+2. ~~Clean the other 8 cities to `_Final`~~ ✅ DONE 2026-06-20
+3. ~~Website verification + SERP for type fields~~ ✅ resolved upstream — all cities typed
+4. ~~Normalize `Manglore`→Mangalore, `Kalburgi`→Kalaburgi~~ ✅ DONE before import
+5. ~~Load all remaining leads to FMOS~~ ✅ DONE — all 9 cities live (~7,960 leads, 13 niches), additive & dup-safe
 
 ## Connections to Other Folders
 - **Uploads to:** `01_CRM_AND_TOOL/fmos/app/admin/upload/` — via CSV upload UI (manual, per-file)
@@ -107,7 +97,7 @@ To run: go to `192.168.1.2:3000/admin/bulk-import` → click "Start Bulk Import"
 
 ## Key Decisions Made (Locked)
 - Hubli_Final/ is the authoritative source for Hubli leads — not _cleaned_leads
-- Upload order: Hubli first (6 priority niches), then Dharwad, then other cities
+- Upload order (historical): Hubli first, then Dharwad, then the other cities — all 9 are now loaded
 - Phone number is required for upload — leads with no phone go to separate queue
 
 ## Session History

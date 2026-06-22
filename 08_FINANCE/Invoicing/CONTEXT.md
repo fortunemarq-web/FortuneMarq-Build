@@ -1,5 +1,5 @@
 # 08 — Invoicing
-**Last Updated:** 2026-04-28 (revised: FMOS production-ready v4.5) | **Status:** Invoice system built in FMOS but not yet activated. No invoices raised yet.
+**Last Updated:** 2026-06-22 (revised: FMOS deployed & live) | **Status:** Invoice module built and live in FMOS (recurring GST invoices + reminders + partial payments). No invoices raised yet — pending GST settings data-entry + first real client.
 
 ## Folder Purpose
 Process documentation for raising, tracking, and managing client invoices. All invoice operations live in FMOS `/admin/finance/invoices`.
@@ -30,8 +30,8 @@ No invoice files exist yet. No invoices have been raised.
 - First invoice to be raised when first client signs
 - FMOS Phase E: Add `revenue_type` column to invoices table (MRR vs setup_fee vs one_time)
 
-## What's Blocked
-- Blocked on FMOS deployment and first client
+## What's Remaining
+- FMOS is deployed & live (fmos.fortunemarq.com); the invoicing module is built and active. Remaining is GST settings data-entry (GSTIN + bank details) and raising the first invoice once the first real client signs.
 
 ## Connections to Other Folders
 - **Invoice generated in:** `01_CRM_AND_TOOL/fmos/app/admin/finance/invoices/page.tsx`

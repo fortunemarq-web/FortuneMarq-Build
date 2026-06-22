@@ -3,7 +3,7 @@
 
 > **PDF_Generator generalisation (2026-06-21):** the standalone `PDF_Generator/` (original 5-page editorial design) has been generalised from Hubli-only to **all 9 cities** via new `generate_city_reports.py`, which builds per-city `niche_data` (top GBP businesses, directories, websites, traffic split, volume) from the live rescraped dataset + competitor SERP. `pdf_generator.py` paths were fixed for the current repo (`FM_BRAND_DIR` env / `Brand_Assets/`), business-name word-wrap + truncation hardened (originals broke mid-word), and the page-2 header made city-aware (was hardcoded "Hubli"). App-side reports (`lib/reports/`) were a separate denser template now replaced by this original design.
 
-> **Reports SHIPPED + WhatsApp cover preview (2026-06-22):** `batch_upload_reports.py` regenerated **936 reports** (EN+KN, 13 niches × 9 cities) in the original design and **overwrote the live Supabase Storage paths** the app serves (Direct Report picks them up — no app change). `batch_upload_covers.py` renders a **cover PNG per report** (page 1) next to each PDF (`…/<file>.png`) for the WhatsApp **image-header** preview. Four approved Meta templates `direct_report_cover_{a,b,c,d}` (image cover + short body + 2 buttons); `actions/direct-report.ts` now sends the **cover template → then the PDF** as a follow-up (EN verified live; KN falls back to the EN template wrapper + KN PDF until KN template translations are added on Meta). The old in-app `@react-pdf` generator (`actions/generate-reports.ts`) is now **disabled** unless `REPORTS_INAPP_GENERATOR=1` (anti-clobber). Hubli/Hotels skipped (never scraped — no volume).
+> **Reports SHIPPED + Direct Report v3 (2026-06-22):** `batch_upload_reports.py` regenerated **936 reports** (EN+KN, 13 niches × 9 cities) in the original design and **overwrote the live Supabase Storage paths** the app serves (Direct Report picks them up — no app change). Direct Report (Stage 3.1) now uses the `direct_report_v3_{a,b,c,d}` template family — a **TEXT template** (detailed body + 3 quick-reply buttons: "Book a meeting" / "Tell me more" / "ಕನ್ನಡ ವರದಿ") sent first, then the matched market-intel PDF as a follow-up document. Tapping ಕನ್ನಡ ವರದಿ sends ONLY the Kannada PDF (webhook → `sendLeadReport`, no re-pitch); the KN message wrapper is still English, only the PDF is Kannada. The old in-app `@react-pdf` generator (`actions/generate-reports.ts`) is now **disabled** unless `REPORTS_INAPP_GENERATOR=1` (anti-clobber). The Python `PDF_Generator` pipeline is canonical.
 
 > Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 > NOTE: this folder has two older overlapping status docs — `DATA_RESEARCH_CONTEXT.md` (2026-03-19) and `DATA_RESEARCH_STATUS_REPORT.md` (2026-03-18). **This CONTEXT.md is the current one;** the other two are historical (flagged for consolidation/removal).
@@ -18,14 +18,14 @@ Store and organise all data assets that power the FortuneMarq sales and marketin
 | File | Description |
 |---|---|
 | `Niche_Data_Reference_Sheet.md` | L0: All 6 priority niches with real search volumes, competitor analysis, opportunity sizing |
-| `PDF_Index.md` | L1b: Maps all 75 Hubli PDFs to city/niche/type/language/filename. Status: 37 English APPROVED, 38 Kannada PENDING REWRITE (misspellings found) |
+| `PDF_Index.md` | L1b: Maps the original 75 Hubli reference PDFs to city/niche/type/language/filename. (Superseded by the live 936-report set in Supabase Storage — all 9 cities × 13 niches × Types A–D × EN+KN.) |
 | `cleanup.py` | Python script for data cleaning |
 
 ### Lead_Database/ subfolder
 | Location | Description |
 |---|---|
-| `Hubli_Final/` | 11 upload-ready Hubli CSV files (~858 leads total) — final cleaned, SERP-matched, ready for FMOS upload |
-| `Hubli_All_Leads_Clean.csv` | Combined Hubli leads (858 rows) |
+| `Hubli_Final/` | Upload-ready Hubli CSV files — final cleaned, SERP-matched, loaded into FMOS (all 9 cities now loaded; ~7,960 leads total) |
+| `Hubli_All_Leads_Clean.csv` | Combined Hubli leads |
 | `No_Phone_Has_Website_Leads.csv` | Leads with website but no phone — different outreach approach needed |
 | `Website_Rescrape_Queue.csv` | Leads flagged for website re-scrape |
 | `Hubli_cleaned_leads/` | Intermediate cleaned files (pre-final) — 13 niche files |
@@ -56,7 +56,7 @@ Store and organise all data assets that power the FortuneMarq sales and marketin
 ### Keyword_Data/ subfolder
 | Location | Description |
 |---|---|
-| `FortuneMarq_Master_Keyword_Research.xlsx` | Master Excel with all keyword data across 9 cities × 14 niches |
+| `FortuneMarq_Master_Keyword_Research.xlsx` | Master Excel with all keyword data across 9 cities (13 loaded DB niches; sheets also cover legacy niches) |
 | `Keyword Research For Google Ads.xlsx` | Google Ads specific keyword research |
 | `FortuneMarq_Detailed_Report.txt` | Text summary of keyword findings |
 | `analyze_keywords.py` | Analysis script |
@@ -88,7 +88,7 @@ Store and organise all data assets that power the FortuneMarq sales and marketin
 | `kn_shape.py` | **NEW** — HarfBuzz+FreeType Kannada shaping (`ShapingCanvas`) so reportlab renders Kannada correctly; mixed Kannada/Latin itemised per-script. |
 | `report_copy.py` | **NEW** — language-keyed copy (EN exact + owner's Gemini KN), keyed by report type/lang. |
 | `batch_upload_reports.py` | **NEW 2026-06-22** — regenerate every `report_assets` row (EN+KN) and overwrite the exact Supabase Storage path the app serves. `plan` / `one` / `all` modes. 936 uploaded, 6 Hotels skipped. |
-| `batch_upload_covers.py` | **NEW 2026-06-22** — render a cover PNG (page 1) per report and upload next to the PDF (`.png`) for the WhatsApp image-header preview. |
+| `batch_upload_covers.py` | **NEW 2026-06-22** — render a cover PNG (page 1) per report and upload next to the PDF (`.png`). (Direct Report v3 now uses a text template + buttons, not an image-cover preview; PNGs remain available but are not part of the live send path.) |
 | `pdf_generator_kn.py` | Python PDF generator (Kannada) — old `deep_translator` (Google Translate) output had bad wording; to be replaced with owner-supplied Gemini Kannada keyed to this design's copy. |
 | `generate_all_pdfs.py` | Original Hubli-only batch runner (kept for reference; superseded by `generate_city_reports.py`). |
 | `generate_all_pdfs_kn.py` | Original Hubli-only Kannada batch runner. |
@@ -103,35 +103,30 @@ Store and organise all data assets that power the FortuneMarq sales and marketin
 - Type 4 — Niche Market Report (for low-volume niches: IVF, Physiotherapy, IELTS, Hotels)
 
 ## Key Data Facts
-- Total Hubli leads in Hubli_Final/: ~858 (upload-ready)
-- Total leads across 9 cities (all cleaned folders): ~7,298
-- Total PDFs generated for Hubli: 75 (37 EN approved, 38 KN pending rewrite)
-- Keyword data: 9 cities × 14 niches = 126 niche-city combinations
+- Total leads across 9 cities (all loaded into FMOS): ~7,960
+- Cities (9): Hubli, Dharwad, Belagavi, Mysuru, Mangalore, Davangere, Ballari, Kalaburagi, Vijayapura
+- Niches (13, loaded): CarRentals, ComputerTraining, DentalClinics, Gyms, IELTSCoaching, InteriorDesigners, IVFClinics, JEENEETCoaching, ModularKitchens, Physiotherapy, RealEstate, SkinClinics, TuitionCentres ("Hotels" has old scripts but is NOT a loaded DB niche)
+- Market-intel reports live in Supabase Storage: 936 (9 cities × 13 niches × Types A–D × EN+KN), generated by the Python `PDF_Generator` pipeline
+- Alignment: leads (~7,960) / market_insights (117 = 9×13) / report_assets (936) all aligned on the same 13 niches, 0 orphans
 - Total monthly searches across all cities/niches: ~2,154,200/month
 - Not a single competitor in 6 priority niches runs paid ads
 
-## What's Pending
-1. **Hubli Kannada PDFs** — regenerate 38 KN PDFs after fixing misspellings in pdf_generator_kn.py
-2. **Dharwad pipeline** — all SERP assets ready; run process_hubli_leads_v2.py equivalent for Dharwad
-3. **Belgaum, Mangalore, Davangere, Ballari** — SERP assets partially ready; run pipeline
-4. **Mysuru, Kalaburgi, Vijayapura** — need SERP HTML collection first, then run pipeline
-5. **FMOS upload** — ✅ done for Hubli (858 leads live in FMOS); load remaining cities via `/admin/bulk-import`
+## What's Done
+- **All 9 cities loaded** into FMOS (~7,960 leads) — scrape, clean, SERP-type, email-enrich, import all complete.
+- **936 market-intel reports shipped** (EN+KN, 13 niches × 9 cities, Types A–D) to live Supabase Storage via the Python `PDF_Generator` pipeline; Kannada shapes correctly via `kn_shape.py` (HarfBuzz+FreeType).
 
-## What's Still Open (FMOS is live)
-- Load remaining cities' leads/reports (only Hubli is loaded) via `/admin/bulk-import`.
-- Kannada PDF regeneration: needs pdf_generator_kn.py misspelling fixes first.
-- Other city pipelines: not urgent until after Hubli outreach is underway.
+## What's Still Open
+- Collection automation (1.1/1.2) + the pipeline orchestrator are not built (genuinely unbuilt — no deployment blocker; FMOS is live at fmos.fortunemarq.com).
 
 ## Connections to Other Folders
 - **Feeds INTO:** `03_SALES_SYSTEM` (scripts/templates reference real search volumes), `06_PAID_MARKETING` (ad copy uses competitor gaps), `01_CRM_AND_TOOL` (leads uploaded via CSV), `05_FORTUNEMARQ_ONLINE_PRESENCE` (content hooks from niche data)
 - **Foundation FOR:** Every single folder in the build system depends on this data being accurate
 
 ## Key Decisions Made (Locked)
-- Hubli is Phase 1 — all other cities are Phase 2+
-- 11 Hubli_Final/ CSVs are the upload-ready set (not the _cleaned_leads versions)
-- English PDFs approved; Kannada PDFs pending rewrite
+- All 9 cities are loaded; Hubli was the original Phase 1, the rest followed in the full re-scrape.
+- The Python `PDF_Generator` pipeline (original 5-page editorial design) is canonical for reports; the in-app `@react-pdf` generator is disabled (anti-clobber).
 - PDF type assignment: by SERP_Ranked + Has_Website columns on each lead
-- Pipeline is fully reusable for all cities — same scripts, just update data_loader.py per city
+- Pipeline is fully reusable for all cities via `generate_city_reports.py` (per-city `niche_data` built from the live rescraped dataset + competitor SERP).
 
 ## Session History
 | Date | Summary |
@@ -141,4 +136,4 @@ Store and organise all data assets that power the FortuneMarq sales and marketin
 | 2026-04-09 | Context audit. L1b PDF Index confirmed complete. L2–L7 all complete (in 03_SALES_SYSTEM and 04_CLIENT_MANAGEMENT folders). |
 | 2026-04-28 | CONTEXT.md fully rewritten. All files inventoried including city-by-city lead folders, PDF counts, script files. |
 | 2026-06-21 | `PDF_Generator/` generalised to all 9 cities (`generate_city_reports.py`); `pdf_generator.py` paths/wrap/city-header fixed. Mysuru Gyms sample rendered + sent for approval. Dharwad re-scraped to parity (238 → 777 leads). Dataset now ~7,958 leads / 9 cities. Batch regen + Storage upload pending owner go-ahead. |
-| 2026-06-22 | Kannada shaping added (`kn_shape.py`) + lang-keyed `report_copy.py`. **936 reports (EN+KN) shipped** to live Storage via `batch_upload_reports.py`. Stray Hotels + duplicate "Dental Clinics" cleaned (13 niches, 0 orphans). Direct Report verified live to QA number. WhatsApp **cover-preview** templates (`direct_report_cover_*`) approved on Meta; per-report cover PNGs via `batch_upload_covers.py`; `direct-report.ts` sends cover→PDF. Old in-app generator disabled (anti-clobber). |
+| 2026-06-22 | Kannada shaping added (`kn_shape.py`) + lang-keyed `report_copy.py`. **936 reports (EN+KN) shipped** to live Storage via `batch_upload_reports.py`. Stray Hotels + duplicate "Dental Clinics" cleaned (13 niches, 0 orphans). Direct Report verified live to QA number. Direct Report v3: `direct_report_v3_{a,b,c,d}` TEXT templates (body + 3 quick-reply buttons incl. "ಕನ್ನಡ ವರದಿ") sent first, then the matched PDF; tapping ಕನ್ನಡ ವರದಿ sends ONLY the Kannada PDF (webhook → `sendLeadReport`). Old in-app generator disabled (anti-clobber). |

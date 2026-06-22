@@ -1,5 +1,5 @@
 # 06 — Paid Marketing (FortuneMarq's Own)
-**Last Updated:** 2026-06-17 | **Status:** PLANNED + INBOUND TRACKING INFRA BUILT IN FMOS (which is deployed & live). Built: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. The agency's own **campaign LAUNCH** has not happened yet — it waits on the niche landing pages going live (critical rule below). Note this is FortuneMarq's *own* ad spend; the broader campaign-management Stage 2 (in `00_MASTER/FMOS_System_Design_And_Tasks.md`) is not yet built. Plan: `01_CRM_AND_TOOL/fmos/PHASE_F_INBOUND_MARKETING.md`.
+**Last Updated:** 2026-06-22 | **Status:** PLANNED + INBOUND TRACKING INFRA BUILT IN FMOS (which is deployed & live). Built: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. The agency's own **campaign LAUNCH** has not happened yet — it waits on the niche landing pages rolling out across niches/cities (critical rule below). Note this is FortuneMarq's *own* ad spend; the broader campaign-management Stage 2 is not yet built. Plan: `00_MASTER/FMOS_System_Design_And_Tasks.md` (Stage 2) + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 > Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
@@ -8,7 +8,7 @@ Plan and execute FortuneMarq's own paid ad campaigns (Meta Ads + Google Ads) to 
 
 ## Critical Rule
 **Paid campaigns are the LAST step.** FMOS is now deployed and working, so the remaining gates are:
-- Landing pages live on fortunemarq.com (still pending redesign + deploy)
+- Niche landing pages rolled out (in-app dynamic LP template `/lp/[niche]/[city]` is live; Dental·Hubli enabled, other niche/city combos to be turned on)
 - Telecaller system operational (Afifa working leads in FMOS)
 - Delivery can handle incoming leads (Stage 4 board is live)
 
@@ -42,11 +42,11 @@ No campaign files exist. All campaigns are pre-launch.
 Jabeer on camera. 60–90 seconds. Explains real niche search data. Ends with WhatsApp CTA to landing page.
 
 ## Landing Pages Required (before ads launch)
-Already created in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — 11 HTML files. Need to be deployed to fortunemarq.com.
+Served by the in-app dynamic LP template at `/lp/[niche]/[city]` in FMOS (live on fortunemarq.com). 13 niches are available; Dental·Hubli is currently enabled. Remaining niche/city combos need to be turned on for the campaigns being run.
 
 ## What's Pending
-1. Deploy niche landing pages to fortunemarq.com
-2. FMOS deployment + Afifa live
+1. Enable the remaining niche/city LP combos (`/lp/[niche]/[city]`) for the campaigns being run
+2. Afifa live working leads in FMOS (FMOS itself is deployed & live)
 3. Jabeer records video ad (1 core video per niche — 60–90 seconds)
 4. Create ad creatives (thumbnails, copy) in Canva
 5. Setup Meta Business Manager ad account
@@ -54,13 +54,13 @@ Already created in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — 11 HTML files. N
 7. Week 2: analyze data, cut underperformers, double down on winner
 
 ## What's Still Open (FMOS is live; these gate campaign launch)
-- Landing pages: redesign + deploy to fortunemarq.com
+- Landing pages: enable the remaining niche/city LP combos (`/lp/[niche]/[city]`; Dental·Hubli already live)
 - Jabeer records the per-niche video ads + creatives
 - Meta Business Manager ad account setup
 
 ## Connections to Other Folders
 - **Inbound leads to:** `01_CRM_AND_TOOL/fmos` — leads auto-tagged with niche+city+source=meta_ads or google_ads
-- **Depends on:** `05_FORTUNEMARQ_ONLINE_PRESENCE` — niche landing pages must be live
+- **Depends on:** the in-app niche LP template `/lp/[niche]/[city]` in FMOS — the target niche/city combos must be enabled
 - **Uses data from:** `07_DATA_AND_RESEARCH` — search volumes and competitor gaps in ad copy
 
 ## Key Decisions Made (Locked)
@@ -76,3 +76,4 @@ Already created in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` — 11 HTML files. N
 | March 2026 | Context file created. Campaign plan defined. Critical rule established. |
 | 2026-04-28 | CONTEXT.md fully rewritten. Niche landing pages confirmed created (in 05_FORTUNEMARQ_ONLINE_PRESENCE/niches/). Still pre-launch. |
 | 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; "blocked on deployment" removed. Remaining launch gates = LPs live + creatives + ad account. Clarified this is FortuneMarq's own spend vs the unbuilt Stage 2 campaign engine. |
+| 2026-06-22 | Doc-accuracy fix. Landing pages corrected from "11 static HTML files in 05_..." to the in-app dynamic LP template `/lp/[niche]/[city]` (13 niches available, Dental·Hubli enabled). Launch gate reframed to enabling the remaining niche/city LP combos. |

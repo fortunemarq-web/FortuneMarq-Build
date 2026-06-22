@@ -1,5 +1,5 @@
 # 09 — GST & Compliance
-**Last Updated:** 2026-04-28 | **Status:** GST registered. Udyam registered. Invoicing not yet activated in FMOS.
+**Last Updated:** 2026-06-22 | **Status:** GST registered. Udyam registered. FMOS deployed & live; invoicing module built — needs GSTIN/bank details entered in `/admin/finance` settings + first client.
 
 ## Folder Purpose
 Store GST registration documents and all compliance-related files. Ensures FortuneMarq invoices are legally compliant with Indian GST requirements.
@@ -37,12 +37,11 @@ GST-compliant invoices must include:
 - IGST (18%) for clients outside Karnataka
 
 ## What's Pending
-- Activate invoice settings in FMOS (`/admin/finance`): enter GSTIN + bank account details
-- This activates GST-compliant PDF invoice generation in FMOS
+- FMOS is deployed & live (fmos.fortunemarq.com) and the invoicing module is built. Remaining setup:
+- Enter invoice settings in FMOS (`/admin/finance`): GSTIN + bank account details
+- This enables GST-compliant PDF invoice generation in FMOS
 - SAC codes for each service need to be confirmed and entered in FMOS
-
-## What's Blocked
-- Blocked on FMOS deployment
+- Issue the first client invoice
 
 ## Connections to Other Folders
 - **GSTIN used in:** `08_FINANCE/Invoicing/` — all invoices
@@ -54,3 +53,4 @@ GST-compliant invoices must include:
 |---|---|
 | March 2026 | Folder created. GST certificate stored. |
 | 2026-04-28 | CONTEXT.md fully rewritten. Udyam location clarified. FMOS activation steps documented. |
+| 2026-06-22 | Status corrected: FMOS deployed & live, invoicing module built; remaining = enter GSTIN/bank details in `/admin/finance` + first client. Removed "blocked on FMOS deployment". |
