@@ -1,14 +1,21 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-17.
+# Last updated: 2026-06-22.
 # ➤ CONTINUING WORK? Read CONTINUE_HERE.md FIRST — it is the CANONICAL handoff (current state,
 #   branch continue-on-mac, next steps, and the doc trust map). It supersedes COWORK_HANDOFF.md,
 #   last_session.md, the PHASE_*.md logs, and the dated "LATEST SESSION" block below (kept for history).
-#   CURRENT STATE (2026-06-17): FMOS is DEPLOYED & LIVE (Vercel, fmos.fortunemarq.com). WhatsApp
-#   Cloud API live; all 33 templates Meta-approved. Built & live: Stage 1 data engine (1.3–1.6),
-#   Stage 3 outbound (3.1–3.4, incl. Direct Report — replaced the old "curiosity" teaser), Stage 4
-#   delivery (4.1–4.7), AI bot (6.1), messaging safety + unified inbox (6.2/6.3/6.4). Latest build on
-#   continue-on-mac. Not yet built: Stage 2 campaigns, Stage 5 presence, 6.5/6.6/6.8/6.9, collection
+#   CURRENT STATE (2026-06-22): FMOS is DEPLOYED & LIVE (Vercel, fmos.fortunemarq.com). WhatsApp
+#   Cloud API live; all 33 system templates + the direct_report_v3_{a,b,c,d} family Meta-approved.
+#   DATA: all 9 cities loaded — ~7,960 leads across 13 niches; leads/market_insights(117=9x13)/
+#   report_assets(936) aligned, 0 orphans. REPORTS: the 936 EN+KN market-intel PDFs are built by the
+#   reportlab pipeline at 07_DATA_AND_RESEARCH/PDF_Generator (5-page design + kn_shape.py Kannada
+#   shaping) → Supabase Storage market-reports → report_assets. The in-app @react-pdf generator
+#   (actions/generate-reports.ts) is DISABLED behind REPORTS_INAPP_GENERATOR (anti-clobber).
+#   Built & live: Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. Direct Report v3 —
+#   text template direct_report_v3_* with 3 buttons [Book a meeting / Tell me more / ಕನ್ನಡ ವರದಿ] then
+#   the matched PDF; the Kannada button sends only the KN PDF), Stage 4 delivery (4.1–4.7), AI bot
+#   (6.1), messaging safety + unified inbox (6.2/6.3/6.4). Latest build on continue-on-mac. Not yet
+#   built: Stage 2 campaigns, Stage 5 presence (5.1 home page live), 4.8, 6.5/6.6/6.8/6.9, collection
 #   automation (1.1/1.2), pipeline orchestrator. Team = Jabeer + Afifa only (delivery = freelancers).
 #
 # LATEST SESSION (2026-06-15): Build phase DONE + accounts consolidated + deploy started.

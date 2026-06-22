@@ -1,5 +1,5 @@
 # 01 — CRM & Tool (FMOS)
-**Last Updated:** 2026-06-17 | **Status:** ✅ **DEPLOYED & LIVE** on Vercel (`fmos.fortunemarq.com`). Database fully synced. **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. the Direct Report — immediate type-matched PDF send that replaced the old "curiosity" teaser), Stage 4 delivery (4.1–4.7), the AI bot (6.1), and messaging safety + unified inbox (6.2/6.3/6.4). WhatsApp Cloud API live; 33 templates Meta-approved. Inbound engine (universal `/api/inbound/[channel]` webhook, UTM attribution, round-robin assign, funnel/CPL marketing tab) live. **Not yet built:** Stage 2 campaigns, Stage 5 presence, command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9), collection automation (1.1/1.2), pipeline orchestrator.
+**Last Updated:** 2026-06-22 | **Status:** ✅ **DEPLOYED & LIVE** on Vercel (`fmos.fortunemarq.com`). Database fully synced (no pending migrations). All 9 cities / 13 niches / ~7,960 leads loaded. **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. the Direct Report v3 — a TEXT template with 3 quick-reply buttons sent first, then the matched market-intel PDF as a follow-up document, which replaced the old "curiosity" teaser), Stage 4 delivery (4.1–4.7), the AI bot (6.1), and messaging safety + unified inbox (6.2/6.3/6.4). WhatsApp Cloud API live on dedicated number +91 79759 18980; 33 system templates + the `direct_report_v3_*` family Meta-approved. Inbound engine (universal `/api/inbound/[channel]` webhook, UTM attribution, round-robin assign, funnel/CPL marketing tab) live. **Not yet built:** Stage 2 campaigns, Stage 5 presence (5.1 HOME page live), command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9), collection automation (1.1/1.2), pipeline orchestrator.
 
 > Canonical app handoff: `fmos/CONTINUE_HERE.md`. Live build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`. (Older pointers to `COWORK_HANDOFF.md` / `00_MASTER_BUILD_PLAN.md` are now bannered historical.)
 
@@ -80,7 +80,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `/admin/marketing` — SEO tracker, paid campaigns, content calendar, weekly brief
 - `/admin/operations` — Operations hub
 - `/admin/niche-kits` — Niche kit management
-- `/sales` — Sales Intelligence Cockpit (power dialer, lead queue, follow-up engine). Role-based: telecaller → TelecallerCockpit with real search volumes wired per lead via `searchVolumeMap`; admin → SalesIntelligenceCockpit. 858 Hubli leads live, bulk-import ready for ~6,300 more.
+- `/sales` — Sales Intelligence Cockpit (power dialer, lead queue, follow-up engine). Role-based: telecaller → TelecallerCockpit with real search volumes wired per lead via `searchVolumeMap`; admin → SalesIntelligenceCockpit. All ~7,960 leads across 9 cities loaded.
 - `/strategist` — Strategist dashboard: 6-stage pipeline, Close Deal modal
 - `/strategist/deals` — Deals management list
 - `/projects` — PM dashboard: clients view + all projects view + team workload
@@ -116,7 +116,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - `data/script_type_C.json` — Type C telecaller script (no website, GMB only)
 - `data/script_type_D.json` — Type D telecaller script (low search volume niche)
 - `data/scripts_index.ts` — Script loader utility; `data/script.types.ts` — TypeScript types
-- `data/curiosity_templates.json` — 4 curiosity WhatsApp templates (one per lead type)
+- Direct Report v3 templates — `direct_report_v3_{a,b,c,d}` (one per lead type): a TEXT template (detailed body + 3 quick-reply buttons: "Book a meeting" / "Tell me more" / "ಕನ್ನಡ ವರದಿ") sent first, then the matched market-intel PDF as a follow-up document. Live route: `/admin/direct-report` (replaced the old curiosity blast)
 - `data/bot_reply_templates.json` — 4 bot reply templates (auto-sent on lead reply)
 - `data/followback_reminder_templates.json` — 1 follow-back reminder template
 - `data/outcome_templates.json` — 6 outcome-triggered templates
@@ -162,22 +162,20 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - Retainer Package System: starter/growth/pro/custom tier tagging
 - Upsell Queue: surface clients with Excellent health score for 2+ months
 
-### Deployment Checklist (after all phases)
-- [ ] Add `ANTHROPIC_API_KEY` to Vercel env vars
+### Deployment Checklist (FMOS is deployed & live)
+- [x] Add `ANTHROPIC_API_KEY` to Vercel env vars
 - [ ] Create Afifa's telecaller account in /admin/users
 - [ ] Create freelancer staff accounts as needed
-- [ ] Point fmos.fortunemarq.com subdomain to Vercel (CNAME added in Hostinger DNS)
-- [x] Upload 11 Hubli_Final CSVs (~858 leads) — DONE via manual upload before 2026-04-29
-- [ ] Run `/admin/bulk-import` to load remaining ~6,300 leads from other cities
+- [x] Point fmos.fortunemarq.com subdomain to Vercel (CNAME added in Hostinger DNS) — LIVE
+- [x] Load all 9 cities / 13 niches / ~7,960 leads via `/admin/bulk-import` — DONE
 - [ ] Enter Austin Dental Spa and OM SAI TRAVELS real data
 - [ ] Activate GST invoice settings with GSTIN 29ICWPS9816Q1ZS
 
 ---
 
-## What's Blocked
-- Deployment blocked until Phases C, D, and E are complete
-- Afifa cannot start work until FMOS is deployed and her account is created
-- Lead outreach cannot begin until FMOS is live and leads are uploaded
+## Open Items
+- FMOS is deployed & live and all leads are loaded — outreach can begin
+- Afifa needs her telecaller account created in /admin/users before she can start work
 
 ---
 
@@ -195,7 +193,7 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 - Stack: Next.js 16 + TypeScript + Tailwind CSS v4 — never switch
 - `task_status` enum: pending, not_started, in_progress, in_review, completed
 - `tasks.project_id` is nullable (strategy tasks have no project)
-- Phase execution order: A (done) → B (done) → C → D → E → Deploy
+- Phase execution order: A (done) → B (done) → C (done) → D (done) → E (done) → Deploy (done, live)
 - Design language: bg-slate-50, white cards, slate-900 sidebar, #42CA80 green — never change
 - Build tool: Antigravity (Claude Code) — all code changes executed here
 - Database types: regenerate `database.types.ts` via Supabase CLI after each phase's SQL migrations
@@ -208,4 +206,4 @@ A full agency operating system built on Next.js 16 (App Router) + TypeScript + T
 | March 2026 | Context file created. Full feature list documented. Change requirements defined. |
 | 2026-04-02 | Full FMOS change spec created. 5 phase spec files written in FMOS_Change_Specs/. 21 data files created in FMOS_Change_Specs/data/. DB migrations documented in MASTER_SPEC.md. Phase order locked. |
 | 2026-04-28 | CONTEXT.md fully rewritten to reflect actual file structure. Phases A+B confirmed complete per 00_MASTER_BUILD_PLAN.md. Phases C–E specs confirmed complete and ready for Antigravity. Deployment checklist documented. |
-| 2026-04-29 | Scripts (A/B/C/D) updated in `lib/data/scripts/`: "our founder" everywhere (was "Jabeer"), Zoom call meeting ask, new objection responses, 9 outcomes, 2 new WhatsApp templates (follow_back_report_sent, send_portfolio). Real search volumes wired into TelecallerCockpit via `searchVolumeMap` (fetched from `market_insights` table in page.tsx). New `/admin/bulk-import` route + server action for one-click import of all ~7,181 leads from Lead_Database. 858 Hubli leads already live. Note: must `rm -rf .next && npm run dev` after any JSON script changes to bust Next.js module cache. |
+| 2026-04-29 | Scripts (A/B/C/D) updated in `lib/data/scripts/`: "our founder" everywhere (was "Jabeer"), Zoom call meeting ask, new objection responses, 9 outcomes, 2 new WhatsApp templates (follow_back_report_sent, send_portfolio). Real search volumes wired into TelecallerCockpit via `searchVolumeMap` (fetched from `market_insights` table in page.tsx). New `/admin/bulk-import` route + server action for one-click import of all leads from Lead_Database (since used to load all 9 cities / 13 niches / ~7,960 leads). Note: must `rm -rf .next && npm run dev` after any JSON script changes to bust Next.js module cache. |

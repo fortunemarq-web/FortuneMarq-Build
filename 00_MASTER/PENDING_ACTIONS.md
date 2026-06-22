@@ -1,12 +1,12 @@
 # FortuneMarq — Pending Actions
-**Last Updated:** 2026-06-17
+**Last Updated:** 2026-06-22
 **Owner:** Jabeer  
 
 > This is the master checklist of everything that still needs to be done, organised by priority.
 > Update this file at the start and end of every session.
 > When an action is complete, move it to the "Completed" section at the bottom with a date.
 
-> ⚠️ **2026-06-17 status note:** Much of the list below predates the deploy and is now done. As of today: **FMOS is deployed & live**, **WhatsApp Cloud API is live with all 33 templates approved**, and Stages 1/3/4 + the AI bot (6.1) + messaging safety/inbox (6.2–6.4) are built. Treat items about "deploy", "QA gate", "WhatsApp send UI", "templates pending" as **complete**. The live open items are: niche landing pages (redesign + deploy), GMB/SEO/social presence, campaign launch (Stage 2), GST settings activation, and the unbuilt safety nets (6.5/6.6/6.8/6.9), collection automation (1.1/1.2), pipeline orchestrator. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
+> ⚠️ **2026-06-22 status note:** Much of the list below predates the deploy + data load and is now done. As of today: **FMOS is deployed & live**, **WhatsApp Cloud API is live with all 33 system templates + the `direct_report_v3_*` family approved**, and Stages 1/3/4 + the AI bot (6.1) + messaging safety/inbox (6.2–6.4) are built. **DATA IS FULLY LOADED:** all 9 cities, 13 niches, ~7,960 leads, 117 `market_insights`, **936 EN+KN reports** (built by the reportlab pipeline at `07_DATA_AND_RESEARCH/PDF_Generator`; the in-app `@react-pdf` generator is disabled behind `REPORTS_INAPP_GENERATOR`). Treat items about "deploy", "QA gate", "WhatsApp send UI", "templates pending", "load remaining leads", "run PDF pipeline / collect SERP for other cities" as **complete**. The live open items are: niche landing pages (roll out remaining niches), GMB/SEO/social presence, campaign launch (Stage 2), GST settings activation, and the unbuilt safety nets (6.5/6.6/6.8/6.9), collection automation (1.1/1.2), pipeline orchestrator. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
 
 ---
 
@@ -19,10 +19,10 @@
 > User accounts exist: sayedjabeer@, afifa@, admin1@, admin2@fmos.com — more can be
 > added from /admin/team → Add Member (team management shipped 2026-06-12).
 
-- [ ] Push fmos to GitHub → import to Vercel
-- [ ] Set Vercel env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `CRON_SECRET`, `INBOUND_WEBHOOK_SECRET` (all values in fmos/.env.local)
-- [ ] Point `fmos.fortunemarq.com` DNS to Vercel + add domain in Vercel; add the domain to Supabase auth redirect URLs
-- [ ] Run `/admin/bulk-import` to load remaining ~6,300 leads (Hubli Batch 2 + other cities)
+- [x] Push fmos to GitHub → import to Vercel. **DONE — deployed & live.**
+- [x] Set Vercel env vars (`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `CRON_SECRET`, `INBOUND_WEBHOOK_SECRET`, etc.). **DONE.**
+- [x] Point `fmos.fortunemarq.com` DNS to Vercel + Supabase auth redirect URLs. **DONE.**
+- [x] Load all leads via `/admin/bulk-import`. **DONE — all 9 cities, ~7,960 leads.**
 - [ ] Enter real client data into FMOS (Austin Dental Spa, OM SAI TRAVELS as initial test clients)
 - [ ] Activate GST invoice settings — GSTIN: 29ICWPS9816Q1ZS
 - [ ] Run smoke test across all FMOS modules post-deployment
@@ -38,13 +38,13 @@ These folders/topics have not been opened in the current build phase. Each needs
 - [x] WhatsApp API vs Business Account — DECIDED (updated 2026-06-12): official Meta WhatsApp Cloud API on a **NEW dedicated Jio number 79759 18980** (Option A — purchased & active). +91 93530 82656 stays in the WhatsApp Business app for manual chats. Never install WhatsApp on the new SIM. Cost: ~₹0.58/marketing conversation; 1,000 free service conversations/month.
 - [~] **WhatsApp Cloud API Setup** (LIVE 2026-06-14 — number registered, BV approved, payment added, **first real message DELIVERED end-to-end** via Graph API to 93530 82656). Remaining: resubmit display name + finalise templates. Steps below:
   - ✅ 2026-06-14: Number REGISTERED · Business Verification APPROVED · India payment method ADDED to WABA FortuneMarq (1499408311884474) · live hello_world send DELIVERED (token+PHONE_NUMBER_ID 1084263481446667 proven).
-  - ⏳ STILL OPEN: (a) display name "FortuneMarq" was REJECTED → resubmit as "FortuneMarq Media and Marketing"; (b) verify direct_report_type_a/b/c approval + resubmit direct_report_type_d; (c) clean up stray Test WABA (1852036272835920) + duplicate "Fortunemarq" (705784465410369); (d) set webhook callback URL after Vercel deploy.
+  - ✅ RESOLVED (2026-06-16/22): display name approved; all 33 system templates + the `direct_report_v3_{a,b,c,d}` family approved & live; webhook callback URL set after the Vercel deploy. (Optional housekeeping: clean up stray Test WABA 1852036272835920 + duplicate "Fortunemarq" 705784465410369.)
   - Step 1: Create/verify Meta Business Manager account (fortunemarq@gmail.com, GSTIN ready) — ✅ DONE (BM portfolio 879084085296794)
   - Step 2: Link Facebook Business Page to Meta Business Manager
   - Step 3: Create Meta App (type: Business) at developers.facebook.com + add WhatsApp product
   - Step 4: Register 79759 18980 as the WABA number (SMS/call OTP to the new SIM)
   - Step 5: Permanent system-user token → fill `WHATSAPP_API_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `META_APP_SECRET` in FMOS `.env.local` (placeholders + real `WHATSAPP_VERIFY_TOKEN` already added 2026-06-12)
-  - Step 6: Submit WhatsApp templates for Meta approval (2–7 days — submit day 1). curiosity_templates use document + Quick Reply buttons — submit as interactive templates.
+  - Step 6: Submit WhatsApp templates for Meta approval. ✅ **DONE** — 33 system templates + the `direct_report_v3_*` family (document + quick-reply buttons) approved & live.
   - Step 7 (after Vercel deploy): set webhook URL `https://<domain>/api/webhooks/whatsapp` in Meta App → WhatsApp → Configuration, subscribe to `messages`
 - [ ] Review and finalise outreach sequence — curiosity step removed. New flow: Jabeer sends PDF report with buttons → lead taps or Afifa calls → outcome logged → follow-up automated. Confirm Afifa's workflow is mapped to FMOS steps.
 - [ ] Test WhatsApp template picker end-to-end in FMOS (bug was fixed — verify it works across all template categories)
@@ -65,13 +65,13 @@ These folders/topics have not been opened in the current build phase. Each needs
 - [ ] **Follow-up queue outcome filters** — in Afifa's cockpit follow-up queue, add filter chips showing lead count per outcome bucket. Filters: All / Follow Back / Interested — Follow Up Later / No Answer (retries) / Gatekeeper (retries) / Report Engaged (tapped button — priority). Each chip shows the count (e.g. "Follow Back 12"). Selecting a filter shows only those leads. Default view shows all, sorted by scheduled callback time. Report Engaged leads always appear at the top regardless of filter
 
 ### 07_DATA_AND_RESEARCH
-- [ ] Finalise and format leads for Dharwad (next city after Hubli — data cleaned, not finalised)
-- [ ] Run PDF pipeline for Dharwad, Belgaum, Mangalore, Davangere, Ballari (SERP HTML ready — just needs pipeline run)
-- [ ] Collect SERP HTML + run pipeline for Mysuru, Kalaburgi, Vijayapura (no HTML yet)
+- [x] Finalise + load leads for ALL 9 cities. **DONE — ~7,960 leads across 13 niches in `leads`.**
+- [x] Run the report pipeline for all cities. **DONE — 936 EN+KN reports (reportlab) live in Storage `market-reports` → `report_assets`.**
+- [x] SERP / competitor analysis for all 9 cities. **DONE — 117 `market_insights` rows (9×13), 0 orphans.**
 
 ### 05_FORTUNEMARQ_ONLINE_PRESENCE
-- [ ] **fortunemarq.com redesign** — current site needs full redesign and redeployment on Hostinger
-- [ ] **Niche landing pages redesign** — all 11 HTML pages in `05_FORTUNEMARQ_ONLINE_PRESENCE/niches/` need redesign before deployment. Also create missing physiotherapy page. Deploy to fortunemarq.com/[niche]-hubli after redesign. These are the `{{landingPageLink}}` used in all WhatsApp templates — nothing sends until these are live
+- [~] **fortunemarq.com rebuild** — now rebuilt in-app on Next.js/Vercel (not Hostinger). **HOME page live**; About/Services/Work/Contact/legal pages pending.
+- [~] **Niche landing pages** — rebuilt as a dynamic in-app template at `/lp/[niche]/[city]` from `market_insights` (EN+KN). **Dental·Hubli enabled**; roll out the remaining niches (seed data + enable). NOTE: WhatsApp outreach is already live via the Direct Report — sends no longer depend on these pages.
 - [ ] **GMB full optimization** — starts June 15: add all 7 services with descriptions, upload 15+ photos, write keyword-rich business description, set up 2x/week posting schedule, pre-populate Q&A with 5 common questions, request reviews from existing freelance clients
 - [ ] **SEO** — starts June 15: keyword targeting for fortunemarq.com — "digital marketing agency Hubli" and niche searches
 - [ ] **Social media content strategy** — complete content calendar for Instagram, Facebook, LinkedIn. Accounts created with few posts — need consistent 5x/week posting schedule
@@ -149,6 +149,10 @@ These are sequenced for later. Do not start until triggers are met.
 | 2026-06-12 | Invoice partial payments (record payment → partially_paid/paid) |
 | 2026-06-12 | GATEKEEPER + NO_ANSWER retry logic confirmed live in cockpit (3-attempt staggered retries, unreachable/flagged stages) |
 | 2026-06-12 | Phase F Stage 0: inbound capture pipeline + webhook + UTM attribution + round-robin auto-assign + Inbound & Funnel marketing tab + spend CSV import |
+| 2026-06-17 | FMOS deployed & live on Vercel (fmos.fortunemarq.com); WhatsApp Cloud API live; Stage 4 delivery (4.1–4.7) + AI bot (6.1) + messaging safety/inbox (6.2–6.4) built |
+| 2026-06-21 | **All 9 cities loaded** — ~7,960 leads across 13 niches; competitor SERP analysis → 117 `market_insights` rows (9×13), 0 orphans |
+| 2026-06-22 | **Market-intel reports rebuilt** — 936 EN+KN PDFs in the 5-page editorial design via the reportlab pipeline (`07.../PDF_Generator` + `kn_shape.py`) → Storage `market-reports` → `report_assets`; in-app `@react-pdf` generator disabled behind `REPORTS_INAPP_GENERATOR` |
+| 2026-06-22 | **Direct Report v3** — `direct_report_v3_{a,b,c,d}` text template + 3 buttons (Book a meeting / Tell me more / ಕನ್ನಡ ವರದಿ) → matched PDF follow-up; Kannada button sends only the KN PDF |
 
 ---
 

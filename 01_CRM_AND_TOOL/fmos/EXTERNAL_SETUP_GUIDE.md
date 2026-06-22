@@ -1,6 +1,6 @@
 # FMOS — External Setup Guide
 **Everything you (Jabeer) must do OUTSIDE the code, then wire into FMOS, before full-scale use.**
-**Last updated:** 2026-06-14
+**Last updated:** 2026-06-22
 
 This is the master checklist of accounts, API keys, plans, verifications, and dashboard
 configs that FMOS depends on. The code is built — these are the *external* pieces that
@@ -14,14 +14,14 @@ make it actually run live. Work top-to-bottom; later sections depend on earlier 
 |---|---|---|---|
 | 1 | Supabase project | Database + auth (everything) | ✅ LIVE |
 | 2 | Anthropic API key | AI strategy + AI reports | ✅ key in `.env.local` — verify billing |
-| 3 | WhatsApp Cloud API (Meta) | Outbound + inbound WhatsApp | 🟡 Live, templates partial, webhook not yet set |
-| 4 | Generated secrets (CRON / INBOUND) | Cron jobs + lead webhooks | ✅ in `.env.local` — must copy to Vercel |
-| 5 | Vercel account + project | Hosting the live app | 🔴 Not deployed yet |
-| 6 | Domain `fmos.fortunemarq.com` | Public URL | 🔴 DNS not pointed yet |
-| 7 | Meta Lead Ads webhook | Auto-capture FB/IG ad leads | 🔴 Not configured |
+| 3 | WhatsApp Cloud API (Meta) | Outbound + inbound WhatsApp | ✅ LIVE — all templates approved, webhook set |
+| 4 | Generated secrets (CRON / INBOUND) | Cron jobs + lead webhooks | ✅ in `.env.local` + Vercel |
+| 5 | Vercel account + project | Hosting the live app | ✅ Deployed & LIVE |
+| 6 | Domain `fmos.fortunemarq.com` | Public URL | ✅ DNS pointed (Hostinger CNAME) |
+| 7 | Meta Lead Ads webhook | Auto-capture FB/IG ad leads | 🔴 Not configured (needs active ad campaigns) |
 | 8 | Google Ads lead-form webhook | Auto-capture Google ad leads | 🔴 Not configured |
 | 9 | Google Search Console API | Real organic SEO tab data | 🔴 Not connected (shows placeholder) |
-| 10 | Data + people inside FMOS | Real leads, team logins | 🔴 To do after deploy |
+| 10 | Data + people inside FMOS | Real leads, team logins | 🟡 In progress (~7,960 leads loaded; team logins to confirm) |
 
 Legend: ✅ done · 🟡 partial · 🔴 not started
 
@@ -41,7 +41,7 @@ subscribe yet. Notes for the free period below.
 **What you still need to decide / do:**
 - [ ] **Free-tier caveat:** Free Supabase **pauses after 7 days of zero activity** and caps at 500MB DB + 1GB storage. As long as the team uses it most days it won't pause. If it ever does, un-pause it from the dashboard (one click). Watch the DB size meter in Settings → Usage — 500MB is plenty for thousands of leads, but bulk CSV imports + audit logs add up. Upgrade to **Pro ($25/mo)** only when you hit a real limit or are ready to depend on uptime + daily backups.
 - [ ] **Storage bucket** for PDFs (proposals/agreements/invoices) — confirm a public-read bucket exists (Storage tab). Needed when we build PDF generation (Phase 2 P2).
-- [ ] **Auth redirect URLs** — after Vercel deploy (§5), add `https://fmos.fortunemarq.com/**` to Authentication → URL Configuration → Redirect URLs. Without this, login breaks on the live domain.
+- [x] **Auth redirect URLs** — `https://fmos.fortunemarq.com/**` is added to Authentication → URL Configuration → Redirect URLs. Login works on the live domain.
 
 **Keys (already in `.env.local`):** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
 ⚠️ The service-role key is admin-level — never expose it client-side, never commit it.
@@ -63,9 +63,9 @@ subscribe yet. Notes for the free period below.
 
 ---
 
-## 3. WHATSAPP CLOUD API (Meta)  🟡 the big one — partially done
+## 3. WHATSAPP CLOUD API (Meta)  ✅ LIVE
 
-**What it is:** Send templates/reminders to leads + receive inbound messages. Fully built in code (`lib/whatsapp/send.ts` + `app/api/webhooks/whatsapp/route.ts`), but the Meta-side setup and the inbound webhook are not finished.
+**What it is:** Send templates/reminders to leads + receive inbound messages. Fully built in code (`lib/whatsapp/send.ts` + `app/api/webhooks/whatsapp/route.ts`) and live end-to-end — Meta-side setup done and the inbound webhook is configured.
 
 **Dedicated number:** +91 79759 18980 (Jio SIM — NEVER install the WhatsApp app on this SIM).
 
@@ -73,12 +73,11 @@ subscribe yet. Notes for the free period below.
 - ✅ Business verification APPROVED
 - ✅ India payment method added
 - ✅ First real test message delivered
-- ✅ Templates type_a / type_b / type_c approved
+- ✅ All 33 system templates + the `direct_report_v3_{a,b,c,d}` family Meta-approved & live
+- ✅ Inbound webhook configured — Meta App (FMOS, `1713470496330818`) → WhatsApp → Configuration → Callback URL `https://fmos.fortunemarq.com/api/webhooks/whatsapp`, Verify Token = `WHATSAPP_VERIFY_TOKEN`, subscribed to the `messages` field. Replies from leads now flow into FMOS.
 
-**What you still need to do:**
-- [ ] **Template type_d** — resubmitted, waiting on Meta review. Check business.facebook.com → WhatsApp Manager → Message Templates.
+**What you still need to do (housekeeping only):**
 - [ ] **Display name "FortuneMarq"** — was auto-rejected (thin web presence). Re-appeal with GST + Udyam certificate. NOT a blocker for sending — leads just see the number until approved.
-- [ ] **Inbound webhook** — *only works after deploy (§5).* Once live: Meta App (FMOS, `1713470496330818`) → WhatsApp → Configuration → set Callback URL to `https://fmos.fortunemarq.com/api/webhooks/whatsapp`, Verify Token = your `WHATSAPP_VERIFY_TOKEN` value, then click "Verify and Save" and **Subscribe to the `messages` field**. Until this is done, replies from leads do NOT appear in FMOS.
 - [ ] **Delete stale duplicate WABAs** to avoid confusion: `1852036272835920` (Test) and `705784465410369` (stray dup).
 
 **Env vars (in `.env.local`):** `WHATSAPP_API_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` (=`1084263481446667`), `WHATSAPP_VERIFY_TOKEN`, `META_APP_SECRET`, and optional `WHATSAPP_LP_FALLBACK_URL` (landing page link used in auto-replies).
@@ -96,7 +95,7 @@ Claude-written one-line activity summary to admin WhatsApp numbers. To turn on:
 
 ---
 
-## 4. GENERATED SECRETS  ✅ exist — must be copied to Vercel
+## 4. GENERATED SECRETS  ✅ exist — in `.env.local` + Vercel
 
 These aren't from a third party — you generate them yourself (random strings). They protect
 your cron jobs and inbound webhooks from being triggered by strangers.
@@ -106,10 +105,10 @@ your cron jobs and inbound webhooks from being triggered by strangers.
 | `CRON_SECRET` | All `/api/cron/*` routes (daily digest, alerts, SLA, follow-ups). Routes return 503 without it. | ✅ in `.env.local` |
 | `INBOUND_WEBHOOK_SECRET` | All `/api/inbound/*` lead webhooks. Fails closed (401) without it. | ✅ in `.env.local` |
 
-- [ ] When you set up Vercel (§5), copy **both** values from `.env.local` into Vercel env vars exactly. If they differ between Vercel and what you put in Meta/Google dashboards, lead capture silently fails.
+- [x] Both values are copied from `.env.local` into Vercel env vars. Keep them identical to what you put in Meta/Google dashboards — if they differ, lead capture silently fails.
 - To regenerate if ever leaked: any long random string works, e.g. run `openssl rand -hex 32`.
 
-**Activate scheduled jobs (free-tier cron) — after deploy:**
+**Activate scheduled jobs (free-tier cron) — available now (app is deployed):**
 A GitHub Actions workflow (`.github/workflows/cron.yml`) runs FMOS's scheduled jobs for free
 (Vercel Hobby only runs cron once/day, too slow for SLA/follow-ups). To turn it on:
 - [ ] Repo → Settings → Secrets and variables → Actions →
@@ -120,30 +119,30 @@ A GitHub Actions workflow (`.github/workflows/cron.yml`) runs FMOS's scheduled j
 
 ---
 
-## 5. VERCEL — DEPLOY THE APP  🔴 not done (see also DEPLOY_VERCEL.md)
+## 5. VERCEL — DEPLOY THE APP  ✅ deployed & LIVE (see also DEPLOY_VERCEL.md)
 
 **What it is:** The host that runs FMOS at a public URL and runs the scheduled cron jobs.
-⚠️ **Prerequisite:** `middleware.ts` auth gate must be built first (Phase 2 P0) — without it, every admin page is publicly readable on the live URL.
+✅ **Auth gate is live** — it lives in `proxy.ts` (Next 16 convention, fail-open), NOT `middleware.ts`. Admin pages are gated on the live URL.
 
-**Steps:**
-- [ ] Create account at vercel.com (sign in with GitHub `sayedjabeer`).
-- [ ] New Project → import repo `FortuneMarq-Build` → **set Root Directory to `01_CRM_AND_TOOL/fmos`** (critical — the repo has other folders).
-- [ ] Add **all env vars** from the master list in §10 (copy values from `.env.local`).
-- [ ] Deploy. First build takes ~3–5 min.
+**Steps (all done — kept for reference / re-deploy):**
+- [x] Account at vercel.com (signed in with the company GitHub).
+- [x] New Project → imported repo `FortuneMarq-Build` → **Root Directory set to `01_CRM_AND_TOOL/fmos`** (critical — the repo has other folders).
+- [x] Added **all env vars** from the master list in §10 (values from `.env.local`).
+- [x] Deployed. Branch `continue-on-mac`; push to `main` auto-deploys.
 - [ ] **Plan:** Stay on **Hobby (free)** for the first ~3 months alongside Supabase. It only runs crons **once per day** — fine, since `vercel.json` schedules exactly 2 daily crons (daily-digest + admin-alerts). The SLA/follow-up crons exist in code but aren't scheduled, so they don't need Pro yet. The one watch-item: Vercel's free plan is technically non-commercial — acceptable for a 3-month internal trial, upgrade to **Pro ($20/mo)** before you treat it as a paid customer-facing product.
 **Cost during trial:** ₹0. Upgrade to ~$20/mo Pro after the 3-month evaluation.
 
 ---
 
-## 6. DOMAIN — fmos.fortunemarq.com  🔴 not done
+## 6. DOMAIN — fmos.fortunemarq.com  ✅ live
 
-**What it is:** Your branded URL instead of the random `*.vercel.app` address.
+**What it is:** Your branded URL instead of the random `*.vercel.app` address. FMOS is live at `fmos.fortunemarq.com`.
 
-**Steps (after Vercel deploy):**
-- [ ] In Vercel → Project → Settings → Domains → add `fmos.fortunemarq.com`.
-- [ ] Vercel shows a CNAME target. Go to **Hostinger** (where fortunemarq.com DNS lives) → DNS → add CNAME record: host `fmos` → value = the Vercel target.
-- [ ] Wait for DNS propagation (minutes to a few hours). Vercel auto-issues the SSL certificate.
-- [ ] Then go back and do the Supabase redirect URL (§1) and WhatsApp webhook (§3) using this domain.
+**Steps (all done — kept for reference):**
+- [x] In Vercel → Project → Settings → Domains → added `fmos.fortunemarq.com`.
+- [x] **Hostinger** DNS (where fortunemarq.com DNS lives) → CNAME record: host `fmos` → the Vercel target.
+- [x] DNS propagated; Vercel auto-issued the SSL certificate.
+- [x] Supabase redirect URL (§1) and WhatsApp webhook (§3) wired to this domain.
 **Cost:** ₹0 (subdomain of a domain you already own).
 
 ---
@@ -191,8 +190,8 @@ A GitHub Actions workflow (`.github/workflows/cron.yml`) runs FMOS's scheduled j
 
 ## 10. MASTER ENV VAR CHECKLIST
 
-Every variable FMOS reads. ✅ = confirmed in your local `.env.local`. All of these must also be
-added to **Vercel** at deploy time. Values live in `.env.local` only — never commit them.
+Every variable FMOS reads. ✅ = confirmed in your local `.env.local`. All of these are also
+set in **Vercel** (the app is deployed). Values live in `.env.local` / Vercel only — never commit them.
 
 | Env var | Service | Required? | In .env.local? |
 |---|---|---|---|
@@ -213,13 +212,13 @@ added to **Vercel** at deploy time. Values live in `.env.local` only — never c
 
 ---
 
-## 11. DATA & PEOPLE — set up INSIDE FMOS (after deploy)
+## 11. DATA & PEOPLE — set up INSIDE FMOS (app is live)
 
 These aren't API keys — they're the real-world content that makes FMOS usable day one:
 
 - [ ] **Admin login** — confirm your own admin account works on the live domain.
 - [ ] **Team accounts** — create logins for Afifa (telecaller), outsourced freelancers (website builders) with correct roles. Roles control what each person sees: admin / telecaller / strategist / pm / staff.
-- [ ] **Import real leads** — use the CSV upload on the leads page (format in `CSV_UPLOAD_FORMAT.md`). Without leads, the telecaller cockpit is empty.
+- [x] **Real leads loaded** — ~7,960 leads across 9 cities (Hubli, Dharwad, Belagavi, Mysuru, Mangalore, Davangere, Ballari, Kalaburagi, Vijayapura) and 13 niches are in the DB. Add more anytime via the CSV upload on the leads page (format in `CSV_UPLOAD_FORMAT.md`).
 - [ ] **Services & pricing** — confirm `lib/data/services_data.json` reflects your real packages and prices (used in the proposal builder).
 - [ ] **WhatsApp templates** — make sure the approved templates' wording matches what you actually want to send.
 - [ ] **Test one full lifecycle** end-to-end: import a test lead → call → log outcome → book meeting → send proposal → agreement → convert to client → invoice. Catch any dead ends before the team relies on it.
@@ -228,12 +227,12 @@ These aren't API keys — they're the real-world content that makes FMOS usable 
 
 ## 12. RECOMMENDED ORDER OF OPERATIONS
 
-1. **Verify Anthropic billing** (§2) — 5 min, unblocks AI features.
-2. **Build `middleware.ts` auth gate** (Phase 2 P0) — required before any public deploy.
+1. ✅ **Anthropic billing** (§2) — verify a card/credits are on file so AI features keep working.
+2. ✅ **Auth gate** (`proxy.ts`, fail-open) — built and live.
 3. **Get permanent WhatsApp token** (§3) — so it doesn't expire mid-use.
-4. **Deploy to Vercel** (§5) with all env vars.
-5. **Point the domain** (§6).
-6. **Update Supabase redirect URLs** (§1) + **set WhatsApp webhook** (§3).
+4. ✅ **Deployed to Vercel** (§5) with all env vars.
+5. ✅ **Domain pointed** (§6).
+6. ✅ **Supabase redirect URLs** (§1) + **WhatsApp webhook** (§3) — done.
 7. **Wire inbound channels** (§7, §8) — only if you're running paid ads.
 8. **Set up team + import leads** (§11).
 9. **Full lifecycle smoke test** (§11) → then go live with the team.

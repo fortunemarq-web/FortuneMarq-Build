@@ -3,7 +3,7 @@
 **Drafted:** 2026-06-16 · Supersedes `WHATSAPP_TEMPLATE_SPEC.md`. Reviewed + warmed in Cowork.
 **Format rules:** numbered params `{{n}}` · links **inline** (no buttons — engine can't fill button params) · Marketing templates carry a `Reply STOP to opt out.` footer · category honesty (Utility = transactional/event-tied, Marketing = promo/re-engagement) · body never starts/ends with a param, no two params adjacent.
 
-**Already approved — DO NOT resubmit:** `direct_report_type_a/b/c/d`, `daily_report`.
+**Already approved — DO NOT resubmit:** `daily_report` + the Direct Report family. The **live** family is `direct_report_v3_{a,b,c,d}` (a TEXT template — body + 3 quick-reply buttons: Book a meeting / Tell me more / ಕನ್ನಡ ವರದಿ — then the matched PDF as a follow-up). The older `direct_report_type_a/b/c/d` (and `direct_report_cover_*`) predecessors are **superseded** but remain approved at Meta.
 
 **This file = 33 templates to submit** (17 with the core loop + finance, plus growth + 2 internal alerts).
 

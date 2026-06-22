@@ -1,6 +1,6 @@
 # FortuneMarq — Master Context File
-**Last Updated:** 2026-06-17
-**Version:** 1.3
+**Last Updated:** 2026-06-22
+**Version:** 1.4
 **Owner:** Sayed Jabeer, Founder — FortuneMarq Media & Marketing
 
 > **CURRENT STATE (2026-06-17) — for live build state read `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest dated entries) + `00_MASTER/FMOS_Execution_Roadmap.md`; for the app handoff read `01_CRM_AND_TOOL/fmos/CONTINUE_HERE.md`.**
@@ -8,6 +8,7 @@
 > - **WhatsApp Cloud API is LIVE** on dedicated number **+91 79759 18980** (PHONE_NUMBER_ID 1084263481446667, WABA 1499408311884474). **All 33 templates submitted AND APPROVED by Meta** (source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md`). 93530 82656 stays in the WhatsApp Business app.
 > - **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, incl. Direct Report — the immediate type-matched PDF send that replaced the old "curiosity" teaser), Stage 4 delivery (4.1–4.7), the AI bot (6.1), and messaging safety + unified inbox (6.2/6.3/6.4). **Not yet built:** Stage 2 campaigns, Stage 5 site/presence, command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9), collection automation (1.1/1.2), pipeline orchestrator.
 > - **Team = Jabeer + Afifa only.** Delivery is Jabeer + outsourced freelancers (no Zaid/Sufiyan).
+> - **DATA (2026-06-22):** all **9 cities** loaded — **~7,960 leads** across **13 niches**; `leads`/`market_insights` (117 = 9×13)/`report_assets` (936) aligned, 0 orphans. The **936 EN+KN market-intel reports** are built by the **reportlab Python pipeline** (`07_DATA_AND_RESEARCH/PDF_Generator`, 5-page design + `kn_shape.py` Kannada shaping) → Storage `market-reports` → `report_assets`. The in-app `@react-pdf` report generator is disabled behind `REPORTS_INAPP_GENERATOR`. (The body tables in §6–§8 below predate this load — trust this header + the 00_MASTER design/roadmap docs.)
 
 > This is the master context file for the entire FortuneMarq build system.
 > Every subfolder context file is built on top of this foundation.
@@ -40,7 +41,7 @@
 FortuneMarq is not being built as a typical digital marketing agency.
 It is being built as a **systems-driven, automation-first agency** where:
 
-- Every service is backed by real data (252 Market Intelligence PDFs, 8,000 scraped leads, keyword research across 9 cities × 14 niches — 2,154,200 total monthly searches)
+- Every service is backed by real data (936 Market Intelligence PDFs across 9 cities × 13 niches, ~7,960 scraped leads, keyword research across all 9 cities)
 - Every repeatable task is automated — humans supervise systems, not execute tasks
 - Every part of the operation lives in one tool (FMOS) — no spreadsheets, no external trackers, no WhatsApp to manage work
 - Volume is the model — accessible prices, fast delivery via automation, strong portfolio, then price increases
@@ -97,7 +98,7 @@ This is the full picture of what is being built. Every folder in `FortuneMarq_Bu
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    07_DATA_AND_RESEARCH                      │
-│   8,000 GBP leads · Keyword data · Competitor analysis      │
+│   ~7,960 GBP leads · Keyword data · Competitor analysis     │
 │   Feeds INTO: Sales System, Paid Marketing, CRM             │
 └───────────────────────────┬─────────────────────────────────┘
                             │
@@ -169,9 +170,9 @@ Every step is owned by a specific folder in this build system.
 ```
 STEP 1 — DATA EXISTS
   Folder: 07_DATA_AND_RESEARCH
-  8,000 GBP leads cleaned + sorted by city and niche
-  Keyword data and competitor data ready per niche+city
-  252 Market Intelligence PDFs ready to deploy
+  ~7,960 GBP leads cleaned + sorted across 9 cities and 13 niches (loaded in FMOS)
+  Keyword data and competitor data ready per niche+city (market_insights: 117 rows)
+  936 Market Intelligence PDFs (EN+KN) live in Supabase Storage
 
 STEP 2 — CAMPAIGN RUNS
   Folder: 06_PAID_MARKETING
@@ -241,10 +242,10 @@ STEP 11 — BRAND BUILDS TRUST (PARALLEL)
 
 | Layer | Tool / Technology | Status |
 |---|---|---|
-| CRM Frontend | Next.js 16.1.6, TypeScript, Tailwind CSS v4 | Built, needs changes |
-| CRM Backend | Supabase (PostgreSQL), @supabase/ssr v0.8.0 | Live on localhost |
-| CRM Hosting | Hostinger Business Plan → fmos.fortunemarq.com | Pending deployment |
-| CRM Domain | fortunemarq.com (Hostinger) — subdomain: fmos | Configured, not pointed |
+| CRM Frontend | Next.js 16, TypeScript, Tailwind CSS v4 | Built & live |
+| CRM Backend | Supabase (PostgreSQL), @supabase/ssr | Live (production) |
+| CRM Hosting | **Vercel** → fmos.fortunemarq.com (Hostinger CNAME) | **Deployed & live** |
+| CRM Domain | fmos.fortunemarq.com | **Live (DNS pointed)** |
 | Website Builds | Antigravity | Personal account, Google AI Pro |
 | AI (Claude) | Claude Pro — browser + Claude Code terminal | Active |
 | AI (CRM Sales Brain) | OpenRouter — Mistral 7B instruct free | Built, needs API key in env |
@@ -263,12 +264,12 @@ These are ready to use. Nothing needs to be built here.
 
 | Asset | Detail | Location |
 |---|---|---|
-| Market Intelligence PDFs | 75 PDFs complete for Hubli (EN + KN, 4 types, 14 niches). PDF Generator pipeline reusable for all cities. Other 8 cities pending pipeline run. | 07_DATA_AND_RESEARCH/PDF_Generator/output/Hubli/ |
-| Lead Database | 7,298 GBP scraped leads. Cleaned and standardised. Hubli: 11 finalised upload-ready CSVs in Hubli_Final/. Other 8 cities cleaned but not finalised. | 07_DATA_AND_RESEARCH/Lead_Database/ |
-| Keyword Data | All 9 cities × 14 niches. Monthly volumes, top keywords. Total: 2,154,200/month. | 07_DATA_AND_RESEARCH/Keyword_Data/ |
-| Competitor Data | Hubli: COMPLETE — GBP CSV, Organic CSV, Master SERP Report, 14 niches. Other cities: HTML files exist, pipeline not yet run. | 07_DATA_AND_RESEARCH/Competitor_Data/ |
-| PDF Generator Pipeline | COMPLETE and reusable. Scripts: pdf_generator.py, pdf_generator_kn.py, generate_all_pdfs.py, generate_all_pdfs_kn.py, data_loader.py, translator.py | 07_DATA_AND_RESEARCH/PDF_Generator/ |
-| CRM / FMOS | Full agency operating system — ~90% complete. Needs changes before deployment | localhost:3000 |
+| Market Intelligence PDFs | **936 PDFs live** (EN + KN, 4 types) across all 9 cities × 13 niches. Built by the reportlab pipeline, stored in Supabase Storage `market-reports` → `report_assets`. | Supabase Storage `market-reports` |
+| Lead Database | **~7,960 GBP leads loaded in FMOS** across all 9 cities, 13 niches. Per-city Final CSVs are the source. | 07_DATA_AND_RESEARCH/Lead_Database/ + `leads` table |
+| Keyword Data | All 9 cities × 13 niches. Monthly volumes + top keywords → `market_insights.general_insights`. | 07_DATA_AND_RESEARCH/Keyword_Data/ |
+| Competitor Data | All 9 cities × 13 niches analyzed (SERP 4-bucket split) → `market_insights.competitor_insights` (117 rows). | 07_DATA_AND_RESEARCH/Competitor_Data/ + `market_insights` |
+| PDF Generator Pipeline | CANONICAL + complete. Scripts: pdf_generator.py, report_copy.py, kn_shape.py (Kannada shaping), generate_city_reports.py, batch_upload_reports.py, batch_upload_covers.py | 07_DATA_AND_RESEARCH/PDF_Generator/ |
+| CRM / FMOS | Full agency operating system — **deployed & live** | fmos.fortunemarq.com (Vercel) |
 | Agency Website | Live at fortunemarq.com | Hostinger |
 | GMB Profile | Created and verified. Basic info added. Not optimised. | Google |
 | WhatsApp Business | Set up on business number | Active |
@@ -281,12 +282,7 @@ Everything in this list needs to be built. Tracked across the relevant folders.
 
 | What | Folder Responsible | Status |
 |---|---|---|
-| FMOS deployed to fmos.fortunemarq.com | 01_CRM_AND_TOOL | PENDING — highest priority blocker. WhatsApp templates bug fixed (RLS + filter). /telecaller redirect fixed. Meetings page needs 2 SQL columns (meeting_link, meeting_notes) + SUPABASE_SERVICE_ROLE_KEY in .env.local before deploy. |
-| CRM changes from blueprint plan | 01_CRM_AND_TOOL | PARTIALLY DONE — WhatsApp templates, telecaller redirect, and RLS fixed. Remaining: Outreach Board, Lead Profile full view, Revenue Forecast widget. |
-| Lead upload to FMOS (Hubli_Final — 11 files ready) | 01_CRM_AND_TOOL + 07_DATA_AND_RESEARCH | BLOCKED — awaiting FMOS deployment |
-| Finalise leads for other 8 cities (cleaned, not formatted) | 07_DATA_AND_RESEARCH | PENDING — Dharwad next |
-| PDF pipeline for Dharwad, Belgaum, Mangalore, Davangere, Ballari | 07_DATA_AND_RESEARCH | PENDING — SERP HTML ready, just needs pipeline run |
-| SERP HTML collection + pipeline for Mysuru, Kalaburgi, Vijayapura | 07_DATA_AND_RESEARCH | PENDING — no HTML yet |
+| ~~FMOS deploy · CRM blueprint changes · lead upload · all-city lead finalisation · PDF pipeline · SERP for all cities~~ | 01_CRM_AND_TOOL + 07_DATA_AND_RESEARCH | ✅ **DONE 2026-06-22** — FMOS deployed & live; all 9 cities loaded (~7,960 leads, 13 niches); 936 EN+KN reports generated via the reportlab pipeline; competitor SERP analysis complete for all 9 cities (117 `market_insights`). |
 | Website Brief Generator App | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 1 build (Months 1–2) |
 | SEO automation system | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 3 build (Months 5–6) |
 | Ads automation system | 02_SERVICE_DELIVERY_AUTOMATION | PENDING — Phase 2 build (Months 3–4) |
@@ -300,7 +296,7 @@ Everything in this list needs to be built. Tracked across the relevant folders.
 | GMB fully optimised | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING — can start now, independent of FMOS |
 | Instagram content — 5 posts/week | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING — can start now |
 | FortuneMarq SEO content plan | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING |
-| 13–14 niche+city landing pages | 06_PAID_MARKETING | PENDING — needed before ads launch |
+| Niche+city landing pages | 06_PAID_MARKETING | PARTIAL — dynamic LP template built at `/lp/[niche]/[city]` (Dental·Hubli enabled); roll out remaining niches before ads launch |
 | Meta ad campaigns (Phase 1) | 06_PAID_MARKETING | PENDING — LAST step, all systems must be ready first |
 | GST invoice setup (add GSTIN to FMOS) | 08_FINANCE | PENDING |
 | Finance tracking activated in FMOS | 08_FINANCE | PENDING — do at deployment |
@@ -433,8 +429,9 @@ If a decision affects another folder — note it. Update that folder's context t
 | 2026-06-12 | 01_CRM_AND_TOOL | **FMOS v4.8 — DATABASE FULLY SYNCED**: all ~19 pending migrations executed in Supabase as one consolidated script (38 tables created: attendance, notifications, automations, marketing, duplicates, sessions, niche kits). Notifications system fixed + live (bell, realtime), daily-digest cron (meetings/follow-ups/overdue invoices/at-risk clients/marketing line), team management built (invite/role change/password reset/deactivate/remove from /admin/team), invoice partial payments, alert()/prompt() eliminated app-wide, /manager/performance now real data. **PHASE F (Inbound + Performance Marketing) planned (fmos/PHASE_F_INBOUND_MARKETING.md) + Stage 0 built and tested**: universal inbound pipeline with phone dedupe + attribution + round-robin auto-assign, /api/inbound/[channel] webhook (Google lead-form adapter), LP UTM capture, cockpit source picker, speed-to-lead, "Inbound & Funnel" tab on /admin/marketing (funnel, channel scoreboard, UTM builder, Meta/Google spend CSV import). Deploy target now Vercel (vercel.json crons ready). Next: deploy → Stage 1 webhooks (WhatsApp Cloud API, Meta leadgen). |
 | 2026-06-13 | 01_CRM_AND_TOOL | **FMOS static QA pass** (`fmos/FMOS_QA_VERIFICATION_2026-06-13.md`). tsc 0 errors; May-audit critical bugs confirmed fixed (total_amount, stage-sync, follow-ups-due). Found P0: page-level auth/RBAC missing (no middleware.ts, ~40 admin pages have no login/role gate; reads rely on RLS, mutations gated by requireAdmin). P1: outbound-WhatsApp send UI unbuilt (lib ready, 0 callers); proposal/agreement "PDF" = browser print (invoices = real react-pdf). Deploy guide written (`fmos/DEPLOY_VERCEL.md`). **Deploy gated on QA per Jabeer — do NOT deploy until P0 fixed + runtime smoke test passes.** |
 | 2026-06-14 | 03_SALES_SYSTEM | **WhatsApp Cloud API LIVE.** Number +91 79759 18980 registered, BV approved, India payment method added to WABA 1499408311884474, first real message delivered end-to-end. (Template approval completed by 2026-06-16 — see below.) |
-| 2026-06-16 | 03_SALES_SYSTEM + 01_CRM_AND_TOOL | **All 33 WhatsApp templates submitted AND APPROVED by Meta** (incl. direct_report_type_d). Source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json`. Stage 1 data engine (1.3–1.6) + Stage 3 outbound (3.1–3.4) built; Direct Report replaces the curiosity teaser; Google Calendar/Meet booking standardized. |
+| 2026-06-16 | 03_SALES_SYSTEM + 01_CRM_AND_TOOL | **All 33 WhatsApp system templates submitted AND APPROVED by Meta** (the `direct_report_*` family is managed separately and approved). Source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json`. Stage 1 data engine (1.3–1.6) + Stage 3 outbound (3.1–3.4) built; Direct Report replaces the curiosity teaser; Google Calendar/Meet booking standardized. |
 | 2026-06-17 | 01_CRM_AND_TOOL + ALL | **FMOS deployed & live.** Stage 4 delivery (4.1–4.7), AI bot (6.1), and messaging safety + unified inbox (6.2/6.3/6.4) all built. Repo-wide doc-accuracy sweep: removed "blocked on deployment", Zaid/Sufiyan, curiosity-teaser, 17/24-template, and Zoom/Calendly claims; clarified pitch_type vs lead_type. See `00_MASTER/FMOS_System_Design_And_Tasks.md` (newest entries) for the authoritative build state. |
+| 2026-06-22 | 07_DATA_AND_RESEARCH + 01_CRM_AND_TOOL + ALL | **All-city data load + report rebuild + Direct Report v3.** All 9 cities loaded (~7,960 leads, 13 niches); `market_insights` (117) + `report_assets` (936 EN+KN) aligned, 0 orphans. Market-intel reports rebuilt in the original 5-page design via the **reportlab pipeline** (`07.../PDF_Generator` + `kn_shape.py` Kannada shaping) → Storage; the in-app `@react-pdf` generator disabled behind `REPORTS_INAPP_GENERATOR`. Direct Report = `direct_report_v3_{a,b,c,d}` text template + 3 buttons → matched PDF; ಕನ್ನಡ ವರದಿ button sends only the KN PDF. Full docs-reconciliation sweep across all 00–10 folders (stale data/report/curiosity claims corrected; superseded session logs archived). |
 
 ---
 

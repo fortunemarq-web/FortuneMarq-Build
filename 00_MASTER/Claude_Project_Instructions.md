@@ -1,6 +1,6 @@
 # FortuneMarq — Claude Browser Project Instructions
 # Copy the instruction block for each project into its Project Instructions field.
-# Last Generated: 2026-06-08
+# Last Generated: 2026-06-22
 
 ---
 
@@ -32,7 +32,7 @@ Volume-first. Low accessible prices. Every one-time client becomes a retainer cl
 - 04_CLIENT_MANAGEMENT: Onboarding, SOPs, health scores, upsells
 - 05_ONLINE_PRESENCE: FortuneMarq GMB, Instagram, LinkedIn, SEO
 - 06_PAID_MARKETING: Own Meta + Google campaigns (LAST step)
-- 07_DATA_AND_RESEARCH: 8,000 leads, keyword data, competitor data, 252 PDFs
+- 07_DATA_AND_RESEARCH: ~7,960 leads (9 cities), keyword data, competitor data, 936 market-intel PDFs
 - 08_FINANCE: Invoicing, GST, MRR tracking
 - 09_LEGAL_AND_OPERATIONS: Agreements, policies, compliance
 - 10_PERSONAL_GROWTH: Jabeer's communication, AI, digital marketing learning
@@ -42,10 +42,10 @@ Data → Paid Campaign → Lead in FMOS → 3-Touch Outreach (Afifa) → Meeting
 
 ## Content Build Hierarchy (current progress)
 - L0 Niche Data Reference Sheet: COMPLETE
-- L1a Lead CSV Files — Hubli: COMPLETE (11 files in Hubli_Final/). Other 8 cities: pending pipeline run.
-- L1b PDF Index: COMPLETE (PDF_Index.md created, all 75 Hubli PDFs mapped)
+- L1a Lead CSV Files — ALL 9 cities: COMPLETE (~7,960 leads loaded across 13 niches).
+- L1b PDF Index: COMPLETE (PDF_Index.md created, all 936 market-intel PDFs mapped — 9 cities × 13 niches × 4 types × EN+KN)
 - L2 Telecaller Scripts — Hubli: COMPLETE (Kanglish + Kannada per niche). Other cities: pending.
-- L3 WhatsApp Templates: PENDING
+- L3 WhatsApp Templates: COMPLETE (33 system templates + direct_report_v3_* family, Meta-approved & live)
 - L4 Proposal + Agreement: PENDING
 - L5 SOPs + Onboarding + Brief Form: PENDING
 - L6 Report Templates + Health Score: PENDING
@@ -60,7 +60,7 @@ Data → Paid Campaign → Lead in FMOS → 3-Touch Outreach (Afifa) → Meeting
 ## Key Locked Decisions
 - Pricing: Landing Page ₹5K–₹8K | Standard Website ₹8K–₹15K | Premium Website ₹15K–₹20K | Ads setup ₹4,500 | Ads monthly ₹2,500 (+ 5% of ad spend if spend exceeds ₹15K/month) | GMB ₹3,500/month | SEO ₹7K–₹15K+
 - Payment: Invoice 1st, due 5th. Ads paused 7 days overdue. Website down 30 days overdue.
-- Geography Phase 1: Hubli-Dharwad only
+- Geography: ALL 9 cities loaded — Hubli, Dharwad, Belagavi, Mysuru, Mangalore, Davangere, Ballari, Kalaburagi, Vijayapura
 - Niche order: Healthcare (Dental + Skin) → Real Estate → Car Rental → Fitness (Gyms) → Education (JEE/NEET + Computer Training) → Remaining niches
 - Tech: Next.js + Supabase + Hostinger + Antigravity + Claude — no changes
 - Ad spend: Client's own responsibility. FortuneMarq management fee only.
@@ -79,7 +79,7 @@ You are working inside the FortuneMarq Build System, specifically the CRM and To
 Plan and design all changes, new features, and improvements to FMOS (FortuneMarq Operating System). This is the planning project — all decisions made here get executed in the terminal via Claude Code. Never write code here — plan what needs to be built, why, and how it connects to the rest of the system.
 
 ## What FMOS Is
-A full agency operating system built on Next.js 16 + TypeScript + Tailwind CSS v4 + Supabase. Currently running on localhost:3000. Target deployment: fmos.fortunemarq.com on **Vercel** (changed from Hostinger; vercel.json with cron schedules is in the repo). v4.8 — feature-complete pre-deploy.
+A full agency operating system built on Next.js 16 + TypeScript + Tailwind CSS v4 + Supabase. **Deployed & LIVE on Vercel at fmos.fortunemarq.com** (Hostinger CNAME). Branch continue-on-mac; push to main auto-deploys. Auth gate is proxy.ts (Next 16), fail-open. The DB is fully synced (no pending migrations).
 
 ## What's Already Built
 Sales Intelligence Cockpit, Niche Pipeline Kanban (7-stage), Client Profile (7 tabs), Task Board, Project Management, Strategy Engine, Finance Module, Agency Marketing Module, Global Search (Cmd+K), Client Portal, WhatsApp Template Engine, Notifications (Supabase Realtime), Audit Log.
@@ -108,12 +108,11 @@ Sales Intelligence Cockpit, Niche Pipeline Kanban (7-stage), Client Profile (7 t
 - **Phase F inbound engine Stage 0 live**: every inbound channel funnels through `/api/inbound/[channel]` → dedupe → attribution (UTM/campaign) → round-robin auto-assign → telecaller notified. Marketing hub has Inbound & Funnel tab (CPL, funnel, channel scoreboard, UTM builder, Meta/Google spend CSV import). Plan: fmos/PHASE_F_INBOUND_MARKETING.md.
 - 4 user accounts live (sayedjabeer@, afifa@, admin1@, admin2@fmos.com); more via /admin/team.
 
-## Deployment Checklist (Vercel)
-- Push fmos repo to GitHub → import in Vercel
-- Env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY, CRON_SECRET, INBOUND_WEBHOOK_SECRET (values in fmos/.env.local)
-- Point fmos.fortunemarq.com to Vercel; add domain to Supabase auth redirect URLs
-- Upload remaining ~6,300 leads CSV; enter real client data; activate GST invoice settings
-- Then Phase F Stage 1: WhatsApp Cloud API + Meta leadgen + Google lead-form webhooks
+## Deployment (Vercel) — DONE
+- Deployed & live: fmos.fortunemarq.com (Hostinger CNAME → Vercel). Branch continue-on-mac; push to main auto-deploys.
+- Env vars set in Vercel: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY, CRON_SECRET, INBOUND_WEBHOOK_SECRET (values in fmos/.env.local).
+- ALL 9 cities loaded (~7,960 leads, 13 niches). WhatsApp Cloud API live on +91 79759 18980; all 33 system templates + direct_report_v3_* family Meta-approved.
+- Remaining: enter real client data; activate GST invoice settings; Phase F Stage 1 Meta leadgen + Google lead-form webhooks.
 
 ## Connections
 - Receives data from: 07_DATA_AND_RESEARCH (leads), 03_SALES_SYSTEM (scripts/templates displayed), 06_PAID_MARKETING (inbound leads)
@@ -179,7 +178,7 @@ Plan and create all content needed to acquire clients — telecaller scripts, Wh
 Meta/Google ad runs for niche+city → 2 days later telecaller (Afifa) begins calls → 3-touch outreach → meeting booked with Jabeer → Jabeer closes → proposal sent within 24 hours → agreement signed → invoice raised → work starts.
 
 ## The 3-Touch Sequence
-- Touch 1: WhatsApp curiosity message (before first call)
+- Touch 1: WhatsApp direct-report message (direct_report_v3_* — detailed body + 3 quick-reply buttons "Book a meeting" / "Tell me more" / "ಕನ್ನಡ ವರದಿ", then the matched market-intel PDF as a follow-up document)
 - Touch 2: PDF report delivered after call (niche+city specific — always)
 - Touch 3: Follow-up call — goal is booking 15–20 min meeting with Jabeer
 
@@ -196,7 +195,7 @@ Meta/Google ad runs for niche+city → 2 days later telecaller (Afifa) begins ca
 
 ## Content to Create (in order)
 - L2: 6 telecaller scripts (one per niche, all 12 outcomes each) → 03_SALES_SYSTEM/Telecaller_Scripts/
-- L3: 28 WhatsApp templates (all variants) → 03_SALES_SYSTEM/WhatsApp_Templates/
+- L3: WhatsApp templates — DONE (33 system templates + direct_report_v3_* family, Meta-approved & live) → 03_SALES_SYSTEM/WhatsApp_Templates/
 - L4a: 8 proposal variants → 03_SALES_SYSTEM/Proposals/
 - L4b: Client agreement template → 09_LEGAL_AND_OPERATIONS/Agreement_Templates/
 
@@ -303,7 +302,7 @@ File naming: [FORMAT]_[Topic]_[Date].md
 - Dental: 21,100/month, one real competitor, no paid ads
 - Car Rentals: 16,450/month, zero paid ads in entire market
 - JEE/NEET: 12,300/month, students going to Physics Wallah
-- Total across 9 cities × 14 niches: 2,154,200 searches/month
+- Total across 9 cities × 13 niches: 2,154,200 searches/month
 
 ## Connections
 - Feeds into: 06_PAID_MARKETING (brand trust reduces ad cost per lead), 03_SALES_SYSTEM (inbound leads from content)
@@ -343,8 +342,8 @@ Jabeer on camera. 60–90 seconds. Explains real niche search data. Example: "63
 ## Funnel
 Awareness video → 50%+ video viewers retargeted → Landing page → Lead form → FMOS (auto-tagged by niche+city+source) → Afifa follow-up call
 
-## Landing Pages Required (13–14 pages + 1 generic)
-One per niche+city for Hubli-Dharwad. Each page: search volume data, competitor gap visual, 3-step solution, pricing reference, lead capture form, WhatsApp CTA.
+## Landing Pages (niche LP template at /lp/[niche]/[city] — PARTIAL, Dental·Hubli enabled)
+One per niche+city (13 niches). Each page: search volume data, competitor gap visual, 3-step solution, pricing reference, lead capture form, WhatsApp CTA.
 
 ## Data Available for Ad Copy (from 07_DATA_AND_RESEARCH — real Google Keyword Planner data)
 - Gyms: 63,950/month, top competitor auth score 12/100, zero ads in market
@@ -371,14 +370,14 @@ Organise, clean, and structure all data assets — keyword research, competitor 
 
 ## Assets in This Folder
 - Niche Data Reference Sheet: COMPLETE (L0) — real numbers for 6 priority niches
-- PDF Index: COMPLETE (L1b) — PDF_Index.md created, all 75 Hubli PDFs mapped by city/niche/type/language
-- Lead CSV Files — Hubli: COMPLETE (L1a) — 11 finalised CSVs in Hubli_Final/, upload-ready for FMOS. Other 8 cities cleaned but not yet finalised.
-- Keyword Data: COMPLETE — all 9 cities × 14 niches in city-wise folders
-- Competitor Data: Hubli COMPLETE (GBP CSV + Organic CSV + Master SERP Report). Dharwad/Belgaum/Mangalore/Davangere/Ballari — HTML files ready, pipeline not yet run. Mysuru/Kalaburgi/Vijayapura — SERP HTML not yet collected.
-- Market Intelligence PDFs: 75 COMPLETE for Hubli (English + Kannada, 4 types, 14 niches) in PDF_Generator/output/Hubli/. Pipeline reusable for all cities.
+- PDF Index: COMPLETE (L1b) — PDF_Index.md created, all 936 market-intel PDFs mapped by city/niche/type/language
+- Lead CSV Files — ALL 9 cities: COMPLETE (L1a) — ~7,960 leads loaded across 13 niches, served via FMOS.
+- Keyword Data: COMPLETE — all 9 cities × 13 niches in city-wise folders
+- Competitor Data: Hubli COMPLETE (GBP CSV + Organic CSV + Master SERP Report). Other cities — competitor data in Competitor_Data/.
+- Market Intelligence PDFs: 936 COMPLETE (9 cities × 13 niches × 4 types × EN+KN) generated by the reportlab Python pipeline at PDF_Generator/ (pdf_generator.py + report_copy.py + kn_shape.py + generate_city_reports.py + batch_upload_reports.py + batch_upload_covers.py), uploaded to Supabase Storage bucket "market-reports" and served via the report_assets table. Kannada renders correctly via the HarfBuzz+FreeType shaper (kn_shape.py).
 
 ## Key Numbers — Real Google Keyword Planner Data (updated 2026-03-19)
-- Total searches across 9 cities × 14 niches: 2,154,200/month
+- Total searches across 9 cities × 13 niches: 2,154,200/month
 - Gyms Hubli: 63,950/month | Skin Clinics: 41,850 | Computer Training: 24,350
 - Dental: 21,100 | Car Rentals: 16,450 | JEE/NEET: 12,300
 - NOT A SINGLE competitor in 6 priority niches runs paid ads
@@ -394,8 +393,8 @@ CSV format: Business Name, Owner Name, Phone, City, Niche, Has Website Y/N, GMB 
 [City]_[Niche]_Leads.csv — e.g. Hubli_Gyms_Leads.csv
 PDF Index: PDF_Index.md — City, Niche, EN filename, KN filename, volume, confirmed
 
-## Phase 1 Priority (Hubli only — upload to FMOS first)
-Hubli_Gyms | Hubli_SkinClinics | Hubli_ComputerTraining | Hubli_DentalClinics | Hubli_Coaching | Hubli_CarRentals
+## Loaded Niches (all 9 cities, 13 niches)
+CarRentals | ComputerTraining | DentalClinics | Gyms | IELTSCoaching | InteriorDesigners | IVFClinics | JEENEETCoaching | ModularKitchens | Physiotherapy | RealEstate | SkinClinics | TuitionCentres
 
 ## Connections
 - Foundation for: Every folder in the build system

@@ -1,14 +1,15 @@
 # FortuneMarq — Critical Path
-**Last Updated:** 2026-06-17
+**Last Updated:** 2026-06-22
 **Owner:** Jabeer
-**Current Phase:** Deployed & live → Presence + Campaigns next
+**Current Phase:** Deployed & live, data fully loaded → Presence + Campaigns next
 
-> **2026-06-17 reality check (supersedes the dated June timeline below — treat those as a checklist, not dates):**
+> **2026-06-22 reality check (supersedes the dated June timeline below — treat those as a checklist, not dates):**
 > ✅ **FMOS is DEPLOYED and live** (Vercel, `fmos.fortunemarq.com`). The P0 auth/RBAC concern is resolved — the auth gate lives in `proxy.ts` (Next 16), fail-open.
-> ✅ **WhatsApp Cloud API is LIVE** — dedicated number **+91 79759 18980** (NOT 93530 82656; that stays in the WA Business app). **All 33 templates approved by Meta.**
-> ✅ **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, Direct Report), Stage 4 delivery (4.1–4.7), AI bot (6.1), messaging safety + inbox (6.2/6.3/6.4).
+> ✅ **WhatsApp Cloud API is LIVE** — dedicated number **+91 79759 18980** (NOT 93530 82656; that stays in the WA Business app). **All 33 system templates + the `direct_report_v3_*` family approved by Meta.**
+> ✅ **DATA FULLY LOADED:** all 9 cities, 13 niches, ~7,960 leads, 117 `market_insights`, **936 EN+KN reports** (built by the reportlab pipeline; in-app `@react-pdf` generator disabled behind `REPORTS_INAPP_GENERATOR`).
+> ✅ **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, Direct Report v3), Stage 4 delivery (4.1–4.7), AI bot (6.1), messaging safety + inbox (6.2/6.3/6.4).
 > 🔜 **CURRENT CRITICAL PATH:**
-> 1. **Niche landing pages** — redesign + deploy on fortunemarq.com (gates campaigns + portfolio links).
+> 1. **Niche landing pages** — HOME page live + LP template built (`/lp/[niche]/[city]`, Dental·Hubli enabled); roll out remaining niches + finish marketing-site pages (gates campaigns + portfolio links).
 > 2. **Presence** — GMB optimization, social content, SEO.
 > 3. **Campaigns** (Meta + Google) — Stage 2 campaign engine + own ad launch.
 > 4. **Remaining builds** — collection automation (1.1/1.2), pipeline orchestrator, command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9).
@@ -72,7 +73,7 @@
 - [ ] Add all env variables to Hostinger (WHATSAPP_API_TOKEN, PHONE_NUMBER_ID, OPENROUTER_API_KEY, SUPABASE_SERVICE_ROLE_KEY)
 - [ ] Activate GST invoice settings — GSTIN: 29ICWPS9816Q1ZS, Karnataka Bank A/C 0332202500001101, IFSC KARB0000332
 - [ ] Run smoke test across all modules post-deployment
-- [ ] Run /admin/bulk-import — loads ~6,300 leads from other city folders
+- [x] Run /admin/bulk-import — all 9 cities loaded (~7,960 leads). **DONE.**
 - [ ] Create user accounts: Afifa (telecaller), an outsourced freelancer (staff), an outsourced freelancer (staff)
 - [ ] Enter real client data: Austin Dental Spa, OM SAI TRAVELS (test clients)
 

@@ -1,6 +1,6 @@
 # FortuneMarq — Complete Agency Infrastructure Map
 **A hierarchical map of the entire operation: what happens OUTSIDE FMOS, what happens INSIDE FMOS, and how every piece connects.**
-**Last updated:** 2026-06-14
+**Last updated:** 2026-06-22
 
 ---
 
@@ -95,8 +95,8 @@ Three sources feed the same `leads` table:
 - 🖥️ **IN:** Telecaller opens **Cockpit** (`/sales`) — sees assigned leads, filtered by niche/city/type A-B-C-D, with follow-up queue.
 - 🖥️ **IN:** Cockpit shows the **right script** for the lead's type + stage (cold open, follow-up steps, objection handlers) from `lib/FMOS_Script_Data`.
 - 🌐 **OUT:** Telecaller **calls the lead on a real phone**. (FMOS does not dial — it scripts + logs.)
-- 🌐 **OUT:** Telecaller sends WhatsApp/PDF from the business phone (or via FMOS WhatsApp send, when UI is built).
-- 🖥️ **IN:** Log the outcome → one of 7: Sent Curiosity / Sent PDF / Follow-up Booked / Will Call Back / No Answer / Not Interested / Meeting Booked.
+- 🌐 **OUT:** Telecaller sends WhatsApp/PDF from the business phone, or sends the Direct Report straight from FMOS (WhatsApp Cloud API live, send UI wired — `/admin/direct-report`).
+- 🖥️ **IN:** Log the outcome → one of the cockpit outcomes: Sent Direct Report / Sent PDF / Follow-up Booked / Will Call Back / No Answer / Not Interested / Meeting Booked.
 - 🔗 **FLOW:** Logging an outcome calls `leadStageUpdate()` → writes `outreach_stage`, stamps `last_activity_at`, writes to `outreach_logs` (the call record: `actor_id`, `outcome_id`, `touch_type`).
 - 🖥️ **IN:** Stage change moves the lead's card on the **Outreach Board** (`/admin/outreach`) automatically.
 - 🖥️ **IN:** PDF delivery tracking at `/admin/outreach/pdf-log`.
@@ -115,7 +115,7 @@ Three sources feed the same `leads` table:
 - 🌐 **OUT:** You hold the actual meeting (call/in-person/video via `meeting_link`).
 - 🖥️ **IN:** Capture `meeting_notes` inline; mark **Attended → Move to Proposals**.
 - 🔗 **FLOW:** "Confirm & Move to Proposals" advances stage; lead appears in the **Proposals → Awaiting Proposal** section.
-  - ⚠️ Schema note: `meeting_link` + `meeting_notes` columns are a **pending SQL migration** (see CLAUDE.md).
+  - ✅ Schema note: `meeting_link` + `meeting_notes` columns exist in the live DB (the 2026-06-12 full sync covered them — no pending migration).
 
 ---
 
@@ -127,8 +127,7 @@ Three sources feed the same `leads` table:
   - Step 2: auto-generated consultative document (situation → growth funnel → why FortuneMarq → service deep-dives → investment table → next steps), personalised by lead type A/B/C/D.
   - Step 3: send — WhatsApp message + `wa.me` deep link.
 - 🔗 **FLOW:** Saves to `proposals` table (`services` jsonb, `total_setup`, `total_monthly`, `status`). "Mark as Sent" → `status = sent` + lead `outreach_stage = proposal_sent`.
-- 🌐 **OUT:** You send the proposal to the client via WhatsApp.
-- ⏳ **Pending feature:** real PDF generation for proposals (invoices already use `@react-pdf/renderer`).
+- 🌐 **OUT:** You send the proposal to the client via WhatsApp (sends as a WhatsApp document).
 
 ---
 
@@ -136,10 +135,9 @@ Three sources feed the same `leads` table:
 
 - 🖥️ **IN:** From an accepted proposal → generate agreement at `/admin/leads/[id]/proposal/[proposalId]/agreement`.
 - 🖥️ **IN:** Agreement detail `/admin/agreements/[id]` — review terms.
-- 🌐 **OUT:** Client signs/agrees (verbal/WhatsApp/physical).
+- 🌐 **OUT:** Client signs/agrees (verbal/WhatsApp/physical). Agreements send as a WhatsApp document.
 - 🖥️ **IN:** Click **"Mark as Confirmed"** → `agreements.status = confirmed`, `confirmed_at` stamped.
 - 🔗 **FLOW:** Confirmation is the trigger to convert the lead into a **Client**.
-- ⏳ **Pending feature:** real PDF for agreements + WhatsApp document send.
 
 ---
 
@@ -234,17 +232,17 @@ Three sources feed the same `leads` table:
 # LAYER 3 — AUTOMATION & INTELLIGENCE (the always-on brain)
 
 ## 3.1 Cron jobs (scheduled background tasks)
-| Cron route | Purpose | Scheduled in vercel.json? |
+| Cron route | Purpose | Scheduled? |
 |---|---|---|
 | `/api/cron/daily-digest` | Daily summary (03:30) | ✅ yes |
 | `/api/cron/admin-alerts` | Admin alerts (03:00) | ✅ yes |
-| `/api/cron/automations/followups` | Auto follow-up reminders | ❌ built, NOT scheduled |
-| `/api/cron/automations/sla` | SLA breach checks | ❌ built, NOT scheduled |
-| `/api/cron/automations/tasks` | Task automations | ❌ built, NOT scheduled |
-| `/api/cron/sla` | Speed-to-lead SLA | ❌ built, NOT scheduled |
-| `/api/cron/session-timeout` | Close stale work sessions | ❌ built, NOT scheduled |
+| `/api/cron/automations/followups` | Auto follow-up reminders | ✅ GitHub Actions |
+| `/api/cron/automations/sla` | SLA breach checks | ✅ GitHub Actions |
+| `/api/cron/automations/tasks` | Task automations | ✅ GitHub Actions |
+| `/api/cron/sla` | Speed-to-lead SLA | ✅ GitHub Actions |
+| `/api/cron/session-timeout` | Close stale work sessions | ✅ GitHub Actions |
 - 🔗 All require `CRON_SECRET`; all use service-role client.
-- ⚠️ **Gap:** 5 of 7 crons exist but aren't scheduled — needs `vercel.json` entries (and Vercel Pro for >1/day frequency).
+- ✅ **Scheduled:** `.github/workflows/cron.yml` runs all jobs free (Vercel Hobby is once/day only) — SLA + follow-ups every 15 min, digest/alerts/session-cleanup daily. Needs `FMOS_BASE_URL` var + `CRON_SECRET` secret in the repo.
 
 ## 3.2 Automations engine (`lib/automations/engine.ts`)
 - 🖥️ Rule-based: **trigger** (e.g. lead stage change) → **conditions** (field checks) → **actions** (notify, update, etc.), with **throttling** + full run logging (`automation_runs`).
@@ -331,13 +329,13 @@ Three sources feed the same `leads` table:
 
 # QUICK GAP LIST (things built but not fully live)
 1. ✅ **Auth gate** — DONE (2026-06-15). Lives in `proxy.ts` (Next 16 convention, not middleware.ts). Rewritten FAIL-OPEN: unauthenticated → /login; role routing only on positively-known role; any read error allows through (no lockout). This was the historic lockout source (old unguarded `getUser()` + `.single()`), now fixed.
-2. ✅ **Cron scheduling** — ADDRESSED (2026-06-15): `.github/workflows/cron.yml` runs all jobs free (Vercel Hobby is once/day only). Pings SLA + follow-ups every 15 min, digest/alerts/session-cleanup daily. Activates post-deploy once `FMOS_BASE_URL` var + `CRON_SECRET` secret are set in the repo. (Runtime caveat: confirm `leads.last_contacted_at` / `stale_flag` / `next_action_date` columns exist during the dry-run.)
+2. ✅ **Cron scheduling** — DONE: `.github/workflows/cron.yml` runs all jobs free (Vercel Hobby is once/day only). Pings SLA + follow-ups every 15 min, digest/alerts/session-cleanup daily. Driven by `FMOS_BASE_URL` var + `CRON_SECRET` secret in the repo. (The `leads.last_contacted_at` / `stale_flag` / `next_action_date` columns all exist in the live DB.)
 3. ✅ **Lead scoring** — DONE (2026-06-15): `calculateLeadScore` wired into the Telecaller Cockpit. Priority Queue now sorts hottest-first; each lead shows a Hot/Warm/Cold + score badge. No SQL. (`noContactIn7Days` factor left off until `last_activity_at` is surfaced to the cockpit query.)
-4. **Outbound WhatsApp send UI** — `lib/whatsapp/send.ts` ready, no UI callers.
-5. **Real PDF** for proposals + agreements (invoices done).
-6. **`meeting_link`/`meeting_notes`** columns — pending SQL migration.
+4. ✅ **Outbound WhatsApp send** — DONE. Cloud API live (+91 79759 18980); `lib/whatsapp/send.ts` wired into the cockpit + `/admin/direct-report`.
+5. ✅ **Proposals + agreements** — send as WhatsApp documents (invoices already use `@react-pdf/renderer`).
+6. ✅ **`meeting_link`/`meeting_notes`** columns — exist in the live DB (no pending migration).
 7. **External marketing APIs (M3)** — GSC, Meta/Google Ads, social reach (CSV/manual bridge today).
 8. **Client health score** — planned, not built.
 
 See `EXTERNAL_SETUP_GUIDE.md` (accounts/keys), `MARKETING_AUDIT_2026-06-14.md` (marketing detail),
-`COWORK_HANDOFF.md` (state + priorities).
+`CONTINUE_HERE.md` (state + priorities).

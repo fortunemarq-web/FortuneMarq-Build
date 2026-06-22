@@ -5,7 +5,12 @@
 **Source of truth (read first):**
 - `00_MASTER/FMOS_System_Design_And_Tasks.md` — full system design (all stages).
 - `00_MASTER/FMOS_Execution_Roadmap.md` — build order + launch gate.
+- `WHATSAPP_TEMPLATES_FINAL.md` — the 33 final templates (copy, category, "when").
+- `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` — machine-readable defs.
+- `scripts/bulk_create_whatsapp_templates.py` — bulk-creator (already run).
 - This file = the WhatsApp-specific work order distilled from those.
+
+> **STATUS 2026-06-16:** all 33 templates submitted to Meta and **APPROVED (live)**. Engine work below is what remains.
 
 > **Hard constraint (decided):** nothing goes live / no client acquisition until the WHOLE system is built and QA'd. Build to spec; do not enable sends to real leads.
 
@@ -87,7 +92,7 @@
 ---
 
 ## 6. Constraints & gotchas
-- **Template approval:** a/b/c DIRECT_REPORT approved; **type_d in review**. Proposal/agreement/invoice/reminder/milestone/monthly/outcome templates still need submission/approval (UTILITY vs MARKETING categories matter).
+- **Template approval:** all 33 (see `WHATSAPP_TEMPLATES_FINAL.md`) + the Direct Report family + daily_report are **approved & live**. The live Direct Report family is `direct_report_v3_{a,b,c,d}` (text body + 3 buttons → matched PDF; the older `direct_report_type_*`/`_cover_*` are superseded but still approved). Don't recreate them; wire the engine to send them by name. If any come back rejected, fix wording in `templates_final.json` and re-run the bulk script for those only. (UTILITY vs MARKETING categories already set per template.)
 - **24h window:** never send free-text cold — template only. Bot free-text only after a user message.
 - **Env:** `WHATSAPP_API_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` (1084263481446667), `META_APP_SECRET`, `WHATSAPP_VERIFY_TOKEN`, `WA_OUTCOME_TEMPLATES`, `WHATSAPP_LP_FALLBACK_URL`, `ANTHROPIC_API_KEY`. Number = **+91 79759 18980** (dedicated; never install WhatsApp app on that SIM).
 - **Compliance before volume:** do not enable mass sends until opt-out + throttling + monitoring are in place.

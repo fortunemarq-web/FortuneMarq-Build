@@ -1,12 +1,12 @@
 # FortuneMarq Agency OS (FMOS) — Complete Application Documentation
 
-> **Last Updated:** June 15, 2026
-> **Version:** 0.1.0 (app v4.9 — DB fully synced + inbound engine Stage 1, pre-deploy)
+> **Last Updated:** June 22, 2026
+> **Version:** 0.1.0 (app v4.9 — DEPLOYED & LIVE on Vercel at fmos.fortunemarq.com; DB fully synced + inbound engine + WhatsApp Cloud API live)
 > **Owner:** Jabeer (sayedjabir33@gmail.com)
 > **App Name:** `agency-os`
 
 > ⚠️ **2026-06-12 — major additions not yet folded into the chapters below**
-> (see `COWORK_HANDOFF.md` + `00_MASTER_BUILD_PLAN.md` for detail):
+> (see `CONTINUE_HERE.md` + `CLAUDE.md` for current canonical detail):
 > - **Database**: ALL pending migrations executed via `supabase/2026-06-12_full_schema_sync.sql`
 >   (38 new tables incl. notifications, attendance_*, automation_*, ad_campaigns,
 >   lead_source_attribution, inbound_events, ad_insights_daily, saved_views, niche_kits…).
@@ -24,7 +24,7 @@
 
 ## ⚡ Changelog — 2026-06-11 Evening (UI/UX Session)
 
-Full detail in `COWORK_HANDOFF.md`. Supersedes older UI statements in this document:
+Full detail in `CONTINUE_HERE.md`. Supersedes older UI statements in this document:
 
 | Area | Change |
 |---|---|
@@ -52,7 +52,7 @@ The following supersedes older statements in this document (full detail in `last
 | Meetings | `meeting_link` / `meeting_notes` are now a versioned migration (`20260611000001_leads_meeting_columns.sql`) and present in `database.types.ts`. |
 | Public flows | Landing-page lead capture is validated + service-role; magic-link reports served by `app/api/public/client-report/[token]/route.ts`. |
 
-⚠️ **The four `20260611*` migrations must be run in Supabase (in order) before deploy.** Required env: `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`.
+✅ **The four `20260611*` migrations (plus all older ones) have been run — the DB is fully synced; there are no pending migrations.** Required env (set in Vercel): `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`.
 
 ---
 
@@ -146,7 +146,7 @@ graph LR
 | **Icons** | Lucide React | 0.556.0 |
 | **Charts** | Recharts | 3.5.1 |
 | **Animations** | Framer Motion | 12.23.25 |
-| **PDF Generation** | `@react-pdf/renderer` | 4.3.2 |
+| **PDF Generation** | `@react-pdf/renderer` (in-app market-intel generator DISABLED behind `REPORTS_INAPP_GENERATOR`; the 936 market-intel reports are built by the canonical reportlab Python pipeline at `07_DATA_AND_RESEARCH/PDF_Generator`) | 4.3.2 |
 | **CSV Parsing** | PapaParse | 5.5.3 |
 | **File Upload** | react-dropzone | 15.0.0 |
 | **Markdown** | react-markdown | 10.1.0 |
@@ -564,7 +564,7 @@ Shows leads where `outreach_stage` IN (`follow_up_due`, `no_answer`, `follow_bac
 | Touch 1 Pending | Slate | Slate |
 | No Answer | Gray | Gray |
 | Follow Back | Yellow | Yellow |
-| Curiosity Sent | Blue | Blue |
+| Direct Report Sent | Blue | Blue |
 | PDF Sent | Indigo | Indigo |
 | Follow-up Due | Amber | Amber |
 | Meeting Booked | Green | Green |
@@ -593,7 +593,7 @@ Each lead card shows:
 | Stage | Action Button |
 |---|---|
 | Touch 1 Pending | WhatsApp link (opens `wa.me/`) |
-| Curiosity Sent | Send PDF → lead profile |
+| Direct Report Sent | Send PDF → lead profile |
 | PDF Sent / Follow-up Due | Log Call → lead profile |
 | Meeting Booked | Open Lead → lead profile |
 | Proposal Sent | Open Proposal → lead profile |
@@ -1157,7 +1157,7 @@ The `outreach_stage` column on the `leads` table is the **single source of truth
 | `touch1_pending` | Touch 1 Pending | ✅ Active | No | Make first call |
 | `no_answer` | No Answer | ✅ Active | **YES** | Retry call |
 | `follow_back` | Follow Back | ✅ Active | **YES** | Lead said they'll call back |
-| `curiosity_sent` | Curiosity Sent | ✅ Active | No | Wait for response |
+| `curiosity_sent` | Direct Report Sent | ✅ Active | No | Wait for response (enum value stays `curiosity_sent`; UI/board now labels it "Direct Report Sent") |
 | `pdf_sent` | PDF Sent | ✅ Active | No | Follow up on PDF |
 | `follow_up_due` | Follow-up Due | ✅ Active | **YES** | Make follow-up call |
 | `meeting_booked` | Meeting Booked | ✅ Active | No | → appears in `/admin/meetings` |
@@ -1485,21 +1485,17 @@ npm run start  # Production server
 npm run lint   # ESLint
 ```
 
-### Vercel Deployment
-1. Push to GitHub
-2. Configure environment variables in Vercel dashboard:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `ANTHROPIC_API_KEY`
-3. Update Supabase Auth redirect URLs to include the Vercel domain
+### Vercel Deployment (LIVE)
+FMOS is deployed & live on Vercel at **fmos.fortunemarq.com** (Hostinger CNAME).
+Branch `continue-on-mac`; pushes to `main` auto-deploy. The reference setup:
+1. Push to GitHub (`github.com/fortunemarq-web/FortuneMarq-Build`)
+2. Environment variables are configured in the Vercel dashboard (see Section 14 for the full list)
+3. Supabase Auth redirect URLs include the production domain
 
-### Pending SQL Migrations
-```sql
--- Required for Meetings page (meeting_link and meeting_notes columns)
-ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_link TEXT;
-ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
-```
+### SQL Migrations
+No pending migrations — the DB is fully synced. The `meeting_link` / `meeting_notes`
+columns (and all `20260611*` + older migrations) are already in the live database.
+Any new DDL is appended to the consolidated sync file and run via the Supabase dashboard.
 
 ### Testing
 - **Framework:** Playwright
@@ -1526,4 +1522,4 @@ ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_notes TEXT;
 ---
 
 > [!NOTE]
-> This documentation covers the application as of June 9, 2026. Features are actively being built and refined. Some pages listed under "Additional Admin Pages" may be in varying stages of completion.
+> This documentation covers the application as of June 22, 2026 (deployed & live on Vercel at fmos.fortunemarq.com). Features are actively being built and refined. Some pages listed under "Additional Admin Pages" may be in varying stages of completion.
