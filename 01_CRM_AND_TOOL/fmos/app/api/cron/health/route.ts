@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/supabase-admin";
 import { verifyCronSecret } from "@/lib/cron-auth";
 import { withHeartbeat } from "@/lib/cron-heartbeat";
 import { CRON_JOBS, staleAfterMins } from "@/lib/cron-jobs";
-import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
+import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 
 /**
  * 6.8 — Automation health check. Runs in the every-15-min batch. Compares each
@@ -29,7 +29,9 @@ async function postHandler(req: NextRequest) {
     const last = hb?.last_run_at ? new Date(hb.last_run_at).getTime() : 0;
     const ageMin = last ? Math.round((now - last) / 60000) : null;
     let status: "ok" | "stale" | "error" | "missing";
-    if (!hb) { status = "missing"; issues.push(`${j.key}: never run`); }
+    // "missing" (never run yet) is shown in the UI but does NOT alert — a just-deployed
+    // job legitimately has no heartbeat until its first run. Only stale/error alert.
+    if (!hb) { status = "missing"; }
     else if (ageMin !== null && ageMin > staleAfterMins(j)) { status = "stale"; issues.push(`${j.key}: stale ${ageMin}m`); }
     else if (hb.last_status === "error") { status = "error"; issues.push(`${j.key}: ${String(hb.last_error || "error").slice(0, 60)}`); }
     else status = "ok";
@@ -60,7 +62,7 @@ async function postHandler(req: NextRequest) {
         .limit(1);
 
       if (!recent || recent.length === 0) {
-        const summary = issues.join(" · ").slice(0, 900);
+        const summary = issues.join(" · ").replace(/\s+/g, " ").slice(0, 480);
         await sb.from("alerts").insert({
           title: `System health: ${issues.length} issue${issues.length > 1 ? "s" : ""}`,
           body: summary,
@@ -68,20 +70,10 @@ async function postHandler(req: NextRequest) {
           status: "open",
           entity_type: "system_health",
         });
-
-        const owner = process.env.OWNER_WHATSAPP || "";
-        if (owner && toWaNumber(owner)) {
-          // Gated on the `system_health_alert` utility template being Meta-approved.
-          // If it isn't yet, this just fails-soft — the alert still lives in /admin/system-health.
-          const r = await sendWhatsAppTemplate(owner, "system_health_alert", {
-            language: "en",
-            proactive: true,
-            bypassOptOut: true,
-            bypassThrottle: true,
-            components: [{ type: "body", parameters: [{ type: "text", text: summary.slice(0, 500).replace(/\s+/g, " ") }] }],
-          }).catch(() => null);
-          alerted = !!r?.success;
-        }
+        // Reuse the existing admin-alert channel: the Meta-approved `admin_alert`
+        // template → all ADMIN_WHATSAPP_NUMBERS (owner included). No extra env/template.
+        await sendAdminAlert(`${issues.length} automation issue${issues.length > 1 ? "s" : ""}`, summary);
+        alerted = true;
       }
     } catch {
       /* alerting must never break the health check */

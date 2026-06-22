@@ -53,7 +53,7 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 
 **Built 2026-06-23 (command center + safety nets — on `continue-on-mac`, pending owner activation):**
 - **6.5** `/admin/command` — cross-engine funnel (leads→…→won) + MRR/clients/outstanding KPIs + by-source table.
-- **6.8** automation health monitoring — `cron_heartbeats` + `withHeartbeat` on all 9 crons + `/api/cron/health` (15-min) + `/admin/system-health` + deduped WhatsApp alert. **Activate:** run `supabase/2026-06-23_cron_heartbeats.sql`, set `OWNER_WHATSAPP`, submit the `system_health_alert` template (`HEALTH_MONITORING_SETUP.md`).
+- **6.8** automation health monitoring — `cron_heartbeats` + `withHeartbeat` on all 9 crons + `/api/cron/health` (15-min) + `/admin/system-health` + deduped alert via the existing `admin_alert` template → `ADMIN_WHATSAPP_NUMBERS` (owner incl.). SQL run (verified live); no extra env/template. Goes live on merge to `main`.
 - **6.9** backups — daily `/api/cron/backup-export` (paginated JSON snapshot of core tables → private `backups` bucket, 30-day prune) + `/admin/backups` + `BACKUP_RESTORE.md`. **Activate:** run `supabase/2026-06-23_backups_bucket.sql`.
 
 **Code (remaining, not yet built):**

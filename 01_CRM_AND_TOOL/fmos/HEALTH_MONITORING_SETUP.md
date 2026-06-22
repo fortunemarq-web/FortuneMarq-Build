@@ -1,51 +1,38 @@
 # 6.8 Automation Health Monitoring — Setup
 
 What this gives you: every scheduled cron records a heartbeat; a health check (runs every 15 min)
-detects any cron that has **stopped** or is **failing**, surfaces it on **/admin/system-health**, and
-WhatsApps you when something breaks. So automations can't die silently.
+detects any cron that has **stopped** (stale) or is **failing**, surfaces it on **/admin/system-health**,
+and WhatsApps you when something breaks. So automations can't die silently.
 
 ## What was built (code — already in the branch)
-- `cron_heartbeats` table + `cron_heartbeat()` RPC (SQL below).
+- `cron_heartbeats` table + `cron_heartbeat()` RPC.
 - `lib/cron-heartbeat.ts` (`recordRun` + `withHeartbeat`) — wraps all 9 cron routes; **fail-open** (never affects a cron).
 - `lib/cron-jobs.ts` — registry of watched jobs + staleness thresholds.
-- `/api/cron/health` — the health check (stale jobs + last-run errors + automation_runs failures → alert + WhatsApp).
+- `/api/cron/health` — the health check (stale jobs + last-run errors + `automation_runs` failures → alert + WhatsApp).
 - `/admin/system-health` — status grid (added to the sidebar under **Tools**).
 - `.github/workflows/cron.yml` — health check added to the every-15-min batch.
 
-## Owner steps to activate (3)
+## Activation
 
-### 1. Run the SQL (dashboard SQL editor)
-Run `supabase/2026-06-23_cron_heartbeats.sql` in the Supabase dashboard (project `cnwooodktqwvpzkucskm`).
-Idempotent and additive — safe to re-run.
+### 1. Run the SQL (dashboard SQL editor) — ✅ DONE
+`supabase/2026-06-23_cron_heartbeats.sql` (verified live: table + RPC present).
 
-### 2. Set the owner number env
-Add to `.env.local` **and** Vercel (Project → Settings → Environment Variables):
-```
-OWNER_WHATSAPP=9193530XXXXX   # your WhatsApp number, country code, no +
-```
-Until this is set, alerts still appear on `/admin/system-health` — only the WhatsApp push is skipped.
+### 2. Alerts — already wired, nothing to configure
+Failure alerts **reuse the existing admin-alert channel**: the Meta-approved **`admin_alert`** template
+sent to every number in **`ADMIN_WHATSAPP_NUMBERS`** (which already includes the owner, 919353082656).
+No new env, no new template, no Vercel change. To change who gets alerts, edit `ADMIN_WHATSAPP_NUMBERS`.
+Alerts are deduped to at most once per 6h, and always appear on `/admin/system-health` regardless.
 
-### 3. Submit the WhatsApp template (Meta)
-Failure alerts to your phone are sent outside any 24h window, so Meta needs an approved **utility** template.
-Submit this in WhatsApp Manager → Message Templates:
+### 3. Go live in production
+Merge `continue-on-mac` → `main` (deploys the new cron routes). The every-15-min GitHub Action then
+pings `/api/cron/health` automatically. (Sends honor `WHATSAPP_SEND_MODE`; in `test` they route to
+`WHATSAPP_TEST_RECIPIENTS`, which includes the owner.)
 
-- **Name:** `system_health_alert`
-- **Category:** Utility
-- **Language:** English
-- **Body:**
-  ```
-  FMOS health alert: {{1}}. Open the System Health dashboard to investigate.
-  ```
-- **Sample for {{1}}:** `daily-digest stale 1500m · sla error HTTP 500`
-- Buttons: none.
-
-Once approved, the health check sends it automatically (deduped: at most once per 6h). No code change needed.
-
-## How it reads
+## How it reads (/admin/system-health)
 - **Healthy** — checked in within ~2.5× its cadence, last run ok.
-- **Stale** — stopped checking in (usually the GitHub Action or its `FMOS_BASE_URL`/`CRON_SECRET` secrets broke).
-- **Error** — last run threw / returned non-2xx.
-- **Never run** — no heartbeat yet (first run pending, or the SQL above hasn't been applied).
+- **Stale** — was running, then stopped (usually the GitHub Action or its `FMOS_BASE_URL`/`CRON_SECRET` secrets broke). **→ alerts.**
+- **Error** — last run threw / returned non-2xx. **→ alerts.**
+- **Never run** — no heartbeat yet (first run pending). Shown for awareness, **does not alert** (avoids first-deploy false alarms).
 
 Watched jobs: sla, followups, scheduled-messages, whatsapp-quality (15-min) · daily-digest, admin-alerts,
-session-timeout, invoice-reminders (daily). The health check also records its own heartbeat (`health`).
+session-timeout, invoice-reminders, backup-export (daily). The health check also records its own heartbeat (`health`).

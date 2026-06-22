@@ -63,7 +63,7 @@ Build order below is sequenced by **dependency** (foundations first) and **risk*
 - [ ] **5.7** Presence dashboard (GA4 + GSC + GMB + social + leads-by-source) + WhatsApp digest.
 - [ ] **6.6** Long-term nurture / reactivation drip.
 - [ ] **6.7** Capacity / WIP guardrail + capacity meter.
-- [x] **6.8** Automation health monitoring + failure alerts to WhatsApp. **BUILT 2026-06-23** — cron heartbeats + `/api/cron/health` + `/admin/system-health`. Activation pending: run `cron_heartbeats.sql`, set `OWNER_WHATSAPP`, submit `system_health_alert` template (see `HEALTH_MONITORING_SETUP.md`).
+- [x] **6.8** Automation health monitoring + failure alerts to WhatsApp. **BUILT 2026-06-23** — cron heartbeats + `/api/cron/health` + `/admin/system-health`. SQL run (verified live); alerts reuse the approved `admin_alert` template → `ADMIN_WHATSAPP_NUMBERS` (owner incl.), no extra config. Goes live on merge to `main` (see `HEALTH_MONITORING_SETUP.md`).
 - [x] **6.9** Backups + periodic data export + documented restore. **BUILT 2026-06-23** — daily `/api/cron/backup-export` + `/admin/backups` + `BACKUP_RESTORE.md`. Activation pending: run `backups_bucket.sql`.
 
 ## Phase F — QA & dry run (pre-launch)
