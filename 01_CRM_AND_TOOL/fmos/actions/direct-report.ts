@@ -271,8 +271,10 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
 }
 
 /**
- * Send ONE lead their report (cover preview + PDF) in the given language.
- * Used by the webhook when a lead taps the "ಕನ್ನಡ ವರದಿ" (Kannada report) button.
+ * Send ONE lead JUST their report PDF in the given language (no template/buttons).
+ * Used by the webhook when a lead taps "ಕನ್ನಡ ವರದಿ" — they already have the pitch
+ * message, so we only deliver the PDF. The tap opens the 24h window, so this goes
+ * as a session document (reactive, NOT proactive — they just messaged us).
  * Picks the correct A/B/C/D report for the lead's niche/city/type.
  */
 export async function sendLeadReport(
@@ -292,7 +294,11 @@ export async function sendLeadReport(
 
   const derived = leadScriptType(lead) as LeadType;
   const asset = chooseReport(assets, derived) || assets[0];
-  const components = reportComponents(asset, lead.company_name || "there", lead.industry, lead.city);
-  const r = await sendCoverPlusPdf(lead.phone, asset, lang, components, { leadId: lead.id, proactive: true });
+  const caption = lang === "kn" ? "ಇಲ್ಲಿದೆ ನಿಮ್ಮ ಕನ್ನಡ ವರದಿ 👇" : "Here's your report 👇";
+  const r = await sendWhatsAppDocument(
+    lead.phone,
+    { link: asset.public_url, filename: asset.filename, caption },
+    { leadId: lead.id }, // reactive reply (tap opened the window); no proactive suppression
+  );
   return { ok: r.success, message: r.success ? `sent ${asset.filename}` : r.error || "send failed" };
 }
