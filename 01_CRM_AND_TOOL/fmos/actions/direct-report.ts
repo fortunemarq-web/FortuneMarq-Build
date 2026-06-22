@@ -53,9 +53,9 @@ export interface BlastResult {
 }
 
 function templateFor(leadType: string): string {
-  // Approved image-header "cover" templates: cover preview + short body + buttons.
-  // The PDF itself is sent as a follow-up document (see sendCoverPlusPdf).
-  return `direct_report_cover_${String(leadType).toLowerCase()}`;
+  // Approved image-header templates: cover preview + detailed body + 3 buttons
+  // (Book a meeting / Tell me more / ಕನ್ನಡ ವರದಿ). The PDF follows as a document.
+  return `direct_report_v3_${String(leadType).toLowerCase()}`;
 }
 
 /** The cover PNG sits next to the report PDF in storage (same path, .png). */
@@ -269,4 +269,31 @@ export async function runDirectReport(input: BlastInput): Promise<BlastResult> {
     message: `Sent ${sent}, ${failed} failed${cappedNote}.`,
     errors: errors.slice(0, 25),
   };
+}
+
+/**
+ * Send ONE lead their report (cover preview + PDF) in the given language.
+ * Used by the webhook when a lead taps the "ಕನ್ನಡ ವರದಿ" (Kannada report) button.
+ * Picks the correct A/B/C/D report for the lead's niche/city/type.
+ */
+export async function sendLeadReport(
+  lead: { id: string; phone: string; company_name?: string; industry?: string; city?: string; has_website?: boolean; serp_ranked?: boolean },
+  lang: "en" | "kn"
+): Promise<{ ok: boolean; message: string }> {
+  if (!lead?.phone || !lead.city || !lead.industry) {
+    return { ok: false, message: "lead missing phone/city/industry" };
+  }
+  const supabase = createAdminClient() as any;
+  const slug = slugify(lead.industry);
+  const { data: allAssets, error } = await supabase
+    .from("report_assets").select("*").eq("city", lead.city).eq("lang", lang);
+  if (error) return { ok: false, message: error.message };
+  const assets: ReportAssetRow[] = (allAssets || []).filter((a: any) => slugify(a.niche_slug) === slug);
+  if (assets.length === 0) return { ok: false, message: `no ${lang} report for ${lead.industry}/${lead.city}` };
+
+  const derived = leadScriptType(lead) as LeadType;
+  const asset = chooseReport(assets, derived) || assets[0];
+  const components = reportComponents(asset, lead.company_name || "there", lead.industry, lead.city);
+  const r = await sendCoverPlusPdf(lead.phone, asset, lang, components, { leadId: lead.id, proactive: true });
+  return { ok: r.success, message: r.success ? `sent ${asset.filename}` : r.error || "send failed" };
 }

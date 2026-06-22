@@ -7,6 +7,7 @@ import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { runBot } from "@/lib/bot/engine";
 import { handleQualityWebhook } from "@/lib/whatsapp/quality";
 import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
+import { sendLeadReport } from "@/actions/direct-report";
 import {
   handleMenuTap,
   isMenuReplyId,
@@ -542,6 +543,23 @@ async function applyButtonAction(
       await sendWhatsAppButtons(phone, messageBody, [...reply.buttons], { leadId });
     } else {
       await sendWhatsAppText(phone, messageBody, { leadId });
+    }
+  }
+
+  // "ಕನ್ನಡ ವರದಿ" tap → send the lead their report in Kannada (cover + PDF).
+  if (action.sendReportLang) {
+    const { data: full } = await supabase
+      .from("leads")
+      .select("id, company_name, phone, industry, city, has_website, serp_ranked")
+      .eq("id", leadId)
+      .maybeSingle();
+    if (full?.phone) {
+      try {
+        const res = await sendLeadReport(full, action.sendReportLang);
+        if (!res.ok) console.error("[webhooks/whatsapp] Kannada report send:", res.message);
+      } catch (e) {
+        console.error("[webhooks/whatsapp] sendLeadReport failed:", e);
+      }
     }
   }
 }

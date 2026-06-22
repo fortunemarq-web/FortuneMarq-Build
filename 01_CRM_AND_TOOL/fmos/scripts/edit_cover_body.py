@@ -58,7 +58,8 @@ def edit(tid, handle):
                 {"param_name": "city", "example": "Hubli"}]}},
             {"type": "BUTTONS", "buttons": [
                 {"type": "QUICK_REPLY", "text": "Book a meeting"},
-                {"type": "QUICK_REPLY", "text": "Tell me more"}]},
+                {"type": "QUICK_REPLY", "text": "Tell me more"},
+                {"type": "QUICK_REPLY", "text": "ಕನ್ನಡ ವರದಿ"}]},
         ],
     }
     return http(f"https://graph.facebook.com/{API}/{tid}",

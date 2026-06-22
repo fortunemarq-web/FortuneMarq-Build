@@ -64,7 +64,8 @@ def create(name, handle):
                 {"param_name": "city", "example": "Mysuru"}]}},
             {"type": "BUTTONS", "buttons": [
                 {"type": "QUICK_REPLY", "text": "Book a meeting"},
-                {"type": "QUICK_REPLY", "text": "Tell me more"}]},
+                {"type": "QUICK_REPLY", "text": "Tell me more"},
+                {"type": "QUICK_REPLY", "text": "ಕನ್ನಡ ವರದಿ"}]},
         ],
     }
     return http(f"https://graph.facebook.com/{API}/{WABA}/message_templates",
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     handle = upload_sample()
     print("sample uploaded, handle ok", flush=True)
     for t in ("a", "b", "c", "d"):
-        name = f"direct_report_cover_{t}"  # fresh names — no deletion-limbo conflict
+        name = f"direct_report_v3_{t}"  # fresh names: cover + detailed body + 3 buttons (incl. Kannada)
         ok, res = create(name, handle)
         if ok:
             print(f"  CREATED {name}: id={res.get('id')} status={res.get('status')}", flush=True)

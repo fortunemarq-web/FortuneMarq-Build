@@ -12,13 +12,15 @@
 
 export interface ButtonAction {
   /** tag appended to leads.tags */
-  tag?: "tapped_book_meeting" | "tapped_tell_me_more";
+  tag?: "tapped_book_meeting" | "tapped_tell_me_more" | "tapped_kannada_report";
   /** bump lead to top of the follow-up queue */
   priorityQueue: boolean;
   /** schedule follow-up N days out instead of bumping */
   followUpDays?: number;
   /** key into AUTO_REPLIES */
   autoReply?: keyof typeof AUTO_REPLIES;
+  /** send the lead their market report in this language (cover + PDF) */
+  sendReportLang?: "en" | "kn";
   /** human label for notifications / cockpit badge */
   label: string;
 }
@@ -48,7 +50,17 @@ export const AUTO_REPLIES = {
  * Matching is fuzzy on title so template wording tweaks don't break the flow.
  */
 export function resolveButtonAction(idOrTitle: string): ButtonAction | null {
-  const norm = (idOrTitle || "").toLowerCase().replace(/[^a-z_ ]/g, "").trim();
+  const raw = idOrTitle || "";
+  const norm = raw.toLowerCase().replace(/[^a-z_ ]/g, "").trim();
+  // "ಕನ್ನಡ ವರದಿ" (Kannada report) — match the Kannada substring (norm strips it) or "kannada".
+  if (raw.includes("ಕನ್ನಡ") || norm.includes("kannada")) {
+    return {
+      tag: "tapped_kannada_report",
+      priorityQueue: false,
+      sendReportLang: "kn",
+      label: "Kannada report",
+    };
+  }
   if (norm.includes("book") && norm.includes("meeting")) {
     return {
       tag: "tapped_book_meeting",
