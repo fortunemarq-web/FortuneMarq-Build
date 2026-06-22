@@ -4,7 +4,7 @@
 **Owner:** Jabeer
 **Companion to:** `FMOS_System_Design_And_Tasks.md` (the full design)
 
-> **Current status (2026-06-22):** Phase A foundations (1.3–1.6, 6.1, 6.3, 6.4) ✅, the full outbound engine (Phase B: 3.1–3.4, 6.2) ✅, and sales→delivery (Phase D: 4.1–4.7) ✅ are all built & live. Data is fully loaded (9 cities, 13 niches, ~7,960 leads, 936 EN+KN reports). **Remaining:** 1.1/1.2 collection + intake orchestrator; Phase C (site/presence + campaigns — 5.1 home page live, 2.1 LP template built with Dental·Hubli enabled); 4.8; Phase E (6.5/5.7/6.6/6.7/6.8/6.9).
+> **Current status (2026-06-22):** Phase A foundations (1.3–1.6, 6.1, 6.3, 6.4) ✅, the full outbound engine (Phase B: 3.1–3.4, 6.2) ✅, and sales→delivery (Phase D: 4.1–4.7) ✅ are all built & live. Data is fully loaded (9 cities, 13 niches, ~7,960 leads, 936 EN+KN reports). **Remaining:** 1.1/1.2 collection + intake orchestrator; Phase C (presence + campaigns — 5.1 marketing site **DONE** [all pages + GA4/Clarity/GSC/Pixel]; 2.1 LP template built but only `dental-clinics` enabled; GMB/SEO/social + campaign engine pending); 4.8; Phase E (6.5/5.7/6.6/6.7/6.8/6.9).
 
 > **Governing rule (decided):** Client acquisition does **NOT** begin until **every feature across all engines is built and QA'd.** No partial go-live. Build the whole machine → QA → then flip everything on together at the Launch Gate.
 
@@ -37,7 +37,8 @@ Build order below is sequenced by **dependency** (foundations first) and **risk*
 - [x] **6.2** Unified conversation inbox + per-thread human takeover (`/admin/inbox`).
 
 ## Phase C — Inbound + site + presence  🟡 IN PROGRESS
-- [~] **5.1 / 2.1** Rebuild fortunemarq.com on Next.js/Vercel (performance + animation), integrated with FMOS; dynamic niche LPs from `market_insights`; SEO-built; EN+KN. **HOME page live + niche LP template built at `/lp/[niche]/[city]` (Dental·Hubli enabled); About/Services/Work/Contact/legal + remaining niches pending.**
+- [x] **5.1** Rebuild fortunemarq.com on Next.js/Vercel, integrated with FMOS — **DONE: all pages live (home/about/services/work/contact/blog/privacy/terms) + GA4/Clarity/GSC/Meta Pixel connected.**
+- [~] **2.1** Dynamic niche LPs from `market_insights` at `/lp/[niche]/[city]`, SEO-built, EN+KN — template built; only `dental-clinics` enabled (`lib/lp/niches.ts`); roll out the remaining 12 niches.
 - [~] **5.1 / 2.1** Website chatbot (shared bot brain) → FMOS inbound; tracking (Pixel + GA4 + Clarity + in-app); forms/CTAs → leads + Google Meet booking; proof vault + projection showcase (2.2). **Conversion layer (forms/WhatsApp CTA/booking/analytics) on the marketing site live; full proof vault + projection rollout pending.**
 - [ ] **2.3** Campaign object + auto-task decomposition; launch-priority view; packages selectable in proposals.
 - [ ] **2.4** Content pipeline — content-item model + board + Drive links.

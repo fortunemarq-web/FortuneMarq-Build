@@ -60,6 +60,21 @@ const deployState = (branch === "main" || branch === "continue-on-mac")
   ? "LIVE (Vercel · fmos.fortunemarq.com)"
   : `feature branch (${branch}) — not the deploy branch`;
 
+// ── code-derived build facts (filesystem — always available, no network) ─────
+// These are the build-status signals a DB pull can't see (the "how did 5.1 read as
+// 'home only'?" gap): concrete marketing-site routes + how many niche LPs are enabled.
+function sitePages() {
+  const ls = g(["ls-files", "01_CRM_AND_TOOL/fmos/app/site"], "");
+  if (!ls) return null;
+  return ls.split("\n").filter((p) => /\/page\.tsx$/.test(p) && !p.includes("[")).length;
+}
+function lpEnabled() {
+  const p = join(REPO, "01_CRM_AND_TOOL/fmos/lib/lp/niches.ts");
+  if (!existsSync(p)) return null;
+  try { return (readFileSync(p, "utf8").match(/enabled:\s*true/g) || []).length; } catch { return null; }
+}
+const codeFacts = { site_pages: sitePages(), lp_enabled: lpEnabled() };
+
 // ── live Supabase counts (fail-open, time-boxed) ────────────────────────────
 async function pullSupabase() {
   const envPath = join(REPO, "01_CRM_AND_TOOL/fmos/.env.local");
@@ -121,8 +136,8 @@ const db = await pullSupabase();
 const prev = priorFacts() || {};
 
 // merge: only overwrite a field with a fresh non-null value; keep prior on a blip
-const FACT_KEYS = ["leads", "cities", "niches", "market_insights", "report_assets", "branch", "deployState"];
-const live = { branch, deployState };
+const FACT_KEYS = ["leads", "cities", "niches", "market_insights", "report_assets", "site_pages", "lp_enabled", "branch", "deployState"];
+const live = { branch, deployState, ...codeFacts };
 if (db.ok) for (const k of ["leads", "cities", "niches", "market_insights", "report_assets"])
   if (db[k] != null) live[k] = db[k];
 const facts = {};
@@ -133,7 +148,7 @@ for (const k of FACT_KEYS) {
   if (prev[k] != null && facts[k] != null && String(prev[k]) !== String(facts[k]))
     drift.push({ field: k, from: prev[k], to: facts[k] });
 }
-const factsChanged = drift.length > 0 || priorFacts() === null;
+const factsChanged = priorFacts() === null || JSON.stringify(facts) !== JSON.stringify(prev);
 
 // ── docs_check (dead refs / stale folder-docs) ──────────────────────────────
 let dc = { deadRefs: [], stale: [], scanned: 0 };
@@ -169,6 +184,8 @@ reconcile them (run the \`sync-docs\` skill, or fix by hand).
 | market_insights rows | **${f(facts.market_insights)}** (= cities × niches) |
 | report_assets rows | **${f(facts.report_assets)}** |
 | report_assets ÷ market_insights | ${ratio} |
+| Marketing-site pages built | **${f(facts.site_pages)}** |
+| Niche LPs enabled (of 13) | **${f(facts.lp_enabled)}** |
 
 > Live counts come from Supabase via \`scripts/doc_sync.mjs\` (service-role REST, read-only).
 > Git HEAD / ahead-behind and the docs_check status are session-volatile and are NOT stored
@@ -177,8 +194,8 @@ reconcile them (run the \`sync-docs\` skill, or fix by hand).
 `;
 
 let wrote = false;
-if (WRITE && factsChanged && db.ok) { writeFileSync(liveStatePath, md); wrote = true; }
-else if (WRITE && !existsSync(liveStatePath) && (db.ok || prev.leads != null)) { writeFileSync(liveStatePath, md); wrote = true; }
+const haveFresh = db.ok || codeFacts.site_pages != null || codeFacts.lp_enabled != null;
+if (WRITE && factsChanged && haveFresh) { writeFileSync(liveStatePath, md); wrote = true; }
 
 // ── output ──────────────────────────────────────────────────────────────────
 const status = {
@@ -207,6 +224,7 @@ if (SESSION) {
     `[doc_sync] FMOS live state — ${today}`,
     `- branch ${branch} (HEAD ${head}, last ${lastCommitDate}; ${ahead} ahead / ${behind} behind origin) · deploy ${facts.deployState}`,
     `- ${dbLine}`,
+    `- build: ${f(facts.site_pages)} marketing-site pages · ${f(facts.lp_enabled)}/13 niche LPs enabled`,
     `- docs_check: ${dead} dead refs, ${stale} stale folder-docs (${status.docsCheck.scanned} scanned)`,
     `- ${driftLine}`,
   ];
@@ -223,6 +241,7 @@ console.log("");
 console.log(`  git     : ${branch} @ ${head} (last ${lastCommitDate}; ${ahead} ahead / ${behind} behind origin)`);
 console.log(`  deploy  : ${facts.deployState}`);
 console.log(`  ${dbLine}`);
+console.log(`  build   : ${f(facts.site_pages)} marketing-site pages · ${f(facts.lp_enabled)}/13 niche LPs enabled`);
 console.log(`  reports : ${ratio} per niche×city`);
 console.log(`  docs    : ${dead} dead refs, ${stale} stale folder-docs (${status.docsCheck.scanned} scanned)`);
 console.log(`  drift   : ${driftLine}`);

@@ -1,6 +1,6 @@
 # FMOS — System Design & Tasks (Living Doc)
 
-**Status:** BUILD IN PROGRESS — ~45% of the 43 workflows built (the convert+deliver spine). DONE: 1.3–1.6, 3.1–3.4, 4.1–4.7, 6.1–6.4. PENDING: 1.1/1.2 + intake orchestrator, all of Stage 2 (campaigns; 2.1 LP template exists, only Dental·Hubli enabled), 4.8, most of Stage 5 (5.1 site = home only), and 6.5–6.9.
+**Status:** BUILD IN PROGRESS — ~45% of the 43 workflows built (the convert+deliver spine). DONE: 1.3–1.6, 3.1–3.4, 4.1–4.7, 6.1–6.4. PENDING: 1.1/1.2 + intake orchestrator, all of Stage 2 (campaigns; 2.1 LP template exists, only Dental·Hubli enabled), 4.8, most of Stage 5 (5.1 marketing site DONE + GA4/Clarity/GSC/Pixel; 5.2–5.7 GMB/SEO/social/dashboard pending; 2.1 LP rollout = only dental-clinics enabled), and 6.5–6.9.
 **Started:** 2026-06-16 · **Last updated:** 2026-06-22
 **Owner:** Jabeer
 **How we work this doc:** Go stage by stage, workflow by workflow. For each minor workflow we capture: Goal → Current state → Problems / open questions → Decisions → Tasks. The per-section ✅/🟡 markers + the dated build-log above are the source of truth for what's built.
@@ -764,7 +764,7 @@ Minor workflows: **4.1 Attend meeting · 4.2 Send proposal · 4.3 Agreement · 4
 
 Elements: **5.1 Company website · 5.2 GMB & Local SEO · 5.3 SEO (organic) · 5.4 Instagram/Facebook · 5.5 LinkedIn · 5.6 Organic lead capture → FMOS · 5.7 Tracking & optimize**
 
-## 5.1 — Company Website (fortunemarq.com)  🟡 *IN PROGRESS — HOME page live; About/Services/Work/Contact/legal pending*
+## 5.1 — Company Website (fortunemarq.com)  ✅ *DONE — all pages live (home/about/services/work/contact/blog/privacy/terms) + GA4/Clarity/GSC/Meta Pixel connected*
 
 **Goal:** The site *is* the proof. Its design, speed, and animation convert visitors into website-development clients (most agencies' own sites look bad — ours is the demo). Plus credibility/trust, and built to **rank on Google** (the main site + all landing pages).
 

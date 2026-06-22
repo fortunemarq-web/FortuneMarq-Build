@@ -70,7 +70,7 @@ These folders/topics have not been opened in the current build phase. Each needs
 - [x] SERP / competitor analysis for all 9 cities. **DONE — 117 `market_insights` rows (9×13), 0 orphans.**
 
 ### 05_FORTUNEMARQ_ONLINE_PRESENCE
-- [~] **fortunemarq.com rebuild** — now rebuilt in-app on Next.js/Vercel (not Hostinger). **HOME page live**; About/Services/Work/Contact/legal pages pending.
+- [x] **fortunemarq.com rebuild** — rebuilt in-app on Next.js/Vercel (not Hostinger). **DONE: all pages live (home/about/services/work/contact/blog/privacy/terms) + GA4/Clarity/GSC/Meta Pixel connected.**
 - [~] **Niche landing pages** — rebuilt as a dynamic in-app template at `/lp/[niche]/[city]` from `market_insights` (EN+KN). **Dental·Hubli enabled**; roll out the remaining niches (seed data + enable). NOTE: WhatsApp outreach is already live via the Direct Report — sends no longer depend on these pages.
 - [ ] **GMB full optimization** — starts June 15: add all 7 services with descriptions, upload 15+ photos, write keyword-rich business description, set up 2x/week posting schedule, pre-populate Q&A with 5 common questions, request reviews from existing freelance clients
 - [ ] **SEO** — starts June 15: keyword targeting for fortunemarq.com — "digital marketing agency Hubli" and niche searches
