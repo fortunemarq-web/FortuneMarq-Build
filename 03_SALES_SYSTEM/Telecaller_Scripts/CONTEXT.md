@@ -83,8 +83,8 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 - Script content is complete and live in FMOS. No further script writing needed.
 
 ## What's Blocked
-- Blocked on FMOS deployment
-- Afifa has not started yet (hired but waiting on FMOS being live)
+- FMOS is deployed & live; scripts are live in the cockpit (`/sales`)
+- Afifa has not started yet (hired; onboarding pending)
 
 ## Connections to Other Folders
 - **JSON files copied to:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/` — for Antigravity to use in Phase C/D

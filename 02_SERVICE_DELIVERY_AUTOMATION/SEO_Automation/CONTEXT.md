@@ -23,7 +23,7 @@ No build files exist. This folder is a planning placeholder.
 - Build timeline: Phase 3 (Months 5–6 after FMOS deployed)
 
 ## What's Blocked
-- Blocked on FMOS deployment
+- FMOS is live; this automation is still pre-build (Phase 3)
 - Blocked on having enough SEO retainer clients to justify DataForSEO API cost (~₹1,500/month per 30 clients)
 - DataForSEO account needs to be created
 

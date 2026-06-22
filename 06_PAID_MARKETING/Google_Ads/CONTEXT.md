@@ -19,7 +19,7 @@ Plan FortuneMarq's own Google Ads campaigns for lead generation. Phase 2 after M
 - Phase 2 (after Meta Ads Phase 1 data is in)
 
 ## What's Blocked
-- All blocked on FMOS deployment + Meta Ads Phase 1 running first
+- FMOS is deployed & live; gated on Meta Ads Phase 1 running first + Google Ads account setup
 
 ## Connections to Other Folders
 - **Keyword data from:** `07_DATA_AND_RESEARCH/Keyword_Data/Hubli_Keywords/`

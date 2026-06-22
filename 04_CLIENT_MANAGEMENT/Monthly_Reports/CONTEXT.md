@@ -55,7 +55,7 @@ Monthly performance reports generated as PDFs and sent to every active client. C
 - Health score auto-calculation from API data (currently manual data entry)
 
 ## What's Blocked
-- Execution blocked on FMOS deployment
+- FMOS is live; monthly client-report auto-send (4.6) is built — execution gated on active clients
 - API integrations blocked on having active clients with connected accounts
 
 ## Connections to Other Folders

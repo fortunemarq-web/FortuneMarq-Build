@@ -49,7 +49,7 @@ Define the exact onboarding process — what happens the moment a client signs, 
 - Note: Most local clients provide logo, services description, photos only — domain/hosting often handled by FortuneMarq
 
 ## What's Blocked
-- Execution blocked on FMOS deployment
+- FMOS is live; the onboarding flow (4.4) is built — execution gated on first clients
 
 ## Connections to Other Folders
 - **JSON files copied to:** `01_CRM_AND_TOOL/FMOS_Change_Specs/data/` — for Antigravity Phase D

@@ -23,7 +23,7 @@ No build files exist. This folder is a planning placeholder.
 - Build timeline: Phase 1 (Months 1–2 after FMOS deployed)
 
 ## What's Blocked
-- Blocked on FMOS deployment being live first
+- FMOS is live; this app is still pre-build (Phase 1)
 - Blocked on outsourced freelancers completing Antigravity training
 - Need at least 2–3 real website builds done manually before automating the process
 

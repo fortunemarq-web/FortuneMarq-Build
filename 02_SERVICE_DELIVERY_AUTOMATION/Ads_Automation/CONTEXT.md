@@ -24,7 +24,7 @@ No build files exist. This folder is a planning placeholder.
 - Build timeline: Phase 2 (Months 3–4 after FMOS deployed)
 
 ## What's Blocked
-- Blocked on FMOS deployment
+- FMOS is live; this automation is still pre-build (Phase 2)
 - Google MCC creation requires a real Google Ads manager account
 - Meta BM requires verified business page and GSTIN
 - API access requires billing setup with Google and Meta

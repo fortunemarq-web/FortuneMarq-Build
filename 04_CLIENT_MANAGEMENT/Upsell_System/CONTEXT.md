@@ -48,7 +48,7 @@ Not Eligible → Upsell Ready → In Conversation → Closed Won / Closed Lost /
 - `upsell_rules.json` + `upsell_scripts.json` to be seeded into FMOS in Phase E
 
 ## What's Blocked
-- Execution blocked on FMOS deployment
+- FMOS is live; upsell automation (4.8) not yet built
 - No clients yet to upsell
 
 ## Connections to Other Folders

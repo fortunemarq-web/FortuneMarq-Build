@@ -36,7 +36,7 @@ Documents when and how to upsell existing clients and manage contract renewals. 
 - FMOS Phase E: 30-day renewal alert + upsell queue in admin dashboard
 
 ## What's Blocked
-- Execution blocked on FMOS deployment and having active clients
+- FMOS is live; renewal/upsell automation (4.8) not yet built — gated on active clients
 
 ## Connections to Other Folders
 - **Detailed scripts:** `04_CLIENT_MANAGEMENT/Upsell_System/FMOS_Upsell_Data/upsell_scripts.json`
