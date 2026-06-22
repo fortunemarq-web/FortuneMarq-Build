@@ -59,12 +59,12 @@ Build order below is sequenced by **dependency** (foundations first) and **risk*
 - [ ] **4.8** Upsell opportunity flags (manual pitch); auto renewals; auto review/referral requests; referral leads → inbound.
 
 ## Phase E — Command center + safety nets
-- [ ] **6.5** Master funnel dashboard (cross-engine: leads → … → MRR) + founder daily WhatsApp digest.
+- [x] **6.5** Master funnel dashboard (cross-engine: leads → … → MRR). **BUILT 2026-06-23** — `/admin/command`. (Founder daily WhatsApp digest still to extend onto the existing daily-digest.)
 - [ ] **5.7** Presence dashboard (GA4 + GSC + GMB + social + leads-by-source) + WhatsApp digest.
 - [ ] **6.6** Long-term nurture / reactivation drip.
 - [ ] **6.7** Capacity / WIP guardrail + capacity meter.
-- [ ] **6.8** Automation health monitoring + failure alerts to WhatsApp.
-- [ ] **6.9** Backups + periodic data export + documented restore.
+- [x] **6.8** Automation health monitoring + failure alerts to WhatsApp. **BUILT 2026-06-23** — cron heartbeats + `/api/cron/health` + `/admin/system-health`. Activation pending: run `cron_heartbeats.sql`, set `OWNER_WHATSAPP`, submit `system_health_alert` template (see `HEALTH_MONITORING_SETUP.md`).
+- [x] **6.9** Backups + periodic data export + documented restore. **BUILT 2026-06-23** — daily `/api/cron/backup-export` + `/admin/backups` + `BACKUP_RESTORE.md`. Activation pending: run `backups_bucket.sql`.
 
 ## Phase F — QA & dry run (pre-launch)
 - [x] **WhatsApp templates — DONE 2026-06-16:** all 33 finalized, submitted, and **APPROVED by Meta**. Source: `WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json` (created via `bulk_create_whatsapp_templates.py`).

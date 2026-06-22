@@ -35,6 +35,8 @@ import {
   Database,
   Megaphone,
   Boxes,
+  Activity,
+  Archive,
 } from "lucide-react";
 
 
@@ -82,6 +84,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
     {
       label: "Insights",
       items: [
+        { label: "Command Center",   href: "/admin/command",          icon: CommandIcon },
         { label: "Finance",          href: "/admin/finance",          icon: DollarSign },
         { label: "Market Insights",  href: "/admin/market-insights",  icon: BarChart2 },
         { label: "Marketing Hub",    href: "/admin/marketing-hub",    icon: Megaphone },
@@ -97,6 +100,8 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
         { label: "WA Templates", href: "/admin/whatsapp-templates", icon: MessageSquare },
         { label: "Attendance",   href: "/admin/attendance",         icon: CalendarCheck },
         { label: "Audit Log",    href: "/admin/audit-log",          icon: History },
+        { label: "System Health", href: "/admin/system-health",     icon: Activity },
+        { label: "Backups",      href: "/admin/backups",            icon: Archive },
         { label: "Data Tools",   href: "/admin/data-management",    icon: Database },
       ],
     },

@@ -51,11 +51,17 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 ## 4. Next steps
 **Already done (these were the old "next" items — all built & live):** Curiosity→Direct Report rename; delivery/read/click tracking (`/admin/direct-report/tracking`); the bot brain (6.1, KB filled); Google Calendar/Meet booking; messaging safety + unified inbox (6.2/6.3/6.4).
 
+**Built 2026-06-23 (command center + safety nets — on `continue-on-mac`, pending owner activation):**
+- **6.5** `/admin/command` — cross-engine funnel (leads→…→won) + MRR/clients/outstanding KPIs + by-source table.
+- **6.8** automation health monitoring — `cron_heartbeats` + `withHeartbeat` on all 9 crons + `/api/cron/health` (15-min) + `/admin/system-health` + deduped WhatsApp alert. **Activate:** run `supabase/2026-06-23_cron_heartbeats.sql`, set `OWNER_WHATSAPP`, submit the `system_health_alert` template (`HEALTH_MONITORING_SETUP.md`).
+- **6.9** backups — daily `/api/cron/backup-export` (paginated JSON snapshot of core tables → private `backups` bucket, 30-day prune) + `/admin/backups` + `BACKUP_RESTORE.md`. **Activate:** run `supabase/2026-06-23_backups_bucket.sql`.
+
 **Code (remaining, not yet built):**
 1. **Stage 2 — campaigns** (campaign object + status machine + metric pull + WhatsApp digest).
-2. **Stage 5 — site/presence**, **6.5 command center**, **6.6 nurture**, **6.8 monitoring**, **6.9 backups**.
+2. **Stage 5 — site/presence** (GMB/SEO/social + **5.7** presence dashboard), **6.6 nurture**, **6.7 capacity guardrail**.
 3. **Collection automation (1.1/1.2)** + the **pipeline orchestrator** (batch status on `import_batch_id`).
 4. **Channel adapters** (web/IG/Messenger) beyond WhatsApp.
+5. **Niche LPs** — parked mid-redesign (uncommitted working tree); see `lp-redesign-direction` memory.
 
 **Owner / external (not code):**
 - **Seed PDFs:** the report library is complete — 936 reports = all 9 cities × 13 niches × 4 types × EN/KN (no gaps; the earlier SkinClinics Type-B EN gap is closed). Regenerate via the reportlab pipeline + `batch_upload_*` when copy/data changes.

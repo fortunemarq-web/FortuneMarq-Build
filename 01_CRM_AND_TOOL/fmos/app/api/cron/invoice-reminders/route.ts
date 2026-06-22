@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
+import { withHeartbeat } from "@/lib/cron-heartbeat";
+
+export const POST = withHeartbeat("invoice-reminders", postHandler);
 
 const APP_URL = () =>
   (process.env.NEXT_PUBLIC_APP_URL || "https://fmos.fortunemarq.com").replace(/\/$/, "");
@@ -22,7 +25,7 @@ function verifyCronSecret(req: NextRequest): boolean {
  * Daily cron — fires payment_reminder on due date, payment_overdue after due date.
  * Skips already-paid/partial invoices.
  */
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   if (!verifyCronSecret(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

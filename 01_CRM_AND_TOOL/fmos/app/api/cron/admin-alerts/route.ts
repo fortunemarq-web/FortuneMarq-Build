@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { verifyCronSecret } from "@/lib/cron-auth";
+import { withHeartbeat } from "@/lib/cron-heartbeat";
 
-export async function POST(req: NextRequest) {
+export const POST = withHeartbeat("admin-alerts", postHandler);
+
+async function postHandler(req: NextRequest) {
     const denied = verifyCronSecret(req);
     if (denied) return denied;
 

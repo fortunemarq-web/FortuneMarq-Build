@@ -2,13 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { verifyCronSecret } from "@/lib/cron-auth";
 import { sendDailyReport } from "@/lib/reports/dailyReport";
+import { withHeartbeat } from "@/lib/cron-heartbeat";
+
+export const POST = withHeartbeat("daily-digest", postHandler);
 
 /**
  * Daily digest — one in-app notification per user summarising what needs
  * attention today: meetings, due follow-ups, overdue invoices, overdue tasks.
  * Schedule once per morning (see vercel.json). Idempotent per day.
  */
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   const denied = verifyCronSecret(req);
   if (denied) return denied;
 

@@ -67,6 +67,14 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/whatsapp-quality" \
             -H "Authorization: Bearer $SECRET" || echo "whatsapp-quality ping failed (non-fatal)"
+      - name: Automation health check (6.8 — alerts if a cron stops)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/health" \
+            -H "Authorization: Bearer $SECRET" || echo "health ping failed (non-fatal)"
 
   daily:
     if: github.event.schedule == '0 3 * * *' || github.event_name == 'workflow_dispatch'
@@ -113,3 +121,11 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/invoice-reminders" \
             -H "Authorization: Bearer $SECRET" || echo "invoice-reminders ping failed (non-fatal)"
+      - name: Daily data export / backup (6.9)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/backup-export" \
+            -H "Authorization: Bearer $SECRET" || echo "backup-export ping failed (non-fatal)"

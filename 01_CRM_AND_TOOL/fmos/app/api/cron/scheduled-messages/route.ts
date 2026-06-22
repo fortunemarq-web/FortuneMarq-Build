@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { verifyCronSecret } from "@/lib/cron-auth";
+import { withHeartbeat } from "@/lib/cron-heartbeat";
+
+export const POST = withHeartbeat("scheduled-messages", postHandler);
 import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
 
 /**
@@ -9,7 +12,7 @@ import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
  * and meeting reminders (meeting_reminder_1h / meeting_reminder_15m — added by 3.4).
  * Run every 15 minutes via vercel.json cron.
  */
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   const denied = verifyCronSecret(req);
   if (denied) return denied;
 

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchMessagingHealth, recordAndAlertHealth } from "@/lib/whatsapp/quality";
+import { withHeartbeat } from "@/lib/cron-heartbeat";
+
+export const POST = withHeartbeat("whatsapp-quality", postHandler);
 
 /**
  * 6.4 — daily poll of Meta messaging quality + tier. Complements the realtime
@@ -11,7 +14,7 @@ function verifyCronSecret(req: NextRequest): boolean {
   return auth === `Bearer ${process.env.CRON_SECRET}`;
 }
 
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   if (!process.env.CRON_SECRET) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 503 });
   }

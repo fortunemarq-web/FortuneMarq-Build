@@ -1,9 +1,12 @@
 import { createAdminClient } from "@/lib/supabase-admin";
 import { verifyCronSecret } from "@/lib/cron-auth";
+import { withHeartbeat } from "@/lib/cron-heartbeat";
+
+export const POST = withHeartbeat("sla", postHandler);
 import { type NextRequest, NextResponse } from "next/server";
 import { runTrigger } from "@/lib/automations/engine";
 
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
     const denied = verifyCronSecret(req);
     if (denied) return denied;
 

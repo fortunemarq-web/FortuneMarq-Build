@@ -8,6 +8,11 @@ finance → team — plus the agency's own inbound-marketing engine. Built with
 (Postgres + Auth + RLS), with Claude (Anthropic) powering the AI features. It is
 deployed on **Vercel** and reached at `fmos.fortunemarq.com`.
 
+> **New (2026-06-22):** a cinematic, scroll-driven landing page for the website-development service
+> at `/web-design` — premium dark-atmosphere hero + GSAP scroll story (no WebGL/particles), honesty-aligned
+> per `00_MASTER` §2.2 (illustrative samples, build-standard metrics). Self-contained under
+> `app/site/web-design/` + `components/site/web-design/`. Full handoff: `app/site/README.md`.
+
 ## Getting started
 
 ```bash
@@ -36,6 +41,12 @@ keys, `ANTHROPIC_API_KEY`, `CRON_SECRET`, WhatsApp/Meta keys, …) before runnin
 - **`scripts/setup_whatsapp_flows.mjs`** — one-time: creates + publishes the multi-select "Services" WhatsApp **Flows** (EN/KN/HI checkbox forms) on the WABA and prints their ids for the `WHATSAPP_FLOW_ID_*` env vars. Reads `WHATSAPP_API_TOKEN` from `.env.local`; the flows are self-contained (no endpoint/encryption — completion returns via `nfm_reply`).
 
 The telecaller cockpit (`components/sales/telecaller-cockpit.tsx`) logs call outcomes and, on **"Interested — Book Meeting Now"** with a chosen date/time, creates a Google Calendar/Meet booking (`bookMeeting`); every other outcome (and a "book" logged without a time) auto-sends the mapped WhatsApp template instead (3.2 / 3.4).
+
+## Command center & safety nets (6.5 / 6.8 / 6.9)
+
+- **Command Center** (`/admin/command`) — one cross-engine funnel (leads → contacted → engaged → meetings → proposals → won) with MRR / active-clients / outstanding KPIs and a by-source/engine table. Server-side count queries mapped from `lib/pipeline.ts` stages.
+- **System Health** (`/admin/system-health`) — automation monitoring (6.8). Every cron is wrapped by `withHeartbeat()` (`lib/cron-heartbeat.ts`, fail-open) which records to `cron_heartbeats`; `/api/cron/health` (every 15 min in the GitHub Actions batch) flags stale/failing jobs against the `lib/cron-jobs.ts` registry, raises a `system_health` alert, and WhatsApps `OWNER_WHATSAPP` via the `system_health_alert` template (deduped ~6h). Setup: `HEALTH_MONITORING_SETUP.md` + `supabase/2026-06-23_cron_heartbeats.sql`.
+- **Backups** (`/admin/backups`) — daily `/api/cron/backup-export` snapshots core tables (`lib/backup/export.ts`, paginated to capture every row) to the private `backups` Storage bucket as one JSON/day, pruned at 30 days; download via signed links or "Run backup now". Setup: `BACKUP_RESTORE.md` + `supabase/2026-06-23_backups_bucket.sql`.
 
 ## WhatsApp sending & the send-mode safety guard
 
