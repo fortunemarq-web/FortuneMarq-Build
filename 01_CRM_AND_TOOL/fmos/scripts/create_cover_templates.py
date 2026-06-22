@@ -8,9 +8,13 @@ APP_ID = "1713470496330818"
 WABA = "1499408311884474"
 API = "v21.0"
 COVER = "/tmp/cover_sample-1.png"
-BODY = ("Hi {{business_name}}! 👋\n"
-        "Your free {{niche}} market report for {{city}} is ready — "
-        "your Google visibility + where your customers are searching 👇")
+BODY = ("Hi {{business_name}}! 👋\n\n"
+        "We did a market research for {{niche}} businesses in {{city}} and put together "
+        "a report on your online presence — how visible your business is on Google, how "
+        "many potential customers are searching for your service every month, and where "
+        "the lead generation gap is.\n\n"
+        "Have a look — it's specific to your business.\n\n"
+        "— Team FortuneMarq")
 
 ENV = ".env.local"
 def env(k):
