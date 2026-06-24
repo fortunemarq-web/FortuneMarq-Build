@@ -17,7 +17,7 @@ type Turn = { role: "user" | "assistant"; content: string };
 const GREETING =
   "Hi! 👋 I'm FortuneMarq's assistant. Ask me about web design, SEO, Google/Meta Ads, or CRM — or I can set up a strategy call. How can I help?";
 
-export default function SiteChat() {
+export default function SiteChat({ industry, city }: { industry?: string; city?: string } = {}) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Turn[]>([{ role: "assistant", content: GREETING }]);
   const [input, setInput] = useState("");
@@ -97,6 +97,8 @@ export default function SiteChat() {
       contact_person: lead.contact_person,
       phone: lead.phone,
       message: "Requested a call from the website chat.",
+      industry,
+      city,
       landing_page: typeof window !== "undefined" ? window.location.href : undefined,
       referrer_url: typeof document !== "undefined" ? document.referrer || undefined : undefined,
     });

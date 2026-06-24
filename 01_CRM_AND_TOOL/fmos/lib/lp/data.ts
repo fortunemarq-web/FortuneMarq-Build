@@ -4,6 +4,7 @@
 // same record that powers the report PDFs) and computes the labelled,
 // illustrative "Projected for you" figures. Server-only.
 
+import { cache } from "react";
 import { createAdminClient } from "@/lib/supabase-admin";
 import type { NicheConfig } from "@/lib/lp/niches";
 
@@ -42,6 +43,9 @@ export interface LpData {
   directoryLeakage: number;
   /** true if this niche×city has a real market_insights row backing it */
   isLive: boolean;
+  /** true if a REAL search volume (> 0) was found — false ⇒ page should 404
+   *  rather than show a fabricated fallback number on a "real data" page */
+  hasData: boolean;
   projection: Projection;
 }
 
@@ -49,11 +53,12 @@ function nf(n: number): number {
   return Math.max(0, Math.round(n));
 }
 
-export async function getLpData(niche: NicheConfig): Promise<LpData> {
+export const getLpData = cache(async (niche: NicheConfig): Promise<LpData> => {
   let monthlySearches = niche.monthlySearches;
   let topKeywords = niche.topKeywords;
   let split: SerpSplit = { ...DEFAULT_SPLIT };
   let isLive = false;
+  let hasData = false;
 
   try {
     const supabase = createAdminClient() as any;
@@ -71,8 +76,11 @@ export async function getLpData(niche: NicheConfig): Promise<LpData> {
 
       const giVol = Number(gi?.monthlySearchDemand);
       const rawVol = parseInt(String(mi.search_volume ?? "").replace(/[^\d]/g, ""), 10);
-      if (Number.isFinite(giVol) && giVol > 0) monthlySearches = giVol;
-      else if (Number.isFinite(rawVol) && rawVol > 0) monthlySearches = rawVol;
+      const live = Number.isFinite(giVol) && giVol > 0 ? giVol : Number.isFinite(rawVol) && rawVol > 0 ? rawVol : 0;
+      if (live > 0) {
+        monthlySearches = live;
+        hasData = true;
+      }
 
       if (Array.isArray(gi?.topKeywords) && gi.topKeywords.length) {
         topKeywords = gi.topKeywords;
@@ -105,9 +113,10 @@ export async function getLpData(niche: NicheConfig): Promise<LpData> {
     split,
     directoryLeakage,
     isLive,
+    hasData,
     projection: { reachableSearches, monthlyVisitors, monthlyEnquiries },
   };
-}
+});
 
 /** Indian-style grouping (1,23,456) for display. */
 export function inFormat(n: number): string {

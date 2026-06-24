@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { processInboundLead, normalizePhone } from "@/lib/inbound/capture";
+import { matchNicheFromText } from "@/lib/lp/niches";
 import { sendWhatsAppText, sendWhatsAppButtons, sendWhatsAppTemplate } from "@/lib/whatsapp/send";
 import { sendAdminAlert } from "@/lib/whatsapp/admin-alert";
 import { runBot } from "@/lib/bot/engine";
@@ -213,16 +214,21 @@ async function handleInboundMessage(message: any, value: any) {
   // ── UNKNOWN number → inbound capture pipeline ────────────────────────
   if (!lead) {
     const isCtwa = !!referral;
+    // Recover the niche/city from the LP wa.me prefill ("…I saw your page on
+    // {niche} in {city}…") so the lead is tagged with industry+city, not just source.
+    const lpRef = matchNicheFromText(text);
     const result = await processInboundLead({
       channel: isCtwa ? "ctwa" : "whatsapp",
       external_id: waMessageId,
       contact_person: profileName,
       phone: from,
       message: text,
+      industry: lpRef?.industry,
+      city: lpRef?.city,
       // CTWA referral → automatic ad attribution
       campaign_external_id: referral?.source_id ? String(referral.source_id) : undefined,
       campaign_name: referral?.headline || referral?.source_url || undefined,
-      utm: isCtwa ? { source: "meta", medium: "ctwa" } : undefined,
+      utm: isCtwa ? { source: "meta", medium: "ctwa", content: lpRef ? `${lpRef.industry}/${lpRef.city}` : undefined } : undefined,
       raw: { message, contacts: value?.contacts, metadata: value?.metadata },
     });
 

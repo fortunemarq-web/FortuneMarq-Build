@@ -1,0 +1,310 @@
+/* =========================================================================
+   NICHE LANDING PAGE — minimal, matches the marketing site (Stage 2.1, v5).
+   Reuses the site design system (site.css tokens + fonts + SiteMotion engine).
+   Only LP-specific layout lives here; brand identity comes from site.css:
+   --bg #030303 · --accent #42CA80 · AllianceNo1 (light display) · AllianceNo2
+   (body) · JetBrains Mono (labels). Motion via SiteMotion markers
+   ([data-reveal="lines"], .reveal-fade, [data-parallax]).
+   ========================================================================= */
+
+.lp-root { background: var(--bg); color: var(--ink); font-family: var(--font-main); overflow-x: clip; }
+
+/* atmosphere — same language as the site (deep green radial + faint grid) */
+.lp-atmos { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.lp-atmos::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 90% 60% at 50% -10%, #0a1a10 0%, var(--bg) 55%); }
+.lp-atmos::after { content: ""; position: absolute; inset: 0; opacity: 0.4; background-image: linear-gradient(rgba(66,202,128,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(66,202,128,0.03) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000, transparent 70%); mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000, transparent 70%); }
+.lp-root main { position: relative; z-index: 1; }
+
+.lp-wrap { width: 100%; max-width: var(--container-width); margin: 0 auto; padding-left: var(--section-pad-x); padding-right: var(--section-pad-x); }
+
+/* nav */
+.lp-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; padding: 18px var(--section-pad-x); transition: background .35s ease, border-color .35s ease, padding .35s ease; border-bottom: 1px solid transparent; }
+.lp-nav.is-scrolled { background: rgba(12,16,14,0.5); -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%); border-bottom-color: rgba(255,255,255,0.1); box-shadow: 0 10px 34px -16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06); }
+/* language pill — plain CSS (site.css's unlayered *{padding:0} reset clobbers Tailwind padding) */
+.lp-lang { display: inline-flex; align-items: center; gap: 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 13px 24px; font-family: var(--font-main); font-size: 16px; font-weight: 600; color: #fff; white-space: nowrap; text-decoration: none; line-height: 1; transition: border-color .25s ease, background .25s ease; }
+.lp-lang:hover { border-color: rgba(66,202,128,0.55); background: rgba(255,255,255,0.1); }
+.lp-lang span { display: inline-block; line-height: 1.6; }
+.lp-lang-icon { width: 20px; height: 20px; color: var(--accent); flex: 0 0 auto; }
+
+.lp-nav-logo { height: 74px; width: auto; }
+@media (max-width: 600px) { .lp-nav-logo { height: 64px; } }
+.lp-nav-actions { display: flex; align-items: center; gap: 14px; }
+/* header CTA stays hidden over the hero (which has its own CTAs); reveals after
+   scroll. display:none so it reserves no space at the top (toggle sits flush). */
+.lp-nav .lp-nav-book { display: none; }
+.lp-nav.is-scrolled .lp-nav-book { display: inline-flex; animation: lp-nav-book-in .35s ease both; }
+@keyframes lp-nav-book-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .lp-nav.is-scrolled .lp-nav-book { animation: none; } }
+/* phones: once the Book CTA appears on scroll, hide the language pill so the row
+   doesn't crowd/overflow (the toggle is still available at the top in the hero) */
+@media (max-width: 430px) { .lp-nav.is-scrolled .lp-lang { display: none; } }
+
+/* labels + type */
+.lp-eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 10px; }
+.lp-eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--accent); opacity: 0.7; }
+.lp-h1 { font-family: var(--font-head); font-weight: 300; font-size: clamp(40px, 7vw, 72px); line-height: 1.06; letter-spacing: -0.02em; color: #fff; text-wrap: balance; }
+.lp-h1 em { display: block; }
+.lp-h2 { font-family: var(--font-head); font-weight: 300; font-size: clamp(32px, 5.5vw, 60px); line-height: 1.05; letter-spacing: -0.02em; color: #fff; }
+.lp-h1 em, .lp-h2 em { font-style: normal; color: var(--accent); }
+.lp-desc { font-family: var(--font-body); font-size: clamp(16px, 2.2vw, 19px); line-height: 1.65; color: var(--muted); max-width: 52ch; }
+.lp-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+
+/* buttons (site pill style) */
+.lp-btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; white-space: nowrap; padding: 15px 26px; border-radius: 999px; border: 1px solid var(--border-highlight); color: var(--ink); background: rgba(255,255,255,0.02); transition: background .3s, border-color .3s, transform .3s; }
+.lp-btn:hover { background: rgba(255,255,255,0.06); transform: translateY(-1px); }
+.lp-btn-primary { background: var(--accent); border-color: var(--accent); color: #04130b; font-weight: 700; }
+.lp-btn-primary:hover { background: #5fe39a; }
+
+/* hero */
+.lp-hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 140px 0 80px; }
+/* SideRays WebGL background (top-right) + legibility veil */
+.side-rays-container { width: 100%; height: 100%; position: relative; pointer-events: none; overflow: hidden; }
+.lp-hero-rays { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.lp-hero-veil { position: absolute; inset: 0; z-index: 1; pointer-events: none; background:
+  linear-gradient(100deg, var(--bg) 0%, rgba(3,3,3,0.74) 32%, rgba(3,3,3,0.15) 62%, transparent 80%),
+  linear-gradient(to top, var(--bg) 2%, transparent 46%); }
+.lp-hero > .lp-wrap { position: relative; z-index: 2; }
+/* trust row */
+.lp-hero-trust { display: flex; align-items: center; gap: 12px; margin-top: 30px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: var(--muted); }
+.lp-stars { color: var(--accent); letter-spacing: 3px; font-size: 13px; }
+.lp-hero-grid { display: grid; grid-template-columns: 1fr; gap: clamp(36px, 6vw, 64px); align-items: center; width: 100%; }
+@media (min-width: 900px) { .lp-hero-grid { grid-template-columns: 1.05fr 0.95fr; } }
+.lp-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.lp-hero-figure { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); }
+.lp-hero-figure::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(3,3,3,0.4), transparent 50%); }
+
+/* image frame (parallax) */
+.lp-frame { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid var(--border); }
+.lp-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* stat row */
+.lp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-top: 44px; }
+.lp-stat { background: var(--bg); padding: 22px 18px; }
+.lp-stat-num { font-family: var(--font-head); font-weight: 300; font-size: clamp(26px, 4.5vw, 40px); line-height: 1; color: #fff; }
+.lp-stat.accent .lp-stat-num { color: var(--accent); }
+.lp-stat-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
+
+/* sections */
+.lp-sec { position: relative; padding: var(--section-pad-y) 0; }
+.lp-sec + .lp-sec { border-top: 1px solid var(--border); }
+.lp-sec-head { max-width: 760px; }
+.lp-sec-head .lp-eyebrow { margin-bottom: 22px; }
+.lp-sec-head .lp-desc { margin-top: 22px; }
+
+/* gap */
+.lp-gap-grid { display: grid; grid-template-columns: 1fr; gap: clamp(30px, 5vw, 56px); align-items: center; margin-top: 48px; }
+@media (min-width: 900px) { .lp-gap-grid { grid-template-columns: 1fr 1fr; } }
+.lp-bignum { font-family: var(--font-head); font-weight: 300; font-size: clamp(80px, 16vw, 180px); line-height: 0.85; letter-spacing: -0.04em; color: var(--accent); }
+.lp-bignum-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
+.lp-bignum-sub { font-family: var(--font-body); font-size: 15px; line-height: 1.55; color: var(--muted); margin-top: 18px; max-width: 34ch; }
+
+/* presence-mode "opportunity" points (low/no-demand variant) */
+.lp-pts { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 48px; }
+@media (min-width: 760px) { .lp-pts { grid-template-columns: 1fr 1fr; } }
+.lp-pt { border: 1px solid var(--border); border-radius: 16px; padding: 28px; background: var(--card-bg); transition: border-color .35s ease, transform .35s ease; }
+.lp-pt:hover { border-color: rgba(66,202,128,0.42); transform: translateY(-3px); }
+.lp-pt-n { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--accent); }
+.lp-pt-t { font-family: var(--font-head); font-weight: 300; font-size: clamp(19px, 2.6vw, 24px); color: #fff; letter-spacing: -0.01em; margin-top: 14px; }
+.lp-pt-d { font-family: var(--font-body); font-size: 14.5px; line-height: 1.6; color: var(--muted); margin-top: 9px; }
+.lp-bars { display: flex; flex-direction: column; gap: 18px; }
+.lp-bar-top { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+.lp-bar-top .n { color: var(--muted); }
+.lp-bar-top.lead .n { color: var(--ink); }
+.lp-bar-top .p { color: #fff; }
+.lp-bar-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 999px; margin-top: 10px; overflow: hidden; }
+.lp-bar-fill { height: 100%; border-radius: 999px; background: rgba(255,255,255,0.25); }
+.lp-bar-top.lead + .lp-bar-track .lp-bar-fill { background: var(--accent); }
+
+/* build cards */
+.lp-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 48px; }
+@media (min-width: 760px) { .lp-cards { grid-template-columns: repeat(3, 1fr); } }
+.lp-card { border: 1px solid var(--border); border-radius: 16px; padding: 30px; background: var(--card-bg); }
+.lp-card-n { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--accent); }
+.lp-card-t { font-family: var(--font-head); font-weight: 300; font-size: 24px; color: #fff; margin-top: 16px; }
+.lp-card-d { font-family: var(--font-body); font-size: 15px; line-height: 1.6; color: var(--muted); margin-top: 10px; }
+
+/* band image */
+.lp-band { position: relative; height: clamp(280px, 50vw, 520px); border-radius: 20px; overflow: hidden; border: 1px solid var(--border); margin-top: 8px; }
+.lp-band img { width: 100%; height: 100%; object-fit: cover; }
+.lp-band-cap { position: absolute; left: 28px; bottom: 26px; right: 28px; z-index: 2; }
+
+/* book */
+.lp-book-grid { display: grid; grid-template-columns: 1fr; gap: clamp(32px, 5vw, 56px); align-items: start; margin-top: 48px; }
+@media (min-width: 900px) { .lp-book-grid { grid-template-columns: 1fr 1fr; } }
+/* book form wrapper — plain (BookCta renders its own card; no double-card) */
+.lp-book-form { width: 100%; }
+
+/* booking form — plain CSS (immune to site.css's unlayered universal reset that
+   otherwise clobbers Tailwind padding/margins) + brand-matched */
+.lpf { position: relative; overflow: hidden; border: 1px solid var(--border-highlight); background: rgba(255,255,255,0.04); border-radius: 24px; padding: clamp(22px, 3vw, 30px); backdrop-filter: blur(20px); }
+.lpf-title { font-family: var(--font-head); font-weight: 300; font-size: 22px; color: #fff; }
+.lpf-sub { font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: var(--muted); margin-top: 6px; }
+.lpf-fields { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+.lpf-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 480px) { .lpf-row { grid-template-columns: 1fr 1fr; } }
+.lpf-field { position: relative; }
+.lpf-field > svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--faint); pointer-events: none; }
+.lpf-input { width: 100%; border: 1px solid var(--border); background: rgba(255,255,255,0.04); border-radius: 14px; padding: 14px 16px 14px 44px; color: #fff; font-family: var(--font-main); font-size: 15px; outline: none; transition: border-color .25s, background .25s; }
+.lpf-input::placeholder { color: var(--faint); }
+.lpf-input:focus { border-color: var(--accent); background: rgba(255,255,255,0.06); }
+.lpf-slots-head { display: flex; align-items: center; gap: 8px; margin-top: 22px; margin-bottom: 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.lpf-slots-head > svg { color: var(--accent); }
+.lpf-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (min-width: 480px) { .lpf-slots { grid-template-columns: 1fr 1fr 1fr; } }
+.lpf-slot { border: 1px solid var(--border); background: rgba(255,255,255,0.04); border-radius: 12px; padding: 10px 6px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); cursor: pointer; transition: border-color .25s, color .25s; text-align: center; }
+.lpf-slot:hover { border-color: rgba(66,202,128,0.45); color: #fff; }
+.lpf-slot.active { border-color: var(--accent); background: var(--accent); color: #04130b; font-weight: 700; }
+.lpf-err { color: #ff8a8a; font-size: 13px; margin-top: 14px; }
+.lpf-submit { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 20px; border: 0; border-radius: 14px; padding: 16px; background: var(--accent); color: #04130b; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; cursor: pointer; transition: background .25s, transform .1s; }
+.lpf-submit:hover { background: #5fe39a; }
+.lpf-submit:active { transform: scale(0.99); }
+.lpf-submit:disabled { opacity: 0.6; cursor: default; }
+.lpf-wa { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; border: 1px solid var(--border-highlight); border-radius: 14px; padding: 13px; background: rgba(255,255,255,0.03); color: #fff; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; transition: background .25s; }
+.lpf-wa:hover { background: rgba(255,255,255,0.07); }
+.lpf-wa > svg { color: var(--accent); }
+.lpf-priv { text-align: center; font-size: 11px; color: var(--faint); margin-top: 12px; font-family: var(--font-mono); }
+.lpf-done { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; border: 1px solid rgba(66,202,128,0.3); background: rgba(66,202,128,0.08); border-radius: 24px; padding: 44px 28px; }
+.lpf-done-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--accent); color: #04130b; display: grid; place-items: center; }
+.lpf-done h3 { font-family: var(--font-head); font-weight: 300; font-size: 24px; color: #fff; }
+.lpf-done p { font-family: var(--font-body); font-size: 15px; line-height: 1.55; color: var(--muted); max-width: 32ch; }
+.lpf-done button { background: none; border: 0; color: var(--accent); font-family: var(--font-mono); font-size: 12px; cursor: pointer; text-decoration: underline; }
+
+/* animated background auroras (subtle drift) */
+/* will-change promotes each aurora to its own GPU layer so the big blur is
+   rasterized once — without this the animated scale() re-rasters the blur every
+   frame, which reads as a light page-wide flicker/blink. */
+.lp-aurora { position: fixed; border-radius: 50%; filter: blur(110px); opacity: 0.55; pointer-events: none; z-index: 0; will-change: transform; backface-visibility: hidden; }
+.lp-aurora-1 { width: 64vw; height: 64vw; max-width: 720px; max-height: 720px; top: -12%; right: -16%; background: radial-gradient(circle, rgba(66,202,128,0.20), transparent 70%); animation: lp-drift1 22s ease-in-out infinite alternate; }
+.lp-aurora-2 { width: 58vw; height: 58vw; max-width: 640px; max-height: 640px; top: 42%; left: -22%; background: radial-gradient(circle, rgba(66,202,128,0.13), transparent 70%); animation: lp-drift2 28s ease-in-out infinite alternate; }
+.lp-aurora-3 { width: 50vw; height: 50vw; max-width: 560px; max-height: 560px; bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(66,202,128,0.10), transparent 70%); animation: lp-drift1 32s ease-in-out infinite alternate-reverse; }
+@keyframes lp-drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(-9%, 7%) scale(1.18); } }
+@keyframes lp-drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(11%, -9%) scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .lp-aurora { animation: none !important; } }
+/* touch / small screens: stop the scale animation (its per-frame blur re-raster
+   is the flicker source on phones) and lighten the blur to hold 60fps. */
+@media (hover: none), (max-width: 991px) { .lp-aurora { animation: none; filter: blur(72px); opacity: 0.5; } }
+.lp-trust { display: inline-flex; align-items: center; gap: 9px; margin-top: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+
+/* hero partnership + certification carousel (auto-loop marquee) */
+.lp-marquee-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: center; margin: clamp(46px, 7vw, 88px) 0 22px; }
+.lp-marquee { width: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+.lp-marquee-track { display: flex; align-items: center; width: max-content; gap: 18px; animation: lp-marquee 36s linear infinite; }
+.lp-marquee:hover .lp-marquee-track { animation-play-state: paused; }
+@keyframes lp-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .lp-marquee-track { animation: none; } }
+.lp-logo-chip { flex: 0 0 auto; width: 148px; aspect-ratio: 2 / 1; background: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 12px 18px; box-shadow: 0 14px 34px -20px rgba(0,0,0,0.6); }
+.lp-logo { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
+.lp-logo-semrush { transform: scale(1.7); }
+/* floating call button (bottom-right; SiteChat launcher is bottom-left) */
+/* sits on the LEFT, stacked directly above the chat-bot launcher (.sc-fab, 56px @ bottom 22px) */
+.lp-call-fab { position: fixed; left: 20px; right: auto; bottom: 90px; z-index: 91; width: 56px; height: 56px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #04140c; box-shadow: 0 10px 30px rgba(66,202,128,0.34); transition: transform 0.25s ease, box-shadow 0.25s ease; text-decoration: none; }
+.lp-call-fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 14px 36px rgba(66,202,128,0.45); }
+.lp-call-glyph { width: 26px; height: 26px; position: relative; z-index: 1; }
+.lp-call-pulse { position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 0 rgba(66,202,128,0.5); animation: lp-callPulse 2.6s ease-out infinite; }
+@keyframes lp-callPulse { 0% { box-shadow: 0 0 0 0 rgba(66,202,128,0.45); } 70% { box-shadow: 0 0 0 16px rgba(66,202,128,0); } 100% { box-shadow: 0 0 0 0 rgba(66,202,128,0); } }
+@media (prefers-reduced-motion: reduce) { .lp-call-pulse { animation: none; } .lp-call-fab:hover { transform: none; } }
+@media (max-width: 600px) { .lp-call-fab { left: 16px; bottom: 86px; } }
+
+/* hero -> next section divider (sits under the marquee) */
+.lp-hero-divider { position: relative; z-index: 2; width: 100%; max-width: var(--container-width); margin: clamp(40px, 6vw, 72px) auto 0; padding: 0 var(--section-pad-x); }
+.lp-hero-divider::after { content: ""; display: block; height: 1px; background: linear-gradient(to right, transparent, var(--border-highlight), transparent); }
+
+/* hero — single column (no figure) */
+.lp-hero-solo { display: flex; flex-direction: column; max-width: 920px; }
+
+/* whole-system — interactive funnel */
+.lp-funnel { margin-top: clamp(44px, 6vw, 64px); display: flex; flex-direction: column; align-items: center; }
+.lp-funnel-cap { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 28px; text-align: center; }
+.lp-funnel-cap b { color: var(--accent); font-weight: 400; }
+
+.lp-funnel-stage { position: relative; width: 100%; }
+.lp-funnel-stage + .lp-funnel-stage { margin-top: 16px; }
+/* connector line into each stage + the outcome */
+.lp-funnel-stage::before,
+.lp-funnel-out::before { content: ""; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 1px; height: 16px; background: linear-gradient(var(--accent), transparent); opacity: 0.45; }
+
+.lp-funnel-inner { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; padding: clamp(18px, 2.6vw, 24px) clamp(20px, 3vw, 30px); border: 1px solid var(--border); border-radius: 16px; background: var(--card-bg); overflow: hidden; transition: border-color .5s ease, transform .5s ease, background .5s ease, box-shadow .5s ease; }
+.lp-funnel-inner::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform .55s ease; }
+/* scroll-driven active glow (shifts card to card as you scroll) */
+.lp-funnel-stage.is-active .lp-funnel-inner { border-color: rgba(66,202,128,0.55); transform: translateY(-3px); background: rgba(66,202,128,0.06); box-shadow: 0 26px 64px -34px rgba(66,202,128,0.55); }
+.lp-funnel-stage.is-active .lp-funnel-inner::before { transform: scaleY(1); }
+.lp-funnel-stage.is-active .lp-funnel-d { color: var(--ink); }
+/* hover glow only for real pointers, so a tap on mobile leaves no sticky highlight */
+@media (hover: hover) {
+  .lp-funnel-stage:hover .lp-funnel-inner { border-color: rgba(66,202,128,0.55); transform: translateY(-3px); background: rgba(66,202,128,0.06); box-shadow: 0 26px 64px -34px rgba(66,202,128,0.55); }
+  .lp-funnel-stage:hover .lp-funnel-inner::before { transform: scaleY(1); }
+  .lp-funnel-stage:hover .lp-funnel-d { color: var(--ink); }
+}
+.lp-funnel-n { font-family: var(--font-mono); font-size: 12px; color: var(--accent); padding-top: 4px; }
+.lp-funnel-t { font-family: var(--font-head); font-weight: 300; font-size: clamp(19px, 2.6vw, 24px); color: #fff; letter-spacing: -0.01em; }
+.lp-funnel-d { font-family: var(--font-body); font-size: 14.5px; line-height: 1.6; color: var(--muted); margin-top: 7px; transition: color .55s; }
+
+.lp-funnel-out { position: relative; margin-top: 24px; display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px; border-radius: 999px; background: var(--accent); color: #04130b; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; box-shadow: 0 22px 54px -22px rgba(66,202,128,0.65); }
+
+/* funnel narrowing only on wider screens; full-width stacked cards on mobile */
+@media (min-width: 760px) { .lp-funnel-stage { width: var(--w, 100%); } }
+
+/* responsive showcase (GSAP scroll-resize) */
+.rs { padding-bottom: 0; }
+.rs-viewport { position: relative; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; overflow: hidden; }
+.rs-stage { display: flex; flex-direction: column; align-items: center; gap: 22px; opacity: 0; will-change: opacity; }
+.rs-frame { position: relative; box-sizing: border-box; padding: 7px; background: linear-gradient(160deg, #161616, #090909); border: 1px solid var(--border-highlight); border-radius: 24px; box-shadow: 0 18px 44px -26px rgba(0,0,0,0.7); will-change: width, height; contain: layout paint; }
+/* static depth glow behind the frame — does NOT resize, so no per-frame shadow repaint */
+.rs-stage::before { content: ""; position: absolute; top: 50%; left: 50%; width: 70%; height: 60%; transform: translate(-50%, -45%); background: radial-gradient(ellipse at center, rgba(66,202,128,0.16), transparent 70%); filter: blur(60px); z-index: -1; pointer-events: none; }
+.rs-img { position: absolute; inset: 7px; border-radius: 16px; object-fit: cover; object-position: top center; will-change: opacity; }
+.rs-tags { position: relative; height: 30px; width: 160px; }
+.rs-tag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.rs-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+/* static fallback (no JS / reduced motion) */
+.rs-fallback { display: flex; align-items: flex-end; justify-content: center; gap: clamp(16px, 4vw, 40px); padding: 20px 0 10px; }
+.rs-fallback-img { border-radius: 16px; border: 1px solid var(--border-highlight); box-shadow: 0 40px 90px -40px rgba(0,0,0,0.8); }
+.rs-fallback-img.m { width: clamp(110px, 26vw, 190px); }
+.rs-fallback-img.d { width: clamp(300px, 60vw, 720px); display: none; }
+@media (min-width: 760px) { .rs-fallback-img.d { display: block; } }
+
+/* ===== "How it's built" — CardSwap system showcase ===== */
+/* mobile: heading -> cards -> switching text. desktop: text-left / cards-right. */
+.sb-grid { display: grid; grid-template-columns: 1fr; grid-template-areas: "head" "stage" "text"; row-gap: 8px; align-items: start; }
+.sb-head { grid-area: head; }
+.sb-stage { grid-area: stage; }
+.sb-text { grid-area: text; }
+@media (min-width: 920px) {
+  .sb-grid { grid-template-columns: 1.02fr 0.98fr; grid-template-areas: "head stage" "text stage"; column-gap: clamp(40px, 5vw, 72px); row-gap: 0; align-items: center; }
+}
+.sb-head .lp-eyebrow { margin-bottom: 22px; }
+
+/* switching text (synced to front card) */
+.sb-switch { position: relative; min-height: 156px; }
+@media (min-width: 920px) { .sb-switch { min-height: 176px; margin-top: 30px; } }
+.sb-panel { position: absolute; inset: 0; opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.sb-panel.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.sb-panel-n { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.sb-panel-t { font-family: var(--font-head); font-weight: 300; font-size: clamp(22px, 3.4vw, 31px); color: #fff; margin: 13px 0 11px; letter-spacing: -0.01em; }
+.sb-panel-d { font-family: var(--font-body); font-size: 15px; line-height: 1.62; color: var(--muted); max-width: 42ch; }
+.sb-dots { display: flex; gap: 8px; margin-top: 24px; }
+.sb-dots span { width: 7px; height: 7px; border-radius: 999px; background: rgba(255,255,255,0.18); transition: background .4s ease, width .4s ease; }
+.sb-dots span.on { background: var(--accent); width: 22px; }
+
+/* card stage */
+.sb-stage { position: relative; min-height: 320px; }
+@media (min-width: 920px) { .sb-stage { min-height: 460px; } }
+
+/* CardSwap base (ported from React Bits, brand-dark + green) */
+.sb .card-swap-container { position: absolute; bottom: 8%; right: 4%; transform: none; transform-origin: bottom right; perspective: 1000px; overflow: visible; }
+.sb .card { position: absolute; top: 50%; left: 50%; border-radius: 16px; border: 1px solid var(--border-highlight); background: #090909; overflow: hidden; transform-style: preserve-3d; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 34px 80px -34px rgba(0,0,0,0.85); }
+.sb-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.sb-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(4,12,10,0.32), transparent 42%); }
+.sb-card-tag { position: absolute; left: 12px; top: 12px; z-index: 2; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #04130b; background: var(--accent); padding: 5px 11px; border-radius: 999px; font-weight: 700; }
+/* center the stack on tablet/mobile, scaled to stay fully visible */
+@media (max-width: 919px) { .sb .card-swap-container { left: 50%; right: auto; bottom: 12px; transform: translateX(-46%) scale(0.8); transform-origin: bottom center; } }
+@media (max-width: 520px) { .sb .card-swap-container { transform: translateX(-46%) scale(0.62); } }
+
+/* dashboards overview grid */
+.lp-dash-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 48px; }
+@media (min-width: 700px) { .lp-dash-grid { grid-template-columns: repeat(2, 1fr); } }
+.lp-dash-card { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--card-bg); }
+.lp-dash-card .lp-frame { border: 0; border-radius: 0; border-bottom: 1px solid var(--border); aspect-ratio: 16 / 10; }
+.lp-dash-meta { padding: 16px 20px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.lp-dash-meta .t { font-family: var(--font-head); font-weight: 300; font-size: 18px; color: #fff; }
+.lp-dash-meta .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }

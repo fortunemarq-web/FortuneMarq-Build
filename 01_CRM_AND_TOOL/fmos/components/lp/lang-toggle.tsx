@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Languages } from "lucide-react";
+import { Globe } from "lucide-react";
 
 /** Toggle EN ↔ KN by flipping the ?lang query param. */
 export default function LangToggle({ lang, label }: { lang: "en" | "kn"; label: string }) {
@@ -16,10 +16,11 @@ export default function LangToggle({ lang, label }: { lang: "en" | "kn"; label: 
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-200 transition-colors hover:border-brand/40 hover:text-white"
+      aria-label="Switch language"
+      className="lp-lang"
     >
-      <Languages className="h-3.5 w-3.5 text-brand" />
-      {label}
+      <Globe className="lp-lang-icon" />
+      <span>{label}</span>
     </Link>
   );
 }

@@ -23,6 +23,10 @@ export interface SiteLeadForm {
   utm?: InboundLeadInput["utm"];
   gclid?: string;
   fbclid?: string;
+  // Set when the chat is embedded on a niche LP, so the lead is tagged with the
+  // niche (industry) + city instead of being indistinguishable from a homepage chat.
+  industry?: string;
+  city?: string;
 }
 
 function validate(form: SiteLeadForm): string | null {
@@ -41,6 +45,8 @@ function toInput(form: SiteLeadForm): InboundLeadInput {
     email: (form.email || "").trim().slice(0, MAX),
     phone: (form.phone || "").trim(),
     message: (form.message || "").trim().slice(0, 800) || undefined,
+    industry: (form.industry || "").trim().slice(0, MAX) || undefined,
+    city: (form.city || "").trim().slice(0, MAX) || undefined,
     utm: form.utm,
     gclid: form.gclid,
     fbclid: form.fbclid,
