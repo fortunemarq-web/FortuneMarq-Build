@@ -40,13 +40,30 @@ export default function LpAnalytics() {
   );
 }
 
-/** Fire a conversion event to any tracker present + the in-app event log. */
+// Map our granular custom LP events → the STANDARD conversion events Google Ads
+// and Meta recognize for reporting + bid optimization. We fire BOTH: the custom
+// name (in-house analysis) AND the standard event (so the ad platforms can
+// optimize toward leads the moment the accounts are linked — no rework needed).
+const STANDARD_EVENTS: Record<string, { ga?: string; fb?: string }> = {
+  lp_lead_submitted: { ga: "generate_lead", fb: "Lead" },
+  lp_meeting_booked: { ga: "generate_lead", fb: "Schedule" },
+  lp_whatsapp_click: { fb: "Contact" },
+  lp_call_click: { fb: "Contact" },
+};
+
+/** Fire a conversion event to any tracker present (custom + standard mapping). */
 export function trackLpEvent(name: string, props?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
+  const w = window as any;
   try {
-    (window as any).gtag?.("event", name, props || {});
-    (window as any).fbq?.("trackCustom", name, props || {});
-    (window as any).clarity?.("event", name);
+    // granular custom event (in-house analysis)
+    w.gtag?.("event", name, props || {});
+    w.fbq?.("trackCustom", name, props || {});
+    w.clarity?.("event", name);
+    // standard conversion event (ad-platform reporting + optimization)
+    const std = STANDARD_EVENTS[name];
+    if (std?.ga) w.gtag?.("event", std.ga, props || {});
+    if (std?.fb) w.fbq?.("track", std.fb, props || {});
   } catch {
     /* tracking must never break the page */
   }

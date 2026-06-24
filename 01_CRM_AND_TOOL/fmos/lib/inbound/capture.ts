@@ -288,6 +288,10 @@ export async function processInboundLead(input: InboundLeadInput): Promise<Inbou
       utm_term: input.utm?.term ?? null,
       landing_page: input.landing_page ?? null,
       referrer_url: input.referrer_url ?? null,
+      // Ad click IDs — kept so a downstream conversion (meeting/won) can be
+      // uploaded back to Google Ads (OCI via gclid) + Meta (CAPI via fbclid).
+      gclid: input.gclid ?? null,
+      fbclid: input.fbclid ?? null,
     });
 
     // 7. Audit
