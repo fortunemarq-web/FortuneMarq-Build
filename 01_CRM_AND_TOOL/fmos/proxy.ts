@@ -131,6 +131,15 @@ export async function proxy(request: NextRequest) {
     if (isInfraPath(pathname)) return NextResponse.next()
     // Already an internal /site path (or someone hit it directly) — serve as-is.
     if (pathname === "/site" || pathname.startsWith("/site/")) return NextResponse.next()
+    // Public lead-facing pages live OUTSIDE /site (app/lp, app/p, app/a, app/inv,
+    // app/client/report). Ad campaigns point at fortunemarq.com/lp/[niche]/[city],
+    // so serve them directly on the marketing host instead of rewriting into /site
+    // (which would 404). They enforce their own access (public by design / token).
+    if (["/lp/", "/p/", "/a/", "/inv/", "/client/report/"].some(
+      (p) => pathname === p.replace(/\/$/, "") || pathname.startsWith(p)
+    )) {
+      return NextResponse.next()
+    }
     const url = request.nextUrl.clone()
     url.pathname = pathname === "/" ? "/site" : `/site${pathname}`
     return NextResponse.rewrite(url)
