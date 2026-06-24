@@ -1,6 +1,6 @@
 # FMOS — System Design Report
 
-**Date:** 2026-06-24 · **Owner:** Jabeer · **Branch/Deploy:** `continue-on-mac` → `main` (Vercel) at `a2698cd`
+**Date:** 2026-06-24 · **Owner:** Jabeer · **Branch/Deploy:** `continue-on-mac` → `main` (Vercel) at `24cdd60` · **Vercel env: all configured (GA4/Pixel/Clarity/Supabase/WhatsApp/Anthropic) — do not re-flag.**
 
 > Snapshot of what's built, what shipped today (the full niche-LP rollout), and what's left — grounded in `00_MASTER/FMOS_System_Design_And_Tasks.md` + the work deployed 2026-06-24.
 
@@ -62,7 +62,7 @@ Also live: **33 WhatsApp templates + the `direct_report_v3_*` family Meta-approv
 ---
 
 ## Recommended next sequence
-1. **Now → launch:** verify Vercel deploy + analytics env IDs firing → wire **conversion tracking** (gclid/fbclid + conversions + CAPI/OCI).
+1. **Done (2026-06-24):** Vercel env IDs (GA4/Pixel/Clarity) confirmed set since 2026-06-19 → standard conversion events (`Lead`/`generate_lead`/`Schedule`/`Contact`) + `gclid`/`fbclid` persistence **built & deployed** (commit `24cdd60`). Remaining (owner-side, at launch): link GA4↔Google Ads + mark `generate_lead` a conversion, connect the Pixel to the Meta ad account, then CAPI/OCI.
 2. **Then:** Stage 2 Campaign object + Meta metrics pull (campaigns live inside FMOS).
 3. **Then:** Stage 5 organic (GMB + programmatic SEO/GSC dashboard + presence dashboard).
 4. **Background:** 1.1/1.2 intake automation, 6.6 nurture, 6.7 capacity guardrail.
