@@ -1,5 +1,5 @@
 # ▶ CONTINUE HERE — Canonical Handoff
-**Updated:** 2026-06-24 · **Branch:** `continue-on-mac` · **This file supersedes all other handoff/continuation docs.**
+**Updated:** 2026-06-25 · **Branch:** `continue-on-mac` · **This file supersedes all other handoff/continuation docs.**
 
 > You are a fresh Claude Code session (new account, same machine + same `FortuneMarq-Build`
 > folder — we switched accounts because the previous one hit its weekly rate limit). The prior
@@ -7,6 +7,13 @@
 > Read it fully, then `CLAUDE.md` (auto-loaded) for app structure.
 
 App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer.
+
+## ⚡ Latest session (2026-06-25) — ad-launch prep (all DEPLOYED to `main`)
+- **Canonical domain fix (`proxy.ts`):** `fortunemarq.com/lp/*` was 404ing (rewritten into `/site/lp/*`); the marketing-host branch now passes `/lp /p /a /inv /client/report` straight through. **Ad + organic destination URL is `https://fortunemarq.com/lp/<niche>/<city>`** (works now; `fmos.fortunemarq.com` is the app host).
+- **Conversion-ready tracking:** `trackLpEvent` also fires the STANDARD ad events (Meta `Lead`/`Schedule`/`Contact` + GA4 `generate_lead`); `lib/inbound/capture.ts` persists `gclid`/`fbclid` on `lead_source_attribution` (migration `supabase/2026-06-24_attribution_clickids.sql` RUN). Vercel analytics env (GA4/Pixel/Clarity) all set — events fire on prod. **Owner-side remaining at launch:** GA4↔Google-Ads link + mark `generate_lead` a conversion; connect Pixel to the Meta ad account; then CAPI/OCI.
+- **SEO:** `app/sitemap.ts` emits all 117 LPs (126 URLs); `/lp` un-blocked in `robots.ts`; sitemap **re-submitted to GSC** (fortunemarq.com Domain property).
+- **2 LP bugs fixed** (found via end-to-end smoke test): React #418 hydration mismatch (booking slots were SSR'd from build-time `new Date()` on static pages → now client-only in `book-cta.tsx`) and an uncaught WebGL crash (`side-rays.tsx` ogl `Renderer` now try/caught → degrades to CSS bg). Verified on prod: 0 hydration/renderer errors; 2/2 form submits land in FMOS tagged niche+city+source + gclid.
+- **Smoke test PASSED:** form lead capture confirmed live (tagged `industry`/`city`/`src:lp`, auto-assigned, UTM + gclid captured). All test leads cleaned up.
 
 ---
 
