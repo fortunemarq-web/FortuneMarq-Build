@@ -15,6 +15,8 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 - **SEO:** `app/sitemap.ts` emits all 117 LPs (126 URLs); `/lp` un-blocked in `robots.ts`; sitemap **re-submitted to GSC** (fortunemarq.com Domain property).
 - **2 LP bugs fixed** (found via end-to-end smoke test): React #418 hydration mismatch (booking slots were SSR'd from build-time `new Date()` on static pages → now client-only in `book-cta.tsx`) and an uncaught WebGL crash (`side-rays.tsx` ogl `Renderer` now try/caught → degrades to CSS bg). Verified on prod: 0 hydration/renderer errors; 2/2 form submits land in FMOS tagged niche+city+source + gclid.
 - **Smoke test PASSED:** form lead capture confirmed live (tagged `industry`/`city`/`src:lp`, auto-assigned, UTM + gclid captured). All test leads cleaned up.
+- **Nurture / reactivation (6.6) — BUILT.** Daily cron `/api/cron/automations/reactivation` sends one approved `revival_nudge` to cold leads (not_interested/lost/unreachable/gatekeeper_flagged, no activity 60d) then moves them to `revival` (one-and-done). OFF by default (`REACTIVATION_ENABLED=1` to enable — keeps go-live from a mass cold blast); `?dry=1` previews candidates. Scheduled in the daily GitHub-Actions batch (along with the dormant ad-conversions cron).
+- **⚠️ COMPLIANCE FIX:** added the missing `leads.do_not_contact` column (migration `supabase/2026-06-25_leads_do_not_contact.sql`, applied). `getLeadGuardState` selected it, so the select errored and the opt-out guard fail-open'd to `optedOut=false` — STOP/opt-out was NOT enforced on any proactive send (masked only by the pre-go-live allowlist). Now enforced.
 
 ---
 

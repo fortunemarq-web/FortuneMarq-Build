@@ -61,7 +61,7 @@ Build order below is sequenced by **dependency** (foundations first) and **risk*
 ## Phase E — Command center + safety nets
 - [x] **6.5** Master funnel dashboard (cross-engine: leads → … → MRR). **BUILT 2026-06-23** — `/admin/command`. (Founder daily WhatsApp digest still to extend onto the existing daily-digest.)
 - [ ] **5.7** Presence dashboard (GA4 + GSC + GMB + social + leads-by-source) + WhatsApp digest.
-- [ ] **6.6** Long-term nurture / reactivation drip.
+- [x] **6.6** Long-term nurture / reactivation drip. **BUILT 2026-06-25** — daily cron `/api/cron/automations/reactivation` sends one approved `revival_nudge` to cold leads (not_interested/lost/unreachable/gatekeeper_flagged, no activity 60d) → moves them to `revival` (one-and-done). OFF by default (`REACTIVATION_ENABLED=1`); `?dry=1` previews. Reuses the `sendWhatsAppTemplate(proactive)` compliance choke point. **Also fixed a live compliance bug:** added the missing `leads.do_not_contact` column so `getLeadGuardState` stops fail-opening — STOP/opt-out is now actually enforced on proactive sends.
 - [ ] **6.7** Capacity / WIP guardrail + capacity meter.
 - [x] **6.8** Automation health monitoring + failure alerts to WhatsApp. **BUILT 2026-06-23** — cron heartbeats + `/api/cron/health` + `/admin/system-health`. SQL run (verified live); alerts reuse the approved `admin_alert` template → `ADMIN_WHATSAPP_NUMBERS` (owner incl.), no extra config. Goes live on merge to `main` (see `HEALTH_MONITORING_SETUP.md`).
 - [x] **6.9** Backups + periodic data export + documented restore. **BUILT 2026-06-23** — daily `/api/cron/backup-export` + `/admin/backups` + `BACKUP_RESTORE.md`. Activation pending: run `backups_bucket.sql`.

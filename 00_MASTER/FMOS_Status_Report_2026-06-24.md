@@ -71,7 +71,7 @@ The offline-conversion uploader (Meta CAPI + Google OCI, cron `/api/cron/ad-conv
 5. For offline import (later): get a Google Ads **developer token** (needs approval — start early) + create two conversion actions ("Meeting", "Won"), then set in Vercel: `GOOGLE_ADS_DEVELOPER_TOKEN, GOOGLE_ADS_CLIENT_ID, GOOGLE_ADS_CLIENT_SECRET, GOOGLE_ADS_REFRESH_TOKEN, GOOGLE_ADS_CUSTOMER_ID, GOOGLE_ADS_CONVERSION_ACTION_MEETING, GOOGLE_ADS_CONVERSION_ACTION_WON`.
 
 **Schedule the uploader:**
-6. Add a `/api/cron/ad-conversions` POST step to `.github/workflows/cron.yml` (Bearer `CRON_SECRET`) so it runs on the existing cron.
+6. ✅ DONE (2026-06-25) — the `/api/cron/ad-conversions` step is already in the daily GitHub-Actions cron batch; it no-ops until the tokens above are set. No action needed.
 
 **You can launch paid ads now** (live LPs → Pixel fires). Steps 1–6 turn the spend into *measurable, self-optimizing* campaigns.
 

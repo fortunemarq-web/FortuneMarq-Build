@@ -15,7 +15,7 @@
 The offline-conversion uploader (Meta CAPI + Google OCI; `lib/ads/*`, cron `/api/cron/ad-conversions`, table `ad_conversions`) ships **dormant**. When we create the ad campaigns, switch it on. Until then leads still capture + tag normally — only the *upload back to the ad platforms* is inactive. **Full step-by-step:** `FMOS_Status_Report_2026-06-24.md` → "🔔 ACTIVATE AT AD LAUNCH".
 - [ ] **Meta:** Events Manager → Pixel → Conversions API → generate token → set **`META_CAPI_TOKEN`** in Vercel; set **Lead** as the optimization conversion.
 - [ ] **Google:** link GA4 ↔ Google Ads + mark **`generate_lead`** a conversion (no-code interim); later set `GOOGLE_ADS_*` env for offline import (dev-token needs approval — start early).
-- [ ] **Schedule:** add a `/api/cron/ad-conversions` POST step to `.github/workflows/cron.yml`.
+- [x] **Schedule:** ✅ DONE 2026-06-25 — `/api/cron/ad-conversions` is in the daily GitHub-Actions cron batch (no-ops until tokens set).
 
 ---
 
