@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { enabledNiches } from "@/lib/lp/niches";
 
 // Marketing-site sitemap. URLs use the real domain and match each page's
 // canonical (root-domain paths — the deferred host-split maps fortunemarq.com →
@@ -40,5 +41,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  return [...staticEntries, ...postEntries];
+  // Niche × city landing pages — every enabled combo (13 niches × 9 cities).
+  // The EN path is canonical; the ?lang=kn variant is declared via per-page
+  // alternates, so it's not a separate sitemap entry.
+  const lpModified = new Date("2026-06-24");
+  const lpEntries: MetadataRoute.Sitemap = enabledNiches().map((n) => ({
+    url: `${SITE_URL}/lp/${n.slug}/${n.citySlug}`,
+    lastModified: lpModified,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...postEntries, ...lpEntries];
 }
