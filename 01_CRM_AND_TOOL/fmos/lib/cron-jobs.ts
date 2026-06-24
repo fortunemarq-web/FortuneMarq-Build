@@ -19,6 +19,7 @@ export const CRON_JOBS: CronJob[] = [
   { key: "session-timeout", label: "Session timeout cleanup", everyMins: 1440, batch: "daily" },
   { key: "invoice-reminders", label: "Invoice reminders", everyMins: 1440, batch: "daily" },
   { key: "backup-export", label: "Daily data export", everyMins: 1440, batch: "daily" },
+  { key: "reactivation", label: "Lead reactivation drip", everyMins: 1440, batch: "daily" },
 ];
 
 /** A job is "stale" if it hasn't checked in within ~2.5 cycles (+ grace). */

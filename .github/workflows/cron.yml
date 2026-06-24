@@ -129,3 +129,19 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/backup-export" \
             -H "Authorization: Bearer $SECRET" || echo "backup-export ping failed (non-fatal)"
+      - name: Ad conversions (Meta CAPI + Google OCI — no-ops until tokens set)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/ad-conversions" \
+            -H "Authorization: Bearer $SECRET" || echo "ad-conversions ping failed (non-fatal)"
+      - name: Lead reactivation drip (6.6 — OFF until REACTIVATION_ENABLED=1)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/automations/reactivation" \
+            -H "Authorization: Bearer $SECRET" || echo "reactivation ping failed (non-fatal)"
