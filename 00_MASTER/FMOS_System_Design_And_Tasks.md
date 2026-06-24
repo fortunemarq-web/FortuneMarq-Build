@@ -1,6 +1,6 @@
 # FMOS — System Design & Tasks (Living Doc)
 
-**Status:** BUILD IN PROGRESS — ~45% of the 43 workflows built (the convert+deliver spine). DONE: 1.3–1.6, 3.1–3.4, 4.1–4.7, 6.1–6.4. PENDING: 1.1/1.2 + intake orchestrator, all of Stage 2 (campaigns; 2.1 LP template exists, only Dental·Hubli enabled), 4.8, most of Stage 5 (5.1 marketing site DONE + GA4/Clarity/GSC/Pixel; 5.2–5.7 GMB/SEO/social/dashboard pending; 2.1 LP rollout = only dental-clinics enabled), and 6.5–6.9.
+**Status:** BUILD IN PROGRESS — ~half the 43 workflows built (the convert+deliver spine). DONE: 1.3–1.6, **2.1 (all 13 niches × 9 cities = 117 LPs, deployed 2026-06-24)**, 3.1–3.4, 4.1–4.7, 5.1 (marketing site), 6.1–6.5, 6.8, 6.9. PENDING: 1.1/1.2 + intake orchestrator, rest of Stage 2 (2.2–2.8 campaign object + metric pull + ad-conversion tracking), 4.8, rest of Stage 5 (5.2–5.7 GMB/SEO/social/presence-dashboard), 6.6/6.7.
 **Started:** 2026-06-16 · **Last updated:** 2026-06-22
 **Owner:** Jabeer
 **How we work this doc:** Go stage by stage, workflow by workflow. For each minor workflow we capture: Goal → Current state → Problems / open questions → Decisions → Tasks. The per-section ✅/🟡 markers + the dated build-log above are the source of truth for what's built.
@@ -8,6 +8,10 @@
 ---
 
 ## Build progress / updates
+
+**2026-06-24 — 2.1 NICHE LPs DONE + DEPLOYED (full rollout):** the niche LP went from "only Dental·Hubli" to **all 13 niches × 9 cities = 117 LPs live** (commit `a2698cd`, ff'd onto `main`). One bilingual EN+KN template (`/lp/[niche]/[city]`), brand-matched to the marketing site. Registry restructured to a **niche×city cross-product** (`lib/lp/niches.ts` → `NICHE_DEFS` × `CITIES`) — fixed 4 industry-key mismatches (SkinClinics/JEENEETCoaching/ComputerTraining/CarRentals) that were silently using fallback numbers. **Two auto-switching angles:** demand mode (≥1,000 searches → capture-the-demand) and **presence mode** (<1,000 / no data → "lead the market via Meta ads", no fabricated numbers — replaces a 404). Tokenised copy (`lib/lp/lp-sections.ts`). New sections: SideRays WebGL hero, partner marquee, animated Gap bars, CardSwap "how it's built", GSAP responsive showcase (per-niche mock-site screenshots), scroll-glow funnel, glass nav. **LP lead capture wired:** form/chat/WhatsApp all tag niche+city+source into FMOS via `processInboundLead` (SiteChat takes industry/city props; WA webhook recovers niche/city from the wa.me prefill via `matchNicheFromText`); call-button taps fire `lp_call_click` (GA4/Pixel/Clarity). Verified 234/234 page variants clean. Deps: `gsap` 3.15 + `ogl`. **Held for ad launch:** conversion tracking (gclid/fbclid persist + Google/Meta conversion mapping + CAPI/OCI).
+
+**2026-06-23 — 6.5/6.8/6.9 DONE + DEPLOYED (command center + safety nets):** `/admin/command` cross-engine funnel + MRR/KPIs (6.5); automation health monitoring — `cron_heartbeats` + `withHeartbeat` on 9 crons + `/api/cron/health` + `/admin/system-health` + deduped `admin_alert` (6.8); daily backups — `/api/cron/backup-export` → private `backups` bucket + `/admin/backups` + `BACKUP_RESTORE.md` (6.9). Commit `b3094ea` ff'd onto `main`; SQL run.
 
 **2026-06-22 — ALL-CITY DATA LOAD + REPORT REBUILD + DIRECT REPORT v3 DONE:**
 - **Data:** all **9 cities** are now loaded — **~7,960 leads** (Mysuru, Belagavi, Hubli, Mangalore, Kalaburagi, Davangere, Dharwad, Vijayapura, Ballari) across **13 niches**. `leads` / `market_insights` (117 rows = 9×13) / `report_assets` (936 rows) are all aligned on the same 13 niches, **0 orphans**. (The earlier "only Hubli / 858 leads / 11 niches" state is history.)
@@ -263,7 +267,7 @@ Tasks:
 
 Minor workflows: **2.1 Niche landing pages · 2.2 Portfolio & results showcase · 2.3 Planning & strategy · 2.4 Script, shooting & editing · 2.5 Campaign setup · 2.6 Conversion actions & tracking · 2.7 Publish campaign · 2.8 Optimise**
 
-## 2.1 — Niche Landing Pages  🟡 *PARTIAL — template built at `/lp/[niche]/[city]`; only Dental·Hubli enabled*
+## 2.1 — Niche Landing Pages  ✅ *DONE (2026-06-24) — all 13 niches × 9 cities = 117 LPs live & deployed*
 
 **Goal:** Same job as the intelligence report, but inbound — turn an ad click into a booked meeting (or WhatsApp inquiry).
 
@@ -292,13 +296,14 @@ Minor workflows: **2.1 Niche landing pages · 2.2 Portfolio & results showcase �
 - ✅ Tracking stack: **Meta Pixel + GA4 + Microsoft Clarity** (free heatmaps/session replay) + in-app event log.
 - ✅ Booking: **Google Calendar / Meet API** (free) — auto-creates the Meet link + calendar event; one engine powers both LP and WhatsApp booking (no Calendly). *(Standardized in 3.4.)*
 
-**Tasks (to execute later)**
-- [ ] Dynamic `/lp/[niche]` (+city) template pulling `market_insights`, EN + KN.
-- [ ] Proof section: Google/Meta ads + conversion screenshots library.
-- [ ] Book-meeting CTA → Google Calendar/Meet API → Meet link + calendar event + meeting/lead in FMOS.
-- [ ] WhatsApp-click → prefilled msg → inbound webhook → lead + source tagging.
-- [ ] Install tracking: Meta Pixel + GA4 + Microsoft Clarity + in-app events → source attribution.
-- [ ] Fully-autonomous WhatsApp AI bot (qualify + answer + book) with guardrails + human-takeover.
+**Tasks**
+- [x] Dynamic `/lp/[niche]/[city]` template pulling `market_insights`, EN + KN. **DONE — all 13 niches × 9 cities (117 LPs), 2026-06-24.**
+- [x] Book-meeting CTA → Google Calendar/Meet API → Meet link + calendar event + meeting/lead in FMOS. **DONE.**
+- [x] WhatsApp-click → prefilled msg → inbound webhook → lead + source tagging (niche+city recovered from prefill via `matchNicheFromText`). **DONE.**
+- [x] Install tracking: Meta Pixel + GA4 + Microsoft Clarity + in-app events → source attribution. **DONE (env-gated).**
+- [x] Fully-autonomous WhatsApp AI bot (qualify + answer + book) with guardrails + human-takeover. **DONE (6.1).**
+- [ ] Proof section: Google/Meta ads + conversion screenshots library (the **projection** "within reach" stats are live; the gated real-proof vault from 2.2 is not built).
+- [ ] Ad conversion tracking: persist `gclid`/`fbclid` + map LP events → Google/Meta conversions + CAPI/OCI (held for ad launch).
 
 ## 2.2 — Portfolio & Results Showcase  ⬅️ *designed*
 

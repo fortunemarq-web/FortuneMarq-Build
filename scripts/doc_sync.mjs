@@ -71,7 +71,17 @@ function sitePages() {
 function lpEnabled() {
   const p = join(REPO, "01_CRM_AND_TOOL/fmos/lib/lp/niches.ts");
   if (!existsSync(p)) return null;
-  try { return (readFileSync(p, "utf8").match(/enabled:\s*true/g) || []).length; } catch { return null; }
+  try {
+    const src = readFileSync(p, "utf8");
+    // niche×city cross-product registry: one `enabled: true` in the flatMap
+    // enables every niche def, so count the niche defs (industry: "Foo" literals).
+    // Falls back to the legacy per-entry `enabled: true` count for the old shape.
+    if (/flatMap/.test(src)) {
+      const defs = (src.match(/industry:\s*"[A-Za-z]+"/g) || []).length;
+      if (defs > 0) return defs;
+    }
+    return (src.match(/enabled:\s*true/g) || []).length;
+  } catch { return null; }
 }
 const codeFacts = { site_pages: sitePages(), lp_enabled: lpEnabled() };
 

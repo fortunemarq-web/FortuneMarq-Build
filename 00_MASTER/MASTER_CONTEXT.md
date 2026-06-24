@@ -296,7 +296,7 @@ Everything in this list needs to be built. Tracked across the relevant folders.
 | GMB fully optimised | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING — can start now, independent of FMOS |
 | Instagram content — 5 posts/week | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING — can start now |
 | FortuneMarq SEO content plan | 05_FORTUNEMARQ_ONLINE_PRESENCE | PENDING |
-| Niche+city landing pages | 06_PAID_MARKETING | PARTIAL — dynamic LP template built at `/lp/[niche]/[city]` (Dental·Hubli enabled); roll out remaining niches before ads launch |
+| Niche+city landing pages | 06_PAID_MARKETING | ✅ DONE — all 13 niches × 9 cities (117 LPs) live & deployed 2026-06-24 (EN+KN, demand + presence modes); lead capture (form/chat/WhatsApp) → FMOS |
 | Meta ad campaigns (Phase 1) | 06_PAID_MARKETING | PENDING — LAST step, all systems must be ready first |
 | GST invoice setup (add GSTIN to FMOS) | 08_FINANCE | PENDING |
 | Finance tracking activated in FMOS | 08_FINANCE | PENDING — do at deployment |

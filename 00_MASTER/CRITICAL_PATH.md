@@ -1,18 +1,17 @@
 # FortuneMarq — Critical Path
-**Last Updated:** 2026-06-22
+**Last Updated:** 2026-06-24
 **Owner:** Jabeer
-**Current Phase:** Deployed & live, data fully loaded → Presence + Campaigns next
+**Current Phase:** Deployed & live; all 117 niche LPs live → Campaigns (ad launch) + Presence next
 
-> **2026-06-22 reality check (supersedes the dated June timeline below — treat those as a checklist, not dates):**
+> **2026-06-24 reality check (supersedes the dated June timeline below — treat those as a checklist, not dates):**
 > ✅ **FMOS is DEPLOYED and live** (Vercel, `fmos.fortunemarq.com`). The P0 auth/RBAC concern is resolved — the auth gate lives in `proxy.ts` (Next 16), fail-open.
 > ✅ **WhatsApp Cloud API is LIVE** — dedicated number **+91 79759 18980** (NOT 93530 82656; that stays in the WA Business app). **All 33 system templates + the `direct_report_v3_*` family approved by Meta.**
 > ✅ **DATA FULLY LOADED:** all 9 cities, 13 niches, ~7,960 leads, 117 `market_insights`, **936 EN+KN reports** (built by the reportlab pipeline; in-app `@react-pdf` generator disabled behind `REPORTS_INAPP_GENERATOR`).
-> ✅ **Built & live:** Stage 1 data engine (1.3–1.6), Stage 3 outbound (3.1–3.4, Direct Report v3), Stage 4 delivery (4.1–4.7), AI bot (6.1), messaging safety + inbox (6.2/6.3/6.4).
+> ✅ **Built & live:** Stage 1 data engine (1.3–1.6), **2.1 niche LPs (all 13 niches × 9 cities = 117 LPs, deployed 2026-06-24)**, Stage 3 outbound (3.1–3.4, Direct Report v3), Stage 4 delivery (4.1–4.7), marketing site (5.1), AI bot (6.1), messaging safety + inbox (6.2/6.3/6.4), command center + safety nets (6.5/6.8/6.9).
 > 🔜 **CURRENT CRITICAL PATH:**
-> 1. **Niche landing pages** — the marketing site is fully built + GA4/Clarity/GSC/Pixel connected; the `/lp/[niche]/[city]` template is built but only `dental-clinics` is enabled — roll out the remaining 12 niches (gates campaigns + portfolio links).
-> 2. **Presence** — GMB optimization, social content, SEO.
-> 3. **Campaigns** (Meta + Google) — Stage 2 campaign engine + own ad launch.
-> 4. **Remaining builds** — collection automation (1.1/1.2), pipeline orchestrator, command center (6.5), nurture (6.6), monitoring (6.8), backups (6.9).
+> 1. **Ad campaigns (Meta + Google)** — the 117 LPs are live as destinations. Remaining: **ad conversion tracking** (persist `gclid`/`fbclid` + map LP events → Google/Meta conversions + CAPI/OCI) + the **Stage 2 campaign engine** (campaign object + Meta metrics pull + digest). *Ad launch ~2 days out.*
+> 2. **Presence** — GMB optimization, social content, SEO (LP sitemap + programmatic pages + GSC dashboard).
+> 3. **Remaining builds** — collection automation (1.1/1.2) + pipeline orchestrator, nurture (6.6), capacity guardrail (6.7), 4.8 scale, 5.7 presence dashboard.
 > ⚠️ The dated June 9–15 timeline + "disconnect 93530 82656" steps below are OBSOLETE/historical — kept for record only. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
 
 > This file tracks the exact sequence of what needs to happen and when.
