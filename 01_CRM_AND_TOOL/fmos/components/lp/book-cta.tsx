@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Loader2,
   CheckCircle2,
@@ -67,7 +67,14 @@ export default function BookCta({ copy, industry, city, nicheSlug, lang, waNumbe
   const [busy, setBusy] = useState(false);
   const [state, setState] = useState<"idle" | "requested" | "booked">("idle");
   const [error, setError] = useState<string | null>(null);
-  const slots = useMemo(genSlots, []);
+  // Slots are "now"-relative and the LP is statically generated — computing them
+  // during SSR bakes in build-time times that mismatch the client at hydration
+  // (React #418, which can break form interactivity). Compute on the client only:
+  // the server renders no slots, then we fill them in after mount.
+  const [slots, setSlots] = useState<{ iso: string; label: string }[]>([]);
+  useEffect(() => {
+    setSlots(genSlots());
+  }, []);
 
   function attribution(): Partial<LpLeadForm> {
     if (typeof window === "undefined") return {};

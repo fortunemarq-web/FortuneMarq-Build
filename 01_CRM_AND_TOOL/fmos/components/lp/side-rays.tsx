@@ -83,7 +83,16 @@ const SideRays = ({
       await new Promise((resolve) => setTimeout(resolve, 10));
       if (!containerRef.current) return;
 
-      const renderer = new Renderer({ dpr: Math.min(window.devicePixelRatio, 2), alpha: true });
+      // WebGL may be unavailable (no GPU, GPU blocklisted, some in-app/older mobile
+      // browsers). ogl's Renderer throws synchronously then ("Cannot set properties
+      // of null (setting 'renderer')"). Fail gracefully — the hero keeps its CSS
+      // gradient/aurora background instead of crashing the page.
+      let renderer: Renderer;
+      try {
+        renderer = new Renderer({ dpr: Math.min(window.devicePixelRatio, 2), alpha: true });
+      } catch {
+        return;
+      }
       rendererRef.current = renderer;
 
       const gl = renderer.gl;
