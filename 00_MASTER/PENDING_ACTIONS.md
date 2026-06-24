@@ -1,5 +1,5 @@
 # FortuneMarq — Pending Actions
-**Last Updated:** 2026-06-22
+**Last Updated:** 2026-06-25
 **Owner:** Jabeer  
 
 > This is the master checklist of everything that still needs to be done, organised by priority.
@@ -9,6 +9,13 @@
 > ⚠️ **2026-06-24 status note:** Much of the list below predates the deploy + data load and is now done. As of today: **FMOS is deployed & live**, **WhatsApp Cloud API is live with all 33 system templates + the `direct_report_v3_*` family approved**, and Stages 1/3/4, the marketing site (5.1), **all 117 niche LPs (2.1)**, the AI bot (6.1), messaging safety/inbox (6.2–6.4), and the command center + safety nets (6.5/6.8/6.9) are built. **DATA IS FULLY LOADED:** all 9 cities, 13 niches, ~7,960 leads, 117 `market_insights`, **936 EN+KN reports** (built by the reportlab pipeline at `07_DATA_AND_RESEARCH/PDF_Generator`; the in-app `@react-pdf` generator is disabled behind `REPORTS_INAPP_GENERATOR`). Treat items about "deploy", "QA gate", "WhatsApp send UI", "templates pending", "load remaining leads", "run PDF pipeline", "niche landing pages", "command center/monitoring/backups" as **complete**. The live open items are: GMB/SEO/social presence, campaign launch + ad conversion tracking (Stage 2), GST settings activation, nurture (6.6), capacity guardrail (6.7), collection automation (1.1/1.2), pipeline orchestrator. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
 
 ---
+
+## 🔔 ACTIVATE AT AD LAUNCH — conversion tracking is BUILT but switched OFF (added 2026-06-25)
+
+The offline-conversion uploader (Meta CAPI + Google OCI; `lib/ads/*`, cron `/api/cron/ad-conversions`, table `ad_conversions`) ships **dormant**. When we create the ad campaigns, switch it on. Until then leads still capture + tag normally — only the *upload back to the ad platforms* is inactive. **Full step-by-step:** `FMOS_Status_Report_2026-06-24.md` → "🔔 ACTIVATE AT AD LAUNCH".
+- [ ] **Meta:** Events Manager → Pixel → Conversions API → generate token → set **`META_CAPI_TOKEN`** in Vercel; set **Lead** as the optimization conversion.
+- [ ] **Google:** link GA4 ↔ Google Ads + mark **`generate_lead`** a conversion (no-code interim); later set `GOOGLE_ADS_*` env for offline import (dev-token needs approval — start early).
+- [ ] **Schedule:** add a `/api/cron/ad-conversions` POST step to `.github/workflows/cron.yml`.
 
 ---
 

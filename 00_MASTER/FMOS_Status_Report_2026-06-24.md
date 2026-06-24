@@ -42,7 +42,7 @@ Also live: **33 WhatsApp templates + the `direct_report_v3_*` family Meta-approv
 
 ## The big pending rocks (priority order)
 1. **Stage 2 campaign tooling** — the FMOS Campaign object (2.3), Meta Marketing API metrics pull + flag rules + WhatsApp digest (2.6), status machine (2.5). *Today you'd run/track ads in Meta Ads Manager directly; FMOS doesn't yet ingest campaign performance.*
-2. **Ad conversion tracking** (part of 2.6, held for launch): persist `gclid`/`fbclid` on leads, map events → Google/Meta conversions, wire **Meta CAPI + Google OCI** so platforms optimize for *real* leads (meeting/won), not cheap form-fills.
+2. **Ad conversion tracking** — ✅ **BUILT (2026-06-25)**: `gclid`/`fbclid` persisted, standard events fire, and the **Meta CAPI + Google OCI** offline-conversion uploader is live but dormant. *Only remaining: switch it on at launch (env tokens) — see the "🔔 ACTIVATE AT AD LAUNCH" checklist below.*
 3. **Stage 5 organic engine** — GMB, programmatic SEO + GSC dashboard (LPs exist but need a sitemap + internal-linking for organic discovery), social, and the unified presence dashboard (5.7).
 4. **Stage 1 intake automation** (1.1/1.2 + orchestrator) — stop running manual scrape/clean scripts.
 5. **6.6 nurture + 6.7 capacity guardrail** — recover cold leads; don't oversell past delivery capacity.
@@ -50,14 +50,30 @@ Also live: **33 WhatsApp templates + the `direct_report_v3_*` family Meta-approv
 ---
 
 ## For the ad launch (~2 days) — ready vs missing
-**✅ Ready:** 117 live LP destinations, lead capture into FMOS (tagged niche+city+source), Pixel/GA4/Clarity present, bot + booking + the full downstream pipeline.
+**✅ Ready:** 117 live LP destinations on the canonical domain (`fortunemarq.com/lp/*`), lead capture into FMOS (tagged niche+city+source), Pixel/GA4/Clarity firing, standard conversion events + `gclid`/`fbclid` persistence + the **offline-conversion uploader (Meta CAPI + Google OCI)** all BUILT & deployed, bot + booking + the full downstream pipeline, sitemap submitted to GSC.
 
-**⛔ Missing (build at / just before launch):**
-1. **Conversion tracking** — `gclid`/`fbclid` persistence + event→conversion mapping + CAPI/OCI (so ads optimize correctly). **Highest priority.**
+**⛔ Remaining:**
+1. **Activate conversion tracking** — built but OFF; flip on at launch (see the checklist below). 
 2. **Campaign module in FMOS** (2.3/2.6) — optional to start; track in Ads Manager initially.
-3. **LP sitemap** for the 117 pages (organic only — not needed for paid).
 
-**You can launch paid ads now** (manual setup → live LPs → Pixel fires). The conversion-tracking wiring is what turns that spend into *measurable, self-optimizing* campaigns — the launch-day job.
+---
+
+## 🔔 ACTIVATE AT AD LAUNCH — DO NOT FORGET (conversion tracking is BUILT but switched OFF)
+The offline-conversion uploader (Meta CAPI + Google OCI, cron `/api/cron/ad-conversions`, commit `a9905ae`) ships **dormant**. When we create the ad campaigns, switch it on — until then leads still capture + tag normally; only the *upload back to the ad platforms* is inactive.
+
+**Meta (quick — do first):**
+1. Meta Events Manager → your Pixel → **Conversions API → Generate access token**.
+2. Add it in Vercel as **`META_CAPI_TOKEN`** (the Pixel ID is already set). → server conversions go live.
+3. In Events Manager, set **Lead** as the campaign's optimization conversion.
+
+**Google:**
+4. Link **GA4 ↔ Google Ads** and mark **`generate_lead`** as a conversion (no-code, works immediately — the interim path).
+5. For offline import (later): get a Google Ads **developer token** (needs approval — start early) + create two conversion actions ("Meeting", "Won"), then set in Vercel: `GOOGLE_ADS_DEVELOPER_TOKEN, GOOGLE_ADS_CLIENT_ID, GOOGLE_ADS_CLIENT_SECRET, GOOGLE_ADS_REFRESH_TOKEN, GOOGLE_ADS_CUSTOMER_ID, GOOGLE_ADS_CONVERSION_ACTION_MEETING, GOOGLE_ADS_CONVERSION_ACTION_WON`.
+
+**Schedule the uploader:**
+6. Add a `/api/cron/ad-conversions` POST step to `.github/workflows/cron.yml` (Bearer `CRON_SECRET`) so it runs on the existing cron.
+
+**You can launch paid ads now** (live LPs → Pixel fires). Steps 1–6 turn the spend into *measurable, self-optimizing* campaigns.
 
 ---
 
