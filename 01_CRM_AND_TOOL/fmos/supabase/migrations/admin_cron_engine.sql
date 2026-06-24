@@ -1,5 +1,9 @@
 -- Admin Alerts Engine & Scheduler
 -- Moves logic from API to DB-native efficient processing
+-- DEPLOYED 2026-06-24: generate_admin_alerts() created in live DB. Was never run before,
+--   so /api/cron/admin-alerts returned HTTP 500 every cycle (health monitor flagged it).
+--   Fixed two schema mismatches vs live tables: lead_outcomes has no outcome_type column,
+--   activity_events has title/body not description.
 
 -- 1. Helper function to check if pg_cron is available
 -- (We'll try to create extension if we can, but often requires superuser. 
@@ -46,18 +50,21 @@ begin
     where created_at >= v_today and source = 'inbound';
     
     kpi_inbound_sla_missed := 0; -- Placeholder logic for now
-    
-    select count(*) into kpi_calls_logged from lead_outcomes 
-    where created_at >= v_today and outcome_type = 'call';
-    
-    select count(*) into kpi_connected from lead_outcomes 
-    where created_at >= v_today and outcome not in ('no_answer','busy','voicemail');
+
+    -- every lead_outcome row is a logged call/interaction (table has no outcome_type column)
+    select count(*) into kpi_calls_logged from lead_outcomes
+    where created_at >= v_today;
+
+    select count(*) into kpi_connected from lead_outcomes
+    where created_at >= v_today and coalesce(outcome,'') not in ('no_answer','busy','voicemail');
     
     select count(*) into kpi_followups_due from leads 
     where next_action_date >= v_today and next_action_date < v_today + 1;
 
-    select count(*) into kpi_strategy_booked from activity_events 
-    where created_at >= v_today and event_type = 'status_change' and description ilike '%strategy%';
+    -- activity_events has title/body (no description column)
+    select count(*) into kpi_strategy_booked from activity_events
+    where created_at >= v_today and event_type = 'status_change'
+      and (coalesce(title,'') ilike '%strategy%' or coalesce(body,'') ilike '%strategy%');
 
     -- Delivery
     select count(*) into kpi_active_projects from projects 
