@@ -34,8 +34,8 @@
 
 **2026-06-16 — WhatsApp templates DONE:** all **33 templates** finalized, reviewed + warmed, submitted, and **APPROVED by Meta (live)**.
 - Source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` (copy + categories + "when" for each).
-- Machine-readable: `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json`.
-- Bulk-create script: `01_CRM_AND_TOOL/fmos/scripts/bulk_create_whatsapp_templates.py` (already run).
+- Machine-readable defs: the inline `TEMPLATES` array in `01_CRM_AND_TOOL/fmos/app/admin/whatsapp-templates/actions.ts` (the external `templates_final.json` is owner-local, loaded via `WA_TEMPLATES_JSON`; not committed to the repo).
+- Registered into Meta via the "Register 33 Meta Templates" button at `/admin/whatsapp-templates` (already run; the old `bulk_create_whatsapp_templates.py` script is removed).
 - Old `WHATSAPP_TEMPLATE_SPEC.md` + the split draft JSONs are SUPERSEDED.
 - Rules baked in: follow-back reminder only fires if call-back is **24h+ out**; invoice/reminder/overdue carry **bank details**; added **payment_partial_received** + **send_info** (company details).
 - Companion work order for Claude Code: `01_CRM_AND_TOOL/fmos/WHATSAPP_HANDOFF_2026-06-16.md`.

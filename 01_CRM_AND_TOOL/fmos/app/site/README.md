@@ -131,7 +131,7 @@ A from-scratch re-platform of the existing static `fortunemarq.com` into this Ne
 
 - **Staged route:** everything lives under **`/site`** (e.g. `/site`, `/site/about`). Public — added to `PUBLIC_PREFIXES` in `proxy.ts` and `PUBLIC_ROUTES` in `components/ui/layout-wrapper.tsx` (no auth, no app chrome).
 - **Final root (`/`) mapping is a deferred decision** (host-split: `fortunemarq.com` → marketing, `fmos.fortunemarq.com` → app). Don't repoint `/` yet.
-- **Source of truth for design/content:** `05_FORTUNEMARQ_ONLINE_PRESENCE/public_html/` — `index/about/services/work/contact/privacy-policy/terms-of-service .html` + `style.css` (5,499 lines) + `script.js` (1,474 lines) + `assets/`. Look: `#030303` bg, `#42CA80` green, Alliance No1/No2 + JetBrains Mono, GSAP + ScrollTrigger + Lenis motion.
+- **Source of truth for design/content:** `05_FORTUNEMARQ_ONLINE_PRESENCE/public_html.zip` (the legacy static site, now zipped — `index/about/services/work/contact/privacy-policy/terms-of-service .html` + `style.css` ~5,499 lines + `script.js` ~1,474 lines + `assets/`; unzip to inspect). Look: `#030303` bg, `#42CA80` green, Alliance No1/No2 + JetBrains Mono, GSAP + ScrollTrigger + Lenis motion.
 
 ## Files (all created for this rebuild)
 | File | Role |
@@ -206,7 +206,7 @@ Every page is built, ported faithfully, polished, and verified (desktop 1440 + m
 - `text scramble` reveal was intentionally skipped (the SplitType line/clip reveals already read premium; scramble risked noise). Revisit if desired.
 
 ### How to wire per-page motion
-`site-motion.tsx` currently inits the home set + shared chrome. For new pages, **extend `site-motion.tsx`** with each page's init functions, **gated by a presence selector** (e.g. `if (document.querySelector('.abt-hero')) initAboutPage()`), exactly like the original `script.js` did — and make sure each is added to the `gsap.context` and cleaned up. Re-init on route change if needed (the effect is `[]`-deps today; home-only). Read the real init code from `05_FORTUNEMARQ_ONLINE_PRESENCE/public_html/script.js`.
+`site-motion.tsx` currently inits the home set + shared chrome. For new pages, **extend `site-motion.tsx`** with each page's init functions, **gated by a presence selector** (e.g. `if (document.querySelector('.abt-hero')) initAboutPage()`), exactly like the original `script.js` did — and make sure each is added to the `gsap.context` and cleaned up. Re-init on route change if needed (the effect is `[]`-deps today; home-only). Read the real init code from the legacy `script.js` inside `05_FORTUNEMARQ_ONLINE_PRESENCE/public_html.zip` (unzip to inspect).
 
 ## Run / verify
 ```bash

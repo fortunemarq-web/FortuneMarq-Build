@@ -25,7 +25,7 @@ App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer
 - **This file** — current state + next steps.
 - `00_MASTER/LIVE_STATE.md` — **machine-generated** live snapshot (Supabase counts + deploy state), refreshed each session by `scripts/doc_sync.mjs`. Never hand-edit it; trust it for current data counts. Doc-automation design: `scripts/DOC_AUTOMATION.md`; reconcile on drift with the `/sync-docs` skill.
 - `CLAUDE.md` — app structure, routes, conventions (auto-loaded).
-- `WHATSAPP_TEMPLATES_FINAL.md` + `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` — the 33 submitted WhatsApp templates (SOURCE OF TRUTH).
+- `WHATSAPP_TEMPLATES_FINAL.md` + the in-app `TEMPLATES` array (`01_CRM_AND_TOOL/fmos/app/admin/whatsapp-templates/actions.ts`) — the 33 approved WhatsApp templates (SOURCE OF TRUTH; the external `templates_final.json` is owner-local via `WA_TEMPLATES_JSON`, not committed).
 - `WHATSAPP_HANDOFF_2026-06-16.md` — the WhatsApp work order (BUILD/CHANGE/REMOVE, 12 surfaces, DoD).
 - `00_MASTER/FMOS_Execution_Roadmap.md`, `FMOS_System_Design_And_Tasks.md`, `CRITICAL_PATH.md`, `PENDING_ACTIONS.md` — owner's strategy/launch-gate (maintained in Cowork).
 

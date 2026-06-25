@@ -37,7 +37,7 @@ keys, `ANTHROPIC_API_KEY`, `CRON_SECRET`, WhatsApp/Meta keys, …) before runnin
 
 ## Operational scripts
 
-- **`scripts/bulk_create_whatsapp_templates.py`** — bulk-creates the Meta WhatsApp Business templates from the canonical `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` (already-approved templates are skipped; safe to re-run).
+- **WhatsApp template registration** — handled in-app by the "Register 33 Meta Templates" button at `/admin/whatsapp-templates` (`app/admin/whatsapp-templates/actions.ts`): upserts the 33 templates from the inline `TEMPLATES` array (already-approved ones are skipped; safe to re-run). The old Python bulk-create script (`bulk_create_whatsapp_templates.py`) + the committed `templates_final.json` are removed; copy source of truth is `WHATSAPP_TEMPLATES_FINAL.md`.
 - **`scripts/setup_whatsapp_flows.mjs`** — one-time: creates + publishes the multi-select "Services" WhatsApp **Flows** (EN/KN/HI checkbox forms) on the WABA and prints their ids for the `WHATSAPP_FLOW_ID_*` env vars. Reads `WHATSAPP_API_TOKEN` from `.env.local`; the flows are self-contained (no endpoint/encryption — completion returns via `nfm_reply`).
 
 The telecaller cockpit (`components/sales/telecaller-cockpit.tsx`) logs call outcomes and, on **"Interested — Book Meeting Now"** with a chosen date/time, creates a Google Calendar/Meet booking (`bookMeeting`); every other outcome (and a "book" logged without a time) auto-sends the mapped WhatsApp template instead (3.2 / 3.4).

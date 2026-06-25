@@ -65,7 +65,7 @@ FortuneMarq_Build/
 - `03_results.md` — outcomes/metrics archive (feeds reports + Proof_Vault)
 - `monthly_reports/` · `assets/` (links to Drive)
 
-**`05_FORTUNEMARQ_ONLINE_PRESENCE/Proof_Vault/`** — real, consented client results + case studies. Feeds the on-request proof link (2.2) and proposals. Real data only — never fabricated.
+**`05_FORTUNEMARQ_ONLINE_PRESENCE/`** — real, consented client results + case studies live in its **Proof_Vault** subfolder (auto-created by FMOS's "Mark as Case Study" consent flow on first use). Feeds the on-request proof link (2.2) and proposals. Real data only — never fabricated.
 
 ---
 
