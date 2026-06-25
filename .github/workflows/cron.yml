@@ -145,3 +145,11 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/automations/reactivation" \
             -H "Authorization: Bearer $SECRET" || echo "reactivation ping failed (non-fatal)"
+      - name: Review + referral flywheel (4.8 — no-ops until review/referral URLs set)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/automations/review-requests" \
+            -H "Authorization: Bearer $SECRET" || echo "review-requests ping failed (non-fatal)"
