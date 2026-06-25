@@ -1,5 +1,5 @@
 # 09 — Legal & Operations
-**Last Updated:** 2026-06-17 | **Status:** GST + Udyam registered. Agreement template, service terms, and payment/cancellation policy complete and wired into FMOS (deployed & live; agreements confirm by WhatsApp/email reply). Minor items still open (privacy policy, website-ownership-transfer doc, GST settings activation in FMOS).
+**Last Updated:** 2026-06-25 | **Status:** GST + Udyam registered. Agreement template, service terms, and payment/cancellation policy complete and wired into FMOS (deployed & live; agreements confirm by WhatsApp/email reply). Privacy Policy + Terms + consent banner are **live on the website**, and **GST invoicing is built** in FMOS (no "activation" pending). Genuinely open: SAC codes + a website-ownership-transfer doc (see "What's Pending").
 
 > Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
@@ -53,14 +53,14 @@ Create and store all legal documents, business policies, and compliance material
 | Email | fortunemarq@gmail.com |
 
 ## What's Pending
-- [ ] Privacy Policy for fortunemarq.com (website legal requirement)
-- [ ] Website Ownership Transfer document (for website clients who want to take their site elsewhere)
-- [ ] GST invoice compliance checklist for FMOS activation
-- [ ] FMOS activation: enter GSTIN and bank details in `/admin/finance` settings
+Most former items are now DONE (see 2026-06-25 note). Genuinely open:
+- [ ] **SAC codes** — confirm the GST Services Accounting Code per service (advertising/marketing ≈ 998361) and enter in FMOS.
+- [ ] **Website Ownership Transfer document** — short doc for website clients who later move their site elsewhere.
+- [ ] (Optional) review the live Privacy Policy for DPDP-Act specifics (data-principal rights, grievance officer).
 
-## What's Still Open (FMOS is live)
-- Privacy Policy: not urgent until website gets significant traffic
-- FMOS GST activation: enter GSTIN + bank details in `/admin/finance` settings (no longer blocked — app is deployed)
+## Done (corrected 2026-06-25)
+- Privacy Policy + Terms of Service: **built and live on the website** (`01_CRM_AND_TOOL/fmos/app/site/privacy-policy`, `.../terms-of-service`) with a consent/cookie banner (`components/site/site-consent.tsx`).
+- GST invoicing: **built** in FMOS (GSTIN + 18% configured, GST-compliant PDF, quarterly GST report at `/admin/finance/gst`) — no "activation" needed. Remaining GST refinements tracked in `08_FINANCE/gst-status-and-gaps.md`.
 
 ## Connections to Other Folders
 - **Feeds INTO:** `03_SALES_SYSTEM/Proposals` — proposals reference agreement terms

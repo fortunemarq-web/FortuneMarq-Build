@@ -37,11 +37,10 @@ GST-compliant invoices must include:
 - IGST (18%) for clients outside Karnataka
 
 ## What's Pending
-- FMOS is deployed & live (fmos.fortunemarq.com) and the invoicing module is built. Remaining setup:
-- Enter invoice settings in FMOS (`/admin/finance`): GSTIN + bank account details
-- This enables GST-compliant PDF invoice generation in FMOS
-- SAC codes for each service need to be confirmed and entered in FMOS
-- Issue the first client invoice
+GST invoicing is **built** in FMOS (GSTIN + 18% configured, GST calc, GST-compliant PDF, quarterly GST report at `/admin/finance/gst`) — not "activate." Genuinely open:
+- **SAC codes** — confirm the Services Accounting Code per service (advertising/marketing ≈ 998361) and enter in FMOS.
+- **Verify** the saved business settings (GSTIN defaulted; confirm bank details persisted), then issue the first client invoice.
+- Other GST refinements (inter-state IGST, rate-from-settings, the `[Add GSTIN]` invoice view) tracked in `08_FINANCE/gst-status-and-gaps.md`.
 
 ## Connections to Other Folders
 - **GSTIN used in:** `08_FINANCE/Invoicing/` — all invoices
