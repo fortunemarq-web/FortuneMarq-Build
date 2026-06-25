@@ -153,3 +153,11 @@ jobs:
           [ -z "$BASE_URL" ] && exit 0
           curl -fsS -X POST "$BASE_URL/api/cron/automations/review-requests" \
             -H "Authorization: Bearer $SECRET" || echo "review-requests ping failed (non-fatal)"
+      - name: Retainer renewal reminders (4.8)
+        env:
+          BASE_URL: ${{ vars.FMOS_BASE_URL }}
+          SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          [ -z "$BASE_URL" ] && exit 0
+          curl -fsS -X POST "$BASE_URL/api/cron/automations/renewals" \
+            -H "Authorization: Bearer $SECRET" || echo "renewals ping failed (non-fatal)"
