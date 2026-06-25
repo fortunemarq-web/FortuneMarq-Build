@@ -9,9 +9,9 @@
 > ✅ **DATA FULLY LOADED:** all 9 cities, 13 niches, ~7,960 leads, 117 `market_insights`, **936 EN+KN reports** (built by the reportlab pipeline; in-app `@react-pdf` generator disabled behind `REPORTS_INAPP_GENERATOR`).
 > ✅ **Built & live:** Stage 1 data engine (1.3–1.6), **2.1 niche LPs (all 13 niches × 9 cities = 117 LPs, deployed 2026-06-24)**, Stage 3 outbound (3.1–3.4, Direct Report v3), Stage 4 delivery (4.1–4.7), marketing site (5.1), AI bot (6.1), messaging safety + inbox (6.2/6.3/6.4), command center + safety nets (6.5/6.8/6.9).
 > 🔜 **CURRENT CRITICAL PATH:**
-> 1. **Ad campaigns (Meta + Google)** — the 117 LPs are live as destinations. Remaining: **ad conversion tracking** (persist `gclid`/`fbclid` + map LP events → Google/Meta conversions + CAPI/OCI) + the **Stage 2 campaign engine** (campaign object + Meta metrics pull + digest). *Ad launch ~2 days out.*
-> 2. **Presence** — GMB optimization, social content, SEO (LP sitemap + programmatic pages + GSC dashboard).
-> 3. **Remaining builds** — collection automation (1.1/1.2) + pipeline orchestrator, nurture (6.6), capacity guardrail (6.7), 4.8 scale, 5.7 presence dashboard.
+> 1. **Ad campaigns (Meta + Google)** — the 117 LPs are live as destinations. **Ad conversion tracking BUILT 2026-06-25** (`gclid`/`fbclid` persisted, standard events fire, Meta CAPI + Google OCI uploader live but dormant until tokens set). Remaining: the **Stage 2 campaign engine** (campaign object + Meta metrics pull + digest) + owner-side activation at launch (Meta CAPI token, GA4↔Ads link — see `LAUNCH_CHECKLIST.md`). *Ad launch ~2 days out.*
+> 2. **Presence** — GMB optimization, social content, SEO (LP sitemap DONE + submitted to GSC; programmatic pages + GSC dashboard pending).
+> 3. **Remaining builds** — collection automation (1.1/1.2) + pipeline orchestrator, capacity guardrail (6.7), 5.7 presence dashboard. **(6.6 nurture/reactivation + 4.8 scale [upsell flags, auto-renewals, review/referral flywheel] BUILT 2026-06-25.)**
 > ⚠️ The dated June 9–15 timeline + "disconnect 93530 82656" steps below are OBSOLETE/historical — kept for record only. Authoritative build state: `00_MASTER/FMOS_System_Design_And_Tasks.md`.
 
 > This file tracks the exact sequence of what needs to happen and when.

@@ -1,6 +1,6 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-24.
+# Last updated: 2026-06-25.
 # ➤ CONTINUING WORK? Read CONTINUE_HERE.md FIRST — it is the CANONICAL handoff (current state,
 #   branch continue-on-mac, next steps, and the doc trust map). It supersedes COWORK_HANDOFF.md,
 #   last_session.md, the PHASE_*.md logs, and the dated "LATEST SESSION" block below (kept for history).
@@ -24,10 +24,13 @@
 #   text template direct_report_v3_* with 3 buttons [Book a meeting / Tell me more / ಕನ್ನಡ ವರದಿ] then
 #   the matched PDF; the Kannada button sends only the KN PDF), Stage 4 delivery (4.1–4.7), AI bot
 #   (6.1), messaging safety + unified inbox (6.2/6.3/6.4), 2.1 niche LPs (13×9). Not yet built:
-#   Stage 2 campaigns + ad conversion tracking (gclid/fbclid persist + Google/Meta conversions +
-#   CAPI/OCI — held for ad launch), Stage 5 presence (5.1 marketing site DONE + GA4/Clarity/GSC/Pixel;
-#   GMB/SEO/social/dashboard pending), 4.8, 6.6/6.7, collection automation (1.1/1.2), pipeline
-#   orchestrator. (6.5/6.8/6.9 DONE+DEPLOYED 2026-06-23; 2.1 niche-LPs DONE+DEPLOYED 2026-06-24.)
+#   Stage 2 campaign engine (2.2 proof vault, 2.3 campaign object, 2.5/2.6 Meta metrics pull + digest),
+#   Stage 5 presence (5.1 marketing site DONE + GA4/Clarity/GSC/Pixel LIVE; GMB/SEO/social + 5.7
+#   dashboard pending), 6.7 capacity guardrail, collection automation (1.1/1.2), pipeline orchestrator.
+#   (6.5/6.8/6.9 DONE 2026-06-23; 2.1 LPs DONE 2026-06-24. BUILT 2026-06-25: 4.8 (review/referral +
+#   auto-renewals), 6.6 (reactivation drip), the ad-conversion uploader [Meta CAPI + Google OCI —
+#   dormant until tokens set] + opt-out compliance fix [added leads.do_not_contact]. CONNECTED
+#   2026-06-25 via owner's Chrome: Meta Pixel + Google Calendar. Owner launch tasks → 00_MASTER/LAUNCH_CHECKLIST.md.)
 #   Team = Jabeer + Afifa only (delivery = freelancers).
 #   LIVE DATA COUNTS: see 00_MASTER/LIVE_STATE.md (machine-generated each session by
 #   scripts/doc_sync.mjs; SessionStart hook + /sync-docs skill keep docs in sync — scripts/DOC_AUTOMATION.md).
