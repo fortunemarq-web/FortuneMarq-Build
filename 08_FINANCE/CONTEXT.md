@@ -1,10 +1,10 @@
 # 08 — Finance
-**Last Updated:** 2026-06-17 | **Status:** Finance module is live in FMOS (deployed) — invoicing, partial payments, recurring GST invoices + payment-reminder cron are built. Still pending: Jabeer entering GSTIN + bank details in `/admin/finance` settings to fully activate GST invoicing, and the MRR-vs-one-time forecast view. No company MRR yet. All pricing locked (below).
+**Last Updated:** 2026-06-25 | **Status:** Finance module is live in FMOS (deployed) — invoicing, partial payments, recurring GST invoices + payment-reminder cron are built. **GST invoicing is functionally built**: GSTIN (`29ICWPS9816Q1ZS`) + 18% rate are configured in settings, invoices compute GST (CGST+SGST) and render a GST-compliant PDF, and there's a quarterly GST filing report at `/admin/finance/gst`. Remaining are refinements + the MRR-vs-one-time forecast view — tracked in `gst-status-and-gaps.md`. No company MRR yet. All pricing locked (below).
 
 > Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 ## Folder Purpose
-Plan and manage all financial operations — invoicing, GST compliance, expense tracking, revenue reporting, and progress toward ₹50K MRR goal. The finance module exists in FMOS (`/admin/finance`) but needs GST settings activated and the MRR/one-time split built (Phase E).
+Plan and manage all financial operations — invoicing, GST compliance, expense tracking, revenue reporting, and progress toward ₹50K MRR goal. The finance module exists in FMOS (`/admin/finance`) with **GST invoicing built** (GSTIN + 18% configured, GST-compliant invoice PDF, quarterly GST report at `/admin/finance/gst`); the remaining GST refinements and the MRR/one-time split (Phase E) are tracked in `gst-status-and-gaps.md`.
 
 ## What Exists (Complete)
 
@@ -102,7 +102,11 @@ No revenue target for June. Entire month focused on:
 - First invoice to be raised: will be for the first signed company client
 
 ## What's Still Open (FMOS is live)
-- Activate GST: enter GSTIN + bank details in `/admin/finance` settings, test invoice PDF.
+GST invoicing is built — not "activate," but a few refinements remain. Full list + file pointers in `gst-status-and-gaps.md`:
+- Verify the saved business settings (GSTIN already defaulted; confirm bank details persisted) + raise one test invoice PDF.
+- Inter-state IGST (place-of-supply) handling — today everything is CGST+SGST (intra-Karnataka).
+- Wire the GST rate from settings (currently hardcoded 18% in invoice creation/issuance).
+- Fix the `[Add GSTIN]` placeholder on the public invoice view.
 - Build the MRR-vs-one-time forecast view (Phase E).
 - No company clients yet = no invoices raised yet.
 
@@ -124,3 +128,4 @@ No revenue target for June. Entire month focused on:
 | 2026-04-28 | CONTEXT.md fully rewritten. GSTIN confirmed. Current revenue confirmed zero. Phase E requirements documented. |
 | 2026-06-08 | Revenue targets reset. June = build month, no revenue target. Q3 (Jul–Sep) = ₹1L total revenue. 20% MoM growth after Q3. GST activation steps documented with bank details from BUSINESS_MASTER_INFO.md. |
 | 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; "blocked on deployment" removed. Recorded finance module as built (invoicing, partial payments, recurring GST invoices + reminder cron). Remaining: GST settings activation + MRR/one-time forecast view. |
+| 2026-06-25 | Code check of FMOS finance. GST invoicing is functionally built (GSTIN + 18% in settings, GST calc, compliant PDF, quarterly GST report at `/admin/finance/gst`) — corrected the stale "needs activation" framing. Real remaining gaps captured as tasks in `gst-status-and-gaps.md` (IGST/inter-state, rate-from-settings, `[Add GSTIN]` invoice view, settings verification) + the MRR/one-time forecast (Phase E). |

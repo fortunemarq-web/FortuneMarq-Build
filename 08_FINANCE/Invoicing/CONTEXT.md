@@ -1,5 +1,5 @@
 # 08 — Invoicing
-**Last Updated:** 2026-06-22 (revised: FMOS deployed & live) | **Status:** Invoice module built and live in FMOS (recurring GST invoices + reminders + partial payments). No invoices raised yet — pending GST settings data-entry + first real client.
+**Last Updated:** 2026-06-25 | **Status:** Invoice module built and live in FMOS (recurring GST invoices + reminders + partial payments). GST invoicing is functionally built (GSTIN + 18% configured, GST-compliant PDF). No invoices raised yet — pending the first real client; remaining GST refinements tracked in `../gst-status-and-gaps.md`.
 
 ## Folder Purpose
 Process documentation for raising, tracking, and managing client invoices. All invoice operations live in FMOS `/admin/finance/invoices`.
