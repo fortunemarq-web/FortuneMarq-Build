@@ -56,7 +56,7 @@ Build order below is sequenced by **dependency** (foundations first) and **risk*
 - [x] **4.5** Bulk task paste → milestones + nested tasks on client card.
 - [x] **4.6** Client project board; milestone-complete → client WhatsApp nudge; monthly report auto → WhatsApp; results → proof vault.
 - [x] **4.7** Recurring GST invoices + payment reminders + paid/outstanding; overdue → Afifa's board + payment outcomes.
-- [ ] **4.8** Upsell opportunity flags (manual pitch); auto renewals; auto review/referral requests; referral leads → inbound.
+- [ ] **4.8** Upsell opportunity flags (manual pitch); auto renewals; **auto review/referral requests — BUILT 2026-06-25** (daily cron `/api/cron/automations/review-requests`: asks delivered-to clients once for a Google review then a referral, logged to `review_requests(kind)`, dedup'd; gated on `FORTUNEMARQ_REVIEW_URL` + `FORTUNEMARQ_REFERRAL_URL`). *Remaining 4.8: upsell flags + auto-renewals (clients table already has `upsell_eligible`/`renewal_date`/`upsell_notes`).* referral leads → inbound.
 
 ## Phase E — Command center + safety nets
 - [x] **6.5** Master funnel dashboard (cross-engine: leads → … → MRR). **BUILT 2026-06-23** — `/admin/command`. (Founder daily WhatsApp digest still to extend onto the existing daily-digest.)
