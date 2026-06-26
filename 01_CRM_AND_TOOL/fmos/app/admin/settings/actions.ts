@@ -21,6 +21,8 @@ export interface BusinessSettings {
   gst_rate: number;
   invoice_prefix: string;
   payment_terms_days: number;
+  /** Monthly MRR target (₹). 0 = no target set (forecast target UI hidden). */
+  mrr_target: number;
 }
 
 // Not exported: "use server" modules may only export async functions,
@@ -42,6 +44,7 @@ const DEFAULT_SETTINGS: BusinessSettings = {
   gst_rate: 18,
   invoice_prefix: "FM",
   payment_terms_days: 15,
+  mrr_target: 0,
 };
 
 export async function getBusinessSettings(): Promise<BusinessSettings> {

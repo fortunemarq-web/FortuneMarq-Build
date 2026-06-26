@@ -3,6 +3,7 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import { sendNotification } from "@/lib/notifications";
+import { computeGstAmount, resolveGstRate } from "@/lib/finance/gst";
 
 /**
  * Auto-mark unpaid invoices as overdue if the due date has passed.
@@ -228,6 +229,13 @@ export async function generateMonthlyInvoices(): Promise<{
     .gt("monthly_value", 0);
   if (clientsError) throw new Error(clientsError.message);
 
+  // GST rate from business settings (falls back to 18).
+  const { data: settingsRow } = await (supabase.from("business_settings") as any)
+    .select("gst_rate")
+    .limit(1)
+    .maybeSingle();
+  const gstRate = resolveGstRate(settingsRow?.gst_rate);
+
   // 2. Clients already billed (mrr invoice issued this month, not cancelled)
   const { data: existing, error: existingError } = await (supabase.from("invoices") as any)
     .select("client_id")
@@ -254,7 +262,7 @@ export async function generateMonthlyInvoices(): Promise<{
 
   for (const client of toBill) {
     const subtotal = client.monthly_value;
-    const gstAmount = Math.round(subtotal * 0.18 * 100) / 100;
+    const gstAmount = computeGstAmount(subtotal, gstRate);
     const { data: invoice, error: invError } = await (supabase.from("invoices") as any)
       .insert({
         invoice_number: `${prefix}-${String(seq).padStart(3, "0")}`,

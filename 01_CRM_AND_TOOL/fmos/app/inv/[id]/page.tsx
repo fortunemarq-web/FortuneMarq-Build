@@ -1,19 +1,40 @@
 import { createAdminClient } from "@/lib/supabase-admin";
 import { notFound } from "next/navigation";
+import { gstBreakdown } from "@/lib/finance/gst";
 
 export const dynamic = "force-dynamic";
+
+// Fallbacks if business_settings hasn't been saved yet.
+const DEFAULT_BIZ = {
+  gstin: "29ICWPS9816Q1ZS",
+  gst_rate: 18,
+  bank_name: "Karnataka Bank",
+  account_name: "FortuneMarq Media & Marketing",
+  account_number: "0332202500001101",
+  ifsc: "KARB0000332",
+  city: "Hubli",
+  state: "Karnataka",
+};
 
 export default async function PublicInvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = createAdminClient();
 
-  const { data: invoice } = await supabase
+  const { data: invoice } = await (supabase as any)
     .from("invoices")
-    .select("id, invoice_number, subtotal, gst_amount, total_amount, due_date, issue_date, notes, status, paid_amount, client_id")
+    .select("id, invoice_number, subtotal, gst_amount, total_amount, due_date, issue_date, notes, status, paid_amount, client_id, is_interstate")
     .eq("id", id)
     .maybeSingle();
 
   if (!invoice) notFound();
+
+  const { data: settingsRow } = await (supabase as any)
+    .from("business_settings")
+    .select("gstin, gst_rate, bank_name, account_name, account_number, ifsc, city, state")
+    .limit(1)
+    .maybeSingle();
+  const biz = { ...DEFAULT_BIZ, ...(settingsRow || {}) };
+  const gstLines = gstBreakdown((invoice as any).gst_amount, biz.gst_rate, !!(invoice as any).is_interstate);
 
   let clientName = "";
   if (invoice.client_id) {
@@ -86,10 +107,12 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
               <span className="text-gray-600">Subtotal</span>
               <span>{fmt(invoice.subtotal)}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">GST (18%)</span>
-              <span>{fmt(invoice.gst_amount)}</span>
-            </div>
+            {gstLines.map((line) => (
+              <div key={line.label} className="flex justify-between text-sm">
+                <span className="text-gray-600">{line.label}</span>
+                <span>{fmt(line.amount)}</span>
+              </div>
+            ))}
             <div className="flex justify-between text-sm font-bold border-t border-gray-200 pt-2 mt-1">
               <span>Total</span>
               <span className="text-[#1E7A4F]">{fmt(invoice.total_amount)}</span>
@@ -112,16 +135,16 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
           {!isPaid && (
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-gray-700 space-y-1">
               <p className="font-semibold text-gray-800 mb-2">Bank Transfer</p>
-              <p>Karnataka Bank</p>
-              <p>A/C Name: FortuneMarq Media &amp; Marketing</p>
-              <p>A/C No: <span className="font-mono">0332202500001101</span></p>
-              <p>IFSC: <span className="font-mono">KARB0000332</span></p>
+              <p>{biz.bank_name}</p>
+              <p>A/C Name: {biz.account_name}</p>
+              <p>A/C No: <span className="font-mono">{biz.account_number}</span></p>
+              <p>IFSC: <span className="font-mono">{biz.ifsc}</span></p>
             </div>
           )}
         </div>
 
         <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center text-xs text-gray-400">
-          FortuneMarq Media &amp; Marketing · GSTIN: [Add GSTIN] · Hubli, Karnataka
+          FortuneMarq Media &amp; Marketing · GSTIN: {biz.gstin} · {biz.city}, {biz.state}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { gstBreakdown } from '@/lib/finance/gst';
 
 const BRAND = '#42CA80';
 const BRAND_DEEP = '#1E7A4F';
@@ -311,8 +312,11 @@ const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
     account_name: settings?.account_name || "FortuneMarq Media & Marketing",
     account_number: settings?.account_number || "0332202500001101",
     ifsc: settings?.ifsc || "KARB0000332",
+    gst_rate: settings?.gst_rate ?? 18,
     payment_terms_days: settings?.payment_terms_days || 15,
   };
+
+  const gstLines = gstBreakdown(invoice.gst_amount, biz.gst_rate, !!invoice.is_interstate);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -419,10 +423,13 @@ const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
                 <Text style={styles.summaryLabel}>Subtotal</Text>
                 <Text style={styles.summaryValue}>{formatCurrency(invoice.subtotal)}</Text>
               </View>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>GST (18%)</Text>
-                <Text style={styles.summaryValue}>{formatCurrency(invoice.gst_amount)}</Text>
-              </View>
+              {(invoice.gst_amount || 0) > 0 &&
+                gstLines.map((line: { label: string; amount: number }) => (
+                  <View key={line.label} style={styles.summaryRow}>
+                    <Text style={styles.summaryLabel}>{line.label}</Text>
+                    <Text style={styles.summaryValue}>{formatCurrency(line.amount)}</Text>
+                  </View>
+                ))}
               <View style={styles.summaryTotalRow}>
                 <Text style={styles.summaryTotalLabel}>Total Due</Text>
                 <Text style={styles.summaryTotalValue}>{formatCurrency(invoice.total_amount)}</Text>

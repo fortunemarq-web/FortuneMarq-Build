@@ -28,7 +28,7 @@ Store all business policies that govern how FortuneMarq operates with clients â€
 
 ## What's Pending
 - None. Policy is locked and ready to use.
-- Privacy Policy still pending (separate document needed for website)
+- Privacy Policy is **DONE** â€” built and live on the website (`01_CRM_AND_TOOL/fmos/app/site/privacy-policy`) + Terms of Service + consent banner.
 
 ## What's Blocked
 - Nothing.

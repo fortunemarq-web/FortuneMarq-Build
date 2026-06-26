@@ -8,6 +8,7 @@ import Link from "next/link";
 import { autoMarkOverdueInvoices, getRevenueVsExpensesChartData } from "./actions";
 import { getBusinessSettings } from "@/app/admin/settings/actions";
 import FinanceChart from "@/components/admin/finance/FinanceChart";
+import RevenueForecastWidget from "@/components/admin/revenue-forecast-widget";
 import { Suspense } from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
@@ -228,6 +229,11 @@ export default async function FinanceDashboard() {
 
           {/* Right */}
           <div className="space-y-4 lg:col-span-4">
+            {/* Revenue forecast (Phase E) */}
+            <Suspense fallback={<Card className="p-5"><p className="text-xs text-slate-400">Loading forecast…</p></Card>}>
+              <RevenueForecastWidget />
+            </Suspense>
+
             {/* P&L */}
             <Card className="p-5">
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-500">P&amp;L this month</h3>

@@ -2,12 +2,22 @@
 
 import { createAdminClient } from "@/lib/supabase-admin";
 import { sendWhatsAppTemplate, toWaNumber } from "@/lib/whatsapp/send";
+import { computeGstAmount, resolveGstRate } from "@/lib/finance/gst";
 
 const APP_URL = () =>
   (process.env.NEXT_PUBLIC_APP_URL || "https://fmos.fortunemarq.com").replace(/\/$/, "");
 
-const GST_RATE = 0.18;
 const IST = "Asia/Kolkata";
+
+/** GST rate (percent) from business_settings, falling back to 18. */
+async function getGstRatePercent(supabase: ReturnType<typeof createAdminClient>): Promise<number> {
+  const { data } = await (supabase as any)
+    .from("business_settings")
+    .select("gst_rate")
+    .limit(1)
+    .maybeSingle();
+  return resolveGstRate(data?.gst_rate);
+}
 
 function fmtINR(n: number) {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
@@ -48,7 +58,8 @@ export async function issueInvoice(input: IssueInvoiceInput): Promise<IssueInvoi
     return { ok: false, error: "clientId or leadId required" };
   }
 
-  const gstAmount = Math.round(input.subtotal * GST_RATE);
+  const gstRate = await getGstRatePercent(supabase);
+  const gstAmount = computeGstAmount(input.subtotal, gstRate);
   const totalAmount = input.subtotal + gstAmount;
 
   // Generate invoice number

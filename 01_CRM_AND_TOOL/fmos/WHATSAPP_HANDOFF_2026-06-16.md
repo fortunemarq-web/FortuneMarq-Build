@@ -6,8 +6,8 @@
 - `00_MASTER/FMOS_System_Design_And_Tasks.md` — full system design (all stages).
 - `00_MASTER/FMOS_Execution_Roadmap.md` — build order + launch gate.
 - `WHATSAPP_TEMPLATES_FINAL.md` — the 33 final templates (copy, category, "when").
-- `03_SALES_SYSTEM/WhatsApp_Templates/FMOS_Template_Data/templates_final.json` — machine-readable defs.
-- `scripts/bulk_create_whatsapp_templates.py` — bulk-creator (already run).
+- `01_CRM_AND_TOOL/fmos/app/admin/whatsapp-templates/actions.ts` — machine-readable defs (the inline `TEMPLATES` array; the external `templates_final.json` is owner-local via `WA_TEMPLATES_JSON`, not committed).
+- The "Register 33 Meta Templates" button at `/admin/whatsapp-templates` — bulk registrar (already run; replaced the removed `bulk_create_whatsapp_templates.py`).
 - This file = the WhatsApp-specific work order distilled from those.
 
 > **STATUS 2026-06-16:** all 33 templates submitted to Meta and **APPROVED (live)**. Engine work below is what remains.
