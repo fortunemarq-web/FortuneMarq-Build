@@ -42,7 +42,7 @@ export default async function GSTReportPage() {
   // Fetch all paid invoices (output GST)
   const { data: invoices } = await (supabase.from("invoices") as any)
     // invoices has no `amount` column — use subtotal / total_amount.
-    .select("id, invoice_number, subtotal, gst_amount, total_amount, revenue_type, status, paid_at, issue_date, clients(business_name)")
+    .select("id, invoice_number, subtotal, gst_amount, total_amount, revenue_type, status, paid_at, issue_date, is_interstate, clients(business_name)")
     .in("status", ["paid", "unpaid", "overdue"])
     .order("issue_date", { ascending: false });
 
@@ -70,6 +70,11 @@ export default async function GSTReportPage() {
     const allMonthInvoices = monthInvoices;
 
     const outputGST = paidInvoices.reduce((s: number, inv: any) => s + (Number(inv.gst_amount) || 0), 0);
+    // Split output GST by place of supply: intra-state → CGST+SGST, inter-state → IGST.
+    const igst = paidInvoices.reduce((s: number, inv: any) => s + (inv.is_interstate ? (Number(inv.gst_amount) || 0) : 0), 0);
+    const intraGst = outputGST - igst;
+    const cgst = intraGst / 2;
+    const sgst = intraGst / 2;
     const taxableValue = paidInvoices.reduce((s: number, inv: any) => s + (Number(inv.subtotal) || inv.amount || 0), 0);
     const totalCollected = paidInvoices.reduce((s: number, inv: any) => s + (Number(inv.total_amount) || inv.amount || 0), 0);
     const invoiceCount = paidInvoices.length;
@@ -83,16 +88,19 @@ export default async function GSTReportPage() {
     const netGSTPayable = outputGST - inputGST;
     const quarter = getQuarterLabel(month, year);
 
-    return { year, month, label, quarter, outputGST, inputGST, netGSTPayable, taxableValue, totalCollected, invoiceCount };
+    return { year, month, label, quarter, outputGST, cgst, sgst, igst, inputGST, netGSTPayable, taxableValue, totalCollected, invoiceCount };
   });
 
   // Quarterly rollup
-  const quarters: Record<string, { label: string; outputGST: number; inputGST: number; netGST: number; taxableValue: number; months: typeof monthlyData }> = {};
+  const quarters: Record<string, { label: string; outputGST: number; cgst: number; sgst: number; igst: number; inputGST: number; netGST: number; taxableValue: number; months: typeof monthlyData }> = {};
   monthlyData.forEach((m) => {
     if (!quarters[m.quarter]) {
-      quarters[m.quarter] = { label: m.quarter, outputGST: 0, inputGST: 0, netGST: 0, taxableValue: 0, months: [] };
+      quarters[m.quarter] = { label: m.quarter, outputGST: 0, cgst: 0, sgst: 0, igst: 0, inputGST: 0, netGST: 0, taxableValue: 0, months: [] };
     }
     quarters[m.quarter].outputGST += m.outputGST;
+    quarters[m.quarter].cgst += m.cgst;
+    quarters[m.quarter].sgst += m.sgst;
+    quarters[m.quarter].igst += m.igst;
     quarters[m.quarter].inputGST += m.inputGST;
     quarters[m.quarter].netGST += m.netGSTPayable;
     quarters[m.quarter].taxableValue += m.taxableValue;
@@ -121,7 +129,7 @@ export default async function GSTReportPage() {
           subtitle={
             <>
               GSTIN: <span className="font-semibold tabular-nums text-slate-700">{settings.gstin}</span>
-              &nbsp;·&nbsp; GST Rate: {gstRate}% (CGST {cgstRate}% + SGST {cgstRate}%)
+              &nbsp;·&nbsp; GST Rate: {gstRate}% (intra-state CGST {cgstRate}% + SGST {cgstRate}% · inter-state IGST {gstRate}%)
             </>
           }
           actions={
@@ -175,7 +183,7 @@ export default async function GSTReportPage() {
               <Table>
                 <THead>
                   <TR className="hover:bg-transparent">
-                    {["Month", "Taxable Value", "Output GST", "CGST", "SGST", "Input Credit", "Net Payable", "Invoices"].map((h) => (
+                    {["Month", "Taxable Value", "Output GST", "CGST", "SGST", "IGST", "Input Credit", "Net Payable", "Invoices"].map((h) => (
                       <TH key={h} className="whitespace-nowrap">{h}</TH>
                     ))}
                   </TR>
@@ -186,8 +194,9 @@ export default async function GSTReportPage() {
                       <TD className="whitespace-nowrap font-semibold text-slate-800">{m.label}</TD>
                       <TD className="tabular-nums text-slate-700">{formatINR(m.taxableValue)}</TD>
                       <TD className="font-semibold tabular-nums text-brand-deep">{formatINR(m.outputGST)}</TD>
-                      <TD className="tabular-nums text-slate-500">{formatINR(m.outputGST / 2)}</TD>
-                      <TD className="tabular-nums text-slate-500">{formatINR(m.outputGST / 2)}</TD>
+                      <TD className="tabular-nums text-slate-500">{formatINR(m.cgst)}</TD>
+                      <TD className="tabular-nums text-slate-500">{formatINR(m.sgst)}</TD>
+                      <TD className="tabular-nums text-slate-500">{formatINR(m.igst)}</TD>
                       <TD className="tabular-nums text-info">{formatINR(m.inputGST)}</TD>
                       <TD className={`font-semibold tabular-nums ${m.netGSTPayable > 0 ? "text-danger" : "text-slate-400"}`}>
                         {formatINR(m.netGSTPayable)}
@@ -200,8 +209,9 @@ export default async function GSTReportPage() {
                     <TD className="font-semibold text-slate-900">Quarter Total</TD>
                     <TD className="font-semibold tabular-nums text-slate-900">{formatINR(q.taxableValue)}</TD>
                     <TD className="font-semibold tabular-nums text-brand-deep">{formatINR(q.outputGST)}</TD>
-                    <TD className="font-semibold tabular-nums text-slate-700">{formatINR(q.outputGST / 2)}</TD>
-                    <TD className="font-semibold tabular-nums text-slate-700">{formatINR(q.outputGST / 2)}</TD>
+                    <TD className="font-semibold tabular-nums text-slate-700">{formatINR(q.cgst)}</TD>
+                    <TD className="font-semibold tabular-nums text-slate-700">{formatINR(q.sgst)}</TD>
+                    <TD className="font-semibold tabular-nums text-slate-700">{formatINR(q.igst)}</TD>
                     <TD className="font-semibold tabular-nums text-info">{formatINR(q.inputGST)}</TD>
                     <TD className={`font-display text-base font-semibold tabular-nums ${q.netGST > 0 ? "text-danger" : "text-brand-deep"}`}>
                       {formatINR(q.netGST)}

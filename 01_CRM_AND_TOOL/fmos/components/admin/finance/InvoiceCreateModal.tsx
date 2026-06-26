@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, Plus, Trash2, Calculator } from "lucide-react";
 import { createInvoice, updateInvoice } from "@/app/admin/finance/actions";
+import { computeGstAmount, gstBreakdown, resolveGstRate } from "@/lib/finance/gst";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -16,9 +17,12 @@ interface InvoiceCreateModalProps {
   onSuccess: (newInv: any) => void;
   /** When set, the modal edits this invoice instead of creating a new one. */
   editInvoice?: any | null;
+  /** GST rate (percent) from business settings. Defaults to 18. */
+  gstRate?: number;
 }
 
-export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess, editInvoice }: InvoiceCreateModalProps) {
+export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess, editInvoice, gstRate }: InvoiceCreateModalProps) {
+  const rate = resolveGstRate(gstRate);
   const isEdit = !!editInvoice;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,6 +34,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
   const [dueDate, setDueDate] = useState(editInvoice?.due_date ?? "");
   const [revenueType, setRevenueType] = useState(editInvoice?.revenue_type ?? "mrr");
   const [includeGst, setIncludeGst] = useState(isEdit ? (editInvoice?.gst_amount ?? 0) > 0 : true);
+  const [isInterstate, setIsInterstate] = useState<boolean>(editInvoice?.is_interstate ?? false);
   const [notes, setNotes] = useState(editInvoice?.notes ?? "");
 
   const [lineItems, setLineItems] = useState(
@@ -42,8 +47,9 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
 
   // Derived state
   const subtotal = lineItems.reduce((acc, item) => acc + (Number(item.amount) || 0), 0);
-  const gstAmount = includeGst ? subtotal * 0.18 : 0;
+  const gstAmount = includeGst ? computeGstAmount(subtotal, rate) : 0;
   const totalAmount = subtotal + gstAmount;
+  const gstLines = gstBreakdown(gstAmount, rate, isInterstate);
 
   useEffect(() => {
     if (isEdit) return; // keep existing values when editing
@@ -91,6 +97,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
         subtotal,
         gst_amount: gstAmount,
         total_amount: totalAmount,
+        is_interstate: includeGst ? isInterstate : false,
         notes,
         revenue_type: revenueType
       };
@@ -244,7 +251,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
           <div className="space-y-4 rounded-xl border border-line bg-slate-50 p-6">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-600">Include GST (18%)</span>
+                <span className="font-semibold text-slate-600">Include GST ({rate}%)</span>
                 <button
                   type="button"
                   onClick={() => setIncludeGst(!includeGst)}
@@ -259,10 +266,26 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
               </div>
             </div>
             {includeGst && (
-              <div className="flex items-center justify-between text-sm">
-                <p className="font-medium italic text-slate-500">Central Tax (CGST + SGST)</p>
-                <p className="font-semibold tabular-nums text-slate-600">₹{gstAmount.toLocaleString('en-IN')}</p>
-              </div>
+              <>
+                {/* Place of supply: intra-state (CGST+SGST) vs inter-state (IGST) */}
+                <div className="flex items-center gap-2 text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setIsInterstate(!isInterstate)}
+                    className={`relative flex h-6 w-10 items-center rounded-full px-1 transition-colors ${isInterstate ? 'bg-brand-deep' : 'bg-slate-300'}`}
+                  >
+                    <div className={`h-4 w-4 rounded-full bg-white transition-transform ${isInterstate ? 'translate-x-4' : 'translate-x-0'}`} />
+                  </button>
+                  <span className="font-medium text-slate-600">Inter-state supply (IGST)</span>
+                  <span className="text-xs text-slate-400">{isInterstate ? 'client outside Karnataka' : 'client in Karnataka'}</span>
+                </div>
+                {gstLines.map((line) => (
+                  <div key={line.label} className="flex items-center justify-between text-sm">
+                    <p className="font-medium italic text-slate-500">{line.label}</p>
+                    <p className="font-semibold tabular-nums text-slate-600">₹{line.amount.toLocaleString('en-IN')}</p>
+                  </div>
+                ))}
+              </>
             )}
             <div className="flex items-center justify-between border-t border-line pt-4">
               <p className="text-sm font-semibold uppercase tracking-wide text-slate-900">Total Amount</p>

@@ -388,6 +388,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
           onClose={() => { setIsModalOpen(false); setEditInvoice(null); }}
           clients={clients}
           editInvoice={editInvoice}
+          gstRate={settings?.gst_rate}
           onSuccess={(newInv) => {
             if (editInvoice) {
               setInvoices(prev => prev.map(inv => inv.id === newInv.id ? { ...inv, ...newInv } : inv));
