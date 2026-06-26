@@ -107,7 +107,7 @@ GST invoicing is built — not "activate," but a few refinements remain. Full li
 - Inter-state IGST (place-of-supply) handling — today everything is CGST+SGST (intra-Karnataka).
 - Wire the GST rate from settings (currently hardcoded 18% in invoice creation/issuance).
 - Fix the `[Add GSTIN]` placeholder on the public invoice view.
-- Build the MRR-vs-one-time forecast view (Phase E).
+- ✅ DONE (2026-06-26): GST refinements (rate-from-settings, inter-state IGST, `[Add GSTIN]` fix) + **Phase E** — the Revenue Forecast widget (committed MRR + pipeline × **real** close rate vs a **configurable** MRR target) is live and now on the finance dashboard; the MRR/Setup/One-Time split was already on the dashboard. MRR target is a business setting (default 0 = build month).
 - No company clients yet = no invoices raised yet.
 
 ## Connections to Other Folders

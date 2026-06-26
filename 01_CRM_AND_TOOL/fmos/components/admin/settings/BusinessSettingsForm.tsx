@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { saveBusinessSettings, BusinessSettings } from "@/app/admin/settings/actions";
-import { Building, CreditCard, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { Building, CreditCard, FileText, CheckCircle, AlertCircle, Target } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,6 +64,7 @@ export default function BusinessSettingsForm({ initialSettings }: Props) {
           &nbsp;&nbsp;account_number TEXT, ifsc TEXT, gst_rate NUMERIC DEFAULT 18,<br />
           &nbsp;&nbsp;invoice_prefix TEXT DEFAULT 'FM',<br />
           &nbsp;&nbsp;payment_terms_days INTEGER DEFAULT 15,<br />
+          &nbsp;&nbsp;mrr_target NUMERIC DEFAULT 0,<br />
           &nbsp;&nbsp;updated_at TIMESTAMPTZ DEFAULT now()<br />
           );
         </p>
@@ -147,6 +148,30 @@ export default function BusinessSettingsForm({ initialSettings }: Props) {
               onChange={(e) => update("payment_terms_days", Number(e.target.value))}
               className="tabular-nums"
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Goals & Targets */}
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <Target className="h-4 w-4 text-slate-400" />
+            Goals &amp; Targets
+          </CardTitle>
+          <span className="text-xs text-slate-400">Drives the Revenue Forecast widget</span>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div>
+            <Label className="text-xs font-semibold uppercase tracking-wide text-slate-500">MRR Target (₹/mo)</Label>
+            <Input
+              type="number"
+              value={settings.mrr_target ?? 0}
+              onChange={(e) => update("mrr_target", Number(e.target.value))}
+              className="tabular-nums"
+              placeholder="50000"
+            />
+            <p className="mt-1 text-[11px] text-slate-400">0 = no target (forecast target UI hidden). Set ₹50,000 when the goal goes live.</p>
           </div>
         </CardContent>
       </Card>

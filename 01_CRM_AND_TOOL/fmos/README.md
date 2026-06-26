@@ -115,3 +115,11 @@ Tightened GST handling across invoicing (tsc 0, build green):
 - **Inter-state IGST / place of supply** — new `invoices.is_interstate` flag (migration `supabase/2026-06-26_invoice_is_interstate.sql`, `NOT NULL DEFAULT false`). The invoice modal has an "Inter-state supply (IGST)" toggle; the invoice modal, PDF, public page, and the GST report (`app/admin/finance/gst/page.tsx`, now with an IGST column) show **CGST+SGST for intra-state** and **IGST for inter-state**. CGST/SGST split so the two halves always sum to the GST total. Existing/untoggled invoices default to intra-state — unchanged behavior.
 - **Fixed the `[Add GSTIN]` placeholder** on the public invoice view (`app/inv/[id]/page.tsx`) — it now reads the real GSTIN + bank details from `business_settings`.
 - **To activate:** run `supabase/2026-06-26_invoice_is_interstate.sql` in the Supabase dashboard before merging.
+
+## Revenue forecast — Phase E (2026-06-26)
+
+Finished the Phase E forecast. The MRR/Setup/One-Time split was already on the finance dashboard; completed the rest:
+- **`components/admin/revenue-forecast-widget.tsx`** now derives the **close rate from real proposal history** (won/confirmed vs rejected; falls back to 30% until ≥4 proposals have closed) instead of a flat 30%, and reads the **MRR target from settings** instead of a hardcoded 0.
+- **Configurable MRR target** — new `business_settings.mrr_target` (migration `supabase/2026-06-26_business_settings_mrr_target.sql`, default 0 = no target / build month), editable under Settings → Goals & Targets. The forecast's target/progress UI activates once it's > 0.
+- The forecast widget is now also mounted on the **finance dashboard** (`app/admin/finance/page.tsx`), not just `/admin`.
+- **To activate the target:** run the migration and set MRR Target to ₹50,000 in Settings when the goal goes live (Q3).

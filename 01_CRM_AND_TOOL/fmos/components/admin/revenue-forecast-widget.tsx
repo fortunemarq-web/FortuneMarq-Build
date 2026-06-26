@@ -1,10 +1,12 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { getBusinessSettings } from "@/app/admin/settings/actions";
 import Link from "next/link";
 import { TrendingUp, Target, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
-const MRR_TARGET = 0; // Build month — no target set yet (June 2026)
-const CLOSE_RATE = 0.30;
+// Default close rate used until there's enough real proposal history to trust a computed one.
+const DEFAULT_CLOSE_RATE = 0.30;
+const MIN_CLOSED_FOR_REAL_RATE = 4;
 
 export default async function RevenueForecastWidget() {
   const supabase = await createServerClientWithCookies();
@@ -28,12 +30,28 @@ export default async function RevenueForecastWidget() {
     .select("total_monthly")
     .eq("status", "sent");
 
+  // Close rate from real history: won/confirmed vs rejected. Falls back to the
+  // default until there's enough closed history to be meaningful.
+  const { data: closedProposals } = await supabase
+    .from("proposals")
+    .select("status")
+    .in("status", ["won", "confirmed", "rejected"]);
+  const wonCount = (closedProposals || []).filter((p: any) => p.status === "won" || p.status === "confirmed").length;
+  const lostCount = (closedProposals || []).filter((p: any) => p.status === "rejected").length;
+  const totalClosed = wonCount + lostCount;
+  const closeRate = totalClosed >= MIN_CLOSED_FOR_REAL_RATE ? wonCount / totalClosed : DEFAULT_CLOSE_RATE;
+  const closeRateIsReal = totalClosed >= MIN_CLOSED_FOR_REAL_RATE;
+  const closeRatePct = Math.round(closeRate * 100);
+
+  const settings = await getBusinessSettings();
+  const MRR_TARGET = Number(settings.mrr_target) || 0;
+
   const currentMRR = (mrrInvoices || []).reduce((s: number, i: any) => s + (i.amount || 0), 0);
   const pipelineMonthly = (sentProposals || []).reduce((s: number, p: any) => s + (p.total_monthly || 0), 0);
   const proposalCount = (sentProposals || []).length;
 
   const projectedFull = currentMRR + pipelineMonthly;
-  const projectedConservative = currentMRR + Math.round(pipelineMonthly * CLOSE_RATE);
+  const projectedConservative = currentMRR + Math.round(pipelineMonthly * closeRate);
   const hasTarget = MRR_TARGET > 0;
   const gapToTarget = hasTarget ? Math.max(0, MRR_TARGET - currentMRR) : 0;
   const targetHit = hasTarget && currentMRR >= MRR_TARGET;
@@ -96,10 +114,14 @@ export default async function RevenueForecastWidget() {
             {/* Conservative */}
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-600">Conservative (30% close rate)</span>
+                <span className="text-xs text-slate-600">Conservative ({closeRatePct}% close rate)</span>
                 <span className="text-sm font-semibold tabular-nums text-brand-deep">{formatINR(projectedConservative)}</span>
               </div>
-              <span className="text-[11px] italic text-slate-400">(estimated close rate — updates with real data)</span>
+              <span className="text-[11px] italic text-slate-400">
+                {closeRateIsReal
+                  ? `(from your real win rate — ${wonCount}/${totalClosed} proposals closed won)`
+                  : "(default estimate — switches to your real win rate after more proposals close)"}
+              </span>
             </div>
 
             {/* Pipeline value */}

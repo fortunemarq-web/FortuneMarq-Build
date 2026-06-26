@@ -15,7 +15,7 @@ or `/tasks`).
 2. **Wire GST rate from settings.** Rate is hardcoded `0.18` in `actions/issue-invoice.ts` and `InvoiceCreateModal.tsx` instead of reading `gst_rate` from settings. Make them read settings so the rate is changeable without code edits.
 3. **Fix the `[Add GSTIN]` placeholder** on the public invoice view (`01_CRM_AND_TOOL/fmos/app/inv/[id]/page.tsx`) — it shows a placeholder instead of the real GSTIN; this may be the link a client opens.
 4. **Verify saved settings + test invoice.** GSTIN is defaulted in code; confirm the `business_settings` row is saved with correct bank details, then raise one test invoice PDF end-to-end.
-5. **MRR vs one-time forecast view (Phase E)** — separate from GST; still pending.
+5. ~~MRR vs one-time forecast view (Phase E)~~ — **DONE 2026-06-26.** The MRR/Setup/One-Time split was already on the finance dashboard; added the Revenue Forecast widget there (committed MRR + pipeline × real close rate vs a configurable MRR target — `business_settings.mrr_target`, migration `supabase/2026-06-26_business_settings_mrr_target.sql`).
 
 ## Notes
 - GST docs/reference: `09_LEGAL_AND_OPERATIONS/GST_and_Compliance/`.
