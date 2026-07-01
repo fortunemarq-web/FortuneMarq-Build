@@ -95,7 +95,7 @@ export default function Home() {
         {/* Logo */}
         <div className="flex h-16 items-center justify-center">
           <img
-            src="/Logo.png"
+            src="/logo-icon-dark.png"
             alt="FortuneMarq"
             className="h-16 w-auto object-contain"
           />

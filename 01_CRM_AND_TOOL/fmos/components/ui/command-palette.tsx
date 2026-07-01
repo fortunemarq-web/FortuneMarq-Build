@@ -253,11 +253,11 @@ export function CommandPalette() {
     return (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] px-4">
             <div
-                className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+                className="fixed inset-0 z-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
                 onClick={() => setIsOpen(false)}
             />
 
-            <div className="w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200 fill-mode-both">
+            <div className="relative z-10 w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200 fill-mode-both">
                 <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5">
                     <div className="flex items-center border-b border-slate-100 px-4">
                         <Search className={cn("h-5 w-5", loading ? "text-indigo-500 animate-pulse" : "text-slate-400")} />

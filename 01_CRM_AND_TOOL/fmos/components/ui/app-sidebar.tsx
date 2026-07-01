@@ -235,7 +235,7 @@ export default function AppSidebar() {
       <Link href="/" className="flex items-center gap-2">
         <div className="flex h-8 items-center">
           <img
-            src="/Logo.png"
+            src="/logo-icon-dark.png"
             alt="FortuneMarq"
             className="h-8 w-auto object-contain"
           />
@@ -270,7 +270,7 @@ export default function AppSidebar() {
             <img
               src="/Logo.png"
               alt="FortuneMarq"
-              className="h-7 w-auto object-contain brightness-0 invert"
+              className="h-7 w-auto object-contain"
             />
           </div>
           {!isCollapsed && (

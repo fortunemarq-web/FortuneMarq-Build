@@ -10,7 +10,7 @@ interface FortuneMarqLogoProps {
 export default function FortuneMarqLogo({ 
   className = "", 
   size = "md",
-  logoPath = "/Logo.png",
+  logoPath = "/logo-icon-dark.png",
   showText = true
 }: FortuneMarqLogoProps) {
   const sizeClasses = {
