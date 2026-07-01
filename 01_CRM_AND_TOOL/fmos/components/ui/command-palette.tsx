@@ -35,6 +35,18 @@ interface SearchResult {
     badge?: string;
 }
 
+// icon is a component (function) — it does NOT survive JSON.stringify into
+// localStorage, so recent searches load back with icon=undefined. Re-hydrate
+// from the category and always fall back, or <Icon/> crashes the whole app.
+const CATEGORY_ICONS: Record<SearchResult["category"], any> = {
+    Leads: Users,
+    Clients: Building2,
+    Tasks: ClipboardList,
+    Projects: FolderKanban,
+    WhatsApp: MessageSquare,
+    Navigation: Target,
+};
+
 export function CommandPalette() {
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
@@ -85,7 +97,12 @@ export function CommandPalette() {
         const stored = localStorage.getItem("recent_searches");
         if (stored) {
             try {
-                setRecentSearches(JSON.parse(stored));
+                setRecentSearches(
+                    (JSON.parse(stored) as SearchResult[]).map((r) => ({
+                        ...r,
+                        icon: CATEGORY_ICONS[r.category] || Search,
+                    }))
+                );
             } catch (e) {
                 localStorage.removeItem("recent_searches");
             }
@@ -291,7 +308,7 @@ export function CommandPalette() {
                         ) : (
                             <div className="px-2 space-y-1">
                                 {displayResults.map((item, index) => {
-                                    const Icon = item.icon;
+                                    const Icon = item.icon || CATEGORY_ICONS[item.category] || Search;
                                     const isSelected = index === selectedIndex;
 
                                     // Header for first item in category
