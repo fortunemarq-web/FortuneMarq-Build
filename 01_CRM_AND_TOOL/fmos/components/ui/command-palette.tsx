@@ -92,6 +92,11 @@ export function CommandPalette() {
         { id: "nav-manager-perf", title: "Sales Performance", icon: Target, href: "/manager/performance", category: "Navigation" },
     ];
 
+    // Telecallers only work leads — search should just find a lead by name or
+    // number, not surface the whole app menu they can't use anyway.
+    const isTelecaller = userProfile?.role === "telecaller";
+    const navActions = isTelecaller ? [] : commonActions;
+
     // Initialize Recent Searches
     useEffect(() => {
         const stored = localStorage.getItem("recent_searches");
@@ -135,7 +140,7 @@ export function CommandPalette() {
             // 1. Search Leads (Scoped by role)
             let leadsQuery = supabase.from("leads")
                 .select("id, company_name, industry, city, outreach_stage, phone, assigned_sales_exec")
-                .or(`company_name.ilike.${pattern},phone.ilike.${pattern},city.ilike.${pattern}`);
+                .or(`company_name.ilike.${pattern},contact_person.ilike.${pattern},phone.ilike.${pattern},city.ilike.${pattern}`);
 
             // Apply Telecaller restriction
             if (userProfile?.role === 'telecaller') {
@@ -178,11 +183,13 @@ export function CommandPalette() {
                 }
             }
 
-            // 3. Search Tasks
-            const { data: tasks } = await (supabase.from("tasks") as any)
-                .select("id, title, project_id, status")
-                .ilike("title", pattern)
-                .limit(5);
+            // 3. Search Tasks (skip for telecallers — they only search leads)
+            const { data: tasks } = userProfile?.role === 'telecaller'
+                ? { data: null }
+                : await (supabase.from("tasks") as any)
+                    .select("id, title, project_id, status")
+                    .ilike("title", pattern)
+                    .limit(5);
 
             if (tasks) {
                 tasks.forEach((t: any) => {
@@ -242,7 +249,7 @@ export function CommandPalette() {
             }
 
             if (isOpen) {
-                const currentList = search ? results : [...recentSearches, ...commonActions];
+                const currentList = search ? results : [...recentSearches, ...navActions];
                 if (e.key === "Escape") {
                     setIsOpen(false);
                 } else if (e.key === "ArrowDown") {
@@ -261,11 +268,11 @@ export function CommandPalette() {
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [isOpen, results, selectedIndex, handleSelect, search, recentSearches, commonActions]);
+    }, [isOpen, results, selectedIndex, handleSelect, search, recentSearches, navActions]);
 
     if (!isOpen) return null;
 
-    const displayResults = search ? results : [...recentSearches, ...commonActions];
+    const displayResults = search ? results : [...recentSearches, ...navActions];
 
     return (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] px-4">
@@ -281,7 +288,7 @@ export function CommandPalette() {
                         <input
                             autoFocus
                             className="flex h-14 w-full border-0 bg-transparent px-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:text-base"
-                            placeholder="Find clients, leads, tasks or projects..."
+                            placeholder={isTelecaller ? "Search leads by name or number..." : "Find clients, leads, tasks or projects..."}
                             value={search}
                             onChange={(e) => {
                                 setSearch(e.target.value);
@@ -302,8 +309,16 @@ export function CommandPalette() {
                         {displayResults.length === 0 ? (
                             <div className="px-6 py-12 text-center">
                                 <Search className="mx-auto h-8 w-8 text-slate-200 mb-4" />
-                                <p className="text-sm text-slate-500 font-medium tracking-tight">No results found for "{search}"</p>
-                                <p className="text-xs text-slate-400 mt-1">Check spelling or try a broader search term.</p>
+                                {search ? (
+                                    <>
+                                        <p className="text-sm text-slate-500 font-medium tracking-tight">No results found for "{search}"</p>
+                                        <p className="text-xs text-slate-400 mt-1">Check spelling or try a broader search term.</p>
+                                    </>
+                                ) : (
+                                    <p className="text-sm text-slate-500 font-medium tracking-tight">
+                                        {isTelecaller ? "Start typing a lead's name or number" : "Start typing to search"}
+                                    </p>
+                                )}
                             </div>
                         ) : (
                             <div className="px-2 space-y-1">
