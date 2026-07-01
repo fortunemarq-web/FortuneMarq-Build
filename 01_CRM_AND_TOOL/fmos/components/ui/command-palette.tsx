@@ -137,17 +137,14 @@ export function CommandPalette() {
         const fullResults: SearchResult[] = [];
 
         try {
-            // 1. Search Leads (Scoped by role)
-            let leadsQuery = supabase.from("leads")
-                .select("id, company_name, industry, city, outreach_stage, phone, assigned_sales_exec")
-                .or(`company_name.ilike.${pattern},contact_person.ilike.${pattern},phone.ilike.${pattern},city.ilike.${pattern}`);
-
-            // Apply Telecaller restriction
-            if (userProfile?.role === 'telecaller') {
-                leadsQuery = leadsQuery.eq('assigned_sales_exec', userProfile.id);
-            }
-
-            const { data: leads } = await leadsQuery.limit(5);
+            // 1. Search Leads — by name / contact / number / city, across ALL
+            // leads. RLS already lets staff read leads, and a telecaller must be
+            // able to find any lead by number (e.g. an inbound caller), not only
+            // the handful assigned to them.
+            const { data: leads } = await supabase.from("leads")
+                .select("id, company_name, industry, city, outreach_stage, phone")
+                .or(`company_name.ilike.${pattern},contact_person.ilike.${pattern},phone.ilike.${pattern},city.ilike.${pattern}`)
+                .limit(5);
             if (leads) {
                 leads.forEach((l: any) => {
                     fullResults.push({
