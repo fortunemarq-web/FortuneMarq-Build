@@ -1087,25 +1087,25 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       ],
                     },
                     {
-                      title: "Re-Pitch",
+                      title: "Re-Open the Loop",
                       lines: [
-                        `"Since we last spoke, we've helped a few ${niche} businesses in ${city} increase their Google enquiries by 30–40%. The opportunity is very real for ${biz} as well."`,
-                        `"When someone in ${city} searches for ${niche} near me, we want ${biz} to be one of the first names they see."`,
+                        `"When we looked at ${biz} on Google, we found a specific gap in ${city} that's sending those searches to your competitors instead of you."`,
+                        `"That's exactly the kind of thing our founder breaks down on the call — for ${biz} specifically."`,
                       ],
                       objections: [
-                        { trigger: "We already get enough customers", response: `"That's great! But imagine if 20-30% more people found you before they found your competitors. Our clients say the ROI pays for itself within the first month."` },
-                        { trigger: "We tried digital marketing before", response: `"I understand the frustration. What we do is very different — it's not ads. It's getting you ranked organically on Google so customers come to you without spending on clicks every month."` },
+                        { trigger: "We already get enough customers", response: `"That's great to hear! This isn't about replacing what works — it's the extra layer of people searching on Google right now who can't find you yet. The founder can show you how big that is for ${biz}."` },
+                        { trigger: "We tried digital marketing before", response: `"I understand the frustration — that happens a lot. Usually it's because agencies just run ads with no foundation underneath. What we do is different: we build the complete system first — your Google presence, website, SEO and ads all working together — so ${biz} gets results that actually last."` },
                       ],
                     },
                     {
                       title: "Book the Meeting",
                       lines: [
-                        `"I'd love to do a quick 20-minute demo specifically for ${biz} — I'll show you exactly what's happening on Google right now and what we can do."`,
+                        `"Best way forward is a quick 15–20 minute call with our founder — he'll show you exactly what's happening on Google for ${biz} right now and what we'd do."`,
                         `"Are you free this week — maybe Tuesday or Wednesday afternoon?"`,
                       ],
                       objections: [
-                        { trigger: "Send me something on WhatsApp first", response: `"Absolutely, I'll send you our overview PDF right now. But I'd love to walk you through it personally — the demo is where it really clicks. Can we schedule a quick call after you've seen the PDF?"` },
-                        { trigger: "I need to discuss with my partner", response: `"Of course! Could we set up a call with both of you? Even 15 minutes — I can answer all your questions together."` },
+                        { trigger: "Send me something on WhatsApp first", response: `"Absolutely, I'll send the report now. But the call is where it really clicks — can we set a quick slot after you've seen it?"` },
+                        { trigger: "I need to discuss with my partner", response: `"Of course! Let's set up the call with both of you — even 15 minutes, so the founder can answer everything together."` },
                       ],
                     },
                   ],
@@ -1160,7 +1160,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       title: "Acknowledge the Callback",
                       lines: [
                         `"Hi ${name}, this is Afifa from FortuneMarq — you'd asked me to give you a call around this time. Is now still convenient?"`,
-                        `"Great! So last time we were talking about how ${biz} could grow its online presence in ${city}. Have you had a chance to think about it?"`,
+                        `"Great! So last time we were talking about how ${biz} could grow its online presence in ${city}. Have you had a chance to look at the report I sent you on WhatsApp?"`,
                       ],
                       objections: [
                         { trigger: "I forgot / what was this about?", response: `"No worries! We had briefly discussed how ${niche} businesses in ${city} are getting more customers through Google. You asked me to call back when you had more time."` },
@@ -1168,24 +1168,23 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       ],
                     },
                     {
-                      title: "Re-engage & Qualify",
+                      title: "Re-engage with Curiosity",
                       lines: [
-                        `"Since you asked me to call back, I want to make sure I use your time well. Are you currently happy with the number of new customers ${biz} is getting each month?"`,
-                        `"And do you feel ${biz} is visible enough on Google when people in ${city} search for ${niche}?"`,
+                        `"Did the search numbers in that report stand out to you? Because honestly that's just the surface — there's a bigger gap specific to ${biz} that our founder walks you through on the call."`,
                       ],
                       objections: [
-                        { trigger: "We're doing fine", response: `"That's wonderful! Our best clients actually say the same thing — and then they see us double their enquiries. Is there a number that would excite you? What would 20 more customers a month mean for ${biz}?"` },
+                        { trigger: "We're doing fine", response: `"That's great to hear! Most of our best clients said the same — the call just shows the extra demand on Google they weren't capturing yet. No harm in seeing the numbers for ${biz}."` },
                       ],
                     },
                     {
                       title: "Lock in the Meeting",
                       lines: [
-                        `"Since you've taken the time to speak with me, I'd love to do a proper 20-minute presentation for you — I'll show you the Google data for ${biz} specifically and what our plan would look like."`,
+                        `"Since you've taken the time, let's get our founder to walk you through the Google data for ${biz} specifically — 15 to 20 minutes, and what the plan would look like."`,
                         `"What works better for you — a call tomorrow, or later this week?"`,
                       ],
                       objections: [
-                        { trigger: "Just tell me the price", response: `"Great question — our pricing is tailored to each business based on the scope of work. The 20-minute call is where I can give you an accurate quote. It's free and there's no obligation."` },
-                        { trigger: "Need more time to decide", response: `"Totally fine! Let's at least do the demo so you have all the information to make the decision. You're not committing to anything — just getting clarity on what's possible for ${biz}."` },
+                        { trigger: "Just tell me the price", response: `"Great question — pricing depends on what ${biz} needs, so the founder gives you an accurate number on the call. It's free, no obligation."` },
+                        { trigger: "Need more time to decide", response: `"Totally fine! Let's at least do the call so you have all the information — you're not committing to anything, just getting clarity on what's possible for ${biz}."` },
                       ],
                     },
                   ],
@@ -1406,7 +1405,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                     {line.condition}
                                   </p>
                                 )}
-                                {line.text}
+                                {selectedLang === "kannada" && line.textKn ? line.textKn : line.text}
                               </div>
                             </div>
                           ))}
@@ -1460,7 +1459,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                   className="w-full flex items-center justify-between px-3 py-2.5 bg-slate-50 hover:bg-slate-100 text-left transition-colors"
                                 >
                                   <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-                                    <MessageCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />&quot;{obj.trigger}&quot;
+                                    <MessageCircle className="h-3.5 w-3.5 text-slate-400 shrink-0" />&quot;{selectedLang === "kannada" && obj.triggerKn ? obj.triggerKn : obj.trigger}&quot;
                                   </span>
                                   {expandedObjections.has(k)
                                     ? <ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0 ml-2" />
@@ -1470,7 +1469,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                                 {expandedObjections.has(k) && (
                                   <div className="px-3 py-3 bg-slate-50 border-t border-line">
                                     <p className="text-[11px] font-semibold text-brand-deep uppercase tracking-wide mb-1.5">Say this:</p>
-                                    <p className="text-sm text-slate-800 leading-relaxed">{obj.response}</p>
+                                    <p className="text-sm text-slate-800 leading-relaxed">{selectedLang === "kannada" && obj.responseKn ? obj.responseKn : obj.response}</p>
                                   </div>
                                 )}
                               </div>

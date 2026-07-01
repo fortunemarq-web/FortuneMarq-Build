@@ -12,16 +12,20 @@
       "lines": [
         {
           "type": "script",
-          "text": "Hello, am I speaking with the owner of [Business Name]?"
+          "text": "Hello, am I speaking with the owner of [Business Name]?",
+          "textKn": "Hello, namaste. Naanu [Business Name] owner jothe mathadtha irodha?"
         },
         {
           "type": "branch",
           "condition": "If gatekeeper / not the owner",
-          "text": "Could I speak with the owner? I have some research data about their business I wanted to share directly with them."
+          "text": "Could I speak with the owner? I have some research data about their business I wanted to share directly with them.",
+          "textKn": "Owner jothe mathadoke aaguttha? Navu avra business bagge swalpa research data collect maadidvi, adhannu avrge direct aagi share maadbekitthu."
         },
         {
-          "type": "script",
-          "text": "Hi! My name is Afifa, I'm calling from FortuneMarq Media & Marketing — we're a digital growth agency based right here in [City]."
+          "type": "branch",
+          "condition": "Once the owner is on the phone",
+          "text": "Hi! My name is Afifa, I'm calling from FortuneMarq Media & Marketing — we're a digital growth agency based right here in [City].",
+          "textKn": "Hi sir! Nanna hesru Afifa antha. Naanu FortuneMarq Media & Marketing indha call maadtha idhini — namma company Hubli based."
         }
       ],
       "objections": []
@@ -32,7 +36,8 @@
       "lines": [
         {
           "type": "script",
-          "text": "Sir, should I continue in Kannada, Hindi, or English? Whatever is comfortable for you."
+          "text": "Sir, what language is comfortable for you?",
+          "textKn": "Sir, nimge yav language comfortable ide?"
         }
       ],
       "objections": []
@@ -43,17 +48,22 @@
       "lines": [
         {
           "type": "script",
-          "text": "I just need 2 minutes of your time — we've done some market research specifically for [Niche] businesses in [City], and we found something really useful. Is this a good time?"
+          "text": "We've done some market research specifically for [Niche] businesses in [City], and the data is quite interesting. I just need 2 minutes of your time — is this a good time to talk?",
+          "textKn": "Sir, navu [City] nalli iro [Niche] businesses bagge market research maadidvi. Kelavu numbers and data thumba interesting aagide. 2 minutes bekitthu — ega matadbauda?"
         }
       ],
       "objections": [
         {
           "trigger": "I'm busy right now",
-          "response": "No problem at all. Can I call you back in an hour or later this evening?"
+          "triggerKn": "Eega swalpa busy idhini",
+          "response": "No problem at all. Can I call you back in an hour or later this evening?",
+          "responseKn": "No problem sir, yawadg call madli?"
         },
         {
           "trigger": "Not interested",
-          "response": "No worries. Mind if I ask — is there a specific reason you don't want to do digital marketing for your business?"
+          "triggerKn": "Namge interest illa",
+          "response": "No worries. Mind if I ask — is there a specific reason you don't want to do digital marketing for your business?",
+          "responseKn": "No problem sir. Yake anta kelbauda, yen reason sir?"
         }
       ]
     },
@@ -63,22 +73,22 @@
       "lines": [
         {
           "type": "script",
-          "text": "The search volume for [Niche] in [City] is [Search Volume] per month — smaller than some other niches."
-        },
-        {
-          "type": "branch",
-          "condition": "Pause — let it land, then reframe",
-          "text": "[PAUSE] But here's what makes it interesting — every single person searching is ready to buy. This is high intent, low competition. The people searching for [Niche] in [City] are not browsing — they have a specific need and they're ready to act."
+          "text": "The search volume for [Niche] in [City] is [Search Volume] per month — smaller than some other niches. (Pause, then reframe) But here's what makes it interesting — every single person searching is ready to buy. This is high intent, low competition.",
+          "textKn": "Namma [City] nalli [Niche] gagi iro search volume prathi thinglu approx [Search Volume] ide — bere niches ge compare maadidhre nimdu business search volume kammi ide. (Pause, then reframe) Aadre idhralli interesting yenu andre — ee huduko prathi obba customerge egle urgent aagi service beku anta hudukthaidhare. Idu thumba high intent matte low competition iro market sir."
         }
       ],
       "objections": [
         {
           "trigger": "Where did you get this data?",
-          "response": "It comes from Google's own data tools plus local market research we did specifically for [City]. I can share what we found on WhatsApp if you'd like to see it before the meeting."
+          "triggerKn": "Ee data nimge yelli sikthu?",
+          "response": "It comes from Google's own data tools plus local market research we did specifically for [City]. I can share what we found on WhatsApp.",
+          "responseKn": "Sir, idhu direct aagi Google de data tools inda matte navu namma [City] ge specific aagi mado local market research inda thagondirodhu. Nimge bekhadre WhatsApp nalli share maadthini."
         },
         {
-          "trigger": "We get enough business through referrals",
-          "response": "Referrals are great — the most trusted source. But there's a whole layer of potential customers who don't know anyone who can refer them, so they search online and whoever shows up first gets that business. That's what the meeting covers."
+          "trigger": "We get enough through referrals",
+          "triggerKn": "Namge references indhane thumbe business barutthe",
+          "response": "Referrals are great. But there's a whole layer of potential customers who don't know anyone who can refer them, so they search online and whoever shows up first gets that business.",
+          "responseKn": "Referrals thumba olledhu sir. Aadre market nalli innu thumba jana idhare, avrge yaaru reference madilla andre avru direct aagi online hudukthare. Google nalli yar munde kanstharo, business avrge hogbidhthe sir."
         }
       ]
     },
@@ -88,17 +98,21 @@
       "lines": [
         {
           "type": "script",
-          "text": "The search volume for [Niche] in [City] is [Search Volume] per month — smaller than some niches. But every single person searching is ready to buy. High intent, low competition. And right now, most of that demand has no strong local business to land on."
+          "text": "The search volume for [Niche] in [City] is [Search Volume] per month. But every single person searching is ready to buy. High intent, low competition. And right now, most of that demand has no strong local business to land on.",
+          "textKn": "Namma [City] nalli [Niche] gagi iro search volume prathi thinglu [Search Volume] ide. Aadre ee huduko prathi obba customer-gu egle urgent aagi service bekaagutthe. High intent, low competition. Matte eega iro samasye yenu andre, ee demandna capture maadoke namma local alli yaavu strong business kanstha illa."
         },
         {
           "type": "script",
-          "text": "Most businesses in your category in [City] are completely invisible online. So whoever builds their presence first effectively owns those searches — and once that trust is established with customers, it becomes very hard for others to catch up."
+          "text": "Most businesses in your category in [City] are completely invisible online. Whoever builds their presence first effectively owns those searches.",
+          "textKn": "Namma [City] nalli iro maximum businesses online nalli completely invisible idhhare sir. So eega neevu first step thagondre, ee complete online searchesna neevu easily own maadbahu sir."
         }
       ],
       "objections": [
         {
           "trigger": "The volume seems low — is it worth it?",
-          "response": "That's a fair question. But think about it this way — [Search Volume] people every month who are specifically searching for exactly what you do, with no competition. Even converting 10% of that is significant. The meeting will show you what that translates to in actual revenue."
+          "triggerKn": "Volume thumba kammi ide, idhrindha yenu use?",
+          "response": "Think about it this way — [Search Volume] people every month who are specifically searching for exactly what you do, with no competition. Even converting 10% of that is significant.",
+          "responseKn": "Ond sanna vishaya yochne maadi sir — prathi thinglu [Search Volume] jana direct aagi neevu mado servicege hudukthaidhare, adhu zero competition jothe. Navu idhralli just 10% convert maadidhru, adhu businessge thumba dodda profit aagutthe sir."
         }
       ]
     },
@@ -108,11 +122,13 @@
       "lines": [
         {
           "type": "script",
-          "text": "We help local [Niche] businesses show up on Google directly — not through JustDial, not through directories. Your own website, your own Google ranking, your own enquiries coming straight to you."
+          "text": "We help local [Niche] businesses show up on Google directly — not through JustDial, not through directories. Your own website, your own Google ranking, your own enquiries coming straight to you.",
+          "textKn": "Navu local [Niche] businessesge direct aagi Google nalli rank aagoke help maadthivi — JustDial illa bere directories moolaka alla. Nimde aadhondu website, nimma Google ranking, matte enquiries direct aagi nimge baro thara maadthivi sir."
         },
         {
           "type": "script",
-          "text": "We've built this system specifically for local businesses in [City]. Everything is connected — the website, the SEO, the Google presence — and we manage it so you don't have to."
+          "text": "We've built this system specifically for local businesses in [City]. Everything is connected — the website, the SEO, the Google presence — and we manage it so you don't have to.",
+          "textKn": "Navu ee complete systemna namma [City] nalli iro local businessesgagi design maadidvi. Idhralli website, SEO, Google presence... ella linked aagirutthe — matte idhnnella navu complete aagi manage maadthivi, nimge yenu madodu iralla."
         }
       ],
       "objections": []
@@ -123,47 +139,63 @@
       "lines": [
         {
           "type": "script",
-          "text": "To understand this better — our founder personally does a quick Zoom call, which you can join right from your phone. He'll walk you through a presentation designed specifically for your business in [City], showing exactly where the demand in your category is coming from and what a realistic growth path looks like for your niche. It's 15 to 20 minutes max — even if you decide not to go ahead, you'll walk away knowing exactly what's available for your business."
+          "text": "Our founder personally does a quick Zoom call, which you can join right from your phone. He'll walk you through a presentation designed specifically for your business in [City]. It's 15 to 20 minutes max — and even if you don't take any services, you'll walk away with a much clearer picture of where your business stands online.",
+          "textKn": "Namma founder personally ond sanna Zoom call thagothare sir, neevu nimma phone indhane join aagbahu. Avru namma [City] nalli iro nimma businessgagi ready madiro ondu complete presentation thoristhare. Just 15 indha 20 minutes max — neevu namma service thagolila andhru parvagilla sir, online nalli nimma business eega yava position nalli ide antha clear aagi picture sigutthe."
         },
         {
           "type": "script",
-          "text": "When would you be free? I'll book the Zoom call and send you the link on WhatsApp."
+          "text": "When would you be free? I'll book the Zoom call and send you the link on WhatsApp.",
+          "textKn": "Neevu yavaga free idhhiri sir? Naanu Zoom call book maadi, link-na nimge WhatsApp nalli share maadthini."
         },
         {
           "type": "branch",
-          "condition": "If wants to think / see something first",
-          "text": "Absolutely — I'll send you the report on WhatsApp right now so you can have a look. And whenever you're ready, we'll set up the Zoom call with our founder."
+          "condition": "If they want to see something first",
+          "text": "Absolutely — I'll send you the report on WhatsApp right now. Whenever you're ready, we'll set up the Zoom call.",
+          "textKn": "Khanditha sir — naanu egle report-na nimge WhatsApp nalli kalisthini. Neevu adhnnu nodi ready aadhmele navu Zoom call set up madona sir."
         },
         {
           "type": "branch",
           "condition": "If still resistant",
-          "text": "It's completely free, no commitment at all. Our founder just walks you through your data — you decide if there's anything worth acting on."
+          "text": "It's completely free, no commitment at all. Our founder just walks you through your data — you decide if there's anything worth acting on.",
+          "textKn": "Idhu completely free sir, yavu commitment-e illa. Namma founder just nimma business data thoristhare — adu nodi neevu decide maad bahudu sir."
         }
       ],
       "objections": [
         {
           "trigger": "How much does this cost?",
-          "response": "We don't have fixed prices — our founder first understands your business, what you actually need, and how much you can benefit from the work. Pricing is decided based on that. But I can assure you, nobody in Hubli right now offers pricing like ours. You can discuss everything directly with him on the call."
+          "triggerKn": "Idhkke eshtu charge aagutthe?",
+          "response": "We don't have fixed prices — our founder first understands your business and what you actually need. Pricing is decided based on that. Nobody in Hubli right now offers pricing like ours.",
+          "responseKn": "Navu yavu fixed pricing itkondilla sir — namma founder modhlu nimma business matte nimma exact requirementna artha maadkothare. Pricing adhra mele decide aagutthe. Matte eega Hubli nalli yaaru namma range-ige pricing matte quality offer madtha illa sir."
         },
         {
           "trigger": "We tried digital marketing before and it didn't work",
-          "response": "That happens a lot — most agencies just run ads with no foundation underneath. What we do is different: we build the whole system first. The Zoom call is the best way to show you what that difference looks like in practice."
+          "triggerKn": "Navu modhlu try maadidvi, yenu work aaglilla",
+          "response": "That happens a lot — most agencies just run ads with no foundation underneath. What we do is different: we build the whole system first.",
+          "responseKn": "Adhu thumba kade aagutthe sir, gothide — maximum agencies just yaavdhondu foundation illadhe ads run maadthare. Aadre navu mado process bere ide: navu modhlu complete system built maadi, aadhmele munde hogthivi sir."
         },
         {
           "trigger": "The owner isn't available / Someone else handles this",
-          "response": "No problem — when is the owner usually free? Our founder can speak directly with them. Or I can WhatsApp the report first so they can have a look before we set up the call."
+          "triggerKn": "Owner eega sigalla / illilla",
+          "response": "No problem — when is the owner usually free? Or I can WhatsApp the report first so they can have a look before we set up the call.",
+          "responseKn": "No problem sir — owner yavaga free irthare general aagi? Illa andre naanu modhlu report-na WhatsApp maadthini, avru adhnnu nodi free aadhmele navu call set up maadbahudu sir."
         },
         {
           "trigger": "Just send me information on WhatsApp",
-          "response": "Of course — I'll send the report right now. Have a look whenever you get a chance, and then the Zoom call with our founder will make a lot more sense. I'll follow up in a couple of days."
+          "triggerKn": "Details ella WhatsApp nalli kalisi",
+          "response": "Of course — I'll send the report right now. The Zoom call with our founder will make a lot more sense after you've had a look.",
+          "responseKn": "Khanditha sir — naanu egle complete report-na WhatsApp maadthini. Neevu adhnnu nodidhmele namma founder jothe mado Zoom call innu clear aagi artha aagutthe sir."
         },
         {
           "trigger": "I'll think about it",
-          "response": "Absolutely, take your time. I'll send the report on WhatsApp and follow up in a couple of days — no pressure. The Zoom call is free, no commitment, our founder just walks you through the data."
+          "triggerKn": "Naanu aalochne madi helthini",
+          "response": "Absolutely, take your time. I'll send the report on WhatsApp and follow up in a couple of days — no pressure.",
+          "responseKn": "Khanditha sir, time thagoli. Naanu report-na WhatsApp nalli kalisi, ond eradu dhina aadhmele follow-up maadthini — yenu pressure illa sir."
         },
         {
           "trigger": "We handle marketing internally / We have someone",
-          "response": "Good to know. The Zoom call might still be useful — our founder can show you what the market data says and you can see if there are gaps worth filling. Even as a second opinion, most business owners find it valuable."
+          "triggerKn": "Navu marketing namm-nammalle nodkothivi",
+          "response": "Good to know. The Zoom call might still be useful — our founder can show you what the market data says and you can see if there are gaps worth filling.",
+          "responseKn": "Adhu thumba olledhu sir. Aadru ee Zoom call nimge useful aagbahudu — market data yenu helthaide antha namma founder thoristhare, adhralli enadru gaps idhre neevu nimma internal team moolaka fill maadbahu sir."
         }
       ]
     }
@@ -173,35 +205,52 @@
       "id": "INTERESTED_BOOK_NOW",
       "label": "Interested — Book Meeting Now",
       "category": "INTERESTED",
-      "actions": ["select_date_time", "generate_meet_link", "send_calendar_invite", "trigger_whatsapp_meeting_confirmation"],
+      "actions": [
+        "select_date_time",
+        "generate_meet_link",
+        "send_calendar_invite",
+        "trigger_whatsapp_meeting_confirmation"
+      ],
       "whatsappTemplate": "meeting_booked"
     },
     {
       "id": "INTERESTED_CALLBACK",
       "label": "Interested — Call Back to Book",
       "category": "INTERESTED",
-      "actions": ["select_date_time", "capture_note", "schedule_afifa_reminder"],
+      "actions": [
+        "select_date_time",
+        "capture_note",
+        "schedule_afifa_reminder"
+      ],
       "whatsappTemplate": "follow_back"
     },
     {
       "id": "INTERESTED_SEND_PDF",
       "label": "Interested — Send PDF First",
       "category": "INTERESTED",
-      "actions": ["trigger_whatsapp_pdf_template", "schedule_afifa_reminder"],
+      "actions": [
+        "trigger_whatsapp_pdf_template",
+        "schedule_afifa_reminder"
+      ],
       "whatsappTemplate": "send_pdf"
     },
     {
       "id": "GATEKEEPER",
       "label": "Gatekeeper — Owner Unavailable",
       "category": "FOLLOW_BACK",
-      "actions": ["capture_note", "schedule_afifa_reminder"],
+      "actions": [
+        "capture_note",
+        "schedule_afifa_reminder"
+      ],
       "whatsappTemplate": null
     },
     {
       "id": "NO_ANSWER",
       "label": "No Answer / Voicemail",
       "category": "FOLLOW_BACK",
-      "actions": ["schedule_afifa_reminder"],
+      "actions": [
+        "schedule_afifa_reminder"
+      ],
       "whatsappTemplate": null
     },
     {
@@ -218,14 +267,20 @@
         "Rude / hung up",
         "Other"
       ],
-      "markAs": ["cold"],
+      "markAs": [
+        "cold"
+      ],
       "whatsappTemplate": null
     },
     {
       "id": "FOLLOW_BACK",
       "label": "Follow Back Later",
       "category": "FOLLOW_BACK",
-      "actions": ["select_date_time", "capture_note", "schedule_afifa_reminder"],
+      "actions": [
+        "select_date_time",
+        "capture_note",
+        "schedule_afifa_reminder"
+      ],
       "whatsappTemplate": "follow_back"
     },
     {
@@ -237,14 +292,19 @@
         "Business closed / doesn't exist",
         "Duplicate entry"
       ],
-      "actions": ["mark_lead_dead"],
+      "actions": [
+        "mark_lead_dead"
+      ],
       "whatsappTemplate": null
     },
     {
       "id": "LANGUAGE_BARRIER",
       "label": "Language Barrier / Couldn't Communicate",
       "category": "FOLLOW_BACK",
-      "actions": ["capture_note", "schedule_afifa_reminder"],
+      "actions": [
+        "capture_note",
+        "schedule_afifa_reminder"
+      ],
       "whatsappTemplate": null
     }
   ],
