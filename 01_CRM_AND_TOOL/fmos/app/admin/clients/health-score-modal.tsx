@@ -67,7 +67,7 @@ export default function HealthScoreModal({ client, onClose }: HealthScoreModalPr
 
   const getScoreBand = (score: number) => {
     if (score >= 80) return { label: "HEALTHY", color: "text-green-700 bg-green-100 border-green-300" };
-    if (score >= 60) return { label: "STABLE", color: "text-blue-700 bg-blue-100 border-blue-300" };
+    if (score >= 60) return { label: "STABLE", color: "text-info bg-info-soft border-info-line" };
     if (score >= 40) return { label: "AT RISK", color: "text-amber-700 bg-amber-100 border-amber-300" };
     return { label: "CRITICAL", color: "text-red-700 bg-red-100 border-red-300" };
   };
@@ -76,7 +76,7 @@ export default function HealthScoreModal({ client, onClose }: HealthScoreModalPr
 
   const getScoreCircleColor = (score: number) => {
     if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-blue-600";
+    if (score >= 60) return "text-info";
     if (score >= 40) return "text-amber-600";
     return "text-red-600";
   };
@@ -158,7 +158,7 @@ export default function HealthScoreModal({ client, onClose }: HealthScoreModalPr
                       [factor.key]: Number(e.target.value),
                     }))
                   }
-                  className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-200 accent-indigo-600"
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-200 accent-[#1E7A4F]"
                 />
                 <p className="text-[10px] text-slate-400 mt-0.5">{factor.hint}</p>
               </div>
