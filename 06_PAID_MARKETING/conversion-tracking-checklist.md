@@ -15,7 +15,7 @@ The pipeline is **already built in FMOS but dormant** — this is the activation
 ## Activation steps
 - [ ] Set `META_CAPI_TOKEN` in Vercel (Production + Preview).
 - [ ] Set the `GOOGLE_ADS_*` credentials in Vercel.
-- [ ] Add a `/api/cron/ad-conversions` step to `01_CRM_AND_TOOL/fmos/.github/workflows/cron.yml`.
+- [ ] Add a `/api/cron/ad-conversions` step to the root `.github/workflows/cron.yml` (the live GitHub Actions workflow; GitHub only runs workflows from the repo root).
 - [ ] Test with `?dry=1` (preview which conversions would upload) before going live.
 
 ## ⚠️ Google side needs a fix first (2026 migration)
