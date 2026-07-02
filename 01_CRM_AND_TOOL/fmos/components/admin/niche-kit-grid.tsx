@@ -180,7 +180,7 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
             };
 
             const { data, error } = await supabase.from("niche_kits")
-                .upsert(payload)
+                .upsert(payload, { onConflict: "niche_id" })
                 .select()
                 .single();
 

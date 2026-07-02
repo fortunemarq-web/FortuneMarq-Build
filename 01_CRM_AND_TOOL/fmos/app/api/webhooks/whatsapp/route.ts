@@ -9,6 +9,7 @@ import { runBot } from "@/lib/bot/engine";
 import { handleQualityWebhook } from "@/lib/whatsapp/quality";
 import { AUTO_REPLIES, resolveButtonAction, fillTemplate } from "@/lib/whatsapp/auto-replies";
 import { sendLeadReport } from "@/actions/direct-report";
+import { leadStageUpdate } from "@/lib/pipeline";
 import {
   handleMenuTap,
   isMenuReplyId,
@@ -423,10 +424,10 @@ async function handleInboundMessage(message: any, value: any) {
         .update({ status: "confirmed", confirmed_at: new Date().toISOString() })
         .eq("id", agreement.id);
 
-      // Move lead to won
+      // Move lead to won (via pipeline: sets status=closed_won, not invalid 'active')
       await (supabase as any)
         .from("leads")
-        .update({ outreach_stage: "won", status: "active", last_activity_at: new Date().toISOString() })
+        .update(leadStageUpdate("won"))
         .eq("id", lead.id);
 
       // Send agreement_welcome to the lead

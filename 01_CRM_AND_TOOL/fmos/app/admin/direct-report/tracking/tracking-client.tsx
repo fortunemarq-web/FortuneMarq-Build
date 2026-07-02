@@ -37,10 +37,12 @@ const STATUS_TIER: Record<string, number> = {
 function tier(status: string | null): number {
   if (!status) return 0;
   const s = status.toLowerCase();
+  // A failed/undelivered send is NOT "sent" — it must not inflate the funnel.
+  if (s.includes("fail") || s.includes("error") || s.includes("undeliver")) return 0;
   for (const [k, v] of Object.entries(STATUS_TIER)) {
     if (s.includes(k)) return v;
   }
-  return 1; // treat unknown as "sent"
+  return 1; // treat other unknown non-error statuses as "sent"
 }
 
 function funnelCounts(rows: LogRow[]) {
