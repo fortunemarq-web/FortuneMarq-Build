@@ -392,21 +392,35 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
   }
 
   // ─── Date helpers ────────────────────────────────────────────────
+  // Format a Date as a LOCAL wall-clock string for <input type="datetime-local">.
+  // (toISOString() would shift to UTC and store meetings/follow-ups 5.5h off.)
+  function localSlice(d: Date): string {
+    const p = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  // Convert a local wall-clock string (from the input/presets) to a real ISO
+  // instant. Runs in the telecaller's browser, so the local offset is correct.
+  function toIso(local: string | null | undefined): string | null {
+    if (!local) return null;
+    const d = new Date(local);
+    return isNaN(d.getTime()) ? null : d.toISOString();
+  }
+
   function buildFollowUpDateTime(preset: "today" | "1hour" | "tomorrow", customTime: string): string {
     const now = new Date();
     if (preset === "1hour") {
       now.setHours(now.getHours() + 1);
-      return now.toISOString().slice(0, 16);
+      return localSlice(now);
     }
     const [hh, mm] = customTime ? customTime.split(":").map(Number) : [10, 0];
     if (preset === "today") {
       now.setHours(hh, mm, 0, 0);
-      return now.toISOString().slice(0, 16);
+      return localSlice(now);
     }
     // tomorrow
     now.setDate(now.getDate() + 1);
     now.setHours(hh, mm, 0, 0);
-    return now.toISOString().slice(0, 16);
+    return localSlice(now);
   }
 
   function autoScheduleNoAnswer(count: number): string {
@@ -420,7 +434,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       now.setDate(now.getDate() + 2);
       now.setHours(10, 0, 0, 0);
     }
-    return now.toISOString().slice(0, 16);
+    return localSlice(now);
   }
 
   function autoScheduleGatekeeper(count: number): string {
@@ -434,7 +448,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       now.setDate(now.getDate() + 1);
       now.setHours(9, 0, 0, 0);
     }
-    return now.toISOString().slice(0, 16);
+    return localSlice(now);
   }
 
   async function logOutcome() {
@@ -481,9 +495,9 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       if (outcome.stage) {
         const mappedStage = stageMap[outcome.stage] || outcome.stage;
         leadUpdates.outreach_stage = mappedStage;
-        if (dateTime) leadUpdates.follow_up_date = dateTime;
+        if (dateTime) leadUpdates.follow_up_date = toIso(dateTime);
       } else if (dateTime) {
-        leadUpdates.follow_up_date = dateTime;
+        leadUpdates.follow_up_date = toIso(dateTime);
       }
 
       // Feature 4: NO_ANSWER auto-retry
@@ -494,7 +508,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
           leadUpdates.outreach_stage = "unreachable";
         } else {
           leadUpdates.outreach_stage = "no_answer";
-          leadUpdates.follow_up_date = autoScheduleNoAnswer(newCount);
+          leadUpdates.follow_up_date = toIso(autoScheduleNoAnswer(newCount));
         }
       }
 
@@ -503,7 +517,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
         const newCount = (currentLead.gatekeeper_count ?? 0) + 1;
         leadUpdates.gatekeeper_count = newCount;
         leadUpdates.outreach_stage = newCount >= 3 ? "gatekeeper_flagged" : "gatekeeper";
-        leadUpdates.follow_up_date = autoScheduleGatekeeper(newCount);
+        leadUpdates.follow_up_date = toIso(autoScheduleGatekeeper(newCount));
       }
 
       // Keep legacy status in lockstep with the canonical stage
@@ -540,13 +554,13 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
       if (selectedOutcome === "INTERESTED_BOOK" && (dateTime || leadUpdates.follow_up_date)) {
         void bookMeeting({
           leadId: currentLead.id,
-          startIso: dateTime || leadUpdates.follow_up_date,
+          startIso: (toIso(dateTime) || leadUpdates.follow_up_date) as string,
         });
       } else {
         void sendOutcomeWhatsApp({
           leadId: currentLead.id,
           outcome: selectedOutcome as any,
-          followUpDate: dateTime || leadUpdates.follow_up_date || null,
+          followUpDate: toIso(dateTime) || leadUpdates.follow_up_date || null,
         });
       }
 

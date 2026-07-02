@@ -18,7 +18,7 @@ export default async function SalesPage() {
     // Page through ALL active leads. Supabase caps each request at 1000 rows,
     // so a single .limit() truncated the dataset (the niche/city filters + queue
     // only saw the first cities). Loop with .range() until a short page returns.
-    const LEAD_COLS = "id, company_name, contact_person, phone, industry, city, status, notes, lead_type, pitch_type, is_low_volume, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, outreach_stage, lead_source, captured_at";
+    const LEAD_COLS = "id, company_name, contact_person, phone, industry, city, status, notes, lead_type, pitch_type, is_low_volume, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, gatekeeper_count, first_contact_at, outreach_stage, lead_source, captured_at";
     const leadRows: any[] = [];
     for (let from = 0; from < 50000; from += 1000) {
       const { data, error } = await supabase
@@ -63,22 +63,14 @@ export default async function SalesPage() {
         .select("industry, city, search_volume"),
     ]);
 
+    // Spread ALL selected columns through — the cockpit relies on pitch_type,
+    // is_low_volume, gatekeeper_count, first_contact_at, captured_at and
+    // lead_source (a hand-written map previously dropped them silently).
     const leads = leadRows.map((l: any) => ({
-      id: l.id,
-      company_name: l.company_name,
-      contact_person: l.contact_person,
-      phone: l.phone,
-      industry: l.industry,
-      city: l.city,
-      status: l.status,
-      notes: l.notes,
-      lead_type: l.lead_type,
-      has_website: l.has_website,
-      serp_ranked: l.serp_ranked,
-      follow_up_date: l.follow_up_date,
-      last_outcome: l.last_outcome,
+      ...l,
       tags: l.tags || [],
       no_answer_count: l.no_answer_count || 0,
+      gatekeeper_count: l.gatekeeper_count || 0,
       outreach_stage: l.outreach_stage || null,
     }));
 
