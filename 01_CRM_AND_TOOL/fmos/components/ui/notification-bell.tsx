@@ -66,13 +66,36 @@ export default function NotificationBell() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [role, setRole] = useState<string | null>(null);
     const supabase = createClient();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setupSubscription();
-        fetchNotifications();
+        let channel: ReturnType<typeof supabase.channel> | null = null;
+        let cancelled = false;
 
+        (async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user || cancelled) return;
+
+            // Role — the "View all activity" link targets admin-only audit-log.
+            const { data: prof } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+            if (!cancelled) setRole((prof as any)?.role ?? null);
+
+            channel = supabase
+                .channel(`notifications:${user.id}`)
+                .on(
+                    'postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'notifications' as any, filter: `user_id=eq.${user.id}` },
+                    (payload) => {
+                        setNotifications(prev => [payload.new, ...prev].slice(0, 20));
+                        setUnreadCount(prev => prev + 1);
+                    }
+                )
+                .subscribe();
+        })();
+
+        fetchNotifications();
         // Trigger background verification of follow-ups
         fetch("/api/notifications/verify", { method: "POST" }).catch(console.error);
 
@@ -83,35 +106,12 @@ export default function NotificationBell() {
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const setupSubscription = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const channel = supabase
-            .channel(`notifications:${user.id}`)
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'notifications' as any,
-                    filter: `user_id=eq.${user.id}`
-                },
-                (payload) => {
-                    setNotifications(prev => [payload.new, ...prev].slice(0, 20));
-                    setUnreadCount(prev => prev + 1);
-                    // Play a subtle sound or show a toast?
-                }
-            )
-            .subscribe();
-
         return () => {
-            supabase.removeChannel(channel);
+            cancelled = true;
+            document.removeEventListener("mousedown", handleClickOutside);
+            if (channel) supabase.removeChannel(channel); // previously leaked — cleanup was discarded
         };
-    };
+    }, []);
 
     const fetchNotifications = async () => {
         setLoading(true);
@@ -270,12 +270,14 @@ export default function NotificationBell() {
                         )}
                     </div>
 
-                    <Link
-                        href="/admin/audit-log"
-                        className="block border-t border-line bg-slate-50/60 py-3 text-center text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
-                    >
-                        View all activity
-                    </Link>
+                    {role === "admin" && (
+                        <Link
+                            href="/admin/audit-log"
+                            className="block border-t border-line bg-slate-50/60 py-3 text-center text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                        >
+                            View all activity
+                        </Link>
+                    )}
                 </div>
             )}
 

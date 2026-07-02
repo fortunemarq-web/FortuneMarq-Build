@@ -124,11 +124,10 @@ const NAV_CONFIG: Record<string, NavItem[]> = {
   pm: [
     { label: "Project Dashboard", href: "/projects", icon: FolderKanban },
   ],
-  // Phase B3: Staff gets My Tasks + My Profile
+  // Phase B3: Staff gets My Tasks + Attendance (no /profile route exists yet)
   staff: [
     { label: "My Tasks",      href: "/tasks",      icon: ListTodo },
     { label: "My Attendance", href: "/attendance", icon: CalendarCheck },
-    { label: "My Profile",    href: "/profile",    icon: UserCircle },
   ],
   client: [
     { label: "My Project", href: "/client/dashboard", icon: FolderKanban },
@@ -398,9 +397,11 @@ export default function AppSidebar() {
           )}
           {!isCollapsed && (
             <div className="flex items-center gap-1">
-              <Link href="/admin/settings" className="text-slate-500 hover:text-slate-300 transition-colors p-1" title="Settings">
-                <Settings className="h-3.5 w-3.5" />
-              </Link>
+              {role === "admin" && (
+                <Link href="/admin/settings" className="text-slate-500 hover:text-slate-300 transition-colors p-1" title="Settings">
+                  <Settings className="h-3.5 w-3.5" />
+                </Link>
+              )}
               <button onClick={handleSignOut} className="text-slate-500 hover:text-red-400 transition-colors p-1" title="Sign Out">
                 <LogOut className="h-3.5 w-3.5" />
               </button>
