@@ -1433,8 +1433,7 @@ Writes to `audit_logs` table with: actor_id (from session), action, entity_type,
 
 | File | Description |
 |---|---|
-| [niche-scripts.ts](lib/niche-scripts.ts) | 31KB of industry-specific call scripts for telecaller cockpit |
-| [pitch-engine.ts](lib/pitch-engine.ts) | AI-powered pitch generation engine |
+| [niche-scripts.ts](lib/niche-scripts.ts) | 31KB of industry-specific call scripts (used by the AI weekly-report engine) |
 | [lead-scoring.ts](lib/lead-scoring.ts) | Lead quality scoring algorithm |
 | [anthropic.ts](lib/anthropic.ts) | Anthropic API integration for AI features (`callAnthropic()`); model IDs centralized in `lib/ai-models.ts` |
 | [notifications.ts](lib/notifications.ts) | `sendNotification()` helper function |
@@ -1443,7 +1442,7 @@ Writes to `audit_logs` table with: actor_id (from session), action, entity_type,
 | [performance.ts](lib/performance.ts) | Performance metric calculations |
 | [file-service.ts](lib/file-service.ts) | File upload/download service |
 | [project-utils.ts](lib/project-utils.ts) | Project helper functions |
-| [utils.ts](lib/utils.ts) | `cn()` function — Tailwind class merge helper |
+| [cn.ts](lib/cn.ts) | `cn()` function — Tailwind class merge helper |
 
 ---
 
