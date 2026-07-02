@@ -133,7 +133,11 @@ export function CommandPalette() {
         setLoading(true);
         // ilike on guaranteed columns — fts_tokens migration may not be applied,
         // and a failed textSearch silently returns nothing.
-        const pattern = `%${query.trim()}%`;
+        // Strip PostgREST or()-grammar metacharacters (, ( )) so typed search text
+        // cannot inject extra filter clauses (e.g. "x,role.eq.admin").
+        const safe = query.trim().replace(/[,()]/g, " ").replace(/\s+/g, " ").trim();
+        if (!safe) { setResults([]); setLoading(false); return; }
+        const pattern = `%${safe}%`;
         const fullResults: SearchResult[] = [];
 
         try {

@@ -15,6 +15,22 @@ const MAX_TURN = 2000;
 
 type Turn = { role: "user" | "assistant"; content: string };
 
+// Best-effort per-IP rate limit. In-memory => per-lambda-instance only (a
+// determined attacker across warm instances gets N× this); it stops casual
+// floods / a single client hammering the LLM. ponytail: upgrade to a shared
+// store (Upstash/DB) if abuse is seen in logs.
+const RL_MAX = 20;            // requests
+const RL_WINDOW_MS = 60_000;  // per minute
+const rlHits = new Map<string, number[]>();
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const hits = (rlHits.get(ip) || []).filter((t) => now - t < RL_WINDOW_MS);
+  hits.push(now);
+  rlHits.set(ip, hits);
+  if (rlHits.size > 5000) rlHits.clear(); // crude unbounded-growth guard
+  return hits.length > RL_MAX;
+}
+
 function sanitizeHistory(raw: unknown): Turn[] {
   if (!Array.isArray(raw)) return [];
   return raw
@@ -29,6 +45,11 @@ function sanitizeHistory(raw: unknown): Turn[] {
 }
 
 export async function POST(req: NextRequest) {
+  const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
+  if (rateLimited(ip)) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
   let body: { message?: unknown; history?: unknown };
   try {
     body = await req.json();

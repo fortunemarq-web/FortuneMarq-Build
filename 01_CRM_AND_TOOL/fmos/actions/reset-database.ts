@@ -1,9 +1,14 @@
 "use server";
 
 import { createServerClientWithCookies } from "@/lib/supabase-server";
+import { getCallerRole } from "@/lib/api-auth";
 import { revalidatePath } from "next/cache";
 
 export async function resetDatabase() {
+    // Destructive: wipes leads/insights/uploads. Admin only.
+    if ((await getCallerRole()) !== "admin") {
+        return { success: false, message: "Forbidden: admin only." };
+    }
     const supabase = await createServerClientWithCookies();
 
     try {

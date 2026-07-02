@@ -1,13 +1,13 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import { normalizePhone, normalizeEmail, extractDomain, normalizeName } from "@/lib/normalize";
+import { getCallerRole, isStaff } from "@/lib/api-auth";
 
 export async function POST(req: NextRequest) {
+    if (!isStaff(await getCallerRole())) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     const supabase = await createServerClientWithCookies();
-
-    // Verify Admin (Optional but recommended)
-    // const { data: { user } } = await supabase.auth.getUser();
-    // if (!user) return new NextResponse("Unauthorized", { status: 401 });
 
     try {
         // 1. Fetch active leads

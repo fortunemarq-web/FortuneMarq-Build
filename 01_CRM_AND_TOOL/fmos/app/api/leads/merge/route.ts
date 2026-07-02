@@ -1,9 +1,13 @@
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { type NextRequest, NextResponse } from "next/server";
 import { logAudit } from "@/lib/audit";
+import { getCallerRole, isStaff } from "@/lib/api-auth";
 import { LEAD_CHILD_TABLES, ACTIVITY_EVENTS_TABLE, type MovedChildren } from "@/lib/leads/merge-relations";
 
 export async function POST(req: NextRequest) {
+    if (!isStaff(await getCallerRole())) {
+        return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+    }
     const supabase = await createServerClientWithCookies();
 
     try {
