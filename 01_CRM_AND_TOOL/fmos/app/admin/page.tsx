@@ -59,7 +59,6 @@ export default async function AdminCommandHub() {
     staleProposalsResult,
     tasksDueTodayResult,
     onboardingClientsResult,
-    pipelineStagesResult,
     telecallerCallsTodayResult,
     telecallerMeetingsTodayResult,
     telecallerPdfsTodayResult,
@@ -124,17 +123,12 @@ export default async function AdminCommandHub() {
       .select("id, business_name")
       .eq("status", "onboarding"),
 
-    // Pipeline stage breakdown — outreach_stage is the source of truth
-    // (status-space is legacy; the cockpit/board only write outreach_stage)
+    // Telecaller calls today — the cockpit logs calls to outreach_logs
+    // (touch_type 'call'), NOT lead_outcomes (which was always ~0).
     supabase
-      .from("leads")
-      .select("outreach_stage")
-      .or("outreach_stage.is.null,outreach_stage.not.in.(won,lost,dead,not_interested)"),
-
-    // Telecaller calls today (lead_outcomes)
-    supabase
-      .from("lead_outcomes")
+      .from("outreach_logs")
       .select("id", { count: "exact", head: true })
+      .eq("touch_type", "call")
       .gte("created_at", todayStart),
 
     // Meetings booked today
@@ -170,7 +164,19 @@ export default async function AdminCommandHub() {
   const staleProposals = staleProposalsResult.data || [];
   const tasksDueToday = tasksDueTodayResult.data || [];
   const onboardingClients = onboardingClientsResult.data || [];
-  const pipelineLeads = pipelineStagesResult.data || [];
+  // Pipeline stage counts — page through (Supabase caps each request at 1000)
+  // so the breakdown reflects all ~8k leads, not a silently-truncated sample.
+  const pipelineLeads: { outreach_stage: string | null }[] = [];
+  for (let from = 0; from < 50000; from += 1000) {
+    const { data, error } = await supabase
+      .from("leads")
+      .select("outreach_stage")
+      .or("outreach_stage.is.null,outreach_stage.not.in.(won,lost,dead,not_interested)")
+      .range(from, from + 999);
+    if (error) break;
+    pipelineLeads.push(...((data as any[]) || []));
+    if (!data || data.length < 1000) break;
+  }
 
   const callsToday = telecallerCallsTodayResult.count || 0;
   const meetingsBookedToday = telecallerMeetingsTodayResult.count || 0;

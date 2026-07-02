@@ -285,7 +285,7 @@ export function CommandPalette() {
             <div className="relative z-10 w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200 fill-mode-both">
                 <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5">
                     <div className="flex items-center border-b border-slate-100 px-4">
-                        <Search className={cn("h-5 w-5", loading ? "text-indigo-500 animate-pulse" : "text-slate-400")} />
+                        <Search className={cn("h-5 w-5", loading ? "text-brand-deep animate-pulse" : "text-slate-400")} />
                         <input
                             autoFocus
                             className="flex h-14 w-full border-0 bg-transparent px-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:text-base"
@@ -343,7 +343,7 @@ export function CommandPalette() {
                                             <div
                                                 className={cn(
                                                     "group flex cursor-pointer items-center justify-between rounded-xl px-4 py-2.5 transition-all",
-                                                    isSelected ? "bg-indigo-50 text-indigo-900 translate-x-1" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                                    isSelected ? "bg-brand-soft text-brand-deep translate-x-1" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                                                 )}
                                                 onMouseEnter={() => setSelectedIndex(index)}
                                                 onClick={() => handleSelect(item)}
@@ -351,7 +351,7 @@ export function CommandPalette() {
                                                 <div className="flex items-center gap-3 overflow-hidden">
                                                     <div className={cn(
                                                         "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border shadow-sm transition-colors",
-                                                        isSelected ? "bg-white border-indigo-200 text-indigo-500" : "bg-white border-slate-200 text-slate-400"
+                                                        isSelected ? "bg-white border-brand-line text-brand-deep" : "bg-white border-slate-200 text-slate-400"
                                                     )}>
                                                         <Icon className="h-5 w-5" />
                                                     </div>
@@ -370,7 +370,7 @@ export function CommandPalette() {
                                                     </div>
                                                 </div>
                                                 {isSelected && (
-                                                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-500 uppercase tracking-wider bg-white rounded-md px-2 py-1 shadow-sm">
+                                                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-brand-deep uppercase tracking-wider bg-white rounded-md px-2 py-1 shadow-sm">
                                                         <span>Select</span>
                                                         <kbd className="font-sans">↵</kbd>
                                                     </div>

@@ -63,7 +63,12 @@ export default function LoginPage() {
       };
 
       const redirectPath = roleRoutes[role] || "/staff";
-      router.push(redirectPath);
+      // Honor the ?next deep-link the auth gate (proxy.ts) sets, if it's a safe
+      // internal path — otherwise fall back to the role's home.
+      const next = typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("next") : null;
+      const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
+      router.push(safeNext || redirectPath);
     } catch (err) {
       console.error("Role fetch error:", err);
       router.push("/staff");

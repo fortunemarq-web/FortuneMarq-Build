@@ -39,7 +39,7 @@ export async function POST() {
                         type: 'follow_up_due',
                         title: 'Follow-up Due Soon',
                         body: `Reminder: Call ${(fu as any).lead?.company_name || 'Prospect'} scheduled for ${new Date((fu as any).scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
-                        link: `/telecaller/follow-ups`,
+                        link: `/sales`,
                         entityId: (fu as any).id,
                         entityType: 'follow_up'
                     });
@@ -71,7 +71,7 @@ export async function POST() {
                         type: 'follow_up_overdue',
                         title: 'Follow-up Overdue!',
                         body: `Action Required: You missed the scheduled follow-up for ${(fu as any).lead?.company_name || 'Prospect'}.`,
-                        link: `/telecaller/follow-ups`,
+                        link: `/sales`,
                         entityId: (fu as any).id,
                         entityType: 'follow_up'
                     });
