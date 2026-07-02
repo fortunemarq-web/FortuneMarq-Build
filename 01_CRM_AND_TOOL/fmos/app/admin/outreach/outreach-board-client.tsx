@@ -25,6 +25,11 @@ import { cn } from "@/lib/cn";
 // ─── Stage Config (single source of truth: lib/pipeline.ts) ──
 const stageByKey = Object.fromEntries(PIPELINE_STAGES.map((s) => [s.key, s]));
 
+// Max cards rendered per column. A stage like touch1_pending can hold thousands
+// of leads; mounting them all as DOM nodes janks the board. Counts, filters and
+// search still operate on the full set — only the rendered DOM is capped.
+const CARD_CAP = 100;
+
 // Workflow tabs — the 17-stage pipeline split into 4 groups so each view shows
 // ≤5 columns and fits on one screen (no giant horizontal strip, no per-column
 // scrolling for the whole board). Drag-and-drop between columns still works.
@@ -250,6 +255,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
         <div className="flex gap-3 overflow-x-auto">
           {currentTab.stages.map(stage => {
             const stageLeads = getLeadsForStage(stage.key);
+            const shownLeads = stageLeads.slice(0, CARD_CAP);
             const isOver = isDraggingOver === stage.key;
             return (
               <div
@@ -278,7 +284,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
                       <span className="text-[11px] font-medium">Empty</span>
                     </div>
                   )}
-                  {stageLeads.map(lead => {
+                  {shownLeads.map(lead => {
                     const daysInStage = daysSince(lead.last_activity_at ?? lead.created_at);
                     const isStalled = daysInStage >= 7;
                     const typeKey = (lead.lead_type || "").toUpperCase();
@@ -338,6 +344,11 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
                       </div>
                     );
                   })}
+                  {stageLeads.length > CARD_CAP && (
+                    <p className="px-1 py-2 text-center text-[11px] text-slate-400">
+                      +{stageLeads.length - CARD_CAP} more — use filters or search to narrow
+                    </p>
+                  )}
                 </div>
               </div>
             );

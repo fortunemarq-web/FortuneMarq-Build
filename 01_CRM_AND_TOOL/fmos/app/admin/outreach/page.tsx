@@ -24,18 +24,20 @@ export default async function OutreachBoardPage() {
   // .limit() truncated the board and the niche/city/assignee filters derived from
   // it. Loop with .range() until a short page returns.
   const LEAD_COLS = "id, company_name, industry, city, lead_type, outreach_stage, follow_up_date, created_at, last_activity_at, assigned_sales_exec, phone, status, last_contacted_at, last_outcome";
-  const leads: any[] = [];
-  let error: { message: string } | null = null;
-  for (let from = 0; from < 50000; from += 1000) {
-    const { data, error: e } = await supabase
-      .from("leads")
-      .select(LEAD_COLS)
-      .order("created_at", { ascending: false })
-      .range(from, from + 999);
-    if (e) { error = e; break; }
-    leads.push(...(data || []));
-    if (!data || data.length < 1000) break;
-  }
+  // Count first, then fetch every page in PARALLEL — was 8 sequential round-trips.
+  const { count: leadCount } = await supabase.from("leads").select("id", { count: "exact", head: true });
+  const pageCount = Math.max(1, Math.ceil((leadCount || 0) / 1000));
+  const pageResults = await Promise.all(
+    Array.from({ length: pageCount }, (_, i) =>
+      supabase
+        .from("leads")
+        .select(LEAD_COLS)
+        .order("created_at", { ascending: false })
+        .range(i * 1000, i * 1000 + 999)
+    )
+  );
+  const error = pageResults.find((r) => r.error)?.error ?? null;
+  const leads: any[] = pageResults.flatMap((r) => r.data || []);
 
   if (error) {
     return (

@@ -15,22 +15,26 @@ export default async function SalesPage() {
     const today = new Date().toISOString().split("T")[0];
     const todayStart = today + "T00:00:00";
 
-    // Page through ALL active leads. Supabase caps each request at 1000 rows,
-    // so a single .limit() truncated the dataset (the niche/city filters + queue
-    // only saw the first cities). Loop with .range() until a short page returns.
+    // Load ALL active leads (Supabase caps each request at 1000 rows). Count
+    // first, then fetch every page in PARALLEL — was 8 sequential round-trips.
     const LEAD_COLS = "id, company_name, contact_person, phone, industry, city, status, notes, lead_type, pitch_type, is_low_volume, has_website, serp_ranked, follow_up_date, last_outcome, tags, no_answer_count, gatekeeper_count, first_contact_at, outreach_stage, lead_source, captured_at";
-    const leadRows: any[] = [];
-    for (let from = 0; from < 50000; from += 1000) {
-      const { data, error } = await supabase
-        .from("leads")
-        .select(LEAD_COLS)
-        .or("status.is.null,status.not.in.(closed_won,closed_lost,disqualified)")
-        .order("follow_up_date", { ascending: true, nullsFirst: true })
-        .range(from, from + 999);
-      if (error) break;
-      leadRows.push(...(data || []));
-      if (!data || data.length < 1000) break;
-    }
+    const ACTIVE_FILTER = "status.is.null,status.not.in.(closed_won,closed_lost,disqualified)";
+    const { count: activeCount } = await supabase
+      .from("leads")
+      .select("id", { count: "exact", head: true })
+      .or(ACTIVE_FILTER);
+    const pageCount = Math.max(1, Math.ceil((activeCount || 0) / 1000));
+    const pageResults = await Promise.all(
+      Array.from({ length: pageCount }, (_, i) =>
+        supabase
+          .from("leads")
+          .select(LEAD_COLS)
+          .or(ACTIVE_FILTER)
+          .order("follow_up_date", { ascending: true, nullsFirst: true })
+          .range(i * 1000, i * 1000 + 999)
+      )
+    );
+    const leadRows: any[] = pageResults.flatMap((r) => r.data || []);
 
     const [callsTodayResult, pdfsTodayResult, meetingsTodayResult, marketInsightsResult] = await Promise.all([
       // Calls logged today — the cockpit logs call outcomes to outreach_logs
