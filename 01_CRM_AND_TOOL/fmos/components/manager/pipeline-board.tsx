@@ -92,13 +92,20 @@ export default function PipelineBoard() {
         try {
             // leads has NO updated_at / assigned_to columns — use
             // last_activity_at / assigned_sales_exec (see CLAUDE.md).
-            const { data, error } = await supabase
-                .from("leads")
-                .select("id, company_name, industry, city, outreach_stage, lead_quality_score, last_activity_at, created_at, assigned_sales_exec")
-                .order("last_activity_at", { ascending: false, nullsFirst: false });
-
-            if (error) throw error;
-            setLeads(data || []);
+            // Page through: PostgREST caps each request at 1000 rows, which
+            // silently truncated the board to the first 1000 of ~8k leads.
+            const all: any[] = [];
+            for (let from = 0; from < 100000; from += 1000) {
+                const { data, error } = await supabase
+                    .from("leads")
+                    .select("id, company_name, industry, city, outreach_stage, lead_quality_score, last_activity_at, created_at, assigned_sales_exec")
+                    .order("last_activity_at", { ascending: false, nullsFirst: false })
+                    .range(from, from + 999);
+                if (error) throw error;
+                all.push(...(data || []));
+                if (!data || data.length < 1000) break;
+            }
+            setLeads(all);
         } catch (error: any) {
             console.error("Error fetching leads for pipeline:", error);
             toast.error("Could not load pipeline", error?.message ?? "");

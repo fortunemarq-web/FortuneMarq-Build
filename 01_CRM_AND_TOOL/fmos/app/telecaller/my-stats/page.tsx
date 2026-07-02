@@ -60,9 +60,12 @@ export default function MyStatsPage() {
             const interestedOutcomes = ["INTERESTED_BOOK", "INTERESTED_FOLLOW_UP", "INTERESTED_SEND_INFO"];
 
             // Fetch today's calls + all-time logs + last 90 days for streak in one parallel batch
-            const [{ data: todayLogs }, { data: allTimeLogs }, { data: recentLogs }, { data: targetRow }] = await Promise.all([
+            // All-time totals via exact head-counts — a plain select was capped at
+            // 1000, freezing "Total calls" at 1000.
+            const [{ data: todayLogs }, { count: totalCallsCount }, { count: totalInterestedCount }, { data: recentLogs }, { data: targetRow }] = await Promise.all([
                 supabase.from("outreach_logs").select("id, outcome").eq("actor_id", userData.user.id).eq("touch_type", "call").gte("created_at", `${today}T00:00:00`).lte("created_at", `${today}T23:59:59`),
-                supabase.from("outreach_logs").select("id, outcome").eq("actor_id", userData.user.id).eq("touch_type", "call"),
+                supabase.from("outreach_logs").select("id", { count: "exact", head: true }).eq("actor_id", userData.user.id).eq("touch_type", "call"),
+                supabase.from("outreach_logs").select("id", { count: "exact", head: true }).eq("actor_id", userData.user.id).eq("touch_type", "call").in("outcome", interestedOutcomes),
                 supabase.from("outreach_logs").select("id, outcome, created_at, touch_type, lead_id, leads(company_name)").eq("actor_id", userData.user.id).order("created_at", { ascending: false }).limit(logLimit),
                 supabase.from("team_targets").select("target_value").eq("user_id", userData.user.id).eq("target_type", "daily_calls").maybeSingle(),
             ]);
@@ -80,7 +83,7 @@ export default function MyStatsPage() {
                 highestStreak = Math.max(highestStreak, run);
             }
 
-            const totalInterested = allTimeLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0;
+            const totalInterested = totalInterestedCount || 0;
             // Daily call goal lives in team_targets as the row target_type='daily_calls'
             // (set by admin via /admin/team → Set Targets). Falls back to 100 if unset.
             const dailyGoal = Number((targetRow as any)?.target_value) || 100;
@@ -91,7 +94,7 @@ export default function MyStatsPage() {
                 interestedToday: todayLogs?.filter((l) => interestedOutcomes.includes(l.outcome ?? "")).length || 0,
                 currentStreak,
                 highestStreak,
-                totalCalls: allTimeLogs?.length || 0,
+                totalCalls: totalCallsCount || 0,
                 totalInterested,
             });
 

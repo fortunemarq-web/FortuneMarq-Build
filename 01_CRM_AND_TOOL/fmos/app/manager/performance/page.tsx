@@ -74,17 +74,22 @@ export default function ManagerPerformance() {
             const start = new Date(now - days * 86400000).toISOString();
             const prevStart = new Date(now - 2 * days * 86400000).toISOString();
 
-            // Current + previous period in one fetch; everything below derives from it
-            const [{ data: logs, error }, { data: profiles }] = await Promise.all([
-                supabase
+            const { data: profiles } = await supabase.from("profiles").select("id, full_name");
+            // Current + previous period. Page through — PostgREST caps each request
+            // at 1000 rows regardless of .limit(), which truncated a 30-day window
+            // to a partial sample and undercounted the leaderboard.
+            const logs: any[] = [];
+            for (let from = 0; from < 100000; from += 1000) {
+                const { data, error } = await supabase
                     .from("outreach_logs")
                     .select("actor_id, outcome, created_at, leads(industry, city)")
                     .gte("created_at", prevStart)
                     .order("created_at", { ascending: false })
-                    .limit(10000),
-                supabase.from("profiles").select("id, full_name"),
-            ]);
-            if (error) throw error;
+                    .range(from, from + 999);
+                if (error) throw error;
+                logs.push(...(data || []));
+                if (!data || data.length < 1000) break;
+            }
 
             const nameOf: Record<string, string> = {};
             (profiles || []).forEach((p: any) => { nameOf[p.id] = p.full_name; });
