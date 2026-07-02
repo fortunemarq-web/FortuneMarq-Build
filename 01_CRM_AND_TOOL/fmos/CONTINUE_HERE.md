@@ -1,5 +1,5 @@
 # ▶ CONTINUE HERE — Canonical Handoff
-**Updated:** 2026-06-25 · **Branch:** `continue-on-mac` · **This file supersedes all other handoff/continuation docs.**
+**Updated:** 2026-07-02 · **Branch:** `continue-on-mac` · **This file supersedes all other handoff/continuation docs.**
 
 > You are a fresh Claude Code session (new account, same machine + same `FortuneMarq-Build`
 > folder — we switched accounts because the previous one hit its weekly rate limit). The prior
@@ -7,6 +7,16 @@
 > Read it fully, then `CLAUDE.md` (auto-loaded) for app structure.
 
 App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer.
+
+## ⚡ Latest session (2026-07-02) — full app audit + fixes (all DEPLOYED to `main`, HEAD `5769472`)
+A multi-agent audit of the whole app; the high-value, safe findings were fixed, verified (tsc+build green, prod DB role-simulation), and deployed across ~16 commits + one live DB migration.
+- **🔒 SECURITY — RLS lockdown (applied to prod + migration `supabase/migrations/20260702000000_security_lockdown_rls.sql`).** Blanket `"any authenticated"` policies on `leads/clients/tasks/profiles` let a client-portal login read/write all internal data and self-escalate to admin; an RLS-off `leads_backup_20260619` + `ad_conversions` were anon-readable via the public key. **Now:** staff-scoped policies via `public.is_staff()` (staff = has a `profiles` row; clients have none), a trigger blocking non-admin `role` changes, backup table dropped, `ad_conversions` RLS on, `agency-files` bucket made private. Verified: admin+telecaller keep full access, a no-profile client sees 0 rows, escalation raises. **Don't reintroduce blanket `authenticated` policies** (see the `security-rls-lockdown` memory). Code guards added: admin gate on `resetDatabase()`, staff 403 on lead merge/undo/scan, `/api/webchat` rate limit, command-palette search-filter sanitization.
+- **Telecaller flow:** `/sales` stopped stripping lead fields (gatekeeper 3-strike escalation, speed-to-lead, Type-D detection restored); follow-up/meeting **timezone bug fixed** (was storing/booking 5.5h off).
+- **Data integrity:** failed WhatsApp sends no longer counted as "sent"; agreement-confirm writes `won` via `lib/pipeline` (not invalid `status:'active'`); niche-kit edit fixed (`onConflict`); **every 1000-row PostgREST dashboard cap fixed** (admin dashboard KPI+stages, my-stats, manager pipeline+performance, weekly report) — counts were silently truncated.
+- **Resilience/UX:** added app `error.tsx`/`not-found.tsx`/`global-error.tsx`; added **`/forgot-password` + `/reset-password`** (proxy allowed them but pages 404'd) + login link; fixed dead-end links (follow-up notif → `/sales`, login honors `?next`, role-gated admin-only sidebar/bell links); fixed a NotificationBell realtime-channel leak.
+- **Perf:** `/sales` + `/admin/outreach` load lead pages in **parallel** (was 8 sequential round-trips); outreach board caps rendered cards at 100/column with a "+N more" footer.
+- **Cleanup:** ~2k LOC dead code removed (verified 0 importers) + dead fmos-level `.github/workflows/cron.yml` (GitHub only runs the repo-root workflow); UI de-rainbowed (command palette, ServicePills, health-score modal) toward the single-green tokens.
+- **NOT done (deliberately — each needs its own scoped, testable pass):** full server-side pagination of the `/sales` cockpit (still holds all active leads client-side); full-page restyles of `/admin/marketing` (foreign dark theme), my-stats, manager/performance; feature builds (Meta Lead-Ads webhook, Stage-2 campaigns, bulk lead-assign, telecaller inbox access); minor polish (some `?param` links ignored by targets, a11y on clickable divs, `framer-motion`/`motion` dedup).
 
 ## ⚡ Latest session (2026-06-25) — ad-launch prep (all DEPLOYED to `main`)
 - **📋 Owner launch checklist:** `00_MASTER/LAUNCH_CHECKLIST.md` — every OUTSIDE-FMOS task Jabeer does to go live (create ad accounts, paid/organic setup, GMB/SEO/social, finance/data, team, the `WHATSAPP_LAUNCH=1`/`REACTIVATION_ENABLED=1`/CAPI launch switches). Marks what's already done.
