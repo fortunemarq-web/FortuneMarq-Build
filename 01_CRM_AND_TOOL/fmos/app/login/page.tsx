@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { Loader2, Lock, Mail, AlertCircle } from "lucide-react";
 import FortuneMarqLogo from "@/components/ui/fortune-marq-logo";
@@ -186,7 +187,12 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div>
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link href="/forgot-password" className="text-xs font-medium text-brand-deep hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Lock className="h-4 w-4 text-slate-400" />

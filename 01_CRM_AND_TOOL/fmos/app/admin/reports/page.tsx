@@ -32,13 +32,18 @@ export default function WeeklyReportPage() {
             // (In a real scenario, we'd aggregate call_logs, deals, etc.
             // For this demo, let's pull some actual counts to make it feel real)
 
-            const { data: leads } = await supabase.from("leads").select("id, status, created_at") as { data: any[] | null };
-            const { data: niches } = await supabase.from("niches").select("name");
+            // Exact counts via head queries — a plain select() is capped at 1000
+            // rows, which silently undercounted total/interested leads.
+            const [totalRes, interestedRes, nichesRes] = await Promise.all([
+                supabase.from("leads").select("id", { count: "exact", head: true }),
+                supabase.from("leads").select("id", { count: "exact", head: true }).in("status", ["qualified", "strategy_booked", "strategy_completed", "proposal_sent"]),
+                supabase.from("niches").select("name"),
+            ]);
 
             const stats = {
-                total_leads: leads?.length || 0,
-                interested_leads: leads?.filter((l: any) => l.status === 'interested' || l.status === 'strategy_booked').length || 0,
-                niche_count: niches?.length || 0,
+                total_leads: totalRes.count || 0,
+                interested_leads: interestedRes.count || 0,
+                niche_count: nichesRes.data?.length || 0,
                 report_date: new Date().toISOString()
             };
 
