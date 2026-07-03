@@ -160,7 +160,7 @@ export default function CommunicationsTab({
             <p className="text-sm text-slate-400">
               No WhatsApp messages found for this client
             </p>
-            <p className="text-xs text-slate-300 mt-1">
+            <p className="text-xs text-slate-700 mt-1">
               Messages sent via the Sales Cockpit will appear here
             </p>
           </Card>

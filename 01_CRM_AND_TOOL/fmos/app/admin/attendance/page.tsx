@@ -41,7 +41,7 @@ export default function AdminAttendancePage() {
                             type="date"
                             value={date}
                             onChange={e => setDate(e.target.value)}
-                            className="bg-white border border-slate-300 rounded-lg px-4 py-2 text-slate-900"
+                            className="bg-surface border border-slate-300 rounded-lg px-4 py-2 text-slate-900"
                         />
                         <ExportCsvButton
                             rows={summaries}
@@ -58,7 +58,7 @@ export default function AdminAttendancePage() {
                     </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div className="bg-surface border border-slate-200 rounded-xl overflow-hidden">
                     <table className="w-full text-left text-sm">
                         <thead className="bg-slate-100 text-slate-500 font-medium uppercase tracking-wider">
                             <tr>

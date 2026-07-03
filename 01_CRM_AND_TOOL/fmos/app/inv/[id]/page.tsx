@@ -58,8 +58,8 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
   const remaining = Number(invoice.total_amount) - paidAmount;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div className="min-h-screen bg-canvas py-10 px-4">
+      <div className="max-w-xl mx-auto bg-surface rounded-2xl shadow-lg overflow-hidden">
         {/* Header */}
         <div className={`px-8 py-7 text-white ${isPaid ? "bg-emerald-700" : "bg-[#1E7A4F]"}`}>
           <p className="text-sm font-medium opacity-80 mb-1">FortuneMarq</p>
@@ -82,11 +82,11 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
           {/* Dates */}
           <div className="flex justify-between text-sm">
             <div>
-              <p className="text-xs text-gray-500 mb-0.5">Issue Date</p>
+              <p className="text-xs text-slate-500 mb-0.5">Issue Date</p>
               <p className="font-medium">{fmtDate(invoice.issue_date)}</p>
             </div>
             <div className="text-right">
-              <p className="text-xs text-gray-500 mb-0.5">Due Date</p>
+              <p className="text-xs text-slate-500 mb-0.5">Due Date</p>
               <p className={`font-medium ${!isPaid && new Date(invoice.due_date) < new Date() ? "text-red-600" : ""}`}>
                 {fmtDate(invoice.due_date)}
               </p>
@@ -96,24 +96,24 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
           {/* Description */}
           {invoice.notes && (
             <div>
-              <p className="text-xs text-gray-500 mb-1">Description</p>
-              <p className="text-sm text-gray-800">{invoice.notes}</p>
+              <p className="text-xs text-slate-500 mb-1">Description</p>
+              <p className="text-sm text-slate-900">{invoice.notes}</p>
             </div>
           )}
 
           {/* Amount breakdown */}
-          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+          <div className="bg-white/[0.06] rounded-xl p-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Subtotal</span>
+              <span className="text-slate-500">Subtotal</span>
               <span>{fmt(invoice.subtotal)}</span>
             </div>
             {gstLines.map((line) => (
               <div key={line.label} className="flex justify-between text-sm">
-                <span className="text-gray-600">{line.label}</span>
+                <span className="text-slate-500">{line.label}</span>
                 <span>{fmt(line.amount)}</span>
               </div>
             ))}
-            <div className="flex justify-between text-sm font-bold border-t border-gray-200 pt-2 mt-1">
+            <div className="flex justify-between text-sm font-bold border-t border-line pt-2 mt-1">
               <span>Total</span>
               <span className="text-[#1E7A4F]">{fmt(invoice.total_amount)}</span>
             </div>
@@ -133,8 +133,8 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
 
           {/* Bank details */}
           {!isPaid && (
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-gray-700 space-y-1">
-              <p className="font-semibold text-gray-800 mb-2">Bank Transfer</p>
+            <div className="bg-white/[0.06] border border-line rounded-xl p-4 text-sm text-slate-700 space-y-1">
+              <p className="font-semibold text-slate-900 mb-2">Bank Transfer</p>
               <p>{biz.bank_name}</p>
               <p>A/C Name: {biz.account_name}</p>
               <p>A/C No: <span className="font-mono">{biz.account_number}</span></p>
@@ -143,7 +143,7 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
           )}
         </div>
 
-        <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center text-xs text-gray-400">
+        <div className="px-8 py-4 bg-white/[0.06] border-t border-line text-center text-xs text-slate-500">
           FortuneMarq Media &amp; Marketing · GSTIN: {biz.gstin} · {biz.city}, {biz.state}
         </div>
       </div>

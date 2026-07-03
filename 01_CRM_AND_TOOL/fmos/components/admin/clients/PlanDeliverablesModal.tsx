@@ -66,7 +66,7 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 px-3 py-2 text-xs font-semibold text-white transition-colors min-h-[36px]"
+        className="flex items-center gap-1.5 rounded-lg bg-surface hover:bg-white/[0.06] px-3 py-2 text-xs font-semibold text-white transition-colors min-h-[36px]"
       >
         <ClipboardList className="h-3.5 w-3.5" />
         Plan Deliverables
@@ -124,7 +124,7 @@ export default function PlanDeliverablesModal({ clientId }: { clientId: string }
                   <button
                     onClick={() => setStep("preview")}
                     disabled={!parsed || parsed.taskCount === 0 && parsed.milestones.length === 0}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-40 px-4 py-2 text-sm font-semibold text-white transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-surface hover:bg-white/[0.06] disabled:opacity-40 px-4 py-2 text-sm font-semibold text-white transition-colors"
                   >
                     Preview <ChevronRight className="h-4 w-4" />
                   </button>

@@ -132,7 +132,7 @@ export default function OverviewTab({
               disabled={togglingUpsell}
               className={cn(
                 "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-ring focus:ring-offset-2",
-                client.upsell_eligible ? "bg-brand" : "bg-slate-200",
+                client.upsell_eligible ? "bg-brand" : "bg-white/[0.06]",
                 togglingUpsell && "opacity-50"
               )}
             >

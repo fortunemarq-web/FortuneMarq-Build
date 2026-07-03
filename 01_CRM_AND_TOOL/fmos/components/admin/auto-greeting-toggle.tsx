@@ -63,7 +63,7 @@ export default function AutoGreetingToggle() {
       className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 border transition-all disabled:opacity-50 ${
         enabled
           ? "bg-brand-deep/10 border-brand-deep/20 text-brand-deep"
-          : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
+          : "bg-surface border-slate-200 text-slate-500 hover:bg-slate-50"
       }`}
     >
       <Zap className="h-4 w-4" />

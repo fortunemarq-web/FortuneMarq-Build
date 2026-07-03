@@ -98,9 +98,9 @@ export default function HealthScoreModal({ client, onClose }: HealthScoreModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl border border-slate-200">
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-surface shadow-2xl border border-slate-200">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between bg-white border-b border-slate-200 px-6 py-4 rounded-t-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between bg-surface border-b border-slate-200 px-6 py-4 rounded-t-2xl">
           <div>
             <h2 className="text-lg font-bold text-slate-900">Health Score</h2>
             <p className="text-xs text-slate-500">{client.business_name}</p>
@@ -167,17 +167,17 @@ export default function HealthScoreModal({ client, onClose }: HealthScoreModalPr
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-slate-200 bg-white px-6 py-4 rounded-b-2xl">
+        <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-slate-200 bg-surface px-6 py-4 rounded-b-2xl">
           <button
             onClick={onClose}
-            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            className="rounded-lg border border-slate-200 bg-surface px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 rounded-lg bg-[#141613] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.06] disabled:opacity-50 transition-colors"
           >
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {isSubmitting ? "Saving..." : "Update Score"}

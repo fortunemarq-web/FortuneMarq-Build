@@ -60,7 +60,7 @@ export default async function CityAcquisitionPage({ params }: { params: Promise<
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-slate-900 text-white shadow-sm">
+              <div className="p-3 rounded-xl bg-surface text-white shadow-sm">
                 <MapPin className="h-6 w-6" />
               </div>
               <div>
@@ -70,7 +70,7 @@ export default async function CityAcquisitionPage({ params }: { params: Promise<
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-surface border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
                 <span className="text-slate-900 mr-1">{activeNichesCount}</span> Active Niches
               </span>
               <AddCityModal fixedCity={cityLabel} />
@@ -81,8 +81,8 @@ export default async function CityAcquisitionPage({ params }: { params: Promise<
         {/* Section 1: Niche Breakdown */}
         <section>
           {cityTargets.length === 0 ? (
-            <div className="bg-white rounded-xl border border-slate-200 p-12 text-center flex flex-col items-center">
-              <Target className="h-12 w-12 text-slate-200 mb-4" />
+            <div className="bg-surface rounded-xl border border-slate-200 p-12 text-center flex flex-col items-center">
+              <Target className="h-12 w-12 text-slate-800 mb-4" />
               <h2 className="text-lg font-bold text-slate-900 mb-2">No Niches Found</h2>
               <p className="text-sm text-slate-500 max-w-sm mb-6">You haven't added any target niches for {cityLabel} yet. Start expanding your reach!</p>
               <AddCityModal fixedCity={cityLabel} buttonLabel="Add First Niche" buttonClassName="flex items-center gap-2 rounded-lg bg-brand-deep px-4 py-2 text-sm font-semibold text-white shadow hover:bg-brand-hover transition-colors" />

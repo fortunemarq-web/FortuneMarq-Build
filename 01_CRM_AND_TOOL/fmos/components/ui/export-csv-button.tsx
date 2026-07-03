@@ -50,7 +50,7 @@ export default function ExportCsvButton({ rows, columns, filename, label = "Expo
       onClick={handleExport}
       className={
         className ??
-        "flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+        "flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
       }
     >
       <Download className="h-3.5 w-3.5" /> {label}

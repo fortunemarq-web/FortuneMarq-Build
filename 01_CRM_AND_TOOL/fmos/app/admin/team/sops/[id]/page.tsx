@@ -53,7 +53,7 @@ export default async function SopDetailPage({
           </div>
         </div>
 
-        <div className="bg-white rounded-[3rem] border border-slate-200 p-8 md:p-12 shadow-xl shadow-slate-900/5">
+        <div className="bg-surface rounded-[3rem] border border-slate-200 p-8 md:p-12 shadow-xl shadow-slate-900/5">
             <h1 className="text-3xl font-black text-slate-900 mb-8">
                 {id === "new" ? "Create New SOP" : "Edit Procedure"}
             </h1>

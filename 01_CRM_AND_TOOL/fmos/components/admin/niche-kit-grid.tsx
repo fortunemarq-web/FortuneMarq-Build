@@ -247,7 +247,7 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
                             </div>
                         ) : (
                             <div className="flex flex-col items-center">
-                                <FileUp className="mb-1 h-6 w-6 text-slate-300 transition-colors group-hover:text-brand-deep" />
+                                <FileUp className="mb-1 h-6 w-6 text-slate-700 transition-colors group-hover:text-brand-deep" />
                                 <span className="text-[11px] font-medium text-slate-500">Upload PDF</span>
                             </div>
                         )}
@@ -279,7 +279,7 @@ function NicheKitEditor({ niche, kit, onSave }: { niche: Niche, kit?: NicheKit, 
                             </div>
                         ) : (
                             <div className="flex flex-col items-center">
-                                <FileUp className="mb-1 h-6 w-6 text-slate-300 transition-colors group-hover:text-brand-deep" />
+                                <FileUp className="mb-1 h-6 w-6 text-slate-700 transition-colors group-hover:text-brand-deep" />
                                 <span className="text-[11px] font-medium text-slate-500">Upload PDF</span>
                             </div>
                         )}

@@ -60,7 +60,7 @@ export default async function InstagramTrackerPage() {
 
             <div className="flex flex-wrap items-center gap-3">
               {stats.map((stat, i) => (
-                <div key={i} className="bg-white rounded-lg border border-slate-200 px-4 py-2 shadow-sm flex flex-col min-w-[120px]">
+                <div key={i} className="bg-surface rounded-lg border border-slate-200 px-4 py-2 shadow-sm flex flex-col min-w-[120px]">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{stat.label}</span>
                   <span className="text-lg font-mono font-bold text-slate-900">{stat.value}</span>
                 </div>
@@ -84,7 +84,7 @@ export default async function InstagramTrackerPage() {
         </section>
 
         {/* Section 3: Performance Log */}
-        <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <section className="bg-surface rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">
               Performance Log (Published)

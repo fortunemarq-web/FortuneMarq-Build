@@ -47,7 +47,7 @@ export default function GmbUpdateMetricsButton({ current }: { current: Record<st
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-white border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2"
+        className="rounded-lg bg-surface border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2"
       >
         <RefreshCw className="h-4 w-4" />
         Update Metrics
@@ -55,7 +55,7 @@ export default function GmbUpdateMetricsButton({ current }: { current: Record<st
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" onMouseDown={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
-          <div className="w-full max-w-sm bg-white rounded-2xl border border-slate-200 shadow-2xl p-6">
+          <div className="w-full max-w-sm bg-surface rounded-2xl border border-slate-200 shadow-2xl p-6">
             <div className="flex justify-between items-center mb-5">
               <h3 className="font-bold text-slate-900">Update GMB Metrics</h3>
               <button onClick={() => setOpen(false)} className="p-1 rounded-lg text-slate-400 hover:bg-slate-100"><X className="h-4 w-4" /></button>

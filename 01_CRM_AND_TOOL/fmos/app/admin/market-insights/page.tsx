@@ -46,7 +46,7 @@ export default async function MarketInsightsPage() {
         </div>
 
         {/* Ingest widget */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <div className="bg-surface border border-slate-200 rounded-xl p-6 shadow-sm">
           <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-4">
             Ingest keyword CSVs
           </h2>
@@ -55,7 +55,7 @@ export default async function MarketInsightsPage() {
 
         {/* Stored insights table */}
         {rows.length > 0 && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div className="bg-surface border border-slate-200 rounded-xl shadow-sm overflow-hidden">
             <div className="px-5 py-3 border-b border-slate-100">
               <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
                 Stored insights ({rows.length} niche × city)

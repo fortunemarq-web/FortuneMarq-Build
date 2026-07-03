@@ -8,6 +8,14 @@ finance → team — plus the agency's own inbound-marketing engine. Built with
 (Postgres + Auth + RLS), with Claude (Anthropic) powering the AI features. It is
 deployed on **Vercel** and reached at `fmos.fortunemarq.com`.
 
+> **UI refresh — dark theme (2026-07-03, branch `ui-refresh`, in progress):** the app is being
+> re-skinned to a dark theme (gradient canvas + glassmorphism cards, single green accent) — **design
+> tokens/colors only, no feature/route/layout change** (the telecaller cockpit layout is explicitly
+> unchanged). Driven by the `slate-*` ramp + surface tokens in `app/globals.css`; per-component
+> surface/text contrast fixes applied across the admin/clients, reports, renewals, and growth screens.
+> Font switched to **Hanken Grotesk** (UI) + IBM Plex Mono. QA'd screen-by-screen via a logged-in
+> contrast audit before merge; not yet on `main`.
+
 > **New (2026-06-22):** a cinematic, scroll-driven landing page for the website-development service
 > at `/web-design` — premium dark-atmosphere hero + GSAP scroll story (no WebGL/particles), honesty-aligned
 > per `00_MASTER` §2.2 (illustrative samples, build-standard metrics). Self-contained under

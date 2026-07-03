@@ -134,7 +134,7 @@ export default function DataManager() {
             </div>
 
             {/* Tab Switcher */}
-            <div className="flex bg-white p-1 rounded-xl w-fit">
+            <div className="flex bg-surface p-1 rounded-xl w-fit">
                 <button
                     onClick={() => setActiveTab("industry")}
                     className={clsx(
@@ -173,7 +173,7 @@ export default function DataManager() {
                         <select
                             value={selectedIndustry}
                             onChange={(e) => { setSelectedIndustry(e.target.value); setIndustryDeleteStatus("idle"); }}
-                            className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl px-4 py-3 outline-none focus:border-red-500 transition-colors"
+                            className="w-full bg-surface border border-slate-300 text-slate-900 rounded-xl px-4 py-3 outline-none focus:border-red-500 transition-colors"
                             disabled={industryDeleteStatus === "deleting"}
                         >
                             <option value="">-- Choose Industry --</option>
@@ -259,13 +259,13 @@ export default function DataManager() {
                                 placeholder="Search by Business Name or Phone..."
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                className="w-full bg-white border border-slate-300 text-slate-900 pl-10 pr-4 py-3 rounded-xl outline-none focus:border-orange-500 transition-colors placeholder:text-slate-500"
+                                className="w-full bg-surface border border-slate-300 text-slate-900 pl-10 pr-4 py-3 rounded-xl outline-none focus:border-orange-500 transition-colors placeholder:text-slate-500"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={isSearching}
-                            className="bg-white text-black font-bold px-6 rounded-xl hover:bg-[#ddd] disabled:opacity-50"
+                            className="bg-surface text-slate-900 font-bold px-6 rounded-xl hover:bg-white/[0.06] disabled:opacity-50"
                         >
                             {isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Search"}
                         </button>
@@ -275,7 +275,7 @@ export default function DataManager() {
                     <div className="space-y-2">
                         {searchResults.length > 0 ? (
                             searchResults.map(lead => (
-                                <div key={lead.id} className="flex items-center justify-between p-4 bg-white border border-[#2a2a2a] rounded-xl group hover:border-slate-300 transition-colors">
+                                <div key={lead.id} className="flex items-center justify-between p-4 bg-surface border border-[#2a2a2a] rounded-xl group hover:border-slate-300 transition-colors">
                                     <div>
                                         <h3 className="text-slate-900 font-bold">{lead.company_name}</h3>
                                         <div className="flex flex-wrap gap-2 mt-2">

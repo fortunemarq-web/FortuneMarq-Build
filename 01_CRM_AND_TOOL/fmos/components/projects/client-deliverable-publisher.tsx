@@ -59,7 +59,7 @@ export default function ClientDeliverablePublisher({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+    <div className="bg-surface rounded-2xl border border-slate-200 shadow-sm p-6">
       <div className="flex items-center gap-2 mb-1">
         <Upload className="h-5 w-5 text-brand-deep" />
         <h3 className="text-sm font-bold text-slate-900">Client Deliverables</h3>

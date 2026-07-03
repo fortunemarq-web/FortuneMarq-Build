@@ -49,12 +49,12 @@ export default async function OrganicTrendChart() {
 
   if (series.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <div className="bg-surface rounded-xl border border-slate-200 shadow-sm p-6">
         <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-6">
           Growth Trend
         </h3>
         <div className="h-[300px] w-full flex flex-col items-center justify-center gap-3 border border-dashed border-slate-200 rounded-xl">
-          <TrendingUp className="h-8 w-8 text-slate-300" />
+          <TrendingUp className="h-8 w-8 text-slate-700" />
           <p className="text-slate-500 text-sm font-semibold">No organic trend data yet</p>
           <p className="text-slate-400 text-xs text-center max-w-xs">
             Enter monthly GMB metrics on the GMB page, or connect Google Search Console,

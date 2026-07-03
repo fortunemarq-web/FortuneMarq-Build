@@ -472,7 +472,7 @@ export default function TemplateManager() {
                                             <Label className="mb-0">Message Body</Label>
                                             <div className="group relative">
                                                 <Info className="h-4 w-4 cursor-help text-slate-400" />
-                                                <div className="invisible absolute bottom-full right-0 z-20 mb-2 w-64 rounded-lg bg-slate-900 p-3 text-[11px] text-white shadow-md group-hover:visible">
+                                                <div className="invisible absolute bottom-full right-0 z-20 mb-2 w-64 rounded-lg bg-surface p-3 text-[11px] text-white shadow-md group-hover:visible">
                                                     <p className="mb-2 border-b border-white/20 pb-1 font-semibold">Available Variables</p>
                                                     <div className="space-y-1.5">
                                                         {VARIABLES.map((v) => (

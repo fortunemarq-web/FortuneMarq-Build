@@ -29,7 +29,7 @@ export default function AgencyGrowthError({
           </button>
           <Link
             href="/admin"
-            className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]"
+            className="rounded-xl border border-slate-200 bg-surface px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]"
           >
             Go to Command Hub
           </Link>

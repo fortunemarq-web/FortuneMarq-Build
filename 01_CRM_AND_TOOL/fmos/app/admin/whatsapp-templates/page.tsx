@@ -21,14 +21,14 @@ export default async function WhatsappTemplatesPage() {
 
     if (!user) {
         return (
-            <div className="flex h-screen items-center justify-center bg-slate-50">
+            <div className="flex h-screen items-center justify-center bg-canvas">
                 <p className="text-slate-500 font-medium">Please sign in to access admin tools.</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-full bg-slate-50 px-4 py-8">
+        <div className="min-h-full bg-canvas px-4 py-8">
             <div className="mx-auto max-w-7xl">
 
                 {/* Breadcrumbs / Header */}
@@ -55,7 +55,7 @@ export default async function WhatsappTemplatesPage() {
                         <SeedTemplatesButton />
                         <Link
                             href="/admin"
-                            className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
+                            className="bg-surface border border-line text-slate-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-white/[0.06] transition-all flex items-center gap-2"
                         >
                             <LayoutDashboard className="h-4 w-4 opacity-50" /> Back to Hub
                         </Link>

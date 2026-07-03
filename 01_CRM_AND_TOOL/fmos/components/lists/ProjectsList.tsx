@@ -95,7 +95,7 @@ export default function ProjectsList({ userId }: { userId: string }) {
             <div className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-slate-500">
-                        <thead className="bg-white text-xs uppercase font-medium text-slate-900">
+                        <thead className="bg-surface text-xs uppercase font-medium text-slate-900">
                             <tr>
                                 <th className="px-4 py-3 w-[40px]"><input type="checkbox" checked={data.length > 0 && isAllSelected(data.map(d => d.id))} onChange={handleSelectAllPage} className="rounded border-[#2a2a2a] bg-slate-50" /></th>
                                 <th className="px-4 py-3">Client</th>
@@ -108,7 +108,7 @@ export default function ProjectsList({ userId }: { userId: string }) {
                             {loading ? <tr><td colSpan={5} className="py-8 text-center text-slate-600"><Loader2 className="animate-spin h-5 w-5 mx-auto" /></td></tr> :
                                 data.length === 0 ? <tr><td colSpan={5} className="py-8 text-center">No projects</td></tr> :
                                     data.map(proj => (
-                                        <tr key={proj.id} className={clsx("hover:bg-white", isSelected(proj.id) && "bg-white")}>
+                                        <tr key={proj.id} className={clsx("hover:bg-white/[0.06]", isSelected(proj.id) && "bg-white/[0.06]")}>
                                             <td className="px-4 py-3"><input type="checkbox" checked={isSelected(proj.id)} onChange={() => toggleSelection(proj.id)} className="rounded border-[#2a2a2a] bg-slate-50" /></td>
                                             <td className="px-4 py-3 font-medium text-slate-900">{proj.clients?.business_name || "Unknown"}</td>
                                             <td className="px-4 py-3">{proj.service_type}</td>

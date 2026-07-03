@@ -247,7 +247,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
               <button
                 onClick={handleGenerateOnboarding}
                 disabled={selectedServices.size === 0 || generating}
-                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-sm font-semibold py-3 rounded-lg transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-[#141613] hover:bg-white/[0.06] disabled:opacity-40 text-white text-sm font-semibold py-3 rounded-lg transition-colors"
               >
                 {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
                 Generate Onboarding Tasks
@@ -287,7 +287,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
             {isAdmin && (
               <button
                 onClick={() => setShowAddTask(v => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-lg px-3 py-1.5 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#141613] hover:bg-white/[0.06] text-white rounded-lg px-3 py-1.5 transition-colors"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add Task
@@ -360,7 +360,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
               <button
                 onClick={addCustomTask}
                 disabled={!addTaskForm.task.trim() || addingTask}
-                className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white px-4 py-1.5 rounded-lg transition-colors"
+                className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-[#141613] hover:bg-white/[0.06] disabled:opacity-40 text-white px-4 py-1.5 rounded-lg transition-colors"
               >
                 {addingTask ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
                 Add

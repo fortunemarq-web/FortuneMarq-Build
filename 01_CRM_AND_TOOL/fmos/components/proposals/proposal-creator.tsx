@@ -465,7 +465,7 @@ FortuneMarq
             {STEPS.map((s, i) => (
               <div key={s.key} className="flex items-center gap-2">
                 <div className={`flex items-center gap-1.5 ${i <= stepIndex ? "opacity-100" : "opacity-40"}`}>
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-[11px] font-semibold ${stepIndex > i ? "bg-brand text-white" : stepIndex === i ? "bg-brand-deep text-white" : "bg-slate-100 text-slate-500"}`}>
+                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-[11px] font-semibold ${stepIndex > i ? "bg-brand text-white" : stepIndex === i ? "bg-brand-deep text-white" : "bg-white/[0.06] text-slate-500"}`}>
                     {stepIndex > i ? <Check className="h-3 w-3" /> : i + 1}
                   </div>
                   <span className={`text-xs font-medium ${stepIndex === i ? "text-slate-900" : "text-slate-400"}`}>{s.label}</span>
@@ -590,7 +590,7 @@ FortuneMarq
             {/* Sticky summary */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-4">
-                <div className="bg-slate-900 rounded-2xl p-5 text-white">
+                <div className="bg-surface rounded-2xl p-5 text-white">
                   <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-4">Proposal Summary</p>
                   {selectedServices.length === 0 ? (
                     <p className="text-sm text-slate-500 text-center py-4">Select services to see totals</p>
@@ -599,12 +599,12 @@ FortuneMarq
                       <div className="space-y-2 mb-4">
                         {selectedServices.map(svc => (
                           <div key={svc.id} className="flex items-center justify-between gap-2">
-                            <p className="text-xs text-slate-300 truncate flex-1">{svc.label}</p>
+                            <p className="text-xs text-slate-700 truncate flex-1">{svc.label}</p>
                             <p className="text-xs tabular-nums text-slate-400 shrink-0">{svc.monthlyRetainer > 0 ? `${formatINR(svc.monthlyRetainer)}/mo` : "—"}</p>
                           </div>
                         ))}
                       </div>
-                      <div className="border-t border-slate-700 pt-3 space-y-2">
+                      <div className="border-t border-line pt-3 space-y-2">
                         {totalSetup > 0 && <div className="flex items-center justify-between"><span className="text-xs text-slate-400">One-time Setup</span><span className="text-sm font-semibold tabular-nums">{formatINR(totalSetup)}</span></div>}
                         <div className="flex items-center justify-between"><span className="text-xs text-slate-400">Monthly Retainer</span><span className="text-lg font-semibold tabular-nums text-brand">{formatINR(totalMonthly)}<span className="text-sm">/mo</span></span></div>
                       </div>

@@ -118,7 +118,7 @@ export default function SopEditor({ sop, onSave }: SopEditorProps) {
                         <button
                             type="button"
                             onClick={() => removeStep(idx)}
-                            className="absolute right-3 top-2.5 p-1 text-slate-300 hover:text-danger transition-colors opacity-0 group-hover:opacity-100"
+                            className="absolute right-3 top-2.5 p-1 text-slate-700 hover:text-danger transition-colors opacity-0 group-hover:opacity-100"
                         >
                             <Trash2 className="h-4 w-4" />
                         </button>

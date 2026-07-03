@@ -92,7 +92,7 @@ export default function ContentKanbanBoard({ channel, initialPieces, availableTy
                 </div>
                 <button
                   onClick={() => setModalPost({ status: col.id })}
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-white hover:text-slate-900 transition-colors bg-white/40"
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-surface hover:text-slate-900 transition-colors bg-white/40"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -111,7 +111,7 @@ export default function ContentKanbanBoard({ channel, initialPieces, availableTy
                       draggable
                       onDragStart={() => handleDragStart(piece.id)}
                       onClick={() => setModalPost(piece)}
-                      className={`group relative rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-brand/50 hover:shadow-md transition-all cursor-pointer ${draggedId === piece.id ? 'opacity-50 ring-2 ring-brand ring-offset-2' : ''}`}
+                      className={`group relative rounded-xl border border-slate-200 bg-surface p-4 shadow-sm hover:border-brand/50 hover:shadow-md transition-all cursor-pointer ${draggedId === piece.id ? 'opacity-50 ring-2 ring-brand ring-offset-2' : ''}`}
                     >
                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab hover:text-slate-900 active:cursor-grabbing text-slate-400">
                         <GripVertical className="h-4 w-4" />

@@ -162,7 +162,7 @@ export default function AdminNewReportPage() {
 
                 <Card className="p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-white">
+                        <div className="w-12 h-12 bg-[#141613] rounded-xl flex items-center justify-center text-white">
                             <Zap className="h-6 w-6" />
                         </div>
                         <div>

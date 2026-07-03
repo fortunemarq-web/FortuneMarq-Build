@@ -10,7 +10,7 @@ export default function SeoLoading() {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-[400px] w-full bg-white border border-slate-200 rounded-xl" />
+            <div key={i} className="h-[400px] w-full bg-surface border border-slate-200 rounded-xl" />
           ))}
         </div>
       </div>

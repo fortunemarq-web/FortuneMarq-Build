@@ -61,7 +61,7 @@ export default function GMBChecklist({ items }: { items: any[] }) {
               {item.is_completed ? (
                 <CheckCircle2 className="h-5 w-5 text-brand-deep" />
               ) : (
-                <Circle className="h-5 w-5 text-slate-300 hover:text-slate-400" />
+                <Circle className="h-5 w-5 text-slate-700 hover:text-slate-400" />
               )}
             </button>
             <span className={`text-sm font-medium ${item.is_completed ? 'text-slate-500 line-through' : 'text-slate-700'}`}>

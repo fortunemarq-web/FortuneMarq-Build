@@ -9,15 +9,15 @@ export default function GmbLoading() {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {[...Array(5)].map((_, i) => <div key={i} className="h-32 bg-white border border-slate-200 rounded-xl" />)}
+          {[...Array(5)].map((_, i) => <div key={i} className="h-32 bg-surface border border-slate-200 rounded-xl" />)}
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 h-[500px] bg-white border border-slate-200 rounded-xl" />
-          <div className="h-[500px] bg-white border border-slate-200 rounded-xl" />
+          <div className="lg:col-span-2 h-[500px] bg-surface border border-slate-200 rounded-xl" />
+          <div className="h-[500px] bg-surface border border-slate-200 rounded-xl" />
         </div>
         
-        <div className="h-[400px] bg-white border border-slate-200 rounded-xl" />
+        <div className="h-[400px] bg-surface border border-slate-200 rounded-xl" />
       </div>
     </div>
   );

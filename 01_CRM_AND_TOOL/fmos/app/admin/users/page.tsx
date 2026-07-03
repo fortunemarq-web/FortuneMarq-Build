@@ -146,7 +146,7 @@ export default function UserManagementPage() {
                             <Card key={profile.id} className="group p-6 transition-all hover:border-line-strong hover:shadow-md">
                                 <div className="mb-6 flex items-start justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-900 text-xl font-semibold text-white">
+                                        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-surface text-xl font-semibold text-white">
                                             {profile.full_name?.charAt(0) || <Users className="h-6 w-6" />}
                                         </div>
                                         <div>

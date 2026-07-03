@@ -51,19 +51,19 @@ export default function AlertsManager({ initialAlerts }: { initialAlerts: Alert[
 
     return (
         <div className="bg-slate-100/60 p-4 border border-slate-200 rounded-xl">
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div className="bg-surface border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 {/* Toolbar */}
                 <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50/50">
                     <div className="flex bg-slate-100/50 rounded-lg p-1 border border-slate-200">
                         <button
                             onClick={() => setFilter('open')}
-                            className={clsx("px-4 py-1.5 text-sm font-medium rounded-md transition-all", filter === 'open' ? "bg-white text-slate-900 shadow-sm border border-slate-200" : "text-slate-600 hover:text-slate-900")}
+                            className={clsx("px-4 py-1.5 text-sm font-medium rounded-md transition-all", filter === 'open' ? "bg-white/[0.06] text-slate-900 shadow-sm border border-slate-200" : "text-slate-600 hover:text-slate-900")}
                         >
                             Active
                         </button>
                         <button
                             onClick={() => setFilter('resolved')}
-                            className={clsx("px-4 py-1.5 text-sm font-medium rounded-md transition-all", filter === 'resolved' ? "bg-white text-slate-900 shadow-sm border border-slate-200" : "text-slate-600 hover:text-slate-900")}
+                            className={clsx("px-4 py-1.5 text-sm font-medium rounded-md transition-all", filter === 'resolved' ? "bg-white/[0.06] text-slate-900 shadow-sm border border-slate-200" : "text-slate-600 hover:text-slate-900")}
                         >
                             Resolved
                         </button>
@@ -123,7 +123,7 @@ export default function AlertsManager({ initialAlerts }: { initialAlerts: Alert[
                                     {alert.status !== 'resolved' && (
                                         <button
                                             onClick={() => handleAction(alert.id, 'resolve')}
-                                            className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
+                                            className="bg-surface hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
                                             title="Resolve Alert"
                                         >
                                             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Resolve

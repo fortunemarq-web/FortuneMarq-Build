@@ -12,20 +12,20 @@ export default function AgencyGrowthLoading() {
         
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl border border-slate-200 h-28" />
+            <div key={i} className="bg-surface rounded-xl border border-slate-200 h-28" />
           ))}
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200 h-[380px]" />
+            <div className="bg-surface rounded-xl border border-slate-200 h-[380px]" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl border border-slate-200 h-[220px]" />
+                <div key={i} className="bg-surface rounded-xl border border-slate-200 h-[220px]" />
               ))}
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 h-[600px] min-h-full" />
+          <div className="bg-surface rounded-xl border border-slate-200 h-[600px] min-h-full" />
         </div>
       </div>
     </div>

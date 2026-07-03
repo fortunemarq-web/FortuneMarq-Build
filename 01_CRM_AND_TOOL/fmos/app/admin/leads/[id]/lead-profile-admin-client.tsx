@@ -330,7 +330,7 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
     <div className="min-h-full bg-canvas">
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-surface text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
           <CheckCircle className="h-4 w-4 text-brand flex-shrink-0" />
           {toast}
         </div>
@@ -503,7 +503,7 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                               setConfirmChecked(false);
                               setConfirmError(null);
                             }}
-                            className="flex items-center gap-1 text-[11px] font-semibold bg-slate-900 hover:bg-slate-800 text-white px-2.5 py-1.5 rounded-lg transition-colors"
+                            className="flex items-center gap-1 text-[11px] font-semibold bg-surface hover:bg-white/[0.06] text-white px-2.5 py-1.5 rounded-lg transition-colors"
                           >
                             <FileSignature className="h-3 w-3" />
                             {isExpanded ? "Cancel" : "Client Confirmed →"}
@@ -626,7 +626,7 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                       </button>
                     )}
                     {isAdmin && editingField !== field && (
-                      <Edit3 className="h-3 w-3 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                      <Edit3 className="h-3 w-3 text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     )}
                   </div>
                 ))}
@@ -746,7 +746,7 @@ export default function LeadProfileAdminClient({ lead, outreachLogs, proposals, 
                     </button>
                   )}
                   {isAdmin && editingField !== "follow_up_date" && (
-                    <Edit3 className="h-3 w-3 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                    <Edit3 className="h-3 w-3 text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                   )}
                 </div>
 

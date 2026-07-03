@@ -312,7 +312,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
         {/* ── Success Toast ── */}
         {successToast && (
-          <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-surface px-5 py-3 text-sm font-semibold text-white shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-brand" />
             {successToast}
           </div>
@@ -357,13 +357,13 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
               onClick={() => setFilter(filter === key ? "all" : key as any)}
               className={`rounded-xl border p-4 text-left transition-all ${
                 filter === key
-                  ? "border-slate-900 bg-slate-900 text-white shadow-sm"
+                  ? "border-line-strong bg-surface text-white shadow-sm"
                   : "border-line bg-surface hover:border-line-strong"
               }`}
             >
               <Icon className={`mb-2 h-4 w-4 ${filter === key ? "text-white" : color}`} />
               <p className={`font-display text-2xl font-semibold tabular-nums ${filter === key ? "text-white" : "text-slate-900"}`}>{count}</p>
-              <p className={`mt-0.5 text-[11px] font-semibold uppercase tracking-wide ${filter === key ? "text-slate-300" : "text-slate-500"}`}>{label}</p>
+              <p className={`mt-0.5 text-[11px] font-semibold uppercase tracking-wide ${filter === key ? "text-slate-700" : "text-slate-500"}`}>{label}</p>
             </button>
           ))}
         </div>
@@ -528,7 +528,7 @@ export default function MeetingsClient({ initialMeetings }: { initialMeetings: M
 
                       {/* Message preview — styled like a WhatsApp thread */}
                       {previewMsg?.id === m.id && (
-                        <div className="space-y-3 rounded-lg bg-slate-900 p-3">
+                        <div className="space-y-3 rounded-lg bg-surface p-3">
                           <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Message preview</p>
                           <div className="rounded-lg border border-emerald-700/30 bg-emerald-900/30 p-3">
                             <pre className="whitespace-pre-wrap font-sans text-xs leading-relaxed text-emerald-100">

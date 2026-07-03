@@ -165,7 +165,7 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
                       <button
                         onClick={() => handleScan(r)}
                         disabled={isScanning || scanning !== null || generating !== null}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:border-brand-deep hover:text-brand-deep disabled:opacity-40 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-2.5 py-1 text-xs font-medium text-slate-700 hover:border-brand-deep hover:text-brand-deep disabled:opacity-40 transition-colors"
                       >
                         {isScanning
                           ? <Loader2 className="h-3 w-3 animate-spin" />
@@ -176,7 +176,7 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
                       <button
                         onClick={() => handleGenerate(r)}
                         disabled={generating === k || scanning !== null || generating !== null}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:border-brand-deep hover:text-brand-deep disabled:opacity-40 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-2.5 py-1 text-xs font-medium text-slate-700 hover:border-brand-deep hover:text-brand-deep disabled:opacity-40 transition-colors"
                       >
                         {generating === k
                           ? <Loader2 className="h-3 w-3 animate-spin" />
@@ -201,7 +201,7 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
                           {(ci.topResults ?? []).map((tr, i) => (
                             <div
                               key={i}
-                              className="flex items-start gap-2 text-xs bg-white rounded-lg border border-slate-200 px-3 py-2"
+                              className="flex items-start gap-2 text-xs bg-surface rounded-lg border border-slate-200 px-3 py-2"
                             >
                               <span className={`mt-0.5 shrink-0 w-2 h-2 rounded-sm ${
                                 tr.bucket === "gmb" ? "bg-blue-500"

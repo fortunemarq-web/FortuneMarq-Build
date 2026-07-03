@@ -128,7 +128,7 @@ export default function MyStatsPage() {
     return (
         <div className="min-h-full bg-slate-50 p-4 md:p-8 max-w-7xl mx-auto space-y-8">
             {/* Header / Hero */}
-            <div className="bg-slate-900 rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
+            <div className="bg-surface rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 blur-[100px] rounded-full -mr-64 -mt-64" />
                 <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 blur-[80px] rounded-full -ml-32 -mb-32" />
 
@@ -181,7 +181,7 @@ export default function MyStatsPage() {
                     { label: "Total Volume", value: stats.totalCalls, sub: "Lifetime Calls", icon: Phone, color: "blue" },
                     { label: "Lifetime Wins", value: stats.totalInterested, sub: "Highly Qualified", icon: Award, color: "emerald" }
                 ].map((s, i) => (
-                    <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div key={i} className="bg-surface p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className={clsx(
                             "w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm",
                             s.color === 'emerald' ? 'bg-emerald-50 text-emerald-600' :
@@ -200,7 +200,7 @@ export default function MyStatsPage() {
             {/* Activity & Recognition */}
             <div className="grid lg:grid-cols-3 gap-8">
                 {/* Recent Activity */}
-                <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="lg:col-span-2 bg-surface rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                     <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                         <div className="flex items-center gap-3">
                             <History className="h-5 w-5 text-slate-400" />

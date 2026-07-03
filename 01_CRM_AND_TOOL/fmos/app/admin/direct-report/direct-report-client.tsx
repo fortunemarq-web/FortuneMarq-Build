@@ -106,7 +106,7 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
       )}
 
       {/* Config */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+      <div className="bg-surface border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelClass}>City</label>
@@ -162,7 +162,7 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
       </div>
 
       {/* Test send */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+      <div className="bg-surface border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
         <p className="text-sm font-semibold text-slate-900 flex items-center gap-2">
           <FlaskConical className="h-4 w-4 text-brand-deep" /> Test send (verify PDF before blasting)
         </p>
@@ -215,7 +215,7 @@ export default function DirectReportClient({ cities, nicheByCity, langs, hasLibr
 
       {/* Result */}
       {result && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+        <div className="bg-surface border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
           <p className="text-sm font-semibold text-slate-900">
             {result.test ? "Test result" : result.dryRun ? "Preview" : "Send result"}
           </p>

@@ -132,7 +132,7 @@ export default function FinanceTab({ clientId, invoices }: FinanceTabProps) {
         ) : (
           <div className="p-12 text-center">
             <div className="mx-auto max-w-xs">
-              <Clock className="mx-auto mb-3 h-10 w-10 text-slate-200" />
+              <Clock className="mx-auto mb-3 h-10 w-10 text-slate-800" />
               <p className="text-sm font-medium text-slate-500">No invoice data available yet.</p>
               <p className="mt-1 text-xs text-slate-400">
                 Invoices generated in the Invoice Manager will appear here automatically.

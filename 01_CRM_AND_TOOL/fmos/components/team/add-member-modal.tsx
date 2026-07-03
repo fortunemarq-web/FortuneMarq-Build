@@ -43,7 +43,7 @@ export default function AddMemberModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white rounded-[2rem] w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="bg-surface rounded-[2rem] w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-emerald-100 text-emerald-700">
@@ -54,7 +54,7 @@ export default function AddMemberModal({ onClose }: { onClose: () => void }) {
               <p className="text-xs font-medium text-slate-400">Creates their login instantly — no email invite needed.</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white rounded-xl transition-all text-slate-400 hover:text-slate-900">
+          <button onClick={onClose} className="p-2 hover:bg-white/[0.06] rounded-xl transition-all text-slate-400 hover:text-slate-900">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -88,7 +88,7 @@ export default function AddMemberModal({ onClose }: { onClose: () => void }) {
               <select
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
+                className="w-full rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>{r.label}</option>

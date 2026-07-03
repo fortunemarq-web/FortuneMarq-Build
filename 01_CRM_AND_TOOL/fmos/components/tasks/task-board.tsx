@@ -224,7 +224,7 @@ export default function TaskBoard({ initialTasks, projects, currentUserId }: Tas
 
       {/* Quick-add row */}
       <div className="mb-4 flex items-center gap-2 rounded-lg border border-dashed border-line-strong bg-surface px-3 py-1.5 focus-within:border-brand focus-within:border-solid transition-colors">
-        <Plus className="h-4 w-4 text-slate-300 shrink-0" />
+        <Plus className="h-4 w-4 text-slate-700 shrink-0" />
         <input
           type="text"
           value={quickAddTitle}

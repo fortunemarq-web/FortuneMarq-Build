@@ -114,7 +114,7 @@ export default function TasksList({ userId }: { userId: string }) {
             <div className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-slate-500">
-                        <thead className="bg-white text-xs uppercase font-medium text-slate-900">
+                        <thead className="bg-surface text-xs uppercase font-medium text-slate-900">
                             <tr>
                                 <th className="px-4 py-3 w-[40px]"><input type="checkbox" checked={data.length > 0 && isAllSelected(data.map(d => d.id))} onChange={handleSelectAllPage} className="rounded border-[#2a2a2a] bg-slate-50" /></th>
                                 <th className="px-4 py-3">Task Title</th>
@@ -127,7 +127,7 @@ export default function TasksList({ userId }: { userId: string }) {
                             {loading ? <tr><td colSpan={5} className="py-8 text-center text-slate-600"><Loader2 className="animate-spin h-5 w-5 mx-auto" /></td></tr> :
                                 data.length === 0 ? <tr><td colSpan={5} className="py-8 text-center">No tasks</td></tr> :
                                     data.map(task => (
-                                        <tr key={task.id} className={clsx("hover:bg-white", isSelected(task.id) && "bg-white")}>
+                                        <tr key={task.id} className={clsx("hover:bg-white/[0.06]", isSelected(task.id) && "bg-white/[0.06]")}>
                                             <td className="px-4 py-3"><input type="checkbox" checked={isSelected(task.id)} onChange={() => toggleSelection(task.id)} className="rounded border-[#2a2a2a] bg-slate-50" /></td>
                                             <td className="px-4 py-3 font-medium text-slate-900">{task.title}</td>
                                             <td className="px-4 py-3">{task.projects?.clients?.business_name || task.projects?.service_type || "-"}</td>

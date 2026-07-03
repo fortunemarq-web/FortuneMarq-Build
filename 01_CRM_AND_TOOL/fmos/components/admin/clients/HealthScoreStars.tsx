@@ -26,7 +26,7 @@ export default function HealthScoreStars({
         <Star
           key={i}
           className={`${iconSize} ${
-            i <= clamped ? COLORS[clamped] : "text-slate-200"
+            i <= clamped ? COLORS[clamped] : "text-slate-800"
           } ${i <= clamped ? "fill-current" : ""}`}
         />
       ))}

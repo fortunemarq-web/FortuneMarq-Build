@@ -22,7 +22,7 @@ export default function RenewalsError({
           <button onClick={reset} className="rounded-lg bg-brand-deep px-6 py-3 text-sm font-semibold text-white hover:bg-brand-active transition-colors min-h-[44px]">
             Try Again
           </button>
-          <Link href="/admin/clients" className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]">
+          <Link href="/admin/clients" className="rounded-xl border border-slate-200 bg-surface px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]">
             Back to Clients
           </Link>
         </div>

@@ -34,7 +34,7 @@ const PRIORITY_FLAGS: Record<string, { label: string; cls: string }> = {
   urgent: { label: "Urgent", cls: "text-danger" },
   high: { label: "High", cls: "text-warn" },
   medium: { label: "Medium", cls: "text-info" },
-  low: { label: "Low", cls: "text-slate-300" },
+  low: { label: "Low", cls: "text-slate-700" },
 };
 
 interface TaskCardProps {

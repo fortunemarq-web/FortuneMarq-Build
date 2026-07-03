@@ -78,7 +78,7 @@ export default function AgreementRowActions({ agreementId, agreementNumber, stat
           <button
             onClick={handleDelete}
             title="Delete agreement"
-            className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-1.5 text-slate-700 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>

@@ -9,14 +9,14 @@ export default function InstagramLoading() {
           </div>
           <div className="flex gap-3 mt-4 md:mt-0">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-16 w-32 rounded-lg bg-white border border-slate-200" />
+              <div key={i} className="h-16 w-32 rounded-lg bg-surface border border-slate-200" />
             ))}
           </div>
         </div>
         
-        <div className="h-[400px] w-full rounded-xl bg-white border border-slate-200" />
+        <div className="h-[400px] w-full rounded-xl bg-surface border border-slate-200" />
         <div className="h-[500px] w-full rounded-xl bg-slate-100/50 border border-slate-200" />
-        <div className="h-[300px] w-full rounded-xl bg-white border border-slate-200" />
+        <div className="h-[300px] w-full rounded-xl bg-surface border border-slate-200" />
       </div>
     </div>
   );

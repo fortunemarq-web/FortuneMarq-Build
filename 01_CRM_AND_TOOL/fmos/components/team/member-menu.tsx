@@ -120,7 +120,7 @@ export default function MemberMenu({ profile }: { profile: any }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-10 z-30 w-52 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl">
+        <div className="absolute right-0 top-10 z-30 w-52 rounded-2xl border border-slate-200 bg-surface p-1.5 shadow-xl">
           <button onClick={handleChangeRole} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50">
             <Shield className="h-4 w-4 text-slate-400" /> Change Role
           </button>

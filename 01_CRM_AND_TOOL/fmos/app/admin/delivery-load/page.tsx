@@ -212,14 +212,14 @@ export default async function DeliveryLoadPage() {
                             <CalendarClock className="h-3 w-3" />{p.daysOverdue}d
                           </span>
                         ) : (
-                          <span className="text-xs text-slate-300">—</span>
+                          <span className="text-xs text-slate-700">—</span>
                         )}
                       </TD>
                       <TD className="px-6 py-4 text-right">
                         {p.revisions > 0 ? (
                           <span className="text-xs font-bold text-warn">{p.revisions}</span>
                         ) : (
-                          <span className="text-xs text-slate-300">—</span>
+                          <span className="text-xs text-slate-700">—</span>
                         )}
                       </TD>
                     </TR>

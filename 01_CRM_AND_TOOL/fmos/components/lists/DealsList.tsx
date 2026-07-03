@@ -129,7 +129,7 @@ export default function DealsList({ userId }: { userId: string }) {
             <div className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-slate-500">
-                        <thead className="bg-white text-xs uppercase font-medium text-slate-900">
+                        <thead className="bg-surface text-xs uppercase font-medium text-slate-900">
                             <tr>
                                 <th className="px-4 py-3 w-[40px]">
                                     <input type="checkbox" checked={data.length > 0 && isAllSelected(data.map(d => d.id))} onChange={handleSelectAllPage} className="rounded border-[#2a2a2a] bg-slate-50" />
@@ -144,7 +144,7 @@ export default function DealsList({ userId }: { userId: string }) {
                             {loading ? <tr><td colSpan={5} className="py-8 text-center text-slate-600"><Loader2 className="animate-spin h-5 w-5 mx-auto" /></td></tr> :
                                 data.length === 0 ? <tr><td colSpan={5} className="py-8 text-center">No deals</td></tr> :
                                     data.map(deal => (
-                                        <tr key={deal.id} className={clsx("hover:bg-white", isSelected(deal.id) && "bg-white")}>
+                                        <tr key={deal.id} className={clsx("hover:bg-white/[0.06]", isSelected(deal.id) && "bg-white/[0.06]")}>
                                             <td className="px-4 py-3"><input type="checkbox" checked={isSelected(deal.id)} onChange={() => toggleSelection(deal.id)} className="rounded border-[#2a2a2a] bg-slate-50" /></td>
                                             <td className="px-4 py-3 font-medium text-slate-900">{deal.clients?.business_name || "Unknown"}</td>
                                             <td className="px-4 py-3">₹{deal.deal_value}</td>

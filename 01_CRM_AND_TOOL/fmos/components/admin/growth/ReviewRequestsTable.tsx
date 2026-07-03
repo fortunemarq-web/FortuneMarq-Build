@@ -118,14 +118,14 @@ export default function ReviewRequestsTable({ requests, activeClients }: { reque
                             <button
                               key={star}
                               onClick={() => handleRatingChange(r.id, star)}
-                              className={`${(r.rating || 0) >= star ? 'text-warn' : 'text-slate-200'} hover:text-warn transition-colors cursor-pointer`}
+                              className={`${(r.rating || 0) >= star ? 'text-warn' : 'text-slate-800'} hover:text-warn transition-colors cursor-pointer`}
                             >
                               <Star className="h-4 w-4 fill-current" />
                             </button>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-slate-300">—</span>
+                        <span className="text-slate-700">—</span>
                       )}
                     </TD>
                   </TR>

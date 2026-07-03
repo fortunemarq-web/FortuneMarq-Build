@@ -207,7 +207,7 @@ export default function FileManager({
                     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-slate-50/80 backdrop-blur-sm">
                         <Loader2 className="h-8 w-8 animate-spin text-[#42CA80]" />
                         <div className="w-48">
-                            <div className="h-1.5 overflow-hidden rounded-full bg-white">
+                            <div className="h-1.5 overflow-hidden rounded-full bg-surface">
                                 <div
                                     className="h-full rounded-full bg-gradient-to-r from-[#42CA80] to-[#3ab872] transition-all duration-300 ease-out"
                                     style={{ width: `${uploadProgress}%` }}
@@ -225,7 +225,7 @@ export default function FileManager({
                     <div
                         className={`mb-4 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 ${isDragActive
                                 ? "scale-110 bg-[#42CA80]/20"
-                                : "bg-white group-hover:bg-[#42CA80]/10"
+                                : "bg-surface group-hover:bg-[#42CA80]/10"
                             }`}
                     >
                         <Upload
@@ -264,7 +264,7 @@ export default function FileManager({
                                 className="group/row flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 transition-colors hover:border-slate-200 hover:bg-[#141414]"
                             >
                                 {/* Icon */}
-                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white">
+                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-surface">
                                     {getFileIcon(f.name, f.type)}
                                 </div>
 
@@ -285,7 +285,7 @@ export default function FileManager({
                                     href={f.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-slate-600 opacity-0 transition-all hover:bg-white hover:text-[#42CA80] group-hover/row:opacity-100"
+                                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-slate-600 opacity-0 transition-all hover:bg-surface hover:text-[#42CA80] group-hover/row:opacity-100"
                                     title="Download"
                                 >
                                     <Download className="h-4 w-4" />

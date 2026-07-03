@@ -10,8 +10,8 @@ export default function AcquisitionLoading() {
             <div className="h-12 w-32 bg-slate-200 rounded-lg" />
           </div>
         </div>
-        <div className="h-[400px] w-full bg-white border border-slate-200 rounded-xl" />
-        <div className="h-[300px] w-full bg-white border border-slate-200 rounded-xl" />
+        <div className="h-[400px] w-full bg-surface border border-slate-200 rounded-xl" />
+        <div className="h-[300px] w-full bg-surface border border-slate-200 rounded-xl" />
       </div>
     </div>
   );

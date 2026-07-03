@@ -31,7 +31,7 @@ export default async function PublicAgreementPage({ params }: { params: Promise<
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="max-w-2xl mx-auto bg-surface rounded-2xl shadow-lg overflow-hidden">
         {/* Header */}
         <div className={`px-8 py-7 text-white ${confirmed ? "bg-emerald-700" : "bg-[#1E7A4F]"}`}>
           <p className="text-sm font-medium opacity-80 mb-1">FortuneMarq</p>

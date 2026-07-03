@@ -137,7 +137,7 @@ export default async function MarketingHubPage() {
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {kpis.map((k) => (
-            <div key={k.label} className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <div key={k.label} className="bg-surface rounded-xl border border-slate-200 shadow-sm p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className={`w-9 h-9 rounded-lg ${k.bg} flex items-center justify-center`}>
                   <k.icon className={`h-5 w-5 ${k.color}`} />
@@ -158,7 +158,7 @@ export default async function MarketingHubPage() {
               <Link
                 key={c.title}
                 href={c.href}
-                className="group bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col hover:border-[#42CA80]/50 hover:shadow-md transition-all"
+                className="group bg-surface rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col hover:border-[#42CA80]/50 hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className={`p-2.5 rounded-xl bg-gradient-to-br ${c.accent} text-white shadow-sm`}>
@@ -178,7 +178,7 @@ export default async function MarketingHubPage() {
         </div>
 
         {/* Recent strategies → outcomes */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-surface rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">Recent Strategies → Results</h3>
@@ -236,7 +236,7 @@ export default async function MarketingHubPage() {
               <Link
                 key={q.label}
                 href={q.href}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:border-[#42CA80]/50 hover:shadow-md transition-all group"
+                className="bg-surface rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:border-[#42CA80]/50 hover:shadow-md transition-all group"
               >
                 <q.icon className="h-5 w-5 text-slate-400 group-hover:text-[#42CA80] transition-colors" />
                 <span className="text-xs font-semibold text-slate-700">{q.label}</span>

@@ -333,7 +333,7 @@ export default async function FinanceDashboard() {
                       <link.icon className="h-4 w-4 text-slate-400" />
                       <span className="text-sm font-medium text-slate-700">{link.label}</span>
                     </span>
-                    <ArrowRight className="h-4 w-4 text-slate-300" />
+                    <ArrowRight className="h-4 w-4 text-slate-700" />
                   </Link>
                 ))}
               </div>

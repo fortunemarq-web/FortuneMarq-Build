@@ -11,7 +11,7 @@ export default function SopCard({ sop }: SopCardProps) {
   const stepsCount = Array.isArray(sop.steps) ? sop.steps.length : (JSON.parse(sop.steps || '[]')).length;
 
   return (
-    <div className="bg-white rounded-[2rem] p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all group relative overflow-hidden">
+    <div className="bg-surface rounded-[2rem] p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all group relative overflow-hidden">
       {/* Category Accent */}
       <div className="absolute top-0 right-0 p-4">
         <div className="bg-slate-50 border border-slate-100 rounded-full px-3 py-1 flex items-center gap-1.5 shadow-sm">
@@ -48,7 +48,7 @@ export default function SopCard({ sop }: SopCardProps) {
                 </span>
                 <Link 
                     href={`/admin/team/sops/${sop.id}`}
-                    className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-sm"
+                    className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#141613] group-hover:text-white transition-all shadow-sm"
                 >
                     <ArrowRight className="h-4 w-4" />
                 </Link>

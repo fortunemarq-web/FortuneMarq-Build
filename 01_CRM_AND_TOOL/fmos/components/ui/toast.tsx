@@ -49,9 +49,9 @@ export const toast = {
 };
 
 const KIND_STYLES: Record<ToastKind, { wrap: string; icon: typeof Info }> = {
-  success: { wrap: "border-emerald-200 bg-emerald-50 text-emerald-900", icon: CheckCircle2 },
-  error: { wrap: "border-red-200 bg-red-50 text-red-900", icon: AlertTriangle },
-  info: { wrap: "border-slate-200 bg-white text-slate-900", icon: Info },
+  success: { wrap: "border-emerald-200 bg-[#171917] text-emerald-900", icon: CheckCircle2 },
+  error: { wrap: "border-red-200 bg-[#171917] text-red-900", icon: AlertTriangle },
+  info: { wrap: "border-line bg-surface text-slate-900", icon: Info },
 };
 
 export function Toaster() {

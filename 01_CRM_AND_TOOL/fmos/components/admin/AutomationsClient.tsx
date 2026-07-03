@@ -392,7 +392,7 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
   return (
     <div className="space-y-4">
       {rules.map((rule) => (
-        <div key={rule.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div key={rule.id} className="bg-surface border border-slate-200 rounded-xl p-5 shadow-sm">
           {editId === rule.id ? (
             <div className="space-y-3">
               <div>
@@ -472,7 +472,7 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
       )}
 
       {(showNew || editFullId) ? (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+        <div className="bg-surface border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
           <div className="flex justify-between items-center mb-1">
             <p className="font-semibold text-slate-900 text-sm">{editFullId ? "Edit Automation Rule" : "New Automation Rule"}</p>
             <button onClick={() => { setShowNew(false); setEditFullId(null); resetForm(); }}><X className="h-4 w-4 text-slate-400" /></button>

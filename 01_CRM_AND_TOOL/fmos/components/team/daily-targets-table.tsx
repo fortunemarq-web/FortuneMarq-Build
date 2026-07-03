@@ -29,7 +29,7 @@ export default function DailyTargetsTable({ targets, profiles, actuals }: DailyT
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <div className="bg-surface rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-slate-100 bg-slate-50/50">
@@ -66,7 +66,7 @@ export default function DailyTargetsTable({ targets, profiles, actuals }: DailyT
                 <tr key={`${profile.id}-${metric}`} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-slate-900 flex items-center justify-center text-[10px] font-black text-white">
+                      <div className="h-8 w-8 rounded-lg bg-[#141613] flex items-center justify-center text-[10px] font-black text-white">
                         {profile.full_name?.charAt(0)}
                       </div>
                       <div>
@@ -85,7 +85,7 @@ export default function DailyTargetsTable({ targets, profiles, actuals }: DailyT
                   </td>
                   <td className="px-6 py-4">
                     {percent === null ? (
-                      <span className="text-[10px] font-bold text-slate-300 uppercase" title="No automatic tracking for this target type yet">
+                      <span className="text-[10px] font-bold text-slate-700 uppercase" title="No automatic tracking for this target type yet">
                         Not tracked
                       </span>
                     ) : (

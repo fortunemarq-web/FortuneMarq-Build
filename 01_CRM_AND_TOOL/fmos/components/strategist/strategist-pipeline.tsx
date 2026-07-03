@@ -573,7 +573,7 @@ export default function StrategistPipeline({
           className={clsx(
             "flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition-colors sm:flex-none sm:px-6",
             activeTab === "pipeline"
-              ? "border-line-strong bg-slate-900 text-white"
+              ? "border-line-strong bg-[#141613] text-white"
               : "border-line bg-surface text-slate-500 hover:bg-slate-50"
           )}
         >
@@ -584,7 +584,7 @@ export default function StrategistPipeline({
           className={clsx(
             "flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition-colors sm:flex-none sm:px-6",
             activeTab === "dashboard"
-              ? "border-line-strong bg-slate-900 text-white"
+              ? "border-line-strong bg-[#141613] text-white"
               : "border-line bg-surface text-slate-500 hover:bg-slate-50"
           )}
         >
@@ -979,7 +979,7 @@ export default function StrategistPipeline({
                 className={clsx(
                   "flex-shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:text-sm",
                   activeStage === "all"
-                    ? "border-line-strong bg-slate-900 text-white"
+                    ? "border-line-strong bg-[#141613] text-white"
                     : "border-line bg-surface text-slate-500 hover:bg-slate-50"
                 )}
               >

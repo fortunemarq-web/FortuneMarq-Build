@@ -69,7 +69,7 @@ export default function DataResetButton() {
         <div>
             <button
                 onClick={() => setStatus("confirming")}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-red-900/30 text-red-500 hover:bg-red-950/30 hover:border-red-500/50 rounded-lg text-sm font-bold transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-surface border border-red-900/30 text-red-500 hover:bg-red-950/30 hover:border-red-500/50 rounded-lg text-sm font-bold transition-all"
             >
                 <Trash2 className="h-4 w-4" />
                 Reset / Wipe All Data

@@ -78,7 +78,7 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
         <Card className="print-area overflow-hidden">
 
           {/* Header */}
-          <div className="bg-slate-900 text-white px-8 py-8">
+          <div className="bg-surface text-white px-8 py-8">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold">FortuneMarq Media & Marketing</p>
@@ -160,7 +160,7 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
                   <div key={svc.id} className="avoid-break">
                     <div className="mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[11px] font-semibold text-white">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface text-[11px] font-semibold text-white">
                           {idx + 1}
                         </span>
                         <h3 className="font-display text-sm font-semibold text-slate-900">{svc.label}</h3>
@@ -216,7 +216,7 @@ export default async function AgreementViewPage({ params }: { params: Promise<{ 
               "Ads paused if payment is overdue by 7 days — resumed same day payment is received",
             ].map((pt, i) => (
               <p key={i} className="text-xs text-slate-600 mb-1.5 flex items-start gap-2">
-                <span className="text-slate-300 shrink-0">·</span>{pt}
+                <span className="text-slate-700 shrink-0">·</span>{pt}
               </p>
             ))}
           </div>

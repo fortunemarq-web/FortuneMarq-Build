@@ -57,7 +57,7 @@ export default function AddCityModal({ fixedCity, buttonLabel, buttonClassName }
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-xl">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-surface shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <h3 className="text-base font-bold text-slate-900">
                 {fixedCity ? `Add niches to ${fixedCity}` : "Add target city"}

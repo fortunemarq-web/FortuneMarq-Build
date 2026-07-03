@@ -94,7 +94,7 @@ export default function MagicReportPage() {
                 </div>
 
                 {/* AI Summary Block */}
-                <div className="bg-slate-900 rounded-2xl p-8 md:p-12 mb-8 text-white relative overflow-hidden">
+                <div className="bg-[#141613] rounded-2xl p-8 md:p-12 mb-8 text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 opacity-10">
                         <Layout className="w-64 h-64" />
                     </div>

@@ -279,7 +279,7 @@ export default function OutreachBoardClient({ initialLeads, profiles, isAdmin }:
                 {/* Cards — taller scroll area now that the board is only one tab deep */}
                 <div className="max-h-[calc(100dvh-250px)] space-y-2 overflow-y-auto p-2">
                   {stageLeads.length === 0 && (
-                    <div className="flex h-20 flex-col items-center justify-center gap-1 text-center text-slate-300">
+                    <div className="flex h-20 flex-col items-center justify-center gap-1 text-center text-slate-700">
                       <Inbox className="h-5 w-5" />
                       <span className="text-[11px] font-medium">Empty</span>
                     </div>

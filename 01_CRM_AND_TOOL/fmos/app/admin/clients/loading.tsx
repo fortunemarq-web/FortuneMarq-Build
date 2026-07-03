@@ -6,10 +6,10 @@ export default function ClientsLoading() {
         <div className="h-4 w-72 rounded bg-slate-100 mb-8" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl bg-white border border-slate-200" />
+            <div key={i} className="h-24 rounded-xl bg-surface border border-slate-200" />
           ))}
         </div>
-        <div className="h-96 rounded-xl bg-white border border-slate-200" />
+        <div className="h-96 rounded-xl bg-surface border border-slate-200" />
       </div>
     </div>
   );

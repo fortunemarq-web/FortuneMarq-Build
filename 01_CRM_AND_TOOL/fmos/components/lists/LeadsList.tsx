@@ -234,7 +234,7 @@ export default function LeadsList({ userId }: { userId: string }) {
                     <input
                         type="text"
                         placeholder="Search company, contact, or phone..."
-                        className="w-full bg-white text-slate-900 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-brand/30 transition-shadow shadow-sm"
+                        className="w-full bg-surface text-slate-900 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-brand/30 transition-shadow shadow-sm"
                         value={filters.search || ""}
                         onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                     />
@@ -253,8 +253,8 @@ export default function LeadsList({ userId }: { userId: string }) {
                                 className={clsx(
                                     "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                                     isActive
-                                        ? "border-slate-900 bg-slate-900 text-white"
-                                        : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                                        ? "border-slate-900 bg-surface text-white"
+                                        : "border-slate-200 bg-surface text-slate-500 hover:border-slate-300 hover:text-slate-700"
                                 )}
                             >
                                 {chip.label}
@@ -265,7 +265,7 @@ export default function LeadsList({ userId }: { userId: string }) {
             </div>
 
             {/* Table */}
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-surface shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-left text-sm">
                         <thead className="border-b border-slate-200 bg-slate-50">

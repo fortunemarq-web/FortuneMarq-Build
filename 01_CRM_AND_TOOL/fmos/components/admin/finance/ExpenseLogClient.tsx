@@ -140,7 +140,7 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ backgroundColor: 'white', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', padding: '10px' }}
+                  contentStyle={{ backgroundColor: '#171917', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '11px', padding: '10px' }}
                   formatter={(val: number) => formatCurrency(val)}
                 />
               </PieChart>

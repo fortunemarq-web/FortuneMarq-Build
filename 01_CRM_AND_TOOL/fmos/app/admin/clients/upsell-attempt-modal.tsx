@@ -83,7 +83,7 @@ export default function UpsellAttemptModal({ client, onClose }: UpsellAttemptMod
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-white/[0.06] hover:text-slate-600 transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -212,7 +212,7 @@ export default function UpsellAttemptModal({ client, onClose }: UpsellAttemptMod
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50 transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#141613] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1c1f1b] disabled:opacity-50 transition-colors"
           >
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {isSubmitting ? "Logging..." : "Log Attempt"}

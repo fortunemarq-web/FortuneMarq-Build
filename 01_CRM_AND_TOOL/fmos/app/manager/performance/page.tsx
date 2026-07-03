@@ -220,14 +220,14 @@ export default function ManagerPerformance() {
                     <p className="text-slate-500 font-medium">Real-time leaderboard and agency metrics</p>
                 </div>
 
-                <div className="flex bg-white rounded-2xl p-1 border border-slate-200 shadow-sm">
+                <div className="flex bg-surface rounded-2xl p-1 border border-slate-200 shadow-sm">
                     {(["today", "week", "month"] as const).map((t) => (
                         <button
                             key={t}
                             onClick={() => setTimeframe(t)}
                             className={clsx(
                                 "px-4 py-2 rounded-xl text-sm font-bold capitalize transition-all",
-                                timeframe === t ? "bg-slate-900 text-white shadow-md" : "text-slate-500 hover:text-slate-900"
+                                timeframe === t ? "bg-white/[0.06] text-white shadow-md" : "text-slate-500 hover:text-slate-900"
                             )}
                         >
                             {t}
@@ -244,7 +244,7 @@ export default function ManagerPerformance() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
-                        className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all"
+                        className="bg-surface p-6 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all"
                     >
                         <div className={clsx(
                             "absolute top-0 right-0 w-32 h-32 blur-[50px] rounded-full -mr-16 -mt-16 opacity-20",
@@ -279,7 +279,7 @@ export default function ManagerPerformance() {
             </div>
 
             {/* Leaderboard Table */}
-            <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+            <div className="bg-surface border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="flex items-center gap-3">
                         <Award className="h-6 w-6 text-amber-500" />
@@ -371,7 +371,7 @@ export default function ManagerPerformance() {
             {/* Bottom Grid: Insights & Goals */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Niche Breakdown */}
-                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div className="bg-surface p-8 rounded-3xl border border-slate-200 shadow-sm">
                     <div className="flex items-center gap-3 mb-8">
                         <Building2 className="h-6 w-6 text-blue-500" />
                         <h2 className="text-xl font-bold text-slate-900">Niche Performance</h2>
@@ -399,7 +399,7 @@ export default function ManagerPerformance() {
                 </div>
 
                 {/* Team Productivity */}
-                <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden">
+                <div className="bg-[#141613] p-8 rounded-3xl text-white shadow-xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full" />
 
                     <div className="flex items-center gap-3 mb-8">

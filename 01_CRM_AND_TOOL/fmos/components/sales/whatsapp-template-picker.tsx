@@ -151,7 +151,7 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
               <div className="flex flex-col items-center justify-center py-16 px-4 text-center text-slate-400">
                 <MessageCircle className="h-8 w-8 mb-2 opacity-20" />
                 <p className="text-xs font-medium">No templates found.</p>
-                <p className="text-[11px] mt-1 text-slate-300">Check Supabase — templates may not be seeded.</p>
+                <p className="text-[11px] mt-1 text-slate-700">Check Supabase — templates may not be seeded.</p>
               </div>
             ) : (
               <div className="p-2">
@@ -221,7 +221,7 @@ export default function WhatsAppTemplatePicker({ lead, actorId, onSent, onClose 
               className={`flex-1 flex items-center justify-center gap-2 font-display font-semibold py-2.5 rounded-lg text-sm transition-colors ${
                 justSent
                   ? "bg-brand-deep text-white"
-                  : "bg-slate-900 text-white hover:bg-slate-800"
+                  : "bg-surface text-white hover:bg-white/[0.06]"
               }`}
             >
               {justSent ? <><Check className="h-4 w-4" /> Logged!</> : "Mark as Sent"}

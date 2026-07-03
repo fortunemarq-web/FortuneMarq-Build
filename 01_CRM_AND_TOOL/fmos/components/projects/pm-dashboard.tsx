@@ -519,7 +519,7 @@ export default function PMDashboard(props: PMDashboardProps) {
                 isActive
                   ? isNeedsAttention
                     ? "border-danger-line bg-danger-soft text-danger"
-                    : "border-line-strong bg-slate-900 text-white"
+                    : "border-line-strong bg-surface text-white"
                   : isNeedsAttention && count > 0
                     ? "border-danger-line bg-danger-soft text-danger hover:bg-red-100"
                     : "border-line bg-surface text-slate-500 hover:bg-slate-50"

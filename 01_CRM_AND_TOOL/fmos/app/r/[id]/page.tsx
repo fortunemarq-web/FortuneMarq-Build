@@ -35,7 +35,7 @@ export default async function ReschedulePage({ params }: { params: Promise<{ id:
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-sm border border-gray-100 p-7">
+      <div className="w-full max-w-md rounded-2xl bg-surface shadow-sm border border-gray-100 p-7">
         <div className="mb-6">
           <p className="text-sm font-semibold text-brand-deep">FortuneMarq</p>
           <h1 className="text-xl font-bold text-gray-900 mt-1">Reschedule your call</h1>

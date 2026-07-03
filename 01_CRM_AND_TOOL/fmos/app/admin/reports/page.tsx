@@ -83,7 +83,7 @@ export default function WeeklyReportPage() {
                 <button
                     onClick={fetchReport}
                     disabled={isLoading}
-                    className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50"
+                    className="flex items-center gap-2 bg-surface text-white px-6 py-3 rounded-2xl font-bold hover:bg-white/[0.06] transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50"
                 >
                     {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <BarChart3 className="h-5 w-5" />}
                     Generate Weekly Summary
@@ -104,7 +104,7 @@ export default function WeeklyReportPage() {
                 <div className="grid lg:grid-cols-3 gap-8">
                     {/* Report Content */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
+                        <div className="bg-surface border border-slate-200 rounded-3xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
                             <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                                 <div className="flex items-center gap-3">
                                     <div className="bg-emerald-500/10 p-2 rounded-xl">
@@ -115,14 +115,14 @@ export default function WeeklyReportPage() {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={handleCopy}
-                                        className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-500"
+                                        className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-slate-500"
                                     >
                                         {copied ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <Copy className="h-5 w-5" />}
                                     </button>
                                     <button
                                         onClick={handleDownload}
                                         title="Download as Markdown"
-                                        className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-500">
+                                        className="p-2 hover:bg-white/[0.06] rounded-lg transition-colors text-slate-500">
                                         <Download className="h-5 w-5" />
                                     </button>
                                 </div>
@@ -152,7 +152,7 @@ export default function WeeklyReportPage() {
 
                     {/* Stats Sidebar */}
                     <div className="space-y-6 animate-in fade-in slide-in-from-right-5 duration-700">
-                        <div className="bg-slate-900 rounded-3xl p-6 text-white space-y-6 shadow-xl relative overflow-hidden">
+                        <div className="bg-surface rounded-3xl p-6 text-white space-y-6 shadow-xl relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[40px] rounded-full" />
 
                             <h3 className="font-bold text-emerald-400 text-sm uppercase tracking-widest flex items-center gap-2">
@@ -185,7 +185,7 @@ export default function WeeklyReportPage() {
                         </div>
 
                         {/* Quick Tooltip */}
-                        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+                        <div className="bg-surface border border-slate-200 rounded-3xl p-6 shadow-sm">
                             <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <Building2 className="h-4 w-4 text-slate-400" /> Agency Insights
                             </h4>

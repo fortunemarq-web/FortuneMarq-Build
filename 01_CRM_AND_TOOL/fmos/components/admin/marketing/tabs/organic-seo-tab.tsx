@@ -288,7 +288,7 @@ export default function OrganicSeoTab() {
                                                     <span className="text-[#666]">--</span>
                                                 )}
                                             </td>
-                                            <td className="px-5 py-4 text-slate-300 font-mono text-xs">{kw.search_volume?.toLocaleString() || "0"}</td>
+                                            <td className="px-5 py-4 text-slate-700 font-mono text-xs">{kw.search_volume?.toLocaleString() || "0"}</td>
                                             <td className="px-5 py-4">
                                                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium uppercase tracking-wider ${getDifficultyBadge(kw.difficulty)}`}>
                                                     {kw.difficulty || "unknown"}

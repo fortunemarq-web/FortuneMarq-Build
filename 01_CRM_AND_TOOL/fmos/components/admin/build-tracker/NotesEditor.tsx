@@ -56,11 +56,11 @@ export default function NotesEditor({ id, initialNotes }: NotesEditorProps) {
       {isPending ? (
         <Loader2 className="h-3 w-3 animate-spin flex-shrink-0 text-slate-400" />
       ) : (
-        <Pencil className="h-3 w-3 flex-shrink-0 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Pencil className="h-3 w-3 flex-shrink-0 text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity" />
       )}
       <span className="truncate max-w-[180px]">
         {notes || (
-          <span className="italic text-slate-300 group-hover:text-slate-400">
+          <span className="italic text-slate-700 group-hover:text-slate-400">
             Add note...
           </span>
         )}

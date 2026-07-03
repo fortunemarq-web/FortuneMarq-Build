@@ -66,7 +66,7 @@ export default function LeadsList({
 
   if (!leads || leads.length === 0) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
+      <div className="rounded-lg border border-slate-200 bg-surface p-8 text-center">
         <p className="text-slate-500">No leads found for this segment.</p>
       </div>
     );

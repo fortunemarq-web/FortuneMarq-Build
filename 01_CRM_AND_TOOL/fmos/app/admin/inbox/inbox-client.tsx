@@ -98,7 +98,7 @@ function TranscriptBubble({ entry }: { entry: TranscriptEntry }) {
   return (
     <div className="flex flex-col items-end mb-3 ml-auto max-w-[80%]">
       <div className={`rounded-2xl rounded-tr-sm px-3.5 py-2 shadow-sm ${
-        isBot ? "bg-brand-deep text-white" : "bg-slate-700 text-white"
+        isBot ? "bg-brand-deep text-white" : "bg-surface text-white"
       }`}>
         <div className="flex items-center gap-1.5 mb-0.5">
           {isBot

@@ -1299,7 +1299,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                       {currentStep < totalSteps - 1 ? (
                         <button
                           onClick={() => { setCurrentStep((s) => s + 1); setExpandedObjections(new Set()); }}
-                          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
+                          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-surface hover:bg-white/[0.06] text-white text-sm font-semibold transition-colors"
                         >
                           Next Step <ChevronRight className="h-4 w-4" />
                         </button>
@@ -1503,7 +1503,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
                           {currentStep < totalSteps - 1 ? (
                             <button
                               onClick={() => { setCurrentStep((s) => s + 1); setExpandedObjections(new Set()); }}
-                              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
+                              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-surface hover:bg-white/[0.06] text-white text-sm font-semibold transition-colors"
                             >
                               Next Step <ChevronRight className="h-4 w-4" />
                             </button>
@@ -1527,7 +1527,7 @@ export default function TelecallerCockpit({ leads, userId, dailyStats, allNiches
             <div className="space-y-2 pb-6">
               <button
                 onClick={() => setShowOutcomeLogger(true)}
-                className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-lg font-semibold text-sm transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-surface hover:bg-white/[0.06] text-white py-3.5 rounded-lg font-semibold text-sm transition-colors"
               >
                 <FileText className="h-4 w-4" />
                 Log Call Outcome

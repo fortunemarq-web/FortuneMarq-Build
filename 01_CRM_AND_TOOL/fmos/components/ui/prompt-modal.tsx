@@ -92,7 +92,7 @@ export function PromptHost() {
         if (e.target === e.currentTarget) settle(null);
       }}
     >
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-surface p-6 shadow-2xl">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
             <h3 className="text-base font-bold text-slate-900">{current.title}</h3>
@@ -120,7 +120,7 @@ export function PromptHost() {
               autoFocus
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-900 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
+              className="w-full rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm font-medium text-slate-900 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
             >
               {(current.options ?? []).map((o) => (
                 <option key={o.value} value={o.value}>
@@ -135,7 +135,7 @@ export function PromptHost() {
               onChange={(e) => setValue(e.target.value)}
               placeholder={current.placeholder}
               rows={4}
-              className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
+              className="w-full resize-none rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
             />
           ) : (
             <input
@@ -144,7 +144,7 @@ export function PromptHost() {
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder={current.placeholder}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
+              className="w-full rounded-xl border border-slate-200 bg-surface px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
             />
           )}
 

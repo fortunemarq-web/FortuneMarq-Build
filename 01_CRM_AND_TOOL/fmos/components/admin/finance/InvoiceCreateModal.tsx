@@ -257,7 +257,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
                   onClick={() => setIncludeGst(!includeGst)}
                   className={`relative flex h-6 w-10 items-center rounded-full px-1 transition-colors ${includeGst ? 'bg-brand-deep' : 'bg-slate-300'}`}
                 >
-                  <div className={`h-4 w-4 rounded-full bg-white transition-transform ${includeGst ? 'translate-x-4' : 'translate-x-0'}`} />
+                  <div className={`h-4 w-4 rounded-full bg-surface transition-transform ${includeGst ? 'translate-x-4' : 'translate-x-0'}`} />
                 </button>
               </div>
               <div className="text-right">
@@ -274,7 +274,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
                     onClick={() => setIsInterstate(!isInterstate)}
                     className={`relative flex h-6 w-10 items-center rounded-full px-1 transition-colors ${isInterstate ? 'bg-brand-deep' : 'bg-slate-300'}`}
                   >
-                    <div className={`h-4 w-4 rounded-full bg-white transition-transform ${isInterstate ? 'translate-x-4' : 'translate-x-0'}`} />
+                    <div className={`h-4 w-4 rounded-full bg-surface transition-transform ${isInterstate ? 'translate-x-4' : 'translate-x-0'}`} />
                   </button>
                   <span className="font-medium text-slate-600">Inter-state supply (IGST)</span>
                   <span className="text-xs text-slate-400">{isInterstate ? 'client outside Karnataka' : 'client in Karnataka'}</span>

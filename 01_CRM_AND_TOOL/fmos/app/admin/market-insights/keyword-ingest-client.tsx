@@ -290,7 +290,7 @@ export default function KeywordIngestClient() {
                       {row.status === "pending" && <span className="text-xs text-slate-400">–</span>}
                     </td>
                     <td className="px-3 py-2">
-                      <button onClick={() => removeRow(idx)} className="text-slate-300 hover:text-red-400">
+                      <button onClick={() => removeRow(idx)} className="text-slate-700 hover:text-red-400">
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </td>

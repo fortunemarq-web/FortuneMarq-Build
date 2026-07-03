@@ -250,7 +250,7 @@ export default function TaskExecutionModal({
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line bg-slate-50/60 p-8 text-center">
-                <Book className="h-12 w-12 text-slate-300" />
+                <Book className="h-12 w-12 text-slate-700" />
                 <p className="mt-3 text-sm text-slate-600">No SOP provided for this task</p>
                 <p className="mt-1 text-xs text-slate-500">
                   Contact your Project Manager for instructions

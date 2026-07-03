@@ -6,8 +6,8 @@ export default function Loading() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div className="h-10 w-48 rounded-lg bg-slate-200" />
         </div>
-        <div className="h-[200px] w-full rounded-xl bg-white border border-slate-200" />
-        <div className="h-[400px] w-full rounded-xl bg-white border border-slate-200" />
+        <div className="h-[200px] w-full rounded-xl bg-surface border border-slate-200" />
+        <div className="h-[400px] w-full rounded-xl bg-surface border border-slate-200" />
       </div>
     </div>
   );

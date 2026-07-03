@@ -105,7 +105,7 @@ export default function ContentCalendar({ channel, initialPieces, availableTypes
 
                   <button
                     onClick={() => setModalPost({ scheduled_date: dayObj.dateStr })}
-                    className="absolute top-2 right-2 p-1 rounded-md text-slate-300 hover:bg-slate-100 hover:text-brand-deep opacity-0 group-hover:opacity-100 transition-all"
+                    className="absolute top-2 right-2 p-1 rounded-md text-slate-700 hover:bg-slate-100 hover:text-brand-deep opacity-0 group-hover:opacity-100 transition-all"
                   >
                     <Plus className="h-3 w-3" />
                   </button>
