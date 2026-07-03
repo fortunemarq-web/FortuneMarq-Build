@@ -138,8 +138,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="fmos-aurora flex min-h-screen flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div className="fmos-aurora relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
+      {/* Decorative green glows — give the frosted card real colour to frost over. */}
+      <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-[26rem] w-[26rem] rounded-full bg-brand/30 blur-[90px]" />
+      <div aria-hidden className="pointer-events-none absolute left-1/2 top-[38%] h-[24rem] w-[24rem] -translate-x-1/2 rounded-full bg-brand-deep/25 blur-[100px]" />
+      <div aria-hidden className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-brand/20 blur-[90px]" />
+      <div className="relative z-10 w-full max-w-sm">
         {/* Logo & Branding */}
         <div className="mb-8 flex flex-col items-center text-center">
           <FortuneMarqLogo size="lg" showText={false} />
@@ -151,7 +155,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <Card className="border-white/70 bg-white/75 p-6 shadow-[0_16px_50px_-18px_rgba(12,124,78,0.28)] backdrop-blur-xl sm:p-8">
+        <Card className="border-white/60 bg-white/60 p-6 shadow-[0_20px_60px_-20px_rgba(12,124,78,0.35)] ring-1 ring-white/50 backdrop-blur-2xl sm:p-8">
           {/* Error Message */}
           {error && (
             <div
