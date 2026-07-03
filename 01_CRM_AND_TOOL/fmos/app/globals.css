@@ -4,40 +4,40 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Brand scale — #42CA80 is the accent; brand-deep is the text-safe green.
-     ONE accent only. Use brand-deep for text/buttons, raw brand for fills. */
-  --color-brand: #42ca80;
-  --color-brand-hover: #35a66a;
-  --color-brand-active: #2d9960;
-  --color-brand-deep: #1e7a4f;
-  --color-brand-deeper: #176b44; /* button hover on brand-deep */
-  --color-brand-soft: #ecfaf3;
-  --color-brand-100: #d1f3e1;
-  --color-brand-line: #c7ebd8; /* soft brand border for tinted chips/cards */
-  --color-brand-ring: rgba(66, 202, 128, 0.35);
+  /* Brand scale (2026-07 refresh) — brand-deep is the text-safe green for
+     text/buttons; raw brand is the brighter accent/fill. ONE accent only. */
+  --color-brand: #16b26a;
+  --color-brand-hover: #12a05f;
+  --color-brand-active: #0f9256;
+  --color-brand-deep: #0c7c4e;
+  --color-brand-deeper: #0a6a43; /* button hover on brand-deep */
+  --color-brand-soft: #e7f4ec;
+  --color-brand-100: #d1ecdb;
+  --color-brand-line: #c9e7d5; /* soft brand border for tinted chips/cards */
+  --color-brand-ring: rgba(12, 124, 78, 0.32);
 
-  /* Neutral surfaces — alias the slate ramp we standardize on app-wide */
-  --color-canvas: #f8fafc; /* app background (slate-50) */
+  /* Neutral surfaces — warm off-white base (2026-07 refresh) */
+  --color-canvas: #f6f6f4; /* app background */
   --color-surface: #ffffff; /* cards / panels */
-  --color-line: #e2e8f0; /* default border (slate-200) */
-  --color-line-strong: #cbd5e1; /* hover / active border (slate-300) */
+  --color-line: #e7e6e1; /* default border */
+  --color-line-strong: #dad9d2; /* hover / active border */
 
   /* Status tones — the ONLY semantic colors. Every status/badge maps to one of:
-     neutral (slate) · brand (green = success/active/won) · info · warning · danger.
+     neutral · brand (green = success/active/won) · info · warning · danger.
      No per-status hues. Each tone: text / -soft fill / -line border. */
-  --color-info: #1d4ed8;
-  --color-info-soft: #eff6ff;
-  --color-info-line: #bfdbfe;
-  --color-warn: #b45309;
-  --color-warn-soft: #fffbeb;
-  --color-warn-line: #fde68a;
-  --color-danger: #b91c1c;
-  --color-danger-soft: #fef2f2;
-  --color-danger-line: #fecaca;
+  --color-info: #2563c9;
+  --color-info-soft: #eaf1fc;
+  --color-info-line: #cbddf6;
+  --color-warn: #a9720f;
+  --color-warn-soft: #faf1e2;
+  --color-warn-line: #eedcb4;
+  --color-danger: #c23a2b;
+  --color-danger-soft: #fbece9;
+  --color-danger-line: #f2cec8;
 
-  --font-display: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
-  --font-body: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
-  --font-sans: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
+  --font-body: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
+  --font-sans: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 
   /* Proposal document (client-facing "growth report" deliverable) fonts —
@@ -47,8 +47,8 @@
 }
 
 :root {
-  --background: #f8fafc; /* slate-50 */
-  --foreground: #0f172a; /* slate-900 */
+  --background: #f6f6f4; /* warm canvas (2026-07 refresh) */
+  --foreground: #1b1b18; /* warm near-black */
 }
 
 body {

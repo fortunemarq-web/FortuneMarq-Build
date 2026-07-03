@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import { DM_Sans, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import LayoutWrapper from "@/components/ui/layout-wrapper";
 
-const dmSans = DM_Sans({
+// UI typeface (2026-07 refresh). Drives --font-display/body/sans via globals.css.
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
-
-const plexSans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-sans",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-hanken",
   display: "swap",
 });
 
@@ -42,10 +36,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${plexSans.variable} ${plexMono.variable}`}
+      className={`${hanken.variable} ${plexMono.variable}`}
     >
       <body
-        className="antialiased bg-slate-50 text-slate-900"
+        className="antialiased bg-canvas text-slate-900"
         suppressHydrationWarning
       >
         <SessionHeartbeat />
