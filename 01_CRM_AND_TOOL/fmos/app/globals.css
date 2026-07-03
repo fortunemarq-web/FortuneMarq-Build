@@ -22,6 +22,23 @@
   --color-line: #e7e6e1; /* default border */
   --color-line-strong: #dad9d2; /* hover / active border */
 
+  /* Warm neutral ramp (2026-07 refresh). The app standardizes on `slate-*`
+     utilities for greys; we override the whole ramp to warm equivalents at the
+     same lightness so every slate usage — text, borders, cards, the dark
+     sidebar — matches the redesign's warm palette with NO component edits and
+     no contrast loss. (The marketing site uses its own tokens, not slate.) */
+  --color-slate-50: #f6f6f4;
+  --color-slate-100: #eeede9;
+  --color-slate-200: #e7e6e1;
+  --color-slate-300: #d6d5cd;
+  --color-slate-400: #a8a79d;
+  --color-slate-500: #6f6e67;
+  --color-slate-600: #57564f;
+  --color-slate-700: #403f39;
+  --color-slate-800: #2a2a24;
+  --color-slate-900: #1c1c18;
+  --color-slate-950: #141310;
+
   /* Status tones — the ONLY semantic colors. Every status/badge maps to one of:
      neutral · brand (green = success/active/won) · info · warning · danger.
      No per-status hues. Each tone: text / -soft fill / -line border. */
