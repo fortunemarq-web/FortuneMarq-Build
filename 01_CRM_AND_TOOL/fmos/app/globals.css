@@ -4,53 +4,53 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Brand scale (2026-07 refresh) — brand-deep is the text-safe green for
-     text/buttons; raw brand is the brighter accent/fill. ONE accent only. */
-  --color-brand: #16b26a;
-  --color-brand-hover: #12a05f;
-  --color-brand-active: #0f9256;
-  --color-brand-deep: #0c7c4e;
-  --color-brand-deeper: #0a6a43; /* button hover on brand-deep */
-  --color-brand-soft: #e7f4ec;
-  --color-brand-100: #d1ecdb;
-  --color-brand-line: #c9e7d5; /* soft brand border for tinted chips/cards */
-  --color-brand-ring: rgba(12, 124, 78, 0.32);
+  /* Brand scale (2026-07 DARK theme) — brand-deep = green for text/buttons on
+     dark; raw brand = brighter accent. Tuned so green text is readable on dark
+     surfaces and green buttons pass large-text contrast with white labels. */
+  --color-brand: #2ecb84;
+  --color-brand-hover: #27b877;
+  --color-brand-active: #22a56b;
+  --color-brand-deep: #1aa867;
+  --color-brand-deeper: #178f58; /* button hover on brand-deep */
+  --color-brand-soft: #13291d; /* dark green tint fill */
+  --color-brand-100: #173a24;
+  --color-brand-line: #22462f; /* soft brand border on dark */
+  --color-brand-ring: rgba(46, 203, 132, 0.40);
 
-  /* Neutral surfaces — warm off-white base (2026-07 refresh) */
-  --color-canvas: #f6f6f4; /* app background */
-  --color-surface: #ffffff; /* cards / panels */
-  --color-line: #e7e6e1; /* default border */
-  --color-line-strong: #dad9d2; /* hover / active border */
+  /* Neutral surfaces — dark base (2026-07 DARK theme) */
+  --color-canvas: #0e100f; /* app background */
+  --color-surface: #171917; /* cards / panels */
+  --color-line: #2a2c2a; /* default border */
+  --color-line-strong: #3a3c3a; /* hover / active border */
 
-  /* Warm neutral ramp (2026-07 refresh). The app standardizes on `slate-*`
-     utilities for greys; we override the whole ramp to warm equivalents at the
-     same lightness so every slate usage — text, borders, cards, the dark
-     sidebar — matches the redesign's warm palette with NO component edits and
-     no contrast loss. (The marketing site uses its own tokens, not slate.) */
-  --color-slate-50: #f6f6f4;
-  --color-slate-100: #eeede9;
-  --color-slate-200: #e7e6e1;
-  --color-slate-300: #d6d5cd;
-  --color-slate-400: #a8a79d;
-  --color-slate-500: #6f6e67;
-  --color-slate-600: #57564f;
-  --color-slate-700: #403f39;
-  --color-slate-800: #2a2a24;
-  --color-slate-900: #1c1c18;
-  --color-slate-950: #141310;
+  /* Neutral ramp (2026-07 DARK theme). The app standardizes on `slate-*` greys;
+     we remap the whole ramp for dark — LOW shades become dark surfaces, HIGH
+     shades become light text — so text/surfaces flip correctly with no per-file
+     edits. (Intentionally-dark surfaces like the sidebar that used slate-800/900
+     are set to explicit dark tokens in their components.) */
+  --color-slate-50: #191b19;
+  --color-slate-100: #202220;
+  --color-slate-200: #2b2d2b;
+  --color-slate-300: #3a3c3a;
+  --color-slate-400: #8b8d85;
+  --color-slate-500: #a4a69d;
+  --color-slate-600: #bcbeb5;
+  --color-slate-700: #d0d2ca;
+  --color-slate-800: #e2e4dc;
+  --color-slate-900: #f4f5f0;
+  --color-slate-950: #ffffff;
 
-  /* Status tones — the ONLY semantic colors. Every status/badge maps to one of:
-     neutral · brand (green = success/active/won) · info · warning · danger.
-     No per-status hues. Each tone: text / -soft fill / -line border. */
-  --color-info: #2563c9;
-  --color-info-soft: #eaf1fc;
-  --color-info-line: #cbddf6;
-  --color-warn: #a9720f;
-  --color-warn-soft: #faf1e2;
-  --color-warn-line: #eedcb4;
-  --color-danger: #c23a2b;
-  --color-danger-soft: #fbece9;
-  --color-danger-line: #f2cec8;
+  /* Status tones — kept as bright pills on dark (light -soft fill + coloured
+     text reads as an accent chip). Each tone: text / -soft fill / -line border. */
+  --color-info: #6ea8ff;
+  --color-info-soft: #13223a;
+  --color-info-line: #234061;
+  --color-warn: #e2ad5c;
+  --color-warn-soft: #2e2413;
+  --color-warn-line: #574726;
+  --color-danger: #f0796a;
+  --color-danger-soft: #2f1512;
+  --color-danger-line: #5a2a24;
 
   --font-display: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
   --font-body: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
@@ -64,12 +64,19 @@
 }
 
 :root {
-  --background: #f6f6f4; /* warm canvas (2026-07 refresh) */
-  --foreground: #1b1b18; /* warm near-black */
+  --background: #0e100f; /* dark base (2026-07 DARK theme) */
+  --foreground: #f4f5f0; /* light text */
 }
 
 body {
-  background: var(--background);
+  /* Moody dark gradient base — dark surfaces/cards sit on top of it. */
+  background-color: #0c0e0d;
+  background-image:
+    radial-gradient(70% 100% at 12% -8%, rgba(46, 203, 132, 0.10), transparent 58%),
+    radial-gradient(60% 90% at 100% 0%, rgba(20, 120, 90, 0.12), transparent 55%),
+    radial-gradient(90% 90% at 50% 118%, rgba(46, 203, 132, 0.06), transparent 60%),
+    linear-gradient(180deg, #0e100f, #090a09);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;

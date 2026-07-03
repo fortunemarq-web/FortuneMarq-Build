@@ -39,7 +39,7 @@ export default function RootLayout({
       className={`${hanken.variable} ${plexMono.variable}`}
     >
       <body
-        className="antialiased bg-canvas text-slate-900"
+        className="antialiased text-slate-900"
         suppressHydrationWarning
       >
         <SessionHeartbeat />

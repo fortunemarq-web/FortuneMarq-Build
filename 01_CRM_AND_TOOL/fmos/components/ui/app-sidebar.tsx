@@ -230,7 +230,7 @@ export default function AppSidebar() {
 
   // Mobile Header Component
   const MobileHeader = () => (
-    <header className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur-sm md:hidden print:hidden">
+    <header className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-white/10 bg-[#0e100f]/95 px-4 backdrop-blur-sm md:hidden print:hidden">
       <Link href="/" className="flex items-center gap-2">
         <div className="flex h-8 items-center">
           <img
@@ -247,7 +247,7 @@ export default function AppSidebar() {
         <NotificationBell />
         <button
           onClick={() => setIsOpen(true)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-white/5 hover:text-slate-900"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />
@@ -261,7 +261,7 @@ export default function AppSidebar() {
     <>
       {/* Sidebar Header / Logo */}
       <div className={clsx(
-        "flex h-[56px] items-center justify-between border-b border-slate-700/40 px-4 transition-all duration-300",
+        "flex h-[56px] items-center justify-between border-b border-white/10 px-4 transition-all duration-300",
         isCollapsed ? "justify-center px-2" : "px-4"
       )}>
         <Link href="/" className="flex items-center gap-2 overflow-hidden">
@@ -281,7 +281,7 @@ export default function AppSidebar() {
         {/* Close button - Mobile only */}
         <button
           onClick={() => setIsOpen(false)}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-white md:hidden"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/10 hover:text-white md:hidden"
           aria-label="Close menu"
         >
           <X className="h-4 w-4" />
@@ -293,13 +293,13 @@ export default function AppSidebar() {
         <div className="px-3 mt-2 animate-in fade-in duration-300">
           <button
             onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-            className="flex w-full items-center justify-between rounded-lg bg-slate-800/50 px-3 py-1.5 text-xs text-slate-400 ring-1 ring-slate-700/50 transition-all hover:bg-slate-800 hover:ring-slate-600"
+            className="flex w-full items-center justify-between rounded-lg bg-white/[0.06] px-3 py-1.5 text-xs text-slate-400 ring-1 ring-white/10 transition-all hover:bg-white/10 hover:ring-white/20"
           >
             <div className="flex items-center gap-2">
               <Search className="h-3.5 w-3.5" />
               <span>Quick Search...</span>
             </div>
-            <div className="flex items-center gap-1 rounded bg-slate-700 px-1.5 py-0.5 text-[10px] font-bold">
+            <div className="flex items-center gap-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold">
               <CommandIcon className="h-2.5 w-2.5" />
               <span>K</span>
             </div>
@@ -336,8 +336,8 @@ export default function AppSidebar() {
                           className={clsx(
                             "group flex items-center rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors duration-150",
                             isActive
-                              ? "border-l-2 border-brand bg-slate-800 pl-[8px] text-white"
-                              : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-200",
+                              ? "border-l-2 border-brand bg-white/[0.06] pl-[8px] text-white"
+                              : "text-slate-400 hover:bg-white/[0.07] hover:text-slate-200",
                             isCollapsed && "justify-center px-0 pl-0 py-2"
                           )}
                           title={isCollapsed ? item.label : undefined}
@@ -366,8 +366,8 @@ export default function AppSidebar() {
                       className={clsx(
                         "group flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150",
                         isActive
-                          ? "border-l-2 border-brand bg-slate-800 pl-[10px] text-white"
-                          : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-200",
+                          ? "border-l-2 border-brand bg-white/[0.06] pl-[10px] text-white"
+                          : "text-slate-400 hover:bg-white/[0.07] hover:text-slate-200",
                         isCollapsed && "justify-center px-0 pl-0"
                       )}
                       title={isCollapsed ? item.label : undefined}
@@ -384,9 +384,9 @@ export default function AppSidebar() {
       </nav>
 
       {/* User Profile & Sign Out */}
-      <div className="border-t border-slate-700/40 bg-slate-900 px-3 py-2">
+      <div className="border-t border-white/10 bg-[#0b0c0b] px-3 py-2">
         <div className={clsx("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
-          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-slate-800 text-xs font-bold text-slate-300 border border-slate-700">
+          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-xs font-bold text-slate-300 border border-white/10">
             {userName.charAt(0).toUpperCase()}
           </div>
           {!isCollapsed && (
@@ -418,7 +418,7 @@ export default function AppSidebar() {
         <div className="mt-2 hidden md:block">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex w-full items-center justify-center rounded-lg border border-slate-700/50 bg-slate-800/30 py-1 text-slate-500 transition-colors hover:bg-slate-800 hover:text-slate-300"
+            className="flex w-full items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] py-1 text-slate-500 transition-colors hover:bg-white/10 hover:text-slate-300"
           >
             {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : (
               <div className="flex items-center gap-1.5">
@@ -449,7 +449,7 @@ export default function AppSidebar() {
       {/* Sidebar */}
       <aside
         className={clsx(
-          "fixed inset-y-0 left-0 z-50 flex flex-col bg-slate-900 border-r border-slate-700/40 transition-all duration-300 ease-in-out md:static md:translate-x-0 print:hidden",
+          "fixed inset-y-0 left-0 z-50 flex flex-col bg-[#0b0c0b] border-r border-white/10 transition-all duration-300 ease-in-out md:static md:translate-x-0 print:hidden",
           isOpen ? "translate-x-0" : "-translate-x-full",
           isCollapsed ? "w-[64px]" : "w-[240px]"
         )}
