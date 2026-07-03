@@ -337,12 +337,12 @@ export default function AppSidebar() {
                             "group flex items-center rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors duration-150",
                             isActive
                               ? "border-l-2 border-brand bg-white/[0.06] pl-[8px] text-white"
-                              : "text-slate-400 hover:bg-white/[0.07] hover:text-slate-200",
+                              : "text-slate-400 hover:bg-white/[0.07] hover:text-slate-800",
                             isCollapsed && "justify-center px-0 pl-0 py-2"
                           )}
                           title={isCollapsed ? item.label : undefined}
                         >
-                          <Icon className={clsx("h-4 w-4 flex-shrink-0 transition-colors", !isCollapsed && "mr-2.5", isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300")} />
+                          <Icon className={clsx("h-4 w-4 flex-shrink-0 transition-colors", !isCollapsed && "mr-2.5", isActive ? "text-white" : "text-slate-500 group-hover:text-slate-700")} />
                           {!isCollapsed && <span className="truncate">{item.label}</span>}
                         </Link>
                       </li>
@@ -367,12 +367,12 @@ export default function AppSidebar() {
                         "group flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150",
                         isActive
                           ? "border-l-2 border-brand bg-white/[0.06] pl-[10px] text-white"
-                          : "text-slate-400 hover:bg-white/[0.07] hover:text-slate-200",
+                          : "text-slate-400 hover:bg-white/[0.07] hover:text-slate-800",
                         isCollapsed && "justify-center px-0 pl-0"
                       )}
                       title={isCollapsed ? item.label : undefined}
                     >
-                      <Icon className={clsx("h-4 w-4 flex-shrink-0 transition-colors", !isCollapsed && "mr-2.5", isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300")} />
+                      <Icon className={clsx("h-4 w-4 flex-shrink-0 transition-colors", !isCollapsed && "mr-2.5", isActive ? "text-white" : "text-slate-500 group-hover:text-slate-700")} />
                       {!isCollapsed && <span className="truncate">{item.label}</span>}
                     </Link>
                   </li>
@@ -386,19 +386,19 @@ export default function AppSidebar() {
       {/* User Profile & Sign Out */}
       <div className="border-t border-white/10 bg-[#0b0c0b] px-3 py-2">
         <div className={clsx("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
-          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-xs font-bold text-slate-300 border border-white/10">
+          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-xs font-bold text-slate-700 border border-white/10">
             {userName.charAt(0).toUpperCase()}
           </div>
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-medium text-slate-300">{userName}</p>
+              <p className="truncate text-xs font-medium text-slate-700">{userName}</p>
               <p className="truncate text-[11px] capitalize text-slate-500">{role}</p>
             </div>
           )}
           {!isCollapsed && (
             <div className="flex items-center gap-1">
               {role === "admin" && (
-                <Link href="/admin/settings" className="text-slate-500 hover:text-slate-300 transition-colors p-1" title="Settings">
+                <Link href="/admin/settings" className="text-slate-500 hover:text-slate-700 transition-colors p-1" title="Settings">
                   <Settings className="h-3.5 w-3.5" />
                 </Link>
               )}
@@ -418,7 +418,7 @@ export default function AppSidebar() {
         <div className="mt-2 hidden md:block">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex w-full items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] py-1 text-slate-500 transition-colors hover:bg-white/10 hover:text-slate-300"
+            className="flex w-full items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] py-1 text-slate-500 transition-colors hover:bg-white/10 hover:text-slate-700"
           >
             {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : (
               <div className="flex items-center gap-1.5">

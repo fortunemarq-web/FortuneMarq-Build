@@ -85,7 +85,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="hidden md:flex h-12 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 print:hidden">
+    <header className="hidden md:flex h-12 shrink-0 items-center justify-between border-b border-white/10 bg-[#0e100f]/70 px-4 backdrop-blur-xl print:hidden">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-1 text-sm min-w-0" aria-label="Breadcrumb">
         {visibleCrumbs.length === 0 ? (

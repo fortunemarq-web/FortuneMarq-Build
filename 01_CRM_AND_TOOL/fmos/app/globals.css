@@ -123,11 +123,12 @@ table,
    surfaces stay flat. Glass frost is done with Tailwind bg-white/N +
    backdrop-blur utilities inline so it composes cleanly. Static (no motion). */
 .fmos-aurora {
-  background-color: #f4f4f0;
+  /* Dark green-tinted band (2026-07 DARK theme) — slightly above the app base
+     so it reads as a distinct greeting band; light text sits on top. */
+  background-color: #141613;
   background-image:
-    radial-gradient(62% 92% at 10% -12%, rgba(22, 178, 106, 0.20), transparent 60%),
-    radial-gradient(52% 80% at 102% -6%, rgba(12, 124, 78, 0.16), transparent 55%),
-    radial-gradient(46% 74% at 88% 116%, rgba(22, 178, 106, 0.10), transparent 62%);
+    radial-gradient(80% 150% at 0% -10%, rgba(46, 203, 132, 0.16), transparent 60%),
+    radial-gradient(70% 140% at 100% -10%, rgba(20, 120, 90, 0.14), transparent 58%);
 }
 
 /* Dark, moody gradient base for the glass direction — deep near-black with
