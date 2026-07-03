@@ -123,6 +123,17 @@ table,
     radial-gradient(46% 74% at 88% 116%, rgba(22, 178, 106, 0.10), transparent 62%);
 }
 
+/* Dark, moody gradient base for the glass direction — deep near-black with
+   muted green depth. Glass surfaces (bg-white/[.06] + backdrop-blur) sit on top. */
+.fmos-dark {
+  background-color: #0c0e0d;
+  background-image:
+    radial-gradient(70% 100% at 12% -10%, rgba(46, 203, 132, 0.14), transparent 58%),
+    radial-gradient(60% 90% at 100% 0%, rgba(20, 120, 90, 0.16), transparent 55%),
+    radial-gradient(80% 90% at 50% 122%, rgba(46, 203, 132, 0.09), transparent 60%),
+    linear-gradient(180deg, #0e100f, #090a09);
+}
+
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,

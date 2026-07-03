@@ -131,31 +131,31 @@ export default function LoginPage() {
   // Show loading spinner while checking auth
   if (isCheckingAuth) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-canvas">
+      <div className="fmos-dark flex min-h-screen items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
       </div>
     );
   }
 
   return (
-    <div className="fmos-aurora relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
-      {/* Decorative green glows — give the frosted card real colour to frost over. */}
-      <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-[26rem] w-[26rem] rounded-full bg-brand/30 blur-[90px]" />
-      <div aria-hidden className="pointer-events-none absolute left-1/2 top-[38%] h-[24rem] w-[24rem] -translate-x-1/2 rounded-full bg-brand-deep/25 blur-[100px]" />
-      <div aria-hidden className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-brand/20 blur-[90px]" />
+    <div className="fmos-dark relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
+      {/* Muted green glows for depth behind the glass card. */}
+      <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-brand/20 blur-[110px]" />
+      <div aria-hidden className="pointer-events-none absolute left-1/2 top-[36%] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-brand-deep/25 blur-[120px]" />
+      <div aria-hidden className="pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-brand/14 blur-[110px]" />
       <div className="relative z-10 w-full max-w-sm">
         {/* Logo & Branding */}
         <div className="mb-8 flex flex-col items-center text-center">
-          <FortuneMarqLogo size="lg" showText={false} />
-          <h1 className="mt-5 font-display text-xl font-semibold tracking-tight text-slate-900">
+          <FortuneMarqLogo size="lg" showText={false} logoPath="/Logo.png" />
+          <h1 className="mt-5 font-display text-xl font-semibold tracking-tight text-white">
             Sign in to FortuneMarq
           </h1>
-          <p className="mt-1.5 text-sm text-slate-500">
+          <p className="mt-1.5 text-sm text-slate-300">
             Enter your work email to access your workspace
           </p>
         </div>
 
-        <Card className="border-white/60 bg-white/60 p-6 shadow-[0_20px_60px_-20px_rgba(12,124,78,0.35)] ring-1 ring-white/50 backdrop-blur-2xl sm:p-8">
+        <Card className="border-white/10 bg-white/[0.06] p-6 shadow-[0_28px_80px_-24px_rgba(0,0,0,0.75)] ring-1 ring-white/10 backdrop-blur-2xl sm:p-8">
           {/* Error Message */}
           {error && (
             <div
@@ -171,7 +171,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Input */}
             <div>
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email" className="text-slate-200">Email address</Label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Mail className="h-4 w-4 text-slate-400" />
@@ -184,7 +184,7 @@ export default function LoginPage() {
                   placeholder="you@company.com"
                   required
                   autoComplete="email"
-                  className="h-11 pl-10"
+                  className="h-11 border-white/10 bg-white/5 pl-10 text-white placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -192,8 +192,8 @@ export default function LoginPage() {
             {/* Password Input */}
             <div>
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-xs font-medium text-brand-deep hover:underline">
+                <Label htmlFor="password" className="text-slate-200">Password</Label>
+                <Link href="/forgot-password" className="text-xs font-medium text-brand hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -209,7 +209,7 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   required
                   autoComplete="current-password"
-                  className="h-11 pl-10"
+                  className="h-11 border-white/10 bg-white/5 pl-10 text-white placeholder:text-slate-400"
                 />
               </div>
             </div>
