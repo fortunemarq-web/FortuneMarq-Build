@@ -283,7 +283,7 @@ export function CommandPalette() {
             />
 
             <div className="relative z-10 w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200 fill-mode-both">
-                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5">
+                <div className="overflow-hidden rounded-2xl border border-white/60 bg-white/80 shadow-2xl ring-1 ring-black/5 backdrop-blur-2xl">
                     <div className="flex items-center border-b border-slate-100 px-4">
                         <Search className={cn("h-5 w-5", loading ? "text-brand-deep animate-pulse" : "text-slate-400")} />
                         <input

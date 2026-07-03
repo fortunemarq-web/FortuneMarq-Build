@@ -261,6 +261,7 @@ export default async function AdminCommandHub() {
       <div className="mx-auto max-w-7xl space-y-8">
 
         {/* ── HEADER ─────────────────────────────────────── */}
+        <div className="fmos-aurora overflow-hidden rounded-2xl border border-brand-line/70 px-6 py-5 shadow-[0_12px_40px_-18px_rgba(12,124,78,0.22)]">
         <PageHeader
           title={`${timeGreeting}, ${userName}`}
           subtitle={
@@ -284,6 +285,7 @@ export default async function AdminCommandHub() {
             </Link>
           }
         />
+        </div>
 
         {/* E4: Monthly Invoice Reminder (1st-5th of month) */}
         {new Date().getDate() <= 5 && activeClients > 0 && (

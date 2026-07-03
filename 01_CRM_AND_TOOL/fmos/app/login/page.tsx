@@ -138,7 +138,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-canvas px-4">
+    <div className="fmos-aurora flex min-h-screen flex-col items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo & Branding */}
         <div className="mb-8 flex flex-col items-center text-center">
@@ -151,7 +151,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <Card className="p-6 shadow-[0_1px_2px_rgba(15,23,42,0.05)] sm:p-8">
+        <Card className="border-white/70 bg-white/75 p-6 shadow-[0_16px_50px_-18px_rgba(12,124,78,0.28)] backdrop-blur-xl sm:p-8">
           {/* Error Message */}
           {error && (
             <div
