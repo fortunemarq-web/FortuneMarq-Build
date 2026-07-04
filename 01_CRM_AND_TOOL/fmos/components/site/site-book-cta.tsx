@@ -6,7 +6,7 @@
 // real Google Meet via bookSiteMeeting (channel "website"); no slot = request a
 // call. SSR-safe (client), reduced-motion-friendly (no heavy animation).
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { requestSiteCall, bookSiteMeeting, type SiteLeadForm } from "@/actions/site-book";
 import { trackEvent } from "@/components/site/site-analytics";
 import { waBotLink } from "@/components/site/site-whatsapp";
@@ -70,7 +70,14 @@ export default function SiteBookCta() {
   const [state, setState] = useState<"idle" | "requested" | "booked">("idle");
   const [meetLink, setMeetLink] = useState<string | undefined>();
   const [error, setError] = useState<string | null>(null);
-  const slots = useMemo(genSlots, []);
+  // Slots depend on the current time + local timezone, so generating them during
+  // SSR yields different labels than the client (UTC server vs IST client) →
+  // hydration mismatch (React #418). Generate AFTER mount so SSR and the first
+  // client render agree (empty), then fill in.
+  const [slots, setSlots] = useState<{ iso: string; label: string }[]>([]);
+  useEffect(() => {
+    setSlots(genSlots());
+  }, []);
 
   function payload(): SiteLeadForm {
     return { ...form, ...attribution() };
