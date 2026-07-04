@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { recoverFromStaleAssets } from "@/lib/stale-asset-recovery";
 
 // App-wide error boundary — replaces Next's raw error screen when any route
 // throws on the client. Keeps users inside the branded app with a way forward.
@@ -14,6 +15,9 @@ export default function Error({
 }) {
   useEffect(() => {
     console.error(error);
+    // Post-deploy skew: if this is a stale-asset error, hard-reload once to pull
+    // the current build instead of showing this screen.
+    recoverFromStaleAssets(error);
   }, [error]);
 
   return (
