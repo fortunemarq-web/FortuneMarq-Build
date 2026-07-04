@@ -1,5 +1,5 @@
 # ▶ CONTINUE HERE — Canonical Handoff
-**Updated:** 2026-07-02 · **Branch:** `continue-on-mac` · **This file supersedes all other handoff/continuation docs.**
+**Updated:** 2026-07-04 · **Branch:** `ui-refresh` (fast-forwarded onto `main` — the dark theme + fixes below are all live on prod) · **This file supersedes all other handoff/continuation docs.**
 
 > You are a fresh Claude Code session (new account, same machine + same `FortuneMarq-Build`
 > folder — we switched accounts because the previous one hit its weekly rate limit). The prior
@@ -7,6 +7,15 @@
 > Read it fully, then `CLAUDE.md` (auto-loaded) for app structure.
 
 App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer.
+
+## ⚡ Latest session (2026-07-04) — dark-theme UI refresh + marketing-site fixes (all DEPLOYED to `main`, HEAD `71f8b1e`)
+Shipped the confirmed **dark theme** across the whole app and fixed three production bugs on the marketing site. All verified (tsc+build green; app QA'd via a logged-in WCAG contrast audit; marketing verified on prod with headless Playwright) and fast-forwarded onto `main` with owner approval.
+- **🎨 DARK THEME — live on prod (commits `4990860`→`3aa069e`).** Dark gradient canvas + glassmorphism cards, **single green accent** (`brand #2ecb84`), UI font switched to **Hanken Grotesk** (+ IBM Plex Mono). Mechanism: re-skin the `slate-*` ramp + surface/brand tokens in `app/globals.css` (LOW slate → dark surfaces, HIGH → light text) so it flips app-wide, then per-component surface/text fixes via the **`fmos-darkify` workflow (106 files)**. Telecaller cockpit layout unchanged (colors only, per owner). QA: logged-in contrast audit returned **0 light-boxes** on dashboard/cockpit/clients/finance/outreach/team+modal (only white-on-green buttons at cr 3.07 — the accepted accent). Full direction + mechanism in the `fmos-ui-redesign-direction` memory (updated: "DARK THEME SHIPPED").
+- **🐛 Marketing preloader nav crash (commit `57b4c0e`).** `components/site/site-motion.tsx` called `preloader.remove()` on `<div id="preloader">` — a React-owned node in the **persistent** site layout. Detaching it made the next client-side navigation's reconcile throw `NotFoundError` (removeChild/insertBefore) → the app error boundary ("Something went wrong"); intermittent, cleared by a hard reload. **Fix:** hide it (`display:none`) instead of removing, so it stays under React's control.
+- **♻️ Post-deploy stale-asset auto-recovery (commit `79ad2eb`).** Free stand-in for **Vercel Skew Protection** (which is **Pro-only** — this Vercel team is on the free plan, so it can't be enabled; confirmed via the CLI). `lib/stale-asset-recovery.ts` wired into `app/error.tsx` + `app/global-error.tsx`: on a `ChunkLoadError`/failed dynamic-import (stale build after a deploy), the boundary **hard-reloads once** (guarded ≤1/30s per tab) instead of showing the error screen. `global-error.tsx` also darkened to match.
+- **🐛 Hydration mismatch #418 on `/contact` (commit `71f8b1e`).** `components/site/site-book-cta.tsx` generated booking-slot labels in `useMemo(genSlots)` during SSR (UTC server) ≠ hydration (IST client) → React #418 text mismatch. **Fix:** defer `genSlots()` to a post-mount `useEffect` (SSR + first client render agree empty, then fill). NOTE: this is the marketing **site** book form — the sibling **LP** `components/lp/book-cta.tsx` had the same bug fixed 2026-06-25; they are two separate components.
+- **🔧 Vercel ops (via the authenticated CLI, team `fortunemarqs-projects`, project `fortune-marq-build`).** Re-enabled **SSO/deployment protection** → **Standard** (`prod_deployment_urls_and_all_previews`: previews + generated `*.vercel.app` URLs locked, **custom domains stay public** — verified `fortunemarq.com`/`fmos.fortunemarq.com` = 200, preview = 302). A throwaway QA admin (`uiqa@fortunemarq.dev`) was created to log into the app for the theme QA, then **deleted from prod** (0 auth/profile rows left).
+- **✅ Prod verification (headless Playwright on `fortunemarq.com`, build `71f8b1e`):** 12 stress navigations across all marketing pages → **0 error-boundary hits, 0 removeChild errors, 0 hydration errors, 0 console errors**; `/contact` renders 6 booking slots. The customer-facing sites stayed public throughout.
 
 ## ⚡ Latest session (2026-07-02) — full app audit + fixes (all DEPLOYED to `main`, HEAD `5769472`)
 A multi-agent audit of the whole app; the high-value, safe findings were fixed, verified (tsc+build green, prod DB role-simulation), and deployed across ~16 commits + one live DB migration.
