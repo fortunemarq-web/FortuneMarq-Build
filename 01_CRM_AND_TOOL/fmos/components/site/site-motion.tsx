@@ -146,7 +146,12 @@ function initPreloader(cleanups: Array<() => void>, reduceMotion: boolean) {
   const finish = () => {
     preloader.classList.add("is-done");
     document.body.classList.remove("is-loading");
-    const t = setTimeout(() => preloader.remove(), 700);
+    // Hide (don't .remove()) — the preloader is a React-owned node in the
+    // persistent site layout. Detaching it makes React's next client-nav
+    // reconcile throw NotFoundError (removeChild/insertBefore) → error boundary.
+    const t = setTimeout(() => {
+      preloader.style.display = "none";
+    }, 700);
     cleanups.push(() => clearTimeout(t));
   };
 
@@ -158,7 +163,7 @@ function initPreloader(cleanups: Array<() => void>, reduceMotion: boolean) {
     /* sessionStorage may be unavailable */
   }
   if (alreadyShown || reduceMotion) {
-    preloader.remove();
+    preloader.style.display = "none";
     document.body.classList.remove("is-loading");
     return;
   }
