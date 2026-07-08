@@ -56,7 +56,7 @@
         {
           "trigger": "I'm busy right now",
           "triggerKn": "Eega swalpa busy idhini",
-          "response": "No problem at all. Can I call you back in an hour or later this evening?",
+          "response": "Okay sir, no problem — can I call you back in an hour or later this evening?",
           "responseKn": "No problem sir, yawadg call madli?"
         },
         {
@@ -98,12 +98,12 @@
       "lines": [
         {
           "type": "script",
-          "text": "You are already showing up on Google — which means you're already getting some of that traffic. But JustDial and other directories are capturing the majority of those clicks, not your business directly. We found a clear gap between what's reaching you and what's available.",
+          "text": "You are already showing up on Google — which means you're already getting some of that traffic. But JustDial and other directories are grabbing most of those clicks, not you directly. So a lot of that business is going to them instead of coming straight to you.",
           "textKn": "Neevu eglene Google nalli kansthidhiri — adhkke nimge swalpa traffic matte business barthaide, adhu olledhe. Aadre JustDial matte bere directories eirodhrindha, majority clicks avre thagolthaidhare, nimge direct aagi bartha illa. Market nalli iro demandge matte nimge barthiro businessge thumba dodda gap ide sir."
         },
         {
           "type": "script",
-          "text": "The people who find your business on Google right now are seeing you alongside 10 other options. Most of them click on a directory first. What we do is change that — so they find you directly, and you own that relationship from the first click.",
+          "text": "The people who find your business on Google right now are seeing you alongside 10 other options. Most of them click on a directory first. What we do is change that — so they come straight to you, not to JustDial.",
           "textKn": "Eega jana Google nalli hudukdhaga nimm jothe innu 10 options kansutthe. Tumba jana direct aagi nimma website click madodhkintha, JustDial thara directories munde hogthare. Navu adhnne change maadthivi — customer direct aagi nimghie reach aagbeku, matte first click indhane business nimge sigbeku."
         }
       ],

@@ -57,7 +57,7 @@
         {
           "trigger": "I'm busy right now",
           "triggerKn": "Eega swalpa busy idhini",
-          "response": "No problem at all. Can I call you back in an hour or later this evening?",
+          "response": "Okay sir, no problem — can I call you back in an hour or later this evening?",
           "responseKn": "No problem sir, yawadg call madli?"
         },
         {
@@ -98,7 +98,7 @@
         },
         {
           "type": "script",
-          "text": "Most businesses in your niche in [City] are in the same position. Nobody has built a strong online presence yet. Whoever moves first gets to own that space.",
+          "text": "Most [Niche] businesses in [City] are in the same position — nobody's really set up online yet. So whoever gets there first will pull in most of those customers.",
           "textKn": "Namma [City] nalli iro maximum [Niche] businesses innu idhe position nalli idhare. Yarru innu online nalli thumba strong aagi munde bandilla. So eega neevu first step thagondre, ee complete online spacena neevu own maadbahu sir."
         }
       ],

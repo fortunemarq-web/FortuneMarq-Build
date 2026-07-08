@@ -96,7 +96,7 @@ Hi {{1}}! Thanks for your time today. As discussed, I'll follow up with you on {
 ### `follow_back` · Utility
 **When:** lead said busy before the pitch; confirms a callback.
 ```
-Hi {{1}}! No problem at all — I'll call you back on {{2}}. Have a good day! — Afifa, FortuneMarq
+Hi {{1}}! As promised, I'll call you back on {{2}}. Talk then! — Afifa, FortuneMarq
 ```
 `{{1}}` name · `{{2}}` callback date & time
 
@@ -125,7 +125,7 @@ Reply STOP to opt out.
 ### `not_interested` · Marketing
 **When:** Afifa logs a call "not interested" (soft close).
 ```
-Hi {{1}}! No worries at all — thanks for your time. If things change or you'd like to see what's happening in your market, here's what we do: {{2}}. Reach out anytime! — FortuneMarq
+Hi {{1}}! Thanks for hearing me out today. If you ever want to see what's moving in your market, here's what we do: {{2}}. Always here if you need us. — FortuneMarq
 Reply STOP to opt out.
 ```
 `{{1}}` name · `{{2}}` landing page link

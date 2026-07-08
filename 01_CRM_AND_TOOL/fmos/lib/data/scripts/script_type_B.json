@@ -57,7 +57,7 @@
         {
           "trigger": "I'm busy right now",
           "triggerKn": "Eega swalpa busy idhini",
-          "response": "No problem at all. Can I call you back in an hour or later this evening?",
+          "response": "Okay sir, no problem — can I call you back in an hour or later this evening?",
           "responseKn": "No problem sir, yawadg call madli?"
         },
         {
@@ -98,7 +98,7 @@
         },
         {
           "type": "script",
-          "text": "The website exists — it's just not working for you yet. Most businesses in your niche in [City] haven't fixed this either — so there's a real window to move first.",
+          "text": "The website exists — it's just not working for you yet. Most other [Niche] businesses in [City] haven't fixed this either — so if you sort it now, you get ahead of them.",
           "textKn": "Website ide, aadre adhu innu nimge correct aagi work aagtha illa. Namma [City] nalli iro thumba [Niche] businesses innu idhnnu fix maadilla — so neevu first move maadidhre market nalli olle advantage sigutthe sir."
         }
       ],

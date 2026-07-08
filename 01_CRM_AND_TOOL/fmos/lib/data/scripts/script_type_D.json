@@ -56,7 +56,7 @@
         {
           "trigger": "I'm busy right now",
           "triggerKn": "Eega swalpa busy idhini",
-          "response": "No problem at all. Can I call you back in an hour or later this evening?",
+          "response": "Okay sir, no problem — can I call you back in an hour or later this evening?",
           "responseKn": "No problem sir, yawadg call madli?"
         },
         {
@@ -73,7 +73,7 @@
       "lines": [
         {
           "type": "script",
-          "text": "The search volume for [Niche] in [City] is [Search Volume] per month — smaller than some other niches. (Pause, then reframe) But here's what makes it interesting — every single person searching is ready to buy. This is high intent, low competition.",
+          "text": "The search volume for [Niche] in [City] is [Search Volume] per month — smaller than some other niches. (Pause, then reframe) But here's what makes it interesting — the people who do search are ready to buy, and hardly anyone else is competing for them.",
           "textKn": "Namma [City] nalli [Niche] gagi iro search volume prathi thinglu approx [Search Volume] ide — bere niches ge compare maadidhre nimdu business search volume kammi ide. (Pause, then reframe) Aadre idhralli interesting yenu andre — ee huduko prathi obba customerge egle urgent aagi service beku anta hudukthaidhare. Idu thumba high intent matte low competition iro market sir."
         }
       ],
@@ -98,7 +98,7 @@
       "lines": [
         {
           "type": "script",
-          "text": "The search volume for [Niche] in [City] is [Search Volume] per month. But every single person searching is ready to buy. High intent, low competition. And right now, most of that demand has no strong local business to land on.",
+          "text": "The search volume for [Niche] in [City] is [Search Volume] a month. But every one of those people is ready to buy — and right now there's no strong local business online for them to land on.",
           "textKn": "Namma [City] nalli [Niche] gagi iro search volume prathi thinglu [Search Volume] ide. Aadre ee huduko prathi obba customer-gu egle urgent aagi service bekaagutthe. High intent, low competition. Matte eega iro samasye yenu andre, ee demandna capture maadoke namma local alli yaavu strong business kanstha illa."
         },
         {

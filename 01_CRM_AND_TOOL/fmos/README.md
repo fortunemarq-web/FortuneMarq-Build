@@ -50,6 +50,8 @@ keys, `ANTHROPIC_API_KEY`, `CRON_SECRET`, WhatsApp/Meta keys, …) before runnin
 
 The telecaller cockpit (`components/sales/telecaller-cockpit.tsx`) logs call outcomes and, on **"Interested — Book Meeting Now"** with a chosen date/time, creates a Google Calendar/Meet booking (`bookMeeting`); every other outcome (and a "book" logged without a time) auto-sends the mapped WhatsApp template instead (3.2 / 3.4).
 
+The type-based **call scripts** the cockpit displays live in `lib/data/scripts/script_type_{a,b,c,d}.json` (7-step flow + per-step objection banks, English + Kanglish). **Copy refresh (2026-07-08):** the spoken English lines were warmed for naturalness — canned openers ("No problem at all…") and marketer jargon ("own that relationship from the first click", "high intent, low competition", "a real window to move first") swapped for plain, owner-friendly wording; the Kannada/Kanglish lines were left unchanged.
+
 ## Command center & safety nets (6.5 / 6.8 / 6.9)
 
 - **Command Center** (`/admin/command`) — one cross-engine funnel (leads → contacted → engaged → meetings → proposals → won) with MRR / active-clients / outstanding KPIs and a by-source/engine table. Server-side count queries mapped from `lib/pipeline.ts` stages.
