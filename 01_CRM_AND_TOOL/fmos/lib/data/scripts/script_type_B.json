@@ -134,19 +134,19 @@
       "lines": [
         {
           "type": "script",
-          "text": "Our founder personally does a quick Zoom call, which you can join right from your phone. He'll walk you through a presentation designed specifically for your business in [City]. It's 15 to 20 minutes max — and even if you don't take any services, you'll walk away with a much clearer picture of where your business stands online.",
-          "textKn": "Namma founder personally ond sanna Zoom call thagothare sir, neevu nimma phone indhane join aagbahu. Avru namma [City] nalli iro nimma businessgagi ready madiro ondu complete presentation thoristhare. Just 15 indha 20 minutes max — neevu namma service thagolila andhru parvagilla sir, online nalli nimma business eega yava position nalli ide antha clear aagi picture sigutthe."
+          "text": "Our founder personally does a quick Google Meet call, which you can join right from your phone. He'll walk you through a presentation designed specifically for your business in [City]. It's 15 to 20 minutes max — and even if you don't take any services, you'll walk away with a much clearer picture of where your business stands online.",
+          "textKn": "Namma founder personally ond sanna Google Meet call thagothare sir, neevu nimma phone indhane join aagbahu. Avru namma [City] nalli iro nimma businessgagi ready madiro ondu complete presentation thoristhare. Just 15 indha 20 minutes max — neevu namma service thagolila andhru parvagilla sir, online nalli nimma business eega yava position nalli ide antha clear aagi picture sigutthe."
         },
         {
           "type": "script",
-          "text": "When would you be free? I'll book the Zoom call and send you the link on WhatsApp.",
-          "textKn": "Neevu yavaga free idhhiri sir? Naanu Zoom call book maadi, link-na nimge WhatsApp nalli share maadthini."
+          "text": "When would you be free? I'll book the Google Meet call and send you the link on WhatsApp.",
+          "textKn": "Neevu yavaga free idhhiri sir? Naanu Google Meet call book maadi, link-na nimge WhatsApp nalli share maadthini."
         },
         {
           "type": "branch",
           "condition": "If they want to see something first",
-          "text": "Absolutely — I'll send you the report on WhatsApp right now. Whenever you're ready, we'll set up the Zoom call.",
-          "textKn": "Khanditha sir — naanu egle report-na nimge WhatsApp nalli kalisthini. Neevu adhnnu nodi ready aadhmele navu Zoom call set up madona sir."
+          "text": "Absolutely — I'll send you the report on WhatsApp right now. Whenever you're ready, we'll set up the Google Meet call.",
+          "textKn": "Khanditha sir — naanu egle report-na nimge WhatsApp nalli kalisthini. Neevu adhnnu nodi ready aadhmele navu Google Meet call set up madona sir."
         },
         {
           "type": "branch",
@@ -177,8 +177,8 @@
         {
           "trigger": "Just send me information on WhatsApp",
           "triggerKn": "Details ella WhatsApp nalli kalisi",
-          "response": "Of course — I'll send the report right now. The Zoom call with our founder will make a lot more sense after you've had a look.",
-          "responseKn": "Khanditha sir — naanu egle complete report-na WhatsApp maadthini. Neevu adhnnu nodidhmele namma founder jothe mado Zoom call innu clear aagi artha aagutthe sir."
+          "response": "Of course — I'll send the report right now. The Google Meet call with our founder will make a lot more sense after you've had a look.",
+          "responseKn": "Khanditha sir — naanu egle complete report-na WhatsApp maadthini. Neevu adhnnu nodidhmele namma founder jothe mado Google Meet call innu clear aagi artha aagutthe sir."
         },
         {
           "trigger": "I'll think about it",
@@ -189,8 +189,8 @@
         {
           "trigger": "We handle marketing internally / We have someone",
           "triggerKn": "Navu marketing namm-nammalle nodkothivi",
-          "response": "Good to know. The Zoom call might still be useful — our founder can show you what the market data says and you can see if there are gaps worth filling.",
-          "responseKn": "Adhu thumba olledhu sir. Aadru ee Zoom call nimge useful aagbahudu — market data yenu helthaide antha namma founder thoristhare, adhralli enadru gaps idhre neevu nimma internal team moolaka fill maadbahu sir."
+          "response": "Good to know. The Google Meet call might still be useful — our founder can show you what the market data says and you can see if there are gaps worth filling.",
+          "responseKn": "Adhu thumba olledhu sir. Aadru ee Google Meet call nimge useful aagbahudu — market data yenu helthaide antha namma founder thoristhare, adhralli enadru gaps idhre neevu nimma internal team moolaka fill maadbahu sir."
         }
       ]
     }
@@ -307,12 +307,12 @@
     {
       "templateId": "meeting_booked",
       "trigger": "INTERESTED_BOOK_NOW",
-      "message": "Hi [Business Name]! This is Afifa from FortuneMarq. Your Zoom call with our founder is confirmed for [Meeting Date] at [Meeting Time]. Here's the Zoom link: [Meet Link]. See you then!"
+      "message": "Hi [Business Name]! This is Afifa from FortuneMarq. Your Google Meet call with our founder is confirmed for [Meeting Date] at [Meeting Time]. Here's the Google Meet link: [Meet Link]. See you then!"
     },
     {
       "templateId": "send_pdf",
       "trigger": "INTERESTED_SEND_PDF",
-      "message": "Hi! This is Afifa from FortuneMarq. I'm sending you the research report we prepared for [Niche] businesses in [City] — please find it attached. Once you've had a look, let's set up a quick Zoom call with our founder. Completely free, no commitment. [PDF Attachment]"
+      "message": "Hi! This is Afifa from FortuneMarq. I'm sending you the research report we prepared for [Niche] businesses in [City] — please find it attached. Once you've had a look, let's set up a quick Google Meet call with our founder. Completely free, no commitment. [PDF Attachment]"
     },
     {
       "templateId": "follow_back",
@@ -327,7 +327,7 @@
     {
       "templateId": "send_portfolio",
       "trigger": "INTERESTED_SEND_PDF",
-      "message": "Hi! This is Afifa from FortuneMarq. Here are some results we've delivered for businesses like yours: [Portfolio Link]. Have a look and let's set up a quick Zoom call with our founder whenever you're free."
+      "message": "Hi! This is Afifa from FortuneMarq. Here are some results we've delivered for businesses like yours: [Portfolio Link]. Have a look and let's set up a quick Google Meet call with our founder whenever you're free."
     }
   ]
 }

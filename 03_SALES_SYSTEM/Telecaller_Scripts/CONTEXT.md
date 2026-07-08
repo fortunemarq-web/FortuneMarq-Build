@@ -1,7 +1,7 @@
 > **Current status (2026-06-17):** FMOS is **deployed \& live**. WhatsApp Cloud API is live with **33 Meta-approved templates** (source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json`). The **"curiosity" teaser flow is removed** — the type-matched PDF is now sent immediately as the **Direct Report**. Booking = Google Calendar/Meet (not Zoom/Calendly). Any obsolete notes below are kept for history.
 
 # 03 — Telecaller Scripts
-**Last Updated:** 2026-04-29 | **Status:** COMPLETE — 4 type-based JSON scripts live in FMOS. Real search volumes wired. All content reflects April 2026 review. Ready for Afifa to use once FMOS is deployed.
+**Last Updated:** 2026-07-08 | **Status:** COMPLETE — 4 type-based JSON scripts live in FMOS. Real search volumes wired. Afifa hardcopy pack present. **2026-07-08 copy pass:** spoken English warmed (canned openers + marketer jargon → plain wording) and booking wording aligned to the real tool ("Zoom" → "Google Meet") across all 4 scripts; hardcopy regenerated.
 
 ## Folder Purpose
 All telecaller script content for Afifa. Scripts are loaded dynamically by FMOS based on lead type — not per-niche. FMOS auto-detects the lead type from the CSV columns and displays the matching script during the call.
@@ -11,7 +11,7 @@ All telecaller script content for Afifa. Scripts are loaded dynamically by FMOS 
 ### FMOS_Script_Data/ — The Active Scripts (type-based architecture)
 | File | Description |
 |---|---|
-| `script_type_A.json` | Script for leads already ranking on Google (SERP_Ranked = Y). References Type 1 Visibility PDF. Full 6-step flow with objections bank. |
+| `script_type_A.json` | Script for leads already ranking on Google (SERP_Ranked = Y). References Type 1 Visibility PDF. Full 7-step flow with objections bank. |
 | `script_type_B.json` | Script for leads with website but not ranking (Has_Website = Y, SERP_Ranked = N). References Type 3 Website Performance PDF. |
 | `script_type_C.json` | Script for leads with no website, GMB only (Has_Website = N, SERP_Ranked = N). References Type 2 Market Opportunity PDF. |
 | `script_type_D.json` | Script for leads in low search volume niches/cities. References Type 4 Niche Market Report PDF. |
@@ -24,6 +24,9 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 ### Root Files
 | File | Description |
 |---|---|
+| `Afifa_Call_Script_Book.docx` | **Print-ready call kit for Afifa (2026-07-04).** Generated from the FMOS script JSON: Scripts A/B/C/D (7 steps each, EN + Kannada) on individual pages → consolidated Objection Handling table → Service Prices & Features. Regenerate via the docx builder in the session scratchpad if the source scripts change. |
+| `Afifa_Training_Guide.md` / `.docx` | Call scripts + mindset/training walkthrough for Afifa (2026-06-27) |
+| `Afifa_Service_Details.md` / `.docx` | Service explanations + pricing framing so Afifa can answer "what do you do / what's included?" (2026-06-27) |
 | `Telecaller_Scripts_Review.docx` | Reviewed and finalized script document (April 2026) |
 | `FortuneMarq_Telecaller_Call_Flow.docx` | Complete call flow document — all steps, outcomes, objections reference |
 | `CONTEXT.md` | This file |
@@ -45,12 +48,12 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 4. **Data Hook** — Type-specific: [Search Volume] monthly searches + what it means for their situation. Real number auto-populated from `market_insights` table via `searchVolumeMap` in FMOS.
 5. **The Gap** — Type-specific: who's capturing demand vs who's invisible. A: reinforce position; B: site but no visibility; C: GMB-only, search demand going to competitors; D: low volume, zero competition, high-intent buyers.
 6. **How We Fit In** — Own website, own Google ranking, own enquiries. Not JustDial, not directories. Full system managed for them.
-7. **Meeting Ask** — Our founder personally does a 15–20 min Zoom call (joinable from phone). Built for their business in [City]. No commitment. Book date + send Zoom link on WhatsApp. Objections: pricing (no fixed rates, founder decides per business), tried before (full system first, not just ads), owner unavailable (WhatsApp PDF first), send on WhatsApp (send PDF + follow up in 2 days), let me think (no pressure), internal team (offer as second opinion).
+7. **Meeting Ask** — Our founder personally does a 15–20 min Google Meet call (joinable from phone). Built for their business in [City]. No commitment. Book date + send Google Meet link on WhatsApp. Objections: pricing (no fixed rates, founder decides per business), tried before (full system first, not just ads), owner unavailable (WhatsApp PDF first), send on WhatsApp (send PDF + follow up in 2 days), let me think (no pressure), internal team (offer as second opinion).
 
 ### Key Language (locked in all 4 scripts)
 - "our founder" — never "Jabeer" in Afifa's spoken script
-- "Zoom call" — never "Google Meet" or "30–45 min meeting"
-- Busy response: "No problem at all. Can I call you back in an hour or later this evening?"
+- "Google Meet call" — the real booking tool (updated 2026-07-08; previously scripted as "Zoom call"); never "30–45 min meeting"
+- Busy response: "Okay sir, no problem — can I call you back in an hour or later this evening?"
 - Not interested response: "No worries. Mind if I ask — is there a specific reason you don't want to do digital marketing for your business?"
 - Pricing response: "We don't have fixed prices — our founder first understands your business, what you actually need, and how much you can benefit from the work. Pricing is decided based on that."
 
@@ -70,8 +73,8 @@ Old architecture — per-niche, per-language scripts. Replaced by type-based FMO
 ### WhatsApp Templates (postCallWhatsApp — 5 per script)
 | templateId | Trigger | Description |
 |---|---|---|
-| meeting_booked | INTERESTED_BOOK_NOW | Zoom link + date/time confirmation |
-| send_pdf | INTERESTED_SEND_PDF | PDF attachment + Zoom call invite |
+| meeting_booked | INTERESTED_BOOK_NOW | Google Meet link + date/time confirmation |
+| send_pdf | INTERESTED_SEND_PDF | PDF attachment + Google Meet call invite |
 | follow_back | INTERESTED_CALLBACK | Follow-up date + PDF |
 | follow_back_report_sent | INTERESTED_CALLBACK | For leads who already have the PDF |
 | send_portfolio | INTERESTED_SEND_PDF | Portfolio link variant |
