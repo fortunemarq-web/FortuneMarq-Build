@@ -1,5 +1,5 @@
 # ▶ CONTINUE HERE — Canonical Handoff
-**Updated:** 2026-07-04 · **Branch:** `ui-refresh` (fast-forwarded onto `main` — the dark theme + fixes below are all live on prod) · **This file supersedes all other handoff/continuation docs.**
+**Updated:** 2026-07-08 · **Branch:** `ui-refresh` (fast-forwarded onto `main` — everything below is live on prod) · **This file supersedes all other handoff/continuation docs.**
 
 > You are a fresh Claude Code session (new account, same machine + same `FortuneMarq-Build`
 > folder — we switched accounts because the previous one hit its weekly rate limit). The prior
@@ -7,6 +7,13 @@
 > Read it fully, then `CLAUDE.md` (auto-loaded) for app structure.
 
 App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer.
+
+## ⚡ Latest session (2026-07-08) — telecaller script + WhatsApp template copy pass (all on `main`, HEAD `56af391`)
+A copy/tone pass on the telecaller call scripts and the two robotic log-outcome WhatsApp templates.
+- **Call scripts (`lib/data/scripts/script_type_{a,b,c,d}.json`, English + Kanglish).** Warmed the tone and cut marketer jargon a shop owner won't parse — "own that relationship from the first click", "high intent, low competition", "a real window to move first", "whoever moves first gets to own that space", "a clear gap between what's reaching you and what's available" → plain, owner-friendly wording. The busy-objection opener was softened to "Okay sir, no problem…" (owner chose to keep "no problem"/"no worries" in the spoken openers — they read fine in Kannada). **Zoom → Google Meet** everywhere (the app books a Google Meet and `meeting_confirmation` already says so; the old scripts said "Zoom"). The long **Step-7 meeting-ask** was split into 4 short, pause-friendly spoken lines. Commits `f15764e` (warm) · `33b40bc` (Zoom→Meet) · `56af391` (Step-7).
+- **WhatsApp templates — 2 reworded + re-approved on Meta.** The two robotic log-outcome openers were reworded and **submitted to Meta via the Graph API** (not just owner-side): `follow_back` ("No problem at all —" → "As promised, I'll call you back…") and `not_interested` ("No worries at all —" → "Thanks for hearing me out today…"; STOP footer kept). Both are now **APPROVED / live**. `WHATSAPP_TEMPLATES_FINAL.md` + the registry `templates_final.json` updated to match.
+- **▶ OPERATIONAL FACT (was previously believed owner-only):** WhatsApp templates **can be edited/submitted to Meta from this repo** via the Graph API — WABA id `1499408311884474`, `WHATSAPP_API_TOKEN` (has `whatsapp_business_management`), `v21.0`. **Create:** `POST /{WABA_ID}/message_templates` (pattern in `scripts/bulk_create_whatsapp_templates.py`). **Edit an existing/approved one:** `GET /{WABA_ID}/message_templates?name=<name>` for its id, then `POST /{template_id}` with `{category, components}`. **Editing an approved template is safe** — the prior approved version keeps sending until (or unless) the edit is approved. See the [[whatsapp-template-edit-via-meta-api]] memory.
+- **Afifa hardcopy** (`03_SALES_SYSTEM/Telecaller_Scripts/Afifa_Call_Script_Book.docx`) regenerated to reflect all of the above (owner-local artifact; not committed). The script generator is a docx-js script kept in the session scratchpad — it hardcodes the copy, so regenerate it from the JSONs if they change again.
 
 ## ⚡ Latest session (2026-07-04) — dark-theme UI refresh + marketing-site fixes (all DEPLOYED to `main`, HEAD `71f8b1e`)
 Shipped the confirmed **dark theme** across the whole app and fixed three production bugs on the marketing site. All verified (tsc+build green; app QA'd via a logged-in WCAG contrast audit; marketing verified on prod with headless Playwright) and fast-forwarded onto `main` with owner approval.
