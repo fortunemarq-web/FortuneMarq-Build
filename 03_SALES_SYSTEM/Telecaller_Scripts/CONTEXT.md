@@ -1,7 +1,7 @@
 > **Current status (2026-06-17):** FMOS is **deployed \& live**. WhatsApp Cloud API is live with **33 Meta-approved templates** (source of truth: `01_CRM_AND_TOOL/fmos/WHATSAPP_TEMPLATES_FINAL.md` + `templates_final.json`). The **"curiosity" teaser flow is removed** — the type-matched PDF is now sent immediately as the **Direct Report**. Booking = Google Calendar/Meet (not Zoom/Calendly). Any obsolete notes below are kept for history.
 
 # 03 — Telecaller Scripts
-**Last Updated:** 2026-07-08 | **Status:** COMPLETE — 4 type-based JSON scripts live in FMOS. Real search volumes wired. Afifa hardcopy pack present. **2026-07-08 copy pass:** spoken English warmed (canned openers + marketer jargon → plain wording) and booking wording aligned to the real tool ("Zoom" → "Google Meet") across all 4 scripts; hardcopy regenerated.
+**Last Updated:** 2026-07-08 | **Status:** COMPLETE — 4 type-based JSON scripts live in FMOS. Real search volumes wired. Afifa hardcopy pack present. **2026-07-08 copy pass:** spoken English warmed (canned openers + marketer jargon → plain wording) and booking wording aligned to the real tool ("Zoom" → "Google Meet") across all 4 scripts; the Step-7 meeting-ask was split into short spoken lines; hardcopy regenerated.
 
 ## Folder Purpose
 All telecaller script content for Afifa. Scripts are loaded dynamically by FMOS based on lead type — not per-niche. FMOS auto-detects the lead type from the CSV columns and displays the matching script during the call.

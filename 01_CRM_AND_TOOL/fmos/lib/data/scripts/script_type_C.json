@@ -134,8 +134,23 @@
       "lines": [
         {
           "type": "script",
-          "text": "Our founder personally does a quick Google Meet call, which you can join right from your phone. He'll walk you through a presentation designed specifically for your business in [City]. It's 15 to 20 minutes max — and even if you don't take any services, you'll walk away with a much clearer picture of where your business stands online.",
-          "textKn": "Namma founder personally ond sanna Google Meet call thagothare sir, neevu nimma phone indhane join aagbahu. Avru namma [City] nalli iro nimma businessgagi ready madiro ondu complete presentation thoristhare. Just 15 indha 20 minutes max — neevu namma service thagolila andhru parvagilla sir, online nalli nimma business eega yava position nalli ide antha clear aagi picture sigutthe."
+          "text": "Our founder gets on a quick Google Meet with you — you can join right from your phone.",
+          "textKn": "Namma founder nimma jothe ond sanna Google Meet call maadthare sir — neevu nimma phone indhane join aagbahu."
+        },
+        {
+          "type": "script",
+          "text": "He'll walk you through a short presentation, made just for your business here in [City].",
+          "textKn": "Avru namma [City] nalli iro nimma businessgagi special aagi ready maadiro ond sanna presentation thoristhare."
+        },
+        {
+          "type": "script",
+          "text": "It only takes 15 to 20 minutes.",
+          "textKn": "Just 15 indha 20 minutes aagutthe sir."
+        },
+        {
+          "type": "script",
+          "text": "And even if you don't go ahead with anything, you'll come away knowing exactly where your business stands online.",
+          "textKn": "Neevu namma service thagolila andhru parvagilla sir — online nalli nimma business eega yava position nalli ide antha clear aagi gothagutthe."
         },
         {
           "type": "script",
