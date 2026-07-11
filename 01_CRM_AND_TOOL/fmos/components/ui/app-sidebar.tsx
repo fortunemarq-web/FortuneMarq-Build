@@ -234,7 +234,7 @@ export default function AppSidebar() {
       <Link href="/" className="flex items-center gap-2">
         <div className="flex h-8 items-center">
           <img
-            src="/logo-icon-dark.png"
+            src="/Logo.png"
             alt="FortuneMarq"
             className="h-8 w-auto object-contain"
           />

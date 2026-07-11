@@ -212,14 +212,14 @@ export default function AuditLogPage() {
                                 {loading ? (
                                     <TR className="hover:bg-transparent">
                                         <TD colSpan={6} className="px-6 py-20 text-center">
-                                            <Activity className="mx-auto mb-2 h-8 w-8 animate-pulse text-slate-200" />
+                                            <Activity className="mx-auto mb-2 h-8 w-8 animate-pulse text-slate-800" />
                                             <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">Auditing System...</p>
                                         </TD>
                                     </TR>
                                 ) : logs.length === 0 ? (
                                     <TR className="hover:bg-transparent">
                                         <TD colSpan={6} className="px-6 py-20 text-center">
-                                            <History className="mx-auto mb-2 h-8 w-8 text-slate-200" />
+                                            <History className="mx-auto mb-2 h-8 w-8 text-slate-800" />
                                             <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">No logs found</p>
                                         </TD>
                                     </TR>

@@ -231,7 +231,7 @@ export default function ClientDashboardPage() {
     return (
       <div className="flex min-h-full flex-col items-center justify-center bg-canvas">
         <Zap className="mb-4 h-10 w-10 animate-pulse text-brand" />
-        <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
+        <Loader2 className="h-6 w-6 animate-spin text-slate-700" />
       </div>
     );
   }
@@ -240,7 +240,7 @@ export default function ClientDashboardPage() {
     return (
       <div className="flex min-h-full items-center justify-center bg-canvas p-4 text-center">
         <div className="max-w-md">
-          <Building2 className="mx-auto mb-4 h-12 w-12 text-slate-300" />
+          <Building2 className="mx-auto mb-4 h-12 w-12 text-slate-700" />
           <h1 className="mb-2 font-display text-xl font-semibold text-slate-900">Portal Access</h1>
           <p className="mb-6 text-sm text-slate-500">{error}</p>
           <Link href="/login" className={buttonVariants({ variant: "primary" })}>Back to login</Link>
@@ -345,7 +345,7 @@ export default function ClientDashboardPage() {
 
               {deliverables.length === 0 ? (
                 <div className="py-12 text-center border border-dashed border-line rounded-xl">
-                  <FileSearch className="mx-auto h-10 w-10 text-slate-300 mb-2" />
+                  <FileSearch className="mx-auto h-10 w-10 text-slate-700 mb-2" />
                   <p className="text-sm font-medium text-slate-400 uppercase tracking-wide">Awaiting Artifacts</p>
                 </div>
               ) : (

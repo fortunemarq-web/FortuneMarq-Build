@@ -160,7 +160,7 @@ export default function DeliveryBoard({
                       <div key={t.id} className="px-4 py-2.5">
                         <div className="flex items-center justify-between gap-3">
                           <button onClick={() => toggleTask(t)} disabled={pending} className="flex items-center gap-2 min-w-0 text-left">
-                            {isDone ? <CheckCircle2 className="h-4 w-4 text-brand shrink-0" /> : <Circle className="h-4 w-4 text-slate-300 shrink-0" />}
+                            {isDone ? <CheckCircle2 className="h-4 w-4 text-brand shrink-0" /> : <Circle className="h-4 w-4 text-slate-700 shrink-0" />}
                             <span className={`text-sm ${isDone ? "line-through text-slate-400" : "text-slate-700"}`}>{t.title}</span>
                           </button>
                           <div className="flex items-center gap-3 shrink-0">
@@ -201,7 +201,7 @@ export default function DeliveryBoard({
 }
 
 function LinkChip({ icon: Icon, label, url }: { icon: typeof Film; label: string; url: string | null }) {
-  if (!url) return <span className="flex items-center gap-1 text-[11px] text-slate-300"><Icon className="h-3 w-3" />{label}</span>;
+  if (!url) return <span className="flex items-center gap-1 text-[11px] text-slate-700"><Icon className="h-3 w-3" />{label}</span>;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
       className="flex items-center gap-1 text-[11px] font-semibold text-brand-deep hover:underline">

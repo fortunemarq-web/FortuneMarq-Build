@@ -876,7 +876,7 @@ FortuneMarq
               <h2 className="font-display text-2xl font-semibold text-slate-900">Proposal Ready</h2>
               <p className="text-slate-500 mt-1">{proposalNumber} · {lead.company_name} · Copy the message below and send via WhatsApp</p>
               <div className="flex items-center justify-center gap-4 mt-4 text-sm">
-                {totalSetup > 0 && <><span className="text-slate-700 font-semibold tabular-nums">{formatINR(totalSetup)} setup</span><span className="text-slate-300">·</span></>}
+                {totalSetup > 0 && <><span className="text-slate-700 font-semibold tabular-nums">{formatINR(totalSetup)} setup</span><span className="text-slate-700">·</span></>}
                 <span className="text-brand-deep font-semibold tabular-nums text-lg">{formatINR(totalMonthly)}/mo</span>
               </div>
             </div>

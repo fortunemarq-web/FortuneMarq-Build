@@ -104,7 +104,7 @@ export default async function SopLibraryPage({
                 <div className="p-8 text-danger">Error: {error.message}</div>
             ) : sops?.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-line bg-slate-50/60 py-20 text-center">
-                    <FileText className="mx-auto mb-4 h-10 w-10 text-slate-300" />
+                    <FileText className="mx-auto mb-4 h-10 w-10 text-slate-700" />
                     <p className="text-sm font-semibold text-slate-500">No procedures found in this category</p>
                 </div>
             ) : (

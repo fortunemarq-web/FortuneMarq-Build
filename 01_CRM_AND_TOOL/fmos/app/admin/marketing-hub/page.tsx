@@ -191,7 +191,7 @@ export default async function MarketingHubPage() {
 
           {runsEnriched.length === 0 ? (
             <div className="px-6 py-12 text-center">
-              <Brain className="h-10 w-10 text-slate-200 mx-auto" />
+              <Brain className="h-10 w-10 text-slate-800 mx-auto" />
               <p className="text-sm text-slate-400 mt-3">No strategies run yet.</p>
               <Link href="/admin/strategy" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#42CA80] hover:underline">
                 Create your first strategy <ArrowRight className="h-3.5 w-3.5" />

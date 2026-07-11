@@ -84,7 +84,7 @@ export default async function CsvUploadHistoryPage() {
         {/* Uploads List */}
         {uploadsList.length === 0 ? (
           <Card className="p-12 text-center">
-            <FileText className="mx-auto h-12 w-12 text-slate-300" />
+            <FileText className="mx-auto h-12 w-12 text-slate-700" />
             <p className="mt-4 text-slate-500">No CSV uploads found</p>
             <Link
               href="/admin/upload"

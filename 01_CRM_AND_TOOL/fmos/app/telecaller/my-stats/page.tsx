@@ -234,7 +234,7 @@ export default function MyStatsPage() {
                                 </div>
                                 <div className="text-right">
                                     <p className="text-xs font-medium text-slate-500">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                                    <ArrowRight className="h-4 w-4 text-slate-300 ml-auto mt-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <ArrowRight className="h-4 w-4 text-slate-700 ml-auto mt-1 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
                             </div>
                         ))}

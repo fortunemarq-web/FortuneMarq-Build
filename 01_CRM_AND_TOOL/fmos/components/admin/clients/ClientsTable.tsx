@@ -350,7 +350,7 @@ export default function ClientsTable({
                         </Link>
                         <button
                           onClick={() => handleDelete(c)}
-                          className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-surface text-slate-300 transition-colors hover:border-danger-line hover:text-danger"
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-surface text-slate-700 transition-colors hover:border-danger-line hover:text-danger"
                           title="Delete Client"
                         >
                           <Trash2 className="h-3.5 w-3.5" />

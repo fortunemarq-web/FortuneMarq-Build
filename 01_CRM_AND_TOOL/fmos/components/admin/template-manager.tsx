@@ -522,7 +522,7 @@ export default function TemplateManager() {
                                                         {formData.content ? (
                                                             renderPreview(formData.content)
                                                         ) : (
-                                                            <span className="italic text-slate-300">Preview will appear here...</span>
+                                                            <span className="italic text-slate-700">Preview will appear here...</span>
                                                         )}
                                                     </div>
                                                     <div className="mt-2 flex items-center justify-end gap-1 text-right text-[11px] text-slate-400">

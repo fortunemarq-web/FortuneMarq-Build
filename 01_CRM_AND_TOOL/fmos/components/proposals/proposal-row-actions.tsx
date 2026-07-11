@@ -165,7 +165,7 @@ export default function ProposalRowActions({ proposalId, proposalNumber, status,
               size="icon"
               onClick={handleDelete}
               title="Delete proposal"
-              className="h-7 w-7 text-slate-300 hover:bg-danger-soft hover:text-danger"
+              className="h-7 w-7 text-slate-700 hover:bg-danger-soft hover:text-danger"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </Button>

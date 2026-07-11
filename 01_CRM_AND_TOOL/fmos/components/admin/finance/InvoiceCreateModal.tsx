@@ -238,7 +238,7 @@ export default function InvoiceCreateModal({ isOpen, onClose, clients, onSuccess
                     type="button"
                     onClick={() => removeLineItem(i)}
                     disabled={lineItems.length === 1}
-                    className="mt-1.5 p-1 text-slate-300 transition-colors hover:text-danger disabled:opacity-0"
+                    className="mt-1.5 p-1 text-slate-700 transition-colors hover:text-danger disabled:opacity-0"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

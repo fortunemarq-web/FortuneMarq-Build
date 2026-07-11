@@ -124,7 +124,7 @@ export default function NicheAccordion({ target, campaigns = [], pipeline = EMPT
               <div className="space-y-3 flex-1 overflow-y-auto max-h-[140px] pr-2">
                 {campaigns.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-slate-400">
-                    <Activity className="h-8 w-8 text-slate-200 mb-2" />
+                    <Activity className="h-8 w-8 text-slate-800 mb-2" />
                     <span className="text-xs">No active campaigns for this niche.</span>
                   </div>
                 ) : (

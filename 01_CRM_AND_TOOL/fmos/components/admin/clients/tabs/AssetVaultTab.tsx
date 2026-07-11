@@ -255,7 +255,7 @@ export default function AssetVaultTab({
                         <button
                           onClick={() => handleDelete(asset.id)}
                           disabled={deletingId === asset.id}
-                          className="flex-shrink-0 rounded-lg p-2 text-slate-300 hover:text-danger hover:bg-danger-soft transition-colors min-h-[36px]"
+                          className="flex-shrink-0 rounded-lg p-2 text-slate-700 hover:text-danger hover:bg-danger-soft transition-colors min-h-[36px]"
                         >
                           {deletingId === asset.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />

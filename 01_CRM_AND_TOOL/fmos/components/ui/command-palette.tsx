@@ -309,7 +309,7 @@ export function CommandPalette() {
                     <div className="max-h-[60vh] overflow-y-auto py-2">
                         {displayResults.length === 0 ? (
                             <div className="px-6 py-12 text-center">
-                                <Search className="mx-auto h-8 w-8 text-slate-200 mb-4" />
+                                <Search className="mx-auto h-8 w-8 text-slate-800 mb-4" />
                                 {search ? (
                                     <>
                                         <p className="text-sm text-slate-500 font-medium tracking-tight">No results found for "{search}"</p>

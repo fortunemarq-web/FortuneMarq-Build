@@ -111,7 +111,7 @@ export default function DailyTargetsTable({ targets, profiles, actuals }: DailyT
           {targets.length === 0 && (
             <tr>
                <td colSpan={3} className="px-6 py-12 text-center">
-                  <TrendingUp className="h-8 w-8 text-slate-200 mx-auto mb-2" />
+                  <TrendingUp className="h-8 w-8 text-slate-800 mx-auto mb-2" />
                   <p className="text-[10px] font-black uppercase text-slate-400">No targets set for today</p>
                </td>
             </tr>

@@ -149,7 +149,7 @@ export default function SetTargetsModal({ profiles, existingTargets, onClose }: 
                     />
                   </TD>
                   <TD className="text-right">
-                    <button onClick={() => removeRow(idx)} className="p-2 text-slate-300 hover:text-danger hover:bg-danger-soft rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                    <button onClick={() => removeRow(idx)} className="p-2 text-slate-700 hover:text-danger hover:bg-danger-soft rounded-lg transition-colors opacity-0 group-hover:opacity-100">
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </TD>

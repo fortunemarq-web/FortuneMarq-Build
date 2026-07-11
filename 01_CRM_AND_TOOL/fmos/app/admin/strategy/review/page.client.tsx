@@ -176,9 +176,9 @@ export default function ReviewPageClient({ team }: { team: any[] }) {
 
             <div className="flex items-center gap-3">
               <button onClick={() => handleToggleAll(true)} className="text-xs font-semibold text-slate-500 hover:text-brand-deep">Select All</button>
-              <span className="text-slate-300">|</span>
+              <span className="text-slate-700">|</span>
               <button onClick={() => handleToggleAll(false)} className="text-xs font-semibold text-slate-500 hover:text-brand-deep">Deselect All</button>
-              <span className="text-slate-300">|</span>
+              <span className="text-slate-700">|</span>
               <button onClick={handleDeleteSelected} className="flex items-center gap-1 text-xs font-semibold text-danger hover:text-red-700">
                 <Trash2 className="h-3 w-3" /> Delete Selected
               </button>

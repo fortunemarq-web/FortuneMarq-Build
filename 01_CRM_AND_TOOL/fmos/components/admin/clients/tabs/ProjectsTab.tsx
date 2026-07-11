@@ -80,7 +80,7 @@ export default function ProjectsTab({
 
       {projects.length === 0 ? (
         <Card className="p-8 text-center">
-          <FolderKanban className="mx-auto mb-3 h-8 w-8 text-slate-300" />
+          <FolderKanban className="mx-auto mb-3 h-8 w-8 text-slate-700" />
           <p className="text-sm text-slate-500">No projects yet</p>
           <p className="mt-1 text-xs text-slate-400">
             Projects will appear here when created through the Close Deal

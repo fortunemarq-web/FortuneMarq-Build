@@ -357,7 +357,7 @@ export default function InvoiceManagerClient({ initialInvoices, clients, setting
                         <button
                           onClick={() => handleDelete(inv.id, inv.invoice_number)}
                           title="Delete invoice"
-                          className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-danger-soft hover:text-danger"
+                          className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-danger-soft hover:text-danger"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

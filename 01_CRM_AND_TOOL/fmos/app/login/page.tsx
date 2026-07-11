@@ -150,7 +150,7 @@ export default function LoginPage() {
           <h1 className="mt-5 font-display text-xl font-semibold tracking-tight text-white">
             Sign in to FortuneMarq
           </h1>
-          <p className="mt-1.5 text-sm text-slate-300">
+          <p className="mt-1.5 text-sm text-white/60">
             Enter your work email to access your workspace
           </p>
         </div>
@@ -171,7 +171,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Input */}
             <div>
-              <Label htmlFor="email" className="text-slate-200">Email address</Label>
+              <Label htmlFor="email" className="text-white/90">Email address</Label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Mail className="h-4 w-4 text-slate-400" />
@@ -192,7 +192,7 @@ export default function LoginPage() {
             {/* Password Input */}
             <div>
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-slate-200">Password</Label>
+                <Label htmlFor="password" className="text-white/90">Password</Label>
                 <Link href="/forgot-password" className="text-xs font-medium text-brand hover:underline">
                   Forgot password?
                 </Link>

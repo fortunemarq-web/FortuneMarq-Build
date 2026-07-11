@@ -92,7 +92,7 @@ export default function CaseStudyModal({ clientId, clientName }: { clientId: str
                       <Input value={m.after} onChange={(e) => updateMetric(i, "after", e.target.value, metrics, setMetrics)}
                         placeholder="After" className="w-20 h-8 text-xs" />
                       <button onClick={() => setMetrics(metrics.filter((_, j) => j !== i))}
-                        className="text-slate-300 hover:text-danger"><Trash2 className="h-3.5 w-3.5" /></button>
+                        className="text-slate-700 hover:text-danger"><Trash2 className="h-3.5 w-3.5" /></button>
                     </div>
                   ))}
                   <button onClick={() => setMetrics([...metrics, { label: "", before: "", after: "" }])}

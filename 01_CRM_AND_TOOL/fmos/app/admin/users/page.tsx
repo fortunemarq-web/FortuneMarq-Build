@@ -138,7 +138,7 @@ export default function UserManagementPage() {
                         ))
                     ) : filteredProfiles.length === 0 ? (
                         <div className="col-span-full rounded-xl border border-dashed border-line bg-slate-50/60 py-20 text-center">
-                            <ShieldAlert className="mx-auto mb-4 h-10 w-10 text-slate-300" />
+                            <ShieldAlert className="mx-auto mb-4 h-10 w-10 text-slate-700" />
                             <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">No users found</p>
                         </div>
                     ) : (

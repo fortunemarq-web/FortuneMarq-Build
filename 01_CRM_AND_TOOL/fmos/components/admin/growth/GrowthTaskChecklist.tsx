@@ -32,7 +32,7 @@ export default function GrowthTaskChecklist({ initialTasks }: { initialTasks: Ta
   if (tasks.length === 0) {
     return (
       <div className="text-center py-12 m-auto">
-        <CheckCircle2 className="h-12 w-12 text-slate-200 mx-auto mb-3" />
+        <CheckCircle2 className="h-12 w-12 text-slate-800 mx-auto mb-3" />
         <p className="text-sm font-medium text-slate-500">All marketing tasks complete!</p>
       </div>
     );

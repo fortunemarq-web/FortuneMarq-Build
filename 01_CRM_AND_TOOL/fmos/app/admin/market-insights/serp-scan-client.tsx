@@ -149,12 +149,12 @@ export default function SerpScanClient({ rows: initialRows }: Props) {
                   </td>
                   <td className="px-4 py-2 text-center text-slate-500">{kwCount}</td>
                   <td className="px-4 py-2 min-w-48">
-                    {ci ? <BucketBar buckets={ci.buckets} /> : <span className="text-xs text-slate-300">—</span>}
+                    {ci ? <BucketBar buckets={ci.buckets} /> : <span className="text-xs text-slate-700">—</span>}
                   </td>
                   <td className="px-4 py-2 text-center">
                     {ci
                       ? <CheckCircle2 className="h-4 w-4 text-green-500 mx-auto" />
-                      : <span className="text-xs text-slate-300">—</span>
+                      : <span className="text-xs text-slate-700">—</span>
                     }
                   </td>
                   <td className="px-4 py-2 text-right text-xs text-slate-400">

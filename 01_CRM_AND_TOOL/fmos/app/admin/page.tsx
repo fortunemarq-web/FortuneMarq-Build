@@ -615,7 +615,7 @@ export default async function AdminCommandHub() {
                     <span className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900">
                       {count}
                     </span>
-                    <ArrowRight className="h-3 w-3 shrink-0 text-slate-300 transition-colors group-hover:text-brand-deep" />
+                    <ArrowRight className="h-3 w-3 shrink-0 text-slate-700 transition-colors group-hover:text-brand-deep" />
                   </Link>
                 );
               })}

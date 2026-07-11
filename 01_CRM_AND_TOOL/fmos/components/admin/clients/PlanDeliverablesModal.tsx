@@ -181,7 +181,7 @@ function PreviewPane({ parsed }: { parsed: ReturnType<typeof parseMilestones> | 
               <span className="text-sm font-semibold text-slate-800">{m.name}</span>
               {m.isGeneral && <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 bg-surface border border-line rounded px-1.5 py-0.5">auto-bucket</span>}
             </div>
-            <span className={`flex items-center gap-1 text-[11px] font-semibold ${m.dueIso ? "text-slate-500" : "text-slate-300"}`}>
+            <span className={`flex items-center gap-1 text-[11px] font-semibold ${m.dueIso ? "text-slate-500" : "text-slate-700"}`}>
               <CalendarDays className="h-3 w-3" />
               {m.dueIso ? fmtDate(m.dueIso) : "no due date"}
             </span>

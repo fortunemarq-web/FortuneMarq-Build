@@ -195,12 +195,12 @@ export default function NotificationBell() {
                     <div className="custom-scrollbar max-h-[450px] overflow-y-auto">
                         {loading && notifications.length === 0 ? (
                             <div className="p-12 text-center">
-                                <Loader2 className="mx-auto h-6 w-6 animate-spin text-slate-300" />
+                                <Loader2 className="mx-auto h-6 w-6 animate-spin text-slate-700" />
                             </div>
                         ) : notifications.length === 0 ? (
                             <div className="p-12 text-center">
                                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-line bg-slate-50">
-                                    <Bell className="h-5 w-5 text-slate-300" />
+                                    <Bell className="h-5 w-5 text-slate-700" />
                                 </div>
                                 <p className="text-sm font-medium text-slate-600">You're all caught up</p>
                                 <p className="mt-1 text-xs text-slate-400">New alerts will show up here.</p>

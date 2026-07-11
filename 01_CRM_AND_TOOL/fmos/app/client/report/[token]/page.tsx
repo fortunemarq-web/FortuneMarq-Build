@@ -103,7 +103,7 @@ export default function MagicReportPage() {
                             Executive Analysis
                         </div>
                         <h2 className="font-display text-3xl font-semibold mb-6 leading-tight">Key Insights &amp; Strategic Progress</h2>
-                        <div className="prose prose-invert max-w-none text-slate-300 font-medium leading-relaxed whitespace-pre-wrap">
+                        <div className="prose prose-invert max-w-none text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">
                             {report.ai_summary || "No automated summary available for this period."}
                         </div>
                     </div>

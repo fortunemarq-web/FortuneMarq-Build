@@ -426,9 +426,9 @@ export default function AutomationsClient({ initialRules, templates = [] }: { in
                   <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
                     <Zap className="h-3 w-3 shrink-0" />
                     <span className="font-mono">{rule.trigger}</span>
-                    <span className="text-slate-300">·</span>
+                    <span className="text-slate-700">·</span>
                     <span>{rule.entity_type}</span>
-                    {rule.priority !== null && <><span className="text-slate-300">·</span><span>P{rule.priority}</span></>}
+                    {rule.priority !== null && <><span className="text-slate-700">·</span><span>P{rule.priority}</span></>}
                   </p>
                 </div>
               </div>

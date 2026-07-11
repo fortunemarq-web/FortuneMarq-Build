@@ -93,7 +93,7 @@ export default function TopBar() {
         ) : (
           visibleCrumbs.map((crumb, i) => (
             <span key={crumb.href} className="flex items-center gap-1 min-w-0">
-              {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-slate-300 shrink-0" />}
+              {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-slate-700 shrink-0" />}
               {crumb.isLast ? (
                 <span className="font-semibold text-slate-900 truncate">{crumb.label}</span>
               ) : (

@@ -23,7 +23,7 @@ export default function ServicePills({
   max?: number;
 }) {
   if (!services || services.length === 0) {
-    return <span className="text-xs text-slate-300 italic">No services</span>;
+    return <span className="text-xs text-slate-700 italic">No services</span>;
   }
 
   const visible = services.slice(0, max);

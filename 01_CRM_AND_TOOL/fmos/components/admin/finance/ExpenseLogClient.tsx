@@ -238,13 +238,13 @@ export default function ExpenseLogClient({ initialExpenses, clients, mtdTotal, c
                         <button
                           onClick={() => { setEditExpense(exp); setIsModalOpen(true); }}
                           title="Edit expense"
-                          className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-600">
+                          className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-600">
                           <Edit3 className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(exp)}
                           title="Delete expense"
-                          className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-danger-soft hover:text-danger">
+                          className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-danger-soft hover:text-danger">
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
