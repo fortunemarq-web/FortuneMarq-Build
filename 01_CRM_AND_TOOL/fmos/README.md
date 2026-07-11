@@ -14,7 +14,11 @@ deployed on **Vercel** and reached at `fmos.fortunemarq.com`.
 > unchanged). Driven by the `slate-*` ramp + surface tokens in `app/globals.css`; per-component
 > surface/text contrast fixes applied across the admin/clients, reports, renewals, and growth screens.
 > Font switched to **Hanken Grotesk** (UI) + IBM Plex Mono. QA'd screen-by-screen via a logged-in
-> contrast audit before merge; not yet on `main`.
+> contrast audit. **LIVE on `main` since 2026-07-04.** Contrast follow-up (2026-07-08→11): fixed the
+> login (subtitle/labels used `text-slate-200/300`, which the ramp flip made dark-on-dark → readable
+> `text-white`); switched the in-app logo from `logo-icon-dark.png` (navy+green, invisible on dark) to
+> `Logo.png` (white+green); and remapped remaining `text-slate-100/200/300` **text** across the app
+> chrome to the now-light shades (100→900, 200→800, 300→700). Re-audited login/dashboard/cockpit/modal — clean.
 
 > **New (2026-06-22):** a cinematic, scroll-driven landing page for the website-development service
 > at `/web-design` — premium dark-atmosphere hero + GSAP scroll story (no WebGL/particles), honesty-aligned
