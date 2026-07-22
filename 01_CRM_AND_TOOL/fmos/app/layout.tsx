@@ -21,6 +21,11 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "FortuneMarq",
   description: "CRM and Project Management tool for Digital Marketing Agency",
+  // Meta Business Manager domain verification (Brand Safety > Domains), added 2026-07-22
+  // for Aggregated Event Measurement / conversion-event prioritization on ad campaigns.
+  verification: {
+    other: { "facebook-domain-verification": "5zffkend3zr8y1fkv263qnone3kqna" },
+  },
 };
 
 import { SessionHeartbeat } from "@/components/session-heartbeat";

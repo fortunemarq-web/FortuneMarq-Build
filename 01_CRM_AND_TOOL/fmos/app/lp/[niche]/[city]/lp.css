@@ -83,6 +83,10 @@
 .lp-stat-num { font-family: var(--font-head); font-weight: 300; font-size: clamp(26px, 4.5vw, 40px); line-height: 1; color: #fff; }
 .lp-stat.accent .lp-stat-num { color: var(--accent); }
 .lp-stat-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
+/* clear the fixed call FAB (left: 16px, 56px wide) so it never sits over the first stat's number */
+@media (max-width: 600px) {
+  .lp-stats .lp-stat:first-child { padding-left: 64px; }
+}
 
 /* sections */
 .lp-sec { position: relative; padding: var(--section-pad-y) 0; }
@@ -97,6 +101,11 @@
 .lp-bignum { font-family: var(--font-head); font-weight: 300; font-size: clamp(80px, 16vw, 180px); line-height: 0.85; letter-spacing: -0.04em; color: var(--accent); }
 .lp-bignum-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
 .lp-bignum-sub { font-family: var(--font-body); font-size: 15px; line-height: 1.55; color: var(--muted); margin-top: 18px; max-width: 34ch; }
+/* clear the fixed call/WhatsApp FABs (left: 16px, 56px wide) so they never sit over the headline number */
+@media (max-width: 600px) {
+  .lp-gap-grid > .reveal-fade { padding-left: 64px; }
+  .lp-gap-grid .lp-bignum { font-size: clamp(56px, 15vw, 80px); }
+}
 
 /* presence-mode "opportunity" points (low/no-demand variant) */
 .lp-pts { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 48px; }
