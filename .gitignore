@@ -25,3 +25,7 @@ venv/
 **/.claude/settings.local.json
 .vercel
 .env*
+
+# Local-only credential files — never committed
+*.local.json
+*.local.md
