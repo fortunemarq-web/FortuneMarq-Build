@@ -14,7 +14,9 @@ from urllib.request import urlopen, Request
 from urllib.error import HTTPError
 
 SUPABASE_URL = "https://cnwooodktqwvpzkucskm.supabase.co"
-ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud29vb2RrdHF3dnB6a3Vjc2ttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNDA3NDEsImV4cCI6MjA4MDYxNjc0MX0.IMaJkvxUyauj6ZsHv79cJGZuP1UrnzXK0tdFvbaqQgs"
+ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
+if not ANON_KEY:
+    sys.exit("Missing SUPABASE_ANON_KEY env var. Run: SUPABASE_ANON_KEY=your_key python3 scripts/import_hubli_leads.py")
 
 HEADERS = {
     "apikey": ANON_KEY,

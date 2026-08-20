@@ -6,7 +6,12 @@
 const { createClient } = require("@supabase/supabase-js");
 
 const SUPABASE_URL = "https://cnwooodktqwvpzkucskm.supabase.co";
-const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud29vb2RrdHF3dnB6a3Vjc2ttIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTA0MDc0MSwiZXhwIjoyMDgwNjE2NzQxfQ.hIEuO6Wj_IDASQjs5nst2d4q2RqHlvVWIPjWuxF9uPA";
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SERVICE_ROLE_KEY) {
+  console.error("Missing SUPABASE_SERVICE_ROLE_KEY env var. Run: SUPABASE_SERVICE_ROLE_KEY=your_key node scripts/delete-old-users.js");
+  process.exit(1);
+}
 
 const KEEP = [
   "sayedjabeer@fmos.com",
