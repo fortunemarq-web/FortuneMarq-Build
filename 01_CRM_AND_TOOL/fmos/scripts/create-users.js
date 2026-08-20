@@ -6,43 +6,35 @@
  * 1. Get your service role key from:
  *    Supabase Dashboard → Project Settings → API → service_role key
  * 2. Run: SUPABASE_SERVICE_ROLE_KEY=your_key_here node scripts/create-users.js
+ *
+ * User list (email/password/full_name/role) lives in
+ * 00_MASTER/FMOS_USER_CREDENTIALS.local.json (gitignored, never committed).
  */
 
 const { createClient } = require("@supabase/supabase-js");
+const path = require("path");
+const fs = require("fs");
 
 const SUPABASE_URL = "https://cnwooodktqwvpzkucskm.supabase.co";
-const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNud29vb2RrdHF3dnB6a3Vjc2ttIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTA0MDc0MSwiZXhwIjoyMDgwNjE2NzQxfQ.hIEuO6Wj_IDASQjs5nst2d4q2RqHlvVWIPjWuxF9uPA";
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SERVICE_ROLE_KEY) {
+  console.error("Missing SUPABASE_SERVICE_ROLE_KEY env var. Run: SUPABASE_SERVICE_ROLE_KEY=your_key node scripts/create-users.js");
+  process.exit(1);
+}
+
+const CREDENTIALS_PATH = path.join(__dirname, "../../../00_MASTER/FMOS_USER_CREDENTIALS.local.json");
+
+if (!fs.existsSync(CREDENTIALS_PATH)) {
+  console.error(`Missing credentials file: ${CREDENTIALS_PATH}`);
+  process.exit(1);
+}
+
+const { users } = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, "utf8"));
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
-
-const users = [
-  {
-    email: "sayedjabeer@fmos.com",
-    password: "Fmos@sj",
-    full_name: "Jabeer",
-    role: "admin",
-  },
-  {
-    email: "afifa@fmos.com",
-    password: "Fmos@Afifa",
-    full_name: "Afifa",
-    role: "telecaller",
-  },
-  {
-    email: "admin1@fmos.com",
-    password: "Fmos@admin1",
-    full_name: "Admin 1",
-    role: "admin",
-  },
-  {
-    email: "admin2@fmos.com",
-    password: "Fmos@admin2",
-    full_name: "Admin 2",
-    role: "admin",
-  },
-];
 
 async function createUsers() {
   console.log("\n🚀 Creating FMOS users...\n");
