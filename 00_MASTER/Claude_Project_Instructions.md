@@ -342,7 +342,7 @@ Jabeer on camera. 60–90 seconds. Explains real niche search data. Example: "63
 ## Funnel
 Awareness video → 50%+ video viewers retargeted → Landing page → Lead form → FMOS (auto-tagged by niche+city+source) → Afifa follow-up call
 
-## Landing Pages (niche LP template at /lp/[niche]/[city] — PARTIAL, Dental·Hubli enabled)
+## Landing Pages (niche LP template at /lp/[niche]/[city] — DONE, all 13 niches × 9 cities live since 2026-06-24)
 One per niche+city (13 niches). Each page: search volume data, competitor gap visual, 3-step solution, pricing reference, lead capture form, WhatsApp CTA.
 
 ## Data Available for Ad Copy (from 07_DATA_AND_RESEARCH — real Google Keyword Planner data)
