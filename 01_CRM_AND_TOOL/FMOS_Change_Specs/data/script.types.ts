@@ -15,13 +15,16 @@ export type OutcomeCategory =
 export interface ScriptLine {
   type: LineType
   text: string
+  textKn?: string    // Kanglish (Kannada in Latin script); falls back to text
   condition?: string // e.g. "If no", "If still resistant"
 }
 
 // An objection and its response — attached to a step
 export interface Objection {
-  trigger: string   // what the lead says
-  response: string  // what Afifa says back
+  trigger: string     // what the lead says
+  triggerKn?: string  // the same objection in Kanglish (recognition cue)
+  response: string    // what Afifa says back
+  responseKn?: string // Kanglish response; falls back to response
 }
 
 // One step in the script (e.g. Introduction, Data Hook, Meeting Ask)
