@@ -89,10 +89,12 @@ export function getFilledScript(
     lines: step.lines.map((line) => ({
       ...line,
       text: fillPlaceholders(line.text, placeholders),
+      ...(line.textKn ? { textKn: fillPlaceholders(line.textKn, placeholders) } : {}),
     })),
     objections: step.objections.map((obj) => ({
       ...obj,
       response: fillPlaceholders(obj.response, placeholders),
+      ...(obj.responseKn ? { responseKn: fillPlaceholders(obj.responseKn, placeholders) } : {}),
     })),
   }))
 
