@@ -174,6 +174,71 @@ export type Database = {
         }
         Relationships: []
       }
+      ad_conversions: {
+        Row: {
+          attempts: number
+          created_at: string
+          currency: string
+          event_name: string
+          fbclid: string | null
+          gclid: string | null
+          google_response: string | null
+          google_sent_at: string | null
+          google_status: string
+          id: string
+          lead_id: string
+          meta_response: string | null
+          meta_sent_at: string | null
+          meta_status: string
+          occurred_at: string
+          value: number | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          currency?: string
+          event_name: string
+          fbclid?: string | null
+          gclid?: string | null
+          google_response?: string | null
+          google_sent_at?: string | null
+          google_status?: string
+          id?: string
+          lead_id: string
+          meta_response?: string | null
+          meta_sent_at?: string | null
+          meta_status?: string
+          occurred_at: string
+          value?: number | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          currency?: string
+          event_name?: string
+          fbclid?: string | null
+          gclid?: string | null
+          google_response?: string | null
+          google_sent_at?: string | null
+          google_status?: string
+          id?: string
+          lead_id?: string
+          meta_response?: string | null
+          meta_sent_at?: string | null
+          meta_status?: string
+          occurred_at?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_conversions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ad_insights_daily: {
         Row: {
           ad_name: string | null
@@ -999,6 +1064,36 @@ export type Database = {
         }
         Relationships: []
       }
+      bot_threads: {
+        Row: {
+          channel: string
+          content: string
+          created_at: string
+          escalated: boolean
+          id: string
+          lead_id: string
+          role: string
+        }
+        Insert: {
+          channel?: string
+          content: string
+          created_at?: string
+          escalated?: boolean
+          id?: string
+          lead_id: string
+          role: string
+        }
+        Update: {
+          channel?: string
+          content?: string
+          created_at?: string
+          escalated?: boolean
+          id?: string
+          lead_id?: string
+          role?: string
+        }
+        Relationships: []
+      }
       build_tracker_modules: {
         Row: {
           created_at: string | null
@@ -1078,6 +1173,7 @@ export type Database = {
           id: string
           ifsc: string | null
           invoice_prefix: string | null
+          mrr_target: number
           payment_terms_days: number | null
           phone: string | null
           pincode: string | null
@@ -1098,6 +1194,7 @@ export type Database = {
           id?: string
           ifsc?: string | null
           invoice_prefix?: string | null
+          mrr_target?: number
           payment_terms_days?: number | null
           phone?: string | null
           pincode?: string | null
@@ -1118,6 +1215,7 @@ export type Database = {
           id?: string
           ifsc?: string | null
           invoice_prefix?: string | null
+          mrr_target?: number
           payment_terms_days?: number | null
           phone?: string | null
           pincode?: string | null
@@ -1851,6 +1949,7 @@ export type Database = {
           phone: string | null
           primary_email: string | null
           renewal_date: string | null
+          renewal_reminded_at: string | null
           services: string[] | null
           services_active: Json | null
           start_date: string | null
@@ -1875,6 +1974,7 @@ export type Database = {
           phone?: string | null
           primary_email?: string | null
           renewal_date?: string | null
+          renewal_reminded_at?: string | null
           services?: string[] | null
           services_active?: Json | null
           start_date?: string | null
@@ -1899,6 +1999,7 @@ export type Database = {
           phone?: string | null
           primary_email?: string | null
           renewal_date?: string | null
+          renewal_reminded_at?: string | null
           services?: string[] | null
           services_active?: Json | null
           start_date?: string | null
@@ -1934,14 +2035,19 @@ export type Database = {
       content_pieces: {
         Row: {
           author_id: string | null
+          caption_draft: string | null
           channel: string | null
           comments: number | null
           content_type: string | null
           created_at: string | null
+          cta_type: string | null
+          cta_url: string | null
           engagement_rate: number | null
           id: string
+          image_prompt: string | null
           leads_attributed: number | null
           likes: number | null
+          notes: string | null
           platform: string | null
           published_date: string | null
           reach: number | null
@@ -1949,19 +2055,25 @@ export type Database = {
           scheduled_date: string | null
           shares: number | null
           status: string | null
+          target_keyword: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
           author_id?: string | null
+          caption_draft?: string | null
           channel?: string | null
           comments?: number | null
           content_type?: string | null
           created_at?: string | null
+          cta_type?: string | null
+          cta_url?: string | null
           engagement_rate?: number | null
           id?: string
+          image_prompt?: string | null
           leads_attributed?: number | null
           likes?: number | null
+          notes?: string | null
           platform?: string | null
           published_date?: string | null
           reach?: number | null
@@ -1969,19 +2081,25 @@ export type Database = {
           scheduled_date?: string | null
           shares?: number | null
           status?: string | null
+          target_keyword?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
           author_id?: string | null
+          caption_draft?: string | null
           channel?: string | null
           comments?: number | null
           content_type?: string | null
           created_at?: string | null
+          cta_type?: string | null
+          cta_url?: string | null
           engagement_rate?: number | null
           id?: string
+          image_prompt?: string | null
           leads_attributed?: number | null
           likes?: number | null
+          notes?: string | null
           platform?: string | null
           published_date?: string | null
           reach?: number | null
@@ -1989,6 +2107,7 @@ export type Database = {
           scheduled_date?: string | null
           shares?: number | null
           status?: string | null
+          target_keyword?: string | null
           title?: string
           updated_at?: string | null
         }
@@ -2015,6 +2134,36 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      cron_heartbeats: {
+        Row: {
+          job_name: string
+          last_duration_ms: number | null
+          last_error: string | null
+          last_run_at: string
+          last_status: string
+          run_count: number
+          updated_at: string
+        }
+        Insert: {
+          job_name: string
+          last_duration_ms?: number | null
+          last_error?: string | null
+          last_run_at?: string
+          last_status?: string
+          run_count?: number
+          updated_at?: string
+        }
+        Update: {
+          job_name?: string
+          last_duration_ms?: number | null
+          last_error?: string | null
+          last_run_at?: string
+          last_status?: string
+          run_count?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       csv_uploads: {
         Row: {
@@ -2633,6 +2782,7 @@ export type Database = {
           gst_amount: number
           id: string
           invoice_number: string
+          is_interstate: boolean
           issue_date: string
           notes: string | null
           paid_amount: number | null
@@ -2653,6 +2803,7 @@ export type Database = {
           gst_amount?: number
           id?: string
           invoice_number: string
+          is_interstate?: boolean
           issue_date?: string
           notes?: string | null
           paid_amount?: number | null
@@ -2673,6 +2824,7 @@ export type Database = {
           gst_amount?: number
           id?: string
           invoice_number?: string
+          is_interstate?: boolean
           issue_date?: string
           notes?: string | null
           paid_amount?: number | null
@@ -2832,6 +2984,8 @@ export type Database = {
           ad_campaign_id: string | null
           content_piece_id: string | null
           created_at: string | null
+          fbclid: string | null
+          gclid: string | null
           id: string
           landing_page: string | null
           lead_id: string | null
@@ -2846,6 +3000,8 @@ export type Database = {
           ad_campaign_id?: string | null
           content_piece_id?: string | null
           created_at?: string | null
+          fbclid?: string | null
+          gclid?: string | null
           id?: string
           landing_page?: string | null
           lead_id?: string | null
@@ -2860,6 +3016,8 @@ export type Database = {
           ad_campaign_id?: string | null
           content_piece_id?: string | null
           created_at?: string | null
+          fbclid?: string | null
+          gclid?: string | null
           id?: string
           landing_page?: string | null
           lead_id?: string | null
@@ -2898,6 +3056,7 @@ export type Database = {
         Row: {
           assigned_sales_exec: string | null
           assigned_strategist: string | null
+          bot_paused: boolean
           call_attempts: number | null
           captured_at: string | null
           city: string | null
@@ -2906,11 +3065,13 @@ export type Database = {
           created_at: string
           current_traffic_estimate: string | null
           deal_probability: number | null
+          do_not_contact: boolean
           email: string | null
           email_normalized: string | null
           first_contact_at: string | null
           follow_up_date: string | null
           gatekeeper_count: number | null
+          gcal_event_id: string | null
           gmb_link: string | null
           has_gmb: boolean | null
           has_website: boolean | null
@@ -2918,11 +3079,13 @@ export type Database = {
           import_batch_id: string | null
           industry: string | null
           intent_score: number | null
+          is_low_volume: boolean
           is_merged: boolean | null
           last_activity_at: string | null
           last_call_outcome: string | null
           last_connected_at: string | null
           last_contacted_at: string | null
+          last_inbound_at: string | null
           last_interaction_note: string | null
           last_outcome: string | null
           last_outcome_reason: string | null
@@ -2942,7 +3105,6 @@ export type Database = {
           pdf_sent_at: string | null
           phone: string | null
           phone_normalized: string | null
-          is_low_volume: boolean
           phone_raw: string | null
           pitch_type: string | null
           proposal_link: string | null
@@ -2956,6 +3118,10 @@ export type Database = {
           status: Database["public"]["Enums"]["lead_status"] | null
           strategy_session_at: string | null
           tags: string[] | null
+          wa_about: string | null
+          wa_lang: string | null
+          wa_opt_out: boolean
+          wa_stage: string | null
           website_domain: string | null
           website_link: string | null
           website_url: string | null
@@ -2963,6 +3129,7 @@ export type Database = {
         Insert: {
           assigned_sales_exec?: string | null
           assigned_strategist?: string | null
+          bot_paused?: boolean
           call_attempts?: number | null
           captured_at?: string | null
           city?: string | null
@@ -2971,11 +3138,13 @@ export type Database = {
           created_at?: string
           current_traffic_estimate?: string | null
           deal_probability?: number | null
+          do_not_contact?: boolean
           email?: string | null
           email_normalized?: string | null
           first_contact_at?: string | null
           follow_up_date?: string | null
           gatekeeper_count?: number | null
+          gcal_event_id?: string | null
           gmb_link?: string | null
           has_gmb?: boolean | null
           has_website?: boolean | null
@@ -2983,11 +3152,13 @@ export type Database = {
           import_batch_id?: string | null
           industry?: string | null
           intent_score?: number | null
+          is_low_volume?: boolean
           is_merged?: boolean | null
           last_activity_at?: string | null
           last_call_outcome?: string | null
           last_connected_at?: string | null
           last_contacted_at?: string | null
+          last_inbound_at?: string | null
           last_interaction_note?: string | null
           last_outcome?: string | null
           last_outcome_reason?: string | null
@@ -3007,7 +3178,6 @@ export type Database = {
           pdf_sent_at?: string | null
           phone?: string | null
           phone_normalized?: string | null
-          is_low_volume?: boolean
           phone_raw?: string | null
           pitch_type?: string | null
           proposal_link?: string | null
@@ -3021,6 +3191,10 @@ export type Database = {
           status?: Database["public"]["Enums"]["lead_status"] | null
           strategy_session_at?: string | null
           tags?: string[] | null
+          wa_about?: string | null
+          wa_lang?: string | null
+          wa_opt_out?: boolean
+          wa_stage?: string | null
           website_domain?: string | null
           website_link?: string | null
           website_url?: string | null
@@ -3028,6 +3202,7 @@ export type Database = {
         Update: {
           assigned_sales_exec?: string | null
           assigned_strategist?: string | null
+          bot_paused?: boolean
           call_attempts?: number | null
           captured_at?: string | null
           city?: string | null
@@ -3036,11 +3211,13 @@ export type Database = {
           created_at?: string
           current_traffic_estimate?: string | null
           deal_probability?: number | null
+          do_not_contact?: boolean
           email?: string | null
           email_normalized?: string | null
           first_contact_at?: string | null
           follow_up_date?: string | null
           gatekeeper_count?: number | null
+          gcal_event_id?: string | null
           gmb_link?: string | null
           has_gmb?: boolean | null
           has_website?: boolean | null
@@ -3048,11 +3225,13 @@ export type Database = {
           import_batch_id?: string | null
           industry?: string | null
           intent_score?: number | null
+          is_low_volume?: boolean
           is_merged?: boolean | null
           last_activity_at?: string | null
           last_call_outcome?: string | null
           last_connected_at?: string | null
           last_contacted_at?: string | null
+          last_inbound_at?: string | null
           last_interaction_note?: string | null
           last_outcome?: string | null
           last_outcome_reason?: string | null
@@ -3072,7 +3251,6 @@ export type Database = {
           pdf_sent_at?: string | null
           phone?: string | null
           phone_normalized?: string | null
-          is_low_volume?: boolean
           phone_raw?: string | null
           pitch_type?: string | null
           proposal_link?: string | null
@@ -3086,6 +3264,10 @@ export type Database = {
           status?: Database["public"]["Enums"]["lead_status"] | null
           strategy_session_at?: string | null
           tags?: string[] | null
+          wa_about?: string | null
+          wa_lang?: string | null
+          wa_opt_out?: boolean
+          wa_stage?: string | null
           website_domain?: string | null
           website_link?: string | null
           website_url?: string | null
@@ -3304,6 +3486,7 @@ export type Database = {
           merge_strategy: Json | null
           merged_by: string | null
           merged_id: string
+          moved_children: Json | null
           survivor_id: string
           undo_until: string
         }
@@ -3315,6 +3498,7 @@ export type Database = {
           merge_strategy?: Json | null
           merged_by?: string | null
           merged_id: string
+          moved_children?: Json | null
           survivor_id: string
           undo_until: string
         }
@@ -3326,6 +3510,7 @@ export type Database = {
           merge_strategy?: Json | null
           merged_by?: string | null
           merged_id?: string
+          moved_children?: Json | null
           survivor_id?: string
           undo_until?: string
         }
@@ -4297,11 +4482,45 @@ export type Database = {
           },
         ]
       }
+      report_assets: {
+        Row: {
+          city: string
+          created_at: string
+          filename: string
+          id: string
+          lang: string
+          lead_type: string
+          niche_slug: string
+          public_url: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          filename: string
+          id?: string
+          lang?: string
+          lead_type: string
+          niche_slug: string
+          public_url: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          filename?: string
+          id?: string
+          lang?: string
+          lead_type?: string
+          niche_slug?: string
+          public_url?: string
+        }
+        Relationships: []
+      }
       review_requests: {
         Row: {
           client_id: string | null
           created_at: string | null
           id: string
+          kind: string
           method: string | null
           notes: string | null
           rating: number | null
@@ -4313,6 +4532,7 @@ export type Database = {
           client_id?: string | null
           created_at?: string | null
           id?: string
+          kind?: string
           method?: string | null
           notes?: string | null
           rating?: number | null
@@ -4324,6 +4544,7 @@ export type Database = {
           client_id?: string | null
           created_at?: string | null
           id?: string
+          kind?: string
           method?: string | null
           notes?: string | null
           rating?: number | null
@@ -4462,6 +4683,48 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_messages: {
+        Row: {
+          created_at: string
+          error: string | null
+          fire_at: string
+          id: string
+          lang: string
+          lead_id: string
+          params: Json | null
+          phone: string
+          sent_at: string | null
+          status: string
+          template_name: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          fire_at: string
+          id?: string
+          lang?: string
+          lead_id: string
+          params?: Json | null
+          phone: string
+          sent_at?: string | null
+          status?: string
+          template_name: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          fire_at?: string
+          id?: string
+          lang?: string
+          lead_id?: string
+          params?: Json | null
+          phone?: string
+          sent_at?: string | null
+          status?: string
+          template_name?: string
+        }
+        Relationships: []
+      }
       seo_keywords: {
         Row: {
           belongs_to: string | null
@@ -4471,6 +4734,7 @@ export type Database = {
           id: string
           is_tracking: boolean | null
           keyword: string
+          notes: string | null
           previous_position: number | null
           search_volume: number | null
           target_url: string | null
@@ -4483,6 +4747,7 @@ export type Database = {
           id?: string
           is_tracking?: boolean | null
           keyword: string
+          notes?: string | null
           previous_position?: number | null
           search_volume?: number | null
           target_url?: string | null
@@ -4495,6 +4760,7 @@ export type Database = {
           id?: string
           is_tracking?: boolean | null
           keyword?: string
+          notes?: string | null
           previous_position?: number | null
           search_volume?: number | null
           target_url?: string | null
@@ -4971,6 +5237,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "tasks_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "project_milestones"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tasks_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
@@ -5236,6 +5509,7 @@ export type Database = {
       }
       whatsapp_logs: {
         Row: {
+          delivery_error: string | null
           delivery_status: string | null
           direction: string
           id: string
@@ -5250,6 +5524,7 @@ export type Database = {
           wa_message_id: string | null
         }
         Insert: {
+          delivery_error?: string | null
           delivery_status?: string | null
           direction?: string
           id?: string
@@ -5264,6 +5539,7 @@ export type Database = {
           wa_message_id?: string | null
         }
         Update: {
+          delivery_error?: string | null
           delivery_status?: string | null
           direction?: string
           id?: string
@@ -5561,17 +5837,28 @@ export type Database = {
         Args: { p_project_id: string }
         Returns: undefined
       }
+      cron_heartbeat: {
+        Args: {
+          p_error?: string
+          p_job: string
+          p_ms?: number
+          p_status?: string
+        }
+        Returns: undefined
+      }
       extract_domain: { Args: { url: string }; Returns: string }
       fmos_client_id: { Args: never; Returns: string }
       fmos_is_staff: { Args: never; Returns: boolean }
       fmos_jsonb_diff: { Args: { new_row: Json; old_row: Json }; Returns: Json }
       fmos_role: { Args: never; Returns: string }
+      generate_admin_alerts: { Args: never; Returns: Json }
       get_dashboard_state: { Args: never; Returns: Json }
       get_my_role: { Args: never; Returns: string }
       increment_package_value: {
         Args: { p_amount: number; p_package_id: string }
         Returns: undefined
       }
+      is_staff: { Args: never; Returns: boolean }
       normalize_email: { Args: { raw_email: string }; Returns: string }
       normalize_phone: { Args: { raw_phone: string }; Returns: string }
       save_dashboard_state: { Args: { new_state: Json }; Returns: undefined }
