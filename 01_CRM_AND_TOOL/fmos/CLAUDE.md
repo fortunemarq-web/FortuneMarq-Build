@@ -1,6 +1,8 @@
 # FMOS — FortuneMarq Agency OS · Claude Context File
 # Auto-loaded at the start of every session. Read this fully before doing anything.
-# Last updated: 2026-06-25.
+# Last updated: 2026-06-25 (block below). Doc-drift check run 2026-08-20 — CONTINUE_HERE.md is
+# now current through 2026-08-20 (dark-theme contrast fixes to 2026-07-22 + an in-flight,
+# uncommitted /start general-campaign LP); this block is unchanged/historical below this line.
 # ➤ CONTINUING WORK? Read CONTINUE_HERE.md FIRST — it is the CANONICAL handoff (current state,
 #   branch continue-on-mac, next steps, and the doc trust map). It supersedes COWORK_HANDOFF.md,
 #   last_session.md, the PHASE_*.md logs, and the dated "LATEST SESSION" block below (kept for history).

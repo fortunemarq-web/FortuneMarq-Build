@@ -1,5 +1,5 @@
 # ▶ CONTINUE HERE — Canonical Handoff
-**Updated:** 2026-07-08 · **Branch:** `ui-refresh` (fast-forwarded onto `main` — everything below is live on prod) · **This file supersedes all other handoff/continuation docs.**
+**Updated:** 2026-08-20 (doc-drift reconciliation — filled the 2026-07-11→07-27 gap this file had missed) · **Branch:** `ui-refresh` (fast-forwarded onto `main` — everything below is live on prod unless noted otherwise) · **This file supersedes all other handoff/continuation docs.**
 
 > You are a fresh Claude Code session (new account, same machine + same `FortuneMarq-Build`
 > folder — we switched accounts because the previous one hit its weekly rate limit). The prior
@@ -7,6 +7,15 @@
 > Read it fully, then `CLAUDE.md` (auto-loaded) for app structure.
 
 App: `01_CRM_AND_TOOL/fmos` (Next.js 16 + Supabase + Tailwind v4). Owner: Jabeer.
+
+## ⚡ Latest session (2026-07-22, commit `9d29d6d`) — LP mobile FAB fix + Meta domain verification (on `main`)
+Two small, unrelated fixes shipped together. **Mobile FAB overlap:** the fixed call/WhatsApp buttons (left:16px, 56px wide) sat over the leading digit of the hero stat row and the Gap section's headline number on mobile — "21,100" misread as "81,100" on the exact page ad traffic lands on; both sections now carry a safe left inset below 600px. **Meta domain verification:** added the Business Manager domain-verification meta tag for fortunemarq.com (Brand Safety → Domains), needed for Aggregated Event Measurement / conversion-event prioritization ahead of campaign launch.
+
+## ⚡ Latest session (2026-07-11, commits `52fc002` + `955a9a5`) — dark-theme contrast fixes (on `main`)
+Follow-up QA pass on the 2026-07-04 dark-theme ship found real dark-on-dark contrast bugs the first audit missed. **Login page:** subtitle + field labels used `text-slate-200/300`, which the dark-theme ramp flip rendered invisible (dark-on-dark) — fixed to white/opacity. **Logo:** the in-app logo used `logo-icon-dark.png` (navy+green, invisible on the dark shell) — swapped to `Logo.png` (white+green) in the sidebar, error/not-found/root splash, and the default `FortuneMarqLogo` (also fixes forgot/reset-password pages). **App-wide:** 32 files still used `text-slate-100/200/300` as text color, which the ramp flip made dark-on-dark — remapped to the correct light shades (100→900, 200→800, 300→700). Re-verified via a logged-in WCAG contrast audit. `README.md` updated same day to mark the dark theme live on main + note this follow-up.
+
+## ⚡ In-flight, uncommitted on `ui-refresh` as of 2026-08-20 — general campaign LP at `/start`
+Not yet deployed to prod. `app/start/page.tsx` — a non-niche, English-only landing page for FortuneMarq's own general ads (the carousel/video destination), reusing the same LP components/motion (SideRays, GapBars, SystemBuild CardSwap, ResponsiveShowcase, LpFunnel) with general, honest copy (no fabricated per-business numbers). Lead capture goes through the same `book-cta` → `actions/lp-book.ts`, tagged `niche_slug: general`, `city: Hubli`. Registered as a public passthrough in `proxy.ts` (`PUBLIC_PREFIXES`) and `layout-wrapper.tsx` (`PUBLIC_ROUTES`, no app shell); `LpNav` now hides its language toggle when `langLabel` is empty (this page has none). `tsc`=0, `npm run build` succeeds, route compiles. Full detail: `README.md`'s "General campaign LP (2026-07-27)" entry.
 
 ## ⚡ Latest session (2026-07-08) — telecaller script + WhatsApp template copy pass (all on `main`, HEAD `56af391`)
 A copy/tone pass on the telecaller call scripts and the two robotic log-outcome WhatsApp templates.

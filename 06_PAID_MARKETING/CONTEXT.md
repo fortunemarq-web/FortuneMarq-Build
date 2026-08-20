@@ -1,5 +1,5 @@
 # 06 — Paid Marketing (FortuneMarq's Own)
-**Last Updated:** 2026-06-22 | **Status:** PLANNED + INBOUND TRACKING INFRA BUILT IN FMOS (which is deployed & live). Built: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. The agency's own **campaign LAUNCH** has not happened yet — it waits on the niche landing pages rolling out across niches/cities (critical rule below). Note this is FortuneMarq's *own* ad spend; the broader campaign-management Stage 2 is not yet built. Plan: `00_MASTER/FMOS_System_Design_And_Tasks.md` (Stage 2) + `00_MASTER/FMOS_Execution_Roadmap.md`.
+**Last Updated:** 2026-08-20 (doc-drift reconciliation vs `00_MASTER/LIVE_STATE.md` + `FMOS_System_Design_And_Tasks.md`) | **Status:** PLANNED + INBOUND TRACKING INFRA BUILT IN FMOS (which is deployed & live). Google Ads API approved and ready (Manager/MCC account `982-189-5523`, developer token **`8jtCRKCJ71JgJYDd5rSEJg`** — Basic Access, approved 2026-07-13; GCP project `fortunemarq-fmos`, OAuth client — see `Google_Ads_API/`). Built: campaign registry (`ad_campaigns` + CPL targets), daily spend tracking (`ad_insights_daily` via Meta/Google CSV import, API sync later), UTM link builder, lead-source attribution, inbound funnel + channel scoreboard on `/admin/marketing`. **All 13 niches × 9 cities (117 LPs) have been live since 2026-06-24 — the niche-LP gate is cleared.** The agency's own **campaign LAUNCH** has not happened yet; the remaining gates are owner-side ad-account/creative work (critical rule below), not the LPs. Note this is FortuneMarq's *own* ad spend; the broader campaign-management Stage 2 is not yet built. Plan: `00_MASTER/FMOS_System_Design_And_Tasks.md` (Stage 2) + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
 > Ground truth for build state: `00_MASTER/FMOS_System_Design_And_Tasks.md` + `00_MASTER/FMOS_Execution_Roadmap.md`.
 
@@ -8,17 +8,18 @@ Plan and execute FortuneMarq's own paid ad campaigns (Meta Ads + Google Ads) to 
 
 ## Critical Rule
 **Paid campaigns are the LAST step.** FMOS is now deployed and working, so the remaining gates are:
-- Niche landing pages rolled out (in-app dynamic LP template `/lp/[niche]/[city]` is live; Dental·Hubli enabled, other niche/city combos to be turned on)
+- ~~Niche landing pages rolled out~~ **DONE (2026-06-24)** — in-app dynamic LP template `/lp/[niche]/[city]` live for all 13 niches × 9 cities (117 LPs)
 - Telecaller system operational (Afifa working leads in FMOS)
 - Delivery can handle incoming leads (Stage 4 board is live)
 
-Do not run ads into a broken system.
+The remaining launch gates are owner-side: create the Google Ads + Meta Ads accounts, finish ad creative, and activate the dormant conversion tracking (see `00_MASTER/LAUNCH_CHECKLIST.md`). Do not run ads into a broken system.
 
 ## What Exists (Complete)
 | File | Description |
 |---|---|
 | `CONTEXT.md` | This file |
 | `Google_Ads/CONTEXT.md` | Planning placeholder — no build files |
+| `Google_Ads_API/FMOS_Google_Ads_API_Design_Document.pdf` | Design document for the Google Ads API **Basic Access** application (describes FMOS's API use: offline conversion import, reporting, campaign management via MCC `982-189-5523`). Attached to the developer-token application. |
 | `Meta_Ads/CONTEXT.md` | Planning placeholder — no build files |
 | `_project_files/MASTER_CONTEXT.md` | Master context for the folder |
 | `_project_files/Niche_Data_Reference_Sheet.md` | Niche data for ad copy |
@@ -77,3 +78,6 @@ Served by the in-app dynamic LP template at `/lp/[niche]/[city]` in FMOS (live o
 | 2026-04-28 | CONTEXT.md fully rewritten. Niche landing pages confirmed created (in 05_FORTUNEMARQ_ONLINE_PRESENCE/niches/). Still pre-launch. |
 | 2026-06-17 | Doc-accuracy sweep. FMOS deployed & live; "blocked on deployment" removed. Remaining launch gates = LPs live + creatives + ad account. Clarified this is FortuneMarq's own spend vs the unbuilt Stage 2 campaign engine. |
 | 2026-06-22 | Doc-accuracy fix. Landing pages corrected from "11 static HTML files in 05_..." to the in-app dynamic LP template `/lp/[niche]/[city]` (13 niches available, Dental·Hubli enabled). Launch gate reframed to enabling the remaining niche/city LP combos. |
+| 2026-07-12 | Google Ads API access infrastructure set up via browser (agency/MCC architecture): Manager account `982-189-5523`, developer token (Test access), GCP project `fortunemarq-fmos` with Google Ads API enabled, OAuth consent screen published to Production + Desktop OAuth client "FMOS Ads API". Added `Google_Ads_API/` with the design-document PDF. **Basic Access application SUBMITTED to Google 2026-07-12** (compliance team acknowledged; review ~3 business days). |
+| 2026-07-13 | Google Ads API **Basic Access APPROVED**. Developer token `8jtCRKCJ71JgJYDd5rSEJg` activated for Manager account `982-189-5523` (15,000 ops/day). Remaining: generate OAuth refresh token (needs owner Google sign-in) + set `GOOGLE_ADS_REFESH_TOKEN` + `GOOGLE_ADS_CLIENT_ID` + `GOOGLE_ADS_CLIENT_SECRET` + `GOOGLE_ADS_DEVELOPER_TOKEN` in Vercel at ad-launch. |
+| 2026-08-20 | Doc-drift reconciliation. The "Critical Rule" gate still said niche LPs weren't rolled out — corrected: all 13 niches × 9 cities (117 LPs) have been live since 2026-06-24. Remaining launch gates are owner-side (ad accounts, creative, activating dormant conversion tracking), not the LPs. |
