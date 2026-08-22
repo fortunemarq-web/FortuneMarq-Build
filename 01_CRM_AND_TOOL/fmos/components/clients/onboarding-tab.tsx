@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   CheckCircle, Clock, AlertTriangle, XCircle, Box,
   ChevronDown, ChevronUp, Loader2, Wand2, Plus, Printer,
-  Play, RotateCcw, Check, Ban,
+  Play, RotateCcw, Ban,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { generateClientOnboarding, SERVICE_TASKS, SERVICE_ASSETS } from "@/lib/onboarding/generateClientOnboarding";
@@ -103,19 +103,20 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
   const serviceIds = [...new Set([...tasks.map(t => t.service_id), ...assets.map(a => a.service_id)])];
 
   const totalTasks = tasks.length;
-  const doneTasks = tasks.filter(t => t.status === "DONE").length;
+  // A task is "resolved" once it's Done OR intentionally Blocked (not applicable) —
+  // Blocked no longer means "still outstanding" for progress/completion purposes.
+  const resolvedTasks = tasks.filter(t => t.status === "DONE" || t.status === "BLOCKED").length;
   const missingRequiredAssets = assets.filter(a => a.required && a.status !== "STORED").length;
-  const isComplete = totalTasks > 0 && doneTasks === totalTasks && missingRequiredAssets === 0;
+  const isComplete = totalTasks > 0 && resolvedTasks === totalTasks && missingRequiredAssets === 0;
 
-  const TASK_STATUS_CYCLE: Record<OnboardingTask["status"], OnboardingTask["status"]> = {
-    PENDING: "IN_PROGRESS",
-    IN_PROGRESS: "DONE",
-    DONE: "PENDING",
-    BLOCKED: "PENDING",
-  };
+  async function startTask(taskId: string) {
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "IN_PROGRESS" } : t));
+    await supabase.from("client_onboarding_tasks").update({ status: "IN_PROGRESS" }).eq("id", taskId);
+    router.refresh();
+  }
 
-  async function cycleTaskStatus(taskId: string, current: OnboardingTask["status"]) {
-    const next = TASK_STATUS_CYCLE[current];
+  async function toggleTaskDone(taskId: string, current: OnboardingTask["status"]) {
+    const next = current === "DONE" ? "IN_PROGRESS" : "DONE";
     const now = new Date().toISOString();
     setTasks(prev => prev.map(t =>
       t.id === taskId ? { ...t, status: next, completed_at: next === "DONE" ? now : null } : t
@@ -124,11 +125,19 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
       status: next,
       completed_at: next === "DONE" ? now : null,
     }).eq("id", taskId);
+    router.refresh();
+  }
+
+  async function unblockTask(taskId: string) {
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "PENDING" } : t));
+    await supabase.from("client_onboarding_tasks").update({ status: "PENDING" }).eq("id", taskId);
+    router.refresh();
   }
 
   async function markTaskBlocked(taskId: string) {
     setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "BLOCKED" } : t));
     await supabase.from("client_onboarding_tasks").update({ status: "BLOCKED" }).eq("id", taskId);
+    router.refresh();
   }
 
   async function handleGenerateOnboarding() {
@@ -145,6 +154,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
       setAssets((newAssets ?? []) as any);
       setShowGeneratePanel(false);
       setSelectedServices(new Set());
+      router.refresh();
     } finally {
       setGenerating(false);
     }
@@ -155,6 +165,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
     if (next === currentStatus) return;
     setAssets(prev => prev.map(a => a.id === assetId ? { ...a, status: next } : a));
     await supabase.from("client_asset_vault").update({ status: next }).eq("id", assetId);
+    router.refresh();
   }
 
   async function activateClient() {
@@ -183,6 +194,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
       setTasks(prev => [...prev, data as OnboardingTask]);
       setAddTaskForm({ service_id: "CUSTOM", task: "", owner: "Jabeer", due_by: "" });
       setShowAddTask(false);
+      router.refresh();
     }
     setAddingTask(false);
   }
@@ -266,7 +278,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="font-display text-sm font-semibold text-slate-900">Onboarding Progress</p>
-            <p className="text-xs text-slate-500 mt-0.5 tabular-nums">{doneTasks}/{totalTasks} tasks complete</p>
+            <p className="text-xs text-slate-500 mt-0.5 tabular-nums">{resolvedTasks}/{totalTasks} tasks complete</p>
           </div>
           <div className="flex items-center gap-2">
             {missingRequiredAssets > 0 && (
@@ -298,7 +310,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
         <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full bg-brand transition-all"
-            style={{ width: totalTasks > 0 ? `${(doneTasks / totalTasks) * 100}%` : "0%" }}
+            style={{ width: totalTasks > 0 ? `${(resolvedTasks / totalTasks) * 100}%` : "0%" }}
           />
         </div>
 
@@ -390,7 +402,7 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
       {serviceIds.map(serviceId => {
         const serviceTasks = tasks.filter(t => t.service_id === serviceId);
         const serviceAssets = assets.filter(a => a.service_id === serviceId);
-        const doneSvcTasks = serviceTasks.filter(t => t.status === "DONE").length;
+        const doneSvcTasks = serviceTasks.filter(t => t.status === "DONE" || t.status === "BLOCKED").length;
         const isCollapsed = collapsedServices.has(serviceId);
         const readiness = serviceReadiness(serviceAssets);
 
@@ -439,30 +451,43 @@ export default function OnboardingTab({ clientId, initialTasks, initialAssets, i
                               {task.notes && <p className="text-[11px] text-slate-400 italic mt-0.5">{task.notes}</p>}
                             </div>
                             {isAdmin && (
-                              <div className="flex items-center gap-1 shrink-0">
-                                <button
-                                  onClick={() => cycleTaskStatus(task.id, task.status)}
-                                  title={
-                                    task.status === "PENDING" ? "Start" :
-                                    task.status === "IN_PROGRESS" ? "Mark Done" :
-                                    "Reset to Pending"
-                                  }
-                                  className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${
-                                    task.status === "DONE"
-                                      ? "bg-slate-50 border-line text-slate-500 hover:bg-slate-100"
-                                      : task.status === "IN_PROGRESS"
-                                      ? "bg-brand-soft border-brand-line text-brand-deep hover:bg-brand-100"
-                                      : "bg-info-soft border-info-line text-info hover:bg-blue-100"
-                                  }`}
-                                >
-                                  {task.status === "PENDING" ? <><Play className="h-3 w-3" /> Start</> :
-                                   task.status === "IN_PROGRESS" ? <><Check className="h-3 w-3" /> Done</> :
-                                   task.status === "DONE" ? <><RotateCcw className="h-3 w-3" /> Reset</> : <><RotateCcw className="h-3 w-3" /> Unblock</>}
-                                </button>
+                              <div className="flex items-center gap-2 shrink-0">
+                                {task.status === "PENDING" && (
+                                  <button
+                                    onClick={() => startTask(task.id)}
+                                    title="Start — you're now working on this"
+                                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border bg-info-soft border-info-line text-info hover:bg-blue-100 transition-colors"
+                                  >
+                                    <Play className="h-3 w-3" /> Start
+                                  </button>
+                                )}
+                                {(task.status === "IN_PROGRESS" || task.status === "DONE") && (
+                                  <label
+                                    title={task.status === "DONE" ? "Done — click to reopen" : "Mark done once you've actually finished this"}
+                                    className="inline-flex items-center gap-2 cursor-pointer select-none text-xs font-semibold px-3 py-1.5 rounded-lg border bg-brand-soft border-brand-line text-brand-deep hover:bg-brand-100 transition-colors"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={task.status === "DONE"}
+                                      onChange={() => toggleTaskDone(task.id, task.status)}
+                                      className="h-3.5 w-3.5 accent-brand-deep"
+                                    />
+                                    Done
+                                  </label>
+                                )}
+                                {task.status === "BLOCKED" && (
+                                  <button
+                                    onClick={() => unblockTask(task.id)}
+                                    title="Unblock — bring this back to Pending"
+                                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border bg-slate-50 border-line text-slate-500 hover:bg-slate-100 transition-colors"
+                                  >
+                                    <RotateCcw className="h-3 w-3" /> Unblock
+                                  </button>
+                                )}
                                 {task.status !== "DONE" && task.status !== "BLOCKED" && (
                                   <button
                                     onClick={() => markTaskBlocked(task.id)}
-                                    title="Mark Blocked"
+                                    title="Not applicable to this client"
                                     className="inline-flex items-center text-xs font-semibold px-2 py-1.5 rounded-lg border bg-danger-soft border-danger-line text-danger hover:bg-red-100 transition-colors"
                                   >
                                     <Ban className="h-3 w-3" />
