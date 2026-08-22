@@ -2,6 +2,9 @@
 
 import { createServerClientWithCookies } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
+import { sendWhatsAppTemplate } from "@/lib/whatsapp/send";
+import { isApprovedWaTemplate } from "@/lib/whatsapp/approved-templates";
+import { leadStageUpdate } from "@/lib/pipeline";
 
 // ── Types ───────────────────────────────────────────────────
 export interface ClientRecord {
@@ -46,6 +49,37 @@ export async function fetchClients(): Promise<ClientRecord[]> {
   return (data ?? []) as any as ClientRecord[];
 }
 
+// ── Check for a matching lead before creating a client from scratch ──
+// Ads/inbound contacts should land as a lead first — this catches the case
+// where "new client" is actually already sitting in the pipeline somewhere.
+export async function checkLeadsByBusinessName(name: string): Promise<
+  {
+    id: string;
+    company_name: string;
+    city: string | null;
+    phone: string | null;
+    outreach_stage: string | null;
+    industry: string | null;
+    contact_person: string | null;
+  }[]
+> {
+  if (!name || name.trim().length < 3) return [];
+  const supabase = await createServerClientWithCookies();
+
+  const { data, error } = await supabase
+    .from("leads")
+    .select("id, company_name, city, phone, outreach_stage, industry, contact_person")
+    .ilike("company_name", `%${name.trim()}%`)
+    .limit(5);
+
+  if (error) {
+    console.error("checkLeadsByBusinessName error:", error);
+    return [];
+  }
+
+  return (data ?? []) as any;
+}
+
 // ── Create a new client ─────────────────────────────────────
 export async function createClient(formData: {
   business_name: string;
@@ -58,6 +92,7 @@ export async function createClient(formData: {
   monthly_value: number;
   start_date: string;
   renewal_date: string;
+  matchedLeadId?: string;
 }): Promise<{ success: boolean; error?: string; clientId?: string }> {
   const supabase = await createServerClientWithCookies();
 
@@ -91,6 +126,15 @@ export async function createClient(formData: {
     await supabase.rpc("create_default_onboarding", {
       p_client_id: data.id,
     });
+  }
+
+  // Creating a client from a matched lead means that lead has converted —
+  // close it out so it doesn't sit "open" on the Outreach Board forever.
+  if (formData.matchedLeadId) {
+    await supabase
+      .from("leads")
+      .update(leadStageUpdate("won"))
+      .eq("id", formData.matchedLeadId);
   }
 
   revalidatePath("/admin/clients");
@@ -371,6 +415,42 @@ export async function updateClientNotes(
 
   if (error) {
     return { success: false, error: error.message };
+  }
+
+  revalidatePath(`/admin/clients/${clientId}`);
+  return { success: true };
+}
+
+// ── Send an approved WhatsApp template to a client on demand ────────
+export async function sendClientWhatsAppTemplate(
+  clientId: string,
+  templateName: string,
+  variables: string[]
+): Promise<{ success: boolean; error?: string }> {
+  if (!isApprovedWaTemplate(templateName)) {
+    return { success: false, error: "Not an approved WhatsApp template" };
+  }
+
+  const supabase = await createServerClientWithCookies();
+  const { data: client } = await supabase
+    .from("clients")
+    .select("phone")
+    .eq("id", clientId)
+    .single();
+
+  if (!client?.phone) {
+    return { success: false, error: "No phone number on file for this client" };
+  }
+
+  const result = await sendWhatsAppTemplate(client.phone, templateName, {
+    language: "en",
+    components: variables.filter((v) => v.trim()).length > 0
+      ? [{ type: "body", parameters: variables.map((v) => ({ type: "text", text: v })) }]
+      : undefined,
+  });
+
+  if (!result.success) {
+    return { success: false, error: result.error };
   }
 
   revalidatePath(`/admin/clients/${clientId}`);

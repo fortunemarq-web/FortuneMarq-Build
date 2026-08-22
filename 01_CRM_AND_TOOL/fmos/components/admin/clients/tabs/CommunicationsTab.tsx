@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { logClientCall } from "@/app/admin/clients/actions";
+import { logClientCall, sendClientWhatsAppTemplate } from "@/app/admin/clients/actions";
+import { APPROVED_WA_TEMPLATES } from "@/lib/whatsapp/approved-templates";
+import { toast } from "@/components/ui/toast";
 import {
   Phone,
   Plus,
@@ -9,6 +11,7 @@ import {
   Loader2,
   MessageSquare,
   Clock,
+  Send,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge, type Tone } from "@/components/ui/badge";
@@ -37,14 +40,33 @@ export default function CommunicationsTab({
   callLogs: initialCallLogs,
   whatsappLogs,
   clientId,
+  clientPhone,
 }: {
   callLogs: CallLog[];
   whatsappLogs: WhatsAppLog[];
   clientId: string;
+  clientPhone?: string | null;
 }) {
   const [callLogs, setCallLogs] = useState(initialCallLogs);
   const [showModal, setShowModal] = useState(false);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [templateName, setTemplateName] = useState<string>(APPROVED_WA_TEMPLATES[0]);
+  const [variables, setVariables] = useState<string[]>([]);
+  const [sendingTemplate, setSendingTemplate] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const handleSendTemplate = async () => {
+    setSendingTemplate(true);
+    const result = await sendClientWhatsAppTemplate(clientId, templateName, variables);
+    setSendingTemplate(false);
+    if (result.success) {
+      toast.success(`Sent "${templateName}"`);
+      setShowTemplateModal(false);
+      setVariables([]);
+    } else {
+      toast.error("Failed to send template", result.error);
+    }
+  };
 
   const outcomeLabel = (o: string | null): { label: string; tone: Tone } => {
     const map: Record<string, { label: string; tone: Tone }> = {
@@ -148,11 +170,22 @@ export default function CommunicationsTab({
 
       {/* WhatsApp Messages */}
       <div>
-        <div className="flex items-center gap-2 mb-4">
-          <MessageSquare className="h-4 w-4 text-slate-400" />
-          <h3 className="font-display text-xs font-semibold uppercase tracking-widest text-slate-500">
-            WhatsApp Messages
-          </h3>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4 text-slate-400" />
+            <h3 className="font-display text-xs font-semibold uppercase tracking-widest text-slate-500">
+              WhatsApp Messages
+            </h3>
+          </div>
+          <button
+            onClick={() => setShowTemplateModal(true)}
+            disabled={!clientPhone}
+            title={clientPhone ? "Send an approved template now" : "No phone number on file"}
+            className="flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors min-h-[36px]"
+          >
+            <Send className="h-3 w-3" />
+            Send Template
+          </button>
         </div>
 
         {whatsappLogs.length === 0 ? (
@@ -273,6 +306,104 @@ export default function CommunicationsTab({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Send Template Modal */}
+      {showTemplateModal && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-4 sm:items-center">
+          <div className="w-full max-w-md rounded-t-2xl border border-line bg-surface shadow-lg sm:rounded-2xl">
+            <div className="flex items-center justify-between border-b border-line px-6 py-4">
+              <h3 className="font-display text-sm font-semibold text-slate-900">Send WhatsApp Template</h3>
+              <button
+                onClick={() => setShowTemplateModal(false)}
+                className="rounded-full p-2 text-slate-400 hover:bg-slate-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-xs text-slate-500">
+                Sending to <span className="font-semibold text-slate-700">{clientPhone}</span>
+              </p>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Template</label>
+                <Select
+                  value={templateName}
+                  onChange={(e) => setTemplateName(e.target.value)}
+                  className="h-10"
+                >
+                  {APPROVED_WA_TEMPLATES.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </Select>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Body variables (in order, if this template has any)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setVariables((prev) => [...prev, ""])}
+                    className="text-xs font-semibold text-brand-deep hover:underline"
+                  >
+                    + Add variable
+                  </button>
+                </div>
+                {variables.length === 0 && (
+                  <p className="text-[11px] text-slate-400">No variables added — sends the template as-is.</p>
+                )}
+                <div className="space-y-2">
+                  {variables.map((v, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Input
+                        value={v}
+                        onChange={(e) =>
+                          setVariables((prev) => prev.map((p, idx) => (idx === i ? e.target.value : p)))
+                        }
+                        placeholder={`Variable {{${i + 1}}}`}
+                        className="h-9 text-xs"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setVariables((prev) => prev.filter((_, idx) => idx !== i))}
+                        className="text-slate-400 hover:text-danger"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleSendTemplate}
+                  disabled={sendingTemplate}
+                  className="flex-1 rounded-lg bg-brand-deep px-4 py-3 text-sm font-semibold text-white hover:bg-brand-deeper disabled:opacity-50 transition-colors min-h-[44px]"
+                >
+                  {sendingTemplate ? (
+                    <span className="flex items-center gap-2 justify-center">
+                      <Loader2 className="h-4 w-4 animate-spin" /> Sending...
+                    </span>
+                  ) : (
+                    "Send Now"
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowTemplateModal(false)}
+                  className="rounded-lg border border-line-strong px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors min-h-[44px]"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

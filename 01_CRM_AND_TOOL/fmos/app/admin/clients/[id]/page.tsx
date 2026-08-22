@@ -287,6 +287,7 @@ export default async function ClientProfilePage({
                 callLogs={callLogs}
                 whatsappLogs={whatsappLogs}
                 clientId={id}
+                clientPhone={client.phone}
               />
             ),
           }}

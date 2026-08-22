@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { X, Plus, Loader2, CheckCircle2 } from "lucide-react";
-import { createClient } from "@/app/admin/clients/actions";
+import { useState, useTransition, useEffect, useRef } from "react";
+import { X, Plus, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
+import { createClient, checkLeadsByBusinessName } from "@/app/admin/clients/actions";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,44 @@ export default function AddClientModal() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [services, setServices] = useState<string[]>([]);
+  const [businessName, setBusinessName] = useState("");
+  const [leadMatches, setLeadMatches] = useState<
+    {
+      id: string;
+      company_name: string;
+      city: string | null;
+      phone: string | null;
+      outreach_stage: string | null;
+      industry: string | null;
+      contact_person: string | null;
+    }[]
+  >([]);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [matchedLeadId, setMatchedLeadId] = useState<string | undefined>(undefined);
+  const ownerNameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const nicheRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  function useLead(l: (typeof leadMatches)[number]) {
+    setMatchedLeadId(l.id);
+    if (ownerNameRef.current && l.contact_person) ownerNameRef.current.value = l.contact_person;
+    if (phoneRef.current && l.phone) phoneRef.current.value = l.phone;
+    if (cityRef.current && l.city) cityRef.current.value = l.city;
+    if (nicheRef.current && l.industry) nicheRef.current.value = l.industry;
+  }
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      const matches = await checkLeadsByBusinessName(businessName);
+      setLeadMatches(matches);
+    }, 400);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [businessName]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,6 +82,7 @@ export default function AddClientModal() {
         monthly_value: parseFloat(fd.get("monthly_value") as string) || 0,
         start_date: fd.get("start_date") as string,
         renewal_date: fd.get("renewal_date") as string,
+        matchedLeadId,
       });
 
       if (result.success) {
@@ -118,18 +157,50 @@ export default function AddClientModal() {
                 name="business_name"
                 required
                 placeholder="e.g. Sunrise Dental Clinic"
+                onChange={(e) => setBusinessName(e.target.value)}
               />
+              {leadMatches.length > 0 && (
+                <div className="mt-2 rounded-lg border border-warn-line bg-warn-soft p-3 space-y-2">
+                  <p className="flex items-center gap-1.5 text-xs font-semibold text-warn">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    Possible match already in Leads — check before creating a duplicate
+                  </p>
+                  {leadMatches.map((l) => (
+                    <div key={l.id} className="flex items-center justify-between gap-2">
+                      <Link
+                        href={`/admin/leads/${l.id}`}
+                        target="_blank"
+                        className="text-xs text-slate-700 hover:underline"
+                      >
+                        {l.company_name} — {l.city || "no city"} — {l.phone || "no phone"} — stage: {l.outreach_stage || "—"}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => useLead(l)}
+                        className={cn(
+                          "shrink-0 text-xs font-semibold px-2 py-1 rounded border transition-colors",
+                          matchedLeadId === l.id
+                            ? "border-brand-line bg-brand-soft text-brand-deep"
+                            : "border-line-strong bg-surface text-slate-600 hover:bg-slate-50"
+                        )}
+                      >
+                        {matchedLeadId === l.id ? "Using this lead" : "Use this lead"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Owner + Phone row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Owner Name</Label>
-                <Input name="owner_name" placeholder="Dr. Sharma" />
+                <Input ref={ownerNameRef} name="owner_name" placeholder="Dr. Sharma" />
               </div>
               <div>
                 <Label>Phone</Label>
-                <Input name="phone" type="tel" placeholder="+91 98765 43210" />
+                <Input ref={phoneRef} name="phone" type="tel" placeholder="+91 98765 43210" />
               </div>
             </div>
 
@@ -143,11 +214,11 @@ export default function AddClientModal() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>City</Label>
-                <Input name="city" placeholder="Hubli" />
+                <Input ref={cityRef} name="city" placeholder="Hubli" />
               </div>
               <div>
                 <Label>Niche</Label>
-                <Input name="niche" placeholder="Dental" />
+                <Input ref={nicheRef} name="niche" placeholder="Dental" />
               </div>
             </div>
 
